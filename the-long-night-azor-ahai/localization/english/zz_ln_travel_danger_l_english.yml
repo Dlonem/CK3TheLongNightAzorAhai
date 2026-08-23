@@ -1,0 +1,35 @@
+﻿l_english:
+
+ # ── THE ROADS THE DEAD HOLD (1.0.12) ────────────────────────────────────────────────
+ ln_the_dead_hold_this_land:0 "The Dead Hold This Land"
+ ln_the_dead_hold_this_land_desc:0 "Nothing living keeps the roads here. What walks them does not need to eat, does not sleep, and does not stop at the edge of the trees."
+ ln_the_dead_are_near:0 "The Dead Are One County Away"
+ ln_the_dead_are_near_desc:0 "The border of their country is a line on a map. What is inside it does not know that."
+
+ ln_travel.1.t:0 "The Road Is Not Empty"
+ ln_travel.1.desc:0 "Your outriders come back at a gallop, which is the first thing wrong, because they are supposed to come back at a walk.\n\nThere are figures on the road ahead. Not many — twenty, perhaps thirty. They are not moving quickly. That is the second thing wrong: men who mean to rob you hurry, and men who mean to talk stop.\n\nThese are doing neither. They are simply coming on, at the same unhurried pace, and the nearest of them is wearing what is left of a farmer's coat and what is left of a farmer."
+ ln_travel.1.desc.btw:0 "There is no road here. There is a way through the trees that people have used long enough to wear it down, and that is not the same thing.\n\nThey come out of the pines on both sides of it at once, without a sound and without hurry, and there are more of them than you can count in the light you have. Some are wearing furs. One is wearing black, or was.\n\nThe cold has kept them very well."
+ ln_travel.1.a:0 "Ride through them. They are slow."
+ ln_travel.1.a_through:0 "Through, and out the other side"
+ ln_travel.1.a_caught:0 "A hand closed on the bridle"
+ ln_travel.1.b:0 "Form a line. Get a fire going."
+ ln_travel.1.b_tt:0 "Your escort holds the road while torches are lit.\n\n#weak It works far more often than it does not. When it does not, it costs one of them. Either way it costs you a month and a half.#!"
+ ln_travel.1.b_burned:0 "They burn"
+ ln_travel.1.b_cost:0 "They burn, and so does one of yours"
+ ln_travel.1.c:0 "Leave the wagons. Ride."
+ ln_travel.1.c_tt:0 "Everything on wheels stays on the road. You do not.\n\n#weak Nobody is hurt, and everybody hears that you ran.#!"
+
+ ln_travel.2.t:0 "One of Them"
+ ln_travel.2.desc:0 "The horses stop before you tell them to. All of them, at once, and then they will not go on and they will not turn.\n\nIt is standing where the track bends, and it is not hurrying either, but for a different reason. It is taller than a man and thinner than one. Its armour is the colour of deep ice and looks grown rather than made. It has been watching you come for some time.\n\nBehind it the trees are white with frost that was not there an hour ago.\n\nWhen it moves, the sound your breath makes is the loudest thing in the world."
+ ln_travel.2.a:0 "Meet it. I did not come this far to be found in the snow."
+ ln_travel.2.a_shatter:0 "It came apart like ice on a stone"
+ ln_travel.2.a_cold:0 "It let you live, which is worse"
+ ln_travel.2.b:0 "Someone has to be the slowest."
+ ln_travel.2.b_tt:0 "You leave [ln_travel_guard.GetTitledFirstName] on the road and you do not stop.\n\n#weak He does not come back. Everyone with you will know exactly what was done and by whom.#!"
+ ln_travel.2.c:0 "Ride. Do not look back."
+ ln_travel.2.c_clear:0 "It did not follow"
+ ln_travel.2.c_hurt:0 "It did not follow far"
+ ln_travel.2.c_taken:0 "It only needed one of you"
+ ln_past_the_wall:0 "Past the Wall"
+ ln_past_the_wall_desc:0 "Nobody's writ runs here and nobody is coming for you. The cold takes travellers who were doing everything right, and the things that walk this country in the Long Night do not announce themselves."
+

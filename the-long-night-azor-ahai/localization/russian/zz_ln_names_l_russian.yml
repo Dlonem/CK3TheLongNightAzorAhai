@@ -1,0 +1,23 @@
+﻿l_russian:
+
+# AGOT: The Long Night & Azor Ahai -- ranger captain given names.
+#
+# These nine are used in history/characters/zz_ln_ranger_captains.txt and are NOT in AGOT's First Man name
+# list, so every one of them logged "Missing loc for name" at load -- 44 lines in the 10 Aug run -- and the
+# captains carrying them displayed a raw key instead of a name. Stonesnake, Dalbridge and Softfoot are canon
+# rangers and worth keeping, so the names stay and the loc is supplied here rather than renaming anyone.
+
+ Benjyn:0 "Бенджин"
+ Berron:0 "Беррон"
+ Dalbridge:0 "Далбридж"
+ Eddin:0 "Эддин"
+ Eggen:0 "Эгген"
+ Jorwyn:0 "Джорвин"
+ Kegs:0 "Кегс"
+ Softfoot:0 "Мягкая Ступня"
+ Stonesnake:0 "Каменный Змей"
+
+# The Others' own culture name list. Ours (common/culture/name_lists/00_othernames.txt), and it had no
+# localization at all -- "Missing loc for name_list_others" at every load, and the list showed a raw key
+# in the culture window. AGOT localizes its own the same way: name_list_northman:0 "Northman".
+ name_list_others:0 "Иные"

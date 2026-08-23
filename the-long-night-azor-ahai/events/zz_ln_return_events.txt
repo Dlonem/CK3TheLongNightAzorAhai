@@ -1,0 +1,361 @@
+﻿namespace = ln_return
+
+# AGOT: The Long Night & Azor Ahai -- the ultimatum over your own hall.
+# See common/decisions/zz_ln_return_with_fire_decisions.txt for the design note.
+
+ln_return.1 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_return.1.t
+	desc = ln_return.1.desc
+	theme = dread
+	left_portrait = { character = root  animation = personality_bold }
+	right_portrait = { character = scope:ln_squatter  animation = fear }
+
+	trigger = { exists = scope:ln_old_seat  exists = scope:ln_squatter }
+
+	# ── CROWN ME, OR I BURN IT ──────────────────────────────────────────────────────────────────────────────
+	# The bluff. Whether it works is decided by what he can see: how much of you he already fears, and how much
+	# he has to lose. A confident man with soldiers behind him calls it, and then everybody knows you blinked.
+	option = {
+		name = ln_return.1.a
+		ai_chance = {
+			base = 35
+			modifier = { add = 15  has_trait = just }
+			modifier = { add = 15  has_trait = calm }
+			modifier = { add = 10  has_trait = generous }
+		}
+		add_character_flag = ln_return_made_the_demand
+
+		# THE ODDS ARE HEAVILY TOWARDS HIM YIELDING, and Thomas is right that they should be: "if they have a
+		# dragon, make sure there's a good opportunity for them to just take it easily, without burning the seat
+		# down." A dragon standing in the yard is not a negotiating position, it is a fact. 75/25 before any
+		# modifier, and dread or a rung on the prophecy ladder pushes it close to certain.
+		#
+		# It is not 100 because the refusal scene is the best writing in the chain and because a man who has
+		# never once been told no by anybody is a less interesting character. A brave, stubborn squatter facing
+		# a lord with no dread can still look up and say it.
+		random_list = {
+			75 = {
+				modifier = { add = 40  dread >= 50 }
+				modifier = { add = 25  dread >= 25 }
+				modifier = { add = 20  has_trait = azor_ahai_reborn }
+				modifier = { add = 15  has_trait = chosen_by_rhllor }
+				modifier = { add = 20  scope:ln_squatter = { has_trait = craven } }
+				modifier = { add = -25  scope:ln_squatter = { has_trait = brave } }
+				modifier = { add = -20  scope:ln_squatter = { has_trait = stubborn } }
+
+				# HE YIELDS.
+				create_title_and_vassal_change = {
+					type = granted
+					save_scope_as = ln_return_change
+					add_claim_on_loss = yes
+				}
+				scope:ln_old_seat = {
+					change_title_holder = {
+						holder = root
+						change = scope:ln_return_change
+					}
+				}
+				resolve_title_and_vassal_change = scope:ln_return_change
+				remove_character_flag = dawn_refugee
+				add_character_flag = ln_restored_by_fire
+				add_dread = 25
+				add_prestige = 300
+
+				# THEY REMEMBER THAT YOU LEFT. Thomas: "obviously I abandoned it, so there's gonna be a little
+				# -- I have to build up my loyalty again." Right, and it is the detail that keeps the easy road
+				# from being a free one. You get the hall back in an afternoon; you get the county back over
+				# years. Control, not opinion, because opinion is about the lord and this is about the place.
+				scope:ln_old_seat = {
+					change_county_control = -40
+					add_county_modifier = {
+						modifier = ln_the_lord_who_left_modifier
+						years = 15
+					}
+				}
+				scope:ln_squatter = { add_opinion = { modifier = hate_opinion  target = root  opinion = -60 } }
+				trigger_event = { id = ln_return.2  days = 5 }
+			}
+			25 = {
+				modifier = { add = 30  scope:ln_squatter = { has_trait = brave } }
+				modifier = { add = 25  scope:ln_squatter = { has_trait = stubborn } }
+				modifier = { add = -35  dread >= 50 }
+				modifier = { add = -20  has_trait = azor_ahai_reborn }
+
+				# HE CALLS IT.
+				add_character_flag = ln_return_was_refused
+				add_pressed_claim = scope:ln_old_seat
+				add_prestige = -150
+				add_dread = -10
+				stress_impact = { base = medium_stress_impact_gain }
+				trigger_event = { id = ln_return.3  days = 5 }
+			}
+		}
+	}
+
+	# ── BURN IT ─────────────────────────────────────────────────────────────────────────────────────────────
+	# You get nothing. That is the entire point of the option and it is why it is here.
+	option = {
+		name = ln_return.1.b
+		ai_chance = {
+			base = 15
+			modifier = { add = 25  has_trait = wrathful }
+			modifier = { add = 25  has_trait = sadistic }
+			modifier = { add = 15  has_trait = callous }
+			modifier = { add = -30  has_trait = compassionate }
+		}
+		add_character_flag = ln_burned_my_own_hall
+		add_dread = 40
+		add_prestige = 50
+		add_piety = -100
+
+		scope:ln_old_seat = {
+			add_county_modifier = {
+				modifier = ln_dragonfire_scar_modifier
+				years = 40
+			}
+			change_county_control = -75
+		}
+		scope:ln_squatter = { add_opinion = { modifier = hate_opinion  target = root  opinion = -100 } }
+		every_vassal = { add_opinion = { modifier = scared_opinion  target = root  opinion = -15 } }
+		stress_impact = { base = major_stress_impact_gain  callous = medium_stress_impact_loss  sadistic = major_stress_impact_loss }
+		trigger_event = { id = ln_return.4  days = 10 }
+	}
+
+	# ── KILL HIM, AND HIS ────────────────────────────────────────────────────────────────────────────────────
+	option = {
+		name = ln_return.1.c
+		ai_chance = {
+			base = 10
+			modifier = { add = 30  has_trait = sadistic }
+			modifier = { add = 25  has_trait = vengeful }
+			modifier = { add = 10  has_trait = paranoid }
+			modifier = { add = -40  has_trait = compassionate }
+		}
+		add_character_flag = ln_return_took_it_in_blood
+
+		create_title_and_vassal_change = {
+			type = usurped
+			save_scope_as = ln_return_change
+			add_claim_on_loss = yes
+		}
+		scope:ln_old_seat = {
+			change_title_holder = {
+				holder = root
+				change = scope:ln_return_change
+			}
+		}
+		resolve_title_and_vassal_change = scope:ln_return_change
+		remove_character_flag = dawn_refugee
+		add_character_flag = ln_restored_by_fire
+
+		scope:ln_squatter = {
+			every_close_family_member = {
+				limit = { is_alive = yes  is_landed = no }
+				death = { death_reason = death_burned  killer = root }
+			}
+			death = { death_reason = death_burned  killer = root }
+		}
+
+		add_dread = 60
+		add_prestige = 100
+		add_piety = -200
+		every_vassal = { add_opinion = { modifier = scared_opinion  target = root  opinion = -30 } }
+		stress_impact = { base = major_stress_impact_gain  sadistic = major_stress_impact_loss  callous = medium_stress_impact_loss  compassionate = major_stress_impact_gain }
+		trigger_event = { id = ln_return.4  days = 10 }
+	}
+
+	# ── TRIAL BY COMBAT ─────────────────────────────────────────────────────────────────────────────────────
+	# Thomas's addition: "maybe you can do a duel, like a trial by combat." It is the honourable road and the
+	# stupid one at the same time -- you have a dragon in the yard and you are choosing to settle it with a
+	# sword, which is exactly the sort of thing that makes a man a story afterwards.
+	#
+	# Prowess decides it, and the resurrected trait's +12 is doing real work here. Losing does NOT kill you --
+	# it takes the hall off the table and leaves you standing in front of everyone having been beaten by the
+	# man who kept your granary honest.
+	option = {
+		name = ln_return.1.e
+		ai_chance = {
+			base = 15
+			modifier = { add = 25  has_trait = brave }
+			modifier = { add = 10  has_trait = arrogant }
+			modifier = { add = 10  has_trait = just }
+		}
+		add_character_flag = ln_return_fought_for_it
+
+		random_list = {
+			50 = {
+				modifier = { add = { value = prowess  multiply = 2 } }
+				modifier = { add = { value = scope:ln_squatter.prowess  multiply = -2 } }
+				modifier = { add = 15  has_trait = resurrected_by_rhllor }
+				modifier = { add = 10  ln_has_deed_valyrian_steel_trigger = yes }
+
+				# YOU WIN. He yields the seat in front of the whole yard and nobody had to burn.
+				create_title_and_vassal_change = {
+					type = granted
+					save_scope_as = ln_return_change
+					add_claim_on_loss = yes
+				}
+				scope:ln_old_seat = {
+					change_title_holder = {
+						holder = root
+						change = scope:ln_return_change
+					}
+					# Far gentler than taking it from the air. They watched you win it.
+					change_county_control = -10
+				}
+				resolve_title_and_vassal_change = scope:ln_return_change
+				remove_character_flag = dawn_refugee
+				add_character_flag = ln_restored_by_fire
+				add_character_flag = ln_won_it_with_a_sword
+				add_prestige = 400
+				add_piety = 100
+				increase_wounds_no_death_effect = { REASON = death_duel }
+				scope:ln_squatter = { add_opinion = { modifier = respect_opinion  target = root  opinion = 40 } }
+			}
+			50 = {
+				modifier = { add = { value = scope:ln_squatter.prowess  multiply = 2 } }
+				modifier = { add = { value = prowess  multiply = -2 } }
+				modifier = { add = -15  has_trait = resurrected_by_rhllor }
+
+				# HE WINS. You keep your life and your dragon and nothing else.
+				add_character_flag = ln_return_lost_the_duel
+				increase_wounds_no_death_effect = { REASON = death_duel }
+				add_prestige = -200
+				add_dread = -15
+				stress_impact = { base = major_stress_impact_gain  arrogant = major_stress_impact_gain }
+				scope:ln_squatter = { add_opinion = { modifier = respect_opinion  target = root  opinion = 25 } }
+				trigger_event = { id = ln_return.3  days = 5 }
+			}
+		}
+	}
+
+	# ── LAND, AND ASK ───────────────────────────────────────────────────────────────────────────────────────
+	option = {
+		name = ln_return.1.d
+		ai_chance = {
+			base = 25
+			modifier = { add = 20  has_trait = just }
+			modifier = { add = 20  has_trait = honest }
+			modifier = { add = 15  has_trait = humble }
+		}
+		add_character_flag = ln_return_asked_politely
+		add_pressed_claim = scope:ln_old_seat
+		add_prestige = 75
+		add_piety = 100
+		scope:ln_squatter = { add_opinion = { modifier = respect_opinion  target = root  opinion = 20 } }
+		stress_impact = { base = minor_stress_impact_loss }
+	}
+}
+
+# ── AFTER HE YIELDS ─────────────────────────────────────────────────────────────────────────────────────────
+ln_return.2 = {
+	type = character_event
+	title = ln_return.2.t
+	desc = ln_return.2.desc
+	theme = realm
+	left_portrait = { character = root  animation = personality_content }
+	right_portrait = { character = scope:ln_squatter  animation = shame }
+
+	trigger = { exists = scope:ln_squatter }
+
+	option = {
+		name = ln_return.2.a          # let him keep a holding. he kept the roof on.
+		ai_chance = {
+			base = 60
+			modifier = { add = 20  has_trait = just }
+			modifier = { add = 20  has_trait = generous }
+			modifier = { add = 10  has_trait = compassionate }
+		}
+		add_prestige = 50
+		add_piety = 50
+		scope:ln_squatter = { add_opinion = { modifier = grateful_opinion  target = root  opinion = 50 } }
+		stress_impact = { base = minor_stress_impact_loss }
+	}
+	option = {
+		name = ln_return.2.b          # give him a horse and the road.
+		ai_chance = {
+			base = 40
+			modifier = { add = 15  has_trait = callous }
+			modifier = { add = 10  has_trait = paranoid }
+			modifier = { add = 10  has_trait = arrogant }
+		}
+		add_dread = 10
+		scope:ln_squatter = { add_opinion = { modifier = hate_opinion  target = root  opinion = -30 } }
+	}
+}
+
+# ── AFTER HE CALLS IT ───────────────────────────────────────────────────────────────────────────────────────
+ln_return.3 = {
+	type = character_event
+	title = ln_return.3.t
+	desc = ln_return.3.desc
+	theme = dread
+	left_portrait = { character = root  animation = rage }
+
+	option = {
+		name = ln_return.3.a          # then we do it the long way.
+		ai_chance = {
+			base = 60
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = 10  has_trait = diligent }
+			modifier = { add = 10  has_trait = just }
+		}
+		add_martial_lifestyle_xp = 80
+		add_prestige = 50
+	}
+	option = {
+		name = ln_return.3.b          # he was right. I am not that man any more.
+		ai_chance = {
+			base = 40
+			modifier = { add = 25  has_trait = humble }
+			modifier = { add = 20  has_trait = content }
+			modifier = { add = 10  has_trait = compassionate }
+		}
+		add_character_flag = ln_return_let_it_go
+		add_piety = 150
+		stress_impact = { base = major_stress_impact_loss }
+	}
+}
+
+# ── AFTER THE FIRE ──────────────────────────────────────────────────────────────────────────────────────────
+ln_return.4 = {
+	type = character_event
+	title = ln_return.4.t
+	desc = {
+		first_valid = {
+			triggered_desc = { trigger = { has_character_flag = ln_burned_my_own_hall }      desc = ln_return.4.desc.burned }
+			triggered_desc = { trigger = { has_character_flag = ln_return_took_it_in_blood } desc = ln_return.4.desc.blood }
+			desc = ln_return.4.desc.burned
+		}
+	}
+	theme = death
+	left_portrait = { character = root  animation = paranoia }
+
+	option = {
+		name = ln_return.4.a          # it is done. it does not need explaining.
+		ai_chance = {
+			base = 50
+			modifier = { add = 20  has_trait = callous }
+			modifier = { add = 10  has_trait = arrogant }
+		}
+		add_dread = 10
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	option = {
+		name = ln_return.4.b          # find the ones who ran. see they are fed.
+		ai_chance = {
+			base = 50
+			modifier = { add = 35  has_trait = compassionate }
+			modifier = { add = 20  has_trait = generous }
+			modifier = { add = 10  has_trait = just }
+		}
+		# add_gold REFUSES NEGATIVE VALUES -- "Error: add_gold effect [ Negative value in: {}. {} ]".
+		# Spending is remove_short_term_gold. Caught in Thomas's 106 AC run; three sites.
+		remove_short_term_gold = 200
+		add_prestige = 100
+		add_piety = 100
+		stress_impact = { base = medium_stress_impact_loss  compassionate = medium_stress_impact_loss }
+	}
+}

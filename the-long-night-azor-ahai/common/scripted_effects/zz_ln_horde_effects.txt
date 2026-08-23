@@ -1,0 +1,62 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the horde grows, and the realm renames itself.
+
+# ── THE HORDE GROWS ────────────────────────────────────────────────────────────────────────────────────────────
+# 10 Aug REWRITE. The old version claimed, in this comment, "one regiment per year for every 10 counties" and then
+# added EXACTLY ONE regiment a year the moment the realm passed ten counties, ceiling 40. So the mass this unit
+# exists to be took forty years to arrive and topped out at 20,000 -- less than the elite core it was supposed to
+# dwarf, and longer than most Long Nights last. The scary part of the dead never showed up.
+#
+# Now it actually scales with conquest, which is what the header always said and what the design calls for: the
+# risen dead of every realm they take. Held at the Wall, they add two regiments a year and stay a manageable
+# nuisance; running away with the continent, eight, and the horde becomes the thing you cannot kill fast enough.
+#
+# THE CEILING STILL MATTERS and is deliberately kept: without one this is the exponential snowball we are trying
+# not to build. 120 regiments x stack 500 = 60,000 bodies of 8/25 infantry -- three times the old cap, and still
+# beatable by quality, which is what keeps "one hybrid on the world's oldest dragon still matters" true.
+#
+# create_maa_regiment's `size` is a LITERAL INT at parse time -- it is not a script value and it is not a scope.
+# That is why the tiers below are branches on literals rather than arithmetic, and why the add is a macro.
+# See common/scripted_effects/zz_ln_camp_retinue_effects.txt for the same constraint and the same solution.
+ln_horde_add_effect = {
+	create_maa_regiment = {
+		type = ln_wight_horde
+		size = $N$
+		check_can_recruit = no
+	}
+}
+
+ln_horde_reinforce_effect = {
+	if = {
+		limit = {
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = {
+				NOT = { "number_maa_regiments_of_type(ln_wight_horde)" >= 120 }
+				any_sub_realm_county = { count >= 10 }
+			}
+		}
+		title:h_the_others.holder = {
+			if      = { limit = { any_sub_realm_county = { count >= 80 } }  ln_horde_add_effect = { N = 8 } }
+			else_if = { limit = { any_sub_realm_county = { count >= 60 } }  ln_horde_add_effect = { N = 6 } }
+			else_if = { limit = { any_sub_realm_county = { count >= 40 } }  ln_horde_add_effect = { N = 4 } }
+			else_if = { limit = { any_sub_realm_county = { count >= 25 } }  ln_horde_add_effect = { N = 3 } }
+			else    = { ln_horde_add_effect = { N = 2 } }
+		}
+	}
+}
+
+# ── THE REALM RENAMES ITSELF ───────────────────────────────────────────────────────────────────────────────────
+# "The Land of Always Winter" is the canon name of the country beyond the Frostfangs, so it is right while the dead
+# are still up there. It reads oddly once that realm covers half of Westeros. So once the Night King holds thirty
+# counties, the realm stops being a place and becomes the event: The Long Night.
+# One-shot. Same technique Long Night+ already uses on k_the_wall in ln_wildlings_unleashed_effect.
+ln_realm_rename_effect = {
+	if = {
+		limit = {
+			NOT = { has_global_variable = ln_realm_renamed }
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { any_sub_realm_county = { count >= 30 } }
+		}
+		set_global_variable = { name = ln_realm_renamed value = yes }
+		title:h_the_others = { set_title_name = ln_realm_the_long_night }
+	}
+}

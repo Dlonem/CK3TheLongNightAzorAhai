@@ -1,0 +1,70 @@
+﻿# The Long Night+ — White Walker recolour.
+#
+# FIX (10 Aug): the six MORPH blocks used `mode = replace` on *_long_night genes, which live in special_genes.
+# The engine rejects replace on a special gene -- [E][dnamodifier.cpp:50], once per block, at lines
+# 14/20/26/38/44/50 of the pre-fix file. This is fallout from the v0.1.0 special_genes wrapper: that change
+# fixed ~98,000 "missing gene" errors and its own comment says it "changes nothing about how they work" --
+# true except for exactly this, the mode silently became illegal. Vanilla's pattern for a special morph gene
+# with a template and a value is `add` (gene_bubonic_plague, 00_trait_modifiers.txt:258).
+#
+# The TWO COLOR BLOCKS BELOW KEEP `replace` ON PURPOSE. hair_color and skin_color are vanilla top-level
+# color genes -- regular, not special -- so replace is legal there, and the log agrees: 6 errors, not 8.
+whitewalker_skin = {
+	whitewalker_skin = {
+		traits = {
+			other_trait
+		}
+		dna_modifiers = {
+			human = {
+				color = {
+					gene = hair_color
+					mode = replace
+					x = 0.0
+					y = 0.0
+				}
+				morph = {
+					mode = add
+					gene = hair_color_hue_long_night
+					template = hair_color_hue_long_night
+					value = 0.08
+				}
+				morph = {
+					mode = add
+					gene = hair_color_saturation_long_night
+					template = hair_color_saturation_long_night
+					value = 0.55
+				}
+				morph = {
+					mode = add
+					gene = hair_color_value_long_night
+					template = hair_color_value_long_night
+					value = 0.47
+				}
+				color = {
+					gene = skin_color
+					mode = replace
+					x = 0.0
+					y = 0.0
+				}
+				morph = {
+					mode = add
+					gene = skin_color_hue_long_night
+					template = skin_color_hue_long_night
+					value = 0.565
+				}
+				morph = {
+					mode = add
+					gene = skin_color_saturation_long_night
+					template = skin_color_saturation_long_night
+					value = 0.80
+				}
+				morph = {
+					mode = add
+					gene = skin_color_value_long_night
+					template = skin_color_value_long_night
+					value = 0.50
+				}
+			}
+		}
+	}
+}

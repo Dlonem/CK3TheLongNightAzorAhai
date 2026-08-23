@@ -1,0 +1,60 @@
+﻿
+others_weak_modifier = {
+	levy_size = 15
+	
+}
+
+
+others_standard_modifier = {
+	levy_size = 25
+	
+}
+
+others_strong_modifier = {
+	levy_size = 50
+	
+}
+
+
+others_insane_modifier = {
+	levy_size = 75
+
+}
+
+# The Long Night+: with fewer Others promoted (conquered now rise as weak wights), the Night King's host
+# bleeds its elite faster than it can replace them. This standing command bonus keeps the dead a credible
+# threat — a harder-hitting, more durable horde led by a dread general who fields more of his Others as knights.
+night_king_command_modifier = {
+	advantage = 12
+	army_damage_mult = 0.20
+	army_toughness_mult = 0.20
+	knight_effectiveness_mult = 0.50
+	knight_limit = 6
+}
+# ── BEING NAMED, AS A MODIFIER RATHER THAN AS FIVE THOUSAND OPINION ROWS ──────────────────────────────
+# 1.0.10b. These replace the every_ruler + add_opinion sweep in ln_the_world_forms_a_view_effect --
+# see the comment there for the full account of what was traded away and why.
+#
+# Reach is unchanged: same_faith_opinion and different_faith_opinion are resolved by the engine against
+# whoever is currently looking at this character, so a stranger on the far side of Essos who shares the
+# faith sees the bonus without anyone having written a row for him. clergy_opinion is stacked on top of
+# same_faith_opinion so priests specifically like a named claimant more than the ordinary faithful do,
+# which is the one piece of the old zealot/red-priest filter worth keeping.
+#
+# Numbers carried over from ln_named_opinion_up_value / _down_value so the felt result is the same:
+#   Favored  +10 same faith (+10 more from clergy) / -8 different faith
+#   Chosen   +25 same faith (+15 more from clergy) / -18 different faith
+# Applied with years = 20, which is what the old opinion modifiers carried.
+ln_named_favored_modifier = {
+	icon = piety_mixed
+	same_faith_opinion = 10
+	clergy_opinion = 10
+	different_faith_opinion = -8
+}
+
+ln_named_chosen_modifier = {
+	icon = piety_mixed
+	same_faith_opinion = 25
+	clergy_opinion = 15
+	different_faith_opinion = -18
+}

@@ -1,0 +1,55 @@
+﻿# AGOT: The Long Night & Azor Ahai -- where the dead are on the road.
+# See zz_ln_travel_danger_modifiers.txt for what this is for.
+
+# Root = a travelling character. "Am I on a road the dead hold?"
+#
+# THREE ARMS, and the first two are not redundant with the third. The Wall and the land beyond it are dangerous
+# during the Long Night whether or not the Others have taken a title there -- most of Beyond the Wall is held by
+# free folk or by nobody, so a holder test alone would leave the Haunted Forest as safe as the Reach. The third
+# arm is the moving front: any county whose holder is one of them.
+#
+# `?=` on every link, per AGOT's own habit and Thomas's instruction: a link that does not resolve should read as
+# "this doesn't exist, fine", not error. location can be unset for a character between provinces, and county can
+# be unset for sea and impassable provinces.
+ln_on_a_dead_road_trigger = {
+	location ?= {
+		OR = {
+			geographical_region = world_westeros_beyond_the_wall
+			geographical_region = world_westeros_the_wall
+			county ?= {
+				holder ?= { ln_is_one_of_them_trigger = yes }
+			}
+		}
+	}
+}
+
+# Root = a travelling character. "Could one of THEM be standing here, rather than only their dead?"
+#
+# Narrower on purpose. Wights are everywhere the dead have been; an Other is a different order of encounter and
+# should stay rare enough to be remembered. So: the Long Night proper (not Cold Winds), and either their own
+# country or past the Wall. A county merely NEXT to theirs never produces one.
+ln_a_walker_could_be_here_trigger = {
+	exists = struggle:ln_long_night_struggle
+	struggle:ln_long_night_struggle = {
+		is_struggle_phase = ln_phase_the_long_night
+	}
+	location ?= {
+		OR = {
+			geographical_region = world_westeros_beyond_the_wall
+			county ?= {
+				holder ?= { ln_is_one_of_them_trigger = yes }
+			}
+		}
+	}
+}
+
+# Root = a travelling character. Did he take the mod's own preparation seriously? This is the gate on the only
+# option in ln_travel.2 that lets a man stand and fight an Other, and it is deliberately the SAME two modifiers
+# the Prepare decisions hand out (zz_ln_preparation_effects.txt:41, :85) -- so the reward for arming a household
+# with dragonglass shows up in a place the player did not expect it to, which is the whole point of arming it.
+ln_carries_something_that_can_hurt_them_trigger = {
+	OR = {
+		has_character_modifier = ln_dragonglass_armed_modifier
+		has_character_modifier = ln_valyrian_armed_modifier
+	}
+}

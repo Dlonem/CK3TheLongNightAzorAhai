@@ -1,0 +1,11 @@
+﻿# The Long Night+ — AFTERMATH (resettling) pulses, riding the global yearly on_action (AGOT extends it the
+# same way for its own colonization). Design doc: dev/the_long_night_plus_aftermath.md.
+
+# NOTE: the yearly_global_pulse declaration that used to sit here now lives in zz_ln_00_hooks.txt, which is
+# the single place this mod attaches to any vanilla on_action. Four files were declaring it independently.
+
+# ln_aftermath_yearly_pulse DELETED 10 Aug -- an on_action sub-list defined here and listed in NO hook, so it never ran.
+# Everything it called is already done once a year by ln_struggle_yearly_work_effect (ln_aftermath_yearly_effect),
+# behind the calendar stamp that guarantees one pass per year. This is the same failure class as
+# ln_watch_strength_pulse (deleted earlier today): the hooks file exists precisely to make a sub-list
+# that nothing lists visible, and a hook that does not run produces silence rather than a log line.

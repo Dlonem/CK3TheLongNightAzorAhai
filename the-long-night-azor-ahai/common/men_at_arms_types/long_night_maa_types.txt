@@ -1,0 +1,67 @@
+﻿# Other MAA
+
+# @ CONSTANTS ARE FILE-SCOPED. @cultural_maa_extra_ai_score is declared at the top of vanilla's
+# 00_cultural_maa_types.txt and is not visible from here, so `ai_quality = { value = @cultural_maa_extra_ai_score }`
+# below was failing to parse every load. Same value as vanilla's and AGOT's: worth roughly eight extra
+# regiments to the AI's scoring, which is what makes the AI actually want the unit.
+@cultural_maa_extra_ai_score = 80
+
+other_maa = {
+	type = Other_infantry
+
+	# The Long Night+: tougher, harder-hitting dead so the horde grinds down the living instead of folding fast.
+	# BALANCE, 10 Aug -- reported by Franz Liszt on the Workshop ("why are wights raised as 45 dmg 189 def
+	# ice spiders thats crazy"). He was right, and understated it. Toughness 120 was higher than ANYTHING in
+	# vanilla or AGOT: both cap at 100, on accolade_maa_elephantiers (stack 25) and dragons_regiment
+	# (stack 1). This unit carries stack = 500. Vanilla's median toughness is 20 and its standard stack 100.
+	# His in-game 45/189 is this plus terrain and phase modifiers.
+	#
+	# 75 puts them at AGOT's giant_regiment tier (50 dmg / 75 tough), which is the right company for a
+	# monstrous unit, and leaves them the toughest infantry on the map without being unkillable. Damage stays
+	# at 38: the dead should hit hard, they just should not also be immortal.
+	damage = 38
+	toughness = 75
+	pursuit = 70
+	screen = 0
+
+	siege_tier = 4
+	siege_value = 0.9
+
+	terrain_bonus = {
+		forest = { damage = 3 toughness = 3 }
+		taiga = { damage = 3 toughness = 3 }
+		jungle = { damage = 3 toughness = 3 }
+		mountains = { damage = 3 toughness = 3 }
+		desert_mountains = { damage = -3 toughness = -3 }
+		wetlands = { damage = 3 toughness = 3 }
+	}
+	# FIX: can_recruit was never closed. Everything below it -- counters, winter_bonus, buy_cost, stack, icon --
+	# was being parsed as triggers INSIDE can_recruit and silently discarded; that is where "Unknown trigger:
+	# icon" came from. Logic preserved verbatim, only the bracing corrected.
+	# NOTE: the Banefort/witch clause looks like copy-paste from another mod. Left as written.
+	can_recruit = {
+		OR = {
+			has_trait = other_trait
+			AND = {
+				dynasty = dynasty:dynn_Banefort
+				any_secret = { secret_type = secret_witch }
+			}
+		}
+	}
+	
+	counters = {
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = 3 toughness = 3 pursuit = 3 }
+		harsh_winter = { damage = 6 toughness = 6 pursuit = 3 }
+	}
+
+	buy_cost = { gold = other_maa_recruitment_cost }
+	low_maintenance_cost = { gold = other_maa_low_maint_cost }
+	high_maintenance_cost = { gold = other_maa_high_maint_cost }
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	stack = 500
+	hired_stack_size = 1
+	icon = titan
+}

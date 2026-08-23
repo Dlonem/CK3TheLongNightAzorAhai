@@ -1,0 +1,22 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the three men-at-arms costs other_maa asks for.
+#
+# common/men_at_arms_types/long_night_maa_types.txt has always written
+#
+#     buy_cost            = { gold = other_maa_recruitment_cost }
+#     low_maintenance_cost  = { gold = other_maa_low_maint_cost }
+#     high_maintenance_cost = { gold = other_maa_high_maint_cost }
+#
+# and nothing anywhere -- not vanilla, not AGOT, not this mod -- has ever defined those three names. CK3 logged
+# only the third ("Failed to read named value or literal from other_maa_high_maint_cost") and swallowed the
+# other two, which is the worst kind of bug: a unit that was free to raise and free to maintain, silently.
+#
+# ADDITIVE, NOT AN OVERRIDE. New file, three new keys, nothing of anyone else's shadowed.
+#
+# VALUES are AGOT's own standard men-at-arms costs, verbatim from the header of their
+# 00_agot_nights_watch_maa_types.txt -- their buy, low-maintenance and high-maintenance constants, 150 / 1.0 / 5.0.
+# Deliberately not tuned upward: other_maa can only be recruited by a character with other_trait, which is the
+# Night King and his own, and they are not a faction the player competes with on economy.
+
+other_maa_recruitment_cost = 150
+other_maa_low_maint_cost = 1.0
+other_maa_high_maint_cost = 5.0

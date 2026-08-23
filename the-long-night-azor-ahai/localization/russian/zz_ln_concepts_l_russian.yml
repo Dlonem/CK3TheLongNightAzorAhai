@@ -1,0 +1,102 @@
+﻿l_russian:
+
+ # AGOT: The Long Night & Azor Ahai -- lore concepts and struggle phase parameters.
+ # Concept loc keys are game_concept_<key> and game_concept_<key>_desc. Aliases do NOT need their own keys.
+
+ # ── LORE CONCEPTS ───────────────────────────────────────────────────────────────────────────────────────────
+ game_concept_wall:0 "Стена"
+ game_concept_wall_desc:0 "Семьсот футов льда, что тянутся на сотню лиг от Тюленьего залива до Теснины, поднятые восемь тысяч лет назад против того, о чём летописи перестали говорить определённо.\n\nЕё держит [nights_watch|E], и с каждым столетием держащих всё меньше. Вдоль неё выстроили девятнадцать замков. Большинство стоят пустыми ещё с тех пор, когда никого из ныне живущих не было на свете."
+
+ game_concept_the_others:0 "Иные"
+ game_concept_the_others_desc:0 "Бледные твари, что выходят из холода, убивают клинками, дробящими железо, и поднимают убитых.\n\nМейстеры Цитадели столетиями доказывали, что это сказка, которой пугают детей. [free_folk|E], живущий там, где живут Иные, судя по всему, спрошен не был."
+
+ game_concept_wight:0 "упырь"
+ game_concept_wight_desc:0 "Труп, поднятый [the_others|E] и пущенный ходить.\n\n$game_concept_wight$ ничего не чувствует, никогда не устаёт и дерётся скверно — вся его опасность в арифметике. Каждый павший в бою с ними встаёт на их стороне, так что проигранная битва стоит вам вдвое, а выигранная всё равно стоит однажды.\n\nИх останавливает огонь. Почти ничто другое."
+
+ game_concept_nights_watch:0 "Ночной Дозор"
+ game_concept_nights_watch_desc:0 "Орден, присягнувший держать [wall|E]. Его братья не берут жён, не держат земель, не заводят детей и не носят корон — и служат до самой смерти.\n\nКогда-то их было двадцать тысяч. Теперь нет. Государство шлёт туда воров, насильников и младших сыновей, а потом перестаёт о нём думать; так заведено очень давно, и до сих пор это ни разу не проверялось."
+
+ game_concept_free_folk:0 "вольный народ"
+ game_concept_free_folk_desc:0 "Народы, живущие к северу от [wall|E], — тенны и горцы, пещерные жители, речной люд, сотня имён, которых карты не удостаивают. К югу от Стены их зовут одичалыми, но сами себя они зовут иначе.\n\nОни не преклоняют колен, что Семь Королевств находят оскорбительным, и они всё чаще бегут на юг, что Семь Королевств находят неудобным. На юге пока никто не спросил, от чего они бегут."
+
+ game_concept_dragonglass:0 "драконье стекло"
+ game_concept_dragonglass_desc:0 "Вулканическое стекло. Обсидиан, если говорить по-мейстерски. Дети Леса звали его застывшим огнём.\n\nОно хрупкое, оно неудобное, оно не удержит лезвия против стали — и оно убивает [the_others|E], чего не делает больше ничто из обычных вещей. Под Драконьим Камнем его очень много, и почти ни у кого никогда не было повода его копать."
+
+ game_concept_valyrian_steel:0 "валирийская сталь"
+ game_concept_valyrian_steel_desc:0 "Клинки, выкованные с чарами во фригольде, мёртвом уже четыреста лет. Легче стали, острее стали — и их невозможно изготовить теперь, когда те, кто знал как, стали пеплом.\n\nВ мире осталось, быть может, две сотни таких клинков, и большинство — родовые реликвии великих [houses|E], которые достают их ради церемоний. А ещё, как выясняется, они убивают [the_others|E]."
+
+ # ── STRUGGLE PHASE PARAMETERS ───────────────────────────────────────────────────────────────────────────────
+ # These are the bullet lines in each phase's effects tooltip. Struggle parameters are script-read only -- they
+ # have no engine behaviour of their own -- so these describe what the phase's MODIFIERS do, plus the few that
+ # our own code branches on. Nothing here promises an effect that is not actually applied somewhere.
+
+ # The Long Summer
+ ln_the_dark_is_distant:0 "Тьма ещё далеко — и приближается"
+ ln_the_dark_is_a_story:0 "За Узким морем это сказка для детей, и не самая складная"
+ ln_summer_peace:0 "Долгие годы тишины: Север меньше задирается, а налётчики движутся вяло"
+ ln_insular_in_good_times:0 "Сытые смыкают ряды — тепло для своих, холод для всех прочих"
+ ln_the_gods_are_quiet:0 "Никто не молится усердно, когда урожай хорош"
+
+ # The Cold Winds Rise
+ ln_the_dark_is_coming:0 "Тьма идёт, и всякий к северу от Перешейка это знает"
+ ln_the_muster_begins:0 "Каждого, кто может держать копьё, вносят в списки, а на стены ставят людей"
+ ln_southern_disbelief:0 "Южные земли продолжают грызться и ещё об этом пожалеют"
+ ln_old_enemies_talk:0 "Коленопреклонённые и [free_folk|E] начали говорить друг с другом"
+ ln_prayers_multiply:0 "Всякая септа, роща и храм полны, и верующие приходят с оружием"
+
+ # The Long Night
+ ln_the_dark_is_here:0 "Тьма здесь"
+ ln_wars_of_the_living:0 "Всякая война теперь ведётся в холоде, а мёртвым достаются объедки"
+ ln_every_spear_counts:0 "Живущие в холоде очень хорошо научились одному и разучились всему остальному"
+ ln_the_living_stand_together:0 "Старые обиды теряют смысл, когда врагу всё равно, кем ты был"
+ ln_the_red_god_rises:0 "Ночь темна и полна ужасов, и над тем, кто это говорит, больше не смеются"
+ ln_essos_profits:0 "Где-то за водой кто-то продаёт зерно и сталь отчаявшимся"
+
+ # The Dawn
+ ln_the_dark_has_passed:0 "Тьма миновала"
+ ln_no_stomach_for_war:0 "Никто из тех, кто там был, не хочет новой войны"
+ ln_bled_together:0 "Они истекали кровью бок о бок, и какое-то время это стоит больше любого договора"
+ ln_reckoning_of_faiths:0 "Все веры спорят, кто из них был прав, и все набирают сторонников"
+
+ # ── ALIAS KEYS (1.0.11) ───────────────────────────────────────────────────────────────────────────
+ # Every concept alias declared in zz_ln_lore_concepts.txt / zz_ln_struggle_concepts.txt needs its own
+ # game_concept_<alias> key. These 32 were absent, which is what held this file at 34/67 in ruparity.
+ # The _desc keys are pure references to the parent concept, exactly as the English file has them --
+ # they resolve through the Russian parent above, so they are copied verbatim and not translated.
+ # Terminology follows the parents already in this file: Стена, Иные, упырь, Ночной Дозор,
+ # вольный народ, драконье стекло.
+ game_concept_the_wall:0 "Стена"
+ game_concept_the_wall_desc:0 "$game_concept_wall_desc$"
+ game_concept_walls:0 "Стены"
+ game_concept_walls_desc:0 "$game_concept_wall_desc$"
+ game_concept_others:0 "Иные"
+ game_concept_others_desc:0 "$game_concept_the_others_desc$"
+ game_concept_white_walker:0 "Белый Ходок"
+ game_concept_white_walker_desc:0 "$game_concept_the_others_desc$"
+ game_concept_white_walkers:0 "Белые Ходоки"
+ game_concept_white_walkers_desc:0 "$game_concept_the_others_desc$"
+ game_concept_wights:0 "упыри"
+ game_concept_wights_desc:0 "$game_concept_wight_desc$"
+ game_concept_the_nights_watch:0 "Ночной Дозор"
+ game_concept_the_nights_watch_desc:0 "$game_concept_nights_watch_desc$"
+ game_concept_black_brothers:0 "чёрные братья"
+ game_concept_black_brothers_desc:0 "$game_concept_nights_watch_desc$"
+ game_concept_wildlings:0 "одичалые"
+ game_concept_wildlings_desc:0 "$game_concept_free_folk_desc$"
+ game_concept_beyond_the_wall:0 "за Стеной"
+ game_concept_beyond_the_wall_desc:0 "$game_concept_free_folk_desc$"
+ game_concept_obsidian:0 "обсидиан"
+ game_concept_obsidian_desc:0 "$game_concept_dragonglass_desc$"
+ game_concept_the_dead:0 "мертвецы"
+ game_concept_the_dead_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_risen_dead:0 "восставшие мертвецы"
+ game_concept_risen_dead_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_undead_infantry:0 "пехота мертвецов"
+ game_concept_undead_infantry_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_long_night:0 "Долгая ночь"
+ game_concept_long_night_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$"
+ game_concept_the_long_night:0 "Долгая ночь"
+ game_concept_the_long_night_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$"
+
+ # Trait GROUP name, asked for whenever anything references the group rather than a rung.
+ trait_rhllor_champion:0 "Поборник Рглора"

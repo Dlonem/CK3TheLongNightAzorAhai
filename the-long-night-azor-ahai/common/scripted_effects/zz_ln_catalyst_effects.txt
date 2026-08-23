@@ -1,0 +1,603 @@
+﻿# AGOT: The Long Night & Azor Ahai -- firing the catalysts.
+#
+# WHY THIS FILE EXISTS. Until now exactly ONE of the seven catalysts was ever activated by anything:
+# ln_catalyst_year_passed, from the yearly drip. The other six were listed in the struggle, localized, and
+# displayed to the player with a point value next to them -- and nothing in the mod could ever make one happen.
+# The struggle looked like it had six ways to accelerate and had one.
+#
+# Every effect here is safe to call unconditionally. Each one no-ops if the struggle does not exist, and the
+# phase check lives in the individual effects because a catalyst only counts towards the phase that lists it.
+#
+# activate_struggle_catalyst runs in STRUGGLE scope and takes a `character` for attribution -- the game shows
+# who caused it. Where there is no sensible culprit we attribute to a random living involved ruler, which is what
+# the yearly drip does too.
+
+# Internal. Picks somebody to blame and fires the catalyst. CATALYST and PHASE are macro parameters.
+# ── THE TWO CHOKE POINTS ────────────────────────────────────────────────────────────────────────────────────
+# EVERY catalyst in this mod goes through one of these two effects. That is deliberate, and after Thomas's
+# 121 AC save it is load-bearing: three things now have to happen every time a catalyst fires, and a call site
+# that forgot any one of them would quietly break the pacing of the whole Long Summer.
+#
+#   1. THE MANUAL RULE. `others_manual_invasion` means the Long Night comes only when a player calls it. This
+#      used to be checked in exactly one place -- the yearly drip -- while all nine other catalysts kept
+#      pushing, and Thomas's 8253 save proved it: the drip was correctly silent for fourteen years and
+#      ln_catalyst_house_extinguished quietly banked five points anyway.
+#
+#   2. A COOLDOWN. Thomas: "This flag keeps firing. We either need to limit how many times the flag gets
+#      listened to, how many times it fires, how much that flag contributes." His readout showed
+#      ln_catalyst_ranging_lost five times and ln_catalyst_watch_undermanned three times inside twenty years,
+#      neither of which had any cap at all. Each catalyst now has its own global cooldown keyed off its own
+#      name, so a Watch that loses a ranging every winter registers as a Watch in trouble rather than as a
+#      metronome.
+#
+#   3. THE LEDGER. The drip is now a schedule keeper rather than a fixed rate -- see
+#      common/script_values/zz_ln_pacing_values.txt -- and it needs to know what the catalysts have already
+#      spent. ln_summer_points is that number, and it is only meaningful if literally every point passes
+#      through here.
+#
+# POINTS MUST MATCH common/struggle/struggles/zz_ln_long_night_struggle.txt. The struggle's catalyst table
+# takes literals and cannot read a script value, so the number lives in two places. /tmp/catcheck.py audits
+# that they agree; it is part of the standing sweep for exactly that reason.
+
+ln_fire_catalyst_effect = {
+	if = {
+		limit = {
+			NOT = { has_game_rule = others_manual_invasion }
+			ln_the_dark_may_come_trigger = yes
+			NOT = { has_global_variable = ln_cd_$CATALYST$ }
+			ln_summer_has_headroom_trigger = yes
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = {
+				is_struggle_phase = $PHASE$
+				any_involved_ruler = { is_alive = yes }
+			}
+		}
+		set_global_variable = { name = ln_cd_$CATALYST$  value = yes  years = $COOLDOWN$ }
+		ln_ledger_the_points_effect = { POINTS = $POINTS$ }
+		struggle:ln_long_night_struggle = {
+			random_involved_ruler = {
+				limit = { is_alive = yes }
+				save_scope_as = ln_catalyst_witness
+			}
+			activate_struggle_catalyst = {
+				catalyst = $CATALYST$
+				character = scope:ln_catalyst_witness
+			}
+		}
+	}
+}
+
+# Same, but blames a specific character we already have in scope.
+ln_fire_catalyst_blaming_effect = {
+	if = {
+		limit = {
+			NOT = { has_game_rule = others_manual_invasion }
+			ln_the_dark_may_come_trigger = yes
+			NOT = { has_global_variable = ln_cd_$CATALYST$ }
+			ln_summer_has_headroom_trigger = yes
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = { is_struggle_phase = $PHASE$ }
+		}
+		set_global_variable = { name = ln_cd_$CATALYST$  value = yes  years = $COOLDOWN$ }
+		ln_ledger_the_points_effect = { POINTS = $POINTS$ }
+		struggle:ln_long_night_struggle = {
+			activate_struggle_catalyst = {
+				catalyst = $CATALYST$
+				character = scope:ln_catalyst_culprit
+			}
+		}
+	}
+}
+
+# THE LEDGER. Only the Long Summer is on a schedule -- the Cold Winds is a flat twenty-five-year countdown and
+# the Long Night ends when the Night King dies -- so only Long Summer points are counted. That check is here
+# rather than at the call sites so a catalyst added to a different phase later cannot poison the number.
+ln_ledger_the_points_effect = {
+	if = {
+		limit = { struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_long_summer } }
+		if = {
+			limit = { NOT = { has_global_variable = ln_summer_points } }
+			set_global_variable = { name = ln_summer_points  value = $POINTS$ }
+		}
+		else = {
+			change_global_variable = { name = ln_summer_points  add = $POINTS$ }
+		}
+	}
+}
+
+# ── ON DEATH ────────────────────────────────────────────────────────────────────────────────────────────────
+# Root = the character who just died. Hooked from on_death via an on_actions sub-list.
+#
+# 9 Aug: the `is_alive = no` guard that used to sit on the ON_ACTION now sits on the six branches below that
+# read death_reason, and ONLY those. on_death fires on roots whose is_alive has not flipped yet -- thousands of
+# times a run -- and the blanket guard was throwing every one of those deaths away, dragon deaths, house
+# extinctions and THE NIGHT KING'S OWN DEATH included. Branches that identify the dead by trait or by house
+# need no such guard and must never carry one again.
+ln_death_catalyst_effect = {
+	save_scope_as = ln_catalyst_culprit
+
+	# A dragon died. The heaviest catalyst in the Long Summer -- the magic thins every time one goes.
+	# has_trait = dragon is AGOT's load-bearing marker; a dragon without it is pruned as an ordinary courtier.
+	if = {
+		limit = { has_trait = dragon }
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_dragon_died  PHASE = ln_phase_long_summer  POINTS = 8  COOLDOWN = 3 }
+		# A dragon dying while the winds already blow is the magic thinning at the worst possible hour.
+		ln_the_dark_comes_sooner_effect = { YEARS = 3 }
+
+		# And if the Others were the ones who put it down, they can have it back up. See
+		# common/scripted_effects/zz_ln_ice_dragon_effects.txt -- the only place a raisable dragon is ever
+		# recorded, and gated hard enough that a dragon shot down over Blackwater Bay does not qualify.
+		ln_record_fallen_dragon_effect = yes
+	}
+
+	# A great house ended. Deliberately narrow: the dead character must have been a landed duke or better, not
+	# lowborn, and the LAST living member of their house. Without the tier gate every extinguished one-county
+	# minor house would count and the summer would end in a decade.
+	if = {
+		limit = {
+			is_lowborn = no
+			# THE GATE THOMAS CAUGHT. `highest_held_title_tier >= tier_duchy` is not "a great house" -- it is
+			# "held a duchy", which is most of the B-list, and every one of them was paying the full +5. AGOT
+			# ships a real definition of a great house and we use it; the tier check stays as a floor.
+			ln_was_great_house_trigger = yes
+			house ?= {
+				NOT = {
+					any_house_member = {
+						is_alive = yes
+						NOT = { this = root }
+					}
+				}
+			}
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_house_extinguished  PHASE = ln_phase_long_summer  POINTS = 5  COOLDOWN = 3 }
+	}
+
+	# A SMALL NAME ENDS. Thomas: "a minor house hasn't lost its last member, which I don't think you've coded
+	# yet." Correct -- only great houses counted, and great houses die out about twice a century.
+	#
+	# Worth ONE point against the great house's five, and that ratio is the whole design. A minor house ending
+	# is a line in a ledger; it is the ACCUMULATION that matters, which is exactly the thesis of the Long
+	# Summer. Reyne and Tarbeck in one generation is two points. Sixty years of quiet attrition among the
+	# lesser halls is twenty, and nobody notices it happening, which is the point.
+	#
+	# The gate is the inverse of the one above: noble, held land, last of the name, and NOT a great house --
+	# so the two can never both fire for the same death.
+	else_if = {
+		limit = {
+			is_lowborn = no
+			NOT = { ln_was_great_house_trigger = yes }
+			highest_held_title_tier >= tier_county
+			house ?= {
+				NOT = {
+					any_house_member = {
+						is_alive = yes
+						NOT = { this = root }
+					}
+				}
+			}
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_minor_house_ended  PHASE = ln_phase_long_summer  POINTS = 1  COOLDOWN = 2 }
+	}
+
+	# A RANGING DID NOT COME BACK. Thomas watched a character die of `death_disappeared_on_ranging` -- a real
+	# AGOT death reason -- while the matching catalyst sat at x0, and asked the obvious question. It was only
+	# ever fired by our own omen event, so AGOT's own rangings were invisible to it. They are the single most
+	# on-theme source in the game and they were being thrown away.
+	if = {
+		# is_alive = no: reads death_reason, which errors on a living root. See zz_ln_catalyst_on_actions.txt.
+		limit = {
+			is_alive = no
+			death_reason = death_disappeared_on_ranging
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_ranging_lost  PHASE = ln_phase_long_summer  POINTS = 4  COOLDOWN = 4 }
+		# ...and in the Cold Winds, the same loss pulls the dark closer instead (self-gated + floored inside).
+		ln_the_dark_comes_sooner_effect = { YEARS = 2 }
+	}
+
+	# THE COLD TOOK THEM. A man lost in a snowstorm north of anywhere is the same story as a ranging that did
+	# not come back, told smaller.
+	# GATED. Thomas: "what if I did that and I'm not a ranging party because I'm not the Night's Watch?" Right --
+	# a Dornish lord who dies in a freak snowstorm at Summerhall is not a ranging. It has to be someone who was
+	# plausibly up there: the Watch, a northerner, or a free folk clansman.
+	if = {
+		limit = {
+			is_alive = no          # reads death_reason -- see zz_ln_catalyst_on_actions.txt
+			death_reason = death_lost_in_snowstorm
+			OR = {
+				has_government = nights_watch_government
+				culture = culture:northman
+				culture = culture:frostborn
+				capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+				capital_province ?= { geographical_region = world_westeros_the_wall }
+			}
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_ranging_lost  PHASE = ln_phase_long_summer  POINTS = 4  COOLDOWN = 4 }
+		# ...and in the Cold Winds, the same loss pulls the dark closer instead (self-gated + floored inside).
+		ln_the_dark_comes_sooner_effect = { YEARS = 2 }
+	}
+
+	# THE WALL TOOK THEM. Fell, jumped, or was thrown -- the Watch is smaller either way, and a Watch that is
+	# losing men to its own wall is exactly the "nineteen castles, most of them empty" story.
+	# RATE-LIMITED. Thomas found the exploit before it shipped: "what if one commander is trying to accelerate
+	# the Long Night and throws fifty dudes off the wall?" Fifty deaths would be 150 points -- the entire Long
+	# Summer bought with a bad afternoon. So the Wall pays at most once every five years, however many go over.
+	# The fiction holds too: the Watch losing a man is routine. The Watch losing men steadily is the signal, and
+	# a signal you can spam is not a signal.
+	if = {
+		limit = {
+			is_alive = no          # reads death_reason -- see zz_ln_catalyst_on_actions.txt
+			OR = {
+				death_reason = death_fell_off_the_wall
+				death_reason = death_jumped_off_the_wall
+				death_reason = death_thrown_off_the_wall
+			}
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_watch_undermanned  PHASE = ln_phase_long_summer  POINTS = 3  COOLDOWN = 5 }
+	}
+
+	# THE FREE FOLK CAME OVER THE WALL AND KILLED HIM. AGOT's own death_wildlings, fired by their raid and
+	# war content -- so this is our catalyst reading their gameplay with no file of theirs touched.
+	#
+	# GATED THE SAME WAY THE SNOWSTORM IS. A Reach lord killed by wildlings is a man who went looking for
+	# them; a northerner or a black brother killed by wildlings is the Wall not holding, which is the thing
+	# this catalyst is actually about.
+	if = {
+		limit = {
+			is_alive = no          # reads death_reason -- see zz_ln_catalyst_on_actions.txt
+			death_reason = death_wildlings
+			OR = {
+				has_government = nights_watch_government
+				culture = culture:northman
+				culture = culture:frostborn
+				capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+				capital_province ?= { geographical_region = world_westeros_the_wall }
+			}
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_watch_undermanned  PHASE = ln_phase_long_summer  POINTS = 3  COOLDOWN = 5 }
+	}
+
+	# A DARK RITUAL. AGOT's death_sacrificed_dark_ritual -- not the Others specifically, but somebody in
+	# Westeros is doing blood magic and getting results, and that is the same news arriving by a different
+	# road. Worth the warning nobody listened to rather than a sighting.
+	if = {
+		limit = {
+			is_alive = no          # reads death_reason -- see zz_ln_catalyst_on_actions.txt
+			death_reason = death_sacrificed_dark_ritual
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_warning_dismissed  PHASE = ln_phase_long_summer  POINTS = 2  COOLDOWN = 3 }
+	}
+
+	# SOMEBODY GAVE THEM TO THE OTHERS. AGOT ships this death reason and nothing in this mod was reading it,
+	# which is remarkable given it is the single most literal piece of evidence the Others exist. Worth the
+	# heaviest Cold Winds catalyst: whoever did this knew exactly what they were doing it for.
+	if = {
+		limit = {
+			is_alive = no          # reads death_reason -- see zz_ln_catalyst_on_actions.txt
+			death_reason = death_sacrificed_to_others
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_other_sighted  PHASE = ln_phase_long_summer  POINTS = 15  COOLDOWN = 6 }
+		ln_the_dark_comes_sooner_effect = { YEARS = 6 }
+		ln_the_free_folk_feel_it_effect = yes
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_warning_dismissed  PHASE = ln_phase_long_summer  POINTS = 2  COOLDOWN = 3 }
+	}
+
+	# The Night King is slain. Worth the entire Long Night threshold at once, which is the whole point --
+	# nothing should be able to accumulate its way to a dawn.
+	#
+	# THE RULE DECIDES WHAT HIS DEATH MEANS -- gate added 8 Aug from the ancestor mods' own workshop reports.
+	# Under others_death_resolution his death IS the ending. Under others_war_resolution his death only
+	# counts if the War for the Dawn has been won -- and that works through this same door, because
+	# war_for_the_dawn_cb's on_victory sets war_for_dawn_victory FIRST and then kills him with
+	# killer = scope:attacker, so the gate passes and the reveal records the right slayer. A Night King who
+	# merely dies in some battle under the war rule passes the crown to his heir (the story cycle's own
+	# on_owner_death does that) and the dawn correctly does NOT come. Before this gate, our catalyst yanked
+	# the struggle to its Dawn on ANY nightking death, a rule too early.
+	if = {
+		limit = {
+			has_trait = nightking
+			OR = {
+				has_game_rule = others_death_resolution
+				has_global_variable = war_for_dawn_victory
+			}
+			# 13 Aug (Thomas's live run, "this event popped up twice"): this branch's own reveal latch
+			# (ln_dawn_revealed) is deliberately CLEARED by the Cycle re-arm the moment the struggle
+			# reaches its Dawn -- so a second on_death pass on the SAME Night King (a documented engine
+			# quirk, see the on_action header) could run the whole branch again into a re-armed latch.
+			# The dawn this death causes cannot already be here: if the struggle is already in its Dawn
+			# phase, this death was processed. Wave two's Night King dies in the Long Night phase and
+			# passes untouched.
+			NOT = { struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_dawn } }
+		}
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_night_king_slain  PHASE = ln_phase_the_long_night  POINTS = 1000  COOLDOWN = 1 }
+		# ...and the reveal. This is where the entire prophecy chain finally reads the hidden truth, for the
+		# first and only time. See zz_ln_reveal_effects.txt.
+		ln_night_king_slain_reveal_effect = yes
+
+		# 1.0.7, DOOR TWO: HIS DRAGONS DO NOT OUTLIVE HIM. An undead dragon has no dynasty and no
+		# government to key on -- the trait is the only handle, which is why the trait exists. Swept
+		# here, in the same place the wars end and the reveal fires, so the sky stops holding them at
+		# the exact moment the thing that animated them goes down. Same reason as the wight collapse
+		# at the story's end, same death reason, no killer named: the cold that stirred them is spent.
+		# (The story-end sweep in the_long_night.txt is the backstop for dawns that arrive without
+		# this branch; both are idempotent.)
+		every_living_character = {
+			limit = { has_trait = ln_undead_dragon }
+			death = { death_reason = death_claimed_by_cold }
+		}
+
+		# THE WARS END WITH HIM. "when you kill the Night King the war ends inconclusively even though the
+		# game rule says killing him wins you the war" -- nordpilled, Aug 5, on The Long Night+'s workshop,
+		# and Ea-Nasir before him. The story cycle only ever called end_story; nobody told the WARS. Every
+		# war the dead are still prosecuting ends in the defenders' victory the moment he falls. Vanilla
+		# shapes: every_character_war + primary_attacker (00_war_effects.txt:2167), end_war = defender
+		# (this mod's own scouring_cb).
+		if = {
+			limit = { has_game_rule = others_death_resolution }
+			every_character_war = {
+				limit = { primary_attacker = root }
+				end_war = defender
+			}
+		}
+	}
+}
+
+# ── A DRAGON CAME BACK INTO THE WORLD ───────────────────────────────────────────────────────────────────────
+# Thomas drew the distinction and it is the right one: dragons BEING BORN and dragons RETURNING to the world
+# are different events. The twentieth hatchling of the Dance is routine and should be worth nothing; the first
+# dragon in a century is an omen. So this fires only while dragons are still rare -- three or fewer alive,
+# counting the new one. It re-arms on its own if they are wiped out and come back, with no timer needed,
+# because the condition is the world state rather than a cooldown.
+#
+# ══ THIS WAS UNREACHABLE FOR THE WHOLE LIFE OF THE MOD, AND A LIVE SAVE PROVED IT ══════════════════════════
+# It used to hang off on_birth_child (via ln_birth_deeds_effect) and test `has_trait = dragon` on the newborn.
+# But AGOT does not BIRTH dragons. Every one of them is made with create_character --
+# 00_agot_dragon_spawning_effects.txt does it eight separate times -- and create_character fires no birth hook
+# at all. So the catalyst parsed, resolved, sat in the struggle's table, carried its own localization, and was
+# drawn in the panel with "+3" beside it... and could never once fire.
+#
+# Caught the only way this class ever gets caught: Thomas read the panel in a 330 AC game where Daenerys had
+# already hatched three dragons and the counter beside that line still said x0. Standing rule 1 -- prove a
+# mechanic is REACHABLE, not merely valid -- and this is the second time that rule has paid for itself.
+#
+# THE CENSUS DOES NOT COUNT. IT STAMPS. Every dragon on AGOT's own `living_dragons` global list is marked with
+# ln_dragon_known the first time we see it; a dragon without the stamp arrived since last year, no matter HOW
+# it arrived -- hatched at an activity, spawned by their script, gifted by a console, or created by a mod we
+# have never heard of. That is the whole point: we stopped guessing which door dragons come through.
+#
+# THE FIRST SWEEP PAYS FOR NOTHING. ln_dragon_census_started makes the opening pass a baseline, so a Dance-era
+# bookmark that begins with sixteen dragons in the sky does not open by handing the Long Summer a fistful of
+# points for dragons that were already there. Only arrivals after that count -- which is exactly Daenerys:
+# a world with no dragons in it, and then three.
+#
+# Root = anything. Called once a year from ln_struggle_yearly_work_effect.
+ln_dragon_census_effect = {
+	if = {
+		limit = { NOT = { has_global_variable = ln_dragon_census_started } }
+		set_global_variable = { name = ln_dragon_census_started  value = yes }
+		every_in_global_list = {
+			variable = living_dragons
+			set_variable = ln_dragon_known
+		}
+	}
+	else = {
+		every_in_global_list = {
+			variable = living_dragons
+			limit = {
+				is_alive = yes
+				NOT = { has_variable = ln_dragon_known }
+			}
+			set_variable = ln_dragon_known
+
+			# 1.0.9 -- THE RARITY GATE IS GONE, because the meaning inverted. It read "an omen only while
+			# they are still a rumour", which is right for a DARK omen: four dragons in the world is no
+			# longer a portent. As a COUNTER it says the opposite of what Thomas asked for -- a Targaryen
+			# who has rebuilt his stables would get nothing for it, and the one player most invested in
+			# fighting the dark with dragons would be the one player the mechanic ignored.
+			# The abuse control is now the cooldown and the two caps inside the counter itself, which are
+			# explicit numbers rather than a side effect of a population check.
+			ln_dragon_hatched_counter_effect = yes
+		}
+	}
+}
+
+# KEPT AS A SECOND DOOR, not as the primary. If anything in AGOT or a submod ever does deliver a dragon
+# through an actual birth, this catches it in the same year rather than waiting for the census -- and the
+# stamp plus the choke's cooldown make the overlap a no-op. Root = the newborn.
+ln_dragon_born_catalyst_effect = {
+	if = {
+		# 1.0.9: the `count >= 4` rarity gate is gone from here too. It survived one edit longer than its
+		# twin in ln_dragon_census_effect and that alone would have been a bug -- the birth hook would have
+		# ignored a hatching in a four-dragon world while the yearly census picked the same dragon up
+		# twelve months later, so the mechanic would have worked by a slower road and looked broken.
+		limit = {
+			has_trait = dragon
+			NOT = { has_variable = ln_dragon_known }
+		}
+		set_variable = ln_dragon_known
+		ln_dragon_hatched_counter_effect = yes
+	}
+}
+
+# ── YEARLY: IS THE WATCH STILL A REAL ARMY? ─────────────────────────────────────────────────────────────────
+# Fires at most once a year, and only while the Long Summer is running. The Watch dwindling is the one catalyst
+# the player can actually do something about without an event: garrison the Wall, or watch the clock run.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# 1.0.9 -- DRAGON HATCHINGS PUSH BACK. Faithless: "dragons hatching is still not counting at all."
+#
+# HE WAS HALF RIGHT, AND THE HALF HE WAS WRONG ABOUT WAS WORSE. ln_catalyst_dragon_born existed, was wired to a
+# yearly census AND a birth hook, and fired with POINTS = 3 -- and the struggle table scored it
+# `ln_catalyst_dragon_born = 3` toward ln_phase_cold_winds. So a hatching was counting. It was counting TOWARD
+# THE DARK. The catalyst file called it "the only catalyst that fires on good news" and then filed the good news
+# under the same ledger as a dead dragon and an extinguished house.
+#
+# Thomas: "I would have dragon hatchings as a counter-catalyst personally... it makes dragon_died mean more,
+# because it becomes a thing that can be fought." Weight, his call: 4, half of dragon_died's 8.
+#
+# ── WHY THIS IS NOT A NEGATIVE CATALYST ───────────────────────────────────────────────────────────────────────
+# Because the engine has no such thing, and this was checked rather than assumed.
+# common/effect_localization/ lists exactly FOUR struggle effects in the whole game:
+#     activate_struggle_catalyst, change_struggle_phase, end_struggle, start_struggle
+# There is no effect that removes struggle progress, and no catalyst table anywhere in vanilla or AGOT carries a
+# negative value -- zero sightings, so shipping one would be inventing engine behaviour. `duration = { points =
+# 100 }` on ln_phase_long_summer means the ENGINE owns that number and we can only ever add to it.
+#
+# So the counter does not subtract. It BANKS CREDIT AGAINST THE DRIP -- the baseline
+# ln_catalyst_year_passed tick that guarantees the summer always ends. A year with credit on it is a year that
+# does not count. Nothing rewinds, nothing can cross a phase boundary backwards, and nothing can go below zero,
+# because nothing is ever taken away. The floor the work order asked for is structural rather than clamped.
+#
+# ── AND WHY IT CANNOT HOLD BACK THE NIGHT FOREVER ─────────────────────────────────────────────────────────────
+# Three bounds, all explicit:
+#   * COOLDOWN 3 years, the same as the catalyst it replaces. A clutch of three hatchlings is one event.
+#   * BANK CAP 12. At most three hatchings' worth of credit can be held at once, so a dragonlord cannot stockpile
+#     a century of quiet and spend it all against one bad decade.
+#   * LIFETIME CAP 40. Across an entire game, dragons can absorb forty points of drip and no more -- forty per
+#     cent of a hundred-point summer. Dragons buy the world a generation. They do not buy it immortality.
+# And credit only ever eats the DRIP. A dead dragon, an extinguished house, a lost ranging and a sighting all
+# still land at full weight, so a world where things are actually going wrong burns through the summer on the
+# strength of what happened in it -- which is the design the drip was built around in the first place.
+ln_dragon_hatched_counter_effect = {
+	if = {
+		limit = {
+			NOT = { has_game_rule = others_manual_invasion }
+			ln_the_dark_may_come_trigger = yes
+			NOT = { has_global_variable = ln_cd_ln_catalyst_dragon_born }
+			exists = struggle:ln_long_night_struggle
+			# LIFETIME CAP. Seeded on first use, so a save that predates 1.0.9 starts with its full budget --
+			# the gate FAILS OPEN on an old save, which is this mod's rule for every new gate.
+			OR = {
+				NOT = { has_global_variable = ln_dragon_credit_total }
+				global_var:ln_dragon_credit_total < 40
+			}
+		}
+		set_global_variable = { name = ln_cd_ln_catalyst_dragon_born  value = yes  years = 3 }
+
+		if = {
+			limit = { NOT = { has_global_variable = ln_dragon_credit_total } }
+			set_global_variable = { name = ln_dragon_credit_total  value = 0 }
+		}
+		if = {
+			limit = { NOT = { has_global_variable = ln_dragon_credit } }
+			set_global_variable = { name = ln_dragon_credit  value = 0 }
+		}
+
+		# ── THE LONG SUMMER: bank four points of drip ────────────────────────────────────────────────────
+		if = {
+			limit = { struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_long_summer } }
+			change_global_variable = { name = ln_dragon_credit  add = 4 }
+			change_global_variable = { name = ln_dragon_credit_total  add = 4 }
+			# BANK CAP, clamped after the add rather than gated before it -- the same lesson
+			# ln_the_dark_comes_sooner_effect learned when its floor check ran before its subtraction and
+			# a six-year clock sailed straight through a five-year floor.
+			if = {
+				limit = { global_var:ln_dragon_credit > 12 }
+				set_global_variable = { name = ln_dragon_credit  value = 12 }
+			}
+			debug_log = "LN_TRACE: dragon hatched - four points of drip credit banked"
+		}
+
+		# ── THE COLD WINDS: give back years the sightings took ───────────────────────────────────────────
+		# The summer's ledger does not exist in this phase; the clock here is a calendar, eroded by
+		# ln_the_dark_comes_sooner_effect. So a hatching does the exact inverse of a sighting -- and is
+		# capped at the number that was ORIGINALLY ROLLED, so dragons can undo erosion and can never make a
+		# winter longer than the one this world was dealt.
+		#
+		# ONLY IF: the roll was written down (ln_winter_roll, stamped in ln_winter_clock_start_effect) and
+		# the target still sits below it, i.e. sightings have actually taken something.
+		# NEVER IF: no roll on file. A save that entered the Cold Winds before 1.0.9 has no original to
+		# restore toward, and guessing one could hand it a longer winter than it ever rolled. That half
+		# fails CLOSED on purpose -- the summer half above still works on every save.
+		else_if = {
+			limit = {
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds }
+				exists = global_var:ln_winter_roll
+				exists = global_var:ln_winter_target
+				global_var:ln_winter_target < global_var:ln_winter_roll
+			}
+			change_global_variable = { name = ln_dragon_credit_total  add = 4 }
+			change_global_variable = { name = ln_winter_target  add = 4 }
+			if = {
+				limit = { global_var:ln_winter_target > global_var:ln_winter_roll }
+				set_global_variable = { name = ln_winter_target  value = global_var:ln_winter_roll }
+			}
+			debug_log = "LN_TRACE: dragon hatched in the cold winds - four years given back to the clock"
+		}
+	}
+}
+
+ln_watch_strength_catalyst_effect = {
+	# THE OSCILLATION BUG THIS FIXES. The first version tested a flat `max_military_strength < 3000` every year
+	# and fired whenever it was true. That is not "the Watch dwindles" -- that is a permanent drip that switches
+	# on the moment the Watch has a bad decade and never switches off, and a Watch hovering at the threshold
+	# would flicker across it handing out points on whichever years it happened to be low.
+	#
+	# So the catalyst fires on the TRANSITION, not on the state, and the threshold is RELATIVE -- see
+	# common/script_values/zz_ln_watch_values.txt for why the absolute numbers had to go.
+	if = {
+		limit = { exists = title:c_castle_black.holder }
+		title:c_castle_black.holder = {
+			if = {
+				limit = { has_government = nights_watch_government }
+
+				# ── THE HIGH-WATER MARK ──────────────────────────────────────────────────────────────────────
+				# Recorded on the first tick and raised whenever the Watch does better than it ever has. Never
+				# lowered: the bar is what they were at their best, and that is the thing being lost.
+				if = {
+					limit = { NOT = { has_global_variable = ln_watch_peak } }
+					set_global_variable = { name = ln_watch_peak  value = max_military_strength }
+				}
+				else_if = {
+					limit = { max_military_strength > global_var:ln_watch_peak }
+					set_global_variable = { name = ln_watch_peak  value = max_military_strength }
+				}
+
+				# ── FALLING ──────────────────────────────────────────────────────────────────────────────────
+				if = {
+					limit = {
+						has_global_variable = ln_watch_peak
+						NOT = { has_global_variable = ln_watch_is_weak }
+						trigger_if = {
+							limit = { has_global_variable = ln_nights_watch_restored }
+							max_military_strength < ln_watch_collapse_floor_value
+						}
+						trigger_else = {
+							max_military_strength < ln_watch_weak_floor_value
+						}
+					}
+					set_global_variable = { name = ln_watch_is_weak value = yes }
+					save_scope_as = ln_catalyst_culprit
+					ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_watch_undermanned  PHASE = ln_phase_long_summer  POINTS = 3  COOLDOWN = 5 }
+				}
+
+				# ── RECOVERING ───────────────────────────────────────────────────────────────────────────────
+				# Re-arms, awards nothing. Getting better is not rewarded; it just reloads the trap.
+				else_if = {
+					limit = {
+						has_global_variable = ln_watch_is_weak
+						max_military_strength > ln_watch_recovered_value
+					}
+					remove_global_variable = ln_watch_is_weak
+				}
+			}
+		}
+	}
+}
+
+# ── THE OTHER STRUGGLE ──────────────────────────────────────────────────────────────────────────────────────
+# Thomas's idea, and it is a good one: AGOT's own btw_struggle models how restless the lands beyond the Wall
+# are. When THAT struggle turns hostile, the free folk are fighting each other instead of watching the north --
+# which is exactly the condition under which a ranging does not come back and nobody investigates.
+#
+# So the two struggles are now wired together. It costs nothing, it uses AGOT's existing content as a signal
+# rather than overriding any of it, and it gives the Long Summer a second source of pressure that a player can
+# actually observe on the map instead of a pure yearly drip.
+ln_btw_restlessness_catalyst_effect = {
+	if = {
+		limit = {
+			exists = struggle:btw_struggle
+			struggle:btw_struggle = { is_struggle_phase = struggle_btw_phase_hostility }
+		}
+		ln_fire_catalyst_effect = { CATALYST = ln_catalyst_ranging_lost  PHASE = ln_phase_long_summer  POINTS = 4  COOLDOWN = 4 }
+		ln_the_dark_comes_sooner_effect = { YEARS = 2 }
+	}
+}

@@ -1,0 +1,116 @@
+﻿# AGOT: The Long Night & Azor Ahai -- title flavor for the two governments this mod adds.
+#
+# WHY. Flavorization matches holders BY GOVERNMENT LIST, and no vanilla or AGOT entry lists
+# wight_government or ln_ranger_government -- so every raised ruler rendered as "Missing Title Loc"
+# (live-run report, Halys Hornwood, 305 AC). Real Others are untouched: the ancestor's
+# others_title_holders.txt matches their name list at priority 2000, far above these.
+# Priorities mirror AGOT's wilderness entries tier for tier (6/16/26/46/101).
+
+baron_wight_male = {
+	type = character
+	gender = male
+	special = holder
+	tier = barony
+	priority = 6
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+baron_wight_female = {
+	type = character
+	gender = female
+	special = holder
+	tier = barony
+	priority = 6
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+count_wight_male = {
+	type = character
+	gender = male
+	special = holder
+	tier = county
+	priority = 16
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+count_wight_female = {
+	type = character
+	gender = female
+	special = holder
+	tier = county
+	priority = 16
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+duke_wight_male = {
+	type = character
+	gender = male
+	special = holder
+	tier = duchy
+	priority = 26
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+duke_wight_female = {
+	type = character
+	gender = female
+	special = holder
+	tier = duchy
+	priority = 26
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+king_wight_male = {
+	type = character
+	gender = male
+	special = holder
+	tier = kingdom
+	priority = 46
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+king_wight_female = {
+	type = character
+	gender = female
+	special = holder
+	tier = kingdom
+	priority = 46
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+emperor_wight_male = {
+	type = character
+	gender = male
+	special = holder
+	tier = empire
+	priority = 101
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+emperor_wight_female = {
+	type = character
+	gender = female
+	special = holder
+	tier = empire
+	priority = 101
+	flavourization_rules = { top_liege = no }
+	governments = { wight_government }
+}
+duke_ln_ranger_male = {
+	type = character
+	gender = male
+	special = holder
+	tier = duchy
+	priority = 26
+	flavourization_rules = { top_liege = no }
+	governments = { ln_ranger_government }
+}
+duke_ln_ranger_female = {
+	type = character
+	gender = female
+	special = holder
+	tier = duchy
+	priority = 26
+	flavourization_rules = { top_liege = no }
+	governments = { ln_ranger_government }
+}

@@ -1,0 +1,73 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- Lightbringer.
+
+ # ── THE ARTIFACT ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer_name:0 "Lightbringer"
+ ln_lightbringer_full_description:0 "The red sword of heroes, forged three times.\n\nIt is warm. Not warm from a forge, and not warm from a hand—warm the way a living thing is warm, all the way down the steel, in a cold room. Men who have held it do not agree on what color it is.\n\nThe third tempering took a soul, and the soul is still in there."
+ ln_lightbringer_lesser_description:0 "The red sword of heroes, forged three times.\n\nIt is warm, and it holds an edge no whetstone ever gave it. In the dark, it shows the faintest line of red down the fuller—enough to find it by, but not enough to read by.\n\nThe smith who watched it come out of the third quench said it was the finest thing he would ever make, but that something about it had not quite taken. He refuses to speak of it further."
+
+ # ── THE DECISION ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_forge_lightbringer_decision:0 "Forge Lightbringer"
+ ln_forge_lightbringer_decision_desc:0 "Salladhor Saan tells it one way and the red priests tell it another, but the shape of the tale is always the same.\n\nAzor Ahai worked thirty days and thirty nights and tempered the blade in water, and the steel broke. He worked fifty days and fifty nights and tempered it in the heart of a lion, and the steel broke. He worked a hundred days and a hundred nights, and when it was done, he called for his wife.\n\nThe forge is cold. The iron is on the anvil. No one is forcing you to strike the first blow."
+ ln_forge_lightbringer_decision_tt:0 "Attempt one forging of the red sword.\n\n#weak Three forgings are needed. The first two fail—that is the tale, not a roll of the dice. The third one asks for something, and you can refuse it.#!"
+ ln_forge_lightbringer_decision_confirm:0 "Light the forge."
+ ln_forge_lightbringer_effect_tt:0 "Begin a forging. #weak The steel will take months. What comes of it depends entirely on what you are willing to put into it.#!"
+ ln_forge_needs_a_forge:0 "You need a hall of your own and either a court smith or a red priest at hand."
+ ln_forge_needs_the_coin:0 "You need enough gold for a forging—#V 300#! for a count, more for a great lord."
+ ln_forge_is_still_cold:0 "The forge has not gone cold since the last attempt."
+
+ # ── 1. WATER ────────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.1.t:0 "Thirty Days and Thirty Nights"
+ ln_lightbringer.1.desc:0 "It is the finest blade anyone in my hall has ever seen, right up until it goes into the trough.\n\nThe water takes it and there is a terrible sound—not a hiss, but a sharp crack, flat and final, like a bone snapping. When the steam clears, there is a fissure down the middle of the steel deep enough to catch a fingernail.\n\nMy smith swears it is his fault. I know it is not. He worked thirty days and did everything perfectly, but the water was never going to be enough. Underneath my disappointment, I already knew that. I know how the story goes, and I was simply hoping it was wrong."
+ ln_lightbringer.1.a:0 "Again. From the beginning."
+ ln_lightbringer.1.b:0 "Send for the priest. I know what this needs."
+
+ # ── 2. THE HEART OF A LION ──────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.2.t:0 "Fifty Days and Fifty Nights"
+ ln_lightbringer.2.desc:0 "There are no lions roaming Westeros, and there have not been since long before the Lannisters put one on their banners.\n\nThe tale asks for a beast I cannot easily have. The priest tells me the difficulty is the entire point, while my smith insists it is a practical problem. A lion can be bought out of the Free Cities with enough coin and eight weeks of patience. A shadowcat can be dragged out of the mountains with armed men and sheer nerve. Or, there is a warhorse in my own stables, carrying a heart just like any other beast.\n\nFifty days of grueling work sit on the anvil either way. What goes into the quench is my decision."
+ ln_lightbringer.2.a:0 "A lion. Shipped from Volantis. The tale demands a lion."
+ ln_lightbringer.2.b:0 "A shadowcat. We hunt it ourselves in the mountains."
+ ln_lightbringer.2.c:0 "A warhorse from my own stable. A heart is a heart."
+
+ # ── 3. THE THIRD FORGING ────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.3.t:0 "A Hundred Days"
+ ln_lightbringer.3.desc:0 "The priest does not make me drag it out of him. He states it plainly, which somehow makes it worse.\n\n\"Water is nothing. A beast is nearly nothing—it has no more soul than the water, it only bleeds more. The steel is not asking for blood. It is asking for a life that knows it is a life.\"\n\nHe lets the terrible weight of that sit in the air between us.\n\n\"Azor Ahai called for his wife and she came. She knew what was being asked, and she came anyway. That is why the sword works. Not the killing. The knowing, and the coming anyway.\"\n\nThe blade rests on the anvil, cooling. It will hold whatever I choose to put into it."
+ ln_lightbringer.3.a:0 "Call for [ln_beloved.GetFirstName]. [ln_beloved.GetSheHe|U] has the right to be asked."
+ ln_lightbringer.3.b:0 "[ln_volunteer.GetTitledFirstName] has offered. Take the offer."
+ ln_lightbringer.3.c:0 "Mine. Death has had me once. Let it try again."
+ ln_lightbringer.3.d:0 "Put the hammer down. Not for any sword ever made."
+
+ # ── 4. NISSA NISSA ──────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.4.t:0 "[ln_beloved.GetHerHis|U] Soul Went Into the Steel"
+ ln_lightbringer.4.desc:0 "[ln_beloved.GetSheHe|U] came to the forge.\n\nThat is the part no one who writes these legends ever gets right—they frame it as a murder. It was so much worse than a murder. [ln_beloved.GetSheHe|U] listened to all of it, asked two quiet questions, then placed [ln_beloved.GetHerHis] hands behind [ln_beloved.GetHerHis] back so [ln_beloved.GetSheHe] would not instinctively reach for the blade, and waited.\n\nThe sound [ln_beloved.GetSheHe] made will echo in this room for the rest of my life. The steel took [ln_beloved.GetHerHim], all of [ln_beloved.GetHerHim], the way water takes salt. When I pulled the blade free, it came up glowing so fiercely red that the smith threw his arm across his eyes, and the mundane fire in the forge immediately sputtered out.\n\nIt is warm. It has been warm ever since. In eight thousand years, no one has ever described it any better than that."
+ ln_lightbringer.4.a:0 "Lightbringer."
+
+ # ── 5. THE VOLUNTEER ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.5.t:0 "A Life That Knew It Was a Life"
+ ln_lightbringer.5.desc:0 "[ln_volunteer.GetTitledFirstName] did not have to be talked into it, and absolutely refused to be talked out of it. The entire ordeal was over far quicker than either of us expected.\n\nThe steel took the blood. The blade came up glowing a dull, burning red and stayed warm, sending every man in the forge to his knees. By every measure anyone could name, the ritual worked.\n\nYet, my priest is the only one who does not look satisfied. When I push him on it, he says the exact thing I feared: \"A life, yes. A willing one, even. But you did not love [ln_volunteer.GetHerHim], and [ln_volunteer.GetSheHe] was not yours to lose.\"\n\n\"The sword is real,\" I tell him sharply.\n\n\"The sword is real,\" he agrees quietly. \"But it is not the one from the story.\""
+ ln_lightbringer.5.a:0 "It will kill the dead all the same."
+
+ # ── 6. HIS OWN HEART ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.6.t:0 "Death Has Had Me Once"
+ ln_lightbringer.6.desc:0 "The priest tells me it cannot be done, then sees the absolute resolve in my face and starts praying instead.\n\nThe ancient tale is extremely specific: the third tempering consumes whoever the sword goes into. It rips a soul out of a body and binds it to a piece of metal, and there is no version of the myth where the forger walks away alive.\n\nBut I have already walked through that particular door once.\n\nI find out.\n\nI drive the blade in. The forge goes completely dark. A long time later—my smith refuses to say how long, and will never speak of it again—I drag myself up off the stone floor with a sword burning red in my hand, and a new hole in my chest that refuses to close."
+ ln_lightbringer.6.a:0 "My life was never mine to keep anyway."
+
+ # ── 7. THE HAMMER GOES DOWN ─────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.7.t:0 "The Hammer Goes Down"
+ ln_lightbringer.7.desc:0 "I set the hammer down on the bench and walk out.\n\nThe priest follows me into the yard, demanding to know if I truly understand what I am refusing. I tell him yes. He asks again, phrasing the doom of the world differently, and I tell him yes again. He does not get angry—he becomes something far worse. He is patient, simply stating that he will wait here.\n\nA hundred days of grueling work is going cold on my anvil. Somewhere deep in the North, a terror that has walked for eight thousand years is walking still.\n\nBut I also know whose face I would have had to look at in that forge. So be it."
+ ln_lightbringer.7.a:0 "Let the world be one sword short."
+ ln_lightbringer.7.b:0 "Not today. Leave the iron on the bench."
+
+ # ── 8. WORD GETS OUT ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.8.t:0 "A Sword That Burns"
+ ln_lightbringer.8.desc:0 "The story arrives before any reliable account of it does, which is how I know it is going to be a massive disruption.\n\n[ln_forger.GetTitledFirstName] has forged a sword. Not found one in a ruin—forged it, three times over, and the third time cost a human life. Everyone bringing me these reports is utterly certain on that detail, and completely unreliable on everything else.\n\nThe septons are furiously declaring it a foul heresy. The maesters insist it is just a trick of the light on folded steel. My own smith, who has never had a profound opinion about anything in his life, quietly asks me if it is true that the blade never goes out.\n\nEight thousand years of the red priests promising a savior, and it is finally a name I recognize."
+ ln_lightbringer.8.a:0 "Just a story. Steel is steel, and I have seen enough of it."
+ ln_lightbringer.8.b:0 "Then the myths are true, and we are all very late."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer_full_modifier:0 "Lightbringer"
+ ln_lightbringer_lesser_modifier:0 "Lightbringer"
+ ln_would_not_pay_the_price_modifier:0 "Would Not Pay the Price"
+ ln_the_forge_is_cold_modifier:0 "The Forge Is Cold"
+ ln_hole_in_his_chest_modifier:0 "A Hole That Does Not Close"

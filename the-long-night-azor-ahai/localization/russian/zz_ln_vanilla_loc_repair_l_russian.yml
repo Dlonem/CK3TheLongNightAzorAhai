@@ -1,0 +1,21 @@
+﻿l_russian:
+
+ # AGOT: The Long Night & Azor Ahai -- two base-game localization keys that do not resolve.
+ #
+ # NOT AN OVERRIDE OF ANY FILE. Localization merges by KEY: the last mod to define a key wins, and nothing
+ # else in that key's original file is touched. So this repairs both strings for the entire playset -- AGOT's
+ # decisions included -- without shadowing a single file of theirs.
+ #
+ # ALREADY_IN_ACTIVITY
+ #   vanilla's is_available does `custom_description = { text = ALREADY_IN_ACTIVITY  NOR = { ... } }`, a
+ #   POSITIVE block, so the engine wants the plain key. Vanilla ships only ALREADY_IN_ACTIVITY_FIRST_NOT and
+ #   ALREADY_IN_ACTIVITY_THIRD_NOT. The plain key has never existed, so every decision in the game using
+ #   is_available prints "ALREADY_IN_ACTIVITY has no localization" in magenta. Worded to match the two
+ #   variants that do exist.
+ #
+ # ALREADY_PLANNING_ACTIVITY
+ #   the key exists; its text embeds [activity|E] and that concept tooltip is failing in this playset,
+ #   rendering as "Activity(BUG: ...". Same sentence, without the link.
+
+ ALREADY_IN_ACTIVITY:0 "Вы сейчас не заняты другим делом"
+ ALREADY_PLANNING_ACTIVITY:0 "Вы уже не планируете другое мероприятие"

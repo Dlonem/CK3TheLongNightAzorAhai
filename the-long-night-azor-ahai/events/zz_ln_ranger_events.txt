@@ -1,0 +1,140 @@
+﻿namespace = ln_ranger
+
+# AGOT: The Long Night & Azor Ahai -- riding out.
+
+# ── 1. THE CLOAK AND THE DIRECTION ──────────────────────────────────────────────────────────────────────────
+ln_ranger.1 = {
+	type = character_event
+	title = ln_ranger.1.t
+	desc = ln_ranger.1.desc
+	theme = travel
+	left_portrait = { character = root  animation = personality_bold }
+	right_portrait = { character = scope:ln_lord_commander  animation = personality_honorable }
+
+	trigger = {
+		is_alive = yes
+		government_has_flag = government_is_nw
+	}
+
+	immediate = {
+		title:k_the_wall.holder ?= { save_scope_as = ln_lord_commander }
+	}
+
+	option = {
+		name = ln_ranger.1.a          # north, then. that is the whole of it.
+		ai_chance = {
+			base = 40
+			modifier = { add = 15  has_trait = brave }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		add_character_flag = ln_ranger_went_north
+		add_martial_lifestyle_xp = 80
+		add_prestige = 50
+	}
+	option = {
+		name = ln_ranger.1.b          # I want the men who have been up there before.
+		ai_chance = {
+			base = 35
+			modifier = { add = 15  has_trait = patient }
+			modifier = { add = 10  has_trait = paranoid }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		add_character_flag = ln_ranger_took_the_veterans
+		add_stewardship_lifestyle_xp = 60
+		add_gold = 75
+	}
+	option = {
+		name = ln_ranger.1.c          # what is actually out there? nobody has written any of this down.
+		ai_chance = {
+			base = 25
+			modifier = { add = 10  has_trait = cynical }
+			modifier = { add = 10  has_trait = patient }
+		}
+		add_character_flag = ln_ranger_asked_questions
+		add_learning_lifestyle_xp = 80
+		add_character_flag = ln_looked_north
+	}
+}
+
+# ── 2. IN FROM THE COLD ─────────────────────────────────────────────────────────────────────────────────────
+# The promotion card. Fires from ln_watch.1 territory but this one is about what he is giving up.
+ln_ranger.2 = {
+	type = character_event
+	title = ln_ranger.2.t
+	desc = ln_ranger.2.desc
+	theme = realm
+	left_portrait = { character = root  animation = personality_content }
+
+	trigger = {
+		is_alive = yes
+		has_government = nights_watch_government
+	}
+
+	option = {
+		name = ln_ranger.2.a          # I served my time out there. Somebody else's turn.
+		ai_chance = {
+			base = 55
+			modifier = { add = 25  has_trait = content }
+			modifier = { add = 15  has_trait = lazy }
+		}
+		add_prestige = 100
+	}
+	option = {
+		name = ln_ranger.2.b          # keep my saddle by the gate.
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = 15  has_trait = diligent }
+			modifier = { add = 10  has_trait = impatient }
+		}
+		add_character_flag = ln_ranger_kept_the_saddle
+		add_martial_lifestyle_xp = 60
+	}
+}
+
+# ── 3. SOMEBODY HAD TO STAND DOWN ───────────────────────────────────────────────────────────────────────────
+# The promotion, for a Wall with no vacancies. Fires a week after the request, once AGOT's revoked handler has
+# returned the castle to the Lord Commander.
+ln_ranger.3 = {
+	type = character_event
+	title = ln_ranger.3.t
+	desc = ln_ranger.3.desc
+	theme = realm
+	left_portrait = { character = root  animation = thinking }
+
+	trigger = {
+		is_alive = yes
+		has_government = ln_ranger_government
+	}
+
+	immediate = {
+		if = {
+			limit = { ln_wall_has_a_free_keepership_trigger = yes }
+			ln_ranger_takes_a_castle_effect = yes
+		}
+	}
+
+	option = {
+		name = ln_ranger.3.a          # I will hold it better than he did.
+		ai_chance = {
+			base = 55
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = 15  has_trait = arrogant }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		trigger = { ln_carries_a_keepership_trigger = yes }
+		add_prestige = 100
+	}
+	option = {
+		name = ln_ranger.3.b          # nothing came free. Back to the horse, then.
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = humble }
+			modifier = { add = 10  has_trait = brave }
+			modifier = { add = 10  has_trait = content }
+		}
+		trigger = { NOT = { ln_carries_a_keepership_trigger = yes } }
+		add_character_flag = ln_still_waiting_for_a_castle
+		add_martial_lifestyle_xp = 40
+	}
+}

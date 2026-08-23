@@ -1,0 +1,369 @@
+﻿# AGOT: The Long Night & Azor Ahai -- taking the black, through AGOT's own front door.
+# Read the header of common/scripted_triggers/zz_ln_nights_watch_triggers.txt first; it explains why none of
+# this mod's own title-granting code survived contact with a live save.
+
+# Root = the man taking the black. Hands his realm on, if he has one.
+#
+# Vanilla's landed-ruler-becomes-landless flow, from game/events/dlc/ep3/ep3_laamp_events.txt (three separate
+# uses). The reason iterating held titles while changing holders is safe is the CHANGE SCOPE: nothing actually
+# moves until resolve_title_and_vassal_change fires, so the loop is over a stable list.
+#
+# NO TIER FILTER, deliberately. Vanilla's version filters `title_tier >= county` because baronies inside a
+# county follow the county automatically. But a third son can be holding a single barony inside SOMEBODY ELSE'S
+# county, and that one would have stayed with him -- leaving him landed, which fails AGOT's
+# `OR = { is_landed = no  has_title = title:b_x }` on every keepership and would have blocked the appointment
+# for exactly the character Thomas asked about. So everything goes.
+#
+# add_claim_on_loss = no because a man of the Night's Watch holds no claims. That is most of the point of it.
+ln_lay_down_the_realm_effect = {
+	if = {
+		limit = { is_landed = yes }
+		if = {
+			limit = { exists = primary_heir }
+			primary_heir = { save_scope_as = ln_black_successor }
+		}
+		else = {
+			liege = { save_scope_as = ln_black_successor }
+		}
+		# `type = inheritance` IS NOT SCRIPTABLE -- the engine says so outright: "Unsupported transfer type --
+		# 'inheritance', 'abdication' or 'appointment_succession' can't be used from script." `granted` is the
+		# correct scriptable type for a title handed over voluntarily, and vanilla uses it 172 times.
+		create_title_and_vassal_change = {
+			type = granted
+			save_scope_as = ln_abdication
+			add_claim_on_loss = no
+		}
+		every_held_title = {
+			# NOT THE RANGING COMPANY. Since the 8 Aug reorder the ranger door grants the company BEFORE the
+			# old realm is laid down (see the depose note there), so by the time this loop runs the company
+			# is already in his hands -- and handing it to the heir along with the castles would undo the
+			# whole ceremony one line after it happened.
+			#
+			# ── 1.0.12: AND NOT A COUNTY CAPITAL BARONY EITHER ──────────────────────────────────────────
+			# The no-tier-filter decision above is right and stays -- a third son can hold a lone barony
+			# inside somebody else's county and it has to go with the rest. But "no filter at all" also
+			# swept up the CAPITAL barony of every county he held, and the engine refuses those outright.
+			# From Thomas's 20 Aug run, on this line:
+			#     Error: change_title_holder_include_vassals effect
+			#            [ Trying to change ownership of a capital barony; change the ownership of the
+			#              county instead ]
+			# It is not cosmetic: the call fails, so that barony does not transfer, and a man who is
+			# supposed to have laid everything down keeps a castle -- which is the exact condition AGOT's
+			# keepership checks test for.
+			#
+			# The engine holds a county's capital barony and the county itself with the same character, as
+			# an invariant, so any capital barony in this list belongs to a county that is ALSO in this list
+			# and is already being transferred. Skipping it loses nothing. The test is the barony's own
+			# province: if the county over it is his too, the county carries it.
+			limit = {
+				NOT = { has_variable = ln_is_a_ranger_title }
+				trigger_if = {
+					limit = { tier = tier_barony }
+					NOT = { title_province.county.holder ?= root }
+				}
+			}
+			change_title_holder_include_vassals = {
+				holder = scope:ln_black_successor
+				change = scope:ln_abdication
+			}
+		}
+		resolve_title_and_vassal_change = scope:ln_abdication
+
+		# ── AND THE PEOPLE ──────────────────────────────────────────────────────────────────────────────
+		# Thomas: "all of the opinion modifiers... how does it look for the other player?"
+		#
+		# The Watch is honourable and it is also abandonment, and Westeros has never resolved that. So both
+		# land, on different people, out of the same act. The man who inherited a decade early cannot say
+		# what he actually feels about it, which is roughly what a +40 he did not earn represents.
+		scope:ln_black_successor = {
+			add_opinion = {
+				modifier = ln_gave_me_everything_opinion
+				target = root
+				opinion = 40
+			}
+		}
+		every_close_family_member = {
+			limit = {
+				is_alive = yes
+				NOT = { this = scope:ln_black_successor }
+			}
+			add_opinion = {
+				modifier = ln_took_the_black_opinion
+				target = root
+				opinion = 15
+			}
+		}
+		every_vassal = {
+			limit = { is_alive = yes }
+			add_opinion = {
+				modifier = ln_took_the_black_opinion
+				target = root
+				opinion = 20
+			}
+		}
+
+		# ── AND THE CHILDREN GO WITH THE HEIR, NOT WITH HIM ─────────────────────────────────────────────
+		# 1.0.12, Thomas in play, 20 Aug: he took the black and three of his four children turned up living
+		# at Castle Black. The fourth was the heir, who now has a court of his own -- which is the tell.
+		#
+		# WHY IT HAPPENS, AND IT IS NOT OURS. Courtiers belong to a CHARACTER, not to a title, so when a lord
+		# goes landless his whole household walks to the Wall behind him. AGOT's own NW title-gain handler is
+		# meant to catch that -- and for a close-family courtier it runs
+		#     every_traveling_family_member = { move_to_pool_at = <Winterfell> }
+		# which moves that courtier's DEPENDENTS and never moves the courtier. So the grown children stay put
+		# and end up sworn-brother-adjacent in a castle they never took a vow to. Their own small children get
+		# shipped to Winterfell without them, which is worse.
+		#
+		# WE FIX IT HERE RATHER THAN IN THE SHADOW, for two reasons. This is where scope:ln_black_successor
+		# exists -- the heir who just took the realm, whose court IS these people's home, and a far better
+		# destination than the pool at Winterfell for a Reach lord's daughters. And it keeps our copy of AGOT's
+		# handler a verbatim shadow with one changed line, which is the whole basis on which shadowcheck can
+		# tell us when it has gone stale.
+		#
+		# CLOSE FAMILY ONLY. The household guard, the councillors and the hangers-on going north with him is
+		# correct and is AGOT's design -- their sweep gives them the black or sends them to the pool. Sons,
+		# daughters, parents and siblings are the ones who should not be on the Wall by accident.
+		if = {
+			limit = {
+				exists = scope:ln_black_successor
+				scope:ln_black_successor = { is_alive = yes  is_landed = yes }
+			}
+			every_courtier = {
+				limit = {
+					is_alive = yes
+					NOT = { this = root }
+					NOT = { this = scope:ln_black_successor }
+					is_close_family_of = root
+					NOR = {
+						has_trait = nightswatch
+						has_trait = nightswatch_temp
+					}
+				}
+				# Their own dependents first, so a daughter's children are not left behind in the snow when she
+				# goes -- the exact failure AGOT's version produces from the other end.
+				every_traveling_family_member = {
+					limit = { is_alive = yes }
+					set_employer = scope:ln_black_successor
+				}
+				set_employer = scope:ln_black_successor
+			}
+		}
+	}
+}
+
+# Root = the man taking the black, already landless and already carrying the nightswatch trait, already in the
+# Lord Commander's court. Finds the first open keepership and appoints him to it; AGOT's own
+# on_court_position_received does the title grant, the vassalage and the government change.
+#
+# THE ORDER IS THE DESIGN. The Nightfort first -- it is the famous ruin, it is what Jon Snow gives Stannis in
+# A Dance with Dragons, and it is the one Thomas was handed in his own run. Then the fifteen lesser castles,
+# every one of them abandoned in lore. The Shadow Tower and Eastwatch last, because those two are actually
+# manned and handing one to a man who walked up this morning would be absurd -- they only come up if sixteen
+# other men have already taken the black in the same game, which is a story worth allowing and not worth
+# expecting.
+#
+# Gated on ln_wall_has_a_free_keepership_trigger in the decision's is_valid, so the chain cannot fall through.
+ln_grant_a_keepership_effect = {
+	# EVERY DOOR ONTO THE WALL ENDS HERE, so this is where the flag belongs. ln_took_the_black used to be set
+	# only in ln_take_the_black_effect (dead code, deleted below) and in the ranger ceremony -- so a brother who
+	# came in through the empty-castle door or the relieve-a-brother door never got it, and if he later rose to
+	# Lord Commander his petition to the North was permanently worth 80 gold less than a former ranger's, for no
+	# reason anyone designed. Found by auditing which flags are set only in unreachable code.
+	add_character_flag = ln_took_the_black
+
+	# ── 1.0.12: THE NIGHTFORT MOVED FROM FIRST TO THIRD-FROM-LAST, AND IT WAS A BUG, NOT A PREFERENCE ────
+	# c_the_nightfort contains FIVE baronies -- b_the_nightfort, b_deep_lake, b_icemark, b_stonedoor,
+	# b_hoarfrost_hill -- and this branch grants the COUNTY. It has to: the Nightfort is the county capital and
+	# CK3 will not let a capital barony have a holder different from its county ("Trying to change ownership of
+	# a capital barony; change the ownership of the county instead", which the 20 Aug log threw from
+	# ln_lay_down_the_realm_effect for exactly this reason).
+	#
+	# So the first man to take the black took the Nightfort AND the four ruins inside it -- and because
+	# ln_keepership_is_free_trigger asks whether the LORD COMMANDER still holds the title, keeperships 2, 3, 5
+	# and 6 stopped being free the same instant. EIGHTEEN KEEPERSHIPS COLLAPSED TO FOURTEEN ON THE FIRST GRANT,
+	# permanently, in every game. Thomas caught the symptom in play -- "to be given control of five different
+	# structures" -- before anyone had measured the cause.
+	#
+	# The Shadow Tower and Eastwatch are county grants for the identical reason and were ALREADY last for it.
+	# The Nightfort simply belonged down here with them and was not. Now Deep Lake, Icemark, Stonedoor and
+	# Hoarfrost Hill are handed out one at a time as brothers 2-5, and the county grant only comes up once
+	# fifteen other men have taken the black -- which makes the Jon-gives-Stannis-the-Nightfort beat something a
+	# senior brother is given rather than a welcome gift, and that reads better anyway.
+	#
+	# THE ONE THING STILL WORTH WATCHING: whoever eventually takes one of the three county keeperships becomes
+	# liege to the brothers already holding baronies inside it, rather than all of them answering to the Lord
+	# Commander. That is a real wrinkle in a flat order and it needs a 17th brother to appear, so it is noted
+	# and not fixed here.
+	if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_deep_lake_keeper  TITLE = b_deep_lake } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_deep_lake_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_icemark_keeper  TITLE = b_icemark } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_icemark_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_greyguard_keeper  TITLE = b_greyguard } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_greyguard_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_stonedoor_keeper  TITLE = b_stonedoor } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_stonedoor_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_hoarfrost_hill_keeper  TITLE = b_hoarfrost_hill } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_hoarfrost_hill_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_queensgate_keeper  TITLE = b_queensgate } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_queensgate_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_oakenshield_keeper  TITLE = b_oakenshield } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_oakenshield_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_woodswatch_by_the_pool_keeper  TITLE = b_woodswatch_by_the_pool } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_woodswatch_by_the_pool_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_sable_hall_keeper  TITLE = b_sable_hall } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_sable_hall_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_rimegate_keeper  TITLE = b_rimegate } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_rimegate_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_westwatch_by_the_bridge_keeper  TITLE = b_westwatch_by_the_bridge } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_westwatch_by_the_bridge_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_sentinel_stand_keeper  TITLE = b_sentinel_stand } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_sentinel_stand_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_long_barrow_keeper  TITLE = b_long_barrow } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_long_barrow_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_the_torches_keeper  TITLE = b_the_torches } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_the_torches_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_greenguard_keeper  TITLE = b_greenguard } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_greenguard_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_the_nightfort_keeper  TITLE = c_the_nightfort } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_the_nightfort_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_the_shadow_tower_keeper  TITLE = c_the_shadow_tower } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_the_shadow_tower_keeper
+			}
+		}
+	}
+	else_if = {
+		limit = { ln_keepership_is_free_trigger = { KEEPER = b_eastwatch_by_the_sea_keeper  TITLE = c_eastwatch } }
+		title:k_the_wall.holder = {
+			appoint_court_position = {
+				recipient = root
+				court_position = b_eastwatch_by_the_sea_keeper
+			}
+		}
+	}
+}
+
+# ln_take_the_black_effect DELETED 10 Aug. It was a complete take-the-black ceremony -- lay down the realm,
+# shed the adventurer shell, join the Watch, take a keepership -- and NOTHING CALLED IT. The castle doors
+# in zz_ln_nights_watch_decisions.txt let AGOT perform the ceremony and only do the appointment ("no
+# ceremony left to perform -- he took the black already"), and the ranger door in zz_ln_ranger_effects.txt
+# carries its own, more complete version (it unrolls the shell destruction twice; this one did it once).
+# So this was a stale duplicate that a future edit could easily have called by mistake, getting the weaker
+# of the two. Its one unique contribution -- add_character_flag = ln_took_the_black -- moved up into
+# ln_grant_a_keepership_effect, where every door actually passes.
+

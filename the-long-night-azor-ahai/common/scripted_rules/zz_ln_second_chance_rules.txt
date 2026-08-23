@@ -1,0 +1,53 @@
+﻿# AGOT: The Long Night & Azor Ahai -- overriding has_natural_death_second_chance.
+#
+# WHY THIS IS AN OVERRIDE AND NOT AN EDIT. Scripted rules are keyed by NAME in a global database, so defining
+# this one in our own file cleanly replaces vanilla's (game/common/scripted_rules/00_scripted_rules.txt:421)
+# without touching a base-game file. The vanilla clauses are reproduced verbatim below -- if they were dropped,
+# the Know Thyself perk would silently stop working for every player in the game.
+#
+# WHY WE NEED IT AT ALL. resurrected_by_rhllor has existed in this mod's lineage since Freeholder and NOTHING
+# HAS EVER GRANTED IT. AGOT does not define the trait; it puts `trait = faith_warrior # Favored by Rhllor` on
+# Beric and Stoneheart with the real line commented out and `# AGOT TODO trait` beside it. So one of the eight
+# deeds in the prophecy system was unreachable, which Thomas caught by asking the right question: will a
+# character in an actual CK3 game ever get this, or am I calibrating against the television?
+#
+# CK3 gives no way to un-kill a character. `death = { }` is terminal and on_death is reactive. This is the ONE
+# engine hook that can stop a death from happening -- and mechanically "you did not die" is a perfectly honest
+# implementation of "the priest prayed over you and you came back," which is what happened to Beric six times.
+
+has_natural_death_second_chance = {
+	OR = {
+		# ── vanilla, verbatim. Do not remove: this is the Know Thyself perk. ──────────────────────────────────
+		AND = {
+			has_perk = know_thyself_perk
+			NOT = { has_character_flag = know_thyself_has_triggered_delay }
+		}
+		has_character_flag = know_thyself_perk_delay_period
+
+		# ── ours: the last kiss ──────────────────────────────────────────────────────────────────────────────
+		# FIVE GATES, and every one of them exists because the first version had only two and was therefore a
+		# formality -- appoint any R'hllor courtier as your chaplain and death became optional. The full
+		# reasoning, including what AGOT actually gives Melisandre, is at the top of
+		# common/scripted_triggers/zz_ln_last_kiss_triggers.txt.
+		#
+		# Beric got six last kisses; a player gets one. The sixth one is the interesting story and no campaign
+		# is going to reach it.
+		AND = {
+			NOT = { has_character_flag = ln_had_the_last_kiss }
+			NOT = { has_trait = resurrected_by_rhllor }
+
+			# 1. Your faith can do this at all.
+			faith = { has_doctrine_parameter = can_heal_via_flames }
+
+			# 2. There is a priest to hand who is genuinely capable of it, and who has not already spent
+			#    himself doing it for somebody else.
+			ln_has_last_kiss_priest_trigger = yes
+
+			# 3. You were killed with life left in you.
+			ln_died_with_life_left_trigger = yes
+
+			# 4. The fire has a reason to want you back.
+			ln_worth_the_fire_trigger = yes
+		}
+	}
+}

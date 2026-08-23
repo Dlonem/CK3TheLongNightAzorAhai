@@ -1,0 +1,20 @@
+﻿# The Long Night+ -- when the Long Night ends and the Others are thrown down, the cold magic
+# binding their raised dead fails, and every wight collapses into lifeless flesh.
+death_dawn_broke = {
+	icon = "death_unknown.dds"
+}
+
+# The Long Night+ -- the death reason for the wights' mass collapse at the end of the Long Night (the_long_night
+# on_end): with the Others thrown down, the cold magic that stirred the dead is spent and every wight is claimed
+# by the cold at last. Fits all resolutions (Night King slain, War for the Dawn won, war lost), unlike "dawn broke".
+death_claimed_by_cold = {
+	icon = "death_unknown.dds"
+}
+
+# AGOT: The Long Night & Azor Ahai -- the blow itself, from either end of it. Carried by the Night King when a
+# champion puts him down in the field (ln_dawn.3) and by the sworn man who steps in front of that champion when
+# the champion was not enough (ln_dawn.4). One reason for both, deliberately: the record should not distinguish
+# between the man who ended it and the man who bought the seconds that let him.
+death_the_dawn = {
+	icon = "death_unknown.dds"
+}

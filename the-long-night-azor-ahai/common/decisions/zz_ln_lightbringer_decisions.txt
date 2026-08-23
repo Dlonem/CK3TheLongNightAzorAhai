@@ -1,0 +1,103 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the forge.
+# See common/scripted_triggers/zz_ln_lightbringer_triggers.txt for why this exists: AGOT stubbed
+# lightbringer_modifier out in a comment and never built it.
+
+ln_forge_lightbringer_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_smith.dds" }
+
+	desc = ln_forge_lightbringer_decision_desc
+	selection_tooltip = ln_forge_lightbringer_decision_tt
+	confirm_text = ln_forge_lightbringer_decision_confirm
+
+	decision_group_type = major
+	# THE AI CAN FORGE IT NOW -- Thomas, 9 Aug: "Somehow, can the AI make Lightbringer? That would be
+	# badass... it would take the right caliber of person." So: only a named champion ever sees the
+	# decision (is_shown), and the ai_will_do below keeps it to the right caliber -- the zealous, the
+	# ambitious, the Chosen -- with the dark already visibly rising. What the AI puts in the third
+	# quench is decided by the same personality weights as everything else (ln_lightbringer.3): a
+	# compassionate AI refuses the wife and takes the volunteer, or walks away entirely.
+	ai_check_interval = 24
+
+	is_shown = {
+		is_adult = yes
+		is_alive = yes
+		ln_is_a_champion_of_rhllor_trigger = yes
+		NOT = { ln_lightbringer_exists_trigger = yes }
+
+		# ONLY WHEN IT IS NEEDED. Forging the red sword of heroes in a warm century is a man having an
+		# expensive dream. The steel is for the dark, and the decision does not appear until the dark is
+		# visibly coming.
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = {
+			OR = {
+				is_struggle_phase = ln_phase_cold_winds
+				is_struggle_phase = ln_phase_the_long_night
+			}
+		}
+	}
+
+	is_valid = {
+		is_available = yes
+		is_imprisoned = no
+
+		custom_description = {
+			text = ln_forge_needs_a_forge
+			ln_has_a_forge_trigger = yes
+		}
+		custom_description = {
+			text = ln_forge_needs_the_coin
+			gold >= ln_lightbringer_forging_cost_value
+		}
+		custom_description = {
+			text = ln_forge_is_still_cold
+			NOT = { has_character_modifier = ln_the_forge_is_cold_modifier }
+		}
+	}
+
+	effect = {
+		remove_short_term_gold = ln_lightbringer_forging_cost_value
+
+		custom_tooltip = ln_forge_lightbringer_effect_tt
+
+		# WHICH FORGING. The counter is advanced by the event that resolves, not here, so a save reloaded
+		# mid-chain cannot skip a stage.
+		# 13 Aug (Thomas, live run): the button never greyed out, so he clicked it repeatedly and every
+		# click spent the gold and queued another event. ln_the_forge_is_cold_modifier was defined and
+		# checked in is_valid -- and applied NOWHERE. It is applied HERE now, on the click, lasting past
+		# the queued stage event so the forge stays visibly hot until the stage resolves.
+		if = {
+			limit = { NOT = { has_variable = ln_forge_stage } }
+			add_character_modifier = { modifier = ln_the_forge_is_cold_modifier  days = 45 }
+			trigger_event = { id = ln_lightbringer.1  days = 30 }
+		}
+		else_if = {
+			limit = { var:ln_forge_stage = 1 }
+			add_character_modifier = { modifier = ln_the_forge_is_cold_modifier  days = 65 }
+			trigger_event = { id = ln_lightbringer.2  days = 50 }
+		}
+		else = {
+			add_character_modifier = { modifier = ln_the_forge_is_cold_modifier  days = 115 }
+			trigger_event = { id = ln_lightbringer.3  days = 100 }
+		}
+	}
+
+	ai_will_do = {
+		base = 0
+		# The right caliber of person, per Thomas. Nobody else ever rolls it.
+		modifier = { add = 20  has_trait = chosen_by_rhllor }
+		modifier = { add = 10  has_trait = azor_ahai_reborn }
+		modifier = { add = 5   has_trait = favored_by_rhllor }
+		modifier = { add = 15  has_trait = zealous }
+		modifier = { add = 5   has_trait = ambitious }
+		modifier = { add = 5   has_trait = brave }
+		# The dead are actually in the world: everything doubles in urgency.
+		modifier = {
+			add = 25
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+		}
+		# The cautious and the kind mostly leave the hammer alone.
+		modifier = { add = -15  has_trait = craven }
+		modifier = { add = -10  has_trait = content }
+		modifier = { add = -10  has_trait = cynical }
+	}
+}

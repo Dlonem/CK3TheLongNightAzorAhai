@@ -1,0 +1,43 @@
+﻿# AGOT: The Long Night & Azor Ahai -- pushing back on AGOT's own struggle.
+#
+# Thomas: "if we can expand all mentions of base AGOT more into our mod."
+#
+# Until now the link between the two struggles was ONE-DIRECTIONAL. ln_btw_restlessness_catalyst_effect reads
+# AGOT's btw_struggle and feeds our Long Summer when the lands beyond the Wall turn hostile. Their struggle has
+# never once noticed ours.
+#
+# It should, and the lore is not subtle about which way the causation runs: the free folk do not come south
+# because they fancy the weather. They come south because of what is behind them. So a confirmed sighting of an
+# Other now pushes THEIR struggle toward hostility, using THEIR OWN CATALYST --
+# catalyst_unnatural_death_important_character, worth 10 toward struggle_btw_phase_hostility in their table.
+#
+# WHICH CLOSES THE LOOP. Others are seen -> beyond the Wall turns hostile -> hostility feeds
+# ln_catalyst_ranging_lost -> the Long Summer shortens -> more sightings. A feedback loop that runs through a
+# mod we do not own and cannot break, because every piece of it is either theirs or ours and none of it is a
+# file shadowing a file.
+#
+# HEAVILY COOLDOWNED. Ten points is a real shove and their struggle is somebody else's balance. Once a decade
+# at most, and never if they are already hostile -- there is nowhere further to push.
+ln_the_free_folk_feel_it_effect = {
+	if = {
+		limit = {
+			exists = struggle:btw_struggle
+			NOT = { has_global_variable = ln_btw_push_cooldown }
+			struggle:btw_struggle = {
+				NOT = { is_struggle_phase = struggle_btw_phase_hostility }
+				any_involved_ruler = { is_alive = yes }
+			}
+		}
+		set_global_variable = { name = ln_btw_push_cooldown  value = yes  years = 10 }
+		struggle:btw_struggle = {
+			random_involved_ruler = {
+				limit = { is_alive = yes }
+				save_scope_as = ln_btw_witness
+			}
+			activate_struggle_catalyst = {
+				catalyst = catalyst_unnatural_death_important_character
+				character = scope:ln_btw_witness
+			}
+		}
+	}
+}

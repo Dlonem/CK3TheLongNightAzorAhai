@@ -1,0 +1,68 @@
+﻿# AGOT: The Long Night & Azor Ahai -- how likely the spear is to bring the thing down.
+#
+# Thomas: "Can we make the chance a bit smaller the bigger the dragon is? Because, you know, legendary beast,
+# lots of magic. If for some reason Balerion the Black Dread survived and is three hundred and fifty years
+# old, he's gonna be massive, and I don't think the Night King should really be able to one-shot him. At that
+# point that sounds like a five percent chance to me at max."
+#
+# AGOT ALREADY MEASURES THIS AND WE DO NOT HAVE TO INVENT IT. dragon_size is their own script value
+# (00_agot_dragon_skill_values.txt:661) built from the dragon's base size, its physique traits and its age,
+# and they ship the thresholds with the meanings written on them
+# (00_agot_dragon_dragon_size_values.txt:15-17):
+#     small_dragon_size_value  = 30   "anything less is considered small/baby"
+#     medium_dragon_size_value = 100  "less is considered average"
+#     large_dragon_size_value  = 180  "Less is considered large"
+# Read in the dragon's scope, exactly as AGOT reads it themselves (00_agot_artifact_misc_effects.txt:1457).
+#
+# NINE STEPS, NOT FOUR. Thomas, on the first version: "Some dragons are two hundred and thirty three. What
+# about one fifty plus? That's large, but it's so close to huge. I feel like that twelve percent gap, we need
+# to bridge that a bit better ... that way your dragon doesn't get lobbed into only four or five percent
+# chances, but rather it's more variable."
+#
+# He is right, and the reason the first cut was coarse is that AGOT only NAMES three thresholds. Their
+# constants are used where they exist; the steps between them are literals, and they are marked as such so
+# nobody later mistakes 140 or 230 for something upstream defined.
+#
+#     size        chance   what it is
+#     < 30          40%    a hatchling
+#     30-69         36%    small
+#     70-99         32%    getting on
+#     100-139       27%    average          <- medium_dragon_size_value
+#     140-179       23%    big for its age
+#     180-229       18%    huge             <- large_dragon_size_value
+#     230-299       13%    a war dragon
+#     300-399        8%    a legend
+#     400+           5%    Balerion          <- Thomas's number, and the floor
+#
+# THE FLOOR IS A FLOOR. min = 5 means no combination of future modifiers can drive a legendary beast to zero:
+# the dead should always have a chance, however thin, or the answer to the Long Night becomes "own an old
+# enough dragon".
+ln_spear_hit_chance_value = {
+	value = 40
+	if = { limit = { scope:ln_spear_dragon_size >= small_dragon_size_value }   add = -4 }
+	if = { limit = { scope:ln_spear_dragon_size >= 70 }                        add = -4 }
+	if = { limit = { scope:ln_spear_dragon_size >= medium_dragon_size_value }  add = -5 }
+	if = { limit = { scope:ln_spear_dragon_size >= 140 }                       add = -4 }
+	if = { limit = { scope:ln_spear_dragon_size >= large_dragon_size_value }   add = -5 }
+	if = { limit = { scope:ln_spear_dragon_size >= 230 }                       add = -5 }
+	if = { limit = { scope:ln_spear_dragon_size >= 300 }                       add = -5 }
+	if = { limit = { scope:ln_spear_dragon_size >= 400 }                       add = -3 }
+
+	# ── AND IT IS THEIR SKY UP THERE ────────────────────────────────────────────────────────────────────
+	# Thomas: "Do we wanna increase the odds that the Night King can spear your dragon once you're beyond
+	# the wall? If you try taking the fight to them, it's more dangerous because you're in their home
+	# territory." Yes -- and it is also the only place it happens in the show. Daenerys loses Viserion north
+	# of the Wall, on an expedition she chose to fly.
+	#
+	# +12 flat rather than a multiplier, so it lifts a hatchling from 40 to 52 and a Balerion from 5 to 17.
+	# The legend is still overwhelmingly likely to come home; it is simply no longer untouchable, which is
+	# the right shape for a player who decided to go and find them.
+	#
+	# world_westeros_beyond_the_wall is AGOT's own region and the banked scope value is set from
+	# combat.location in ln_find_a_dragonrider_effect -- never read here directly, because a script value
+	# that reaches for a scope the caller may not have set is exactly the silent-zero trap this file's
+	# header warns about.
+	if = { limit = { scope:ln_spear_beyond_the_wall = 1 }  add = 12 }
+
+	min = 5
+}

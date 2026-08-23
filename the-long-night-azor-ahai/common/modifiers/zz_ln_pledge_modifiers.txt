@@ -1,0 +1,75 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the price of taking a side early.
+
+# You kept your gods and sent your men anyway. Costs real strength at home for real strength in the war that is
+# coming -- levies committed north, upkeep for men you will not see again for years.
+ln_sworn_to_the_dawn_modifier = {
+	icon = martial_positive
+	advantage = 3                       # men who have been told what they are marching towards
+	men_at_arms_maintenance = -0.15     # a war footing kept up for years, cheaply
+	levy_size = -0.15                   # because they are already gone north
+	monthly_prestige = 0.5              # the songs start early for the lord who believed first
+}
+
+# You burned him. Your own clergy loved it. Everyone with a red priest in their court noticed.
+ln_burned_the_red_priest_modifier = {
+	icon = piety_positive
+	monthly_piety = 1.0
+	clergy_opinion = 15
+	same_faith_opinion = 5
+	different_faith_opinion = -10
+	dread_baseline_add = 5
+}
+
+# You took a foreign god in front of your whole court. The Seven do not forgive it quickly.
+ln_took_the_red_modifier = {
+	icon = piety_negative
+	vassal_opinion = -15
+	clergy_opinion = -25
+	monthly_piety = -0.5
+}
+
+# THE PRIEST'S SHARE. Permanent, and deliberately so -- ln_priest_can_give_the_last_kiss_trigger refuses anybody
+# carrying it, so this modifier IS the rate limit on resurrection. A court can raise one man per priest, ever.
+# Thoros of Myr after Beric's sixth: "he looked like something that had been dug up."
+ln_gave_the_last_kiss_modifier = {
+	icon = health_negative
+	health = -0.75
+	fertility = -0.25
+	monthly_piety = 1.0        # the order knows what he did
+	same_faith_opinion = 20
+}
+
+# He went down and did not get up. Held in place until his priest decides -- see ln_prophecy.21. The duration
+# is a backstop only: if the priest dies before answering, or the event is somehow lost, the man is left badly
+# hurt rather than left in limbo forever.
+ln_fell_in_the_dark_modifier = {
+	icon = health_negative
+	health = -1.5
+	prowess = -4
+	monthly_prestige = -0.25
+}
+
+# THE COUNTERWEIGHT. Thomas: "I don't want shit to just keep going downhill. I want there to actually be some
+# benefit." Granted by ln_risen.11 at the end of the Resurrected chain, and permanent.
+#
+# A man who has already been dead is very hard to threaten, and everybody around him knows it. That is the
+# whole modifier: dread that is not cruelty, and men who will hold a line next to him because the worst thing
+# that can happen to them has visibly already happened to him and he came back and kept going.
+ln_death_holds_no_terror_modifier = {
+	icon = martial_positive
+	dread_baseline_add = 15
+	enemy_hostile_scheme_success_chance_add = -15
+	knight_effectiveness_mult = 0.2
+	army_maintenance_mult = -0.1
+	stress_gain_mult = -0.2
+}
+
+# You put your hand in a brazier in front of your own hall and the hand still works. Nobody who was in that
+# room has stopped talking about it and nobody who has heard about it since has quite believed it.
+ln_the_hand_that_did_not_burn_modifier = {
+	icon = piety_positive
+	monthly_piety = 0.75
+	same_faith_opinion = 20
+	dread_baseline_add = 10
+	prowess = 1
+}

@@ -1,0 +1,21 @@
+﻿l_russian:
+
+ # AGOT: The Long Night & Azor Ahai -- opinion modifiers.
+ # Written to be read in a tooltip at a glance: what you did, from their side, in their words.
+
+ ln_gave_me_everything_opinion:0 "Отдал мне всё и ушёл"
+ ln_took_the_black_opinion:0 "Надел чёрное"
+ ln_took_my_command_opinion:0 "Отнял у меня отряд"
+ ln_let_me_keep_my_dignity_opinion:0 "Позволил мне сохранить достоинство"
+ ln_saw_what_you_did_to_him_opinion:0 "Я видел, что ты с ним сделал"
+ ln_killed_her_for_a_sword_opinion:0 "Убил её ради меча"
+ ln_paid_the_price_opinion:0 "Заплатил цену, которой требовало предание"
+ ln_took_one_of_ours_opinion:0 "Забрал одного из наших ради стали"
+ ln_asks_the_north_for_help_opinion:0 "Всё пишет нам о Стене"
+ ln_fed_the_wall_opinion:0 "Кормил Стену, когда больше не кормил никто"
+ ln_the_priests_say_it_of_him_opinion:0 "Жрецы говорят это о нём"
+ ln_believes_his_own_legend_opinion:0 "Верит в собственную легенду"
+ ln_named_favored_modifier:0 "Наречён отмеченным"
+ ln_named_favored_modifier_desc:0 "Жрец произнёс это вслух, и слово идёт дальше. Единоверцы смотрят второй раз; все прочие находят всё это неловким."
+ ln_named_chosen_modifier:0 "Наречён обещанным принцем"
+ ln_named_chosen_modifier_desc:0 "Храмы от Асшая до Староместа пользуются именем более старым и более опасным. Героем это вас не делает. Это делает вас спорным вопросом, и люди займут в нём стороны."

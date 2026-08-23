@@ -1,0 +1,9 @@
+﻿# AGOT: The Long Night & Azor Ahai -- ruin decay pulse.
+# Rides yearly_global_pulse via the on_actions sub-list, which MERGES rather than colliding (an on_action may hold
+# only one effect block, so adding to the sub-list is the only safe way to extend a shared on_action).
+
+# ln_ruins_decay_pulse DELETED 10 Aug -- an on_action sub-list defined here and listed in NO hook, so it never ran.
+# Everything it called is already done once a year by ln_struggle_yearly_work_effect (ln_ruins_decay_effect),
+# behind the calendar stamp that guarantees one pass per year. This is the same failure class as
+# ln_watch_strength_pulse (deleted earlier today): the hooks file exists precisely to make a sub-list
+# that nothing lists visible, and a hook that does not run produces silence rather than a log line.

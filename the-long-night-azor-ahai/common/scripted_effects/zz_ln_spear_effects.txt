@@ -1,0 +1,100 @@
+﻿# AGOT: The Long Night & Azor Ahai -- THE SPEAR.
+#
+# Workshop, Keir Starmer: "Feedback for the Nightking himself, since without him The Others lose... He should
+# be way more powerful himself, especially against dragons. You have a dragon no matter how small, he instantly
+# fumbles and you win."
+#
+# He is right about the problem and Thomas named the answer: the one image everybody who watched the show
+# remembers. The thing on the ice raises its arm, and a dragon comes out of the sky.
+#
+# WHY THIS IS NOT A BALANCE PATCH. Giving the Night King a bigger prowess number would answer the same
+# complaint and be forgettable. This costs the player something they earned, on camera, at a moment they will
+# retell -- and it plugs into machinery that already exists: a dragon that dies during the Long Night where
+# the dead have reached is recorded by ln_record_fallen_dragon_effect and can be RAISED as theirs, keeping its
+# shape genes and losing its colour. The spear does not just take a dragon off the board. It hands one to the
+# enemy wearing the same face in the wrong colour. The mod could already do all of that except the throwing.
+#
+# NOT A GAME RULE START. Thomas: "I don't think he should start with his own dragon. There's a game rule for
+# that." Right -- agot_long_night_dragon_on already exists for people who want the arcade version.
+#
+# ══ HOW OFTEN THIS CAN POSSIBLY HAPPEN, because it is the question everybody asks second ══════════════════
+#   * ONE throw per battle, at ONE dragon. Four dragons on the field is not four rolls -- the target is drawn
+#     once, uniformly, from every eligible rider present. Thomas asked directly: "if there's four dragons in
+#     the same army, are you telling me one out of four of them is gonna die right then and there?" No.
+#   * ONE throw per THREE YEARS, armed on the attempt and not on the hit -- see ln_arm_the_spear_effect.
+#   * And the hit chance falls off a cliff with the dragon's size -- see ln_spear_hit_chance_value.
+# A hatchling flown at the dead is in real danger. Balerion is not.
+
+# Root = a combat side. Draws the target.
+#
+# EVERY ELIGIBLE RIDER ON THE FIELD GOES IN THE HAT, then one is drawn. Commanders AND knights, both sides:
+# a combat side can hold several armies and therefore several commanders, and a dragonrider who is riding as
+# a knight rather than commanding is just as much in the sky. every_side_commander / every_side_knight are
+# vanilla's own iterators, and add_to_temporary_list survives the scope change into enemy_side because a
+# temporary list belongs to the execution rather than to a scope.
+#
+# THE DRAW IS UNIFORM ON PURPOSE. Weighting it toward the biggest dragon was the first instinct -- he throws
+# at the greatest threat -- and it is wrong here, because size is ALSO what decides whether the throw kills.
+# Weighting both ends would have quietly cancelled out the protection big dragons are supposed to have, which
+# is the opposite of what was asked for.
+ln_find_a_dragonrider_effect = {
+	every_side_commander = {
+		limit = { ln_is_a_spear_target_trigger = yes }
+		add_to_temporary_list = ln_spear_targets
+	}
+	every_side_knight = {
+		limit = { ln_is_a_spear_target_trigger = yes }
+		add_to_temporary_list = ln_spear_targets
+	}
+	enemy_side = {
+		every_side_commander = {
+			limit = { ln_is_a_spear_target_trigger = yes }
+			add_to_temporary_list = ln_spear_targets
+		}
+		every_side_knight = {
+			limit = { ln_is_a_spear_target_trigger = yes }
+			add_to_temporary_list = ln_spear_targets
+		}
+	}
+
+	# An empty list simply saves nothing and the caller's `exists` check does the rest.
+	random_in_list = {
+		list = ln_spear_targets
+		save_scope_as = ln_spear_rider
+	}
+	if = {
+		limit = { exists = scope:ln_spear_rider }
+		scope:ln_spear_rider = {
+			var:current_dragon = { save_scope_as = ln_spear_dragon }
+		}
+
+		# ── EVERYTHING THE ODDS DEPEND ON IS BANKED HERE, BEFORE ANYTHING IS ROLLED OR KILLED ───────────
+		# Thomas's rule, from the ordering bug he caught in the first build: "anything that ends in death
+		# needs to be basically one of the last things, because then it should take into account everything
+		# that led to it -- everything that could influence it." The dragon's size is read here, off a living
+		# animal, and every later step reads the banked number instead of the corpse.
+		scope:ln_spear_dragon = {
+			save_scope_value_as = { name = ln_spear_dragon_size  value = dragon_size }
+		}
+
+		# Where the battle was. Set to 0 first and overwritten, so the value ALWAYS exists -- a script value
+		# that reaches for a scope the caller may not have set resolves silently and wrongly, which is the
+		# single most common way something in this mod has turned out not to work.
+		save_scope_value_as = { name = ln_spear_beyond_the_wall  value = 0 }
+		if = {
+			limit = { combat.location ?= { geographical_region = world_westeros_beyond_the_wall } }
+			save_scope_value_as = { name = ln_spear_beyond_the_wall  value = 1 }
+		}
+	}
+}
+
+# Root = the Night King.
+#
+# THE COOLDOWN IS THE BALANCE, AND IT ARMS ON THE THROW RATHER THAN ON THE KILL. That distinction is the whole
+# reason a big dragon is actually safe: if it only armed on a hit, a Balerion at five per cent would be rolled
+# again every single battle and would eventually come down anyway, which would have made the size protection
+# decorative. He throws once; whether it lands is the dragon's business; either way he spends three years
+# making another. It also gives the fiction its own reason -- the dead do not make many of these.
+ln_arm_the_spear_effect = {
+	add_character_flag = { flag = ln_spear_thrown  years = 3 }
+}

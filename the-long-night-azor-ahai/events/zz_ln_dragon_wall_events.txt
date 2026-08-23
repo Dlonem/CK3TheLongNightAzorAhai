@@ -1,0 +1,141 @@
+﻿namespace = ln_omen
+
+# AGOT: The Long Night & Azor Ahai -- she will not cross.
+# See common/scripted_effects/zz_ln_dragon_wall_effects.txt for the lore and for why this exists at all.
+
+ln_omen.10 = {
+	type = character_event
+	title = ln_omen.10.t
+
+	# BOTH READINGS ARE TRUE AT ONCE, which is Thomas's house rule: "I always err on the side of, within
+	# reason, give it... so both people can be right. Oh yeah, it's the magics, but also it's the preference of
+	# the dragon." So the middle paragraph is chosen by the dragon's own personality traits -- a defiant or
+	# imperious dragon reads as a will refusing, a skittish or depressed one reads as fear, and a dragon with
+	# neither leaves you with nothing to blame but the ice. Nobody in the event ever says which it was, because
+	# nobody in the books knows either. Alysanne never wrote down what she thought.
+	desc = {
+		desc = ln_omen.10.desc.open
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					scope:ln_dragon = {
+						OR = {
+							has_trait = dragon_defiant
+							has_trait = dragon_imperious
+							has_trait = dragon_aggressive
+							has_trait = dragon_bloodthirsty
+						}
+					}
+				}
+				desc = ln_omen.10.desc.will
+			}
+			triggered_desc = {
+				trigger = {
+					scope:ln_dragon = {
+						OR = {
+							has_trait = dragon_skittish
+							has_trait = dragon_depressed
+							has_trait = dragon_restrained
+						}
+					}
+				}
+				desc = ln_omen.10.desc.fear
+			}
+			desc = ln_omen.10.desc.ward
+		}
+		desc = ln_omen.10.desc.close
+	}
+
+	theme = dread
+	left_portrait = { character = root  animation = shock }
+	right_portrait = { character = scope:ln_dragon  animation = anger }
+
+	trigger = { exists = scope:ln_dragon }
+
+	# ── FORCE HER. Alysanne tried three times. So can you, and you will get the same answer.
+	option = {
+		name = ln_omen.10.a
+
+		# You do not cross. What you get is the certainty -- you have now watched a creature that flies into
+		# massed pikes refuse a line on a map, three times, and you are never going to unsee it.
+		add_character_flag = ln_heard_the_warning
+		add_prestige = 50
+		stress_impact = { base = medium_stress_impact_gain }
+		if = {
+			limit = { exists = scope:ln_dragon }
+			scope:ln_dragon = { add_opinion = { modifier = angry_opinion  target = root  opinion = -20 } }
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = { add = 40  has_trait = stubborn }
+			modifier = { add = 30  has_trait = arrogant }
+		}
+	}
+
+	# ── TURN BACK. The wise answer, and the one that costs nothing but pride.
+	option = {
+		name = ln_omen.10.b
+
+		add_character_flag = ln_looked_north
+		stress_impact = { base = minor_stress_impact_loss }
+
+		ai_chance = {
+			base = 40
+			modifier = { add = 30  has_trait = patient }
+			modifier = { add = 25  learning >= 12 }
+		}
+	}
+
+	# ── ASK THE CITADEL. The reassuring answer, and it costs you the warning.
+	# Thomas: "just because it costs you something doesn't mean it has to have good outcomes only." The inverse
+	# also has to be true, or the moral choices are decoration -- the comfortable option has to be able to cost
+	# you something real. This one hands back nothing but peace of mind, and peace of mind is not dragonglass.
+	option = {
+		name = ln_omen.10.c
+
+		add_piety = 25
+		stress_impact = { base = medium_stress_impact_loss }
+
+		ai_chance = {
+			base = 30
+			modifier = { add = 40  has_trait = cynical }
+			modifier = { add = 20  has_trait = content }
+		}
+	}
+}
+
+# ── THE TALE ────────────────────────────────────────────────────────────────────────────────────────────────
+# The same lore, reaching the people who will never sit on a dragon. Thomas's point, and it is a good one: the
+# fifth son with no prospects who reads the story and understands it is a better protagonist than the king who
+# saw it and shrugged. This is a knowledge gate, nothing more -- but it is the one that is reachable by a
+# landless scholar in Oldtown.
+ln_omen.11 = {
+	type = character_event
+	title = ln_omen.11.t
+	desc = ln_omen.11.desc
+	theme = learning
+	left_portrait = { character = root  animation = thinking }
+
+	option = {
+		name = ln_omen.11.a
+		ai_chance = {
+			base = 55
+			modifier = { add = 20  has_trait = diligent }
+			modifier = { add = 10  has_trait = paranoid }
+		}
+		add_character_flag = ln_heard_the_warning
+		add_learning_lifestyle_xp = 50
+	}
+
+	option = {
+		name = ln_omen.11.b
+		ai_chance = {
+			base = 45
+			modifier = { add = 25  has_trait = cynical }
+			modifier = { add = 15  has_trait = lazy }
+			modifier = { add = 10  has_trait = content }
+		}
+		add_piety = 25
+	}
+}

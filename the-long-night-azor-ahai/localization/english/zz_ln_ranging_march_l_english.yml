@@ -1,0 +1,25 @@
+﻿l_english:
+
+ # ── RANGING DECISIONS ──────────────────────────────────────────────────────────────────────────────────────
+ ln_march_the_ranging_decision:0 "March the Ranging"
+ ln_march_the_ranging_decision_desc:0 "The camp can be struck in an hour. That has always been the brutal efficiency of a ranging: it is not a castle, and we are not a garrison. We are an expedition into the freezing dark.\n\nThe only question a captain ever really answers is the one the map asks."
+ ln_march_the_ranging_decision_tt:0 "Choose a ranging ground beyond the Wall and march the camp there."
+ ln_march_the_ranging_decision_confirm:0 "Sound the horn."
+
+ ln_return_to_the_wall_decision:0 "Return to the Wall"
+ ln_return_to_the_wall_decision_desc:0 "Whatever this ranging found, or failed to find, the Wall is where the journey ends.\n\nThe horn sounds to turn the column south. I notice that every single man in the camp walks just a little faster than he did on the way out."
+ ln_return_to_the_wall_decision_tt:0 "March the camp home to Castle Black."
+ ln_return_to_the_wall_decision_confirm:0 "Turn south."
+
+ # ── EVENTS ──────────────────────────────────────────────────────────────────────────────────────────────────
+ ln_ranging.1.t:0 "Where the Ranging Goes"
+ ln_ranging.1.desc:0 "The company is drawn up in the snow, the sledges are loaded, and the massive ice gate is open.\n\nNorth of here, there are three grounds a ranging captain can reasonably make for. Every black brother in the column has a very strong opinion about all of them, though they have the discipline not to voice it.\n\nI look out at the terrifying expanse of the haunted woods. The command is mine."
+ ln_ranging.1.a:0 "Craster's Keep. At least it is a roof."
+ ln_ranging.1.b:0 "Whitetree. Deep into the haunted woods."
+ ln_ranging.1.c:0 "Hardhome. The frozen shore."
+ ln_ranging.1.d:0 "Not yet. The camp stays here."
+
+ ln_ranging.2.t:0 "The Camp Stands"
+ ln_ranging.2.desc.north:0 "The tents are up and the ditch is dug before dark.\n\nIt is not a castle. It was never meant to be. But it is the Watch, standing deep in the snow, doing what it was built to do. The wind howls through the trees, and the sentries stare out into the freezing black, waiting for movement."
+ ln_ranging.2.desc.home:0 "The Wall swallows the horizon a full day before we reach it. It always does.\n\nWe make camp in its shadow, close enough that the cold coming off the ice settles into the tents, and for the first time in weeks the watches pass without a single man calling out."
+ ln_ranging.2.a:0 "So it does."

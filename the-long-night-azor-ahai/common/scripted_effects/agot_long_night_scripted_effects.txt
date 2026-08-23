@@ -1,0 +1,5124 @@
+﻿
+# THREE DEAD EFFECTS REMOVED 10 Aug (agot_spawn_adult_skroth_effect, agot_spawn_adult_skroth_again_effect,
+# scouring_lands_effect). All three were inherited from the ancestor mods, called by nothing in this mod,
+# and unknown to AGOT -- verified by name against the whole playset. scouring_lands_effect had a totally
+# EMPTY body. The two skroth effects were earlier drafts of the Others' ice dragon, superseded by
+# agot_spawn_adult_ice_dragon_effect (still here, still live -- it is what the legacy
+# agot_long_night_dragon_on rule calls) and by ln_raise_fallen_dragon_effect on the modern default.
+# Three near-identically-named dragon spawners with only one live path is precisely the trap that had
+# already produced one stale-duplicate bug in this mod, so the dead two are gone rather than annotated.
+# The live scouring chain is untouched: longnight_create_other_for_scouring, longnight_spawn_army_for_
+# scouring and scouring_cb are all still here.
+
+
+
+
+# The Long Night+: when the Others fall, the lands the Night King held are left scoured. Ordinary holdings
+
+# collapse into wilderness (secondary holdings razed, development wiped); the great de jure seats are instead
+
+# left as ruins, scaled to their standing (kingdom seat -> a renowned large ruin, duchy seat -> a medium ruin).
+
+# The living who return south inherit a ravaged, depopulated waste to reclaim through AGOT's colonization and
+
+# ruin systems. Must run in the_long_night on_end BEFORE the wights die, so the dead are still scopeable holders.
+
+agot_long_night_scour_others_lands_effect = {
+
+	# 1.0.10 -- arm the post-Dawn county-memory sweep: counties this walk cannot reach (reconquered by
+	# the living mid-war, or converted land the dead no longer held) get repaired by the yearly
+	# aftermath pass instead. Cleared by the sweep itself after one clean pass.
+	set_global_variable = { name = ln_county_memory_pending  value = yes }
+	if = {
+		limit = { has_global_variable = ln_county_memory_done_1 }
+		remove_global_variable = ln_county_memory_done_1
+	}
+
+	# 13 Aug (1.0.6a) -- THE SURVIVORS OF THE WAR FOR THE DAWN. Thomas, post-victory: characters named
+	# "Lord Other The Others" holding "The Army of the Dead of The Nightfort" as INDEPENDENT FEUDAL REALMS,
+	# settling the former Wall lands with ordinary human portraits. He checked: they had no wight trait.
+	# They were of house_theothers, and this limit only ever asked about the two traits, so the scour
+	# walked straight past them and destroy_others_kingdom_titles (which only touches the Night King's own
+	# titles, and only above county tier) never saw them either. Between the two holes, every dead lord
+	# who was not personally trait-marked kept his county forever.
+	#
+	# ln_is_one_of_them_trigger is the mod's existing answer to "is this one of the dead" -- traits,
+	# the Night King, the house, and now wight_government. Ruins are excluded because they are already
+	# the thing this effect turns land into.
+	#
+	# AND THE LAND BECOMES RUINS, NOT A GRANT. Thomas's ruling: "those lands should just become ruins...
+	# that way the wall can retake them over. Because if you tried to manually do it, you'd end up giving
+	# all of the lands the Long Night conquered to the Night's Watch, and I definitely want to avoid that."
+	# So nothing is handed to anybody -- the Watch, the North and the Crown retake it on their own clock
+	# through the reconquest and colonisation systems that already exist.
+	every_county = {
+
+		limit = {
+
+			exists = holder
+
+			holder = {
+
+				ln_is_one_of_them_trigger = yes
+
+				NOT = { has_government = ruins_government }
+
+			}
+
+		}
+
+		save_scope_as = scour_county
+
+		# 1.0.10 -- give the land its memory back before it becomes a ruin. Culture and faith survive
+		# ruination, so what this writes is what the colonists find. Stamped counties restore exactly;
+		# unstamped converted ones fall back to the de jure kingdom's living holder; beyond the Wall
+		# nothing resolves and the winter stays. See zz_ln_county_memory_effects.txt.
+		ln_restore_county_memory_effect = yes
+
+
+
+		if = {
+
+			# De jure seat of a kingdom -> a renowned great ruin (e.g. Winterfell, Storm's End).
+
+			limit = {
+
+				de_jure_liege ?= {
+
+					de_jure_liege ?= {
+
+						tier = tier_kingdom
+
+						title_capital_county = scope:scour_county
+
+					}
+
+				}
+
+			}
+
+			agot_ruin_county_effect = yes
+
+			title_province = {
+
+				remove_building = medium_ruin_01
+
+				add_building = large_ruin_01
+
+				add_building = ruin_renowned_01
+
+			}
+
+			ln_mark_scoured_ruin_effect = yes
+
+		}
+
+		else_if = {
+
+			# De jure seat of a duchy -> a sizeable ruin.
+
+			limit = {
+
+				de_jure_liege ?= {
+
+					tier = tier_duchy
+
+					title_capital_county = scope:scour_county
+
+				}
+
+			}
+
+			agot_ruin_county_effect = yes
+
+			ln_mark_scoured_ruin_effect = yes
+
+		}
+
+		else = {
+
+			# Everything else simply returns to the wild.
+
+			make_settlement_county_wilderness = { COUNTY = this }
+
+		}
+
+	}
+
+}
+
+
+
+the_long_night_setup_effect = {
+
+
+
+
+
+
+
+create_character = {
+
+
+
+							name = other_name
+
+
+
+							gender = male
+
+
+
+							culture = culture:frostborn
+
+
+
+							faith = faith:cold_gods	
+
+
+
+							# `.province` IS NOT A LINK ON A LANDED TITLE and never has been; the county-to-province
+							# link is title_province. An unresolvable location makes CK3 reject the entire
+							# create_character, so this call has been failing every single run --
+							# "Invalid/missing location or employer" at the_long_night_setup_effect.
+							location = title:c_the_frigid_rise.title_province
+
+
+
+							# 1.0.9 -- WAS { 8000 11000 } AND THAT IS WHERE THE NEGATIVE AGES COME FROM.
+							# Thomas, 14 Aug: "they are over... they're several thousand years old... now this
+							# character is negative three thousand years old or something like that."
+							#
+							# AGOT's calendar is 8000 + AC, so the game date at a 143 AC save is 8143. An age
+							# roll ABOVE the current year puts the birth date at or below year ZERO, which CK3
+							# cannot represent -- and 8000-11000 rolled against a date of 8082-8284 (every
+							# bookmark AGOT ships) lands there roughly four times in five. The character then
+							# reads as impossibly ancient, then as negative, depending on which way the engine
+							# clamps.
+							#
+							# 8000 is the SAFE CEILING at every AGOT bookmark: the earliest is 8082, so an age
+							# of 8000 gives birth year 82 -- positive, barely, and correct. This also matches
+							# other_template's own { 6000 8000 } in
+							# common/scripted_character_templates/00_long_night_other_templates.txt, whose
+							# comment defends the range as deliberate: "an Other is older than the Wall, and
+							# CK3 will happily carry the number." It will. It will not carry a negative one.
+							age = { 6000 8000 }
+
+
+
+							dynasty_house = house:house_theothers
+
+
+
+							martial = 25			
+
+
+
+							diplomacy = 0
+
+
+
+							intrigue = 100
+
+
+
+							learning = 65	
+
+
+
+							stewardship = 30			
+
+
+
+							prowess = 30
+
+
+
+
+
+
+
+							trait = other_trait
+
+
+
+							trait = nightking
+
+
+
+							trait = spindly		
+
+
+
+							trait = intellect_good_3			
+
+
+
+							# v0.2.0: was `compassionate`. The Night King is not compassionate. Swapped for the lore-correct
+
+							# opposite in the same trait group -- no conflict, since it replaces rather than adds.
+
+							trait = sadistic						
+
+
+
+							trait = education_martial_5	
+
+
+
+							# v0.2.0 (revised): shipped as `content` (LOW ai_ambition). Briefly swapped to `ambitious`, now
+
+							# NEITHER -- deliberately no ambition trait at all.
+
+							# Reasoning: `content` was probably a deliberate brake by the original author, and that is a
+
+							# fair instinct -- but it was braking the wrong thing. The Others' expansion is SCRIPT driven
+
+							# (the 30-day pulse in common/story_cycles/the_long_night.txt), not ai_ambition driven, and the
+
+							# real cause of the "sits idle" reports was the malformed long_night_cooldown flag fixed in
+
+							# v0.1.0. What `content` DID do is make the AI reluctant to independently evaluate its own
+
+							# invasion CBs, which is a drag on top of the pulse. `ambitious` would then over-correct in the
+
+							# other direction. Neutral removes the drag without adding a push, and leaves pacing entirely
+
+							# to the 30-day pulse -- the lever actually designed for it, and the one we can tune precisely.
+
+
+
+							# v0.2.0: was `generous`. His vassals are mindless wights under wight_government with a dread
+
+							# baseline of 150 -- he does not need to buy their loyalty.
+
+							trait = arrogant
+
+
+
+							trait = giant							
+
+							# 13 Aug (1.0.6), Thomas's 13 Aug run: the Night King spawned CRAVEN ("Analytic Craven"
+							# AI personality), because nothing here stopped the engine rolling random personality
+							# traits on top of the curated set. His personality is the four lines above and
+							# nothing else -- the embodiment of the dark does not get to roll dice about whether
+							# he scares easily.
+							random_traits = no
+
+							after_creation = {
+
+
+
+								add_character_flag = has_scripted_appearance	
+
+
+
+								add_character_flag = ai_immune_to_mental_breaks		
+
+
+
+								add_character_flag = immune_to_disease		
+
+
+
+								add_character_flag = is_nightking
+
+
+
+								add_character_flag = agot_immersion_bannermen_blocker
+
+								# 1.0.7: identity is stamped at creation, not inferred later. See ln_is_one_of_them_trigger.
+
+								add_character_flag = ln_one_of_them
+
+
+
+								add_character_flag = { flag = war_for_dawn_cooldown years = 10 } # Added buffer fix
+
+
+
+								if = { limit = { game_start_date >= 8300.1.1 }
+
+									add_character_flag = { flag = long_night_cooldown years = 2 }
+
+									# 1.0.8: a distinct marker for the SAME window -- see the pulse trigger in the_long_night.txt.
+
+									add_character_flag = { flag = ln_setup_grace years = 2 }
+
+								}
+
+
+
+								if = { limit = { has_game_rule = others_weak_invasion } add_character_modifier = others_weak_modifier }
+
+
+
+								if = { limit = { has_game_rule = others_standard_invasion } add_character_modifier = others_standard_modifier }
+
+
+
+								if = { limit = { has_game_rule = others_strong_invasion } add_character_modifier = others_strong_modifier }
+
+
+
+								if = { limit = { has_game_rule = others_insane_invasion } add_character_modifier = others_insane_modifier }
+
+								# v0.2.0: if the recurrence rule is on and this is not the first wave, the dead come back harder.
+
+								ln_apply_wave_escalation_effect = yes
+
+
+
+								
+
+
+
+								set_sexuality = asexual
+
+
+
+								#add_character_modifier = diplomacy_majesty_4090_no_raiment_modifier
+
+
+
+								make_trait_inactive = cool_silver_hair
+
+
+
+								make_trait_inactive = blue_eyes
+
+
+
+
+
+
+								give_nickname = nick_the_great_other
+
+
+
+								
+
+
+
+								
+
+
+
+							}
+
+
+
+
+
+
+
+						
+
+							save_scope_as = otherinvader
+
+						}
+
+
+
+					
+
+
+
+		scope:otherinvader = {
+
+			#copy_inheritable_appearance_from = character:others_thenightking
+
+			# The Long Night+: standing command bonus so the dead stay a credible threat despite fewer elite Others.
+
+			add_character_modifier = night_king_command_modifier
+
+
+
+			if = { limit = { title:c_the_frigid_rise.holder = { is_ai = yes } } get_title = title:c_the_frigid_rise }
+
+			if = { limit = { title:c_bloodbend.holder = { is_ai = yes } } get_title = title:c_bloodbend }
+
+			if = { limit = { title:c_hoarmarrow.holder = { is_ai = yes } } get_title = title:c_hoarmarrow }
+
+			if = { limit = { title:c_idle_barrens.holder = { is_ai = yes } } get_title = title:c_idle_barrens }
+
+			if = { limit = { title:c_wights_well.holder = { is_ai = yes } } get_title = title:c_wights_well }
+
+			if = { limit = { title:c_axe_camp.holder = { is_ai = yes } } get_title = title:c_axe_camp }
+
+			if = { limit = { title:c_clear_ice_lake.holder = { is_ai = yes } } get_title = title:c_clear_ice_lake }
+
+			if = { limit = { title:c_gerras_dryn.holder = { is_ai = yes } } get_title = title:c_gerras_dryn }
+
+			if = { limit = { title:c_hail_coast.holder = { is_ai = yes } } get_title = title:c_hail_coast }
+
+			if = { limit = { title:c_lhark_vakar.holder = { is_ai = yes } } get_title = title:c_lhark_vakar }
+
+			if = { limit = { title:c_torch_river.holder = { is_ai = yes } } get_title = title:c_torch_river }
+
+			if = { limit = { title:c_ask_vith.holder = { is_ai = yes } } get_title = title:c_ask_vith }
+
+			if = { limit = { title:c_basordryn.holder = { is_ai = yes } } get_title = title:c_basordryn }
+
+			if = { limit = { title:c_roveggs_spine.holder = { is_ai = yes } } get_title = title:c_roveggs_spine }
+
+			if = { limit = { title:c_vurk_ryg.holder = { is_ai = yes } } get_title = title:c_vurk_ryg }
+
+			mutate_into_other_effect = yes
+
+			every_courtier_or_guest = { mutate_into_other_effect = yes }
+
+			
+
+			get_title = title:h_the_others
+
+			
+
+			
+
+			
+
+			# exists-guard added 9 Aug: Great_Other is an AGOT dummy character BORN 8300.1.1, so in any game
+			# started before 8300 he was never instantiated and this reference logged "Failed context switch"
+			# at every invasion start. The block is the post-8300 route for handing his sub-realm to the
+			# invader; earlier starts are covered by the per-county get_title list above.
+			if = { limit = { exists = character:Great_Other  character:Great_Other = { is_alive = yes } }
+
+				create_title_and_vassal_change = {
+
+					type = conquest
+
+					save_scope_as = change
+
+				}
+
+				character:Great_Other = {
+
+						every_sub_realm_title = {
+
+							limit = {
+
+								tier >= tier_county
+
+								NOT = { holder ?= scope:otherinvader }
+
+							}
+
+							change_title_holder_include_vassals = {
+
+								holder = scope:otherinvader
+
+								change = scope:change
+
+								take_baronies = no
+
+							}
+
+												}
+
+					}
+
+				resolve_title_and_vassal_change = scope:change
+
+			}
+
+	
+
+			add_prestige = 5000
+
+			add_piety = 5000
+
+			add_gold = 500
+
+
+
+	set_artifact_rarity_illustrious = yes
+
+
+
+	create_artifact = {
+
+
+
+		name = crown_of_the_great_other_name
+
+
+
+		description = crown_of_the_great_other_description
+
+
+
+		type = helmet
+
+
+
+		visuals = crown_of_true_winter_visuals
+
+
+
+		wealth = scope:wealth
+
+
+
+		quality = scope:quality
+
+
+
+		template = crown_of_true_winter_template
+
+
+
+		modifier = crown_of_true_winter_modifier
+
+
+
+		save_scope_as = newly_created_artifact
+
+
+
+		decaying = no
+
+
+
+	}
+
+
+
+
+
+
+
+	scope:newly_created_artifact = {
+
+
+
+		set_variable = { name = crown_of_true_winter_artifact value = yes }
+
+
+
+		set_variable = { name = historical_unique_artifact value = yes }
+
+
+
+	}
+
+
+
+ ### Sword
+
+
+
+	set_artifact_rarity_illustrious = yes
+
+
+
+	create_artifact = {
+
+
+
+		name = others_sword
+
+
+
+		visuals = others_sword_visuals
+
+
+
+		description = other_sword_description
+
+
+
+		type = sword
+
+
+
+		wealth = scope:wealth
+
+
+
+		quality = scope:quality
+
+
+
+		template = others_sword_template
+
+
+
+		history = {
+
+
+
+			type = created_before_history
+
+
+
+			date = 50.1.1
+
+
+
+		}
+
+
+
+		modifier = others_sword_modifier
+
+
+
+		save_scope_as = newly_created_artifact
+
+
+
+		decaying = yes
+
+
+
+	}
+
+
+
+	scope:newly_created_artifact = {
+
+
+
+		set_variable = { name = historical_unique_artifact value = yes }
+
+
+
+		equip_artifact_to_owner = yes
+
+
+
+	}
+
+
+
+	spawn_army = { 
+
+
+
+				men_at_arms = {
+
+
+
+					type = other_maa
+
+
+
+					# 10 Aug: was 100. stack = 500, so this line alone put 50,000 of the toughest unit in the game
+
+					# on the map at setup -- 2.5x the entire wight horde cap (40 regiments of 8/25 fodder, ~20,000),
+
+					# which inverts the design this mod states for itself: a small elite core on top of a big weak
+
+					# horde. 20 stacks = 10,000 elite. With the horde and levies the Night King still fields an army
+
+					# no single realm can meet alone -- which is the point. The Dawn is supposed to need allies.
+
+					# Reported as 45 dmg / 189 def by Franz Liszt; see long_night_maa_types.txt for the stat half.
+
+					stacks = 20
+
+
+
+				}
+
+
+
+			
+
+
+
+				men_at_arms = {
+
+
+
+					type = trebuchet
+
+
+
+					stacks = 100
+
+
+
+				}
+
+
+
+				name = wights
+
+
+
+
+
+
+
+			uses_supply = no
+
+
+
+			location = capital_province }
+
+
+
+
+
+
+
+#agot_create_artifact_crown_of_true_winter_effect = { OWNER = this }
+
+
+
+	
+
+
+
+	
+
+		create_story = {
+
+					type = long_night_story
+
+				}
+
+
+
+
+
+	
+
+
+
+
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+others_character_male_spawner = yes
+
+
+
+	# The Long Night+: a deeper bench of elite Others (the Night King's knights) so his core survives attrition.
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+	others_character_male_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+others_character_female_spawner = yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+others_character_male_spawner = {  
+
+
+
+
+
+
+
+
+
+
+
+create_character = {
+
+
+
+				name = other_name
+
+
+
+				age = { 6000 7000 }
+
+
+
+				culture = culture:frostborn
+
+
+
+				gender = male
+
+
+
+				dynasty_house = house:house_theothers
+
+
+
+				faith = faith:cold_gods
+
+
+
+				#father = scope:otherinvader
+
+
+
+				employer = scope:otherinvader
+
+
+
+				random_traits = yes
+
+
+
+				trait = other_trait
+
+
+
+				trait = spindly
+
+
+
+				random_traits_list = {
+
+
+
+					education_martial_1 = { weight = { base = 20 } }
+
+
+
+					education_martial_2 = { weight = { base = 20 } }
+
+
+
+					education_martial_3 = { weight = { base = 45 } }
+
+
+
+					education_martial_4 = { weight = { base = 15 } }
+
+
+
+				}
+
+
+
+				after_creation = {
+
+
+
+				
+
+
+
+								add_character_flag = agot_immersion_bannermen_blocker
+
+								# 1.0.7: identity is stamped at creation, not inferred later. See ln_is_one_of_them_trigger.
+
+								add_character_flag = ln_one_of_them
+
+
+
+								add_character_flag = ai_immune_to_mental_breaks		
+
+
+
+								add_character_flag = immune_to_disease		
+
+
+
+								set_sexuality = asexual
+
+
+
+								#add_character_modifier = diplomacy_majesty_4090_no_raiment_modifier
+
+
+
+								make_trait_inactive = cool_silver_hair
+
+
+
+								make_trait_inactive = blue_eyes
+
+
+
+					if = {
+
+
+
+						limit = { has_trait = dwarf }
+
+
+
+						remove_trait = dwarf
+
+
+
+					}
+
+
+
+					if = {
+
+
+
+						limit = { has_trait = clubfooted }
+
+
+
+						remove_trait = clubfooted
+
+
+
+					}
+
+
+
+				}
+
+
+
+				
+
+
+
+				save_scope_as = otherspawn
+
+
+
+
+
+
+
+			}
+
+
+
+			scope:otherspawn = {
+
+
+
+			
+
+
+
+			
+
+
+
+						 ### Sword
+
+
+
+	set_artifact_rarity_illustrious = yes
+
+
+
+	create_artifact = {
+
+
+
+		name = others_sword
+
+
+
+		visuals = others_sword_visuals
+
+
+
+		# WAS `others_sword_description`, WHICH HAS NEVER EXISTED. The defined key is singular --
+		# other_sword_description, in theothers_l_english.yml -- and the mod's other two create_artifact
+		# sites already use it. Two of the four Crystal Swords in every campaign, the Night King's among
+		# them, have carried no description at all.
+		description = other_sword_description
+
+
+
+		type = sword
+
+
+
+		wealth = scope:wealth
+
+
+
+		quality = scope:quality
+
+
+
+		template = others_sword_template
+
+
+
+		history = {
+
+
+
+			type = created_before_history
+
+
+
+			date = 50.1.1
+
+
+
+		}
+
+
+
+		modifier = others_sword_modifier
+
+
+
+		save_scope_as = newly_created_artifact
+
+
+
+		decaying = yes
+
+
+
+	}
+
+
+
+	scope:newly_created_artifact = {
+
+
+
+		set_variable = { name = historical_unique_artifact value = yes }
+
+
+
+		equip_artifact_to_owner = yes
+
+
+
+	}
+
+
+
+					}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+others_character_female_spawner = {  
+
+
+
+
+
+
+
+create_character = {
+
+
+
+				name = other_name
+
+
+
+				age = { 6000 7000 }
+
+
+
+				culture = culture:frostborn
+
+
+
+				gender = female
+
+
+
+				dynasty_house = house:house_theothers
+
+
+
+				faith = faith:cold_gods
+
+
+
+				#father = scope:otherinvader
+
+
+
+				employer = scope:otherinvader
+
+
+
+				random_traits = yes
+
+
+
+				trait = spindly
+
+
+
+				trait = other_trait
+
+
+
+				trait = witch
+
+
+
+				random_traits_list = {
+
+
+
+					education_martial_1 = { weight = { base = 20 } }
+
+
+
+					education_martial_2 = { weight = { base = 20 } }
+
+
+
+					education_martial_3 = { weight = { base = 45 } }
+
+
+
+					education_martial_4 = { weight = { base = 15 } }
+
+
+
+				}
+
+
+
+				random_traits_list = {
+
+
+
+					beauty_good_1 = { weight = { base = 40 } }
+
+
+
+					beauty_good_2 = { weight = { base = 45 } }
+
+
+
+					beauty_good_3 = { weight = { base = 15 } }
+
+
+
+				}
+
+
+
+				after_creation = {
+
+
+
+				
+
+
+
+								add_character_flag = agot_immersion_bannermen_blocker
+
+								# 1.0.7: identity is stamped at creation, not inferred later. See ln_is_one_of_them_trigger.
+
+								add_character_flag = ln_one_of_them
+
+
+
+								add_character_flag = ai_immune_to_mental_breaks		
+
+
+
+								add_character_flag = immune_to_disease
+
+
+
+								make_trait_inactive = cool_silver_hair
+
+
+
+								make_trait_inactive = blue_eyes
+
+
+
+					if = {
+
+
+
+						limit = { has_trait = dwarf }
+
+
+
+						remove_trait = dwarf
+
+
+
+					}
+
+
+
+					if = {
+
+
+
+						limit = { has_trait = clubfooted }
+
+
+
+						remove_trait = clubfooted
+
+
+
+					}
+
+
+
+				}
+
+
+
+				
+
+
+
+				save_scope_as = otherspawn
+
+
+
+
+
+
+
+			}
+
+
+
+			scope:otherspawn = {
+
+
+
+			
+
+
+
+						 ### Sword
+
+
+
+	set_artifact_rarity_illustrious = yes
+
+
+
+	create_artifact = {
+
+
+
+		name = others_sword
+
+
+
+		visuals = others_sword_visuals
+
+
+
+		description = other_sword_description
+
+
+
+		type = sword
+
+
+
+		wealth = scope:wealth
+
+
+
+		quality = scope:quality
+
+
+
+		template = others_sword_template
+
+
+
+		history = {
+
+
+
+			type = created_before_history
+
+
+
+			date = 50.1.1
+
+
+
+		}
+
+
+
+		modifier = others_sword_modifier
+
+
+
+		save_scope_as = newly_created_artifact
+
+
+
+		decaying = yes
+
+
+
+	}
+
+
+
+	scope:newly_created_artifact = {
+
+
+
+		set_variable = { name = historical_unique_artifact value = yes }
+
+
+
+		equip_artifact_to_owner = yes
+
+
+
+	}
+
+
+
+					}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+others_decide_if_invasion_will_happen_effect = {
+
+
+
+	if = {
+
+
+
+		limit = {
+
+
+
+			NOT = { has_global_variable = others_invasion_will_happen }
+
+
+
+		}
+
+
+
+		set_global_variable = {
+
+
+
+			name = others_invasion_will_happen
+
+
+
+			value = no
+
+
+
+		}
+
+
+
+		
+
+
+
+		random = {
+
+
+
+			chance = {
+
+
+
+				value = 0
+
+
+
+			
+
+
+
+				if = {
+
+
+
+					limit = {
+
+
+
+						has_game_rule = others_remote_odds_invasion_chance
+
+
+
+					}
+
+
+
+					add = 25
+
+
+
+				}
+
+
+
+				if = {
+
+
+
+					limit = {
+
+
+
+						has_game_rule = others_even_odds_invasion_chance
+
+
+
+					}
+
+
+
+					add = 50
+
+
+
+				}
+
+
+
+				if = {
+
+
+
+					limit = {
+
+
+
+						has_game_rule = others_near_certain_invasion_chance
+
+
+
+					}
+
+
+
+					add = 75
+
+
+
+				}
+
+
+
+				if = {
+
+
+
+					limit = {
+
+
+
+						has_game_rule = others_certain_invasion_chance
+
+
+
+					}
+
+
+
+					add = 100
+
+
+
+				}
+
+
+
+			}
+
+
+
+			
+
+
+
+			set_global_variable = {
+
+
+
+				name = others_invasion_will_happen
+
+
+
+				value = yes
+
+
+
+			}
+
+
+
+		}
+
+
+
+	}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Scouring
+
+
+
+
+
+
+
+longnight_create_other_for_scouring = {
+
+
+
+	create_character = {
+
+
+
+		name = other_leader_name
+
+
+
+		gender = male
+
+
+
+		template = other_template
+
+
+
+		save_scope_as = other
+
+
+
+		location = scope:target_location
+
+
+
+		culture = culture:frostborn
+
+
+
+		faith = faith:cold_gods
+
+
+
+		dynasty_house = house:house_theothers
+
+
+
+	}
+
+
+
+	# Set up title so that war can be declared
+
+
+
+	create_dynamic_title = {
+
+
+
+		tier = duchy
+
+
+
+		name = others_duchy_title
+
+
+
+	}
+
+
+
+	create_title_and_vassal_change = {
+
+
+
+		type = created
+
+
+
+		save_scope_as = change
+
+
+
+		add_claim_on_loss = no
+
+
+
+	}
+
+
+
+	scope:new_title = {
+
+
+
+		set_capital_county = $TARGET$.capital_county
+
+
+
+		set_landless_title = yes
+
+
+
+		set_destroy_on_succession = yes
+
+
+
+		set_delete_on_destroy = yes
+
+
+
+		set_no_automatic_claims = yes
+
+
+
+		set_definitive_form = yes
+
+
+
+		set_can_be_named_after_dynasty = no
+
+
+
+		change_title_holder = {
+
+
+
+			holder = scope:other
+
+
+
+			change = scope:change
+
+
+
+		}
+
+
+
+	}
+
+
+
+	resolve_title_and_vassal_change = scope:change
+
+
+
+}
+
+
+
+longnight_spawn_army_for_scouring = { # TARGET
+
+
+
+	scope:other = {
+
+
+
+	
+
+
+
+		hidden_effect = { add_gold = 100 }
+
+
+
+		start_war = {
+
+
+
+			cb = scouring_cb
+
+
+
+			target = $TARGET$
+
+
+
+			target_title = $TARGET$.primary_title
+
+
+
+		}
+
+
+
+		set_variable = {
+
+
+
+							name = others_army_size
+
+
+
+							value = $TARGET$.max_military_strength 
+
+
+
+							}
+
+
+
+		# PHASE-AWARE, 10 Aug. This was a flat multiply = 1.5 with nothing anywhere justifying it, and it is the
+
+		# single most consequential number in the mod: the invasion army is scaled off the VICTIM, so 1.5 meant
+
+		# every realm faced 150% of its own total strength plus 3,000 elite men-at-arms, forever, no matter how
+
+		# well it had prepared -- and a stronger realm summoned a stronger enemy. Unwinnable by construction.
+
+		#
+
+		# Now the Cold Winds spawn at PARITY and only the Long Night proper spawns at 1.5. The decade of warning
+
+		# becomes a fight a prepared realm with allies can actually win, and the escalation is something the
+
+		# player can see coming -- which is the entire point of the preparation layer (dragonglass, Valyrian
+
+		# steel, the pledge). The hardest battle in the mod is still the last one.
+
+		if = {
+
+			limit = {
+
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+
+			}
+
+			change_variable = {
+
+				name = others_army_size
+
+				multiply = 1.5
+
+			}
+
+		}
+
+
+		# AND A CEILING, 10 Aug -- read off a live 294 AC run, not theorised.
+
+		#
+
+		# spawn_army leaves a PERMANENT army behind and CK3 ships no kill_army effect to disband it with. Each
+
+		# scouring also creates a NEW Other to carry its host, so the hosts accumulate across characters and all
+
+		# of them join the same war as attackers. The screenshot: the Others fielding 429,171 men against a
+
+		# defender with 32,710 -- and 392,200 of that, NINETY-ONE PERCENT, was accumulated scouring levies. The
+
+		# men-at-arms everyone has been arguing about were a rounding error. The accumulation was the entire
+
+		# difficulty curve, and nothing bounded it.
+
+		#
+
+		# 25,000 a host. A small realm still cannot survive one alone; a great house can meet one and lose to
+
+		# three. That is the shape the war is supposed to have -- the living lose ground steadily and only a
+
+		# coalition reverses it -- instead of a number no coalition could ever answer.
+
+		change_variable = {
+
+			name = others_army_size
+
+			max = 25000
+
+		}
+
+
+
+						
+
+
+
+		
+
+
+
+		
+
+
+
+		
+
+
+
+		if = {
+
+
+
+			limit = {exists = scope:target_location }
+
+
+
+			spawn_army = {
+
+
+
+				name = scouring_army_name
+
+
+
+				levies = var:others_army_size
+
+
+
+				men_at_arms = {
+
+
+
+					type = other_maa
+
+
+
+					stacks = 6
+
+
+
+				}
+
+
+
+				# men_at_arms = {
+
+
+
+				# 	type = regiment_northman_crannog_archers
+
+
+
+				# 	stacks = 3
+
+
+
+				# }
+
+
+
+				location = scope:target_location
+
+
+
+			}
+
+
+
+		}
+
+
+
+		else = {
+
+
+
+			spawn_army = {
+
+
+
+				name = scouring_army_name
+
+
+
+				levies = var:others_army_size
+
+
+
+				men_at_arms = {
+
+
+
+					type = other_maa
+
+
+
+					stacks = 6
+
+
+
+				}
+
+
+
+				# men_at_arms = {
+
+
+
+				# 	type = regiment_northman_crannog_archers
+
+
+
+				# 	stacks = 3
+
+
+
+				# }
+
+
+
+				location = $TARGET$.location
+
+
+
+			}
+
+
+
+		}
+
+
+
+	}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+longnight_reform_nightswatch_effect = {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create_character = {
+
+
+
+							#name = "Other"
+
+
+
+							gender = male
+
+							# A character needs a location OR an employer, exactly one -- and he had neither.
+							# He is about to be handed Castle Black, so he is born there. title_province on a
+							# title scope is AGOT's own idiom (149 uses of scope:birth_location.title_province).
+							location = title:b_castle_black.title_province
+
+
+
+							culture = culture:northman
+
+
+
+							faith = faith:old_gods_wnw
+
+
+
+							age = { 16 45 }
+
+
+
+							trait = nightswatch
+
+
+
+							save_scope_as = new_lord_commander
+
+
+
+						}
+
+
+
+
+
+
+
+scope:new_lord_commander = {
+
+
+
+get_title = title:c_castle_black
+
+
+
+get_title = title:c_the_nightfort
+
+
+
+get_title = title:c_the_shadow_tower
+
+
+
+get_title = title:c_eastwatch
+
+
+
+get_title = title:d_the_wall
+
+
+
+get_title = title:k_the_wall
+
+
+
+
+
+
+
+change_government = nights_watch_government
+
+
+
+		add_gold = 500
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+destroy_others_kingdom_titles = {
+
+
+
+
+
+
+
+every_held_title = { 
+
+
+
+limit = { tier > tier_county }
+
+
+
+
+
+
+
+prev = { destroy_title = prev }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+agot_long_night_iron_throne_reformation_effect = { 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+every_ruler = { limit = { 
+
+
+
+	AND = { is_independent_ruler = yes 
+
+
+
+	this.capital_barony.title_province = { geographical_region = world_westeros_seven_kingdoms }
+
+
+
+	is_landed = yes
+
+
+
+	}
+
+
+
+	}
+
+
+
+	
+
+
+
+	trigger_event = {
+
+
+
+						id = others_maintenance.3
+
+
+
+						days = 1
+
+
+
+					}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if = { limit = { has_game_rule = longnight_iron_throne_reformation_on }	 
+
+
+
+#	###Reform 7 Kingdoms
+
+
+
+#	
+
+
+
+#	if = { limit = { exists = title:h_the_iron_throne.holder }
+
+
+
+#	if = { limit = { title:k_the_north.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#		title:k_the_north.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#	if = { limit = { title:k_the_riverlands.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#		title:k_the_riverlands.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#	if = { limit = { title:k_the_vale.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#		title:k_the_vale.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#	if = { limit = { title:k_the_westerlands.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#		title:k_the_westerlands.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#	if = { limit = { title:k_the_crownlands.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#	title:k_the_crownlands.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#	if = { limit = { title:k_the_reach.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#	title:k_the_reach.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}			
+
+
+
+#	if = { limit = { title:k_the_stormlands.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#	title:k_the_stormlands.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#	if = { limit = { title:k_dorne.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#	title:k_dorne.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#	if = { limit = { title:k_the_iron_islands.holder = { is_vassal_of = title:h_the_others.holder } }
+
+
+
+#	title:k_the_iron_islands.holder = {	trigger_event = {
+
+
+
+#						id = others_maintenance.2
+
+
+
+#						days = 2
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#					}
+
+
+
+#	
+
+
+
+#	}
+
+
+
+#	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+agot_spawn_adult_ice_dragon_effect = {
+
+
+
+
+
+
+
+
+
+
+
+	ordered_living_dragon = {
+
+
+
+			
+
+
+
+			order_by = age
+
+
+
+			position = 0
+
+
+
+			save_scope_as = oldest_dragon
+
+
+
+		}
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	create_character = {
+
+
+
+		name = dragon_skroth
+
+
+
+		gender = male 
+
+
+
+		culture = culture:dragon_culture
+
+
+
+		faith = faith:valyrian_pan_freehold
+
+
+
+		location = location
+
+
+
+		age = scope:oldest_dragon.age
+
+
+
+		dynasty_house = house:house_theothers
+
+
+
+		trait = immortal
+
+
+
+		trait = dragon
+
+
+
+		trait = education_dragon_1
+
+
+
+		trait = dragon_physique_good_3
+
+
+
+		trait = dragon_solitary
+
+
+
+		trait = dragon_bloodthirsty
+
+
+
+		trait = dragon_voracious
+
+
+
+		trait = dragon_defiant
+
+
+
+
+
+
+
+
+
+
+
+		random_traits = no
+
+
+
+
+
+
+
+		save_scope_as = dragon
+
+
+
+
+
+
+
+		after_creation = {
+
+
+
+			set_variable = {
+
+
+
+				name = dragon_gender_hidden
+
+
+
+				value = 1
+
+
+
+			}
+
+
+
+
+
+
+
+			create_story = story_dragon_alive
+
+
+
+
+
+
+
+			# Needed for visuals
+
+
+
+			set_variable = {
+
+
+
+				name = dragon_age
+
+
+
+				value = age
+
+
+
+			}
+
+
+
+
+
+
+
+			#Set dragon visual gene ranges here.
+
+
+
+			agot_back_apply_dragon_aging_effect = yes
+
+
+
+		#Ice Dragon Appearance
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_primary_color_hue
+
+
+
+				value = 0.05
+
+
+
+			}
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_primary_color_value
+
+
+
+				value = 0.05
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_secondary_hue
+
+
+
+				value = 0.65
+
+
+
+			}
+
+
+
+			
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_secondary_value
+
+
+
+				value = 0.35
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_eye_color_hue
+
+
+
+				value = 0.0
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_eye_color_value
+
+
+
+				value = 0.0
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_horn_color_hue
+
+
+
+				value = 0.55
+
+
+
+			}
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_horn_color_value
+
+
+
+				value = 0.0
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_brow_width
+
+
+
+				value = 1.0
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_cheek_width
+
+
+
+				value = 0.26
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_chin_profile
+
+
+
+				value = 1.0
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_crest_depth
+
+
+
+				value = 0.59
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_head_roundness
+
+
+
+				value = 0.99
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_horns_eyebrow_length
+
+
+
+				value = 0.31
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_main_horn_shape_template
+
+
+
+				value = 4
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_main_horn_shape_value
+
+
+
+				value = 0.36
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_jaw_width
+
+
+
+				value = 0.47
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_lower_jaw_height
+
+
+
+				value = 0.48
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_lower_jaw_width
+
+
+
+				value = 0.13
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_old_neck
+
+
+
+				value = 0.22
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_outer_brow_height
+
+
+
+				value = 0.18
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_snout_height
+
+
+
+				value = 0.56
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_snout_length
+
+
+
+				value = 0.25
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_snout_profile
+
+
+
+				value = 0.5
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_snout_width
+
+
+
+				value = 0.36
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_upper_jaw_width
+
+
+
+				value = 0.03
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_center_fin_size
+
+
+
+				value = 0.12
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_back_spike_size
+
+
+
+				value = 0.87
+
+
+
+			}
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_horns_eyebrow
+
+
+
+				value = 0.5
+
+
+
+			}
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_neck_spike_size
+
+
+
+				value = 0.5
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_side_fin_size
+
+
+
+				value = 0.5
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_snout_end_width
+
+
+
+				value = 0.8
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_neck_length
+
+
+
+				value = 0.8
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = gene_dragon_tail_length
+
+
+
+				value = 0.8
+
+
+
+			}
+
+
+
+
+
+
+
+			set_variable = {
+
+
+
+				name = color_grading
+
+
+
+				value = flag:darkest
+
+
+
+			}
+
+
+
+			set_variable = {
+
+
+
+				name = color
+
+
+
+				value = flag:white
+
+
+
+			}
+
+
+
+
+
+
+
+			# ── THE EIGHT GENES THIS PATH NEVER ROLLED ──────────────────────────────────────────────
+			# story_dragon_variable_storage:on_setup reads FORTY-TWO gene_dragon_* variables off the
+			# dragon. This effect sets thirty-four. The live log on 10 Aug caught the other eight, twelve
+			# times in one run: 'Failed to fetch variable for gene_dragon_body_shading_template' and
+			# 'Event target link var returned an unset scope', at agot_story_cycle_dragon_variables.txt
+			# lines 98 and 150. Inherited from Long Night+, which omits exactly the same eight.
+			#
+			# NOT COSMETIC BOOKKEEPING. 00_agot_dragon_gene_values.txt:672 shows the portrait system
+			# reads a dragon's genes back OUT OF THE STORY CYCLE, not off the character. Unset reads as
+			# zero, no entry in portrait_modifiers/00_agot_dragon_genes.txt matches, and the dragon
+			# renders flat: no body shading, no wing shading, no tertiary colour, no metallic scales.
+			#
+			# AGOT's ordinary path never has this problem because agot_become_the_dragon calls
+			# agot_gen_appearance_variables, which rolls all forty-two. This path hand-writes its list
+			# instead, because an ice dragon is not supposed to be randomly coloured. So the eight are
+			# hand-written too, cold: template ranges verified against AGOT (body 1-16, wings 1-20, the
+			# rest 0-1 floats), tertiary hue matched to ln_apply_the_cold_effect's horn hue.
+			#
+			# ln_raise_fallen_dragon_effect -- the route the Others normally use now -- already sets all
+			# forty-two and needs none of this. Only the legacy agot_long_night_dragon_on rule comes here.
+			set_variable = { name = gene_dragon_tertiary_hue             value = 0.55 }
+			set_variable = { name = gene_dragon_tertiary_value           value = 0.1  }
+			set_variable = { name = gene_dragon_body_shading_template    value = 1    }
+			set_variable = { name = gene_dragon_body_shading_value       value = 0.5  }
+			set_variable = { name = gene_dragon_wings_shading_template   value = 1    }
+			set_variable = { name = gene_dragon_wings_shading_value      value = 0.5  }
+			set_variable = { name = gene_dragon_metallic_scales_strength value = 0.0  }
+			set_variable = { name = gene_dragon_wounded                  value = 0.0  }
+
+			# Create and pass the variables to the story cycle
+
+
+
+			agot_dragon_transfer_vars_to_story_cycle_effect = { DRAGON = scope:dragon }
+
+
+
+		}
+
+
+
+		
+
+
+
+	}
+
+
+
+	
+
+
+
+	hidden_effect = {
+
+
+
+									agot_tame_dragon = {
+
+
+
+										TAMER = root.story_owner
+
+
+
+										DRAGON = scope:dragon
+
+
+
+									}
+
+
+
+									
+
+
+
+									scope:dragon = { 
+
+
+
+									change_dragon_size = {
+
+
+
+										VALUE = scope:oldest_dragon.dragon_size
+
+
+
+									}
+
+
+
+									
+
+
+
+									}
+
+
+
+								}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+escape_noble_effect = {
+
+	# A landless courtier flees south to SAFETY rather than being raised — they join a safe southern court instead
+
+	# of founding an adventurer camp. This keeps the laamp count (and the player's performance) in check, so no cap
+
+	# gate is needed on this path. Priority: a relative, then a ruler of their own culture, then any safe ruler. If
+
+	# no safe host exists at all they simply do not flee (and are raised as a wight) — the flag is set only on success.
+
+	save_scope_as = fleeing_courtier
+
+	if = {
+
+		limit = { any_close_or_extended_family_member = { ln_safe_flee_host_trigger = yes } }
+
+		random_close_or_extended_family_member = {
+
+			limit = { ln_safe_flee_host_trigger = yes }
+
+			save_scope_as = flee_host
+
+		}
+
+	}
+
+	else_if = {
+
+		limit = { any_ruler = { ln_safe_flee_host_trigger = yes  culture = scope:fleeing_courtier.culture } }
+
+		random_ruler = {
+
+			limit = { ln_safe_flee_host_trigger = yes  culture = scope:fleeing_courtier.culture }
+
+			save_scope_as = flee_host
+
+		}
+
+	}
+
+	else_if = {
+
+		limit = { any_ruler = { ln_safe_flee_host_trigger = yes } }
+
+		random_ruler = {
+
+			limit = { ln_safe_flee_host_trigger = yes }
+
+			save_scope_as = flee_host
+
+		}
+
+	}
+
+	if = {
+
+		limit = { exists = scope:flee_host }
+
+		add_stress = medium_stress_impact_gain   # the shock of fleeing (these courtiers are never brave — gated in mutate_into_other_effect)
+
+		add_character_flag = dawn_refugee
+
+		add_character_flag = dawn_refugee_courtier       # path marker: fled as a landless courtier (vs dawn_refugee_lord) — for saves debugging + aftermath flavor
+
+		add_character_modifier = dawn_refugee_modifier   # visible "Fled South" marker
+
+		set_employer = scope:flee_host                   # take refuge in a safe southern court — no adventurer camp
+
+	}
+
+}
+
+
+
+# Landed variant (used by the Flee South decision): a lord abandons their seat ahead of the dead.
+
+# Root = a domicile. Add a tier-2 camp building, putting its tier-1 in first if it is missing.
+#
+# 10 Aug, off the live log: flee_noble_south_effect force-added six tier-2 buildings directly and the engine
+# refused every one -- "Cannot construct an upgrade when previous building has not been built", ~151 per run.
+# add_domicile_building ignores cost and construction time but it does NOT ignore the prerequisite chain, and
+# each of the six declares one in common/domiciles/00_camp_buildings.txt:
+#   supply_tent_reserve_provisions <- supply_tent_01      mess_tent_cooks              <- mess_tent_01
+#   camp_fire_local_hangers_on     <- camp_fire_01        baggage_train_porters        <- baggage_train_01
+#   proving_grounds_training_circle<- proving_grounds_01  barber_tent_surgeons_tools   <- barber_tent_01
+#
+# So the fled lord's camp was getting NOTHING, silently, in every game -- the errors were the only trace of a
+# feature that never ran. Guard-then-add is vanilla's own idiom (00_administrative_effects.txt:430).
+# has_domicile_building_or_higher rather than has_domicile_building: the plain form misses upgraded tiers and
+# would re-add a base the lord has already outgrown.
+# 1.0.12 -- TWO MORE WAYS TO FAIL, BOTH MEASURED, 14 PER RUN. The 10 Aug guard below (re-test the base
+# rather than trust the add) was right and stays. It just did not cover everything add_domicile_building
+# refuses to do:
+#
+#   7x  Domicile owner failed to meet triggered requirements: 'camp_fire_local_hangers_on'
+#   5x  Domicile owner failed to meet triggered requirements: 'supply_tent_reserve_provisions'
+#   2x  Domicile has no free building slots: 'barber_tent_...'
+#
+# THE FIRST TWO ARE THE UPGRADE'S OWN can_construct, AND IT IS EXACTLY TWO. Of the six pairs this effect is
+# called with, only these two carry a can_construct at all, and both carry the same one -- vanilla
+# common/domiciles/buildings/00_camp_buildings.txt, camp_fire_local_hangers_on:4185 and
+# supply_tent_reserve_provisions: a custom_tooltip wrapping `has_realm_law_flag = unlocks_<key>`, i.e. the
+# camp's PURPOSE has to have unlocked that building. mess_tent_cooks, baggage_train_porters,
+# proving_grounds_training_circle and barber_tent_surgeons_tools have no can_construct block, and no
+# unlocks_ flag exists for them anywhere in common/laws -- so a generic `has_realm_law_flag =
+# unlocks_$UPGRADE$` would have been worse than the bug, silently blocking the four that were working.
+# The gate is therefore passed IN, one trigger per call site, defaulting to `always = yes`.
+# It is checked on `owner` because that is who the engine tested -- "Domicile OWNER failed to meet".
+#
+# THE THIRD IS SLOTS, AND ONLY THE BASE NEEDS ONE. An upgrade replaces its base in the slot it already
+# occupies (previous_building = camp_fire_01 and friends), so it needs no free slot of its own; a base does.
+# domicile_building_has_free_internal_slot takes the MAIN building of the domicile, not the building being
+# added -- vanilla's own idiom in add_random_internal_japanese_manor_building
+# (common/scripted_effects/10_dlc_tgp_japan_scripted_effects.txt:429), which passes japanese_manor_main_01
+# even for a manor sitting at main_03. The camp equivalent is camp_main_01.
+#
+# WHEN AGOT OR VANILLA TOUCH 00_camp_buildings.txt, RE-CHECK WHICH OF THE SIX CARRY A can_construct. A new
+# gate upstream shows up here as this error coming back, not as a build failure.
+ln_camp_add_upgrade_effect = {
+	if = {
+		limit = {
+			NOT = { has_domicile_building_or_higher = $BASE$ }
+			domicile_building_has_free_internal_slot = camp_main_01
+		}
+		add_domicile_building = $BASE$
+	}
+	# 10 Aug -- ONLY REACH FOR THE UPGRADE IF THE BASE ACTUALLY LANDED. add_domicile_building force-adds but it
+	# SILENTLY NO-OPS when the camp has no free slot, and the upgrade behind it then throws "Cannot construct
+	# an upgrade when previous building has not been built". Both halves were in the live log
+	# (barber_tent_01 / barber_tent_surgeons_tools, camp_fire_01 / camp_fire_local_hangers_on). Testing the
+	# base again rather than trusting the add above is the whole fix.
+	if = {
+		limit = {
+			has_domicile_building_or_higher = $BASE$
+			NOT = { has_domicile_building_or_higher = $UPGRADE$ }
+			owner = { $GATE$ = $GATE_VALUE$ }
+		}
+		add_domicile_building = $UPGRADE$
+	}
+}
+
+flee_noble_south_effect = {
+
+	# Remember the lord's former standing BEFORE the titles are lost below — it scales both the starting camp and
+
+	# (later) the retinue they bring south. Camp level: count → 1 (default), duke → 2, king → 3, emperor/hegemon → 4.
+
+	if = { limit = { highest_held_title_tier >= tier_empire } save_scope_value_as = { name = ln_camp_level value = 4 } }
+
+	else_if = { limit = { highest_held_title_tier >= tier_kingdom } save_scope_value_as = { name = ln_camp_level value = 3 } }
+
+	else_if = { limit = { highest_held_title_tier >= tier_duchy } save_scope_value_as = { name = ln_camp_level value = 2 } }
+
+	else = { save_scope_value_as = { name = ln_camp_level value = 1 } }
+
+	# PERSIST the standing and the lost seat as real variables (the scope value above dies with this effect):
+
+	# the aftermath "Return North" pull reads them YEARS later to scale the settler retinue and aim the lord back
+
+	# at his own ancestral county (the seat COUNTY, not the primary title — a fled king targets his capital county).
+
+	set_variable = { name = ln_camp_level value = scope:ln_camp_level }
+
+	if = {
+
+		limit = { is_landed = yes  exists = capital_county }
+
+		set_variable = { name = ln_lost_seat value = capital_county }
+
+	}
+
+	# Note the lord's cultural men-at-arms BEFORE he loses his realm, so the reduced retinue he brings south is of his
+
+	# own people. We can't clone regiments across the loss of the realm, so we record the regional type here and
+
+	# respawn a scaled echo once he is landless. No match (a minor or exotic lord) → no retinue, just gold to recruit.
+
+	if = { limit = { "number_maa_regiments_of_type(frog_spears)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:north } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(river_bows)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:riverlands } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(finger_scouts)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:vale } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(royal_crossbowmen)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:crownlands } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(rain_bringers)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:westerlands } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(honeywine_quirrels)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:reach } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(marcher_longbowmen)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:stormlands } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(sun_spears)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:dorne } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(ironborn_reavers)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:ironman } }
+
+	else_if = { limit = { "number_maa_regiments_of_type(clan_raiders)" >= 1 } save_scope_value_as = { name = ln_maa_region value = flag:wildling } }
+
+	# The shock of fleeing — the brave are shamed to the core, the rest still shaken.
+
+	if = { limit = { has_trait = brave } add_stress = massive_stress_impact_gain }
+
+	else = { add_stress = medium_stress_impact_gain }
+
+	# Their lands do NOT fall to the Night King — a kinsman or retainer left behind takes them up, so the dead must
+
+	# still conquer them (the Night King keeps grinding). Priority: a capable adult vassal, else an adult courtier,
+
+	# else a generated heir (never leave a title without a holder).
+
+	if = {
+
+		limit = { is_landed = yes }
+
+		if = {
+
+			limit = { any_vassal = { ln_flee_successor_trigger = yes } }
+
+			ordered_vassal = {
+
+				limit = { ln_flee_successor_trigger = yes }
+
+				order_by = highest_held_title_tier
+
+				max = 1
+
+				check_range_bounds = no
+
+				save_scope_as = flee_successor
+
+			}
+
+		}
+
+		else_if = {
+
+			limit = { any_courtier = { ln_flee_successor_trigger = yes } }
+
+			random_courtier = {
+
+				limit = { ln_flee_successor_trigger = yes }
+
+				save_scope_as = flee_successor
+
+			}
+
+		}
+
+		else = {
+
+			create_character = {
+
+				# REQUIRED. Without it CK3 throws "Must specify gender data" and the successor this
+				# lord is about to hand his entire realm to is never created at all.
+				gender = male
+
+				age = { 25 45 }
+
+				culture = root.culture
+
+				faith = root.faith
+
+				location = capital_province
+
+				save_scope_as = flee_successor
+
+			}
+
+		}
+
+		create_title_and_vassal_change = { type = granted save_scope_as = flee_south_change }
+
+		every_held_title = {
+
+			# Live-log fix: the engine refuses change_title_holder on a capital BARONY ("change the
+			# ownership of the county instead", 51x) -- the county transfer carries it anyway.
+			# 10 Aug: the guard was too narrow and the error never stopped -- 194 more in the next run.
+			# `prev.capital_barony` is THE lord's own seat, singular. A lord holding three counties directly
+			# holds THREE capital baronies, and the engine refuses every one of them. is_capital_barony is a
+			# title-scope trigger (AGOT pairs it with tier = tier_barony the same way in
+			# 00_agot_blackfyre_wars.txt:77). Skipping them all is what the engine itself asks for --
+			# "change the ownership of the county instead" -- and the county transfer carries the barony.
+			limit = {
+				NOT = {
+					AND = {
+						tier = tier_barony
+						is_capital_barony = yes
+					}
+				}
+			}
+
+			change_title_holder = { holder = scope:flee_successor  change = scope:flee_south_change }
+
+		}
+
+		resolve_title_and_vassal_change = scope:flee_south_change
+
+	}
+
+	# Now landless: become a flagged refugee adventurer (rally fodder for the War for the Dawn).
+
+	add_character_flag = dawn_refugee
+
+	add_character_flag = dawn_refugee_lord           # path marker: fled as a landed lord via the decision (vs dawn_refugee_courtier) — for saves debugging + aftermath flavor
+
+	add_character_modifier = dawn_refugee_modifier   # visible "Fled South" marker
+
+	create_landless_adventurer_title_effect = {
+
+		REASON = flag:voluntary
+
+		FLAVOR_CHAR = root
+
+	}
+
+	# A lord does not flee into an empty field — scale his starting camp to his former standing (a count keeps the
+
+	# default camp_main_01; the chain upgrades cumulatively for duke/king/emperor).
+
+	# 10 Aug -- 1,388 ERROR LINES A SESSION, the single largest source in the run:
+	#   "untyped trigger [ Scoped object of type 'domicile' is not valid ((null) weak (Domicile)) ]"
+	#   common/decisions/00_agot_long_night_decisions.txt line 399 (flee_south_decision:effect)
+	#
+	# The camp is created by the government change a few lines up, and a government change that fails for ANY
+	# reason -- an ineligible entrant, a landless lord who had nothing to lay down, a save carried across a
+	# build -- leaves this whole block dereferencing a domicile that was never made. Every clause inside then
+	# throws, which is why one fleeing lord produced dozens of lines rather than one.
+	#
+	# Guarded rather than moved: the same shape ln_pitch_the_camp_effect already uses. A lord whose camp did
+	# not get made still flees; he just flees into a bare field, which is a worse outcome for him and no
+	# outcome at all for the log.
+	if = {
+		limit = { has_domicile = yes }
+		domicile = {
+
+		if = { limit = { scope:ln_camp_level >= 2 } add_domicile_building = camp_main_02 }
+
+		if = { limit = { scope:ln_camp_level >= 3 } add_domicile_building = camp_main_03 }
+
+		if = { limit = { scope:ln_camp_level >= 4 } add_domicile_building = camp_main_04 }
+
+		# Random secondary tents/wagons — which slots fill is left to chance, and a greater lord fills more (chance
+
+		# 25%/level per category). Duke up only: a count's bare camp has no spare slots. add_domicile_building
+
+		# force-adds (ignores cost/construction time); adds that find no free slot simply no-op.
+
+		if = {
+
+			limit = { scope:ln_camp_level >= 2 }
+
+			random = { chance = { value = 25 multiply = scope:ln_camp_level } ln_camp_add_upgrade_effect = { BASE = supply_tent_01  UPGRADE = supply_tent_reserve_provisions  GATE = has_realm_law_flag  GATE_VALUE = unlocks_supply_tent_reserve_provisions } }
+
+			random = { chance = { value = 25 multiply = scope:ln_camp_level } ln_camp_add_upgrade_effect = { BASE = mess_tent_01  UPGRADE = mess_tent_cooks  GATE = always  GATE_VALUE = yes } }
+
+			random = { chance = { value = 25 multiply = scope:ln_camp_level } ln_camp_add_upgrade_effect = { BASE = camp_fire_01  UPGRADE = camp_fire_local_hangers_on  GATE = has_realm_law_flag  GATE_VALUE = unlocks_camp_fire_local_hangers_on } }
+
+			random = { chance = { value = 25 multiply = scope:ln_camp_level } ln_camp_add_upgrade_effect = { BASE = baggage_train_01  UPGRADE = baggage_train_porters  GATE = always  GATE_VALUE = yes } }
+
+			random = { chance = { value = 25 multiply = scope:ln_camp_level } ln_camp_add_upgrade_effect = { BASE = proving_grounds_01  UPGRADE = proving_grounds_training_circle  GATE = always  GATE_VALUE = yes } }
+
+			random = { chance = { value = 25 multiply = scope:ln_camp_level } ln_camp_add_upgrade_effect = { BASE = barber_tent_01  UPGRADE = barber_tent_surgeons_tools  GATE = always  GATE_VALUE = yes } }
+
+		}
+
+	}
+	}
+
+	# Retinue: clean slate (destroys any regiments that lingered through the loss of his realm — no double army),
+
+	# then bring a reduced band of his OWN people's men-at-arms (size scaled by camp standing), of the regional type
+
+	# noted before he fled. Plus gold scaled to his former rank, so he can raise more from his new camp.
+
+	every_maa_regiment = { destroy_maa_regiment = yes }
+
+	if = {
+
+		limit = { exists = scope:ln_maa_region }
+
+		# FIX: create_maa_regiment's `size` is a literal int at PARSE time -- scope:ln_camp_level there was a
+
+		# malformed token, so ALL TEN regiments were dropped and a restored lord arrived with no men at all.
+
+		# The switch now lives in ln_camp_retinue_effect and takes SIZE as a macro parameter, which IS text-
+
+		# substituted before parsing (cf. game/common/scripted_effects/07_dlc_ep3_scripted_effects.txt).
+
+		if = {
+
+			limit = { scope:ln_camp_level >= 4 }
+
+			ln_camp_retinue_effect = { SIZE = 4 }
+
+		}
+
+		else_if = {
+
+			limit = { scope:ln_camp_level = 3 }
+
+			ln_camp_retinue_effect = { SIZE = 3 }
+
+		}
+
+		else_if = {
+
+			limit = { scope:ln_camp_level = 2 }
+
+			ln_camp_retinue_effect = { SIZE = 2 }
+
+		}
+
+		else = {
+
+			ln_camp_retinue_effect = { SIZE = 1 }
+
+		}
+
+	}
+
+	add_gold = { value = 250 multiply = scope:ln_camp_level }   # count 250 → emperor 1000, tunable
+
+}
+
+
+
+# The Long Night+ — #12 the Wall. Fired from long_night_story when the dead take Castle Black: the middle of the Wall
+
+# comes crashing down, a permanent scar (never restored). AGOT already builds the whole collapse system (meshes,
+
+# animation, particles, sound, conditional rendering) — we only trigger it.
+
+#   LAYER A (reliable, here): the exact building swap AGOT's own agot_wall_fall GUI performs — flag the fallen
+
+#   variable + remove special_the_wall + add special_the_wall_damaged. The swap is MANDATORY, not just the variable:
+
+#   graphical backgrounds only refresh when a building CHANGES in the holding (per 98_special_buildings.txt header).
+
+#   The broken-middle graphical is already active in AGOT, so this renders the shattered Wall.
+
+#   LAYER B (cinematic anim + sound CK3AGOT_wall_collapse_the_others + camera) is layered on once the agot_debug.1000
+
+#   animation test confirms the falling animation actually plays.
+
+agot_long_night_wall_collapse_effect = {
+
+	# One-shot: only if the Wall still stands.
+
+	if = {
+
+		limit = {
+
+			title:b_castle_black.title_province = {
+
+				NOT = { has_variable = agot_wall_has_fallen_left }
+
+				NOT = { has_variable = agot_wall_has_fallen_middle }
+
+				NOT = { has_variable = agot_wall_has_fallen_right }
+
+			}
+
+		}
+
+		# Cinematic for every human player. The widget event (long_night_plus_wall.1) plays the middle collapse
+
+		# animation, pans the camera, plays the music, AND breaks the Wall ITSELF on finish (its GUI calls AGOT's
+
+		# agot_wall_fall scripted GUI = sets agot_wall_has_fallen_middle + swaps the building). So we must NOT swap or
+
+		# set any variable here — a second fallen variable would conflict (two set => no broken graphical renders, the
+
+		# bug we hit). The breach is always the middle (the only animated collapse entity AGOT ships) — i.e. at Castle
+
+		# Black itself.
+
+		every_player = {
+
+			trigger_event = { id = long_night_plus_wall.1 }
+			# v0.2.1: the monumental follow-up card, once the dust settles (see the event's own comment)
+			# 1.0.9 -- WAS days = 2, AND TWO DAYS IS ABOUT ONE SECOND. Thomas, 14 Aug live run: "I got another
+			# event about the Night King standing by the wall. And then when I clicked okay through that, the
+			# other event just disappeared." That is exactly this card landing ON TOP of the cinematic while the
+			# widget is still running -- .1's top-left window is what the widget clocks itself against, so
+			# dismissing anything that steals focus tears the collapse down mid-animation and the player loses
+			# the one shot they get at seeing the Wall come down.
+			#
+			# The window CANNOT be hidden and CANNOT be moved (see the header of long_night_plus_wall_events.txt
+			# -- both break the widget outright), so the only lever is the clock. Thirty days is longer than the
+			# animation at any game speed, and it is better writing besides: this card's own comment says it
+			# arrives "when the dust has settled and the realm understands what it saw". A month is that.
+			trigger_event = { id = long_night_plus_wall.2  days = 30 }
+
+		}
+
+		# Reliable fallback: with NO human player to play the widget (AI-only realm, or observer), the Wall would never
+
+		# fall. Two days on, break it directly if it is still standing (mirrors what the widget's agot_wall_fall does).
+
+		# 1.0.9 -- AND THIS ONE WAS THE DANGEROUS ONE. At days = 2 the AI fallback could break the Wall
+		# WHILE THE WIDGET WAS STILL ANIMATING it. Its trigger only asks whether the Wall is still standing;
+		# it does not and cannot ask whether a widget is mid-flight. The comment fifteen lines above spells
+		# out what that costs: the widget's own agot_wall_fall sets agot_wall_has_fallen_middle too, and
+		# "two set => no broken graphical render", which is a bug this project has already hit once.
+		# CORRECTED: an earlier version of this note claimed the race was visible in observer. It is not --
+		# Thomas, 14 Aug: "in regard to being in observer mode, I've never received any kind of events or pop
+		# ups, because those only fire for characters, and I wasn't a character." He is right, and that is
+		# exactly why this fallback exists at all: with no player character there is no .1 to break the Wall.
+		#
+		# The race is real for a PLAYING character, which is every time Thomas has actually seen the cinematic.
+		# Two in-game days at speed 5 is about a second of real time, so the fallback could fire while that
+		# player's widget was still animating. Thirty days lets the widget win every time; in a genuinely
+		# AI-only game nothing is watching and a month's delay on an off-screen building swap costs nobody
+		# anything.
+		trigger_event = { id = long_night_plus_wall.3 days = 30 }
+
+		# 13 Aug (1.0.6a) -- AND SOME OF THE WATCH GETS OUT. Snapshotted here, while they are still alive
+		# and still themselves, so the brothers-come-south card can offer REAL men instead of strangers.
+		# See ln_brothers_flee_south_effect.
+		ln_brothers_flee_south_effect = yes
+
+		# 13 Aug (1.0.6) -- the fall now LEAVES A MARK the player can read: a permanent county modifier on
+
+		# Castle Black (Jorahm: no modifier ever indicated the Wall had fallen). Removed when the Wall is
+
+		# raised again between waves -- see the re-arm block in ln_struggle_monthly_effect.
+
+		title:c_castle_black = {
+
+			add_county_modifier = { modifier = ln_wall_broken_modifier }
+
+		}
+
+	}
+
+}
+
+
+
+ln_mutate_into_other_unguarded_effect = {
+
+	# Nobles have a small chance to flee south ahead of the dead instead of being raised as
+
+	# wights — they become flagged refugee adventurers (fodder for the War for the Dawn).
+
+	if = {
+
+		limit = {
+
+			is_lowborn = no
+
+			is_landed = no                       # landed rulers become wights keeping their title; only their landless kin/courtiers may flee
+
+			is_adult = yes                       # no fleeing children
+
+			dynasty ?= { dynasty_prestige_level >= 3 }   # only nobles of real standing flee — refugees worth rallying to the Dawn
+
+			# v0.2.0: the hard `brave` exclusion is gone -- ln_noble_flee_chance_value weights it (-10) instead,
+
+			# so a brave man can still be pulled south by his family, just far less often.                  # the brave stand and fall — they do not flee
+
+			NOT = { has_trait = wight_trait }
+
+			NOT = { has_trait = other_trait }
+
+			NOT = { has_character_flag = dawn_refugee }
+
+		}
+
+		random = {
+
+			# v0.2.0: was a flat `chance = 3`. A house of ten lost everyone. Now scaled by temperament, age and
+
+			# what they have to run for -- see common/script_values/zz_ln_flee_values.txt. Typical 15-35%.
+
+			chance = ln_noble_flee_chance_value
+
+			escape_noble_effect = yes
+
+		}
+
+	}
+
+	# v0.2.0 -- THE LANDED LORD'S ROAD SOUTH.
+
+	# flee_noble_south_effect (this file, ~line 2926) is a complete, careful piece of work -- it records the lord's
+
+	# standing, remembers the seat he lost so the aftermath "Return North" decision can aim him back at it years
+
+	# later, notes his cultural men-at-arms so the retinue he brings south is of his own people, and installs a
+
+	# successor so his lands do NOT simply fall into the Night King's lap. Wepo94 wrote all of it and then never
+
+	# called it from anywhere. This is the call.
+
+	# Chance is much lower than the landless path and lower again the greater the house: a Stark does not walk away
+
+	# from Winterfell. See ln_lord_flee_chance_value.
+
+	if = {
+
+		limit = {
+
+			is_landed = yes
+
+			is_adult = yes
+
+			is_lowborn = no
+
+			NOT = { has_trait = wight_trait }
+
+			NOT = { has_trait = other_trait }
+
+			NOT = { has_character_flag = dawn_refugee }
+
+			NOT = { house ?= house:house_theothers }
+
+		}
+
+		random = {
+
+			chance = ln_lord_flee_chance_value
+
+			flee_noble_south_effect = yes
+
+			add_character_flag = dawn_refugee
+
+			add_character_flag = dawn_refugee_lord
+
+		}
+
+	}
+
+
+
+	# Everyone who did not flee is raised as a wight (undead thrall; keeps their title, becomes
+
+	# the Night King's vassal). Identical to the old Other conversion but with the temporary
+
+	# `wight` trait instead of `other_trait` (wights die when the Long Night ends).
+
+	if = {
+
+		limit = {
+
+			NOT = { has_character_flag = dawn_refugee }   # did not flee
+
+			NOT = { has_trait = other_trait }             # spare the true Others (Night King, spawned Others)
+
+			NOT = { house ?= house:house_theothers }  # never raise actual House of the Others members as wights
+
+			# 11 Aug -- AND NEVER THE MAP'S BOOKKEEPING. brindatm on the Workshop: "The ruins character ruin
+
+			# 'the sleeping warden' can get conquered and turned into a wight, this is very very not good.
+
+			# Maybe give his character a flag to not get wighted?" He is right on both counts, including the
+
+			# remedy. AGOT's Ruin_Empress and its of_the_Wilderness twin are placeholder rulers that hold the
+
+			# ruin and wilderness counties of the ENTIRE MAP so the engine has somewhere to put them. Raising
+
+			# one hands the Night King a character holding land in every corner of the world, and the block
+
+			# further down was already stripping its `ruin` / `wilderness` / `agot_dummy_trait` marker traits
+
+			# on the way through -- i.e. we were quietly promoting the scenery to a vassal.
+
+			#
+
+			# This is also a third cause of "Trying to set illegal government": ruins_government and
+
+			# wilderness_government declare no can_get_government at all, so change_government could never
+
+			# have succeeded on one of these anyway. See common/governments/zz_wight_government.txt.
+
+			#
+
+			# Guarded by trait AND by government, because either alone is one rename away from silence.
+
+			NOT = { has_trait = ruin }
+
+			NOT = { has_trait = wilderness }
+
+			NOT = { has_trait = agot_dummy_trait }
+
+			NOT = { has_government = ruins_government }
+
+			NOT = { has_government = wilderness_government }
+
+		}
+
+	# THE THIRD CAUSE OF "Trying to set illegal government" -- 210 a run -- AND the bug Lyon reported on the
+
+	# Workshop the same day: "the Long Night [realm] becomes the wild government type and stops progressing."
+
+	# They are one bug.
+
+	#
+
+	# wight_government declares primary_holding = tribal_holding and required_county_holdings = { tribal_holding },
+
+	# and its valid_holdings are castle / temple_citadel / settlement. Neither wilderness_holding nor ruin_holding
+
+	# is in either list -- so beyond the Wall, where wilderness holdings ARE the map, the government was never
+
+	# legal and the change failed. The raised ruler then KEPT wilderness_government, which is what Lyon saw.
+
+	#
+
+	# The previous fix converted capital_province ONLY. required_county_holdings validates against the whole
+
+	# CAPITAL COUNTY, and one leftover wilderness holding in any other province of it keeps the government
+
+	# illegal -- which is why the error never went away. Capital county, every province. set_holding_type in
+
+	# province scope is AGOT's own idiom (00_agot_colonization_effects.txt:507); every_county_province has 44
+
+	# uses in vanilla.
+
+	if = {
+
+		limit = { exists = capital_county }
+
+		capital_county = {
+
+			every_county_province = {
+
+				limit = { OR = { has_holding_type = wilderness_holding has_holding_type = ruin_holding } }
+
+				set_holding_type = tribal_holding
+
+			}
+
+		}
+
+	}
+
+	
+
+	# All wights use wight_government — a NON-DYNASTIC clone of tribal_government. It keeps full realm mechanics
+
+	# for the Night King's AI host, but non-dynastic = UNPLAYABLE (like theocracy/republic), so a conquered
+
+	# PLAYER hands off to their heir/dynasty, or hits game over if none remain (heirs get conquered too → cascade).
+
+	# RULERS ONLY. others_heartbeat.1 runs this over every_courtier_or_guest, and a courtier has no
+	# government to change -- the call errored once per courtier per tick and did nothing else.
+	if = {
+		limit = {
+			is_ruler = yes
+			# Live-run 290-305 AC: 22,723 x "Trying to set illegal government". Two causes, both gated:
+			#  1) the heartbeat re-runs this effect on every EXISTING wight, and re-setting the same
+			#     government is itself the illegal call -- so skip anyone already converted;
+			#  2) camp-based rulers (landless-adventurer class: ranging companies, pirates, AGOT's
+			#     custom landless) cannot legally take a settled government at all. They keep their
+			#     government and still get wight_trait below -- the trait, not the government, is
+			#     what makes a wight a wight.
+			NOT = { has_government = wight_government }
+			NOR = {
+				government_has_flag = government_is_landless_adventurer
+				government_has_flag = government_is_custom_landless
+			}
+
+
+			# 3) and the capital county must actually be legal for it NOW. The conversion above should have seen
+
+			#    to that; if anything is left, SKIP rather than error. A silent skip costs only the government
+
+			#    flavour -- wight_trait below is what makes a wight a wight -- while the illegal call costs a log
+
+			#    line and changes nothing anyway.
+
+			NOT = {
+
+				capital_county ?= {
+
+					any_county_province = {
+
+						OR = { has_holding_type = wilderness_holding  has_holding_type = ruin_holding }
+
+					}
+
+				}
+
+			}
+		}
+		change_government = wight_government
+	}
+
+
+
+	# NOTE: the wight is raised (add_trait = wight_trait + one-shot setup) AFTER the disease/age/wound purge
+
+	# below — trait `opposites` BLOCK add_trait, so a diseased/old conquered noble could never become a wight
+
+	# while those traits were still on them. See the one-shot block just before set_faith/set_culture.
+
+	if = { limit = { has_trait = ruin } remove_trait = ruin }
+
+	if = { limit = { has_trait = wilderness } remove_trait = wilderness }
+
+	if = { limit = { has_trait = unknown } remove_trait = unknown }
+
+	if = { limit = { has_trait = agot_dummy_trait } remove_trait = agot_dummy_trait }
+
+	
+
+	# Purge old age/disease traits
+
+	if = { limit = { has_trait = withering_mind } remove_trait = withering_mind }
+
+	if = { limit = { has_trait = fragile_bones } remove_trait = fragile_bones }
+
+	if = { limit = { has_trait = faltering_heart } remove_trait = faltering_heart }
+
+	if = { limit = { has_trait = clouded_eyes } remove_trait = clouded_eyes }
+
+	if = { limit = { has_trait = infirm } remove_trait = infirm }
+
+	if = { limit = { has_trait = gout_ridden } remove_trait = gout_ridden }
+
+	if = { limit = { has_trait = consumption } remove_trait = consumption }
+
+	if = { limit = { has_trait = leper } remove_trait = leper }
+
+	if = { limit = { has_trait = bubonic_plague } remove_trait = bubonic_plague }
+
+	if = { limit = { has_trait = ill } remove_trait = ill }
+
+	if = { limit = { has_trait = pneumonic } remove_trait = pneumonic }
+
+	if = { limit = { has_trait = typhus } remove_trait = typhus }
+
+	if = { limit = { has_trait = smallpox } remove_trait = smallpox }
+
+	if = { limit = { has_trait = measles } remove_trait = measles }
+
+	if = { limit = { has_trait = ergotism } remove_trait = ergotism }
+
+	# ADDED: the modern CK3 illness set. AGOT replaces vanilla's 00_traits.txt wholesale, and the
+
+	# names Long Night+ was written against (blood_cough, bloody_flux, winter_fever, dancing_plague,
+
+	# shaking_sickness, great_spring_sickness, st_anthonys_fire, goutridden, leper_1) do not exist in
+
+	# ANY loaded trait file. has_trait on an unknown key silently returns false, so this whole purge
+
+	# has been quietly skipping most of what it was meant to clean off.
+
+	if = { limit = { has_trait = great_pox } remove_trait = great_pox }
+
+	if = { limit = { has_trait = early_great_pox } remove_trait = early_great_pox }
+
+	if = { limit = { has_trait = lovers_pox } remove_trait = lovers_pox }
+
+	if = { limit = { has_trait = cancer } remove_trait = cancer }
+
+	if = { limit = { has_trait = sickly } remove_trait = sickly }
+
+	if = { limit = { has_trait = greyscale } remove_trait = greyscale }
+
+	if = { limit = { has_trait = dysentery } remove_trait = dysentery }
+
+	if = { limit = { has_trait = wounded_1 } remove_trait = wounded_1 }
+
+	if = { limit = { has_trait = wounded_2 } remove_trait = wounded_2 }
+
+	if = { limit = { has_trait = wounded_3 } remove_trait = wounded_3 }
+
+	if = { limit = { has_trait = maimed } remove_trait = maimed }
+
+	if = { limit = { has_trait = blind } remove_trait = blind }
+
+	if = { limit = { has_trait = incapable } remove_trait = incapable }
+
+	if = { limit = { has_trait = one_legged } remove_trait = one_legged }
+
+	if = { limit = { has_trait = disfigured } remove_trait = disfigured }
+
+	if = { limit = { has_trait = lovers_pox } remove_trait = lovers_pox }
+
+	if = { limit = { has_trait = early_great_pox } remove_trait = early_great_pox }
+
+	if = { limit = { has_trait = great_pox } remove_trait = great_pox }
+
+
+
+	# Live-run: the engine refuses set_character_faith on a religious head (the Magnar of Thenn).
+	# SECOND live-run correction: is_head_of_faith is a LANDED_TITLE trigger ("Wrong scope:
+	# character, expected landed_title" x7,000) -- the broken guard evaluated false and new wights
+	# kept their living faith all session. The character-scope form is any_held_title.
+	if = {
+		limit = { NOT = { any_held_title = { is_head_of_faith = yes } } }
+		set_character_faith = faith:cold_gods
+	}
+
+	set_culture = culture:frostborn
+
+
+
+	# v0.2.1 -- the dead do not fight with dragonglass. Live-run report (305 AC): conquered lords
+	# kept Dragonglass-Armed after being raised, so the Night King's own host marched with the
+	# living's anti-wight kit. Every preparation modifier is stripped -- the stores, the arms, the
+	# hall's daggers, the heirloom steel. DELIBERATELY OUTSIDE the one-shot guard below: the heartbeat
+	# re-runs this effect on existing wights, so wights raised before this fix shipped (running saves)
+	# are cleaned on their next tick too. remove_character_modifier is a silent no-op when the
+	# modifier is not there, so the repeat costs nothing and logs nothing.
+	remove_character_modifier = ln_dragonglass_armed_modifier
+	remove_character_modifier = ln_dragonglass_knight_modifier
+	remove_character_modifier = ln_dragonglass_stores_modifier
+	remove_character_modifier = ln_valyrian_armed_modifier
+
+	# CONVERSION HOOK -- see common/scripted_effects/zz_ln_conversion_hooks.txt. Empty in this mod;
+	# a compatibility patch overrides it to unmake whatever the body was before the dead took it.
+	# Outside the one-shot guard for the same reason the dragonglass strip is: the heartbeat re-runs
+	# this effect, so wights that already exist in a running save get the same treatment.
+	ln_on_raised_as_wight_effect = yes
+
+	# Raise as a wight LAST — AFTER the disease/age/wound purge above, so no opposite trait blocks
+
+	# add_trait = wight_trait (trait `opposites` prevent the add while the opposite is still present).
+
+	# Everything that must run exactly ONCE per wight lives in this NOT-has-wight_trait guard, because
+
+	# others_heartbeat re-runs this whole effect on existing wights.
+
+	if = {
+
+		limit = { NOT = { has_trait = wight_trait } }
+
+		add_trait = wight_trait
+
+		# 1.0.7: identity is stamped at conversion, not inferred later. See ln_is_one_of_them_trigger.
+
+		add_character_flag = ln_one_of_them
+
+		# Random gore variant (ln_wight_gore allele, selected by this flag in wight_trait_modifiers.txt).
+
+		random_list = {
+
+			1 = { add_character_flag = wight_v1 }
+
+			1 = { add_character_flag = wight_v2 }
+
+			1 = { add_character_flag = wight_v3 }
+
+		}
+
+		# Random idle pose (read by the idle group in gfx/portraits/portrait_animations/animations.txt) — one of
+
+		# five barbershop poses, fixed per wight by the flag set here.
+
+		random_list = {
+
+			1 = { add_character_flag = wight_pose_wounded }
+
+			1 = { add_character_flag = wight_pose_loss }
+
+			1 = { add_character_flag = wight_pose_aggressive }
+
+			1 = { add_character_flag = wight_pose_yield }
+
+			1 = { add_character_flag = wight_pose_stayback }
+
+		}
+
+		# Dated "first death" memory (timestamped natively in AGOT's calendar). The wight's collapse at the
+
+		# Long Night's end is CK3's native (second) death.
+
+		create_character_memory = { type = wight_raised_memory }
+
+
+
+		# v0.2.0: tell the people who knew them. LN+ already built the memory above and never surfaced it --
+
+		# your bannerman rose and you found out by scrolling a character list. Human players only, inner ring
+
+		# always, wider ring cooldowned. See common/scripted_effects/zz_ln_wight_notice_effects.txt.
+
+		ln_wight_raised_notify_effect = yes
+
+
+
+		# The Long Night+: a raised wight belongs to the dead — sever every alliance it held in life. Otherwise a
+
+		# former ally still shields it (you could not declare war on a realm allied to a wight).
+
+		save_temporary_scope_as = ln_raised_wight
+
+		every_ally = {
+
+			break_alliance = scope:ln_raised_wight
+
+		}
+
+
+
+		# v0.2.0 -- sever every scripted bond too, for the same reason the alliance goes: a wight is not your
+
+		# friend any more. Two things this fixes.
+
+		#   1) A walking corpse in the enemy host still counted as your friend/lover, with all the opinion and
+
+		#      mechanical weight that carries.
+
+		#   2) THE STRESS CASCADE. At the Long Night's end the story kills EVERY wight in a single tick
+
+		#      (the_long_night.txt, every_living_character -> death_claimed_by_cold). Every one of those deaths
+
+		#      fires vanilla's on_death_relation_* chain for anyone still bonded to them. A player with a dozen
+
+		#      friends among the dead would be hit by the whole cascade at once, at the exact moment of victory.
+
+		#      Severing here means there is nothing left to grieve by the time the Dawn breaks.
+
+		# Order matters: this runs AFTER ln_wight_raised_notify_effect above, so the notice still finds the bond
+
+		# and still reads "your best friend". The bond dies immediately after the letter is sent.
+
+		# Collected into temporary lists first -- never mutate a relation list while iterating it.
+
+		every_relation = { type = friend       add_to_temporary_list = ln_sever_friend }
+
+		every_relation = { type = best_friend  add_to_temporary_list = ln_sever_best_friend }
+
+		every_relation = { type = lover        add_to_temporary_list = ln_sever_lover }
+
+		every_relation = { type = soulmate     add_to_temporary_list = ln_sever_soulmate }
+
+		every_in_list = { list = ln_sever_friend       remove_relation_friend      = scope:ln_raised_wight }
+
+		every_in_list = { list = ln_sever_best_friend  remove_relation_best_friend = scope:ln_raised_wight }
+
+		every_in_list = { list = ln_sever_lover        remove_relation_lover       = scope:ln_raised_wight }
+
+		every_in_list = { list = ln_sever_soulmate     remove_relation_soulmate    = scope:ln_raised_wight }
+
+		# 1.0.8 -- and MARRIAGE, the one bond the v0.2.0 sweep above missed. A living spouse stayed wed to the
+
+		# corpse, and the only road out was the Forced Divorce interaction: -30 opinion for 15 years on the
+
+		# living spouse, -25/-30 on the wight, -5 across the wight's family -- and a "rational" AI that refuses
+
+		# to click it at all. Found by zucchinionpizza on r/CK3AGOT (660 upvotes). Death did us part instead:
+
+		# spouses, betrothals and concubinage all end here, at no cost to anyone, by the same no-fault road AGOT
+
+		# itself uses when a man takes the black. Full reasoning in zz_ln_wight_notice_effects.txt.
+
+		# Card first, then the cut -- same ordering as the notice above, so the letter still finds a wife.
+
+		ln_wight_marriage_card_effect = yes
+
+		ln_wight_marriage_severance_effect = yes
+
+
+	}
+
+	}
+
+}
+
+
+
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# 1.0.12b -- THE FRONT DOOR, AND WHY IT EXISTS. Thomas's live run produced a four-year-old WILD DRAGON
+# carrying wight_trait, frostborn culture and the cold gods -- because a dragon can be a courtier, a county
+# can sweep its residents, and nothing in the twelve call sites above this line ever asked what KIND of
+# character it was handed. His ruling: "a dragon probably shouldn't get the wight trait like that. If
+# anything, it should go through the whole undead dragon mechanic."
+#
+# So the conversion body keeps its name-shaped hole plugged from one place: every caller still calls
+# mutate_into_other_effect, and mutate_into_other_effect now refuses dragons at the door rather than each of
+# twelve call sites remembering to. Dragons the dead take have their own road (ln_the_dead_claim_dragon_effect
+# and the raise path in zz_ln_ice_dragon_effects.txt), and a dragon this guard turns away is simply a dragon
+# the dead did not get -- which is also the answer to "should wild dragons be a third side?": recorded as a
+# design question, not decided by a bug.
+mutate_into_other_effect = {
+	if = {
+		limit = { NOT = { has_trait = dragon } }
+		ln_mutate_into_other_unguarded_effect = yes
+	}
+}

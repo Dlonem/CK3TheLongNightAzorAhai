@@ -1,0 +1,108 @@
+﻿# AGOT: The Long Night & Azor Ahai -- dying in battle, and the priest who has to decide about it.
+#
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE RESEARCH THOMAS ASKED FOR, because the answer decided the design.
+#
+# Q: Can we hijack the vanilla battle death chain?
+# A: Only by overriding `knight_killed`, and we should not.
+#
+#    Combat phase events are KEYED ENTRIES IN A GLOBAL DATABASE, one picked per pulse (every COMBAT_EVENT_DAYS
+#    = 5 days) weighted by each entry's `chance`. So a mod can ADD entries in its own file and they merge --
+#    AGOT does exactly that with knight_dragon_joined_battle in 00_agot_knight_phase_events.txt. That part is
+#    clean and it is what this file does.
+#
+#    But `knight_killed` is the entry that kills, and there is no additive way to intercept it. Overriding it
+#    means shipping our own copy, and this is where it falls down:
+#
+# Q: Does AGOT touch that file?
+# A: HEAVILY. Vanilla's knight_killed is 463 lines. AGOT's is 993, with 587 lines of differences:
+#       * they add `is_valid = { is_current_dragonrider_warfare = no }` -- dragonriders cannot be knight-killed
+#       * prowess "immortality" scaling changed from 30 to 40 in two places
+#       * garuda_court_position replaced with household_guard_court_position and bloodrider_court_position
+#    Copying their version into this mod means every one of those silently reverts the day AGOT edits it and we
+#    do not notice. Dragonriders quietly become killable again. Nothing logs it. That is the exact failure mode
+#    this project has already lost the most time to.
+#
+# Q: Would a CK3 update break it / would I have to patch immediately?
+# A: Yes to both, twice over -- once for PDX and once for AGOT, and AGOT is the faster-moving of the two.
+#
+#    Verified separately: `on_natural_death_second_chance` is the ONLY hook in the entire game that can stop a
+#    death, and it is natural-death only. There is no on_battle_death_second_chance. `on_death` is reactive and
+#    CK3 cannot un-kill a character.
+#
+# SO THIS DOES NOT INTERCEPT THE DEATH. It competes for the same slot.
+#
+#    When a blessed champion is in a combat, this entry sits in the same weighted pool as knight_killed and
+#    takes some of the rolls that would otherwise have killed him. He goes down, badly, and does not die in
+#    that instant -- and his priest gets the scene and the choice. It is not a lie: a man who took a blow that
+#    would have killed anyone else and is lying in the mud not breathing is exactly the story, and it needs no
+#    AGOT file, no vanilla file, and nothing to re-patch.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+ln_knight_fell_for_the_dawn = {
+	type = knight
+
+	is_valid = {
+		# AGOT's own exclusion, respected rather than worked around: a rider in the air is not in this lottery.
+		is_current_dragonrider_warfare = no
+
+		is_alive = yes
+		NOT = { has_trait = resurrected_by_rhllor }
+		NOT = { has_character_flag = ln_had_the_last_kiss }
+		NOT = { has_character_flag = ln_fell_for_the_dawn }
+
+		# A priest is standing behind this man, and he has not already spent himself on somebody else.
+		ln_has_living_sponsor_trigger = yes
+		var:ln_blessing_sponsor = { ln_sponsor_can_still_pay_trigger = yes }
+
+		# And the war this is all about is actually happening.
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = {
+			OR = {
+				is_struggle_phase = ln_phase_cold_winds
+				is_struggle_phase = ln_phase_the_long_night
+			}
+		}
+	}
+
+	# knight_killed opens at base 30 and is then scaled down hard by prowess and by outnumbering. 40 here means
+	# a blessed champion is meaningfully harder to lose outright without being untouchable -- he can still be
+	# maimed, still be wounded, still be killed on any roll this entry does not win.
+	chance = {
+		base = 40
+
+		# The dark itself. When the dead are in the world the fire is paying closer attention.
+		modifier = {
+			factor = 1.5
+			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+		}
+		# It is watching the ones it has already marked most closely of all.
+		modifier = {
+			factor = 1.5
+			OR = {
+				has_trait = favored_by_rhllor
+				has_trait = chosen_by_rhllor
+				has_trait = azor_ahai_reborn
+			}
+		}
+	}
+
+	effect = {
+		add_character_flag = ln_fell_for_the_dawn
+		save_scope_as = ln_the_fallen
+
+		# He is not dead. He is also not getting up on his own.
+		# REASON is REQUIRED -- it is a macro parameter, not an optional flavour argument, and calling this
+		# bare errors with "Arguments needed for scripted effect". Vanilla always passes a death reason.
+		increase_wounds_no_death_effect = { REASON = death_wounds }
+		add_character_modifier = {
+			modifier = ln_fell_in_the_dark_modifier
+			years = 3
+		}
+
+		var:ln_blessing_sponsor = {
+			save_scope_as = ln_the_priest
+			trigger_event = { id = ln_prophecy.21  days = 1 }
+		}
+	}
+}

@@ -1,0 +1,193 @@
+﻿# AGOT: The Long Night & Azor Ahai -- EVERY hook into a vanilla on_action, in one place.
+#
+# WHY THIS FILE EXISTS. Before this, four separate files each declared `yearly_global_pulse = { on_actions = {...} }`
+# and two declared `on_game_start_after_lobby`. Whether CK3 merges same-named on_action definitions across files or
+# lets the last one parsed win is not something the mod should be betting on -- and if it is last-wins, three of
+# the four yearly hooks were dead and nobody would ever have seen an error, because a hook that does not run
+# produces silence, not a log line. That is the worst failure mode there is.
+#
+# THE RULE, from here on: a vanilla on_action is declared in THIS FILE and nowhere else. Feature files define
+# their own named sub-lists (ln_*_pulse, ln_*_catalysts) and this file lists them. Adding a hook means adding one
+# line here, which is also the only place to look to find out what this mod attaches to the game loop.
+
+on_game_start_after_lobby = {
+	# 1.0.8: others_maintenance.1 moved here from common/on_action/AGOT Invasions/invasions_game_start.txt,
+	# which was the second declaration this file's header says should not exist. It was NOT dead --
+	# on_action sub-lists really do merge across files, and the proof is that AGOT declares this same
+	# on_action in two of its OWN files (common/on_action/game_start.txt:2636 and
+	# common/on_action/agot_on_actions/agot_game_start.txt:2048) and ships it working. But consolidating
+	# is strictly safe-or-better: if merging holds it changes nothing, and if it ever stopped holding,
+	# whichever file lost the race was silently dropping either this event or the three hooks below.
+	events = {
+		others_maintenance.1
+	}
+	on_actions = {
+		ln_prophecy_game_start
+		ln_struggle_game_start
+		ln_dragon_repair_game_start
+		ln_household_game_start
+	}
+}
+
+# 1.0.10 -- the county-memory stamp (culture/faith restoration). Sub-list in
+# common/on_action/zz_ln_county_memory_on_actions.txt; effects in zz_ln_county_memory_effects.txt.
+on_title_gain = {
+	on_actions = {
+		# Order matters and is deliberate: the others' hook first (it can mutate a lord into one of the
+		# dead), the memory stamp second -- so a county kept by a freshly-converted lord is stamped with
+		# its still-living culture on the same day. That conversion route was otherwise uncovered.
+		ln_others_title_gain
+		ln_county_memory_on_title_gain
+	}
+}
+
+# 1.0.12 -- THE THREE THAT HAD NEVER FIRED. All three of these were declared in
+# 00_others_on_actions.txt as raw `effect = {}` blocks against on_actions that vanilla AND AGOT also
+# declare with an effect. The engine picks a winner by PARSE ORDER within common/on_action/ (top-level
+# files in path order first, then subdirectories, last one parsed wins) and says so in error.log at
+# jomini_onaction.cpp:161. 00_others_on_actions.txt sorts first, so it lost all three, every run, since
+# the fork. Registered here as sub-lists, which merge instead of competing -- the same shape AGOT uses
+# for esr_on_vassal_gained. Bodies stay in 00_others_on_actions.txt; the two county ones also had a
+# scope:recipient bug fixed on the way through. Full write-up in that file's header.
+on_vassal_gained = {
+	on_actions = {
+		ln_others_vassal_gained
+	}
+}
+
+# Root on both of these is THE CULTURE, not a character. scope:actor and scope:landed_title are the
+# engine-supplied handles and are what the bodies use.
+on_county_auto_granted_to_local_culture = {
+	on_actions = {
+		ln_others_county_local_culture
+	}
+}
+
+on_county_auto_granted_to_liege_culture = {
+	on_actions = {
+		ln_others_county_liege_culture
+	}
+}
+
+# 1.0.12b -- THE DRAGON BALKS ON THE CROSSING, not up to a year later. Root here is the owner of the army and
+# scope:army is the army, per vanilla's own header on army_on_actions.txt:652. See the long note above
+# ln_dragon_wall_crossing; the yearly pulse stays as the backstop and the one-shot flag stops a double fire.
+on_army_enter_province = {
+	on_actions = {
+		ln_dragon_wall_crossing
+	}
+}
+
+# 1.0.12 -- THE OTHER HALF OF THE CROSSING. on_army_enter_province only sees armies; a rider who uses the
+# caravan's "take flight" option is on a travel plan, not marching, and crosses the Wall invisibly. Vanilla's
+# on_travel_plan_movement (travel_on_actions.txt:2) is the hook for that case. Sub-list registration, so this
+# merges with vanilla's own entries rather than competing with them -- see the header of this file.
+on_travel_plan_movement = {
+	on_actions = {
+		ln_dragon_wall_flight
+		# 1.0.12 -- the dead on the road. Same sub-list, same merge, one more name. See
+		# common/on_action/zz_ln_travel_danger_on_actions.txt for why this is not hooked onto vanilla's
+		# travel_danger_events_on_action instead.
+		ln_travel_the_dead_roads
+	}
+}
+
+on_birth_child = {
+	on_actions = {
+		ln_prophecy_birth
+	}
+}
+
+on_death = {
+	on_actions = {
+		ln_death_catalysts
+		ln_watch_succession
+		ln_nw_vassal_lc_death
+	}
+}
+
+# 13 Aug (1.0.6) -- THE WALL TITLE CHURN, Thomas + Jorahm. AGOT's own LC re-election
+# (on_nw_lord_commander_death in agot_wall_on_actions.txt) is gated on agot_is_independent_ruler.
+# A Lord Commander with ANY liege -- which this mod's fealty content and the post-War-for-the-Dawn
+# settlement can produce -- dies WITHOUT an election, so k_the_wall and d_the_wall fall to ordinary
+# blood succession. That is how Thomas's debug panel showed d_the_wall passing to the Iron Throne
+# holder by "flag inheritance", with AGOT's undismissable "Fall of the Night's Watch" card
+# (agot_nw_ranger_events.0108) firing on every such churn.
+#
+# ONLY IF: the dying man is the Watch (government_is_nw) and actually holds k_the_wall.
+# NEVER IF: he is independent -- that is AGOT's own case and their handler already runs; two
+# elections in one death would fight each other.
+# The effect is AGOT's own agot_nw_elect_lc, not a parallel system.
+ln_nw_vassal_lc_death = {
+	trigger = {
+		government_has_flag = government_is_nw
+		this = title:k_the_wall.holder
+		NOT = { agot_is_independent_ruler = yes }
+	}
+	effect = {
+		agot_nw_elect_lc = yes
+	}
+}
+
+# NOTE: yearly_global_pulse is not hooked here. The yearly work runs from ln_struggle.2, a self-perpetuating
+# event we own, AND from yearly_playable_pulse below -- two independent drivers behind one once-a-year gate.
+# See the block comment above ln_struggle_yearly_work_effect for why.
+#
+# THE DRIP MYSTERY IS SOLVED, and it was not a bug in the scheduling at all. Thomas's 8253 save showed the
+# struggle alive since 8239.1.12 -- exactly the one-day delay this file schedules, so ln_struggle.1 fired on
+# time -- with fourteen years elapsed and five points banked from a single catalyst. The run used
+# `others_manual_invasion`. The drip's own gate refused to tick, correctly. What was wrong was that the summer's
+# year counter and the introduction card had been chained behind that gate too, so a player on that rule saw
+# nothing at all; and that every OTHER catalyst ignored the rule and kept pushing. Both are fixed.
+
+yearly_playable_pulse = {
+	on_actions = {
+		# 1.0.12 -- ln_household_yearly does exactly one thing and is meant to stop existing: it strips the
+		# retired ledger cooldown off any save still carrying it. Remove it in 1.1.0 with the modifier.
+		ln_household_yearly
+		ln_prophecy_yearly
+		ln_struggle_clock_backstop
+		ln_dragon_wall_pulse
+		ln_risen_yearly
+		ln_favored_yearly
+		ln_chosen_yearly
+		ln_watch_yearly
+	}
+}
+
+yearly_struggle_playable_pulse = {
+	on_actions = {
+		ln_omen_pulse
+		ln_coldwinds_pulse
+	}
+}
+
+three_year_playable_pulse = {
+	on_actions = {
+		ln_wandering_dead_pulse
+	}
+}
+
+# Root = a character who was about to die of natural causes and got a second chance. The gate is the scripted
+# rule has_natural_death_second_chance, which we override in common/scripted_rules/zz_ln_second_chance_rules.txt.
+on_natural_death_second_chance = {
+	on_actions = {
+		ln_last_kiss
+	}
+}
+
+# Root = the WINNING combat_side. Verified from AGOT's own use of this hook (agot_combat_event.1000 declares
+# scope = combat_side; agot_others_events.9000 reads side_primary_participant and combat.location off it), so
+# side_commander / enemy_side / combat.location are all reachable. Used for the killing blow -- see
+# events/zz_ln_dawn_events.txt for why that scene lives here and not in a combat phase event.
+on_combat_end_winner = {
+	on_actions = {
+		ln_dawn_combat
+		ln_known_dead_combat
+		# 1.0.12 -- THE SPEAR. See common/on_action/zz_ln_spear_on_actions.txt for why it hangs here rather
+		# than on on_combat_start (that hook's root is the Combat, which exposes neither side_commander nor
+		# enemy_side, and those two handles are the whole search).
+		ln_others_spear
+	}
+}
+

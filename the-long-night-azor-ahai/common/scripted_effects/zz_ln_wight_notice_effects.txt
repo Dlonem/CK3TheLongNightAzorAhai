@@ -1,0 +1,182 @@
+﻿# AGOT: The Long Night & Azor Ahai -- word reaches you that someone you knew is walking again.
+#
+# Long Night+ already does real craft at conversion: three gore layers, five idle poses, a dated wight_raised_memory
+# timestamped in AGOT's calendar. None of it was ever surfaced -- your bannerman rose and you found out by scrolling
+# a character list. This is the notice.
+#
+# Two rings, deliberately:
+#   * the inner ring (close family, best friend, soulmate) is always told. Those bonds are rare enough that volume
+#     is never a problem, and being told your brother is walking is the whole point.
+#   * the wider ring (friends, lovers) is cooldowned, so a catastrophic year does not bury the player in notices.
+# The cooldown flag is set by the event itself, so an inner-ring notice also suppresses the wider ring for a while.
+
+ln_wight_raised_notify_effect = {
+	# Runs in the NEW WIGHT's scope, from the one-shot block in mutate_into_other_effect.
+	save_scope_as = ln_risen
+
+	# ---- inner ring: always told ----
+	every_close_family_member = {
+		limit = { ln_wight_notice_recipient_trigger = yes }
+		trigger_event = { id = ln_wight.1  days = { 3 30 } }
+	}
+	every_relation = {
+		type = best_friend
+		limit = { ln_wight_notice_recipient_trigger = yes }
+		trigger_event = { id = ln_wight.1  days = { 3 30 } }
+	}
+	every_relation = {
+		type = soulmate
+		limit = { ln_wight_notice_recipient_trigger = yes }
+		trigger_event = { id = ln_wight.1  days = { 3 30 } }
+	}
+
+	# ---- wider ring: cooldowned ----
+	every_relation = {
+		type = friend
+		limit = {
+			ln_wight_notice_recipient_trigger = yes
+			NOT = { has_character_flag = ln_wight_notice_cooldown }
+		}
+		trigger_event = { id = ln_wight.1  days = { 3 30 } }
+	}
+	every_relation = {
+		type = lover
+		limit = {
+			ln_wight_notice_recipient_trigger = yes
+			NOT = { has_character_flag = ln_wight_notice_cooldown }
+		}
+		trigger_event = { id = ln_wight.1  days = { 3 30 } }
+	}
+}
+
+# == DEATH DID US PART (1.0.8) =====================================================================
+# THE BUG, found by zucchinionpizza on r/CK3AGOT ("My 'rational' niece doesn't want to divorce her dead
+# husband", 660 upvotes): a living character stays MARRIED to a spouse who has been raised as a wight.
+# The only road out was the Forced Divorce interaction, which is a punishment -- -30 opinion on the
+# living spouse for 15 years, -25/-30 on the wight, -5 across the wight's family -- and a "rational" AI
+# refuses to click it at all. So the marriage stood. To a corpse. Forever.
+#
+# v0.2.0 already severed alliance, friend, best friend, lover and soulmate at the moment of the raise
+# (mutate_into_other_effect). Marriage was the one bond that sweep missed. It goes in the same block,
+# for the same reason, and it costs nobody anything. Death did us part.
+#
+# WHY THE BARE `divorce` AND NEVER `divorce_effect` -- verified in source, 13 Aug:
+#   * The opinion penalties are NOT in the engine effect. They are in the scripted wrapper. AGOT ships
+#     its own common/scripted_effects/00_marriage_interaction_effects.txt at vanilla's path (so AGOT's
+#     is the live one), and its divorce_effect adds divorced_me_opinion, then divorced_close_kin to
+#     every close-or-extended family member, plus two memories and esr_divorce_effect.
+#   * The bare effect adds none of it. Vanilla annotates its own use of it, twice, in
+#     events/interaction_events/marriage_interaction_events.txt: `divorce = root # no opinion hit, no
+#     scripted effect`.
+#   * The template below is AGOT's OWN no-fault dissolution, copied clause for clause from
+#     00_agot_nightswatch_effects.txt (taking the black) and agot_free_captive_effect
+#     (00_agot_effects.txt:441). That includes the grand-wedding branch: a promised grand wedding must
+#     NOT be torn down with a plain break_betrothal or the activity outlives the betrothal.
+#
+# Root = the wight. IDEMPOTENT: every clause is guarded on the bond still existing, so the yearly sweep
+# re-running across an already-severed wight does nothing and logs nothing.
+ln_wight_marriage_severance_effect = {
+	save_scope_as = ln_risen
+
+	# Spouses -- primary AND secondary in one sweep; every_spouse covers both.
+	if = {
+		limit = { is_married = yes }
+		every_spouse = { divorce = scope:ln_risen }
+	}
+
+	# Betrothal, with AGOT's grand-wedding case.
+	if = {
+		limit = { exists = betrothed }
+		if = {
+			limit = { has_been_promised_grand_wedding = yes }
+			break_grand_wedding_betrothal_effect = yes
+		}
+		else = { break_betrothal = betrothed }
+	}
+
+	# Concubinage, BOTH directions -- the wight may be the concubine or the one who kept them.
+	# ...the wight IS someone's concubine. AGOT's idiom, unchanged.
+	if = {
+		limit = { is_concubine = yes }
+		this.concubinist = { remove_concubine = prev }
+	}
+	# ...and the wight KEPT concubines. CORRECTED on adversarial review -- the first cut of this line
+	# was `every_consort = { remove_concubine = scope:ln_risen }`, which is wrong twice over:
+	#   1. WRONG SCOPE DIRECTION. remove_concubine runs in the KEEPER's scope with the kept as target
+	#      -- vanilla's own effect_localization says so (00_character_effects.txt: REMOVE_CONCUBINE_
+	#      EFFECT = "[TARGET_CHARACTER] stops being a concubine"). Written the other way round it asks
+	#      the engine to stop the wight being his own concubine's concubine, and the women stay bound
+	#      to the corpse -- the exact bug this whole effect exists to kill.
+	#   2. WRONG ITERATOR. every_consort walks SPOUSES as well as concubines.
+	# This is AGOT's canonical form for dropping a character's own concubines, copied from
+	# 00_agot_citadel_effects.txt:65-73, guard included.
+	if = {
+		limit = { number_of_concubines > 0 }
+		every_concubine = {
+			scope:ln_risen = { remove_concubine = prev }
+		}
+	}
+}
+
+# The letter. Split from the severance on purpose so the YEARLY SWEEP can sever in silence: on an old
+# save the marriage ended in fiction years ago, and posting fifty letters about it the moment the save
+# loads would be a bug, not drama. Only the live raise sends this.
+#
+# Sent BEFORE the severance runs, exactly as the v0.2.0 sweep sends ln_wight_raised_notify_effect before
+# it cuts the friendships -- the letter still finds a wife; the marriage ends immediately behind it.
+#
+# Root = the wight.
+ln_wight_marriage_card_effect = {
+	save_scope_as = ln_risen
+	every_spouse = {
+		limit = { ln_wight_marriage_card_recipient_trigger = yes }
+		# A saved scope does NOT survive a queued event. Stash the wight in a variable and rebuild the
+		# scope in ln_wight.2's immediate. Standing rule, paid for once already.
+		set_variable = { name = ln_lost_to_the_dead  value = scope:ln_risen }
+		trigger_event = { id = ln_wight.2  days = { 3 10 } }
+	}
+}
+
+# The self-heal. Standing mid-save policy: prefer a sweep that repairs old saves to a one-time event
+# that only helps new ones. EVERY save made before 1.0.8 can hold the Reddit case, and this is what
+# fixes it -- within one game year of loading, silently. Root = anything; runs from
+# ln_struggle_yearly_work_effect.
+#
+# The limit is ordered cheapest-first deliberately: the four marriage tests are simple reads and reject
+# the overwhelming majority of the world before ln_is_one_of_them_trigger's six-way OR is ever
+# evaluated.
+#
+# 1.0.10b -- ONE-SHOT, NOT YEARLY, AND THE OLD JUSTIFICATION HERE WAS WRONG.
+# This comment used to read "every_living_character at yearly cadence is established practice here
+# (zz_ln_catalyst_effects.txt, zz_ln_invasion_opening_effects.txt, the_long_night.txt all do it)".
+# Checked, and it is not: catalyst_effects walks the world once, when the Night King dies;
+# invasion_opening walks it once, at the opening. Neither is yearly. This was the only effect in the mod
+# walking ~191,000 characters EVERY GAME YEAR, on a save where it had nothing left to find, forever.
+#
+# It is a RETROACTIVE repair by construction -- "EVERY save made before 1.0.8 can hold the Reddit case"
+# -- so it only ever needs to run once per save. Live raises are already handled at raise time by
+# ln_wight_marriage_card_effect and the severance behind it; that is the ongoing mechanism and it costs
+# nothing. The one-shot global is the same shape as ln_full_sweep_done_2 in zz_ln_ice_dragon_effects.txt:
+# a save that predates the global runs the sweep once on the next yearly tick and never again, which
+# fails open exactly the way the old saves need.
+ln_wight_marriage_sweep_effect = {
+	if = {
+		limit = { has_global_variable = ln_wight_marriage_retro_done }
+		# nothing to do -- one failed global check a year, instead of a full pass over the world
+	}
+	else = {
+	set_global_variable = { name = ln_wight_marriage_retro_done  value = yes }
+	every_living_character = {
+		limit = {
+			OR = {
+				is_married = yes
+				exists = betrothed
+				is_concubine = yes
+				number_of_concubines > 0
+			}
+			ln_is_one_of_them_trigger = yes
+		}
+		ln_wight_marriage_severance_effect = yes
+	}
+	}
+}

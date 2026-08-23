@@ -1,0 +1,1626 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Others do not conjure a dragon. They take one.
+#
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# WHAT WAS WRONG WITH THE INHERITED VERSION. agot_spawn_adult_ice_dragon_effect creates a character called
+# `dragon_skroth` out of nothing, borrows the age of whatever the oldest living dragon happens to be, and gives
+# it a fixed pale colour scheme. No dragon has to have died. The Others do not have to have been anywhere near
+# one. The name is Long Night+'s invention and appears in neither the books nor the show.
+#
+# Thomas: "the reason the Night King had a dragon was because the living lost a dragon to his army. He was
+# present. He resurrected it... when the Greyjoys killed that second dragon outside King's Landing, the Night
+# King wouldn't get access to that dragon because he was nowhere near it."
+#
+# That is the rule, and it is a better rule. So:
+#
+#   1. When a dragon dies, ln_record_fallen_dragon_effect asks whether the Others could plausibly have been
+#      standing over the body. If so the dragon goes into the ln_fallen_dragons global list, and its age at
+#      death is stamped onto its own corpse (AGOT keeps dead dragons unpruneable, so the record survives).
+#   2. The Others' story cycle then raises ONE OF THOSE. Not a clone -- that dragon. It keeps its name (via
+#      change_first_name = { template_character = ... }, vanilla's own namesake mechanism) and all twenty-six
+#      of its shape genes, so Vhagar comes back looking like Vhagar. Only the eight COLOUR genes are overwritten,
+#      which is what turns her the colour of the thing that took her.
+#   3. If no dragon has fallen to them, they do not get one. They wait. That is the whole point.
+#
+# The legacy behaviour is still available on the rule as `agot_long_night_dragon_on` for anyone who wants the
+# old guarantee, and it is now explicitly labelled as the arcade option that it is.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# Root = a dragon that has just died. Called from ln_death_catalyst_effect.
+ln_record_fallen_dragon_effect = {
+	if = {
+		limit = {
+			has_trait = dragon
+
+			# ── IT MUST NOT ALREADY BE ONE OF THEIRS ────────────────────────────────────────────────────────
+			# Thomas: "what happens when you kill that dragon that's owned by the Night King? Logically it
+			# should stay dead. There shouldn't be an infinite revive loop." Correct, and these three checks are
+			# what guarantee it. Living -> undead -> dead, and dead is the end of it.
+			#   * house_theothers   -- everything they raise is born into that house
+			#   * ln_undead_dragon  -- the trait, in case a raised dragon ever changes hands
+			#   * ln_raised_from    -- the variable pointing back at the body it came out of
+			# On top of which, a dragon is removed from ln_fallen_dragons the moment it is raised, so even the
+			# original corpse cannot be drawn on twice.
+			NOT = { house ?= house:house_theothers }
+			NOT = { has_trait = ln_undead_dragon }
+			NOT = { has_variable = ln_raised_from }
+
+			# THE DARK HAS TO BE HERE. A dragon that dies in the Long Summer is simply a dead dragon.
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+
+			# AND THEY HAVE TO HAVE BEEN THERE -- see zz_ln_ice_dragon_triggers.txt, which asks where the war
+			# has reached rather than where it began.
+			ln_others_were_here_trigger = yes
+		}
+		# Stamped on the corpse rather than held in a global, because there may be several and each needs its
+		# own number. Dead dragons are unpruneable in AGOT, so this survives as long as the save does.
+		set_variable = { name = ln_died_at_age  value = age }
+		add_to_global_variable_list = { name = ln_fallen_dragons  target = this }
+	}
+}
+
+# Root = the Night King. Called from the Long Night story cycle in place of the old spawn.
+#
+# HE CANNOT RIDE TWO. Thomas: "say he gets two dragons, he can't ride them like a pair of jet skis. Maybe the
+# more dragons die, the more get sorted to the Others, so multiple of them can fly."
+#
+# So the Night King is served first, and every dragon after that goes to a lieutenant -- any Other in his court
+# or realm who is not already riding something. That is also why the story cycle keeps calling this every three
+# years instead of stopping once he has one: the supply is the number of dragons the living have lost to him,
+# and the demand is the number of Others without a mount. Both grow.
+#
+# There is no cap and there does not need to be one. The living cannot lose more dragons than they have.
+ln_others_take_a_dragon_effect = {
+	if = {
+		limit = {
+			has_game_rule = agot_long_night_dragon_raise
+			OR = {
+				any_in_global_list = { variable = ln_fallen_dragons  count >= 1 }
+				# 1.0.7, DOOR TWO: a converted dragon nobody is riding is supply too -- claimed while every
+				# captain already had a mount, waiting owned in the Night King's court.
+				any_in_global_list = { variable = living_dragons  ln_unridden_undead_trigger = yes }
+			}
+		}
+		# THE NIGHT KING FIRST. He is the story owner and the trigger upstream already checked he has no dragon.
+		if = {
+			limit = { has_trait = dragonless_dragonrider }
+			remove_trait = dragonless_dragonrider
+		}
+		ln_mount_or_raise_effect = yes
+
+		# AND THEN HIS CAPTAINS, one apiece, for as long as there are bodies to raise
+		# -- or, since Door Two, converted dragons waiting unridden.
+		ln_arm_the_lieutenants_effect = yes
+	}
+	else_if = {
+		limit = {
+			has_game_rule = agot_long_night_dragon_on
+			agot_dragon_population_extinct = no
+		}
+		if = {
+			limit = { has_trait = dragonless_dragonrider }
+			remove_trait = dragonless_dragonrider
+		}
+		agot_spawn_adult_ice_dragon_effect = yes
+	}
+	# agot_long_night_dragon_off, or nothing has fallen to them yet: they wait. Checked again in three years.
+}
+
+# Root = anything. Called once a year from ln_struggle_yearly_work_effect, inside the invasion window.
+#
+# 1.0.12b -- THE UNDO for the bug the guard on mutate_into_other_effect now prevents: Thomas's save holds at
+# least one living dragon (Rhaetherion, wild, four years old) wearing wight_trait, frostborn culture and the
+# cold gods, because the county sweeps wighted it like any other resident. Left alone it is wrong twice --
+# wrong now, and wrong at the dawn, when the wight-collapse sweep (the_long_night.txt:206) would kill a
+# living dragon for a trait it should never have carried.
+#
+# The heal restores what mutate actually changed on a dragon and nothing else: the trait, the identity
+# stamp, the gore-variant flags, the culture and the faith (set back to the clone template's own pair,
+# zz_ln_ice_dragon_effects.txt create_character above). The purges mutate ran (disease, wounds) cannot be
+# un-run and do not need to be. Runs only while the invasion window is open because the bug can only be
+# created inside it; once every save has passed through one yearly tick with this live, it finds nothing.
+ln_dewight_dragons_effect = {
+	if = {
+		limit = {
+			has_global_variable = ln_invasion_opening
+			NOT = { has_global_variable = ln_aftermath_started }
+		}
+		every_living_character = {
+			limit = {
+				has_trait = dragon
+				has_trait = wight_trait
+			}
+			remove_trait = wight_trait
+			remove_character_flag = ln_one_of_them
+			remove_character_flag = wight_v1
+			remove_character_flag = wight_v2
+			remove_character_flag = wight_v3
+			remove_character_flag = wight_pose_loss
+			set_culture = culture:dragon_culture
+			set_character_faith = faith:valyrian_pan_freehold
+		}
+	}
+}
+
+# Root = the Other. Raises a specific dragon that the Others put in the ground.
+ln_raise_fallen_dragon_effect = {
+	random_in_global_list = {
+		variable = ln_fallen_dragons
+		save_scope_as = ln_fallen_dragon
+	}
+
+	if = {
+		limit = { exists = scope:ln_fallen_dragon }
+		remove_list_global_variable = { name = ln_fallen_dragons  target = scope:ln_fallen_dragon }
+
+		# 1.0.12b -- THE AGE IS READ INTO A SCOPE FIRST. Thomas's run produced a raised clone aged ZERO from a
+		# corpse that died at ninety-nine: `age = scope:X.var:Y` inside create_character is exactly the kind of
+		# chained read that fails quietly at creation time, and a failed read is age 0. A scope value read is
+		# not -- so bank it, then hand create_character the banked number.
+		scope:ln_fallen_dragon = {
+			save_scope_value_as = { name = ln_raise_age  value = var:ln_died_at_age }
+		}
+		create_character = {
+			# Placeholder only. change_first_name in after_creation replaces it with the fallen dragon's own
+			# name -- vanilla's namesake mechanism (birth_events.txt:3427), used here for the same reason.
+			name = dragon_skroth
+			gender = male
+			culture = culture:dragon_culture
+			faith = faith:valyrian_pan_freehold
+			location = location
+			age = scope:ln_raise_age
+			dynasty_house = house:house_theothers
+			trait = immortal
+			trait = dragon
+			trait = education_dragon_1
+			trait = dragon_physique_good_3
+			trait = dragon_solitary
+			trait = dragon_bloodthirsty
+			trait = dragon_voracious
+			trait = dragon_defiant
+			random_traits = no
+			save_scope_as = dragon
+
+			after_creation = {
+				# ── IT IS THE SAME DRAGON ────────────────────────────────────────────────────────────────────
+				# IT KEEPS ITS NAME. Thomas: "if Vhagar were to get killed by the Night King, I'd like to think
+				# the dragon would still be named Vhagar -- but perhaps it should get a nickname called the
+				# undead, and a dragon trait to represent that they belong to the Night King."
+				# So: same name, new nickname, new trait. Vhagar the Undead.
+				change_first_name = { template_character = scope:ln_fallen_dragon }
+				give_nickname = nick_the_undead
+				add_trait = ln_undead_dragon
+				add_character_flag = ln_one_of_them   # 1.0.7: stamped at creation -- see ln_is_one_of_them_trigger
+				set_variable = { name = ln_raised_from  value = scope:ln_fallen_dragon }
+
+				set_variable = { name = dragon_gender_hidden  value = 1 }
+
+				# 11 Aug -- A FLOOR FOR THESE TWO, BEFORE THE STORY EXISTS. AGOT's own hatchling template sets
+				# both to 0 with the comment "Set to 0 here since they're a baby-the backage effect doesn't
+				# update their age" (00_agot_dragon_templates.txt), and it is right: their
+				# agot_back_apply_dragon_aging_effect is a `while = { limit = { age > var:dragon_age_counter } }`
+				# loop, so at age 0 the body never executes and dragon_size_base is never written.
+				#
+				# story_dragon_variable_storage.on_setup then reads scope:dragon.var:dragon_size_base UNGUARDED
+				# (agot_story_cycle_dragon_variables.txt:22), and gene_dragon_size is applied mode = replace off
+				# the result. We can reach age 0 here: the age comes from the corpse's ln_died_at_age, and
+				# ln_dragonpit_sweep_effect executes EVERY dragon in a captured pit, hatchlings included.
+				# change_dragon_size below re-bases off the corpse, so this is a floor, not the value.
+				set_variable = { name = dragon_size       value = 0 }
+				set_variable = { name = dragon_size_base  value = 0 }
+
+				create_story = story_dragon_alive
+				set_variable = { name = dragon_age  value = age }
+				agot_back_apply_dragon_aging_effect = yes
+
+				ln_copy_dragon_shape_effect = yes
+				ln_apply_the_cold_effect = yes
+
+				# ── AGOT'S OWN CLOSING STEPS, and leaving them out was a real bug ───────────────────────────
+				# The inherited spawn effect ends with four things this one first shipped without. Two of them
+				# are load-bearing and the omission would have been invisible until somebody actually got a
+				# raised dragon in-game:
+				#   * color_grading / color -- the portrait tint flags the ice dragon look reads
+				#   * agot_dragon_transfer_vars_to_story_cycle_effect -- pushes the gene variables INTO the
+				#     dragon's story cycle, which is where AGOT's portrait system actually reads them from.
+				#     Without it every one of the twenty-six copied shape genes would sit on the character
+				#     doing nothing and the dragon would render as a default.
+				set_variable = { name = color_grading  value = flag:darkest }
+				set_variable = { name = color          value = flag:white }
+				agot_dragon_transfer_vars_to_story_cycle_effect = { DRAGON = scope:dragon }
+			}
+		}
+
+		# ── AND IT HAS TO ACTUALLY BE THEIRS TO RIDE ────────────────────────────────────────────────────────
+		# The other omission, and the worse one: without agot_tame_dragon the Night King would have been handed
+		# a dragon he was not bonded to. It sits in the world, it belongs to his house, and he cannot fly it.
+		# Root here is the Other, so TAMER = this rather than root.story_owner -- this effect is called from
+		# inside story_owner already.
+		hidden_effect = {
+			agot_tame_dragon = {
+				TAMER = this
+				DRAGON = scope:dragon
+			}
+			# Size follows the body it came out of, so a raised Vhagar is Vhagar-sized. Thomas: "you'd have to
+			# make sure the age matches, so it'd be zero" -- age is taken from ln_died_at_age above, and size
+			# is the other half of that same point.
+			scope:dragon = {
+				change_dragon_size = { VALUE = scope:ln_fallen_dragon.dragon_size }
+			}
+		}
+	}
+}
+
+# Root = the new dragon. Twenty-six SHAPE genes, copied straight off the body. This is what makes it recognisably
+# the same animal -- the skull, the horns, the neck, the tail. AGOT copies dragon genes this way itself
+# (`value = scope:story.var:gene_dragon_primary_color_hue` and friends), so the pattern is theirs, not invented.
+ln_copy_dragon_shape_effect = {
+	# ══ THE SEE-THROUGH DRAGONS ═══════════════════════════════════════════════════════════════════════════
+	# Workshop report from MPREG on 1.0.3: "this mod seems to cause issues with dragons, making them see
+	# through or causing parts of them to become see through." It is ours, and this is the line that fixes it.
+	#
+	# WHY IT HAPPENED. AGOT builds a dragon through their scripted_character_templates, every one of which
+	# calls agot_gen_appearance_variables -- 1,115 lines that guarantee EVERY dragon gene has a value, taking
+	# an inherited one where it exists and rolling a random one where it does not. We do not use their
+	# templates: the raised dragon is a create_character, so that generator never ran on it, and the only
+	# genes it ever had were the ones copied below.
+	#
+	# The copies further down are guarded on `has_variable` on the corpse, which was the right instinct and
+	# the wrong fix. A history-defined dragon whose look came from DNA rather than variables has no
+	# gene_dragon_wings_shading_template to copy -- so the guard skipped it, the new dragon got NOTHING, and
+	# AGOT's portrait script values read those templates UNGUARDED:
+	#
+	#     Error: Failed to fetch variable for 'gene_dragon_wings_shading_template' due to not being set
+	#     Error: Failed to fetch variable for 'gene_dragon_body_shading_template' due to not being set
+	#     (9,258 lines between them in one session)
+	#
+	# A shading gene with no value is a shading layer that does not render. That is the transparency.
+	#
+	# THE FIX IS THEIR OWN GENERATOR, NOT A HAND-WRITTEN DEFAULT LIST. Calling it first fills every gene --
+	# including ones we do not copy and ones AGOT may add later -- and the copies below then overwrite the
+	# ones we actually have. The ice-white recolour still runs after this effect, so it wins as it always did.
+	# A hand-maintained table of fallback values would have gone stale the first time they touched a gene.
+	agot_gen_appearance_variables = yes
+
+	# ══ 1.0.9 -- THE OTHER TWENTY-SIX ═════════════════════════════════════════════════════════════════════
+	# The eight guarded copies below this list were added in 1.0.7 after the live run. These twenty-six were
+	# left UNGUARDED, and that is the see-through dragon bug -- still, after every fix that claimed it.
+	#
+	# A history-defined dragon gets its look from DNA, not variables. Balerion and Vhagar have no
+	# gene_dragon_* variables at all. `value = scope:ln_fallen_dragon.var:gene_dragon_X` on such a corpse
+	# does not merely fail to copy -- it leaves the target UNSET, destroying the value
+	# agot_gen_appearance_variables wrote one line earlier. The generator ran; the copy undid it.
+	#
+	# THE PROOF IS THIS EFFECT'S OWN SPLIT. One run of error.log names 26 genes and only 26:
+	#
+	#     1320 x gene_dragon_main_horn_shape_template   (132 renders x 10 template tests in the modifier)
+	#      132 x each of the other 24 shape genes
+	#        0 x gene_dragon_body_shading_template / gene_dragon_wings_shading_template / the other 6
+	#
+	# The zero set is exactly the guarded set. Same effect, same scope, same execution -- the guard is the
+	# only difference between a gene that survives and a gene that does not. That is the whole bug.
+	#
+	# So: inherit where the corpse has it, KEEP THE GENERATOR'S ROLL where it does not. A raised Vhagar
+	# whose corpse carried no variables now comes back as a solid dragon of the generator's making rather
+	# than a translucent one -- there is nothing to inherit, and a rolled face beats no face.
+	# ── 1.0.13: READ THE ENTRY, NOT THE CORPSE ──────────────────────────────────────────────────────────
+	# AGOT's own idiom, lifted from change_dragon_size (00_agot_dragon_effects.txt:700): scope the corpse,
+	# walk the storage list for its entry, hold it in a temporary scope. Entry first because 0.5.1 strips
+	# the character's gene variables at on_setup; character second because during creation, before that
+	# runs, the character is the only source there is; and the generator's roll above is the floor when
+	# neither has anything -- a rolled face beats no face, which is the see-through-dragon lesson.
+	if = {
+		limit = { agot_has_dragon_storage_system_global_list = yes }
+		every_in_global_list = {
+			variable = gl_dragon_variable_storage
+			limit = { var:dragon_id ?= scope:ln_fallen_dragon }
+			save_temporary_scope_as = ln_fallen_entry
+		}
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_back_spike_size } }
+		set_variable = { name = gene_dragon_back_spike_size                 value = scope:ln_fallen_entry.var:gene_dragon_back_spike_size }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_back_spike_size } }
+		set_variable = { name = gene_dragon_back_spike_size                 value = scope:ln_fallen_dragon.var:gene_dragon_back_spike_size }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_body_pattern_template } }
+		set_variable = { name = gene_dragon_body_pattern_template           value = scope:ln_fallen_entry.var:gene_dragon_body_pattern_template }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_body_pattern_template } }
+		set_variable = { name = gene_dragon_body_pattern_template           value = scope:ln_fallen_dragon.var:gene_dragon_body_pattern_template }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_body_pattern_value } }
+		set_variable = { name = gene_dragon_body_pattern_value              value = scope:ln_fallen_entry.var:gene_dragon_body_pattern_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_body_pattern_value } }
+		set_variable = { name = gene_dragon_body_pattern_value              value = scope:ln_fallen_dragon.var:gene_dragon_body_pattern_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_body_shading_template } }
+		set_variable = { name = gene_dragon_body_shading_template           value = scope:ln_fallen_entry.var:gene_dragon_body_shading_template }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_body_shading_template } }
+		set_variable = { name = gene_dragon_body_shading_template           value = scope:ln_fallen_dragon.var:gene_dragon_body_shading_template }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_body_shading_value } }
+		set_variable = { name = gene_dragon_body_shading_value              value = scope:ln_fallen_entry.var:gene_dragon_body_shading_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_body_shading_value } }
+		set_variable = { name = gene_dragon_body_shading_value              value = scope:ln_fallen_dragon.var:gene_dragon_body_shading_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_brow_width } }
+		set_variable = { name = gene_dragon_brow_width                      value = scope:ln_fallen_entry.var:gene_dragon_brow_width }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_brow_width } }
+		set_variable = { name = gene_dragon_brow_width                      value = scope:ln_fallen_dragon.var:gene_dragon_brow_width }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_center_fin_size } }
+		set_variable = { name = gene_dragon_center_fin_size                 value = scope:ln_fallen_entry.var:gene_dragon_center_fin_size }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_center_fin_size } }
+		set_variable = { name = gene_dragon_center_fin_size                 value = scope:ln_fallen_dragon.var:gene_dragon_center_fin_size }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_cheek_width } }
+		set_variable = { name = gene_dragon_cheek_width                     value = scope:ln_fallen_entry.var:gene_dragon_cheek_width }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_cheek_width } }
+		set_variable = { name = gene_dragon_cheek_width                     value = scope:ln_fallen_dragon.var:gene_dragon_cheek_width }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_chin_profile } }
+		set_variable = { name = gene_dragon_chin_profile                    value = scope:ln_fallen_entry.var:gene_dragon_chin_profile }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_chin_profile } }
+		set_variable = { name = gene_dragon_chin_profile                    value = scope:ln_fallen_dragon.var:gene_dragon_chin_profile }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_crest_depth } }
+		set_variable = { name = gene_dragon_crest_depth                     value = scope:ln_fallen_entry.var:gene_dragon_crest_depth }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_crest_depth } }
+		set_variable = { name = gene_dragon_crest_depth                     value = scope:ln_fallen_dragon.var:gene_dragon_crest_depth }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_eye_color_hue } }
+		set_variable = { name = gene_dragon_eye_color_hue                   value = scope:ln_fallen_entry.var:gene_dragon_eye_color_hue }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_eye_color_hue } }
+		set_variable = { name = gene_dragon_eye_color_hue                   value = scope:ln_fallen_dragon.var:gene_dragon_eye_color_hue }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_eye_color_saturation } }
+		set_variable = { name = gene_dragon_eye_color_saturation            value = scope:ln_fallen_entry.var:gene_dragon_eye_color_saturation }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_eye_color_saturation } }
+		set_variable = { name = gene_dragon_eye_color_saturation            value = scope:ln_fallen_dragon.var:gene_dragon_eye_color_saturation }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_eye_color_value } }
+		set_variable = { name = gene_dragon_eye_color_value                 value = scope:ln_fallen_entry.var:gene_dragon_eye_color_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_eye_color_value } }
+		set_variable = { name = gene_dragon_eye_color_value                 value = scope:ln_fallen_dragon.var:gene_dragon_eye_color_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_fire_color_template } }
+		set_variable = { name = gene_dragon_fire_color_template             value = scope:ln_fallen_entry.var:gene_dragon_fire_color_template }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_fire_color_template } }
+		set_variable = { name = gene_dragon_fire_color_template             value = scope:ln_fallen_dragon.var:gene_dragon_fire_color_template }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_fire_color_value } }
+		set_variable = { name = gene_dragon_fire_color_value                value = scope:ln_fallen_entry.var:gene_dragon_fire_color_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_fire_color_value } }
+		set_variable = { name = gene_dragon_fire_color_value                value = scope:ln_fallen_dragon.var:gene_dragon_fire_color_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_fire_smoke_template } }
+		set_variable = { name = gene_dragon_fire_smoke_template             value = scope:ln_fallen_entry.var:gene_dragon_fire_smoke_template }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_fire_smoke_template } }
+		set_variable = { name = gene_dragon_fire_smoke_template             value = scope:ln_fallen_dragon.var:gene_dragon_fire_smoke_template }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_fire_smoke_value } }
+		set_variable = { name = gene_dragon_fire_smoke_value                value = scope:ln_fallen_entry.var:gene_dragon_fire_smoke_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_fire_smoke_value } }
+		set_variable = { name = gene_dragon_fire_smoke_value                value = scope:ln_fallen_dragon.var:gene_dragon_fire_smoke_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_head_roundness } }
+		set_variable = { name = gene_dragon_head_roundness                  value = scope:ln_fallen_entry.var:gene_dragon_head_roundness }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_head_roundness } }
+		set_variable = { name = gene_dragon_head_roundness                  value = scope:ln_fallen_dragon.var:gene_dragon_head_roundness }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_horn_color_hue } }
+		set_variable = { name = gene_dragon_horn_color_hue                  value = scope:ln_fallen_entry.var:gene_dragon_horn_color_hue }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_horn_color_hue } }
+		set_variable = { name = gene_dragon_horn_color_hue                  value = scope:ln_fallen_dragon.var:gene_dragon_horn_color_hue }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_horn_color_saturation } }
+		set_variable = { name = gene_dragon_horn_color_saturation           value = scope:ln_fallen_entry.var:gene_dragon_horn_color_saturation }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_horn_color_saturation } }
+		set_variable = { name = gene_dragon_horn_color_saturation           value = scope:ln_fallen_dragon.var:gene_dragon_horn_color_saturation }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_horn_color_value } }
+		set_variable = { name = gene_dragon_horn_color_value                value = scope:ln_fallen_entry.var:gene_dragon_horn_color_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_horn_color_value } }
+		set_variable = { name = gene_dragon_horn_color_value                value = scope:ln_fallen_dragon.var:gene_dragon_horn_color_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_horns_eyebrow } }
+		set_variable = { name = gene_dragon_horns_eyebrow                   value = scope:ln_fallen_entry.var:gene_dragon_horns_eyebrow }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_horns_eyebrow } }
+		set_variable = { name = gene_dragon_horns_eyebrow                   value = scope:ln_fallen_dragon.var:gene_dragon_horns_eyebrow }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_horns_eyebrow_length } }
+		set_variable = { name = gene_dragon_horns_eyebrow_length            value = scope:ln_fallen_entry.var:gene_dragon_horns_eyebrow_length }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_horns_eyebrow_length } }
+		set_variable = { name = gene_dragon_horns_eyebrow_length            value = scope:ln_fallen_dragon.var:gene_dragon_horns_eyebrow_length }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_jaw_width } }
+		set_variable = { name = gene_dragon_jaw_width                       value = scope:ln_fallen_entry.var:gene_dragon_jaw_width }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_jaw_width } }
+		set_variable = { name = gene_dragon_jaw_width                       value = scope:ln_fallen_dragon.var:gene_dragon_jaw_width }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_lower_jaw_height } }
+		set_variable = { name = gene_dragon_lower_jaw_height                value = scope:ln_fallen_entry.var:gene_dragon_lower_jaw_height }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_lower_jaw_height } }
+		set_variable = { name = gene_dragon_lower_jaw_height                value = scope:ln_fallen_dragon.var:gene_dragon_lower_jaw_height }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_lower_jaw_width } }
+		set_variable = { name = gene_dragon_lower_jaw_width                 value = scope:ln_fallen_entry.var:gene_dragon_lower_jaw_width }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_lower_jaw_width } }
+		set_variable = { name = gene_dragon_lower_jaw_width                 value = scope:ln_fallen_dragon.var:gene_dragon_lower_jaw_width }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_main_horn_shape_template } }
+		set_variable = { name = gene_dragon_main_horn_shape_template        value = scope:ln_fallen_entry.var:gene_dragon_main_horn_shape_template }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_main_horn_shape_template } }
+		set_variable = { name = gene_dragon_main_horn_shape_template        value = scope:ln_fallen_dragon.var:gene_dragon_main_horn_shape_template }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_main_horn_shape_value } }
+		set_variable = { name = gene_dragon_main_horn_shape_value           value = scope:ln_fallen_entry.var:gene_dragon_main_horn_shape_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_main_horn_shape_value } }
+		set_variable = { name = gene_dragon_main_horn_shape_value           value = scope:ln_fallen_dragon.var:gene_dragon_main_horn_shape_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_metallic_scales_strength } }
+		set_variable = { name = gene_dragon_metallic_scales_strength        value = scope:ln_fallen_entry.var:gene_dragon_metallic_scales_strength }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_metallic_scales_strength } }
+		set_variable = { name = gene_dragon_metallic_scales_strength        value = scope:ln_fallen_dragon.var:gene_dragon_metallic_scales_strength }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_neck_length } }
+		set_variable = { name = gene_dragon_neck_length                     value = scope:ln_fallen_entry.var:gene_dragon_neck_length }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_neck_length } }
+		set_variable = { name = gene_dragon_neck_length                     value = scope:ln_fallen_dragon.var:gene_dragon_neck_length }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_neck_spike_size } }
+		set_variable = { name = gene_dragon_neck_spike_size                 value = scope:ln_fallen_entry.var:gene_dragon_neck_spike_size }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_neck_spike_size } }
+		set_variable = { name = gene_dragon_neck_spike_size                 value = scope:ln_fallen_dragon.var:gene_dragon_neck_spike_size }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_old_neck } }
+		set_variable = { name = gene_dragon_old_neck                        value = scope:ln_fallen_entry.var:gene_dragon_old_neck }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_old_neck } }
+		set_variable = { name = gene_dragon_old_neck                        value = scope:ln_fallen_dragon.var:gene_dragon_old_neck }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_outer_brow_height } }
+		set_variable = { name = gene_dragon_outer_brow_height               value = scope:ln_fallen_entry.var:gene_dragon_outer_brow_height }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_outer_brow_height } }
+		set_variable = { name = gene_dragon_outer_brow_height               value = scope:ln_fallen_dragon.var:gene_dragon_outer_brow_height }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_primary_color_hue } }
+		set_variable = { name = gene_dragon_primary_color_hue               value = scope:ln_fallen_entry.var:gene_dragon_primary_color_hue }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_primary_color_hue } }
+		set_variable = { name = gene_dragon_primary_color_hue               value = scope:ln_fallen_dragon.var:gene_dragon_primary_color_hue }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_primary_color_saturation } }
+		set_variable = { name = gene_dragon_primary_color_saturation        value = scope:ln_fallen_entry.var:gene_dragon_primary_color_saturation }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_primary_color_saturation } }
+		set_variable = { name = gene_dragon_primary_color_saturation        value = scope:ln_fallen_dragon.var:gene_dragon_primary_color_saturation }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_primary_color_value } }
+		set_variable = { name = gene_dragon_primary_color_value             value = scope:ln_fallen_entry.var:gene_dragon_primary_color_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_primary_color_value } }
+		set_variable = { name = gene_dragon_primary_color_value             value = scope:ln_fallen_dragon.var:gene_dragon_primary_color_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_scale_highlights } }
+		set_variable = { name = gene_dragon_scale_highlights                value = scope:ln_fallen_entry.var:gene_dragon_scale_highlights }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_scale_highlights } }
+		set_variable = { name = gene_dragon_scale_highlights                value = scope:ln_fallen_dragon.var:gene_dragon_scale_highlights }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_scale_shadows } }
+		set_variable = { name = gene_dragon_scale_shadows                   value = scope:ln_fallen_entry.var:gene_dragon_scale_shadows }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_scale_shadows } }
+		set_variable = { name = gene_dragon_scale_shadows                   value = scope:ln_fallen_dragon.var:gene_dragon_scale_shadows }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_secondary_hue } }
+		set_variable = { name = gene_dragon_secondary_hue                   value = scope:ln_fallen_entry.var:gene_dragon_secondary_hue }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_secondary_hue } }
+		set_variable = { name = gene_dragon_secondary_hue                   value = scope:ln_fallen_dragon.var:gene_dragon_secondary_hue }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_secondary_saturation } }
+		set_variable = { name = gene_dragon_secondary_saturation            value = scope:ln_fallen_entry.var:gene_dragon_secondary_saturation }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_secondary_saturation } }
+		set_variable = { name = gene_dragon_secondary_saturation            value = scope:ln_fallen_dragon.var:gene_dragon_secondary_saturation }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_secondary_value } }
+		set_variable = { name = gene_dragon_secondary_value                 value = scope:ln_fallen_entry.var:gene_dragon_secondary_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_secondary_value } }
+		set_variable = { name = gene_dragon_secondary_value                 value = scope:ln_fallen_dragon.var:gene_dragon_secondary_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_side_fin_size } }
+		set_variable = { name = gene_dragon_side_fin_size                   value = scope:ln_fallen_entry.var:gene_dragon_side_fin_size }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_side_fin_size } }
+		set_variable = { name = gene_dragon_side_fin_size                   value = scope:ln_fallen_dragon.var:gene_dragon_side_fin_size }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_snout_end_width } }
+		set_variable = { name = gene_dragon_snout_end_width                 value = scope:ln_fallen_entry.var:gene_dragon_snout_end_width }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_snout_end_width } }
+		set_variable = { name = gene_dragon_snout_end_width                 value = scope:ln_fallen_dragon.var:gene_dragon_snout_end_width }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_snout_height } }
+		set_variable = { name = gene_dragon_snout_height                    value = scope:ln_fallen_entry.var:gene_dragon_snout_height }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_snout_height } }
+		set_variable = { name = gene_dragon_snout_height                    value = scope:ln_fallen_dragon.var:gene_dragon_snout_height }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_snout_length } }
+		set_variable = { name = gene_dragon_snout_length                    value = scope:ln_fallen_entry.var:gene_dragon_snout_length }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_snout_length } }
+		set_variable = { name = gene_dragon_snout_length                    value = scope:ln_fallen_dragon.var:gene_dragon_snout_length }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_snout_profile } }
+		set_variable = { name = gene_dragon_snout_profile                   value = scope:ln_fallen_entry.var:gene_dragon_snout_profile }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_snout_profile } }
+		set_variable = { name = gene_dragon_snout_profile                   value = scope:ln_fallen_dragon.var:gene_dragon_snout_profile }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_snout_width } }
+		set_variable = { name = gene_dragon_snout_width                     value = scope:ln_fallen_entry.var:gene_dragon_snout_width }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_snout_width } }
+		set_variable = { name = gene_dragon_snout_width                     value = scope:ln_fallen_dragon.var:gene_dragon_snout_width }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_tail_length } }
+		set_variable = { name = gene_dragon_tail_length                     value = scope:ln_fallen_entry.var:gene_dragon_tail_length }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_tail_length } }
+		set_variable = { name = gene_dragon_tail_length                     value = scope:ln_fallen_dragon.var:gene_dragon_tail_length }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_tertiary_hue } }
+		set_variable = { name = gene_dragon_tertiary_hue                    value = scope:ln_fallen_entry.var:gene_dragon_tertiary_hue }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_tertiary_hue } }
+		set_variable = { name = gene_dragon_tertiary_hue                    value = scope:ln_fallen_dragon.var:gene_dragon_tertiary_hue }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_tertiary_saturation } }
+		set_variable = { name = gene_dragon_tertiary_saturation             value = scope:ln_fallen_entry.var:gene_dragon_tertiary_saturation }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_tertiary_saturation } }
+		set_variable = { name = gene_dragon_tertiary_saturation             value = scope:ln_fallen_dragon.var:gene_dragon_tertiary_saturation }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_tertiary_value } }
+		set_variable = { name = gene_dragon_tertiary_value                  value = scope:ln_fallen_entry.var:gene_dragon_tertiary_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_tertiary_value } }
+		set_variable = { name = gene_dragon_tertiary_value                  value = scope:ln_fallen_dragon.var:gene_dragon_tertiary_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_upper_jaw_width } }
+		set_variable = { name = gene_dragon_upper_jaw_width                 value = scope:ln_fallen_entry.var:gene_dragon_upper_jaw_width }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_upper_jaw_width } }
+		set_variable = { name = gene_dragon_upper_jaw_width                 value = scope:ln_fallen_dragon.var:gene_dragon_upper_jaw_width }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_wings_shading_template } }
+		set_variable = { name = gene_dragon_wings_shading_template          value = scope:ln_fallen_entry.var:gene_dragon_wings_shading_template }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_wings_shading_template } }
+		set_variable = { name = gene_dragon_wings_shading_template          value = scope:ln_fallen_dragon.var:gene_dragon_wings_shading_template }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_wings_shading_value } }
+		set_variable = { name = gene_dragon_wings_shading_value             value = scope:ln_fallen_entry.var:gene_dragon_wings_shading_value }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_wings_shading_value } }
+		set_variable = { name = gene_dragon_wings_shading_value             value = scope:ln_fallen_dragon.var:gene_dragon_wings_shading_value }
+	}
+	if = {
+		limit = { exists = scope:ln_fallen_entry  scope:ln_fallen_entry = { has_variable = gene_dragon_wounded } }
+		set_variable = { name = gene_dragon_wounded                         value = scope:ln_fallen_entry.var:gene_dragon_wounded }
+	}
+	else_if = {
+		limit = { scope:ln_fallen_dragon = { has_variable = gene_dragon_wounded } }
+		set_variable = { name = gene_dragon_wounded                         value = scope:ln_fallen_dragon.var:gene_dragon_wounded }
+	}
+}
+
+# Root = the new dragon. The THIRTEEN colour genes, overwritten. Same values the inherited ice dragon used, so
+# nothing about the palette changes -- what changes is that it is now sitting on top of a face somebody
+# recognises.
+ln_apply_the_cold_effect = {
+	# ── 1.0.13 -- THE THIRD COLOUR TERM ─────────────────────────────────────────────────────────────────
+	# 0.5.1 made dragon colour hue x SATURATION x value; before it there were only two terms, and this effect
+	# set both of them. AGOT's own migration (agot_story_cycle_dragon_variables.txt, the days = 30 effect
+	# group) backfills any entry missing the new channels to 1.0, with NO dragon filter -- so within a month
+	# it would be choosing the ice dragons' saturation for us, silently.
+	#
+	# The five saturations are set to 1.0 DELIBERATELY: that is AGOT's own default, so an ice dragon looks
+	# exactly as it does on a stock 0.5.1 install today, and the value is now OURS rather than theirs.
+	# TO MAKE THE COLD PALER, LOWER THEM -- they are the whole knob, and this is the only place they are set.
+	# Judge it on a raised dragon in game, not from here.
+	set_variable = { name = gene_dragon_primary_color_hue              value = 0.05 }
+	set_variable = { name = gene_dragon_primary_color_value            value = 0.05 }
+	set_variable = { name = gene_dragon_secondary_hue                  value = 0.65 }
+	set_variable = { name = gene_dragon_secondary_value                value = 0.35 }
+	set_variable = { name = gene_dragon_eye_color_hue                  value = 0.0 }
+	set_variable = { name = gene_dragon_eye_color_value                value = 0.0 }
+	set_variable = { name = gene_dragon_horn_color_hue                 value = 0.55 }
+	set_variable = { name = gene_dragon_horn_color_value               value = 0.0 }
+	set_variable = { name = gene_dragon_primary_color_saturation       value = 1.0 }
+	set_variable = { name = gene_dragon_secondary_saturation           value = 1.0 }
+	set_variable = { name = gene_dragon_tertiary_saturation            value = 1.0 }
+	set_variable = { name = gene_dragon_eye_color_saturation           value = 1.0 }
+	set_variable = { name = gene_dragon_horn_color_saturation          value = 1.0 }
+}
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE DRAGONPIT. Thomas's scenario, and it is the best one in the feature:
+#
+#   "Any dragon trapped in a dragonpit -- not just the one in King's Landing, because you can build your own.
+#    Personally I would release all my dragons from the pit before the Night King gets there. Because if he gets
+#    there, or I give up my title and they stay locked in the pit, there's a good chance he's going to come by
+#    and execute all the dragons in the pit. They're going to get reborn, and he's going to give them to his
+#    lieutenants."
+#
+# That is exactly what this does, and the reason it is worth building is the sentence he started with: it makes
+# the player DO something. A dragonpit is a safe place to keep dragons for the entire game right up until the
+# moment it becomes the worst place in the world, and nothing warns you. Letting them out costs you the pit's
+# bonuses and the convenience; leaving them in costs you the dragons and then hands them to the enemy.
+#
+# HOW THE PIT IS READ. AGOT stamps var:pitted_dragon_location on a dragon when it is put in one -- the county
+# the pit is in (00_agot_dragon_effects.txt, alongside the agot_dragon_in_dragonpit modifier). 63 read sites in
+# AGOT, so it is load-bearing there and safe to read here. A dragon with that variable is in a cage.
+#
+# WHY IT RUNS YEARLY RATHER THAN ON CAPTURE. There is no on_action for "the Others took this county" that covers
+# occupation, title transfer and scouring alike, and a hook that only caught one of the three would be the
+# silent kind of wrong. Sweeping once a year catches every route, and a year's delay reads as them getting
+# round to it.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# Root = anything. Called once a year from ln_struggle_yearly_work_effect.
+ln_dragonpit_sweep_effect = {
+	if = {
+		limit = {
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+		}
+		# every_living_dragon rather than every_in_global_list over living_dragons: it is an ENGINE list builder
+		# (AGOT uses it to populate their global list in the first place), so iterating it while killing things
+		# does not depend on how a script-maintained list behaves mid-loop. Cheap either way -- there are tens of
+		# dragons in the world, not thousands.
+		every_living_dragon = {
+			limit = {
+				is_alive = yes
+				has_trait = dragon
+				NOT = { house ?= house:house_theothers }
+				NOT = { has_trait = ln_undead_dragon }
+
+				# It is in a pit, and the pit is theirs now.
+				exists = var:pitted_dragon_location
+				var:pitted_dragon_location = { ln_county_is_theirs_trigger = yes }
+			}
+			# Killed in the cage. death_reason is AGOT's own execution reason so the death feed reads correctly,
+			# and no killer is named: the recorder does not need one, because the county being theirs already
+			# satisfies ln_others_were_here_trigger on its own.
+			death = { death_reason = death_execution }
+		}
+	}
+}
+
+
+# Root = the Night King. Hands a raised dragon to each of his captains who has none, while bodies remain.
+#
+# WHO COUNTS AS A CAPTAIN. Anyone in his realm or hall carrying other_trait -- the mod's own marker for one of
+# them, added in the_long_night story cycle. Wights are deliberately excluded: a wight is a corpse that walks
+# where it is pointed, and handing it a dragon is not the image. The Others are the ones with minds.
+#
+# NOT A LOOP OVER THE LIST. every_vassal and every_courtier are the loop; the fallen-dragon list is just the
+# supply, checked per captain. If it runs dry halfway through, the rest go without and get another chance in
+# three years -- which is correct, because by then the living may have lost another one.
+ln_arm_the_lieutenants_effect = {
+	every_vassal = {
+		limit = {
+			has_trait = other_trait
+			is_alive = yes
+			NOT = { has_trait = dragonrider }
+			NOT = { exists = var:current_dragon }
+			OR = {
+				any_in_global_list = { variable = ln_fallen_dragons  count >= 1 }
+				any_in_global_list = { variable = living_dragons  ln_unridden_undead_trigger = yes }
+			}
+		}
+		if = {
+			limit = { has_trait = dragonless_dragonrider }
+			remove_trait = dragonless_dragonrider
+		}
+		ln_mount_or_raise_effect = yes
+	}
+	every_courtier = {
+		limit = {
+			has_trait = other_trait
+			is_alive = yes
+			NOT = { has_trait = dragonrider }
+			NOT = { exists = var:current_dragon }
+			OR = {
+				any_in_global_list = { variable = ln_fallen_dragons  count >= 1 }
+				any_in_global_list = { variable = living_dragons  ln_unridden_undead_trigger = yes }
+			}
+		}
+		if = {
+			limit = { has_trait = dragonless_dragonrider }
+			remove_trait = dragonless_dragonrider
+		}
+		ln_mount_or_raise_effect = yes
+	}
+}
+
+
+# ── THE SEE-THROUGH DRAGONS, FOR SAVES THAT ALREADY HAVE ONE ───────────────────────────────────────────────
+# Root = anything. One-shot, self-gating, run at game start.
+#
+# taylorbb12345 on the Workshop, on 1.0.4a: "great mod but dragons are see through". The 1.0.4 fix for that
+# (agot_gen_appearance_variables at the top of ln_copy_dragon_shape_effect) is present, correctly scoped and
+# complete -- but it lives inside create_character's after_creation, so it only ever touches dragons raised
+# from that point on. A dragon raised on 1.0.3 or earlier has no shading templates and never will, and no
+# amount of updating the mod changes that. Reporting a fixed bug from an old save is not the reporter being
+# wrong; it is us shipping a fix with no migration.
+#
+# WHY IT WRITES THE STORY DIRECTLY instead of calling agot_dragon_transfer_vars_to_story_cycle_effect again:
+# that effect CREATES A NEW story_dragon_variable_storage and pushes it onto gl_dragon_variable_storage
+# (00_agot_dragon_effects.txt:2249-2279). Calling it twice for one dragon leaves two entries fighting over one
+# dragon_id. Matching on var:dragon_id is AGOT's own idiom for finding the right one (same file, :2040).
+#
+# SAFE WHEN IT DOES NOT MATCH. If the storage entry cannot be found the limit simply selects nothing -- the
+# character-side variables are still repaired, and nothing is corrupted.
+# Root = ONE undead dragon that has not been gene-synced yet. The body of the repair, factored out in
+# 1.0.9 so the two sweeps below can share it without sharing an iterator.
+#
+# ── WHAT WAS ACTUALLY BROKEN, AND WHY THIS EFFECT NEVER FIXED IT ──────────────────────────────────────
+# The old gate was `NOT = { has_variable = gene_dragon_wings_shading_template }`. That gene is one of the
+# EIGHT GUARDED copies in ln_copy_dragon_shape_effect, so on any dragon raised by 1.0.7 or later it is
+# always set: the generator writes it and the guard never destroys it. The gate could therefore never
+# open for the dragons this effect exists to repair. A full run bears it out exactly -- ZERO errors
+# against wings_shading, 1,320 against gene_dragon_main_horn_shape_template.
+#
+# The stamp replaces it, because there are two broken populations and only one shows on the character:
+#   * raised before 1.0.9 -- the 26 unguarded copies wiped the character's genes AND the storage entry
+#     that on_setup built from them.
+#   * raised before 1.0.7 and then "repaired" by the old version of this effect -- the generator refilled
+#     the CHARACTER, but only eight genes were ever pushed to storage, so the entry the portrait actually
+#     reads still holds nothing for the other 26. Nothing on the character reveals this. A character-side
+#     gene test cannot find these dragons at all.
+# The stamp is absent on every save that predates 1.0.9, so this FAILS OPEN once per dragon and latches.
+ln_repair_one_dragon_effect = {
+	save_scope_as = ln_repair_dragon
+	# 1.0.9b: stamp versioned _1 -> _2. The _1 stamp landed before the branch below and regardless of
+	# whether it fired, so every dragon got exactly one repair attempt EVER -- a dragon the narrow gate
+	# skipped was written off from all future sweeps. _2 re-admits every dragon 1.0.9 already stamped.
+	set_variable = ln_gene_storage_sync_2
+	if = {
+		limit = { has_variable = ln_gene_storage_sync_1 }
+		remove_variable = ln_gene_storage_sync_1
+	}
+
+	# REGENERATE ONLY IF ACTUALLY BROKEN, AND ONLY A CLONE. The old effect ran the generator on every
+	# dragon that passed the gate; under a one-pass stamp that would re-roll every undead dragon's face
+	# on first load, which is a bug of our own making. Two conditions, and both halves matter:
+	#
+	# ONLY IF: it is a DOOR ONE clone (exists = var:ln_raised_from -- set in ln_raise_fallen_dragon_effect's
+	# after_creation, and the same discriminator ln_undead_dragon_upkeep_effect already uses) AND a marker
+	# gene is missing. main_horn_shape_template is the loudest of the 26; wings_shading_template covers
+	# clones raised before 1.0.7, when the shading copies were unguarded too.
+	#
+	# NEVER IF: it is a DOOR TWO conversion. That dragon is the same animal it always was -- its own genes,
+	# its own storage entry -- and if it is historical its look comes from DNA and it has NO gene variables
+	# at all, which would satisfy the missing-gene test and hand it a randomly generated face. Door Two's
+	# entire guarantee is that no appearance is ever rebuilt. Do not rebuild it.
+	if = {
+		limit = {
+			# has_variable, NOT `exists = var:ln_raised_from`. The two differ on exactly the dragons that
+			# matter here: ln_raised_from points at a CORPSE, and a corpse can be pruned out of the save.
+			# After pruning the variable is still there but its target no longer resolves, so `exists` goes
+			# false and the oldest clones -- the ones whose corpses have had the longest to be pruned, and
+			# the ones most likely to be broken -- would silently fail the provenance test and never be
+			# repaired. This is a question about PROVENANCE, not about whether the corpse is still reachable.
+			# (ln_undead_dragon_upkeep_effect below is right to use `exists`: it dereferences the variable.)
+			OR = {
+				# The original clause, unchanged: a Door One clone whose copied genes went missing.
+				AND = {
+					has_variable = ln_raised_from
+					# 1.0.13: these two asked the CHARACTER, and 0.5.1 removes every gene variable from the
+					# character once its storage entry exists -- so both were true for every clone alive and
+					# this branch would have re-rolled the face of every undead dragon on the next sweep.
+					# The entry is the thing that can actually be missing a gene.
+					OR = {
+						ln_storage_entry_lacks_gene_trigger = { DRAGON = scope:ln_repair_dragon  GENE = gene_dragon_main_horn_shape_template }
+						ln_storage_entry_lacks_gene_trigger = { DRAGON = scope:ln_repair_dragon  GENE = gene_dragon_wings_shading_template }
+					}
+				}
+				# 1.0.11: OR the storage entry the portrait actually reads is blank. This is the clause that
+				# reaches historical dragons. The old comment below said a Door Two conversion must never be
+				# rebuilt because "its look comes from DNA" -- 00_agot_char_dragons.txt has 72 dragons and no
+				# dna lines, so on a blank entry there is nothing to protect. Guarded on the ENTRY, not on
+				# provenance, so a dragon whose entry still carries its curated values is untouched.
+				AND = {
+					ln_storage_entry_is_blank_trigger = { DRAGON = scope:ln_repair_dragon }
+					# AND the character cannot supply the genes itself. Caught on the adversarial pass: without
+					# this, a dragon whose CHARACTER genes are intact but whose ENTRY went blank would have its
+					# face re-rolled by the generator and then synced -- visible, but no longer the dragon the
+					# player knew. The sync block below already fixes that dragon on its own, off its own genes.
+					# Generate only when there is genuinely nothing to copy.
+					NOT = { has_variable = gene_dragon_body_shading_value }
+				}
+			}
+		}
+		# Their generator -- it guarantees every dragon gene has a value, including ones we never copied and
+		# ones AGOT may add later. Then the ice palette back over the top, exactly the order
+		# ln_copy_dragon_shape_effect uses, so a repaired dragon and a newly raised one end up identical.
+		agot_gen_appearance_variables = yes
+		# 1.0.11: the ice palette is OURS, and this branch can now reach a dragon that is not. A blank-entry
+		# repair on one of AGOT's own living dragons must leave it looking like an AGOT dragon.
+		if = {
+			limit = { has_trait = ln_undead_dragon }
+			ln_apply_the_cold_effect = yes
+		}
+	}
+
+	# ── AND THEN INTO STORAGE, WHICH IS THE HALF THAT WAS MISSING ────────────────────────────────────
+	# The portrait reads the STORY CYCLE entry, not the character: agot_story_cycle_dragon_variables.txt
+	# on_setup builds it from the character ONCE, at creation, and only for is_historical_dragon = no.
+	# Repairing the character without refreshing this entry fixed nothing a player could ever see.
+	#
+	# EVERY COPY IS GUARDED. An unguarded read off a scope that lacks the variable is the exact mechanism
+	# of the bug this release fixes, and a Door Two dragon reaching this sync would have had its storage
+	# entry emptied by the repair meant to save it. The tertiary pair in particular comes from
+	# agot_assign_tertiary_color_effect, a sub-effect of the generator, and metallic_scales_strength is set
+	# only inside the generator's baby-dragon + metallic-egg branch (00_agot_dragon_appearance_effects.txt
+	# :55-79, depth 5) -- an adult clone never enters it. An older comment here called those "certain".
+	# They are not, and this file has been bitten once already by trusting a comment.
+	if = {
+		limit = { agot_has_dragon_storage_system_global_list = yes }
+		every_in_global_list = {
+			variable = gl_dragon_variable_storage
+			limit = { var:dragon_id ?= scope:ln_repair_dragon }
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_back_spike_size } }
+				set_variable = { name = gene_dragon_back_spike_size                 value = scope:ln_repair_dragon.var:gene_dragon_back_spike_size }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_body_pattern_template } }
+				set_variable = { name = gene_dragon_body_pattern_template           value = scope:ln_repair_dragon.var:gene_dragon_body_pattern_template }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_body_pattern_value } }
+				set_variable = { name = gene_dragon_body_pattern_value              value = scope:ln_repair_dragon.var:gene_dragon_body_pattern_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_body_shading_template } }
+				set_variable = { name = gene_dragon_body_shading_template           value = scope:ln_repair_dragon.var:gene_dragon_body_shading_template }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_body_shading_value } }
+				set_variable = { name = gene_dragon_body_shading_value              value = scope:ln_repair_dragon.var:gene_dragon_body_shading_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_brow_width } }
+				set_variable = { name = gene_dragon_brow_width                      value = scope:ln_repair_dragon.var:gene_dragon_brow_width }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_center_fin_size } }
+				set_variable = { name = gene_dragon_center_fin_size                 value = scope:ln_repair_dragon.var:gene_dragon_center_fin_size }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_cheek_width } }
+				set_variable = { name = gene_dragon_cheek_width                     value = scope:ln_repair_dragon.var:gene_dragon_cheek_width }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_chin_profile } }
+				set_variable = { name = gene_dragon_chin_profile                    value = scope:ln_repair_dragon.var:gene_dragon_chin_profile }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_crest_depth } }
+				set_variable = { name = gene_dragon_crest_depth                     value = scope:ln_repair_dragon.var:gene_dragon_crest_depth }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_eye_color_hue } }
+				set_variable = { name = gene_dragon_eye_color_hue                   value = scope:ln_repair_dragon.var:gene_dragon_eye_color_hue }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_eye_color_saturation } }
+				set_variable = { name = gene_dragon_eye_color_saturation            value = scope:ln_repair_dragon.var:gene_dragon_eye_color_saturation }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_eye_color_value } }
+				set_variable = { name = gene_dragon_eye_color_value                 value = scope:ln_repair_dragon.var:gene_dragon_eye_color_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_fire_color_template } }
+				set_variable = { name = gene_dragon_fire_color_template             value = scope:ln_repair_dragon.var:gene_dragon_fire_color_template }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_fire_color_value } }
+				set_variable = { name = gene_dragon_fire_color_value                value = scope:ln_repair_dragon.var:gene_dragon_fire_color_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_fire_smoke_template } }
+				set_variable = { name = gene_dragon_fire_smoke_template             value = scope:ln_repair_dragon.var:gene_dragon_fire_smoke_template }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_fire_smoke_value } }
+				set_variable = { name = gene_dragon_fire_smoke_value                value = scope:ln_repair_dragon.var:gene_dragon_fire_smoke_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_head_roundness } }
+				set_variable = { name = gene_dragon_head_roundness                  value = scope:ln_repair_dragon.var:gene_dragon_head_roundness }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_horn_color_hue } }
+				set_variable = { name = gene_dragon_horn_color_hue                  value = scope:ln_repair_dragon.var:gene_dragon_horn_color_hue }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_horn_color_saturation } }
+				set_variable = { name = gene_dragon_horn_color_saturation           value = scope:ln_repair_dragon.var:gene_dragon_horn_color_saturation }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_horn_color_value } }
+				set_variable = { name = gene_dragon_horn_color_value                value = scope:ln_repair_dragon.var:gene_dragon_horn_color_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_horns_eyebrow } }
+				set_variable = { name = gene_dragon_horns_eyebrow                   value = scope:ln_repair_dragon.var:gene_dragon_horns_eyebrow }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_horns_eyebrow_length } }
+				set_variable = { name = gene_dragon_horns_eyebrow_length            value = scope:ln_repair_dragon.var:gene_dragon_horns_eyebrow_length }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_jaw_width } }
+				set_variable = { name = gene_dragon_jaw_width                       value = scope:ln_repair_dragon.var:gene_dragon_jaw_width }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_lower_jaw_height } }
+				set_variable = { name = gene_dragon_lower_jaw_height                value = scope:ln_repair_dragon.var:gene_dragon_lower_jaw_height }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_lower_jaw_width } }
+				set_variable = { name = gene_dragon_lower_jaw_width                 value = scope:ln_repair_dragon.var:gene_dragon_lower_jaw_width }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_main_horn_shape_template } }
+				set_variable = { name = gene_dragon_main_horn_shape_template        value = scope:ln_repair_dragon.var:gene_dragon_main_horn_shape_template }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_main_horn_shape_value } }
+				set_variable = { name = gene_dragon_main_horn_shape_value           value = scope:ln_repair_dragon.var:gene_dragon_main_horn_shape_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_metallic_scales_strength } }
+				set_variable = { name = gene_dragon_metallic_scales_strength        value = scope:ln_repair_dragon.var:gene_dragon_metallic_scales_strength }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_neck_length } }
+				set_variable = { name = gene_dragon_neck_length                     value = scope:ln_repair_dragon.var:gene_dragon_neck_length }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_neck_spike_size } }
+				set_variable = { name = gene_dragon_neck_spike_size                 value = scope:ln_repair_dragon.var:gene_dragon_neck_spike_size }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_old_neck } }
+				set_variable = { name = gene_dragon_old_neck                        value = scope:ln_repair_dragon.var:gene_dragon_old_neck }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_outer_brow_height } }
+				set_variable = { name = gene_dragon_outer_brow_height               value = scope:ln_repair_dragon.var:gene_dragon_outer_brow_height }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_primary_color_hue } }
+				set_variable = { name = gene_dragon_primary_color_hue               value = scope:ln_repair_dragon.var:gene_dragon_primary_color_hue }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_primary_color_saturation } }
+				set_variable = { name = gene_dragon_primary_color_saturation        value = scope:ln_repair_dragon.var:gene_dragon_primary_color_saturation }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_primary_color_value } }
+				set_variable = { name = gene_dragon_primary_color_value             value = scope:ln_repair_dragon.var:gene_dragon_primary_color_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_scale_highlights } }
+				set_variable = { name = gene_dragon_scale_highlights                value = scope:ln_repair_dragon.var:gene_dragon_scale_highlights }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_scale_shadows } }
+				set_variable = { name = gene_dragon_scale_shadows                   value = scope:ln_repair_dragon.var:gene_dragon_scale_shadows }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_secondary_hue } }
+				set_variable = { name = gene_dragon_secondary_hue                   value = scope:ln_repair_dragon.var:gene_dragon_secondary_hue }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_secondary_saturation } }
+				set_variable = { name = gene_dragon_secondary_saturation            value = scope:ln_repair_dragon.var:gene_dragon_secondary_saturation }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_secondary_value } }
+				set_variable = { name = gene_dragon_secondary_value                 value = scope:ln_repair_dragon.var:gene_dragon_secondary_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_side_fin_size } }
+				set_variable = { name = gene_dragon_side_fin_size                   value = scope:ln_repair_dragon.var:gene_dragon_side_fin_size }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_snout_end_width } }
+				set_variable = { name = gene_dragon_snout_end_width                 value = scope:ln_repair_dragon.var:gene_dragon_snout_end_width }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_snout_height } }
+				set_variable = { name = gene_dragon_snout_height                    value = scope:ln_repair_dragon.var:gene_dragon_snout_height }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_snout_length } }
+				set_variable = { name = gene_dragon_snout_length                    value = scope:ln_repair_dragon.var:gene_dragon_snout_length }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_snout_profile } }
+				set_variable = { name = gene_dragon_snout_profile                   value = scope:ln_repair_dragon.var:gene_dragon_snout_profile }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_snout_width } }
+				set_variable = { name = gene_dragon_snout_width                     value = scope:ln_repair_dragon.var:gene_dragon_snout_width }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_tail_length } }
+				set_variable = { name = gene_dragon_tail_length                     value = scope:ln_repair_dragon.var:gene_dragon_tail_length }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_tertiary_hue } }
+				set_variable = { name = gene_dragon_tertiary_hue                    value = scope:ln_repair_dragon.var:gene_dragon_tertiary_hue }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_tertiary_saturation } }
+				set_variable = { name = gene_dragon_tertiary_saturation             value = scope:ln_repair_dragon.var:gene_dragon_tertiary_saturation }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_tertiary_value } }
+				set_variable = { name = gene_dragon_tertiary_value                  value = scope:ln_repair_dragon.var:gene_dragon_tertiary_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_upper_jaw_width } }
+				set_variable = { name = gene_dragon_upper_jaw_width                 value = scope:ln_repair_dragon.var:gene_dragon_upper_jaw_width }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_wings_shading_template } }
+				set_variable = { name = gene_dragon_wings_shading_template          value = scope:ln_repair_dragon.var:gene_dragon_wings_shading_template }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_wings_shading_value } }
+				set_variable = { name = gene_dragon_wings_shading_value             value = scope:ln_repair_dragon.var:gene_dragon_wings_shading_value }
+			}
+			if = {
+				limit = { scope:ln_repair_dragon = { has_variable = gene_dragon_wounded } }
+				set_variable = { name = gene_dragon_wounded                         value = scope:ln_repair_dragon.var:gene_dragon_wounded }
+			}
+		}
+	}
+}
+
+# Root = anything. THE YEARLY SWEEP, and it is deliberately the cheap one.
+# Thomas, 14 Aug: "for all of our self heal stuff, make sure that it's not performance heavy."
+# every_living_dragon is NOT cheap: AGOT declares it `base = living_character` + `has_trait = dragon`
+# (00_agot_scripted_lists_filler_lists.txt:71), so it walks every living character in the world -- the
+# same ~191,000-character walk flagged elsewhere in this project. AGOT's `living_dragons` global list is
+# tens of entries and holds every dragon the storage system knows about, including every dragon this mod
+# raises (ln_raise_fallen_dragon_effect ends in agot_dragon_transfer_vars_to_story_cycle_effect, which
+# adds it). ln_mount_or_raise_effect in this same file already reads that list. So: the list yearly.
+ln_repair_raised_dragons_effect = {
+	every_in_global_list = {
+		variable = living_dragons
+		limit = {
+			has_trait = ln_undead_dragon
+			NOT = { has_variable = ln_gene_storage_sync_2 }
+		}
+		ln_repair_one_dragon_effect = yes
+	}
+}
+
+# Root = anything. THE GAME-START SWEEP, and it is the expensive complete one, ONCE PER LOAD.
+# The list sweep above cannot see a clone raised before agot_dragon_transfer_vars_to_story_cycle_effect
+# was added to ln_raise_fallen_dragon_effect -- those dragons were never put in `living_dragons` and have
+# no storage entry either, so they render off the character alone and the generator half of the repair is
+# the whole fix for them. They are also the oldest and most broken dragons on any long-running save, so
+# missing them would mean shipping a self-heal that skips the people who have waited longest for it.
+# Once at load, latched by the stamp thereafter.
+ln_repair_raised_dragons_full_sweep_effect = {
+	every_living_dragon = {
+		limit = {
+			has_trait = ln_undead_dragon
+			NOT = { has_variable = ln_gene_storage_sync_2 }
+		}
+		ln_repair_one_dragon_effect = yes
+	}
+}
+
+# Root = anything. THE BLANK-ENTRY SWEEP (1.0.11) -- the first repair in this file allowed to touch a
+# dragon that is not ours.
+#
+# WHAT IT IS FOR. Both sweeps above gate on `has_trait = ln_undead_dragon`, so a living AGOT dragon with a
+# blank storage entry -- Dreamfyre in the 16 Aug screenshots -- was unreachable by any repair we have ever
+# shipped. This one selects on the DEFECT rather than on provenance, which is why it finds them.
+#
+# IT WALKS THE LIST, NOT THE WORLD. `living_dragons` is tens of entries; every_living_dragon is declared
+# `base = living_character` + `has_trait = dragon` and is the ~191,000-character walk flagged elsewhere in
+# this project. Thomas, 14 Aug: "make sure that it's not performance heavy."
+#
+# IT CREATES NO STORY, AND THAT IS THE SAFETY ARGUMENT. The original design for this feature called
+# create_story inside a sweep -- ungated, that spawns a story per dragon per year forever. This repairs
+# entries that ALREADY EXIST and never creates one, so that failure mode does not exist here. Dragons with
+# no entry at all are still unreached; they are deliberately left until a release that has been booted.
+#
+# SELF-LATCHING. ln_repair_one_dragon_effect stamps ln_gene_storage_sync_2 as its first act, so each
+# dragon is considered exactly once. On a healthy save the limit rejects every entry.
+ln_repair_blank_storage_dragons_effect = {
+	every_in_global_list = {
+		variable = living_dragons
+		# ── WHY THE BLANK TEST IS NOT IN THIS LIMIT ──────────────────────────────────────────────────
+		# It was, for exactly one live run, and it printed 4,416 errors:
+		#     Left side and right side during comparison were of different types
+		#     (left was 'character', right was 'story')
+		# Scripted-trigger parameters are TEXTUAL SUBSTITUTION, not scope capture. `DRAGON = this`
+		# substitutes the literal token `this` into the trigger body, where it is re-evaluated inside
+		# ln_storage_entry_is_blank_trigger's own any_in_global_list -- and there the current scope is the
+		# STORY being iterated, not the dragon. So it compared the entry's dragon_id against the entry.
+		# A limit cannot save a scope, so the dragon is captured in the body instead and passed explicitly.
+		# NEVER pass `this` or `prev` into a parameterised trigger that opens a list of its own.
+		limit = {
+			NOT = { has_variable = ln_gene_storage_sync_2 }
+			# 1.0.12b -- THE GATE THIS SWEEP SHIPPED WITHOUT, and the cause of the 17 Aug "glitch dragons"
+			# thread (thefoxking554, MPREG: Vermithor fine at age 200, skeletal by 220 -- reported the DAY
+			# 1.0.11 shipped this sweep). A HISTORICAL dragon's storage entry is geneless BY AGOT'S DESIGN:
+			# story_dragon_variable_storage.on_setup copies genes only for `is_historical_dragon = no`
+			# (agot_story_cycle_dragon_variables.txt:14). This sweep read that deliberate blankness as the
+			# defect it hunts, "repaired" it by syncing the character's genes into the entry -- PARTIALLY,
+			# because every copy is guarded on the character actually having that gene -- and a portrait that
+			# then reads the entry finds some layers valued and some missing. A missing shading layer does
+			# not render. That is the skeleton. AGOT's own boundary, restored: historical dragons are theirs.
+			is_historical_dragon = no
+		}
+		save_temporary_scope_as = ln_blank_check_dragon
+		if = {
+			limit = { ln_storage_entry_is_blank_trigger = { DRAGON = scope:ln_blank_check_dragon } }
+			ln_repair_one_dragon_effect = yes
+		}
+	}
+}
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# DOOR TWO (1.0.7): CONVERT, NEVER CLONE.
+#
+# Thomas: "Notice how the wights are handled -- those characters don't die, they get a trait... Does
+# that not seem like a more straightforward way to specifically ensure that our mod causes no
+# invisible dragons?" Yes. Everything below is that answer for the one death road we can actually
+# stand in front of: dragon-vs-dragon combat, intercepted in zz_ln_dragon_combat_overrides.txt
+# BEFORE the death lands. The dragon survives as itself -- its own genes, its own storage entry, its
+# own Past Riders -- so no appearance is ever rebuilt and the invisible-dragon failure mode cannot
+# occur, by construction.
+#
+# THE RECORDER AND THE RAISE ABOVE ARE NOW THE FALLBACK, NOT THE MAIN ROAD. Dragons also die to
+# scorpions (agot_dragon_warfare_events, 10 sites), sieges (agot_dragon_siege_events, 4), slaying
+# attempts (agot_dragon_slaying_events, 2), water wizards, and old age -- none of which funnels
+# through a scripted effect we can override without shadowing twenty thousand lines of AGOT events.
+# A dragon lost to the dead on those roads still goes through ln_record_fallen_dragon_effect and
+# comes back as a Door One raise. That is a deliberate, examined compromise: the clone path stays,
+# narrow, for the deaths no interception can reach.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# Root = a dragon that was about to die in dragon combat and passed ln_the_dead_claim_this_trigger.
+# Called from the dragon_combat_result_grab override IN PLACE OF the death. Scopes available from
+# the combat: scope:dsc_victor (the rider that beat it), scope:dsc_loser (its own rider).
+ln_the_dead_claim_dragon_effect = {
+	save_scope_as = ln_claimed_dragon
+
+	# ── THE BOND IS CUT, AGOT'S OWN WAY ─────────────────────────────────────────────────────────────
+	# agot_untame_dragon, not bare agot_unbond_dragon: untame is the one that pushes var:current_rider
+	# onto the dragon's past_riders list (the history Thomas wants preserved) and leaves a surviving
+	# rider correctly dragonless_dragonrider. If the rider is about to die in the same combat branch,
+	# that trait sits on him for a tick and goes to the grave -- harmless, and his death handling then
+	# finds no dragon to mourn, which is right: it is not his any more. The rider is remembered FIRST,
+	# because untame is also what removes var:current_rider.
+	if = {
+		limit = { exists = var:current_rider }
+		var:current_rider = { save_scope_as = ln_bereft_rider }
+		agot_untame_dragon = {
+			OWNER = scope:ln_bereft_rider
+			DRAGON = scope:ln_claimed_dragon
+		}
+	}
+
+	# ── THE CONVERSION ──────────────────────────────────────────────────────────────────────────────
+	# Same name, new nickname, new trait -- Vhagar the Undead, and it is still Vhagar. The same marks
+	# the raise path leaves, so every downstream guard treats both kinds identically.
+	add_trait = ln_undead_dragon
+	add_character_flag = ln_one_of_them   # 1.0.7: stamped at conversion -- see ln_is_one_of_them_trigger
+	give_nickname = nick_the_undead
+	set_variable = { name = color_grading  value = flag:darkest }
+	set_variable = { name = color          value = flag:white }
+
+	# The recolour, in BOTH places it has to land. The character-side palette is what any future
+	# transfer or creation code reads...
+	ln_apply_the_cold_effect = yes
+	# ...but a LIVING dragon's portrait reads its gl_dragon_variable_storage entry -- on_setup MOVES
+	# the gene variables off the character and into the story (agot_story_cycle_dragon_variables.txt),
+	# so the ice palette must be written into the storage as well or the dragon keeps its living
+	# colours. Historical dragons carry no storage genes at all (their look is baked DNA); for them
+	# this writes nothing and the trait + nickname carry the meaning -- see the session doc, verified
+	# vs hypothesis.
+	ln_chill_the_storage_effect = yes
+
+	# ── THEIRS NOW ──────────────────────────────────────────────────────────────────────────────────
+	# The Night King is served first; his captains after; and a claim with every saddle filled is
+	# still OWNED -- it waits in the Night King's court, not in the wild where a living claimant could
+	# tame it back, until ln_others_take_a_dragon_effect's next three-year pass finds it a rider.
+	if = {
+		limit = {
+			title:h_the_others.holder ?= {
+				is_alive = yes
+				NOT = { has_trait = dragonrider }
+				NOT = { exists = var:current_dragon }
+			}
+		}
+		title:h_the_others.holder = {
+			if = {
+				limit = { has_trait = dragonless_dragonrider }
+				remove_trait = dragonless_dragonrider
+			}
+		}
+		hidden_effect = {
+			agot_tame_dragon = {
+				TAMER = title:h_the_others.holder
+				DRAGON = scope:ln_claimed_dragon
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			title:h_the_others.holder ?= {
+				any_vassal = { ln_wants_an_undead_mount_trigger = yes }
+			}
+		}
+		title:h_the_others.holder = {
+			random_vassal = {
+				limit = { ln_wants_an_undead_mount_trigger = yes }
+				save_scope_as = ln_new_cold_rider
+				if = {
+					limit = { has_trait = dragonless_dragonrider }
+					remove_trait = dragonless_dragonrider
+				}
+			}
+		}
+		hidden_effect = {
+			agot_tame_dragon = {
+				TAMER = scope:ln_new_cold_rider
+				DRAGON = scope:ln_claimed_dragon
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			title:h_the_others.holder ?= {
+				any_courtier = { ln_wants_an_undead_mount_trigger = yes }
+			}
+		}
+		title:h_the_others.holder = {
+			random_courtier = {
+				limit = { ln_wants_an_undead_mount_trigger = yes }
+				save_scope_as = ln_new_cold_rider
+				if = {
+					limit = { has_trait = dragonless_dragonrider }
+					remove_trait = dragonless_dragonrider
+				}
+			}
+		}
+		hidden_effect = {
+			agot_tame_dragon = {
+				TAMER = scope:ln_new_cold_rider
+				DRAGON = scope:ln_claimed_dragon
+			}
+		}
+	}
+	else = {
+		# Every saddle is filled. Owned, unridden, waiting -- agot_set_as_owned_dragon courts it to the
+		# Night King and flags it owned_dragon, which is what keeps the living from taming it back.
+		if = {
+			limit = { exists = title:h_the_others.holder }
+			hidden_effect = {
+				agot_set_as_owned_dragon = {
+					OWNER = title:h_the_others.holder
+					DRAGON = scope:ln_claimed_dragon
+				}
+			}
+		}
+	}
+
+	# ── THE RIDER WHO LIVED ─────────────────────────────────────────────────────────────────────────
+	# Some branches kill the rider with the dragon; some leave him standing in the snow watching it.
+	# If he lives out the combat, he gets the card -- the dragon stamped on him as a variable rather
+	# than a saved scope, per the standing rule: never rely on saved scopes in a queued card; rebuild
+	# in immediate. Human riders only; an AI lord does not need the scene.
+	if = {
+		limit = {
+			exists = scope:ln_bereft_rider
+			scope:ln_bereft_rider = {
+				is_alive = yes
+				is_ai = no
+			}
+		}
+		scope:ln_bereft_rider = {
+			set_variable = { name = ln_lost_to_the_cold  value = scope:ln_claimed_dragon }
+			trigger_event = { id = ln_dragonfall.1  days = 2 }
+		}
+	}
+}
+
+# Root = a dragon (living). Writes the ice palette into the dragon's gl_dragon_variable_storage
+# entry -- the place a LIVING dragon's portrait actually reads. Same eight values as
+# ln_apply_the_cold_effect, same storage-matching idiom as ln_repair_raised_dragons_effect (matching
+# on var:dragon_id is AGOT's own; calling the transfer effect instead would create a SECOND storage
+# entry, the exact double-registration bug the repair effect's header warns about). If no entry
+# matches -- a historical dragon, or a save from before the storage system -- the loop selects
+# nothing and nothing is corrupted.
+ln_chill_the_storage_effect = {
+	save_scope_as = ln_cold_dragon
+	if = {
+		limit = { agot_has_dragon_storage_system_global_list = yes }
+		every_in_global_list = {
+			variable = gl_dragon_variable_storage
+			limit = { var:dragon_id ?= scope:ln_cold_dragon }
+			set_variable = { name = gene_dragon_primary_color_hue    value = 0.05 }
+			set_variable = { name = gene_dragon_primary_color_value  value = 0.05 }
+			set_variable = { name = gene_dragon_secondary_hue        value = 0.65 }
+			set_variable = { name = gene_dragon_secondary_value      value = 0.35 }
+			set_variable = { name = gene_dragon_eye_color_hue        value = 0.0 }
+			set_variable = { name = gene_dragon_eye_color_value      value = 0.0 }
+			set_variable = { name = gene_dragon_horn_color_hue       value = 0.55 }
+			set_variable = { name = gene_dragon_horn_color_value     value = 0.0 }
+		}
+	}
+}
+
+# Root = a dragonless Other (the Night King or a captain). Door Two means the supply has two shelves:
+# living converted dragons nobody is riding, and corpses that can be raised. The living one is taken
+# first -- it is already up, already theirs, and taking it does not spend a body.
+ln_mount_or_raise_effect = {
+	if = {
+		limit = {
+			any_in_global_list = { variable = living_dragons  ln_unridden_undead_trigger = yes }
+		}
+		random_in_global_list = {
+			variable = living_dragons
+			limit = { ln_unridden_undead_trigger = yes }
+			save_scope_as = ln_spare_mount
+		}
+		hidden_effect = {
+			agot_tame_dragon = {
+				TAMER = this
+				DRAGON = scope:ln_spare_mount
+			}
+		}
+	}
+	else = {
+		ln_raise_fallen_dragon_effect = yes
+	}
+}
+
+# Root = anything. Called once a year from ln_struggle_yearly_work_effect. Two self-heals, both
+# idempotent, both a no-op on a healthy save:
+#   1. The shading repair, now yearly as well as at game start -- game start is not the only door
+#      old data comes through, and the sweep costs one filtered pass over tens of dragons.
+#   2. CLONE-ERA PAST RIDERS. A Door One clone kept no rider history -- the Past Riders list stayed
+#      on the corpse. The clone's back-pointer (var:ln_raised_from) still knows which corpse, so the
+#      list is copied over once. Guarded on the clone having none, so it never runs twice and never
+#      touches a Door Two conversion, which kept its own list by construction.
+ln_undead_dragon_upkeep_effect = {
+	debug_log = "LN_TRACE: yearly dragon repair upkeep fired"
+	# 1.0.9b -- THE FULL SWEEP, MOVED TO WHERE IT ACTUALLY RUNS. Proven live in session 26:
+	# on_game_start_after_lobby fires on NEW GAME only, never on loading a save, so the game-start
+	# sweep in zz_ln_dragon_repair_on_actions.txt has never once run for a mid-campaign player.
+	# This heartbeat provably runs on loaded saves (13 observed yearly fires, calendar stamp at the
+	# final year). One-shot per stamp version; costs one global check a year once done; a save that
+	# predates the global runs it once on the next yearly tick -- fails open, repairs silently.
+	if = {
+		limit = { NOT = { has_global_variable = ln_full_sweep_done_2 } }
+		set_global_variable = { name = ln_full_sweep_done_2  value = yes }
+		debug_log = "LN_TRACE: one-shot full repair sweep running from the yearly heartbeat"
+		ln_repair_raised_dragons_full_sweep_effect = yes
+	}
+	ln_repair_raised_dragons_effect = yes
+	# 1.0.11: the blank-entry sweep, which reaches dragons the two above cannot -- including AGOT's own.
+	ln_repair_blank_storage_dragons_effect = yes
+	every_living_dragon = {
+		limit = {
+			has_trait = ln_undead_dragon
+			exists = var:ln_raised_from
+			NOT = { any_in_list = { variable = past_riders  count >= 1 } }
+			var:ln_raised_from = { any_in_list = { variable = past_riders  count >= 1 } }
+		}
+		save_scope_as = ln_clone_dragon
+		var:ln_raised_from = {
+			every_in_list = {
+				variable = past_riders
+				scope:ln_clone_dragon = {
+					add_to_variable_list = {
+						name = past_riders
+						target = prev
+					}
+				}
+			}
+		}
+	}
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# ln_unpollute_historical_storage_effect -- WRITTEN AND SHIPPED IN 1.0.12, REMOVED IN 1.0.12a THE SAME DAY.
+# It was the single most damaging thing this project has ever shipped and the reasoning error is worth keeping.
+#
+# WHAT IT DID: for every storage entry whose dragon is historical, it removed all 42 gene variables, on the
+# belief that a historical dragon's entry is BLANK BY DESIGN and that anything in it was pollution.
+#
+# WHY THAT WAS WRONG: `story_dragon_variable_storage.on_setup` does skip its gene block for historical dragons
+# (agot_story_cycle_dragon_variables.txt:14) -- that part was read correctly. But a SECOND effect fills those
+# entries instead: `agot_historical_dragon_transfer_vars_to_story_cycle_effect`
+# (00_agot_dragon_effects.txt:2302) takes ~40 curated gene values as $PARAM$s and writes them straight onto
+# the story -- `scope:story = { set_variable = { name = gene_dragon_primary_color_value ... } }`. It is called
+# from agot_historical_dragons_setup at game start, for ~60 named dragons, and the comment in that file reads
+# "Balerion, curated dna".
+#
+# So the entries are not blank. They are the ONLY place a historical dragon's canonical appearance exists, and
+# this effect deleted it. Every Balerion, Caraxes, Vermithor and Vhagar in every running save turned white --
+# reported within hours by Barni, BORED SHIRTLESS, Daysniper and others.
+#
+# THE PART THAT SHOULD NOT HAPPEN AGAIN: session 28 of this project had already established the curated path
+# and written it down. The information that would have stopped this was in our own docs, and the new
+# conclusion contradicted it without ever checking. The standing rule is "a comment asserting precedent is not
+# precedent" -- the harder version is that YOUR OWN EARLIER FINDING outranks your current inference, and if
+# the two disagree the finding wins until re-verified against source.
+#
+# A sweep that DELETES data needs the same bar as a death effect: enumerate what writes the thing you are
+# about to remove, all of it, before removing any of it.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+

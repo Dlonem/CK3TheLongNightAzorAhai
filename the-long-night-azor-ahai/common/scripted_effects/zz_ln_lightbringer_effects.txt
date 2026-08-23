@@ -1,0 +1,131 @@
+﻿# AGOT: The Long Night & Azor Ahai -- forging the red sword.
+#
+# THE TALE, WHICH IS ALSO THE MECHANIC. Salladhor Saan tells it to Davos in A Clash of Kings, and the World of
+# Ice and Fire repeats it: Azor Ahai laboured thirty days and thirty nights, and tempered the blade in water,
+# and it broke. He laboured fifty days and fifty nights, and tempered it in the heart of a lion, and it broke.
+# He laboured a hundred days and a hundred nights, and called his wife Nissa Nissa, and drove the sword through
+# her living heart, and her soul went into the steel.
+#
+# Three forgings, and the third one costs a person. That is not a mechanic I invented and then justified -- it
+# is the story, and the story happens to be the best possible design for this, because it forces the player to
+# find out what he is willing to do while the dead are walking south.
+#
+# NOTHING HERE IS RANDOM. The first two forgings always fail. A player cannot get lucky, and the fiction cannot
+# be short-circuited by a good roll. The only real decision in the whole chain is the third one.
+
+# Root = the forger. Which forging is he on? Kept as a character variable rather than flags so it reads as a
+# progress counter in the debug view and cannot get into a half-set state.
+ln_advance_the_forging_effect = {
+	if = {
+		limit = { NOT = { has_variable = ln_forge_stage } }
+		set_variable = { name = ln_forge_stage  value = 1 }
+	}
+	else = {
+		change_variable = { name = ln_forge_stage  add = 1 }
+	}
+	add_character_modifier = { modifier = ln_the_forge_is_cold_modifier  years = 2 }
+}
+
+# Root = the forger. Creates the sword.
+#
+# GRADE is `full` or `lesser` and picks the modifier. Everything else is identical, including the name -- a
+# lesser Lightbringer is still Lightbringer, and a player who took the cheaper road should have to look at the
+# tooltip to be reminded of it rather than being told in the title.
+#
+# ln_is_lightbringer is set ON THE ARTIFACT, which is what ln_carries_lightbringer_trigger reads. Same shape as
+# AGOT's own `valyrian_steel` marker: the property belongs to the object, not to whoever happens to hold it,
+# so it survives looting, inheritance and being buried in a vault for two centuries.
+#
+# NOT MARKED valyrian_steel, deliberately. Lightbringer predates Valyria by thousands of years in every version
+# of the story. It gets counted as a hero's sword by ln_has_deed_valyrian_steel_trigger through its own clause
+# instead of by lying about what it is made of.
+ln_create_lightbringer_effect = {
+	set_global_variable = { name = ln_lightbringer_forged  value = yes }
+	set_global_variable = { name = ln_lightbringer_forger  value = root }
+	add_character_flag = ln_forged_lightbringer
+	# The dated, visible-forever version of that flag. See zz_ln_conclusion_memories.txt.
+	create_character_memory = { type = ln_forged_lightbringer_memory }
+	if = {
+		limit = { has_variable = ln_forge_stage }
+		remove_variable = ln_forge_stage
+	}
+
+	set_artifact_rarity_illustrious = yes
+	create_artifact = {
+		name = ln_lightbringer_name
+		description = ln_lightbringer_$GRADE$_description
+		wealth = scope:wealth
+		quality = scope:quality
+		type = sword
+		visuals = ln_lightbringer_visuals
+		template = ln_lightbringer_template
+		modifier = ln_lightbringer_$GRADE$_modifier
+		creator = root
+		save_scope_as = ln_the_sword
+		history = {
+			type = created
+			actor = root
+			location = root.location
+		}
+	}
+	scope:ln_the_sword = {
+		set_variable = { name = ln_is_lightbringer  value = yes }
+		equip_artifact_to_owner = yes
+	}
+
+	# Everyone hears about it. This is the only object in the game whose forging is world news.
+	every_player = {
+		limit = { NOT = { this = root } }
+		trigger_event = { id = ln_lightbringer.8  days = { 3 30 } }
+	}
+}
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# 1.0.9 -- THE SWORD THAT STAYED GREY. brindatm, against 1.0.7: "lightbringer should have purple rarity, not
+# grey." Thomas clarified this is about how the weapon LOOKS, not how hard it is to obtain.
+#
+# THE 1.0.7 FIX IS CORRECT AND IT IS ALREADY IN THE BUILD -- verified this session rather than assumed.
+# ln_create_lightbringer_effect calls set_artifact_rarity_illustrious, which is NOT an engine effect: it is a
+# VANILLA SCRIPTED EFFECT (game/common/scripted_effects/01_exp1_historical_artifacts_creation_effect.txt) whose
+# entire body is `save_scope_value_as` for quality = 100 and wealth = 100. Our create_artifact then consumes
+# scope:quality and scope:wealth on the next two lines. That is exactly the right shape, and it is why the call
+# sits BEFORE create_artifact rather than after -- which looks wrong at a glance and is not.
+#
+# But it can only ever apply to a sword being forged NOW. Every Lightbringer forged before 1.0.7 was created
+# with no wealth and no quality and is still sitting at common/grey in somebody's save, which is almost
+# certainly brindatm's. So this is a SELF-HEAL, not a re-fix.
+#
+# THE ENGINE HAS NO WAY TO CHANGE AN EXISTING ARTIFACT'S WEALTH OR QUALITY. The complete artifact effect list in
+# common/effect_localization/ is: add/remove_artifact_modifier, add/remove_house_artifact_claim,
+# add/remove_personal_artifact_claim, copy_artifact_modifiers, create_artifact, destroy_artifact,
+# destroy_owned_artifact, equip_artifact_to_owner, set_artifact_rarity, unequip_artifact_from_owner. Only
+# set_artifact_rarity can touch an existing object -- and rarity is the thing brindatm is actually looking at,
+# so it is also the right tool rather than a workaround. Vanilla uses it in artifact scope after creation
+# (05_dlc_bp2_effects.txt:355, `scope:newly_created_artifact = { set_artifact_rarity = illustrious }`).
+#
+# ── WHY every_ruler, AND WHY IT IS CHEAP ─────────────────────────────────────────────────────────────────────
+# There is no global artifact iterator in this engine -- no every_artifact anywhere in vanilla, so artifacts can
+# only be reached through a character. every_ruler is thousands of characters rather than the ~191,000 of
+# every_living_character, and it is only entered at all when ln_lightbringer_forged is set: in the overwhelming
+# majority of games nobody has forged one and this effect is a single failed `has_global_variable` check.
+#
+# THE LATCH IS SET INSIDE THE LOOP, ON SUCCESS ONLY, and that is deliberate. If the sword is in a courtier's
+# hands rather than a ruler's this year, the pass finds nothing, does not latch, and tries again next year --
+# and inheritance, looting and courtiers becoming rulers all eventually put it in front of us. Latching on the
+# attempt instead of the find would have quietly given up on exactly the saves where the sword had wandered.
+ln_lightbringer_restamp_effect = {
+	if = {
+		limit = {
+			has_global_variable = ln_lightbringer_forged
+			NOT = { has_global_variable = ln_lightbringer_rarity_fixed }
+		}
+		every_ruler = {
+			every_character_artifact = {
+				limit = { has_variable = ln_is_lightbringer }
+				set_artifact_rarity = illustrious
+				set_global_variable = { name = ln_lightbringer_rarity_fixed  value = yes }
+			}
+		}
+	}
+}

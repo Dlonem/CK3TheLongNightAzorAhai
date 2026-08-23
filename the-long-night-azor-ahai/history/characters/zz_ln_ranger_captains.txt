@@ -1,0 +1,1410 @@
+﻿# AGOT: The Long Night & Azor Ahai -- seven generations of ranging captains.
+#
+# WHY HISTORY CHARACTERS AND NOT SCRIPT. The engine builds a domicile exactly once per title: at game start,
+# for a title whose history gives it a holder -- the same way AGOT's First Ranger gets his camp
+# (history/titles/agot_laamp_titles.txt:1477). change_government at runtime does not build camps; two live
+# saves proved it. So the companies ride from the first day of every bookmark, captained by these men, and
+# the camps their titles carry outlive every one of them.
+#
+# Field-for-field on AGOT's own 00_agot_char_nightswatch.txt, including their
+# agot_join_nightswatch_history_effect (ORDER = ranger) -- reference to their effect, no AGOT file touched.
+
+ln_captain_g1_c1 = {
+	name = Torren
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 14
+	prowess = 16
+
+	trait = education_martial_2
+	trait = stubborn
+
+	8050.1.1 = { birth = yes }
+	8068.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8110.1.1 = { death = yes }
+}
+
+ln_captain_g1_c2 = {
+	name = Benjyn
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 15
+	prowess = 17
+
+	trait = education_martial_2
+	trait = patient
+
+	8050.1.1 = { birth = yes }
+	8068.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8110.1.1 = { death = yes }
+}
+
+ln_captain_g1_c3 = {
+	name = Harwin
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 16
+	prowess = 18
+
+	trait = education_martial_2
+	trait = vengeful
+
+	8050.1.1 = { birth = yes }
+	8068.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8110.1.1 = { death = yes }
+}
+
+ln_captain_g1_c4 = {
+	name = Osric
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 17
+	prowess = 10
+
+	trait = education_martial_2
+	trait = calm
+
+	8050.1.1 = { birth = yes }
+	8068.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8110.1.1 = { death = yes }
+}
+
+ln_captain_g1_c5 = {
+	name = Edwyle
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 10
+	prowess = 11
+
+	trait = education_martial_2
+	trait = honest
+
+	8050.1.1 = { birth = yes }
+	8068.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8110.1.1 = { death = yes }
+}
+
+ln_captain_g1_c6 = {
+	name = Rodwell
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 11
+	prowess = 12
+
+	trait = education_martial_2
+	trait = wrathful
+
+	8050.1.1 = { birth = yes }
+	8068.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8110.1.1 = { death = yes }
+}
+
+ln_captain_g1_c7 = {
+	name = Jorwyn
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 12
+	prowess = 13
+
+	trait = education_martial_2
+	trait = brave
+
+	8050.1.1 = { birth = yes }
+	8068.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8110.1.1 = { death = yes }
+}
+
+ln_captain_g1_c8 = {
+	name = Brandon
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 13
+	prowess = 14
+
+	trait = education_martial_2
+	trait = diligent
+
+	8050.1.1 = { birth = yes }
+	8068.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8110.1.1 = { death = yes }
+}
+
+ln_captain_g2_c1 = {
+	name = Cregan
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 17
+	prowess = 12
+
+	trait = education_martial_2
+	trait = patient
+
+	8085.1.1 = { birth = yes }
+	8103.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8140.1.1 = { death = yes }
+}
+
+ln_captain_g2_c2 = {
+	name = Willam
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 10
+	prowess = 13
+
+	trait = education_martial_2
+	trait = vengeful
+
+	8085.1.1 = { birth = yes }
+	8103.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8140.1.1 = { death = yes }
+}
+
+ln_captain_g2_c3 = {
+	name = Donnor
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 11
+	prowess = 14
+
+	trait = education_martial_2
+	trait = calm
+
+	8085.1.1 = { birth = yes }
+	8103.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8140.1.1 = { death = yes }
+}
+
+ln_captain_g2_c4 = {
+	name = Alaric
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 12
+	prowess = 15
+
+	trait = education_martial_2
+	trait = honest
+
+	8085.1.1 = { birth = yes }
+	8103.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8140.1.1 = { death = yes }
+}
+
+ln_captain_g2_c5 = {
+	name = Berron
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 13
+	prowess = 16
+
+	trait = education_martial_2
+	trait = wrathful
+
+	8085.1.1 = { birth = yes }
+	8103.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8140.1.1 = { death = yes }
+}
+
+ln_captain_g2_c6 = {
+	name = Torghen
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 14
+	prowess = 17
+
+	trait = education_martial_2
+	trait = brave
+
+	8085.1.1 = { birth = yes }
+	8103.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8140.1.1 = { death = yes }
+}
+
+ln_captain_g2_c7 = {
+	name = Halys
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 15
+	prowess = 18
+
+	trait = education_martial_2
+	trait = diligent
+
+	8085.1.1 = { birth = yes }
+	8103.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8140.1.1 = { death = yes }
+}
+
+ln_captain_g2_c8 = {
+	name = Erik
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 16
+	prowess = 10
+
+	trait = education_martial_2
+	trait = stubborn
+
+	8085.1.1 = { birth = yes }
+	8103.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8140.1.1 = { death = yes }
+}
+
+ln_captain_g3_c1 = {
+	name = Jonnel
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 12
+	prowess = 17
+
+	trait = education_martial_2
+	trait = vengeful
+
+	8115.1.1 = { birth = yes }
+	8133.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8180.1.1 = { death = yes }
+}
+
+ln_captain_g3_c2 = {
+	name = Rickard
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 13
+	prowess = 18
+
+	trait = education_martial_2
+	trait = calm
+
+	8115.1.1 = { birth = yes }
+	8133.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8180.1.1 = { death = yes }
+}
+
+ln_captain_g3_c3 = {
+	name = Artos
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 14
+	prowess = 10
+
+	trait = education_martial_2
+	trait = honest
+
+	8115.1.1 = { birth = yes }
+	8133.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8180.1.1 = { death = yes }
+}
+
+ln_captain_g3_c4 = {
+	name = Beron
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 15
+	prowess = 11
+
+	trait = education_martial_2
+	trait = wrathful
+
+	8115.1.1 = { birth = yes }
+	8133.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8180.1.1 = { death = yes }
+}
+
+ln_captain_g3_c5 = {
+	name = Walton
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 16
+	prowess = 12
+
+	trait = education_martial_2
+	trait = brave
+
+	8115.1.1 = { birth = yes }
+	8133.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8180.1.1 = { death = yes }
+}
+
+ln_captain_g3_c6 = {
+	name = Medgar
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 17
+	prowess = 13
+
+	trait = education_martial_2
+	trait = diligent
+
+	8115.1.1 = { birth = yes }
+	8133.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8180.1.1 = { death = yes }
+}
+
+ln_captain_g3_c7 = {
+	name = Cley
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 10
+	prowess = 14
+
+	trait = education_martial_2
+	trait = stubborn
+
+	8115.1.1 = { birth = yes }
+	8133.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8180.1.1 = { death = yes }
+}
+
+ln_captain_g3_c8 = {
+	name = Hoster
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 11
+	prowess = 15
+
+	trait = education_martial_2
+	trait = patient
+
+	8115.1.1 = { birth = yes }
+	8133.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8180.1.1 = { death = yes }
+}
+
+ln_captain_g4_c1 = {
+	name = Theomar
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 15
+	prowess = 13
+
+	trait = education_martial_2
+	trait = calm
+
+	8155.1.1 = { birth = yes }
+	8173.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8215.1.1 = { death = yes }
+}
+
+ln_captain_g4_c2 = {
+	name = Robard
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 16
+	prowess = 14
+
+	trait = education_martial_2
+	trait = honest
+
+	8155.1.1 = { birth = yes }
+	8173.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8215.1.1 = { death = yes }
+}
+
+ln_captain_g4_c3 = {
+	name = Eddin
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 17
+	prowess = 15
+
+	trait = education_martial_2
+	trait = wrathful
+
+	8155.1.1 = { birth = yes }
+	8173.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8215.1.1 = { death = yes }
+}
+
+ln_captain_g4_c4 = {
+	name = Karlon
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 10
+	prowess = 16
+
+	trait = education_martial_2
+	trait = brave
+
+	8155.1.1 = { birth = yes }
+	8173.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8215.1.1 = { death = yes }
+}
+
+ln_captain_g4_c5 = {
+	name = Morgan
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 11
+	prowess = 17
+
+	trait = education_martial_2
+	trait = diligent
+
+	8155.1.1 = { birth = yes }
+	8173.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8215.1.1 = { death = yes }
+}
+
+ln_captain_g4_c6 = {
+	name = Dywen
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 12
+	prowess = 18
+
+	trait = education_martial_2
+	trait = stubborn
+
+	8155.1.1 = { birth = yes }
+	8173.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8215.1.1 = { death = yes }
+}
+
+ln_captain_g4_c7 = {
+	name = Ulmer
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 13
+	prowess = 10
+
+	trait = education_martial_2
+	trait = patient
+
+	8155.1.1 = { birth = yes }
+	8173.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8215.1.1 = { death = yes }
+}
+
+ln_captain_g4_c8 = {
+	name = Grenn
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 14
+	prowess = 11
+
+	trait = education_martial_2
+	trait = vengeful
+
+	8155.1.1 = { birth = yes }
+	8173.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8215.1.1 = { death = yes }
+}
+
+ln_captain_g5_c1 = {
+	name = Todder
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 10
+	prowess = 18
+
+	trait = education_martial_2
+	trait = honest
+
+	8190.1.1 = { birth = yes }
+	8208.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8245.1.1 = { death = yes }
+}
+
+ln_captain_g5_c2 = {
+	name = Halder
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 11
+	prowess = 10
+
+	trait = education_martial_2
+	trait = wrathful
+
+	8190.1.1 = { birth = yes }
+	8208.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8245.1.1 = { death = yes }
+}
+
+ln_captain_g5_c3 = {
+	name = Pypar
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 12
+	prowess = 11
+
+	trait = education_martial_2
+	trait = brave
+
+	8190.1.1 = { birth = yes }
+	8208.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8245.1.1 = { death = yes }
+}
+
+ln_captain_g5_c4 = {
+	name = Mallador
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 13
+	prowess = 12
+
+	trait = education_martial_2
+	trait = diligent
+
+	8190.1.1 = { birth = yes }
+	8208.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8245.1.1 = { death = yes }
+}
+
+ln_captain_g5_c5 = {
+	name = Ottyn
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 14
+	prowess = 13
+
+	trait = education_martial_2
+	trait = stubborn
+
+	8190.1.1 = { birth = yes }
+	8208.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8245.1.1 = { death = yes }
+}
+
+ln_captain_g5_c6 = {
+	name = Thoren
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 15
+	prowess = 14
+
+	trait = education_martial_2
+	trait = patient
+
+	8190.1.1 = { birth = yes }
+	8208.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8245.1.1 = { death = yes }
+}
+
+ln_captain_g5_c7 = {
+	name = Jarman
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 16
+	prowess = 15
+
+	trait = education_martial_2
+	trait = vengeful
+
+	8190.1.1 = { birth = yes }
+	8208.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8245.1.1 = { death = yes }
+}
+
+ln_captain_g5_c8 = {
+	name = Endrew
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 17
+	prowess = 16
+
+	trait = education_martial_2
+	trait = calm
+
+	8190.1.1 = { birth = yes }
+	8208.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8245.1.1 = { death = yes }
+}
+
+ln_captain_g6_c1 = {
+	name = Qhorin
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 13
+	prowess = 14
+
+	trait = education_martial_2
+	trait = wrathful
+
+	8220.1.1 = { birth = yes }
+	8238.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8280.1.1 = { death = yes }
+}
+
+ln_captain_g6_c2 = {
+	name = Stonesnake
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 14
+	prowess = 15
+
+	trait = education_martial_2
+	trait = brave
+
+	8220.1.1 = { birth = yes }
+	8238.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8280.1.1 = { death = yes }
+}
+
+ln_captain_g6_c3 = {
+	name = Dalbridge
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 15
+	prowess = 16
+
+	trait = education_martial_2
+	trait = diligent
+
+	8220.1.1 = { birth = yes }
+	8238.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8280.1.1 = { death = yes }
+}
+
+ln_captain_g6_c4 = {
+	name = Eggen
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 16
+	prowess = 17
+
+	trait = education_martial_2
+	trait = stubborn
+
+	8220.1.1 = { birth = yes }
+	8238.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8280.1.1 = { death = yes }
+}
+
+ln_captain_g6_c5 = {
+	name = Bannen
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 17
+	prowess = 18
+
+	trait = education_martial_2
+	trait = patient
+
+	8220.1.1 = { birth = yes }
+	8238.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8280.1.1 = { death = yes }
+}
+
+ln_captain_g6_c6 = {
+	name = Dirk
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 10
+	prowess = 10
+
+	trait = education_martial_2
+	trait = vengeful
+
+	8220.1.1 = { birth = yes }
+	8238.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8280.1.1 = { death = yes }
+}
+
+ln_captain_g6_c7 = {
+	name = Garth
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 11
+	prowess = 11
+
+	trait = education_martial_2
+	trait = calm
+
+	8220.1.1 = { birth = yes }
+	8238.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8280.1.1 = { death = yes }
+}
+
+ln_captain_g6_c8 = {
+	name = Alfyn
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 12
+	prowess = 12
+
+	trait = education_martial_2
+	trait = honest
+
+	8220.1.1 = { birth = yes }
+	8238.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8280.1.1 = { death = yes }
+}
+
+ln_captain_g7_c1 = {
+	name = Bedwyck
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 16
+	prowess = 10
+
+	trait = education_martial_2
+	trait = brave
+
+	8255.1.1 = { birth = yes }
+	8273.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8320.1.1 = { death = yes }
+}
+
+ln_captain_g7_c2 = {
+	name = Kegs
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 17
+	prowess = 11
+
+	trait = education_martial_2
+	trait = diligent
+
+	8255.1.1 = { birth = yes }
+	8273.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8320.1.1 = { death = yes }
+}
+
+ln_captain_g7_c3 = {
+	name = Mully
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 10
+	prowess = 12
+
+	trait = education_martial_2
+	trait = stubborn
+
+	8255.1.1 = { birth = yes }
+	8273.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8320.1.1 = { death = yes }
+}
+
+ln_captain_g7_c4 = {
+	name = Softfoot
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 11
+	prowess = 13
+
+	trait = education_martial_2
+	trait = patient
+
+	8255.1.1 = { birth = yes }
+	8273.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8320.1.1 = { death = yes }
+}
+
+ln_captain_g7_c5 = {
+	name = Byam
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 12
+	prowess = 14
+
+	trait = education_martial_2
+	trait = vengeful
+
+	8255.1.1 = { birth = yes }
+	8273.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8320.1.1 = { death = yes }
+}
+
+ln_captain_g7_c6 = {
+	name = Leathers
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 13
+	prowess = 15
+
+	trait = education_martial_2
+	trait = calm
+
+	8255.1.1 = { birth = yes }
+	8273.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8320.1.1 = { death = yes }
+}
+
+ln_captain_g7_c7 = {
+	name = Rory
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 14
+	prowess = 16
+
+	trait = education_martial_2
+	trait = honest
+
+	8255.1.1 = { birth = yes }
+	8273.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8320.1.1 = { death = yes }
+}
+
+ln_captain_g7_c8 = {
+	name = Cellador
+	religion = old_gods_wnw
+	culture = northman
+
+	martial = 15
+	prowess = 17
+
+	trait = education_martial_2
+	trait = wrathful
+
+	8255.1.1 = { birth = yes }
+	8273.1.1 = {
+		trait = nightswatch_historical
+		effect = {
+			agot_join_nightswatch_history_effect = {
+				ORDER = ranger
+				CASTLE = title:c_castle_black
+				NW_JOIN_AGE = 18
+			}
+		}
+	}
+	8320.1.1 = { death = yes }
+}

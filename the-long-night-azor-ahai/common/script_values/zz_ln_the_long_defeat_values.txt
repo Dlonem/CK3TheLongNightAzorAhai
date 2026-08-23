@@ -1,0 +1,60 @@
+﻿# AGOT: The Long Night & Azor Ahai -- how long is too long.
+
+# YEARS THE LONG NIGHT HAS RUN. ln_long_night_started is stamped once, on entry to the phase, by
+# ln_struggle_reached_long_night_effect. Written the same way ln_winter_elapsed_value is.
+ln_long_night_elapsed_value = {
+	value = current_year
+	subtract = global_var:ln_long_night_started
+}
+
+# A HUNDRED YEARS. Was fifty; raised on 10 Aug at Thomas's call -- "I feel like a hundred years minimum for
+# that specific little thing there." He is right, and fifty was reasoning from the wrong end. Fifty years is
+# longer than the invasion is DESIGNED to take, which made it sound generous, but the number that matters is
+# how long a losing realm can plausibly still be losing. Fifty is one bad king and a regency. A hundred is
+# four generations who were each born into it, each tried, and each handed it on worse -- and that is the
+# only version of this ending that has earned the word "defeat" rather than "setback".
+#
+# It also puts the Long Defeat safely beyond any plausible dawn. The struggle is not on a timer: the Long
+# Night ends when the Night King dies, and a realm still capable of killing him has a century to manage it.
+# Reaching this means nobody managed it, for a hundred years, while sixty counties sat in his hand.
+#
+# Exposed as a value rather than inlined so it stays one number to change if live play says otherwise.
+ln_long_defeat_years_value = {
+	value = 100
+}
+
+# AND SIXTY COUNTIES. AGOT's Westeros is a few hundred; sixty in one dead hand is not "they took the North",
+# it is "they took the North and kept going and nobody stopped them". Counted off his own sub-realm so it
+# behaves identically in every bookmark.
+ln_long_defeat_counties_value = {
+	value = 60
+}
+
+# YEARS SINCE THE DARK WON. ln_the_dark_won_year is stamped once, in ln_the_long_defeat_effect, and until
+# 10 Aug nothing read it. ln_defeat.2 does now: the recognition keeps firing forever after the struggle
+# ends, because the dead keep walking, and the scene a man plays out over a body in the first winter is
+# not the scene he plays out in the fiftieth.
+#
+# DEFENSIVE SHAPE ON PURPOSE. `subtract = global_var:X` on an unset global is the "Failed to fetch
+# variable" line AGOT throws all over the live log. The if/else makes this safe to evaluate in any
+# campaign, including every campaign where the dark never wins.
+ln_years_since_the_dark_won_value = {
+	if = {
+		limit = { has_global_variable = ln_the_dark_won_year }
+		value = current_year
+		subtract = global_var:ln_the_dark_won_year
+	}
+	else = { value = 0 }
+}
+
+# YEARS SINCE THE LAST DAWN. Same shape, same reason; read by ln_others.2 under The Cycle to work out
+# whether anyone in the hall was alive for the last one. Falls back to a number no comparison will ever
+# pass, so wave one behaves as though the question was never asked.
+ln_years_since_the_last_dawn_value = {
+	if = {
+		limit = { has_global_variable = ln_last_dawn_year }
+		value = current_year
+		subtract = global_var:ln_last_dawn_year
+	}
+	else = { value = 9999 }
+}

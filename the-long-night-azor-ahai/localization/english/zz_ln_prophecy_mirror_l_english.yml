@@ -1,0 +1,45 @@
+﻿l_english:
+
+ ln_read_the_signs_decision_desc:0 "Sit down with what is known about your own life and count the signs honestly."
+ ln_read_the_signs_decision_tt:0 "Look at the marks on your life."
+ ln_read_the_signs_decision_confirm:0 "Count them."
+
+ ln_prophecy.10.t:0 "The Marks on Your Life"
+ ln_prophecy.10.desc.intro:0 "Set aside, for a moment, what you would like to be true.\n"
+
+ ln_prophecy.10.desc.is_chosen:0 "#EMP You have been named the Prince That Was Promised.#! Not quietly, and not by one man. Whether that naming was correct is not a question anyone alive can answer.\n"
+ ln_prophecy.10.desc.is_favored:0 "#EMP You have been named as favored.#! Someone who reads flames, or trees, or entrails spoke your name out loud, and other people heard it.\n"
+ ln_prophecy.10.desc.refused:0 "#EMP You refused the name#!, in front of witnesses, and nobody has raised it since. But refusing the title does not make the marks go away.\n"
+ ln_prophecy.10.desc.unnamed:0 "Nobody has said anything to you. Yet, there are still things about your life that are exceedingly difficult to file as coincidence.\n"
+
+ ln_prophecy.10.deed.dreams:0 "\n#EMP Dreams that arrive as memory.#! You have known things you had no physical way of knowing, and you learned young to stop mentioning it."
+ ln_prophecy.10.deed.green:0 "\n#EMP You see through the weirwoods.#! The blood of the First Men runs true in you, whatever your maester thinks of the idea."
+ ln_prophecy.10.deed.salt:0 "\n#EMP Born amid salt and smoke.#! Salt water in earshot of the birthing room, and dragons still alive in the world that morning."
+ ln_prophecy.10.deed.star:0 "\n#EMP Born beneath a bleeding star.#! You came into a world that had already started going wrong, and you have never known the other kind."
+ ln_prophecy.10.deed.survived:0 "\n#EMP You walked away from the dead.#! Not everyone who was with you did."
+ ln_prophecy.10.deed.steel:0 "\n#EMP You carry spell-forged steel.#! A blade from a freehold four hundred years dead, and there are perhaps only two hundred left in the world."
+ ln_prophecy.10.deed.dragons:0 "\n#EMP You woke dragons out of stone.#! Or something ancient did, and you were the one standing there."
+ ln_prophecy.10.deed.returned:0 "\n#EMP You died, and did not stay dead.#! You are not entirely willing to think about what exactly came back."
+ ln_prophecy.10.deed.blood:0 "\n#EMP Blood nobody knows about.#! You were born to the wrong side of a marriage, and to the right side of something far older. Whether anyone alive can prove it is a separate question from whether it is true."
+
+ ln_prophecy.10.desc.has_priest:0 "\n\nThere is a red priest under your roof. If the tally ever reaches enough, he is the one who will say so."
+ ln_prophecy.10.desc.has_seer:0 "\n\nThere is someone under your roof who sees. Not a red priest—the North does not run to them—but the naming does not care which of them does it."
+ ln_prophecy.10.desc.no_seer:0 "\n\n#EMP There is nobody near you who reads flames, or weirwoods, or anything else.#! Whatever the marks amount to, there is no one to count them aloud. And a prophecy nobody speaks is just a series of coincidences happening to one person."
+
+ ln_prophecy.10.a:0 "Set it aside. There is work to do."
+
+ # ── WHAT YOU DID ABOUT IT ───────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.10.did.quiet:0 "\n#weak You did not correct the priest, but you did not agree with him either.#!"
+ ln_prophecy.10.did.kept:0 "\n#weak You were told what you were. You have not put the mantle down since.#!"
+ ln_prophecy.10.did.glass:0 "\n#weak There is a cellar somewhere in your holdings full of black glass, and men who think you are utterly mad.#!"
+ ln_prophecy.10.did.sworn:0 "\n#weak You swore your swords to a war in the North that half your court does not even believe in.#!"
+ ln_prophecy.10.did.burned:0 "\n#weak You burned a priest of R'hllor. They did not scream. You still think about that.#!"
+ ln_prophecy.10.did.wishes:0 "\n#weak You came back from the dead, and there are mornings you wish you had not.#!"
+ ln_prophecy.10.did.ended:0 "\n#weak The dark finally broke, and it broke while you were standing in it.#!"
+
+ # ── WHAT READING THE SIGNS ACTUALLY DOES ────────────────────────────────────────────────────────────────────
+ ln_read_the_signs_effect_marks:0 "Take stock of the nine marks the old texts argue over: #Y dragon dreams, the greensight, born amid salt and smoke, a bleeding star, surviving what should have killed you, wielding a Valyrian steel sword, waking dragons from stone, returning from the dead, and the blood of the dragon carried unknowing#!."
+ ln_read_the_signs_effect_many:0 "#P You carry a great many of them. Others have started saying so out loud.#!"
+ ln_read_the_signs_effect_some:0 "#Y You carry several. Enough that a maester would quietly write it down.#!"
+ ln_read_the_signs_effect_few:0 "#weak You carry a few. Most men carry none.#!"
+ ln_read_the_signs_effect_costs:0 "You will be shown which marks are on you, which are not, and what would still count. #weak Costs nothing and changes nothing — it is a mirror, not a claim.#!"

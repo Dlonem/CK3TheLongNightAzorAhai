@@ -1,0 +1,75 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the dead come back.
+#
+# Called from the story cycle's on_end.
+#
+# ONE CLOCK. As of v0.4.0 the struggle IS the schedule. This effect no longer bumps the wave counter and no longer
+# books its own 90-130 year event: it hands the world to the struggle's Dawn phase and the struggle takes it from
+# there -- Dawn (5y) -> the Long Summer drips back up to 100 points (~90-100y at the default rate) -> the Cold
+# Winds Rise (10y, and its warning card) -> the Long Night, which fires others.1. Same ~105 year span the old
+# scheduled event used, except now every later wave gets its warning instead of arriving out of a clear sky, and
+# the invasion-timing game rule tunes the gap for free because it tunes the drip.
+#
+# The counter and the gate-clearing live in ln_struggle_dawn_reached_effect. Doing them here as well was double-
+# counting every cycle: ln_wave_count went up by two, so the escalation tiers arrived twice as fast as intended.
+#
+# What is NOT cleared anywhere: ln_nw_dilemma_done, ln_nights_watch_restored, ln_wildlings_welcomed,
+# ln_realm_renamed. The Question of the North is answered once per world and stays answered -- a second Long Night
+# should find a world already shaped by the first one, not reset it.
+
+ln_long_night_recurrence_effect = {
+	# Whatever ended the Long Night, move the struggle to its Dawn phase so the two never disagree. The Dawn latch
+	# then decides: under "Once" it ends the struggle, under "The Cycle" it turns the wheel.
+	ln_sync_struggle_to_dawn_effect = yes
+
+	# FALLBACK -- no struggle to hand off to. Either it was ended by decision, or this is a save that predates the
+	# struggle. Keep the old scheduled-event path alive for those worlds so the dark still comes back, gated on the
+	# struggle's absence so it can never run alongside the struggle path and double-count.
+	if = {
+		limit = {
+			has_game_rule = long_night_recurs
+			NOT = { exists = struggle:ln_long_night_struggle }
+		}
+
+		if = {
+			limit = { NOT = { has_global_variable = ln_wave_count } }
+			set_global_variable = { name = ln_wave_count value = 2 }
+		}
+		else = {
+			change_global_variable = { name = ln_wave_count add = 1 }
+		}
+
+		if = {
+			limit = { has_global_variable = others_invasion_triggered }
+			remove_global_variable = others_invasion_triggered
+		}
+		if = {
+			limit = { has_global_variable = others_invasion_has_arrived }
+			remove_global_variable = others_invasion_has_arrived
+		}
+		if = {
+			limit = { has_global_variable = others_invasion_will_happen }
+			remove_global_variable = others_invasion_will_happen
+		}
+
+		trigger_event = { id = others.1  years = { 90 130 } }
+	}
+}
+
+# Applied at spawn, on top of the ordinary strength modifier. Tiered so the numbers stay legible.
+ln_apply_wave_escalation_effect = {
+	if = {
+		limit = { exists = global_var:ln_wave_count }
+		if = {
+			limit = { global_var:ln_wave_count >= 6 }
+			add_character_modifier = ln_wave_escalation_3_modifier
+		}
+		else_if = {
+			limit = { global_var:ln_wave_count >= 4 }
+			add_character_modifier = ln_wave_escalation_2_modifier
+		}
+		else_if = {
+			limit = { global_var:ln_wave_count >= 2 }
+			add_character_modifier = ln_wave_escalation_1_modifier
+		}
+	}
+}

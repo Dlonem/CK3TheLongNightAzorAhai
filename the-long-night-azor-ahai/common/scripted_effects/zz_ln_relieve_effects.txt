@@ -1,0 +1,205 @@
+﻿# AGOT: The Long Night & Azor Ahai -- taking a castle off a man who is not using it.
+# The measured case for this file's existence is in common/scripted_triggers/zz_ln_relieve_triggers.txt.
+
+# ── RELIEVE HIM ─────────────────────────────────────────────────────────────────────────────────────────────
+# Root = the man who wants the castle. Finds the weakest keeper and has the Lord Commander take his command.
+#
+# revoke_court_position runs on the EMPLOYEE, per CK3's own docs: "Revokes the target court position from the
+# scoped character." Which position he holds is not directly readable, so this matches on the title he is
+# sitting on -- eighteen branches, generated rather than typed, because a hand-written list of eighteen is a
+# list with a typo in it.
+#
+# THE TITLE COMES BACK ON ITS OWN. AGOT's on_court_position_revoked fires their own event a day later and
+# returns the castle to the Lord Commander. We do not touch the title ourselves -- doing it by hand alongside
+# their handler is how you end up with two pieces of script both convinced they own the same county.
+ln_relieve_a_brother_effect = {
+	title:k_the_wall.holder = {
+		random_vassal_or_below = {
+			limit = { ln_brother_should_be_relieved_trigger = yes }
+			# Weakest first: a man who cannot get out of bed before a man who is merely old.
+			weight = {
+				base = 1
+				modifier = { add = 10  has_trait = incapable }
+				modifier = { add = 4   age >= 75 }
+			}
+			save_scope_as = ln_relieved_brother
+		}
+	}
+
+	# EVERY OTHER KEEPER ON THE WALL SEES IT, and does some arithmetic about his own last four years of
+	# reports. Thomas: "how does it look for the other player?" -- in a multiplayer game this is exactly the
+	# moment another human notices you are the sort of man who does this.
+	if = {
+		limit = { exists = scope:ln_relieved_brother }
+		title:k_the_wall.holder = {
+			every_vassal_or_below = {
+				limit = {
+					is_alive = yes
+					government_has_flag = government_is_nw
+					NOT = { this = root }
+					NOT = { this = scope:ln_relieved_brother }
+				}
+				add_opinion = {
+					modifier = ln_saw_what_you_did_to_him_opinion
+					target = root
+					opinion = -12
+				}
+			}
+		}
+	}
+
+	# WHO CAN ACTUALLY REVOKE IT. revoke_court_position runs on the EMPLOYER and names the employee as
+	# recipient -- see the header. AGOT's keeperships nest, so the employer of a barony keeper is whoever
+	# holds the parent county, not necessarily the Lord Commander. Read it off the man rather than assuming.
+	if = {
+		limit = {
+			exists = scope:ln_relieved_brother
+			exists = scope:ln_relieved_brother.employer
+		}
+		scope:ln_relieved_brother.employer = { save_scope_as = ln_keeper_employer }
+	}
+	else_if = {
+		limit = {
+			exists = scope:ln_relieved_brother
+			exists = title:k_the_wall.holder
+		}
+		title:k_the_wall.holder = { save_scope_as = ln_keeper_employer }
+	}
+
+	# MATCHED ON THE POSITION, NOT ON THE TITLE HE SITS ON. A brother can hold the Nightfort without
+	# holding the Nightfort keepership, and revoking a position a man does not have is its own error.
+	if = {
+		limit = {
+			exists = scope:ln_relieved_brother
+			exists = scope:ln_keeper_employer
+		}
+		scope:ln_keeper_employer = {
+			if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_the_nightfort_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_the_nightfort_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_deep_lake_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_deep_lake_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_icemark_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_icemark_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_greyguard_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_greyguard_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_stonedoor_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_stonedoor_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_hoarfrost_hill_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_hoarfrost_hill_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_queensgate_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_queensgate_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_oakenshield_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_oakenshield_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_woodswatch_by_the_pool_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_woodswatch_by_the_pool_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_sable_hall_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_sable_hall_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_rimegate_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_rimegate_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_westwatch_by_the_bridge_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_westwatch_by_the_bridge_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_sentinel_stand_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_sentinel_stand_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_long_barrow_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_long_barrow_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_the_torches_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_the_torches_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_greenguard_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_greenguard_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_the_shadow_tower_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_the_shadow_tower_keeper
+				}
+			}
+			else_if = {
+				limit = { scope:ln_relieved_brother = { has_court_position = b_eastwatch_by_the_sea_keeper } }
+				revoke_court_position = {
+					recipient = scope:ln_relieved_brother
+					court_position = b_eastwatch_by_the_sea_keeper
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,151 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the interloper's way in.
+#
+# WHAT THIS DECISION IS FOR. A southron lord is an INTERLOPER in the Long Night struggle: his capital is inside
+# the region (the region is all of Westeros) but his faith is the Seven and his culture is Andal, and neither is
+# in this war. He can watch it happen to other people. The engine gives him no button to change that -- see the
+# long note at the top of zz_ln_involvement_triggers.txt -- because involvement is derived from faith, culture
+# and capital, and there is no effect anywhere in CK3 that sets it directly.
+#
+# What there IS, and what this decision is built on, is the fact that R'HLLOR IS IN THE INVOLVED LIST. That is
+# not decoration. It means a lord who takes the red god is INVOLVED the moment he does it, by the engine's own
+# reckoning, with the Struggle Involvement panel spelling out exactly why. This decision is the road to that
+# door -- and it is careful to make walking through it a genuine loss as well as a gain, because a man who
+# changes his gods in front of his bannermen pays for it.
+#
+# The second option exists so the answer is not simply "convert or be irrelevant". A lord can commit everything
+# he has WITHOUT abandoning the Seven; he stays an interloper on the panel, which is honest, and he gets full
+# access to this mod's content through ln_participates_in_the_dawn_trigger, which is also honest. The third
+# option exists because Thomas asked for choices where "just because it costs you something doesn't mean it has
+# to have good outcomes only" -- burning the priest is the popular, pious, immediately profitable answer, and it
+# shuts the dragonglass door in your own face.
+
+ln_send_for_a_red_priest_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds" }
+
+	desc = ln_send_for_a_red_priest_decision_desc
+	selection_tooltip = ln_send_for_a_red_priest_decision_tt
+	confirm_text = ln_send_for_a_red_priest_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 60
+
+	is_shown = {
+		exists = struggle:ln_long_night_struggle
+		is_landed = yes
+		is_adult = yes
+
+		# 1.0.9 -- WAS `ln_is_interloper_trigger = yes` ALONE, AND THAT SHUT OUT THE FAITHFUL.
+		# Thomas, 14 Aug: "I transferred over there, and it didn't show up until the long night began."
+		# He was right to be confused, and the code was right too, which is the awkward part: R'hllor is an
+		# INVOLVED faith, so taking it is the engine-level route from interloper to involved -- which means
+		# anyone already of the red god is already involved and correctly failed this test. The decision
+		# was doing exactly its job and its job was too narrow.
+		#
+		# There are two reasons to send to Essos for a priest and only one of them was served:
+		#   * you are outside this war and want in -- the conversion door, unchanged below.
+		#   * you already follow the red god and simply have no priest -- which is most of the map's
+		#     R'hllor rulers, and which is the road to a Court Chaplain, and through him to a seer, and
+		#     through a seer to being named Favored or Chosen. That whole chain already existed. Nobody
+		#     could reach it.
+		OR = {
+			ln_is_interloper_trigger = yes
+			AND = {
+				faith = { religion = religion:the_rhllor_religion }
+				ln_has_red_priest_trigger = no
+			}
+		}
+		NOT = { has_character_flag = ln_sworn_to_the_dawn }
+		NOT = { has_character_flag = ln_sent_for_the_red_priest }
+		NOT = { has_character_flag = ln_burned_the_red_priest }
+
+		# THE KNOWLEDGE GATE, same shape as the dragonglass. You do not send to Myr for a fire priest because
+		# the weather has turned. Something has to have reached you first -- a warning you chose to check, a
+		# ranging you paid to look for, a man you believed, the sight, or the dark actually arriving.
+		OR = {
+			# 1.0.9: and following the red god is itself knowing. The gate below exists so that a Reach lord
+			# does not write to Myr because the weather turned -- something has to have reached him first.
+			# Nothing has to reach a man who already prays to R'hllor every night: the fire IS his warning,
+			# and sending for one of his own priests needs no omen to justify it. This is the clause that
+			# was actually keeping Thomas waiting until the Long Night began.
+			faith = { religion = religion:the_rhllor_religion }
+			# 1.0.10 (Thomas): and the blood of Old Valyria needs no omen either. Fire is in the family
+			# memory even where the Seven hold the sept -- a Valyrian-blooded lord can take this first
+			# step toward the red god before the Night begins, without converting and without a warning
+			# having reached him. heritage_valyrian is AGOT's own pillar (00_agot_heritage.txt:191).
+			culture = { has_cultural_pillar = heritage_valyrian }
+			has_character_flag = ln_heard_the_warning
+			has_character_flag = ln_looked_north
+			has_character_flag = ln_named_it_first
+			ln_has_deed_greensight_trigger = yes
+			struggle:ln_long_night_struggle = {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_available = yes
+		gold >= 150
+	}
+
+	effect = {
+		remove_short_term_gold = 150
+		add_character_flag = ln_sent_for_the_red_priest
+
+		# He is coming from Myr, or Volantis, or somewhere further east than that. It takes as long as it takes.
+		trigger_event = { id = ln_pledge.1  days = { 120 400 } }
+	}
+
+	# The AI should do this rarely and for reasons. A pious Seven-worshipping Reach lord sending to Essos for a
+	# fire priest is a genuinely strange act, and it should read as one.
+	ai_will_do = {
+		base = 5
+
+		# Personality (v0.2.1 pass): a zealous son of the Seven does not write to a foreign fire,
+		# whatever the weather. The frightened and the searching do.
+		modifier = { add = -20  has_trait = zealous }
+		modifier = { add = 15  has_trait = paranoid }
+		modifier = { add = 10  has_trait = ambitious }
+		modifier = { add = 10  has_trait = cynical }
+
+		# The dead are at the Neck. Strangeness stops mattering.
+		modifier = {
+			add = 45
+			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+		}
+		modifier = {
+			add = 15
+			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_cold_winds }
+		}
+		# A man who has already seen something does not need convincing twice.
+		modifier = {
+			add = 30
+			OR = {
+				has_character_flag = ln_named_it_first
+				has_character_flag = ln_looked_north
+			}
+		}
+		# The cynical and the desperate both reach for foreign gods. The devout do not.
+		modifier = {
+			add = 20
+			OR = {
+				has_trait = cynical
+				has_trait = ambitious
+			}
+		}
+		modifier = {
+			factor = 0.1
+			OR = {
+				has_trait = zealous
+				faith = { has_doctrine = doctrine_pluralism_fundamentalist }
+			}
+		}
+		modifier = {
+			factor = 0
+			gold < 300
+		}
+	}
+}

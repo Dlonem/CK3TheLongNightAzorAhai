@@ -1,0 +1,479 @@
+﻿namespace = ln_lightbringer
+
+# AGOT: The Long Night & Azor Ahai -- the three forgings.
+#
+# EVERY EVENT RE-CHECKS ITS OWN CONDITIONS. Learned the hard way: Thomas renounced the Favored name and kept
+# getting Favored events, because the pulse checked the trait when it SCHEDULED and the events fired up to 250
+# days later. These fire 30, 50 and 100 days out by design, so the same hazard applies at three times the
+# distance -- a man can be deposed, imprisoned, unnamed or dead in a hundred days.
+
+# ── 1. THIRTY DAYS AND THIRTY NIGHTS ────────────────────────────────────────────────────────────────────────
+# Water. It breaks. This is not a roll and it never was.
+ln_lightbringer.1 = {
+	type = character_event
+	title = ln_lightbringer.1.t
+	desc = ln_lightbringer.1.desc
+	theme = war
+	left_portrait = { character = root  animation = worry }
+
+	trigger = {
+		is_alive = yes
+		ln_is_a_champion_of_rhllor_trigger = yes
+		NOT = { ln_lightbringer_exists_trigger = yes }
+	}
+
+	immediate = {
+		ln_advance_the_forging_effect = yes
+	}
+
+	option = {
+		name = ln_lightbringer.1.a          # again. from the beginning.
+		ai_chance = {
+			base = 55
+			modifier = { add = 20  has_trait = diligent }
+			modifier = { add = 15  has_trait = patient }
+		}
+		add_learning_lifestyle_xp = 60
+		add_prestige = -25
+		stress_impact = { base = minor_stress_impact_gain  patient = minor_stress_impact_loss }
+	}
+	option = {
+		name = ln_lightbringer.1.b          # water was always wrong. the tale says so.
+		ai_chance = {
+			base = 45
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = 10  has_trait = impatient }
+		}
+		trigger = { ln_has_red_priest_trigger = yes }
+		add_character_flag = ln_forge_knows_the_price
+		add_learning_lifestyle_xp = 100
+		add_piety = 50
+	}
+}
+
+# ── 2. FIFTY DAYS AND FIFTY NIGHTS ──────────────────────────────────────────────────────────────────────────
+# The heart of a lion. There are no lions in Westeros, which is the point of the three options: what you can
+# actually get your hands on is not what the tale asks for, and the steel knows the difference.
+ln_lightbringer.2 = {
+	type = character_event
+	title = ln_lightbringer.2.t
+	desc = ln_lightbringer.2.desc
+	theme = war
+	left_portrait = { character = root  animation = anger }
+
+	trigger = {
+		is_alive = yes
+		ln_is_a_champion_of_rhllor_trigger = yes
+		NOT = { ln_lightbringer_exists_trigger = yes }
+	}
+
+	immediate = {
+		ln_advance_the_forging_effect = yes
+	}
+
+	option = {
+		name = ln_lightbringer.2.a          # a lion, shipped from the Free Cities. the tale says a lion.
+		ai_chance = {
+			base = 30
+			modifier = { add = 20  has_trait = zealous }
+			modifier = { add = 10  has_trait = arrogant }
+		}
+		trigger = { gold >= 200 }
+		remove_short_term_gold = 200
+		add_piety = 75
+		add_character_flag = ln_forge_bought_the_lion
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	# THE SHADOWCAT. Thomas: "I do remember there being a shadowcat event that gets triggered from the Game of
+	# Thrones base mod. Maybe take a peek at that." There is one --
+	# $A/events/agot_filler/00_agot_the_north_filler_events.txt, agot_filler_north.0062 through .0067, a whole
+	# hunting chain flagged with agot_filler_north_shadowcat. Deliberately NOT hooked into: theirs is a
+	# multi-event hunt with its own pacing and dropping a forging into the middle of it would break both.
+	# Instead, a man who has already been through their chain knows what he is doing here, and the option says
+	# so -- an interweave that costs nothing and cannot break when they edit their file.
+	option = {
+		name = ln_lightbringer.2.b          # a shadowcat, out of the mountains. we take it ourselves.
+		ai_chance = {
+			base = 35
+			modifier = { add = 25  has_trait = brave }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		add_martial_lifestyle_xp = 100
+		add_prestige = 75
+		add_character_flag = ln_forge_hunted_the_cat
+		# A man who has hunted one before does not get mauled doing it again.
+		if = {
+			limit = { NOT = { has_character_flag = agot_filler_north_shadowcat } }
+			increase_wounds_no_death_effect = { REASON = death_hunting_accident }
+		}
+		stress_impact = { base = minor_stress_impact_loss  brave = medium_stress_impact_loss }
+	}
+	option = {
+		name = ln_lightbringer.2.c          # a warhorse from my own stable. it is a heart.
+		ai_chance = {
+			base = 35
+			modifier = { add = 15  has_trait = cynical }
+			modifier = { add = 10  has_trait = calm }
+			modifier = { add = 10  has_trait = content }
+		}
+		add_character_flag = ln_forge_took_the_shortcut
+		add_prestige = -50
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+}
+
+# ── 3. A HUNDRED DAYS, AND THE THING NOBODY WANTS TO SAY ────────────────────────────────────────────────────
+# The only real decision in the chain.
+ln_lightbringer.3 = {
+	type = character_event
+	title = ln_lightbringer.3.t
+	desc = ln_lightbringer.3.desc
+	theme = death
+	left_portrait = { character = root  animation = grief }
+	right_portrait = {
+		character = scope:ln_beloved
+		animation = sadness
+	}
+
+	trigger = {
+		is_alive = yes
+		ln_is_a_champion_of_rhllor_trigger = yes
+		NOT = { ln_lightbringer_exists_trigger = yes }
+	}
+
+	immediate = {
+		# WHO IS NISSA NISSA. The spouse first, because that is the tale. Falling back to the person with the
+		# highest opinion of you who is not your child -- because the story is about the cost, and the cost is
+		# only a cost if it is somebody who would stand still for it.
+		if = {
+			limit = { exists = primary_spouse }
+			primary_spouse = { save_scope_as = ln_beloved }
+		}
+		else = {
+			random_courtier_or_guest = {
+				limit = {
+					is_adult = yes
+					NOT = { this = root }
+					opinion = { target = root  value >= 60 }
+				}
+				save_scope_as = ln_beloved
+			}
+		}
+
+		# THE VOLUNTEER. Somebody who believes hard enough to offer. Zealous, R'hllor, and not the beloved.
+		random_courtier_or_guest = {
+			limit = {
+				is_adult = yes
+				NOT = { this = root }
+				trigger_if = { limit = { exists = scope:ln_beloved }  NOT = { this = scope:ln_beloved } }
+				has_trait = zealous
+				OR = {
+					has_trait = red_priest
+					faith = root.faith
+				}
+			}
+			save_scope_as = ln_volunteer
+		}
+	}
+
+	# ── NISSA NISSA ─────────────────────────────────────────────────────────────────────────────────────────
+	option = {
+		name = ln_lightbringer.3.a
+		ai_chance = {
+			base = 15
+			modifier = { add = 35  has_trait = zealous }
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = 10  has_trait = sadistic }
+			modifier = { add = -40  has_trait = compassionate }
+		}
+		trigger = { exists = scope:ln_beloved }
+		trigger_event = { id = ln_lightbringer.4  days = 1 }
+	}
+
+	# ── THE VOLUNTEER ───────────────────────────────────────────────────────────────────────────────────────
+	option = {
+		name = ln_lightbringer.3.b
+		ai_chance = {
+			base = 45
+			modifier = { add = 10  has_trait = just }
+			modifier = { add = 10  has_trait = calm }
+		}
+		trigger = { exists = scope:ln_volunteer }
+		trigger_event = { id = ln_lightbringer.5  days = 1 }
+	}
+
+	# ── HIS OWN HEART ───────────────────────────────────────────────────────────────────────────────────────
+	# Only a man death has already had a turn at. See ln_can_temper_in_own_heart_trigger.
+	option = {
+		name = ln_lightbringer.3.c
+		ai_chance = {
+			base = 15
+			modifier = { add = 30  has_trait = brave }
+			modifier = { add = 15  has_trait = compassionate }
+			modifier = { add = -30  has_trait = craven }
+		}
+		trigger = { ln_can_temper_in_own_heart_trigger = yes }
+		trigger_event = { id = ln_lightbringer.6  days = 1 }
+	}
+
+	# ── PUT THE HAMMER DOWN ─────────────────────────────────────────────────────────────────────────────────
+	option = {
+		name = ln_lightbringer.3.d
+		ai_chance = {
+			base = 25
+			modifier = { add = 35  has_trait = compassionate }
+			modifier = { add = 10  has_trait = content }
+			modifier = { add = -20  has_trait = zealous }
+		}
+		trigger_event = { id = ln_lightbringer.7  days = 1 }
+	}
+}
+
+# ── 4. HER SOUL WENT INTO THE STEEL ─────────────────────────────────────────────────────────────────────────
+ln_lightbringer.4 = {
+	type = character_event
+	title = ln_lightbringer.4.t
+	desc = ln_lightbringer.4.desc
+	theme = death
+	left_portrait = { character = root  animation = shock }
+
+	trigger = {
+		is_alive = yes
+		exists = scope:ln_beloved
+		scope:ln_beloved = { is_alive = yes }
+		NOT = { ln_lightbringer_exists_trigger = yes }
+	}
+
+	immediate = {
+		scope:ln_beloved = {
+			death = {
+				killer = root
+				death_reason = death_sacrificed
+			}
+		}
+		ln_create_lightbringer_effect = { GRADE = full }
+		add_character_flag = ln_paid_in_full
+	}
+
+	option = {
+		name = ln_lightbringer.4.a
+		add_dread = 30
+		add_piety = 300
+		add_prestige = 200
+		# ONE stress hit, not a cascade. Standing rule, and it is the right call here anyway -- a cascade
+		# would turn the most significant moment in the mod into a stat-management problem.
+		stress_impact = {
+			base = massive_stress_impact_gain
+			callous = medium_stress_impact_loss
+			zealous = medium_stress_impact_loss
+			compassionate = medium_stress_impact_gain
+		}
+		# PERMANENT, AND IT SHOULD BE. disappointed_opinion was doing this job and it was the wrong tooltip
+		# by a mile -- it is the same line the game uses when you forget somebody's name day. A man who put a
+		# sword through his wife's living heart does not become less of that man in his children's eyes
+		# because eleven years went by, so ln_killed_her_for_a_sword_opinion has no monthly_change at all.
+		every_close_family_member = {
+			limit = { is_alive = yes }
+			add_opinion = {
+				modifier = ln_killed_her_for_a_sword_opinion
+				target = root
+				opinion = -60
+			}
+		}
+
+		# AND THE OTHER HALF, which is the reason the third forging is a decision rather than a cost.
+		# Somebody in every hall in Westeros thinks it was the correct thing to do -- the zealots of the Red
+		# Faith above all, who have been waiting eight thousand years for a man willing to do exactly this.
+		every_player = {
+			limit = {
+				NOT = { this = root }
+				is_alive = yes
+				OR = {
+					has_trait = zealous
+					faith = root.faith
+				}
+			}
+			add_opinion = {
+				modifier = ln_paid_the_price_opinion
+				target = root
+				opinion = 30
+			}
+		}
+		every_courtier_or_guest = {
+			limit = {
+				is_alive = yes
+				has_trait = zealous
+				faith = root.faith
+			}
+			add_opinion = {
+				modifier = ln_paid_the_price_opinion
+				target = root
+				opinion = 25
+			}
+		}
+	}
+}
+
+# ── 5. THE VOLUNTEER ────────────────────────────────────────────────────────────────────────────────────────
+ln_lightbringer.5 = {
+	type = character_event
+	title = ln_lightbringer.5.t
+	desc = ln_lightbringer.5.desc
+	theme = death
+	left_portrait = { character = root  animation = disbelief }
+	right_portrait = { character = scope:ln_volunteer  animation = personality_zealous }
+
+	trigger = {
+		is_alive = yes
+		exists = scope:ln_volunteer
+		scope:ln_volunteer = { is_alive = yes }
+		NOT = { ln_lightbringer_exists_trigger = yes }
+	}
+
+	immediate = {
+		scope:ln_volunteer = {
+			death = {
+				killer = root
+				death_reason = death_sacrificed
+			}
+		}
+		ln_create_lightbringer_effect = { GRADE = lesser }
+	}
+
+	option = {
+		name = ln_lightbringer.5.a
+		add_dread = 10
+		add_piety = 200
+		add_prestige = 100
+		stress_impact = { base = medium_stress_impact_gain  zealous = medium_stress_impact_loss }
+
+		# A smaller, quieter version of the same reckoning. He offered, and they still have to live with it.
+		# PERMANENT, for the same reason.
+		if = {
+			limit = { exists = scope:ln_volunteer }
+			scope:ln_volunteer = {
+				every_close_family_member = {
+					limit = { is_alive = yes }
+					add_opinion = {
+						modifier = ln_took_one_of_ours_opinion
+						target = root
+						opinion = -35
+					}
+				}
+			}
+		}
+	}
+}
+
+# ── 6. HIS OWN HEART ────────────────────────────────────────────────────────────────────────────────────────
+# The Resurrected chain's payoff, and the only one that costs the forger instead of somebody else.
+ln_lightbringer.6 = {
+	type = character_event
+	title = ln_lightbringer.6.t
+	desc = ln_lightbringer.6.desc
+	theme = death
+	left_portrait = { character = root  animation = pain }
+
+	trigger = {
+		is_alive = yes
+		ln_can_temper_in_own_heart_trigger = yes
+		NOT = { ln_lightbringer_exists_trigger = yes }
+	}
+
+	immediate = {
+		ln_create_lightbringer_effect = { GRADE = full }
+		add_character_flag = ln_paid_in_full
+		add_character_flag = ln_tempered_in_his_own_heart
+		add_character_modifier = ln_hole_in_his_chest_modifier
+	}
+
+	option = {
+		name = ln_lightbringer.6.a
+		add_piety = 300
+		add_prestige = 300
+		add_dread = 20
+		stress_impact = { base = medium_stress_impact_gain  brave = medium_stress_impact_loss }
+	}
+}
+
+# ── 7. THE HAMMER GOES DOWN ─────────────────────────────────────────────────────────────────────────────────
+# Not a failure state. A different answer, and the mod is as willing to reward it.
+ln_lightbringer.7 = {
+	type = character_event
+	title = ln_lightbringer.7.t
+	desc = ln_lightbringer.7.desc
+	theme = faith
+	left_portrait = { character = root  animation = personality_compassionate }
+
+	trigger = { is_alive = yes }
+
+	immediate = {
+		add_character_modifier = ln_would_not_pay_the_price_modifier
+		# The counter stays where it is, so the third forging can be attempted again later. A man is allowed
+		# to change his mind, and the sword does not go anywhere.
+	}
+
+	option = {
+		name = ln_lightbringer.7.a
+		ai_chance = {
+			base = 55
+			modifier = { add = 10  has_trait = content }
+		}
+		add_piety = -100
+		stress_impact = { base = medium_stress_impact_loss }
+		every_close_family_member = {
+			limit = { is_alive = yes }
+			add_opinion = { modifier = admiration_opinion  target = root  opinion = 20 }
+		}
+	}
+	option = {
+		name = ln_lightbringer.7.b          # not today. not this one.
+		ai_chance = {
+			base = 45
+			modifier = { add = 10  has_trait = patient }
+		}
+		add_character_flag = ln_will_come_back_to_it
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+}
+
+# ── 8. WORD REACHES THE REST OF THE WORLD ───────────────────────────────────────────────────────────────────
+# Everyone else's card. One object in this mod is world news and this is it.
+ln_lightbringer.8 = {
+	type = character_event
+	title = ln_lightbringer.8.t
+	desc = ln_lightbringer.8.desc
+	theme = faith
+	left_portrait = { character = root  animation = thinking }
+
+	trigger = {
+		is_alive = yes
+		exists = global_var:ln_lightbringer_forger
+	}
+
+	immediate = {
+		global_var:ln_lightbringer_forger = { save_scope_as = ln_forger }
+	}
+
+	option = {
+		name = ln_lightbringer.8.a          # a story. steel is steel.
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = cynical }
+			modifier = { add = 10  has_trait = calm }
+		}
+		add_character_flag = ln_doubts_the_sword
+		add_prestige = 25
+	}
+	option = {
+		name = ln_lightbringer.8.b          # then it is true, and we are very late.
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = zealous }
+			modifier = { add = 15  has_trait = paranoid }
+		}
+		add_character_flag = ln_heard_the_warning
+		add_piety = 50
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+}

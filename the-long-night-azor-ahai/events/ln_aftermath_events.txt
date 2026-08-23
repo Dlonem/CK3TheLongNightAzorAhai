@@ -1,0 +1,266 @@
+﻿namespace = ln_aftermath
+
+# The Long Night+ — AFTERMATH (resettling) events.
+# Design doc: dev/the_long_night_plus_aftermath.md (sibling, not shipped).
+#
+# ln_aftermath.1  — THE QUESTION OF THE NORTH: the mandatory Crown dilemma (restore the Watch ⇄ welcome the
+#                   free folk), scheduled 30-180 days after the Long Night ends. Mutually exclusive forever.
+# ln_aftermath.3  — notification to players: the free folk pour south (wildling path taken).
+# ln_aftermath.4  — notification to players: the Night's Watch rises again (Watch path taken).
+# ln_aftermath.20 — refugee caravan arrival router (hidden): settle here, walk to the next empty county, or
+#                   give up when nothing is left.
+# ln_aftermath.21 — player refugee arrival choice (the AI settles automatically).
+# ln_aftermath.25 — player notification: the road ends, the refugee becomes a plain adventurer.
+
+# ------------------------------------------------------------------------------------------------------------
+# THE QUESTION OF THE NORTH
+ln_aftermath.1 = {
+	type = character_event
+	title = ln_aftermath.1.t
+	# 1.0.12a -- THE WATCH MAY STILL BE STANDING, AND UNTIL NOW THIS CARD NEVER ASKED. Daysniper held the
+	# Wall as Lord Commander, beat the Others off it, and was then told by this event that the Watch was gone
+	# and would never rise again. Two descriptions now, and the crown's choice is a different choice in each.
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { ln_the_watch_survived_trigger = yes }
+				desc = ln_aftermath.1.desc.watch_held
+			}
+			desc = ln_aftermath.1.desc
+		}
+	}
+	theme = realm
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		NOT = { exists = global_var:ln_nw_dilemma_done }
+		ln_aftermath_crown_trigger = yes
+		ln_long_night_over_trigger = yes
+	}
+
+	# Restore the Night's Watch — the free folk stay outside, the Wall's ruin is garrisoned again.
+	# 1.0.12a: the name reads differently when there is a Watch still on the Wall. Nothing about the option's
+	# effect changes -- reinforcing a garrison that held and refounding one that died are the same instruction
+	# to the crown, and only one of them is a resurrection.
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { ln_the_watch_survived_trigger = yes }
+						desc = ln_aftermath.1.a.held
+					}
+					desc = ln_aftermath.1.a
+				}
+			}
+		}
+		custom_tooltip = ln_aftermath.1.a.tt
+		hidden_effect = {
+			save_scope_as = ln_watch_chooser   # the choosing crown skips the ln_aftermath.4 notification
+			ln_nights_watch_restored_effect = yes
+		}
+		ai_chance = {
+			base = 50
+			modifier = { add = 25 has_trait = zealous }
+			modifier = { add = 15 has_trait = just }
+			modifier = { add = 10 has_trait = paranoid }
+			modifier = { add = -20 has_trait = compassionate }
+			modifier = { add = -10 has_trait = fickle }
+		}
+	}
+
+	# Welcome the free folk — the Watch never rises again; the clans settle the Wall and the Gifts.
+	option = {
+		name = ln_aftermath.1.b
+		custom_tooltip = ln_aftermath.1.b.tt
+		hidden_effect = {
+			save_scope_as = ln_unleash_chooser   # the choosing crown skips the ln_aftermath.3 notification
+			ln_wildlings_unleashed_effect = yes
+		}
+		ai_chance = {
+			base = 40
+			modifier = { add = 30 has_trait = compassionate }
+			modifier = { add = 15 has_trait = brave }
+			modifier = { add = 10 has_trait = generous }
+			modifier = { add = -30 has_trait = zealous }
+			modifier = { add = -15 has_trait = paranoid }
+		}
+	}
+}
+
+# ------------------------------------------------------------------------------------------------------------
+# Notification: the free folk pour south (sent to every player except the choosing crown).
+ln_aftermath.3 = {
+	type = character_event
+	title = ln_aftermath.3.t
+	desc = ln_aftermath.3.desc
+	theme = realm
+
+	option = {
+		name = ln_aftermath.3.a
+	}
+}
+
+# ------------------------------------------------------------------------------------------------------------
+# v0.2.0 -- Notification: the Watch rises again (every player except the choosing crown). Mirror of ln_aftermath.3;
+# before this the Watch outcome was silent for everyone but the crown.
+ln_aftermath.4 = {
+	type = character_event
+	title = ln_aftermath.4.t
+	desc = ln_aftermath.4.desc
+	theme = realm
+
+	# 1.0.7: faces (the session-18 portrait audit) -- the crown that restored the Watch, and the
+	# Wall's new Lord Commander. Both rebuilt here, not carried: the card is queued 20-40 days out.
+	immediate = {
+		global_var:ln_watch_restorer ?= { save_scope_as = ln_watch_restorer }
+		title:k_the_wall.holder ?= { save_scope_as = ln_new_lord_commander }
+	}
+	left_portrait = { character = scope:ln_watch_restorer  animation = personality_honorable }
+	right_portrait = { character = scope:ln_new_lord_commander  animation = personality_bold }
+
+	option = {
+		name = ln_aftermath.4.a
+	}
+}
+
+# ------------------------------------------------------------------------------------------------------------
+# Refugee caravan arrival router (hidden). Fired by the Return North travel plan's on_arrival.
+ln_aftermath.20 = {
+	hidden = yes
+
+	trigger = {
+		has_character_flag = dawn_refugee
+		is_landless_adventurer = yes
+	}
+
+	immediate = {
+		# WAYPOINT stop (Moat Cailin on the causeway, on_arrival_destinations = all fires here too):
+		# resupply the caravan and roll on. Final-arrival logic only runs at the stored destination —
+		# never settle at a waypoint, even one that happens to lie in scoured wilderness.
+		if = {
+			limit = {
+				is_travelling = yes
+				NOT = { location.county ?= var:ln_return_destination }
+			}
+			domicile ?= { change_provisions = 400 }
+		}
+		else_if = {
+			limit = { location.county ?= { ln_wilderness_county_trigger = yes } }
+			# The settler folk gather HERE, at the destination — northern survivors flocking to a returned
+			# lord. Raised at departure they would drain the camp's provisions for the whole forced trip.
+			# Guard: re-arrivals (after a "not yet") must not stack more regiments.
+			if = {
+				limit = { agot_current_settler_maa_count < 100 }
+				# FIX: create_maa_regiment's `size` is read as a literal int at PARSE time -- a script value there
+				# is a malformed token and the regiment was dropped entirely. Branch on the camp level instead;
+				# mirrors what ln_refugee_settler_size_value used to do (camp level, clamped 1-4) -- that value
+				# was Long Night+'s, referenced by nothing, and was removed 10 Aug.  The shape is kept; the
+				# symbol is gone, so do not go looking for it.
+				if = {
+					limit = { var:ln_camp_level >= 4 }
+					create_maa_regiment = { type = laamp_settler_maa  size = 4  check_can_recruit = no }
+				}
+				else_if = {
+					limit = { var:ln_camp_level = 3 }
+					create_maa_regiment = { type = laamp_settler_maa  size = 3  check_can_recruit = no }
+				}
+				else_if = {
+					limit = { var:ln_camp_level = 2 }
+					create_maa_regiment = { type = laamp_settler_maa  size = 2  check_can_recruit = no }
+				}
+				else = {
+					create_maa_regiment = { type = laamp_settler_maa  size = 1  check_can_recruit = no }
+				}
+			}
+			if = {
+				limit = { is_ai = yes }
+				ln_refugee_settle_here_effect = yes
+			}
+			else = {
+				trigger_event = ln_aftermath.21
+			}
+		}
+		else = {
+			# Claimed while the caravan traveled — walk on to the next empty county.
+			location.county ?= { ln_find_wilderness_neighbor_effect = yes }
+			if = {
+				limit = { NOT = { exists = scope:ln_return_target } }
+				random_county_in_region = {
+					region = world_westeros_the_north_mainland
+					limit = { ln_wilderness_county_trigger = yes }
+					save_scope_as = ln_return_target
+				}
+			}
+			if = {
+				limit = { exists = scope:ln_return_target }
+				# Restock for the extra leg — the re-route is forced too, no starvation on our watch.
+				# Already in the North by now, so a direct leg (no waypoint); update the stored destination.
+				set_variable = { name = ln_return_destination value = scope:ln_return_target }
+				domicile ?= { change_provisions = 500 }
+				start_travel_plan = {
+					destination = scope:ln_return_target.title_province
+					travel_with_domicile = yes
+					players_use_planner = no
+					on_arrival_event = ln_aftermath.20
+					on_arrival_destinations = all
+				}
+			}
+			else = {
+				# Nothing left to settle anywhere — the road ends here.
+				ln_clear_refugee_state_effect = yes
+				if = {
+					limit = { is_ai = no }
+					trigger_event = ln_aftermath.25
+				}
+			}
+		}
+	}
+}
+
+# ------------------------------------------------------------------------------------------------------------
+# Player refugee: the caravan stands on empty land — settle, or keep wandering.
+ln_aftermath.21 = {
+	type = character_event
+	title = ln_aftermath.21.t
+	desc = ln_aftermath.21.desc
+	theme = realm
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	trigger = {
+		has_character_flag = dawn_refugee
+		is_landless_adventurer = yes
+		location.county ?= { ln_wilderness_county_trigger = yes }
+	}
+
+	# Settle here and now.
+	option = {
+		name = ln_aftermath.21.a
+		custom_tooltip = ln_aftermath.21.a.tt
+		hidden_effect = { ln_refugee_settle_here_effect = yes }
+	}
+
+	# Not yet — the camp stays; the native settle decision (or another Return North) remains available.
+	option = {
+		name = ln_aftermath.21.b
+	}
+}
+
+# ------------------------------------------------------------------------------------------------------------
+# Player notification: no empty land remains — the refugee becomes a plain adventurer.
+ln_aftermath.25 = {
+	type = character_event
+	title = ln_aftermath.25.t
+	desc = ln_aftermath.25.desc
+	theme = default
+
+	option = {
+		name = ln_aftermath.25.a
+	}
+}

@@ -1,0 +1,95 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who counts as a brother you can post somewhere.
+#
+# Thomas, watching his own ranging company from the inside: "I don't have any rangers in my group. I don't
+# have anybody who could be a knight for me. I want other brothers to join me, or there to be some kind of
+# allocation. If people are sending men to the wall -- perhaps a prisoner from King's Landing was sent to the
+# wall -- our mod can catch that and then have them get allocated. We want the Night's Watch to feel like a
+# living entity."
+#
+# WHERE THE MEN ALREADY ARE. Every road into the Watch -- the take-the-black decision, a lord disposing of a
+# brother, a prisoner sent north, AGOT's own recruitment -- ends in the same place: agot_add_to_nightswatch_effect
+# drops the man into the LORD COMMANDER'S COURT and leaves him there. So there is no interception to write.
+# Castle Black is already the holding pen; nothing has ever emptied it outward. That is the whole bug, and it
+# is why a captain can hold a company for thirty years with four empty council seats and no knight.
+
+# Root = a character. A brother the Watch can send out to a ranging company.
+#
+# RENAMED 10 Aug, off database_conflicts.log. This shipped under the name of the ORDER-MEMBERSHIP trigger in
+# zz_ln_nights_watch_triggers.txt -- which loads later alphabetically and therefore won, silently, leaving
+# this body dead and every caller reading somebody else's definition. The log said so plainly:
+#
+#     "Overriding entry 'ln_is_a_sworn_brother_trigger' for database 'common/scripted_triggers' in
+#      file: common/scripted_triggers/zz_ln_nights_watch_triggers.txt"
+#
+# That older definition means "is a member of the order" -- alive, adult, any of the three nightswatch
+# traits, and somewhere in the Wall's chain of command. It is the right definition of the phrase and it
+# stays exactly where it is. But it does not exclude maesters, septons or incapable men, so while it was in
+# force here the Lord Commander would happily have posted his own maester north to hold a spear.
+#
+# Two lessons, both cheap: a scripted trigger is a keyed singleton like anything else, and grepping the mod
+# for a name before defining it costs five seconds. database_conflicts.log is where this class of bug
+# confesses -- worth reading after every session that adds triggers or effects.
+ln_can_be_a_ranging_brother_trigger = {
+	is_alive = yes
+	is_adult = yes
+	is_male = yes
+	has_trait = nightswatch
+	NOR = {
+		has_trait = maester
+		has_trait = septon
+		has_trait = incapable
+	}
+}
+
+# Root = a courtier in the Lord Commander's court. Can this man be sent out to a company?
+#
+# NO XP GATE, DELIBERATELY, and this is the difference between this and ln_can_go_ranging_trigger. That one
+# picks a CAPTAIN and asks for a hundred trait XP, because command is earned. This one picks a man to march
+# under him, and the Watch has never been fussy about that -- a green boy off a King's Landing cart is exactly
+# who ends up in a ranging company. The captain can make something of him or not.
+ln_can_be_posted_out_trigger = {
+	ln_can_be_a_ranging_brother_trigger = yes
+	is_ai = yes
+	is_ruler = no
+	is_imprisoned = no
+	# Not the order's own officers -- the Lord Commander needs a court too.
+	NOT = { is_councillor = yes }
+	# AGOT's singular First Ranger keeps his own men.
+	trigger_if = {
+		limit = { exists = title:d_nw_landless_first_ranger.holder }
+		NOT = { this = title:d_nw_landless_first_ranger.holder }
+	}
+	# 1.0.12 -- AND NOT A MAN WHO HAS ALREADY BEEN POSTED ONCE. ln_posted_to_a_company is stamped on every
+	# brother this system sends out (zz_ln_brother_allocation_effects.txt) and nothing had ever read it --
+	# the engine reported it every boot as "set but is never used". Reading it here is not bookkeeping, it
+	# fixes a real behaviour: the yearly pass draws from the Lord Commander's court, a posted man is still
+	# reachable through it, and without this a ranger could be pulled out of one company and dropped into
+	# another every single year. A brother is posted once and stays where he is sent.
+	NOT = { has_character_flag = ln_posted_to_a_company }
+}
+
+# Root = a ranging captain. Is his company thin enough to be worth a posting this year?
+#
+# SIX. Four is the council (AGOT ships councillor_ranger_1 through _4 and gates them on
+# agot_is_landless_nw_character, which our captains pass), and the rest are the men he can raise as knights.
+# Under six he is a commander with nobody to command, which is the state Thomas found himself in.
+ln_company_is_short_handed_trigger = {
+	NOT = {
+		any_courtier = {
+			ln_can_be_a_ranging_brother_trigger = yes
+			count >= 6
+		}
+	}
+}
+
+# Root = the Lord Commander. Is there slack at Castle Black worth posting out?
+#
+# THE WALL DOES NOT EMPTY ITSELF. Without a floor this drains the Lord Commander's own court into the field
+# one man a year forever, and the seat of the order ends up thinner than the companies it commands. Ten is
+# enough to keep his council staffed and still have men on the steps.
+ln_wall_has_men_to_spare_trigger = {
+	any_courtier = {
+		ln_can_be_posted_out_trigger = yes
+		count >= 10
+	}
+}

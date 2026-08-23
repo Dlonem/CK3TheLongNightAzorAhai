@@ -1,0 +1,112 @@
+﻿# AGOT: The Long Night & Azor Ahai -- THE WAVE TAKES WHAT IT TOUCHES. (1.0.10)
+#
+# Thomas, from the 8211-8232 run: "why did the crossing of the frays fall before Winterfell?" -- the dead
+# were at the Trident with most of the North still free, and the map read as teleporting rather than
+# flooding. Session 26b found the cause and it is not the target picker.
+#
+# WHAT ACTUALLY HAPPENED. The North had bent the knee, so every invasion war's PRIMARY defender is the
+# Iron Throne itself. Vanilla's setup_invasion_cb with take_occupied = yes hands the winner every county
+# of the loser's realm his armies happen to be sitting on -- realm-wide, at any distance. A war whose goal
+# was Flint's Finger therefore legally paid out riverlands counties on the far side of the North, because
+# a stack had wandered there during the siege. Nothing was buggy; the CB was simply written for ordinary
+# conquests between neighbours, not for a wave.
+#
+# THOMAS'S RULE, and it is the right one: "if they're attacking Last Hearth and there's a piece of
+# territory in Karhold that touches the wall that they now own, that should still go to them... we
+# obviously don't want distant pockets, which can't happen if they took counties bordering their literal
+# territory, not including the ocean and such, bodies of water."
+#
+# SO: the war goal transfers in full, exactly as before -- that is what the war was fought for. Occupied
+# land OUTSIDE the goal transfers only if it can be walked to from land the dead already hold. Everything
+# else goes back to the living, and the dead can come for it in the next war, from the front, like a flood.
+#
+# HOW CONTIGUITY IS TESTED. any_neighboring_county, vanilla's own county-adjacency link (used exactly this
+# way with has_variable in 00_hunt_triggers.txt). Water is excluded for free and without a sea test: only
+# COUNTIES carry the mark, so an ocean between two shores has nothing to carry it and the flood stops at
+# the coast. A strait the dead already marched an army across is a legitimate step -- every candidate here
+# is a county they are physically occupying, so they got there somehow.
+#
+# COST. One walk of the loser's realm to collect the occupied counties, one of the winner's to seed, then
+# eight flood passes over the OCCUPIED SET ALONE -- typically a handful of counties, never the world. It
+# runs once, at a peace deal. The marks are set with days = 2 so they expire on their own: no cleanup
+# walk, and nothing left in the save.
+
+# Root = the CB's on_victory scope. Reads scope:attacker, scope:defender, scope:change and target_titles,
+# and MUST run before resolve_title_and_vassal_change -- it adds to the change already in flight rather
+# than opening a second one, the same rule ln_expand_the_conquest_effect follows for the same reason.
+ln_contiguous_conquest_effect = {
+	# THE CANDIDATES: the loser's counties the dead are actually sitting on. Collected once into a list so
+	# the flood below iterates a handful of counties instead of re-walking a realm eight times.
+	scope:defender = {
+		every_sub_realm_county = {
+			limit = { county_controller = scope:attacker }
+			add_to_list = ln_occupied_counties
+		}
+	}
+
+	# Nothing occupied outside the goal -- the ordinary case for a clean siege war. Skip everything.
+	if = {
+		limit = { any_in_list = { list = ln_occupied_counties  always = yes } }
+
+		# THE SEED IS THE WAR GOAL, and only the war goal. It transfers whatever happens, so land touching
+		# it is touching them -- otherwise the first ring outside a newly won duchy would always be judged
+		# unreachable, and the wave could never widen.
+		#
+		# Their EXISTING land is not marked at all: the flood test below asks a neighbouring county
+		# whether its holder is one of the dead, which is both cheaper (no marking a realm that can run to
+		# hundreds of counties every time a war ends) and strictly more correct -- it counts every lord of
+		# the dead, including any who is not a vassal of this Night King and would have been invisible to
+		# a realm walk.
+		every_in_list = {
+			list = target_titles
+			every_in_de_jure_hierarchy = {
+				# Stop descending at county tier instead of walking every barony under the goal -- vanilla's
+				# own shape for exactly this job, struggle_cb_title_transfer in 00_war_effects.txt.
+				continue = { tier > tier_county }
+				limit = { tier = tier_county }
+				# A SEPARATE MARK, deliberately. setup_invasion_cb already transfers the goal, so a goal county
+				# must seed the flood without ever entering the transfer list below -- otherwise the same title
+				# would be handed over twice inside one change, and this file's neighbours are full of warnings
+				# about what happens when a title transfer is asked for more than once.
+				set_variable = { name = ln_the_goal_ground  value = yes  days = 2 }
+			}
+		}
+
+		# THE FLOOD. Eight passes, because a chain longer than eight counties of continuously occupied
+		# land outside the war goal does not happen in one war -- and if it ever did, the tail of it is
+		# exactly the distant pocket this effect exists to refuse. Each pass can only extend the mark to a
+		# county touching an already-marked one, so the set grows outward from the front and never jumps.
+		while = {
+			count = 8
+			every_in_list = {
+				list = ln_occupied_counties
+				limit = {
+					NOT = { has_variable = ln_touches_the_dead }
+					NOT = { has_variable = ln_the_goal_ground }
+					# Touching the war goal, ground taken earlier in this same flood, or simply a county
+					# the dead already hold. any_neighboring_county is vanilla's county-title adjacency
+					# link -- 00_hunt_triggers.txt:542 and 00_cultural_triggers.txt:441, both on a county
+					# title scope, both testing the neighbour's contents exactly like this.
+					any_neighboring_county = {
+						OR = {
+							has_variable = ln_touches_the_dead
+							has_variable = ln_the_goal_ground
+							holder ?= { ln_is_one_of_them_trigger = yes }
+						}
+					}
+				}
+				set_variable = { name = ln_touches_the_dead  value = yes  days = 2 }
+			}
+		}
+
+		# AND TAKE ONLY WHAT THE FLOOD REACHED.
+		every_in_list = {
+			list = ln_occupied_counties
+			limit = { has_variable = ln_touches_the_dead }
+			change_title_holder = {
+				holder = scope:attacker
+				change = scope:change
+			}
+		}
+	}
+}

@@ -1,0 +1,120 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who hears the omens.
+#
+# Root = a playable character involved in (or interloping on) the Long Night struggle.
+# scope:struggle = the Long Night struggle. Both guaranteed by yearly_struggle_playable_pulse; see the on_action.
+#
+# Deliberately narrow. A failed ranging is Night's Watch and northern business -- sending it to a Dornish player
+# would be absurd and, worse, boring. A man claiming he saw one goes to everybody, because by the Cold Winds the
+# story has legs and reaches every hall in the realm.
+#
+# The rolls are low on purpose. Each event also carries its own flag guard, so the chance controls WHEN it lands
+# in the phase rather than whether it lands at all -- a player should not be able to predict the year.
+
+ln_omen_pulse_effect = {
+	# ── THE LOST RANGING. Long Summer, and only to people with a reason to hear about it.
+	if = {
+		limit = {
+			scope:struggle = { is_struggle_phase = ln_phase_long_summer }
+			NOT = { has_character_flag = ln_omen_cooldown }
+			OR = {
+				has_government = nights_watch_government
+				culture = culture:northman
+				culture = culture:frostborn
+				# `?=` NOT `=`. This used to run for human players only, who are always landed; it now runs for
+				# every AI in the struggle, and a landless one has no capital_province at all. Bare `=` on a
+				# missing scope is an error per character per year -- the cheapest possible way to reintroduce
+				# a five-figure log.
+				capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+				capital_province ?= { geographical_region = world_westeros_the_wall }
+			}
+		}
+		# A HUMAN GETS THE CARD.
+		if = {
+			limit = { is_ai = no }
+			random = {
+				chance = 18
+				trigger_event = { id = ln_omen.1  days = { 5 300 } }
+			}
+		}
+		# EVERYONE ELSE STILL LOSES THE RANGING. No card -- an AI lord does not need a popup -- but the world
+		# moves, which it did not before.
+		#
+		# THE GLOBAL COOLDOWN IS DOING THE REAL BALANCING HERE, not the chance. There are dozens of eligible
+		# northern and Watch rulers and this runs for every one of them every year; at 10% that is several a
+		# year, and at +4 each it would swamp the +1 drip entirely and end the Long Summer in fifteen years.
+		# With the cooldown the roll only decides WHEN inside each window, never how many. Eight years -> the
+		# lost rangings contribute roughly 12 of the summer's 100 points across a century, which is seasoning.
+		else = {
+			if = {
+				limit = { NOT = { has_global_variable = ln_world_ranging_cooldown } }
+				random = {
+					chance = 10
+					set_global_variable = { name = ln_world_ranging_cooldown  value = yes  years = 8 }
+					save_scope_as = ln_catalyst_culprit
+					ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_ranging_lost  PHASE = ln_phase_long_summer  POINTS = 4  COOLDOWN = 4 }
+					ln_the_dark_comes_sooner_effect = { YEARS = 2 }
+				}
+			}
+		}
+	}
+
+	# ── SOMEONE SAW ONE. Cold Winds, everybody, once per character per world.
+	# Weighted so it usually lands in the first half of the decade -- it should feel like a warning with time
+	# left on it, not like the last thing that happens before the dark.
+	if = {
+		limit = {
+			scope:struggle = { is_struggle_phase = ln_phase_cold_winds }
+			NOT = { has_character_flag = ln_saw_one_done }
+		}
+		# A HUMAN GETS THE CARD, and the card is where the interesting choice lives -- believe the man, or
+		# laugh at him. Those two options are ln_catalyst_other_sighted and ln_catalyst_warning_dismissed.
+		if = {
+			limit = { is_ai = no }
+			random = {
+				chance = 40
+				trigger_event = { id = ln_omen.2  days = { 5 300 } }
+			}
+		}
+		# THE AI MAKES THE SAME CHOICE OFF-SCREEN, and mostly makes the wrong one. Weighted 3:1 towards
+		# disbelief, because that is the whole thesis of the setting: the realm's problem was never that nobody
+		# saw anything, it was that nobody was believed. The zealous and the northern are likelier to listen.
+		else = {
+			if = {
+				limit = { NOT = { has_global_variable = ln_world_sighting_cooldown } }
+				random = {
+					chance = 12
+					set_global_variable = { name = ln_world_sighting_cooldown  value = yes  years = 6 }
+					save_scope_as = ln_catalyst_culprit
+					random_list = {
+						25 = {
+							modifier = {
+								add = 25
+								OR = {
+									has_trait = zealous
+									culture = culture:northman
+									culture = culture:frostborn
+									has_government = nights_watch_government
+								}
+							}
+							# THE DRAGONBLOOD HALF-BELIEVE, and only half. Thomas: "Targaryens are the ones
+							# ruling... we don't want them to get involved. They have to stay loosely attuned.
+							# They recognise the prophecy, but they can't outright say it until it's way too
+							# late." So they get a fraction of what a northerner or a red priest gets: it is
+							# in their family's own dreams and they still will not say it out loud in council.
+							modifier = {
+								add = 10
+								agot_has_dragonblood_heritage = yes
+							}
+							ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_other_sighted  PHASE = ln_phase_long_summer  POINTS = 15  COOLDOWN = 6 }
+							ln_the_dark_comes_sooner_effect = { YEARS = 5 }
+							ln_the_free_folk_feel_it_effect = yes
+						}
+						75 = {
+							ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_warning_dismissed  PHASE = ln_phase_long_summer  POINTS = 2  COOLDOWN = 3 }
+						}
+					}
+				}
+			}
+		}
+	}
+}

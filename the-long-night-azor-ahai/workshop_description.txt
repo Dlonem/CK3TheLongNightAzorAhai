@@ -1,0 +1,110 @@
+[h1]AGOT: The Long Night & Azor Ahai[/h1]
+
+[i]"There is only one war that matters. The Great War. And it is here."[/i]
+
+[hr][/hr]
+
+Eight seasons promised us the Long Night. We got one dark episode and a knife.
+
+Which means the best version of that story is still sitting there unwritten — and a game where you play a lord in Westeros is a very good place to write it. Not the correct ending. [b]Yours.[/b] The one where your lover dies covering the retreat at the Trident. The one where the Prince That Was Promised turns out to be a lie a red priest told to hold the realm together. The one where you take the last dragon north and it does not come back.
+
+[hr][/hr]
+
+[h2]Before you play: one rule[/h2]
+
+[b]DISABLE every other Long Night mod.[/b] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3355437474]AGOT: The Long Night[/url] and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3766462389]The Long Night+[/url] must be [b]unchecked in your playset[/b] — not sorted above this mod, [b]disabled[/b]. This mod grew out of them and ships files at the same paths; either of them loaded [i]anywhere[/i] in your list overrides this mod with older code and brings back the see-through dragon bug. Yes, you can unsubscribe from them — this mod replaces both.
+
+[hr][/hr]
+
+[h2]What you'll play[/h2]
+
+[b]The dead get back up.[/b] Every man you lose can rise wearing his own face — wights with their own government, their own portraits, their own rot, marching under the Night King.
+
+[b]They raise what they kill.[/b] Bring a dragon down over the Haunted Forest and it comes back. Same name. Same face. The wrong colour, and the wrong rider.
+
+[b]The Wall comes down.[/b] Not a notification — a scripted collapse at Castle Black with the camera on it. And it's one of five ways the dark can arrive: the breach, the last ranging that came back wrong, the free folk exodus, or the quiet one, where it was already inside your hall wearing a face you recognised.
+
+[b]Take the black, and mean it.[/b] Lay down your lands, hand the realm to your heir, and serve. Hold one of the Wall's castles as a sworn brother — or ride out with one of eight ranging companies, landless and oathbound, each with a real camp on the map from day one. Captains compete for First Ranger. The Watch fills its own ranks when men run short.
+
+[b]Command the Watch.[/b] As Lord Commander, call a Great Ranging north for word — and pay two hundred brothers for it. Or send a sworn brother gate to gate down the length of Westeros, asking every great lord the old question: how full are your dungeons, and what exactly were you planning to do with the men inside them?
+
+[b]Azor Ahai is a mechanic, not a title.[/b] Deeds mark you — a hero's sword carried, the dead faced and survived. Red priests name claimants: [b]favored[/b], then [b]chosen[/b]. Whether the one they named was ever the prince is decided behind the curtain, and the world only finds out at the end. [b]Lightbringer[/b] can be forged, at the price every version of the tale agrees on.
+
+[b]And the AI plays all of it.[/b] Rival claimants meet — and sometimes ally. A king of the right caliber forges the sword himself. When the Night King finally falls, the world learns who was actually standing there: the slayer, and the men beside him, named on a card and remembered for a thousand years.
+
+[hr][/hr]
+
+[h2]A century of warning[/h2]
+
+The Long Night is a full four-phase struggle, and you can watch it coming.
+
+[list]
+[*][b]The Long Summer[/b] — decades of quiet, and everything you fail to do with them.
+[*][b]Winter Is Coming[/b] — the rangings stop coming back. A warning of unknown length, which can get shorter.
+[*][b]The Long Night[/b] — the invasion proper.
+[*][b]The Dawn[/b] — what is left, and what it cost.
+[/list]
+
+The world pushes the dark closer on its own: dead dragons, lost rangings, a hollowed-out Watch, an Other seen and believed. A quiet century still ends on schedule. A bad one ends early. And what you do with the warning — dragonglass in the cellars, men and grain sent north, a realm that armed instead of arguing — is the whole difference between surviving this and being surprised by it.
+
+[hr][/hr]
+
+[h2]After[/h2]
+
+The North is scoured: ruins where the great seats stood, wilderness where the rest was. Then comes the Question of the North — restore the Night's Watch, or open the Gift to the free folk. One crown, one choice, and it sticks for the rest of the game. Wildling clans migrate into the empty land year by year. Landless survivors walk the Kingsroad home to rebuild their ancestral seats. And you can sell colonisation rights to the Free Cities, then watch your northern vassals remember that you did.
+
+[hr][/hr]
+
+[h2]Make it your apocalypse[/h2]
+
+Game rules for how likely the invasion is (certain to never), when it comes (immediately, in 50/100/150 years, historical, random, or only when you say so), how hard it hits (weak to insane), how it ends, whether the Night King gets his dragon, and whether the Iron Throne reforms afterward.
+
+And whether it can all happen [b]again[/b]. Turn the wheel on: the Wall is raised anew, the veterans of the first dawn are known by name, and the second night comes heavier than the first.
+
+[hr][/hr]
+
+[h2]Load order[/h2]
+
+[olist]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032][b]A Game of Thrones[/b][/url]
+[*]AGOT submods — [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2950245430]AGOT+[/url], [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2962713441]Valyrian Steel[/url], Submod Core, Nobility, models…
+[*][b]AGOT: The Long Night & Azor Ahai[/b] [i](this mod)[/i]
+[*][i]Optional:[/i] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2856525601][b]Supernatural[/b][/url]
+[*][i]If you run Supernatural:[/i] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3780270228][b]AGOT: Supernatural & The Long Night Compatibility Patch[/b][/url] — [b]always last[/b]
+[/olist]
+
+Requires [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032][b]A Game of Thrones[/b][/url]. Does not require any other Long Night mod — and [b]do not run this alongside one[/b] (see the rule at the top: disabled, not sorted). A note for dragon-mod users: dead dragons' looks are baked into your save against the exact list of portrait genes your mods add. Adding or removing [i]any[/i] mod that adds genes mid-save (this one included) can scramble dragons that are already dead — living ones are safe. Pick your dragon mods at campaign start and keep them.
+
+[h2]What this mod overrides from AGOT[/h2]
+
+Kept deliberately short, because you deserve to know what a submod touches. Each of these is AGOT's own file with a named, documented change, re-checked against their current version every release:
+
+[list]
+[*][b]Scripted rules[/b] — so a landless brother of the Watch can move his ranging camp the way the First Ranger does, and so a sworn brother can't end up regent of a southern kingdom.
+[*][b]Domicile types[/b] — so a ranging captain can hold a camp at all. AGOT built the ranger camp for exactly one title.
+[*][b]The Night's Watch title-gain handler[/b] — so appointing a ranging captain doesn't force a government change on him.
+[/list]
+
+Everything else this mod adds sits alongside AGOT rather than on top of it.
+
+[hr][/hr]
+
+[b]Legacy of Valyria / Essos Expanded and friends:[/b] untested with this mod, and Legacy of Valyria currently targets an older CK3 than AGOT itself — if you run them anyway, keep them above this mod and expect no support. Fair warning either way: any mod that adds portrait genes shifts which [i]dead[/i] dragons render wrong on an existing save (see the note above). New campaign, fixed mod list = safe.
+
+[b]A note on the patch:[/b] it reconciles all three mods and needs all three loaded. If you're running [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2856525601]Supernatural[/url] and AGOT [i]without[/i] this mod, you don't want that patch — grab the standalone Supernatural/AGOT one instead.
+
+[hr][/hr]
+
+[h2]Credit where it's owed[/h2]
+
+I did not invent this. I'm standing on three people's work: [b]Freeholder[/b], who wrote the original Long Night; [b]Tehaen[/b], who brought it forward to 1.19 as The Long Night (Resurrected); and [b]Wepo94[/b], whose The Long Night+ added the wights, the Wall collapse and the whole aftermath. This is a fork, not a replacement, and it exists because of them.
+
+And to be clear about the endgame: if the AGOT team ever ships their own Long Night, I'll take this down and point you at it. If they'd rather lift anything from here into the base mod instead, it's theirs, no strings. I'd rather this end up in AGOT than stay a separate download forever.
+
+Still on the workbench: killing the Night King as a full scene, more ways to lose well, and a Dance of the Dragons bookmark. The discussion threads are open if you want a say in what lands first.
+
+[hr][/hr]
+
+If you like this, I also maintain [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2856525601][b]Supernatural[/b][/url] — vampires, werewolves, hybrids, hunters and witches for CK3. Very different vibe, same amount of care.
+
+[i]The night is dark and full of terrors. Bring a sword.[/i]

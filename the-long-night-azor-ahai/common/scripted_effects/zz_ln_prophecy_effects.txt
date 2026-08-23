@@ -1,0 +1,345 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the prophecy, working.
+
+# ── THE HIDDEN TRUTH ────────────────────────────────────────────────────────────────────────────────────────
+# Decided once, at game start, and never shown. Under the random rule it is a coin; under the other two the
+# player already knows and has chosen to. Nothing in the chain reads this to decide whether a naming HAPPENS --
+# a red priest names people whether or not he is right. It is read at the very end, and nowhere else.
+ln_set_prophecy_truth_effect = {
+	if = {
+		limit = { NOT = { has_global_variable = ln_prophecy_is_true } }
+		if = {
+			limit = { has_game_rule = ln_prophecy_is_true }
+			set_global_variable = { name = ln_prophecy_is_true value = yes }
+		}
+		else_if = {
+			limit = { has_game_rule = ln_prophecy_is_a_lie }
+			set_global_variable = { name = ln_prophecy_is_true value = no }
+		}
+		else = {
+			random = {
+				chance = 50
+				set_global_variable = { name = ln_prophecy_is_true value = yes }
+			}
+			if = {
+				limit = { NOT = { has_global_variable = ln_prophecy_is_true } }
+				set_global_variable = { name = ln_prophecy_is_true value = no }
+			}
+		}
+	}
+}
+
+# ── DEEDS AWARDED AT BIRTH ──────────────────────────────────────────────────────────────────────────────────
+# Root = the newborn. Two deeds can only ever be decided here, because both are facts about the moment of birth
+# and there is no way to reconstruct them later.
+ln_birth_deeds_effect = {
+	# a dragon hatching is a struggle catalyst in its own right -- see zz_ln_catalyst_effects.txt
+	ln_dragon_born_catalyst_effect = yes
+
+	# SALT AND SMOKE. Salt is a coastal birth -- literal, checkable, and true of a surprising number of the
+	# people this prophecy has ever been aimed at. Smoke is the world still having dragons in it on the day you
+	# were born. That second half deliberately makes this deed common in Aegon's century and vanishingly rare in
+	# the century after the last dragon dies, which is exactly the right shape: the age of dragons should breed
+	# claimants, and the age after it should breed doubt.
+	# SALT is literal: a birth within sound of the sea.
+	# SMOKE is deliberately NOT "dragons are alive" any more. That reading excluded Daenerys, who was born on
+	# Dragonstone in a storm in a world whose last dragon had been dead 150 years -- she HATCHED them. Smoke is
+	# now any of: dragons in the world, OR a birth on volcanic ground (Dragonstone, the Valyrian peninsula), OR
+	# a birth in winter, which is the closest a script can get to "born in the storm that killed her mother".
+	# Any one of the three. The deed should be rare, not impossible for the person it was written about.
+	if = {
+		limit = {
+			location ?= { is_coastal = yes }   # location is a PROVINCE; is_coastal_county is landed_title
+			OR = {
+				any_in_global_list = {
+					variable = living_dragons
+					count >= 1
+				}
+				# THIRD ATTEMPT, and the first two both shipped errors -- worth recording why.
+				#   attempt 1: world_westeros_dragonstone / volcanic_plains / volcanic_mountains /
+				#              is_in_the_severe_winter -- four names that exist nowhere. Caught pre-launch.
+				#   attempt 2: geographical_region = world_westeros_dragonstone_island -- the STRING appears in
+				#              AGOT's region file, but not as a top-level region, so the database lookup failed
+				#              (2,424 errors). And location.county is a landed_title while has_winter_trigger
+				#              wants a province (3,636 errors).
+				# So: only conditions proven at runtime. `location` IS a province -- that is exactly why
+				# is_coastal works on it above -- and has_winter_trigger takes a province.
+				# A birth in winter covers Daenerys (born in the storm that gives her the name Stormborn) and
+				# any northern claimant. Dragonstone specifically is still worth adding, but only once the real
+				# title key has been confirmed against landed_titles rather than guessed a third time.
+				location ?= { has_winter_trigger = yes }
+			}
+		}
+		add_character_flag = ln_deed_salt_and_smoke
+	}
+
+	# BORN UNDER A BLEEDING STAR. Not a comet we have to model -- the sky being wrong is the struggle already
+	# being past the summer. A child born into the Cold Winds or the dark itself is a different kind of claimant
+	# to one born in the long peace and told about it afterwards.
+	if = {
+		limit = {
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+		add_character_flag = ln_deed_bleeding_star
+	}
+}
+
+# ── BACKFILL FOR CHARACTERS WHO WERE NEVER BORN ─────────────────────────────────────────────────────────────
+# Thomas: "what if I chose the house customizer and said I'm the sibling of one of the Targaryens -- do I get
+# the deeds?" No, and that was a real hole. The two birth deeds fire from on_birth_child, which never runs for
+# a ruler-designer character, a console-spawned one, or anybody alive at the bookmark date.
+#
+# So they are assessed once, retroactively, from what can still be checked about them: where they were born and
+# what the world looked like. A character already alive at game start gets the coastal read from their birth
+# province; the "dragons were alive" half is unknowable after the fact, so living dragons AT GAME START stands
+# in for it -- which is right far more often than it is wrong, given how slowly that fact changes.
+ln_backfill_birth_deeds_effect = {
+	if = {
+		limit = {
+			NOT = { has_character_flag = ln_deeds_assessed }
+			is_alive = yes
+		}
+		add_character_flag = ln_deeds_assessed
+
+		if = {
+			limit = {
+				NOT = { has_character_flag = ln_deed_salt_and_smoke }
+				# CK3 exposes no birth-location scope -- `birth_province` does not exist, checked. So for a
+				# character who was never born in-game the proxy is their capital, since a noble is
+				# overwhelmingly likely to have been born at the seat they now hold. Honest approximation,
+				# flagged as one; the real birth deed above is exact for anyone born during play.
+				capital_province ?= { is_coastal = yes }
+				OR = {
+					any_in_global_list = { variable = living_dragons  count >= 1 }
+					capital_province ?= { has_winter_trigger = yes }
+				}
+			}
+			add_character_flag = ln_deed_salt_and_smoke
+		}
+	}
+}
+
+# ── THE NAMING ──────────────────────────────────────────────────────────────────────────────────────────────
+# Root = a character who might be named. Called from the yearly sweep and from anything that grants a deed.
+#
+# THE RULE THIS OBEYS: a naming requires a NAMER. Deeds alone never promote anybody. You can be the most marked
+# man in Westeros and die unremarked because nobody who reads flames or sees through weirwoods ever met you.
+# That is the difference between a prophecy and an achievement list.
+ln_check_naming_effect = {
+	# 10 Aug -- AND STOP SCHEDULING CARDS THAT WILL CANCEL THEMSELVES ON ARRIVAL.
+	#
+	# Fixing ln_prophecy.2's trigger stops the repeat, but this effect would still have queued an event every
+	# single pulse for a man who has refused -- each one waiting 3-60 days and then self-cancelling. Level 1
+	# has been doing exactly that since it shipped; nobody noticed because the card never appeared. Invisible
+	# work is still work, and a refused claimant is precisely the character this fires on most often.
+	#
+	# One guard covering both rungs. A man who told the priests they had the wrong man is left alone until the
+	# flag lapses.
+	if = {
+		limit = { NOT = { has_character_flag = ln_refused_the_name } }
+
+		# Level 1 -- Favored. A seer looks at you and says something out loud.
+		if = {
+			limit = {
+				ln_meets_favored_threshold_trigger = yes
+				NOT = { has_trait = favored_by_rhllor }
+				NOT = { has_trait = chosen_by_rhllor }
+				NOT = { has_trait = azor_ahai_reborn }
+				ln_has_a_seer_trigger = yes
+			}
+			trigger_event = { id = ln_prophecy.1  days = { 3 60 } }
+		}
+
+		# Level 2 -- Chosen. Rarer, louder, and it makes enemies.
+		else_if = {
+			limit = {
+				ln_meets_chosen_threshold_trigger = yes
+				NOT = { has_trait = chosen_by_rhllor }
+				NOT = { has_trait = azor_ahai_reborn }
+				NOT = { has_character_flag = ln_accepted_the_chosen_name }
+				ln_has_a_seer_trigger = yes
+			}
+			trigger_event = { id = ln_prophecy.2  days = { 3 60 } }
+		}
+	}
+}
+
+# Root = the newly named. Level 1.
+ln_name_favored_effect = {
+	add_trait = favored_by_rhllor
+	add_character_flag = ln_was_named
+	set_variable = { name = ln_named_year  value = current_year }
+
+	ln_the_world_forms_a_view_effect = yes
+}
+
+# Root = the newly named. Level 2.
+#
+# DO NOT TRUST THE LADDER. This comment used to say "add_trait handles the ladder for us -- the engine
+# removes the lower rung on its own". It does not, and that assumption is the whole of Faithless's and
+# immastar23's repeating-card bug: a Favored claimant who accepted the Chosen name stayed Favored, never
+# became Chosen, and got the fullscreen card again every single year.
+#
+# Nothing else in this playset does it the lazy way either. Vanilla uses set_trait_rank for kinslayer
+# (00_secret_effects.txt), removes wounded_2 before adding wounded_1 (20_health_effects.txt), and AGOT
+# removes dragon_wounded_2 before adding dragon_wounded_3 (00_agot_dragon_combat_effects.txt).
+#
+# The flag is set FIRST and unconditionally, because it is what ln_prophecy.2's trigger reads. Even if a
+# future trait change breaks the promotion again, the card still closes.
+ln_name_chosen_effect = {
+	add_character_flag = ln_accepted_the_chosen_name
+	if = {
+		limit = { has_trait = favored_by_rhllor }
+		remove_trait = favored_by_rhllor
+	}
+	add_trait = chosen_by_rhllor
+	add_character_flag = ln_was_named
+	if = {
+		limit = { NOT = { has_variable = ln_named_year } }
+		set_variable = { name = ln_named_year  value = current_year }
+	}
+	# The world notices. This is the moment rival claimants acquire a reason to care about you.
+	set_global_variable = { name = ln_a_chosen_exists  value = yes }
+	add_to_global_variable_list = { name = ln_chosen_list  target = this }
+
+	ln_the_world_forms_a_view_effect = yes
+}
+
+# ── AND EVERYBODY ELSE HAS AN OPINION ABOUT IT ──────────────────────────────────────────────────────────────
+# Thomas: "how does it look for the other player?"
+#
+# Being named is not a private event. Men of the Red Faith look at you differently the day a priest says it out
+# loud, and everybody else finds the whole business embarrassing -- which in the North is most people, and is
+# exactly the tension the prophecy layer is built on. Both fire from the same act, at different people, and
+# both decay, because a claim that nobody keeps repeating stops mattering.
+#
+# HOW LOUD depends on which rung he is on, read live from the traits by ln_named_opinion_up_value and
+# ln_named_opinion_down_value -- not passed in as a macro parameter, because this effect is also the right
+# place to call from if anything ever promotes a man without going through the naming.
+ln_the_world_forms_a_view_effect = {
+	# 1.0.10b -- REWRITTEN FROM O(EVERY RULER ALIVE) TO O(1). This is a shipped performance bug, reported
+	# on the Workshop as "is there a way to lessen the lag when you are chosen", and Thomas read it right
+	# from the symptom alone: "you might have the scope way too broad... you would just apply a character
+	# modifier to the person, that essentially benefits everybody."
+	#
+	# WHAT IT USED TO DO, and why it was expensive three separate ways:
+	#   every_ruler = { ... add_opinion = { target = root } }
+	#   1. every_ruler in an AGOT playset is thousands of characters, walked on the naming tick.
+	#   2. each one ran in_diplomatic_range against root -- not a field read, real work, per ruler.
+	#   3. each match WROTE A PERSISTENT PER-PAIR OPINION ENTRY into the save, which then has to be
+	#      stored, decayed and re-summed on every opinion recalculation for twenty years.
+	# And it ran TWICE for anyone who went Favored -> Chosen, because both naming effects call this.
+	# The reporter's "changes by, like, eight" is ln_named_opinion_down_value's -8 exactly.
+	#
+	# WHAT IT DOES NOW: one static modifier on the named character. same_faith_opinion and
+	# different_faith_opinion are evaluated by the engine against whoever is doing the looking, at the
+	# moment they look -- so the reach is identical and the cost is one modifier on one character.
+	# All three keys are vanilla-verified before use (same_faith_opinion 79 uses, different_faith_opinion
+	# 58, clergy_opinion 68).
+	#
+	# WHAT WAS TRADED AWAY, stated plainly because it is a real loss:
+	#   - the bonus used to land only on the ZEALOUS and on RED PRIESTS of your own faith. A character
+	#     modifier cannot condition on the observer's traits. clergy_opinion carries the priests; the
+	#     zealotry filter is gone and every co-religionist now approves a little.
+	#   - the malus used to skip NORTHMAN and FROSTBORN. It no longer does. A northman of the old gods
+	#     now finds a red-named claimant as embarrassing as anyone else does.
+	# Both nuances were invisible in aggregate -- the player reads one number in a tooltip -- and neither
+	# was worth walking the world twice for.
+	#
+	# Idempotent: it removes both rungs first, so promotion Favored -> Chosen swaps cleanly instead of
+	# stacking, and calling it on a character who has been un-named simply strips the modifier.
+	# The twenty-year duration is the old opinion modifiers' `years = 20`, kept: a claim nobody keeps
+	# repeating stops mattering.
+	if = {
+		limit = { has_character_modifier = ln_named_favored_modifier }
+		remove_character_modifier = ln_named_favored_modifier
+	}
+	if = {
+		limit = { has_character_modifier = ln_named_chosen_modifier }
+		remove_character_modifier = ln_named_chosen_modifier
+	}
+	if = {
+		limit = { has_trait = chosen_by_rhllor }
+		add_character_modifier = { modifier = ln_named_chosen_modifier  years = 20 }
+	}
+	else_if = {
+		limit = { has_trait = favored_by_rhllor }
+		add_character_modifier = { modifier = ln_named_favored_modifier  years = 20 }
+	}
+}
+
+# ── UN-NAMING ───────────────────────────────────────────────────────────────────────────────────────────────
+# Two of the eight deeds are things you HOLD, not things you did. Lose the sword, lose the dragon, and the count
+# falls. A man who was named on six deeds and is down to four is still Chosen -- the title does not evaporate --
+# but he can no longer be promoted, and if he falls below the Favored threshold entirely the priests who named
+# him have a decision to make. That is a far better story than a trait that only ever ratchets upward.
+ln_check_unnaming_effect = {
+	if = {
+		limit = {
+			has_trait = favored_by_rhllor
+			NOT = { has_trait = chosen_by_rhllor }
+			NOT = { ln_meets_favored_threshold_trigger = yes }
+			NOT = { has_character_flag = ln_unnaming_pending }
+		}
+		add_character_flag = { flag = ln_unnaming_pending  years = 5 }
+		trigger_event = { id = ln_prophecy.3  days = { 10 200 } }
+	}
+}
+
+# ── THE YEARLY SWEEP ────────────────────────────────────────────────────────────────────────────────────────
+# Root = a playable character. Cheap: the deed count is eight boolean checks and most characters fail the first
+# gate immediately.
+ln_prophecy_yearly_effect = {
+	if = {
+		limit = { NOT = { has_game_rule = ln_naming_off } }
+		ln_backfill_birth_deeds_effect = yes
+		ln_check_naming_effect = yes
+		ln_check_unnaming_effect = yes
+	}
+}
+
+# Root = the claimant. Saves scope:ln_priest for the prophecy events, so the loc can NAME the priest
+# instead of saying "your priest". Measured against AGOT's own event corpus: they average 28.7 named
+# character references per 1,000 words and this file had zero, which is what players meant by "vague".
+#
+# THE SHAPE IS NOT OPTIONAL. It mirrors ln_has_red_priest_trigger (zz_ln_prophecy_triggers.txt:110)
+# exactly: cp: for the landed, court_position: for the landless ONLY. The camp-officer link evaluated on
+# a landed character logs an unset-scope error per call -- 8,688 of them in the 13 Aug session. The inner
+# `if` is nested rather than combined into one limit so the link is never reached on the wrong branch.
+#
+# Conditions match the trigger term for term (red_priest + is_available_adult). If they ever drift, a
+# desc variant will select on the trigger while the scope stays unsaved and the text renders blank.
+ln_save_priest_scope_effect = {
+	if = {
+		limit = { is_landed = yes }
+		if = {
+			limit = {
+				exists = cp:councillor_court_chaplain
+				cp:councillor_court_chaplain = { has_trait = red_priest  is_available_adult = yes }
+			}
+			cp:councillor_court_chaplain = { save_scope_as = ln_priest }
+		}
+	}
+	else = {
+		if = {
+			limit = {
+				exists = court_position:camp_priest_camp_officer
+				court_position:camp_priest_camp_officer = { has_trait = red_priest  is_available_adult = yes }
+			}
+			court_position:camp_priest_camp_officer = { save_scope_as = ln_priest }
+		}
+	}
+}
+
+# Root = the claimant. Saves scope:ln_greenseer when a courtier or guest carries the sight.
+ln_save_greenseer_scope_effect = {
+	random_courtier_or_guest = {
+		limit = { has_trait = greensight  is_available_adult = yes }
+		save_scope_as = ln_greenseer
+	}
+}

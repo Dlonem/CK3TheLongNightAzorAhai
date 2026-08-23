@@ -1,0 +1,144 @@
+﻿# AGOT: The Long Night & Azor Ahai -- THE OTHERS' CONVERSION HOOKS.
+#
+# 1.0.12: NOTHING IN THIS FILE DECLARES A VANILLA OR AGOT on_action ANY MORE. Every hook here is a
+# uniquely-named sub-action; all four are registered under their real on_action in zz_ln_00_hooks.txt,
+# per that file's standing rule.
+#
+# WHY ALL THREE OF THE REMAINING ONES HAD TO MOVE -- AND WHY THE OLD READING OF THIS WAS BACKWARDS.
+# The engine settles a same-named on_action `effect` by PARSE ORDER INSIDE common/on_action/, not by
+# mod load order. It says so out loud. From logs/error.log, 18 Aug run:
+#
+#   [E][jomini_onaction.cpp:161]: There is more than one 'effect' defined using most recent:
+#       title_on_actions.txt   line 4312   (on_vassal_gained)
+#       culture_on_actions.txt line 594    (on_county_auto_granted_to_local_culture)
+#       culture_on_actions.txt line 426    (on_county_auto_granted_to_liege_culture)
+#
+# All three winners are AGOT's files. We are #4 in dlc_load.json and AGOT is #1, so load order was
+# never what decided it. The rule that fits every collision observed in that log -- including AGOT's
+# own internal ones (replace/agot_game_start.txt beating agot_game_start.txt; test_title_on_actions.txt
+# beating agot_title_on_actions.txt) -- is: TOP-LEVEL FILES IN common/on_action/ ARE PARSED FIRST IN
+# PATH ORDER, THEN SUBDIRECTORIES, AND THE LAST `effect` PARSED WINS. This file is called
+# 00_others_on_actions.txt. It sorts ahead of every other file in the folder and loses every race it
+# enters.
+#
+# SO THE REAL DEFECT WAS NEVER THAT WE WERE SUPPRESSING AGOT -- AGOT'S BLOCKS WERE ALWAYS THE LIVE
+# ONES. It is that all three of ours had NEVER RUN, in any version, since the fork. The Others'
+# mutate-on-grant mechanic was silently missing from vassalisation and from both county auto-grant
+# routes. A hook that does not run produces silence, not a log line: this file's own siblings have
+# been saying that since 1.0.8, and it was true here three more times.
+#
+# AND BOTH COUNTY BLOCKS WERE BROKEN ON THEIR OWN TERMS AS WELL. They read scope:recipient. The engine
+# does not supply it. Vanilla culture_on_actions.txt and AGOT's copy of it BOTH create it inside their
+# own effect -- `scope:landed_title.holder = { save_scope_as = recipient }` -- which is precisely the
+# block ours displaced. Had we ever won the race, we would have read a scope that did not exist.
+# The engine's own header on both hooks (vanilla culture_on_actions.txt:399) lists exactly three:
+#       Root = The culture   |   scope:actor = The granter   |   scope:landed_title = The landed title
+# So both now reach the new holder through scope:landed_title.holder, which is supplied, and neither
+# depends any longer on AGOT's effect having run first.
+
+# ── REMOVED 1.0.10a: on_title_granted WAS NOT A HOOK, AND HAD NEVER RUN ─────────────────────────────
+# Inherited from the ancestor Long Night mod. It held a real mechanic -- when one of the dead granted a
+# title, the recipient and his whole court mutated into Others -- and it had never fired once, in any
+# version, because CK3 HAS NO on_title_granted. The engine's own list has on_title_gain, on_title_lost,
+# on_title_gain_inheritance, on_title_gain_usurpation and the three on_county_auto_granted_to_* hooks
+# (the two of those used further down this file are real and do work). An unknown on_action name is
+# parsed, kept, and never called: no error, no warning, no behaviour. Found by the 1.0.10a wiring audit,
+# which flags every sub-list in this mod that nothing references and that the engine does not fire.
+#
+# NOTHING IS LOST BY DELETING IT. ln_others_title_gain below already covers the same ground from the
+# other side -- it fires on the real on_title_gain hook and mutates a character whose LIEGE is one of the
+# dead, which is the same population this block was written for. The mechanic works; only this copy of it
+# was dead. Left as a tombstone so nobody "restores" it.
+# 1.0.10 -- WAS a bare `on_title_gain = { effect = {...} }`. This mod's own hooks file records the
+# lesson (zz_long_night_plus_aftermath_effects.txt): a same-named on_action declared WITH AN EFFECT
+# BLOCK in two places competes rather than merges, and the loser goes silent. Renamed to a sub-list
+# and registered in zz_ln_00_hooks.txt beside the county-memory stamp, per the standing rule: a
+# vanilla on_action is declared in the hooks file and nowhere else. Body untouched.
+ln_others_title_gain = {
+	effect = {
+		if = {
+			limit = { root = { has_trait = other_trait } }
+			if = {
+				limit = { NOT = { has_character_flag = others_heartbeat_active } }
+				trigger_event = { id = others_heartbeat.1 }
+			}
+		}
+		if = {
+			limit = {
+				exists = root.liege
+				root.liege = { has_trait = other_trait }
+			}
+			root.liege = {
+				save_scope_as = thegreatother
+				if = {
+					limit = { NOT = { has_character_flag = others_heartbeat_active } }
+					trigger_event = { id = others_heartbeat.1 }
+				}
+			}
+			root = { mutate_into_other_effect = yes every_courtier_or_guest = { mutate_into_other_effect = yes } }
+		}
+	}
+}
+
+
+# 1.0.12 -- WAS a bare `on_vassal_gained = { effect = {...} }`, and had never fired. See the file header.
+# Root = the character gaining the vassal, scope:vassal = the vassal being gained. Both are engine-supplied
+# and both survive the sub-list indirection: AGOT ships the same pattern in
+# agot_on_actions/agot_esr_on_actions.txt:207, where esr_on_vassal_gained is registered as a sub-list and
+# reads scope:old_liege out of the parent hook. Body otherwise untouched.
+ln_others_vassal_gained = {
+	effect = {
+		if = {
+			limit = {
+				root = { has_trait = other_trait }
+			}
+			root = { save_scope_as = thegreatother }
+			scope:vassal = {
+				mutate_into_other_effect = yes
+				every_courtier_or_guest = {
+					mutate_into_other_effect = yes
+				}
+			}
+		}
+	}
+}
+
+# 1.0.12 -- WAS a bare `on_county_auto_granted_to_local_culture = { effect = {...} }`, had never fired, and
+# read a scope:recipient it did not create. See the file header. ROOT HERE IS THE CULTURE, not a character;
+# nothing below touches root, which is why the sub-list move is safe.
+ln_others_county_local_culture = {
+	effect = {
+		if = {
+			limit = {
+				exists = scope:landed_title.holder
+				scope:actor = { has_trait = other_trait }
+			}
+			scope:actor = { save_scope_as = thegreatother }
+			scope:landed_title.holder = {
+				mutate_into_other_effect = yes
+				every_courtier_or_guest = {
+					mutate_into_other_effect = yes
+				}
+			}
+		}
+	}
+}
+
+# 1.0.12 -- same story, same fix, the liege-culture route. See the file header.
+ln_others_county_liege_culture = {
+	effect = {
+		if = {
+			limit = {
+				exists = scope:landed_title.holder
+				scope:actor = { has_trait = other_trait }
+			}
+			scope:actor = { save_scope_as = thegreatother }
+			scope:landed_title.holder = {
+				mutate_into_other_effect = yes
+				every_courtier_or_guest = {
+					mutate_into_other_effect = yes
+				}
+			}
+		}
+	}
+}

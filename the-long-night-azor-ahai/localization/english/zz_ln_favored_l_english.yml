@@ -1,0 +1,82 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- the Favored chain.
+
+ ln_favored.1.t:0 "The First of Them"
+ ln_favored.1.desc:0 "He has walked from Volantis.\n\nNot sailed. Walked, as far as the sea and then worked a crossing and then walked again, and he has been doing it for two years, and he arrived at your gate this morning with his feet in rags and asked the guard — politely, in bad Common — whether this was the right castle.\n\nHe does not want money. He does not want land or a place or a letter. He has come a very long way to stand in a courtyard and look at you, and then, presumably, to walk back.\n\nYour steward is waiting for an instruction. So, less obviously, is everybody else in the yard."
+ ln_favored.1.a:0 "Feed him, hear him out, and send him home with boots."
+ ln_favored.1.b:0 "Turn him around. This starts here or it does not stop."
+ ln_favored.1.c:0 "Give him a bed. A man who walks two years is worth keeping."
+
+ ln_favored.2.t:0 "There Is Another"
+ ln_favored.2.desc:0 "There is a man in Myr with the same claim.\n\nA temple there has been saying it for eight months — a captain's son, born in the year of some comet you have never heard of, who walked out of a burning ship without a mark. They have the same word for him that your priests have for you.\n\nThe letter reporting it is from a red priest, and it is entirely matter-of-fact, because the priests have never once said there would be only one. That is a thing men assumed.\n\nIt is you who assumed. And you did not notice until just now, reading this, and finding out how much you disliked it."
+ ln_favored.2.a:0 "Good. Let them go and stare at him for a while."
+ ln_favored.2.b:0 "Write to him. Whatever this is, we are both inside it."
+ ln_favored.2.c:0 "He is wrong. Say so, and say it where the priests can hear."
+
+ ln_favored.3.t:0 "Put It Down"
+ ln_favored.3.desc:0 "[ln_asker.GetTitledFirstName] has clearly rehearsed this and is going to get through it whatever you do with your face.\n\n'It is a foreign word, my lord, from a foreign fire, and it is being said about you in your own halls by men who do not answer to you. I am not asking you to disbelieve it. I am asking you to say, once, out loud, that you do not claim it. That is all. One sentence and it dies.'\n\nAnd [ln_asker.GetSheHe] is right that it would. A claim like this only stands as long as the man at the middle of it declines to knock it over, and everyone in this room knows that, including you."
+ ln_favored.3.a:0 "Then I renounce it. Loudly, and in front of all of you."
+ ln_favored.3.b:0 "I never claimed it. I will not disclaim it either."
+ ln_favored.3.c:0 "I keep it. Say so in your sept on the seventh day."
+
+ ln_favored.4.t:0 "His Son Is Watching"
+ ln_favored.4.desc:0 "The man is going to die tonight and everybody in the room knows it except possibly the man.\n\nHis son fetched you. Ran the whole way, would not be put off by the steward, and is standing at the foot of the bed with an expression you will remember: not grief yet, not quite hope either. Waiting.\n\nYou are here because of what your priests have been saying about you. The boy heard it in a tavern, and has spent his father's last afternoon believing a hand on the chest might do something.\n\nIt will not do anything. You are almost entirely sure it will not do anything."
+ ln_favored.4.a:0 "Put your hand on him. It costs nothing to be kind."
+ ln_favored.4.b:0 "Take the boy into the corridor and tell him the truth."
+
+ ln_favored.5.t:0 "Then Prove It"
+ ln_favored.5.desc:0 "It is a small brazier and it has been burning since noon.\n\nThe suggestion was not made maliciously, which is somehow worse. One of the priests said it almost warmly, as a way of ending the arguing: R'hllor's chosen do not burn. Half the hall thought it was a fine idea before they had finished hearing it.\n\nThe brazier is at your elbow. The room has gone quiet in that particular way. And you are turning over the one fact that matters, which is that you have no idea whether the story about not burning is true, and there is only one way anyone finds out."
+ ln_favored.5.a:0 "Put your hand in it. Let the fire decide what I am."
+ ln_favored.5.b:0 "No. And whoever suggested it can find another hall."
+
+ ln_favored.6.t:0 "He Wants a Fire"
+ ln_favored.6.desc:0 "He has picked the man out already: a raider taken in the spring, due to hang in a fortnight, and nobody at all will miss him.\n\n'You are asking the wrong question,' the priest says. 'He dies in fourteen days either way. On a rope he dies for nothing. In the fire he dies for the dawn, and the Lord takes note of the man who gave it.' He says all this in the tone of a steward proposing a grain purchase.\n\nThe worst part is the arithmetic. It genuinely does not cost a life. It costs the *kind* of thing your hall is, once, in front of everyone, and there is no version of this where people forget which way you went."
+ ln_favored.6.a:0 "No. Not while I hold this hall."
+ ln_favored.6.b:0 "Let him burn. He was for the rope anyway."
+
+ ln_favored.7.t:0 "Does It Come to Me?"
+ ln_favored.7.desc:0 "[ln_asker.GetTitledFirstName] asks it straight out, over the accounts, without looking up.\n\n'When it is mine — the seat, the men, all of it. Does the other thing come with it?'\n\nThe worry underneath is not greed. [ln_asker.GetSheHe|U] has watched what the name does to a hall and wants to know whether it is coming for [ln_asker.GetHerHim] too.\n\nYou have no idea. The prophecy is about a person. Nobody has ever explained what happens when that person has children."
+ ln_favored.7.a:0 "No. It is not a title. You cannot inherit it."
+ ln_favored.7.b:0 "I do not know. Nobody does. That is the honest answer."
+ ln_favored.7.c:0 "Let them think it does. It costs us nothing."
+
+ ln_favored.8.t:0 "The Miracle"
+ ln_favored.8.desc:0 "A blind girl in a village two days south can see. It happened at the moment you rode past, and there are now four hundred people in that village who were not there last week.\n\nShe was never blind. Her uncle arranged all of it, and he is taking coin at the shrine he has put up in his own yard. It is not even a good fraud — three people in that village could unpick it in an afternoon, and none of them will, because the four hundred are buying bread and beer and the village has never had a year like it.\n\nAnd your priests are delighted. They are telling it as far as the Neck."
+ ln_favored.8.a:0 "Expose the whole of it, in the square, myself."
+ ln_favored.8.b:0 "Say nothing. It is a good story and it is doing good work."
+ ln_favored.8.c:0 "Find out who paid the uncle. Somebody did."
+
+ ln_favored.9.t:0 "They Have Built You Something"
+ ln_favored.9.desc:0 "It is at the crossroads below the castle and it went up in about a month.\n\nWhoever built it had no idea what they were doing. There is a nightfire, which is the red priests' business — and a weirwood face carved into the post, and red cloth of the sort a septon would recognise. It is not a temple of anything. It is a shrine to *you*, assembled out of every faith the builders had ever heard of.\n\nThey come at dusk. Not many, and not loudly. Your septon has seen it and said nothing, which from him is a statement. Your red priest has seen it and said nothing either, which is a worse one."
+ ln_favored.9.a:0 "Have it taken down before somebody else takes it down."
+ ln_favored.9.b:0 "Leave it. Let them have something."
+
+ ln_favored.10.t:0 "Then Come With Us"
+ ln_favored.10.desc.open:0 "They have come a long way to ask and they have brought a map.\n\nA ranger, a red priest, and a knight whose brother did not come back from a ranging, and between them they have a plan that is not actually mad: men, supplies, a season, a route past the Shadow Tower. What they do not have is a reason for anybody to follow them.\n\nThey would like you to be the reason.\n\n"
+ ln_favored.10.desc.ordeal:0 "'They saw you put your hand in that brazier,' the knight says. 'Half the North has heard about it by now. You do not have to do anything up there. You have to be seen going.'"
+ ln_favored.10.desc.lie:0 "You are thinking about a village two days south, and four hundred people, and a girl who could always see perfectly well. Everything they are offering you is built on the same kind of ground."
+ ln_favored.10.desc.quiet:0 "You have never once said the word yourself. You notice they have not asked you to. They have simply arrived and started planning as though the matter were settled, which, apparently, for everybody except you, it is."
+ ln_favored.10.desc.plain:0 "The priest has not said anything at all yet. He is letting the other two do it, which tells you who thought of it."
+ ln_favored.10.desc.close:0 "\n\nThe map is still on the table. Nobody has rolled it up."
+ ln_favored.10.a:0 "Then I go north with you."
+ ln_favored.10.b:0 "You shall have men and coin. I stay."
+ ln_favored.10.c:0 "No. I am a lord, not a sign."
+
+ # ── THE SHRINE ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_shrine_county_modifier:0 "Shrine at the Crossroads"
+ ln_shrine_county_modifier_desc:0 "A nightfire, a weirwood face and a horseshoe, in the same small building. The people who come here at dusk are not entirely sure what they are worshipping and it does not appear to trouble them."
+
+ # ── THE ORDEAL, ANSWERED ────────────────────────────────────────────────────────────────────────────────────
+ ln_favored.11.t:0 "The Hand"
+ ln_favored.11.desc:0 "The maester takes the last of the wrapping off and then says nothing for a while, which from him is close to shouting.\n\nIt is scarred, and always will be. That is not what has him quiet. It is that the hand works — every finger, full strength, no rot, and it closed in weeks. On the night it happened he told you to expect to lose two fingers, and possibly the arm.\n\n'I would like to write this up,' he says eventually. 'I am not saying anything about it. I would simply like it written down somewhere.'\n\nOutside, somebody who was in the hall that night is telling somebody who was not."
+ ln_favored.11.a:0 "He kept his side of it. Say so, and say it loudly."
+ ln_favored.11.b:0 "It is a scar. Men get scars and men heal."
+
+ ln_the_hand_that_did_not_burn_modifier:0 "The Hand That Did Not Burn"
+ ln_the_hand_that_did_not_burn_modifier_desc:0 "Held in a brazier in front of a full hall, and it still closes on a sword. Nobody who was in that room has stopped telling it."
+
+ # ── 1.0.13: THE SIGHTED OPTION ─────────────────────────────────────────────────
+ ln_favored.1.d:0 "I know his face. I have known it for two years — I only did not know it was a face."
+ ln_favored.10.desc.knew:0 "I keep coming back to the man who walked from Volantis.\n\nI knew his face before he raised it. Not from anywhere — I had simply carried it around behind my eyes for two years and mistaken it for a shape in a fire. He walked across the world to look at me, and I had already been looking at him.\n\nEverything since has had that quality. Not revelation. Recognition, arriving slightly late."
+

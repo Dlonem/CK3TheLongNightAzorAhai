@@ -1,0 +1,32 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- government display keys the engine derives and looks up on its
+ # own (<government>_adjective and friends; the raw key was showing in the realm panel, live-run
+ # report 305 AC), plus the names for zz_ln_government_title_holders.txt. wight_government and
+ # wight_government_desc already live in long_night_plus_memories_l_english.yml -- NOT restated here,
+ # one definition per key.
+
+ wight_government_with_icon:0 "$wight_government$"
+ wight_government_adjective:0 "Risen"
+ wight_government_realm:0 "Risen Host"
+ wight_government_filter_option:0 "Risen Thrall"
+ wight_government_filter_option_desc:0 "Only show characters raised into the service of the dead"
+
+ baron_wight_male:0 "Risen Thrall"
+ baron_wight_female:0 "Risen Thrall"
+ count_wight_male:0 "Wight Lord"
+ count_wight_female:0 "Wight Lady"
+ duke_wight_male:0 "Cold Lord"
+ duke_wight_female:0 "Cold Lady"
+ king_wight_male:0 "Winter King"
+ king_wight_female:0 "Winter Queen"
+ emperor_wight_male:0 "Winter Emperor"
+ emperor_wight_female:0 "Winter Empress"
+
+ ln_ranger_government_with_icon:0 "$ln_ranger_government$"
+ ln_ranger_government_realm:0 "Ranging Company"
+ ln_ranger_government_filter_option:0 "Ranging Company"
+ ln_ranger_government_filter_option_desc:0 "Only show sworn brothers ranging beyond the Wall"
+
+ duke_ln_ranger_male:0 "Ranger-Captain"
+ duke_ln_ranger_female:0 "Ranger-Captain"

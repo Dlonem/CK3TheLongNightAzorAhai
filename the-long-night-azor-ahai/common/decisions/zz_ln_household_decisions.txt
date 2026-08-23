@@ -1,0 +1,157 @@
+﻿# AGOT: The Long Night & Azor Ahai -- household administration.
+# See zz_ln_household_triggers.txt for what this is and what its limits are.
+#
+# ALL THREE FAIL IN is_shown, NEVER IN is_valid. Thomas: "we want is_shown failing so that the decision
+# doesn't render at all, so the decision can't even be recognized by those people." A decision that fails
+# is_valid is drawn greyed with its requirements listed -- which would advertise the whole thing to every
+# player in the game. A decision that fails is_shown does not exist.
+#
+# ── ON PICTURES, WHICH IS NOT A STYLE NOTE ───────────────────────────────────────────────────────────
+# Every `picture` path below was checked against the file on disk before it was written down, including
+# its dimensions and compression. 1.0.9 -- I invented decision_mission.dds instead of checking the folder,
+# and CK3 does not fail a missing decision illustration once: it re-requests it EVERY FRAME the decisions
+# panel is open. Thomas's live run was 1,475 VFSOpen errors, the log growing while he watched, 7 FPS on
+# screen, and a crash on hitting speed 5. texcheck.py exists so that class cannot come back silently.
+#
+# ── ON COOLDOWNS, 1.0.9 ──────────────────────────────────────────────────────────────────────────────
+# There are none any more. Thomas: "technically, we don't need a cooldown." Safe because nothing else can
+# reach these: is_shown gates them to one dynasty, ai_will_do is base 0, ai_check_interval is 0 so the AI
+# never evaluates them as a choice at all. Every effect is idempotent -- guarded legacies, accumulating
+# perk points, stacking artifacts -- so repeat fires are wasteful, not damaging. That was the bar Thomas
+# set: "so that it won't break."
+# ln_household_ledger_cooldown_modifier is retained in common/modifiers but is no longer applied or
+# read; see the note in that file for why it was not simply deleted.
+
+# ── THE REPEATABLE ONE: coin, and the men who kept faith ─────────────────────────────────────────────
+ln_household_ledger_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_spend_money.dds" }
+
+	desc = ln_household_ledger_decision_desc
+	selection_tooltip = ln_household_ledger_decision_tt
+	confirm_text = ln_household_ledger_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0
+
+	is_shown = {
+		ln_household_has_the_ledger_trigger = yes
+	}
+
+	is_valid = {
+		is_available = yes
+	}
+
+	effect = {
+		ln_household_ledger_effect = yes
+	}
+
+	# Never. This door is for one player and the AI must not touch it.
+	ai_will_do = { base = 0 }
+}
+
+# ── THE ONE HE TAKES ONCE, BUT IS NOT FORCED TO ──────────────────────────────────────────────────────
+# The ln_household_chartered flag that used to gate is_shown is gone: "I still have the option if I
+# personally want to trigger it multiple times so that it won't break." Saves carrying the retired flag
+# are unaffected -- nothing reads it now.
+ln_household_charter_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds" }
+
+	desc = ln_household_charter_decision_desc
+	selection_tooltip = ln_household_charter_decision_tt
+	confirm_text = ln_household_charter_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0
+
+	is_shown = {
+		ln_household_has_the_ledger_trigger = yes
+	}
+
+	is_valid = {
+		is_available = yes
+	}
+
+	effect = {
+		ln_household_charter_effect = yes
+	}
+
+	ai_will_do = { base = 0 }
+}
+
+# ── THE SHIP ─────────────────────────────────────────────────────────────────────────────────────────
+# Thomas asked for this one to be Westeros-specific rather than generic estate business, and for the
+# framing to sit next to how the Valyrian Steel mod writes its Old Valyria expedition. No event card:
+# "we don't need, like, an event card. This is just for me."
+#
+# THE PICTURE IS AGOT'S OWN AND CURRENTLY UNUSED BY IT. decision_fleet.dds ships in the base mod at
+# gfx/interface/illustrations/decisions/ and nothing in AGOT's own common/decisions references it -- an
+# authored asset sitting idle. Verified on disk: 1100x440, DXT1, byte-identical in format to the two
+# vanilla illustrations already used above. The Long Night loads after AGOT, so the path resolves.
+ln_household_valyria_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_fleet.dds" }
+
+	desc = ln_household_valyria_decision_desc
+	selection_tooltip = ln_household_valyria_decision_tt
+	confirm_text = ln_household_valyria_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0
+
+	is_shown = {
+		ln_household_has_the_ledger_trigger = yes
+	}
+
+	is_valid = {
+		is_available = yes
+	}
+
+	effect = {
+		ln_household_valyria_effect = yes
+	}
+
+	ai_will_do = { base = 0 }
+}
+
+# ── THE FOURTH DOOR (1.0.12b, Thomas): "maybe there's like a fourth decision that can remove a bunch of
+# these negative traits." Same private gate, same AI-proofing as the other three. It undoes the DAMAGE a
+# life accumulates -- wounds, scars, sickness, stress -- and deliberately not the STORY: nicknames, sins,
+# personality and prophecy standing all stay, because "being named" is reputation, and reputation coming
+# off at a decision would read as a cheat even at his own table. Every removal is guarded, so clicking it
+# healthy is a clean no-op.
+ln_household_mend_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds" }
+
+	desc = ln_household_mend_decision_desc
+	selection_tooltip = ln_household_mend_decision_tt
+	confirm_text = ln_household_mend_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0
+
+	is_shown = {
+		ln_household_has_the_ledger_trigger = yes
+	}
+
+	is_valid = {
+		is_available = yes
+	}
+
+	effect = {
+		custom_tooltip = ln_household_mend_effect_tt
+		hidden_effect = {
+			if = { limit = { has_trait = wounded_1 }   remove_trait = wounded_1 }
+			if = { limit = { has_trait = wounded_2 }   remove_trait = wounded_2 }
+			if = { limit = { has_trait = wounded_3 }   remove_trait = wounded_3 }
+			if = { limit = { has_trait = maimed }      remove_trait = maimed }
+			if = { limit = { has_trait = disfigured }  remove_trait = disfigured }
+			if = { limit = { has_trait = one_eyed }    remove_trait = one_eyed }
+			if = { limit = { has_trait = one_legged }  remove_trait = one_legged }
+			if = { limit = { has_trait = ill }         remove_trait = ill }
+			if = { limit = { has_trait = infirm }      remove_trait = infirm }
+			if = { limit = { has_trait = incapable }   remove_trait = incapable }
+			add_stress = -100
+		}
+	}
+
+	ai_will_do = { base = 0 }
+}

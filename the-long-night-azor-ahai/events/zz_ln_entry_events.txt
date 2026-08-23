@@ -1,0 +1,86 @@
+﻿namespace = ln_prophecy
+
+# AGOT: The Long Night & Azor Ahai -- the card for people who did not come in the front door.
+# See common/scripted_effects/zz_ln_entry_effects.txt for why this exists.
+
+ln_prophecy.30 = {
+	type = character_event
+	title = ln_prophecy.30.t
+	desc = {
+		desc = ln_prophecy.30.desc_open
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_trait = azor_ahai_reborn }
+				desc = ln_prophecy.30.desc_azor
+			}
+			triggered_desc = {
+				trigger = { has_trait = chosen_by_rhllor }
+				desc = ln_prophecy.30.desc_chosen
+			}
+			triggered_desc = {
+				trigger = { has_trait = resurrected_by_rhllor }
+				desc = ln_prophecy.30.desc_risen
+			}
+			desc = ln_prophecy.30.desc_favored
+		}
+		desc = ln_prophecy.30.desc_close
+	}
+	theme = faith
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { character = scope:ln_the_seer  animation = personality_zealous }
+
+	trigger = {
+		is_alive = yes
+		ln_is_a_champion_of_rhllor_trigger = yes
+	}
+
+	# SOMEBODY HAS TO BE SAYING THIS TO HIM. A red priest if he has one, a woods witch or a greenseer if he
+	# does not, and a man who walked a long way if he has neither -- because a character who holds this trait
+	# and has nobody in his hall who cares about it is still going to have somebody turn up eventually.
+	immediate = {
+		if = {
+			limit = { cp:councillor_court_chaplain ?= { has_trait = red_priest } }
+			cp:councillor_court_chaplain = { save_scope_as = ln_the_seer }
+		}
+		else_if = {
+			limit = {
+				any_courtier_or_guest = {
+					is_adult = yes
+					OR = { has_trait = red_priest  has_trait = witch  has_trait = greensight }
+				}
+			}
+			random_courtier_or_guest = {
+				limit = {
+					is_adult = yes
+					OR = { has_trait = red_priest  has_trait = witch  has_trait = greensight }
+				}
+				save_scope_as = ln_the_seer
+			}
+		}
+		else = {
+			create_character = {
+				location = root.capital_province
+				culture = culture:volantene
+				faith = faith:rhllor_fc
+				gender = male
+				age = { 30 65 }
+				dynasty = none
+				random_traits = yes
+				trait = zealous
+				save_scope_as = ln_the_seer
+			}
+		}
+	}
+
+	option = {
+		name = ln_prophecy.30.a          # I know what they say. Say it anyway.
+		add_piety = 50
+		add_character_flag = ln_listened_to_the_seer
+	}
+	option = {
+		name = ln_prophecy.30.b          # I did not ask for this and I do not want it.
+		add_prestige = -25
+		add_character_flag = ln_wants_none_of_it
+		stress_impact = { base = minor_stress_impact_loss }
+	}
+}

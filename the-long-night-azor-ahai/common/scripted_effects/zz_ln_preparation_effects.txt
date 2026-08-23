@@ -1,0 +1,138 @@
+﻿# AGOT: The Long Night & Azor Ahai -- arming for the dark.
+#
+# Root = a playable character. Runs on the yearly playable pulse.
+#
+# WHY THE VALYRIAN BONUS IS APPLIED THIS WAY. There is no way to write "this character fights better
+# specifically against the Others" -- CK3 has no per-enemy combat modifier. So the bonus is gated on the PHASE
+# instead: it only exists once Winter Is Coming or the Long Night is running, which is the same thing in
+# practice and costs nothing in the centuries when there is nothing to fight.
+#
+# And it uses the artifact the player ALREADY HAS. No Valyrian steel is created, copied, or borrowed from
+# another mod -- ln_has_deed_valyrian_steel_trigger reads AGOT's own `has_variable = valyrian_steel` marker on
+# whatever blade they happen to own.
+
+ln_preparation_upkeep_effect = {
+	if = {
+		limit = {
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+
+		# Spell-forged steel in hand, and something worth using it on.
+		#
+		# AND ON THE RIGHT SIDE OF THE WAR -- 10 Aug, off a screenshot of the Night King wearing Spell-Forged
+		# Steel. This runs on yearly_playable_pulse, the Night King IS a playable ruler, and
+		# ln_has_deed_valyrian_steel_trigger only asks whether a Valyrian blade is equipped -- it does not ask
+		# who is holding it. So the dead were being handed the living's anti-Other bonus: advantage +1, +10%
+		# enemy fatal casualties, +10% knight effectiveness, under flavour text that reads "it does not care
+		# how cold the thing in front of it is." Backwards in every sense, and on the one character in the
+		# game who least needs help.
+		if = {
+			limit = {
+				ln_has_deed_valyrian_steel_trigger = yes
+				ln_is_one_of_them_trigger = no
+				NOT = { has_character_modifier = ln_valyrian_armed_modifier }
+			}
+			add_character_modifier = ln_valyrian_armed_modifier
+		}
+	}
+	else = {
+		# The dark has passed or has not come. Take the edge back off.
+		if = {
+			limit = { has_character_modifier = ln_valyrian_armed_modifier }
+			remove_character_modifier = ln_valyrian_armed_modifier
+		}
+	}
+
+	# Lost the blade -- lost the bonus, in any phase. Same rule as the deed: what you hold, not what you did.
+	# ALSO the cleanup path for the dead: a Night King who picked this up before the gate above existed loses
+	# it on the next yearly tick rather than carrying it for the rest of the save.
+	if = {
+		limit = {
+			has_character_modifier = ln_valyrian_armed_modifier
+			OR = {
+				NOT = { ln_has_deed_valyrian_steel_trigger = yes }
+				ln_is_one_of_them_trigger = yes
+			}
+		}
+		remove_character_modifier = ln_valyrian_armed_modifier
+	}
+
+	# ── THE DRAGONGLASS GOES INTO HANDS ─────────────────────────────────────────────────────────────────────
+	# Stores are a marker with no combat statistics; ARMED is where every number lives, and it exists only
+	# while the dead are actually in the world. See the long note in common/modifiers/zz_ln_preparation_modifiers.txt
+	# for why it had to be split -- the short version is that the old single modifier ran for thirty flat years
+	# and outlived the Long Night by decades, which made it a siege weapon to point at the Iron Throne.
+	#
+	# THE LONG NIGHT PHASE AND NOT THE COLD WINDS. Deliberate. The Cold Winds are the decade of warning: you
+	# mine, you stockpile, you drill. Nothing is handed out until the dark arrives, which makes the arrival a
+	# payoff instead of an anticlimax, and leaves no window where a lord is armed against the dead and fighting
+	# the living instead.
+	if = {
+		limit = {
+			has_character_modifier = ln_dragonglass_stores_modifier
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+		}
+		# The lord himself.
+		if = {
+			limit = { NOT = { has_character_modifier = ln_dragonglass_armed_modifier } }
+			add_character_modifier = ln_dragonglass_armed_modifier
+		}
+		# And everybody in the hall. Knights first because a knight need not be a courtier in every edge case,
+		# then the court itself -- the cupbearer, the wards, the septon's boy. Thomas's call and the right one.
+		# The guard is what stops this stacking: CK3 does not deduplicate character modifiers by key, it just
+		# adds the numbers together again.
+		#
+		# 1.0.12 -- AND NOT THE DRAGON. Workshop report, Keir Starmer: "it gives your dragon the modifier too."
+		# AGOT's dragons are characters sitting in your court, so every_knight and every_courtier find them like
+		# anyone else, and the dragon was being issued obsidian-tipped arms and a fifteen-year war bonus. Two
+		# lines, and it was the only place in the mod handing a character MODIFIER to a courtier -- an audit of
+		# every every_courtier / every_knight in the build turned up nineteen more and all the rest are
+		# add_opinion, which on a dragon is invisible and harmless.
+		every_knight = {
+			limit = {
+				NOT = { has_character_modifier = ln_dragonglass_knight_modifier }
+				NOT = { ln_is_a_dragon_trigger = yes }
+			}
+			add_character_modifier = {
+				modifier = ln_dragonglass_knight_modifier
+				years = 15
+			}
+		}
+		every_courtier = {
+			limit = {
+				NOT = { has_character_modifier = ln_dragonglass_knight_modifier }
+				NOT = { ln_is_a_dragon_trigger = yes }
+			}
+			add_character_modifier = {
+				modifier = ln_dragonglass_knight_modifier
+				years = 15
+			}
+		}
+	}
+	else = {
+		# THE DAWN TAKES IT BACK. The muster disbands, the glass goes back in the cellar, and nobody carries a
+		# war bonus into the world that comes after. The stores marker stays -- you do still own the glass, and
+		# under the recurrence rule you will want it again.
+		if = {
+			limit = { has_character_modifier = ln_dragonglass_armed_modifier }
+			remove_character_modifier = ln_dragonglass_armed_modifier
+		}
+		# Knights first, then the wider court: a man can stop being a knight without leaving the hall, and the
+		# fifteen-year duration only catches the ones who leave entirely.
+		every_knight = {
+			limit = { has_character_modifier = ln_dragonglass_knight_modifier }
+			remove_character_modifier = ln_dragonglass_knight_modifier
+		}
+		every_courtier = {
+			limit = { has_character_modifier = ln_dragonglass_knight_modifier }
+			remove_character_modifier = ln_dragonglass_knight_modifier
+		}
+	}
+}

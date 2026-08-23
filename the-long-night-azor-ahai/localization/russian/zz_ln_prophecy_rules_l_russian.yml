@@ -1,0 +1,43 @@
+﻿l_russian:
+
+ # ── PROPHECY GAME RULES ─────────────────────────────────────────────────────────────────────────────────────
+ rule_ln_prophecy_truth:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Азор Ахай#! — был ли принц вообще?"
+ rule_ln_prophecy_truth_desc:0 "Истинно ли пророчество на самом деле. Решается при начале игры, и #EMP игра вам этого никогда не скажет#!. Вы узнаете в конце — или не узнаете вовсе."
+ setting_ln_prophecy_random:0 "Пусть решит пламя #EMP (по умолчанию)#!"
+ setting_ln_prophecy_random_desc:0 "Монета, подброшенная при начале игры и скрытая навсегда."
+ setting_ln_prophecy_is_true:0 "Принц есть"
+ setting_ln_prophecy_is_true_desc:0 "Пророчество истинно, и знаки значат ровно то, чем кажутся. Вы это знаете; в мире — никто."
+ setting_ln_prophecy_is_a_lie:0 "Принца нет"
+ setting_ln_prophecy_is_a_lie_desc:0 "Обещанного принца нет и никогда не было. Долгую Ночь всё ещё можно пережить — просто сделает это не пророчество."
+ rule_ln_prophecy_naming:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Азор Ахай#! — наречение притязателей"
+ rule_ln_prophecy_naming_desc:0 "Сколько знаков нужно жизни, прежде чем кто-то произнесёт слова вслух. Знаков всего девять. Четыре — уже необыкновенная жизнь."
+ setting_ln_naming_normal:0 "Как сказано в книгах #EMP (по умолчанию)#!"
+ setting_ln_naming_normal_desc:0 "Два знака, чтобы стать #EMP Отмеченным#!, четыре — чтобы стать #EMP Избранным#!."
+ setting_ln_naming_generous:0 "Пламя говорит громко"
+ setting_ln_naming_generous_desc:0 "Один и три. Притязатели повсюду, соперничающие храмы, несколько живых разом."
+ setting_ln_naming_strict:0 "Прочтение Цитадели"
+ setting_ln_naming_strict_desc:0 "Три и шесть. Для шести практически нужен дракон, так что в большинстве миров #EMP Избранного#! не бывает никогда."
+ setting_ln_naming_off:0 "Никого никогда не нарекают"
+ setting_ln_naming_off_desc:0 "Цепь пророчества выключена. Черты поборника остаются недоступными."
+
+ # ── DEED FLAG DESCRIPTIONS ──────────────────────────────────────────────────────────────────────────────────
+ # Used by tooltips that list what marks a character carries.
+ ln_deed_salt_and_smoke:0 "Рождён среди соли и дыма"
+ ln_deed_bleeding_star:0 "Рождён под кровоточащей звездой"
+ ln_deed_survived_the_others:0 "Ушёл живым от мёртвых"
+ ln_deed_dragon_dreams:0 "Сны, что приходят как воспоминания"
+ ln_deed_greensight:0 "Видит сквозь чардрева"
+ ln_deed_valyrian_steel:0 "Носит сталь, выкованную с чарами"
+ ln_deed_woke_dragons:0 "Пробудил драконов из камня"
+ ln_deed_returned:0 "Умер и мёртвым не остался"
+
+ # ── WHO MAY BE NAMED ────────────────────────────────────────────────────────────────────────────────────────
+ rule_ln_prophecy_claimants:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Азор Ахай#! — кого можно наречь"
+ rule_ln_prophecy_claimants_desc:0 "#EMP Избранный#! — это притязание, а не факт: их может быть несколько разом. #EMP Азор Ахай, рождённый вновь#! — исключение: он достаётся тому, кто убьёт Короля Ночи, и лишь однажды."
+ setting_ln_claimants_anyone:0 "Кто угодно #EMP (по умолчанию)#!"
+ setting_ln_claimants_anyone_desc:0 "Столько притязателей, сколько подходит, — и ИИ, и игроки. Изнутри мира не понять, кто из них ошибка."
+ setting_ln_claimants_players_only:0 "Только игроки"
+ setting_ln_claimants_players_only_desc:0 "Нарекают только игроков. В совместной игре пророчество становится делом между людьми за столом."
+ setting_ln_claimants_one_at_a_time:0 "По одному за раз"
+ setting_ln_claimants_one_at_a_time_desc:0 "Не больше одного живого #EMP Избранного#!. Пока он дышит, наречь никого нельзя, — и место освобождается в тот миг, когда он перестанет.\n\nЧто, конечно, подталкивает к решению определённого рода."
+

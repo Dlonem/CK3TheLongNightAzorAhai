@@ -1,0 +1,13 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the world after the living lost.
+# Sits on the Night King himself. He is not a claimant any more; he is the government.
+#
+# KEY NAMES VERIFIED AGAINST LIVE AGOT FILES, 10 Aug. The first version of this file shipped with
+# `men_at_arms_maintenance_mult`, which does not exist. The parser stopped dead at that line
+# ("Unexpected token: men_at_arms_maintenance_mult"), which meant the modifier was never fully read
+# at all. Counted in AGOT's own common/: men_at_arms_maintenance (40 uses), dread_baseline_add (76),
+# monthly_prestige (493). There is no _mult variant of the maintenance key.
+ln_the_dark_won_modifier = {
+	monthly_prestige = 5
+	dread_baseline_add = 40
+	men_at_arms_maintenance = -0.5
+}

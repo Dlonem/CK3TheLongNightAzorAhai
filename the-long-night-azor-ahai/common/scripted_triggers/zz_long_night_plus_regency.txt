@@ -1,0 +1,31 @@
+﻿# The Long Night+ — overrides AGOT's regency_for_personal_reasons_trigger.
+# A wight is an incapable (incapacitating = yes) landed ruler in many cases; vanilla/AGOT would assign it a
+# regent. We don't want that: wight-held lands are meant to fall into ruin and abandon. By excluding wights
+# from this trigger, no "personal reasons" regency is ever required for them, and any regency that managed to
+# form (e.g. a non-converted newcomer arriving before the next others_heartbeat conversion) ends on the next
+# evaluation. Based verbatim on AGOT's version (common/scripted_triggers/00_diarchy_scripted_triggers.txt)
+# plus the single `NOT = { has_trait = wight_trait }` line — keep in sync if AGOT changes its trigger.
+regency_for_personal_reasons_trigger = {
+	custom_tooltip = {
+		text = regency_for_personal_reasons_trigger.tt.cannot_govern_by_themselves
+		# The Long Night+: wights never need a regent.
+		NOT = { has_trait = wight_trait }
+		OR = {
+			AND = {
+				is_adult = no
+				#AGOT Modified
+				#NOT = {
+				#	liege = { has_diarchy_parameter = diarchy_type_is_junior_emperorship }
+				#}
+				trigger_if = {
+					limit = { exists = liege}
+					NOT = {
+						liege = { has_diarchy_parameter = diarchy_type_is_junior_emperorship }
+					}
+				}
+			}
+			is_incapable = yes
+			has_character_modifier = isolating_modifier
+		}
+	}
+}

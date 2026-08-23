@@ -1,0 +1,32 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- the conclusion.
+
+ nick_the_dawnbringer:0 "the Dawnbringer"
+ nick_the_dawn:0 "the Dawn"
+ nick_the_prince_that_was_promised:0 "the Prince That Was Promised"
+
+ ln_reveal.9.t:0 "The Reckoning"
+ ln_reveal.9.desc_open:0 "The maesters have been at it since the thaw and they have finally produced a number, and the number is the reason nobody wants to read the rest of the page.\n\n"
+ ln_reveal.9.desc_sword:0 "It ended with a sword that was forged for it. That is the part the singers will keep and the maesters will argue about for four hundred years — that somebody made the thing the old story said to make, and then went and did the thing the old story said to do, and it worked exactly as advertised. There is no comfortable way to write that down in a book of history.\n\n"
+ ln_reveal.9.desc_sword_unused:0 "The sword was forged. It cost what the tale said it would cost. And in the end it was not the sword that finished it, which is a sentence somebody is going to have to explain to whoever paid for it.\n\n"
+ ln_reveal.9.desc_no_sword:0 "No sword was forged. Nobody sang. It ended the way most things end — men with ordinary steel, standing in the wrong place at the right moment, most of whom did not survive it.\n\n"
+ ln_reveal.9.desc_watch_held:0 "The Night's Watch held. Not intact — nothing about it is intact — but there are black cloaks on the Wall and men in the castles, and the institution the south spent a century treating as a penal colony for rapers and thieves is the reason there is a south.\n\n"
+ ln_reveal.9.desc_watch_broke:0 "The Night's Watch did not hold. The castles are empty in a way they have never been empty before, and the men who might have manned them are under the snow between here and the Wall.\n\n"
+ ln_reveal.9.desc_close:0 "The sun came up. That is the whole of the good news and it is enough.\n\nThe grand maester wants to know what to write at the top of the page. He has been asking for a week. He would like a name for it, and a date, and a sentence that people in three hundred years will be able to read without needing the rest of the book."
+ ln_reveal.9.a:0 "Write it down. All of it. Especially the parts nobody comes out of well."
+ ln_reveal.9.b:0 "Let the next lot work it out for themselves. We did."
+ # ── WHAT KIND OF MAN THE HISTORIES ARE WRITING ABOUT ────────────────────────────────────────────────────────
+ ln_reveal.9.desc_you_forge:0 "Your name is in it more than once, and not for the reasons you would have chosen. They have the forge. They have all three temperings. Somebody has written down what the third one cost and somebody else has crossed it out and written it back in.\n\n"
+ ln_reveal.9.desc_you_risen:0 "Your name is in it, with the thing that happened to you set down in the flat unbothered way maesters use for things they do not believe. '[ROOT.Char.GetSheHe|U] was dead. [ROOT.Char.GetSheHe|U] was not dead afterward.' Four words of hedging and then straight on to the next entry.\n\n"
+ ln_reveal.9.desc_you_watch:0 "Your name is in it under the Wall, in the list of men who held a castle nobody had held in living memory. It is a short list and it is the only part of this the North is going to read twice.\n\n"
+ ln_reveal.9.desc_you_return:0 "Your name is in it, and next to it the word they use for men who came back from Essos with something the realm did not want and could not refuse.\n\n"
+ ln_reveal.9.desc_you_chosen:0 "Your name is in it a great deal — the naming, the men who came to see whether it was true, the ones who came to make sure it was not. Whatever else the histories decide, they will not be able to leave you out of it.\n\n"
+ ln_reveal.9.desc_you_favored:0 "Your name is in it, in the part about the priests, hedged with the words maesters use when they are recording that people believed something rather than that it was so.\n\n"
+ ln_reveal.9.desc_you_witness:0 "Your name is in it once, in a list, in the middle. You were there. That turns out to be worth more than most things in this book.\n\n"
+ ln_reveal.9.desc_you_nobody:0 "Your name is not in it at all, which took some doing given where you were standing for most of it.\n\n"
+
+ ln_reveal.9.desc_close_cycle:0 "The sun came up. That is the whole of the good news and it is enough.\n\nThe grand maester wants a name for it, and a date, and a sentence for people in three hundred years to read. He has settled on 'the end.'\n\nThe free folk, who lost more than anyone and write nothing down, use a different word. Not ended — #EMP asleep#!. Nobody argues with them about it. Nobody who was there is entirely sure they are wrong."
+
+ # ln_dawn.4 -- he walked into its reach and walked back out.
+ nick_the_undaunted:0 "the Undaunted"

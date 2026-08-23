@@ -1,0 +1,30 @@
+﻿l_english:
+
+ ln_reveal.1.t:0 "The Dawn"
+
+ # 1. NAMED, AND RIGHT. The least interesting of the four, and deliberately not the most common.
+ ln_reveal.1.desc.vindicated:0 "#BER The dead lie still.\n\n [ln_slayer.GetTitledFirstName] did it, and [ln_slayer.GetHerHis] name had been said aloud in temples from Asshai to Oldtown for years before the blow landed.\n\n So the priests were right. That is worth sitting with, because it happens so rarely that nobody has a ritual for it. They read the flames, the flames were not lying, and the man they pointed at walked north and finished it — eight thousand years late and entirely on schedule.\n\n In a hundred years the maesters will have found reasons to doubt it, because that is what maesters are for. They will be wrong, and it will not matter.\n\n #bold It was prophecy. It was always going to be prophecy.#!#!"
+ # 2. NAMED, AND IT HAD NOTHING TO DO WITH IT.
+ ln_reveal.1.desc.named_but_hollow:0 "#BER The dead lie still.\n\n [ln_slayer.GetTitledFirstName] did it. The temples had said so for years, and now the temples are saying they said so, and both of those things are true.\n\n Here is what is also true, and what nobody in a red robe will ever say aloud: there was no prince. There was no promise. There was one life with the right marks on it, priests who wanted very badly for the marks to mean something, and a war that had to be won by somebody.\n\n It was won — [ln_slayer.GetHerHim] did it, with a sword, in the cold, and would have done it just the same if no one had ever read a flame.\n\n #bold The faith will remember this as the night it was proved right. It was not.#!#!"
+ # 3. THERE WAS A PRINCE, AND EVERY PRIEST NAMED THE WRONG MEN. The one worth playing for.
+ ln_reveal.1.desc.wrong_men:0 "#BER The dead lie still.\n\n It was [ln_slayer.GetTitledFirstName], and nobody had ever said [ln_slayer.GetHerHis] name.\n\n Not once. Not in a temple, not in a grove, not by a woman reading a fire in a hedge. Every priest in the world spent a century counting marks on other people's lives and being certain, and burying the ones they had been certain about — and the whole time the answer was standing somewhere none of them were looking.\n\n There was a prince. That is the part that will break them. The prophecy was real, the promise was kept, and the entire apparatus built to find the man was so completely wrong it may as well not have existed.\n\n #bold The flames never lied. Nobody ever learned to read them.#!#!"
+ # 4. NOTHING. A man with a sword.
+ ln_reveal.1.desc.just_a_man:0 "#BER The dead lie still.\n\n It was [ln_slayer.GetTitledFirstName]. There is nothing else to say about it, and that is the whole of it.\n\n No prophecy. No promised prince, no champion born amid salt and smoke, no burning sword — there never was, at any point, in any of it. Eight thousand years of temples and counting and naming and certainty, built on top of a story somebody told once about a winter that ended.\n\n The winter ended this time too. Somebody went north and did the thing that needed doing, and the reason [ln_slayer.GetSheHe] did it was not that [ln_slayer.GetSheHe] was chosen. It was that [ln_slayer.GetSheHe] was there.\n\n #bold That will have to be enough. It is, in fact, more.#!#!"
+
+ # 5. NOBODY KNOWS WHO DID IT.
+ ln_reveal.1.desc.nameless:0 "#BER The dead lie still.\n\n Nobody can say who did it.\n\n That is not a gap in the record — the record is the gap. There was a battle in the dark, in a winter that had gone on so long nobody was counting seasons any more, and at some point during it the thing that was driving them stopped, and every corpse in the field went down at once and stayed down.\n\n Somebody was standing closest. Somebody swung. The maesters will spend four hundred years constructing an answer and the answer will be wrong, because the men who could have told them were in the front rank and the front rank is where the arithmetic went.\n\n #bold It ended. That is the only part anyone can prove.#!#!"
+
+ ln_reveal.1.a:0 "Then let the sun come up."
+
+ ln_reveal.10.t:0 "The Men Who Were There"
+ ln_reveal.10.desc_open:0 "The singers will get it wrong within the year. They will put kings in the front rank who were four hundred leagues south, and a sunrise where there was only the snow going grey, and in time their version will be the one everybody knows.\n\nSo let it be written down once, plainly, while the men who saw it can still object:\n\nIt was [ln_slayer.GetTitledFirstName].\n\n"
+ ln_reveal.10.desc_knight_1:0 "And [ln_slayer.GetSheHe] did not stand there alone. [ln_dawn_knight_1.GetTitledFirstName] held the ground on [ln_slayer.GetHerHis] flank."
+ ln_reveal.10.desc_knight_2:0 " [ln_dawn_knight_2.GetTitledFirstName] kept the line from folding when it wanted to fold."
+ ln_reveal.10.desc_knight_3:0 " [ln_dawn_knight_3.GetTitledFirstName] was there in the dark and the cold, with the dead coming on and no reason at all to believe the next hour would ever arrive.\n\nNone of them will be in the songs. All of them were in the snow."
+ ln_reveal.10.desc_alone:0 "The men who should be named beside [ln_slayer.GetHerHim] cannot be, because the snow kept them. Whoever held the flank, whoever kept the line from folding in the dark — the front rank is where the arithmetic went, and the record has a silence in it where their names should stand."
+ ln_reveal.10.desc_close:0 "\n\nRemember it the plain way, the way it happened. Somebody swung, and somebody stood beside them, and the sun came up."
+ ln_reveal.10.a:0 "Write their names. All of them."
+
+ ln_stood_at_the_dawn_memory_desc:0 "stood in the front rank on the night the Night King fell"
+ ln_stood_at_the_dawn_memory_desc_second_perspective:0 "stood in the front rank on the night the Night King fell"
+ ln_stood_at_the_dawn_memory_desc_third_perspective:0 "stood in the front rank on the night the Night King fell"

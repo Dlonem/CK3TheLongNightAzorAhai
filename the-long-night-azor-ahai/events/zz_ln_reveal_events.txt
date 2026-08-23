@@ -1,0 +1,255 @@
+﻿namespace = ln_reveal
+
+# AGOT: The Long Night & Azor Ahai -- what it was.
+#
+# Four endings, chosen by two booleans the player has never been allowed to see:
+#   was the man who ended it acclaimed as the prince?   x   was there ever a prince?
+#
+# The vindication branch is the LEAST interesting of the four and it is deliberately not the most common. The
+# one worth playing for is the third: the prophecy was real, and the men the priests spent a century naming
+# were not it, and somebody nobody was watching walked up and finished it.
+ln_reveal.1 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_reveal.1.t
+	desc = {
+		first_valid = {
+			# 1. Named, and right.
+			triggered_desc = {
+				trigger = {
+					exists = global_var:ln_prophecy_is_true
+					global_var:ln_prophecy_is_true = yes
+					exists = scope:ln_slayer
+					scope:ln_slayer = { has_trait = azor_ahai_reborn  ln_was_acclaimed_trigger = yes }
+				}
+				desc = ln_reveal.1.desc.vindicated
+			}
+			# 2. Named, and it had nothing to do with it.
+			triggered_desc = {
+				trigger = {
+					exists = global_var:ln_prophecy_is_true
+					global_var:ln_prophecy_is_true = no
+					exists = scope:ln_slayer
+					scope:ln_slayer = { ln_was_acclaimed_trigger = yes }
+				}
+				desc = ln_reveal.1.desc.named_but_hollow
+			}
+			# 3. There WAS a prince, and every priest named the wrong men.
+			triggered_desc = {
+				trigger = {
+					exists = global_var:ln_prophecy_is_true
+					global_var:ln_prophecy_is_true = yes
+					exists = scope:ln_slayer
+					scope:ln_slayer ?= { always = yes }
+				}
+				desc = ln_reveal.1.desc.wrong_men
+			}
+			# 4. Nothing. A man with a sword.
+			triggered_desc = {
+				trigger = { exists = scope:ln_slayer  scope:ln_slayer ?= { always = yes } }
+				desc = ln_reveal.1.desc.just_a_man
+			}
+			# 5. Nobody knows who did it.
+			desc = ln_reveal.1.desc.nameless
+		}
+	}
+	theme = faith
+	override_background = { reference = agot_frozen_forest }
+
+	# 13 Aug (1.0.6a) -- THE CARD NOW SHOWS WHO IT IS ABOUT. Thomas: "I really wish in regard to that
+	# full screen event pop up that you could have character portraits inside of that... I don't think
+	# it's currently possible." It is: 12 of vanilla's 60 `window = fullscreen_event` events carry
+	# portraits (mpo_greatest_of_khans.0001 among them). The slayer stands on the right of the biggest
+	# card in the mod, which is where he has always belonged.
+	#
+	# AND IF A DRAGON DID IT WITH NOBODY ON ITS BACK, the dragon takes the frame. Dragons are ordinary
+	# characters in AGOT, so they portrait like anyone else.
+	left_portrait = { character = root  animation = grief }
+	right_portrait = {
+		character = scope:ln_slayer
+		animation = personality_bold
+	}
+	lower_right_portrait = {
+		character = scope:ln_dawn_dragon
+	}
+
+	immediate = {
+		play_music_cue = "mood_jennyofoldstones"
+		# immediate runs before the window renders, so the desc below can use scope:ln_slayer.
+		if = {
+			limit = { exists = global_var:ln_the_slayer }
+			global_var:ln_the_slayer = { save_scope_as = ln_slayer }
+		}
+	}
+
+	option = {
+		name = ln_reveal.1.a
+	}
+}
+
+# ── 9. THE CHRONICLE ────────────────────────────────────────────────────────────────────────────────────────
+# A season after the dark lifts, an accounting. Every branch reads a global that was set by something that
+# actually happened, so no two campaigns produce the same page.
+ln_reveal.9 = {
+	type = character_event
+	title = ln_reveal.9.t
+	desc = {
+		desc = ln_reveal.9.desc_open
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_global_variable = ln_slain_with_lightbringer }
+				desc = ln_reveal.9.desc_sword
+			}
+			triggered_desc = {
+				trigger = { has_global_variable = ln_lightbringer_forged }
+				desc = ln_reveal.9.desc_sword_unused
+			}
+			desc = ln_reveal.9.desc_no_sword
+		}
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_global_variable = ln_nights_watch_restored }
+				desc = ln_reveal.9.desc_watch_held
+			}
+			desc = ln_reveal.9.desc_watch_broke
+		}
+		# AND WHAT KIND OF MAN IS BEING WRITTEN ABOUT. Reads the record every chain has been quietly keeping --
+		# see common/scripted_triggers/zz_ln_record_triggers.txt. Ordered so the rarest thing you did is the
+		# thing the histories lead with.
+		first_valid = {
+			triggered_desc = {
+				trigger = { ln_record_of_the_forge_trigger = yes }
+				desc = ln_reveal.9.desc_you_forge
+			}
+			triggered_desc = {
+				trigger = { ln_record_of_the_risen_trigger = yes }
+				desc = ln_reveal.9.desc_you_risen
+			}
+			triggered_desc = {
+				trigger = { ln_record_of_the_watch_trigger = yes }
+				desc = ln_reveal.9.desc_you_watch
+			}
+			triggered_desc = {
+				trigger = { ln_record_of_the_return_trigger = yes }
+				desc = ln_reveal.9.desc_you_return
+			}
+			triggered_desc = {
+				trigger = { ln_record_of_the_chosen_trigger = yes }
+				desc = ln_reveal.9.desc_you_chosen
+			}
+			triggered_desc = {
+				trigger = { ln_record_of_the_favored_trigger = yes }
+				desc = ln_reveal.9.desc_you_favored
+			}
+			triggered_desc = {
+				trigger = { ln_record_of_the_long_night_trigger = yes }
+				desc = ln_reveal.9.desc_you_witness
+			}
+			desc = ln_reveal.9.desc_you_nobody
+		}
+		first_valid = {
+			triggered_desc = {
+				# Under "The Cycle" the histories hedge. This is the only line in the mod that knows the
+				# difference between the two rules at the moment of victory, and it tells the player nothing
+				# mechanical -- only that the maesters and the free folk do not use the same word.
+				trigger = { has_game_rule = long_night_recurs }
+				desc = ln_reveal.9.desc_close_cycle
+			}
+			desc = ln_reveal.9.desc_close
+		}
+	}
+	theme = realm
+	left_portrait = { character = root  animation = personality_content }
+
+	trigger = {
+		is_alive = yes
+		is_adult = yes
+	}
+
+	option = {
+		name = ln_reveal.9.a          # write it down. all of it.
+		add_learning_lifestyle_xp = 100
+		add_prestige = 100
+		add_character_flag = ln_kept_the_record
+	}
+	option = {
+		name = ln_reveal.9.b          # let the next lot work it out for themselves.
+		add_character_flag = ln_let_it_lie
+		stress_impact = { base = medium_stress_impact_loss }
+	}
+}
+
+# ── THE ROLL-CALL ───────────────────────────────────────────────────────────────────────────────────────────
+# Ten days after the blow, after the theology card (.1, day 3) and well before the chronicle (.9, day 120):
+# not whether the prophecy was true, not what the war cost -- just who was standing there. Portraits are the
+# actual men, captured at the moment of death; the desc names as many as lived.
+ln_reveal.10 = {
+	type = character_event
+	title = ln_reveal.10.t
+	desc = {
+		desc = ln_reveal.10.desc_open
+		triggered_desc = {
+			trigger = { exists = scope:ln_dawn_knight_1  scope:ln_dawn_knight_1 ?= { always = yes } }
+			desc = ln_reveal.10.desc_knight_1
+		}
+		triggered_desc = {
+			trigger = { exists = scope:ln_dawn_knight_2  scope:ln_dawn_knight_2 ?= { always = yes } }
+			desc = ln_reveal.10.desc_knight_2
+		}
+		triggered_desc = {
+			trigger = { exists = scope:ln_dawn_knight_3  scope:ln_dawn_knight_3 ?= { always = yes } }
+			desc = ln_reveal.10.desc_knight_3
+		}
+		triggered_desc = {
+			trigger = { NOT = { exists = scope:ln_dawn_knight_1 } }
+			desc = ln_reveal.10.desc_alone
+		}
+		desc = ln_reveal.10.desc_close
+	}
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = scope:ln_slayer
+		animation = personality_bold
+	}
+	lower_left_portrait = {
+		character = scope:ln_dawn_knight_1
+	}
+	lower_center_portrait = {
+		character = scope:ln_dawn_knight_2
+	}
+	lower_right_portrait = {
+		character = scope:ln_dawn_knight_3
+	}
+
+	# Reads the durable globals, not the ten-day-old saved scope. See ln_night_king_slain_reveal_effect.
+	# The gate stays on the durable global -- that is what proved it fires. The second line exists only so
+	# the localization compiler can TYPE scope:ln_slayer; ?= makes it safe if the scope is ever absent.
+	trigger = {
+		exists = global_var:ln_the_slayer
+		scope:ln_slayer ?= { always = yes }
+	}
+
+	# 11 Aug -- REBUILT HERE, exactly as ln_reveal.1 has always done it. immediate runs before the window
+	# renders, so every token below resolves. This is "Ō"'s ERROR[Scope:ln_slayer.GetTitledFirstName].
+	immediate = {
+		global_var:ln_the_slayer = { save_scope_as = ln_slayer }
+		if = {
+			limit = { exists = global_var:ln_dawn_knight_1 }
+			global_var:ln_dawn_knight_1 = { save_scope_as = ln_dawn_knight_1 }
+		}
+		if = {
+			limit = { exists = global_var:ln_dawn_knight_2 }
+			global_var:ln_dawn_knight_2 = { save_scope_as = ln_dawn_knight_2 }
+		}
+		if = {
+			limit = { exists = global_var:ln_dawn_knight_3 }
+			global_var:ln_dawn_knight_3 = { save_scope_as = ln_dawn_knight_3 }
+		}
+	}
+
+	option = {
+		name = ln_reveal.10.a
+	}
+}

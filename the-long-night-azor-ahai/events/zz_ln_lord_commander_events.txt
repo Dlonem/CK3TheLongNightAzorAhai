@@ -1,0 +1,300 @@
+﻿namespace = ln_lc
+
+# The Great Ranging: called by the Lord Commander (zz_ln_lord_commander_decisions.txt). One card when
+# it rides, then one of three ends, weighted colder as the world gets colder. Every catalyst and
+# accelerant call below self-gates on phase, so no outcome fires machinery out of season.
+
+# ── 1. IT RIDES ─────────────────────────────────────────────────────────────────────────────────────────────
+ln_lc.1 = {
+	type = character_event
+	title = ln_lc.1.t
+	desc = ln_lc.1.desc
+	theme = war
+	left_portrait = { character = root  animation = personality_bold }
+
+	trigger = { this = title:k_the_wall.holder }
+
+	# DEVELOPED 9 Aug (Session 10): the arc's opener now carries the arc's one command decision. Send the
+	# rangers, or ride at their head. Leading buys real odds -- the good end goes from 40 weight to 55 --
+	# because the man who called the ranging is the one man who cannot be lied to about what it finds. The
+	# outcomes are the same three cards either way; no death mechanics are touched (standing rule 5).
+	option = {
+		name = ln_lc.1.a
+		random_list = {
+			40 = {
+				trigger_event = { id = ln_lc.2  days = { 60 120 } }
+			}
+			35 = {
+				modifier = {
+					add = 20
+					struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+				}
+				trigger_event = { id = ln_lc.3  days = { 90 160 } }
+			}
+			25 = {
+				modifier = {
+					add = 15
+					struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+				}
+				trigger_event = { id = ln_lc.4  days = { 90 160 } }
+			}
+		}
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = {
+		name = ln_lc.1.b
+		add_prestige = 150
+		# 1.0.12 -- THE OUTCOME CARDS NOW KNOW YOU WERE THERE. Discord, bug: "if you go with the Ranging and the
+		# The Ranging is Lost or They Came Back Quiet options proc, it's very immersion-breaking to have the
+		# description basically ignore that you were there leading them this entire time." He is right, and the
+		# old note above this event says so out loud without noticing it was a defect: "The outcomes are the same
+		# three cards either way."
+		#
+		# 400 days, which comfortably outlives the longest delay any of the three outcomes uses (90-160) and
+		# expires on its own if an outcome somehow never lands. Each outcome removes it on the option, AFTER the
+		# desc has been drawn -- removing it in an immediate would erase the very thing the desc branches on.
+		add_character_flag = { flag = ln_rode_with_the_ranging  days = 400 }
+		random_list = {
+			55 = {
+				trigger_event = { id = ln_lc.2  days = { 60 120 } }
+			}
+			30 = {
+				modifier = {
+					add = 20
+					struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+				}
+				trigger_event = { id = ln_lc.3  days = { 90 160 } }
+			}
+			15 = {
+				modifier = {
+					add = 15
+					struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+				}
+				trigger_event = { id = ln_lc.4  days = { 90 160 } }
+			}
+		}
+		ai_chance = {
+			base = 30
+			modifier = { add = 30  OR = { has_trait = brave  has_education_martial_trigger = yes } }
+			modifier = { add = -30  has_trait = craven }
+			# 1.0.12b -- AND A MAN HAS TO BE ABLE TO SIT A HORSE FOR A SEASON. The old weighting asked only about
+			# temperament, so a seventy-year-old Lord Commander with a bad leg rode out as readily as a brave one
+			# of thirty. Now that the outcome cards know whether you led, an AI leading a ranging it had no
+			# business leading is a story the world tells wrong.
+			modifier = { add = 15  has_trait = ambitious }
+			modifier = { add = -15  age >= 55 }
+			modifier = { add = -25  age >= 65 }
+			modifier = { add = -25  has_trait = wounded_2 }
+			modifier = { add = -40  has_trait = wounded_3 }
+			modifier = { add = -30  has_trait = maimed }
+		}
+	}
+}
+
+# ── 2. WORD FROM THE NORTH ──────────────────────────────────────────────────────────────────────────────────
+# The good end: the Watch KNOWS now, on paper, with names and distances. The warning flag is the same
+# one the intro card sets -- so the Lord Commander who spent men to learn can mine glass on the
+# strength of it, and so can any brother who inherits the ledger.
+ln_lc.2 = {
+	type = character_event
+	title = ln_lc.2.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_character_flag = ln_rode_with_the_ranging }
+				desc = ln_lc.2.desc.led
+			}
+			desc = ln_lc.2.desc
+		}
+	}
+	theme = learning
+	left_portrait = { character = root  animation = personality_content }
+
+	option = {
+		name = ln_lc.2.a
+		remove_character_flag = ln_rode_with_the_ranging
+		# 1.0.12b -- the ranging is HOME now, whatever ln_ranging_is_out still says. That flag's remaining
+		# lifetime is the rest-and-refit cooldown, and the decision's greyed-out text branches on this marker
+		# so it stops claiming men are on the ice after the player has watched them ride back in.
+		add_character_flag = { flag = ln_ranging_returned  years = 5 }
+		add_prestige = 100
+		add_learning_lifestyle_xp = 100
+		add_character_flag = ln_heard_the_warning
+	}
+}
+
+# ── 3. THE RANGING IS LOST ──────────────────────────────────────────────────────────────────────────────────
+ln_lc.3 = {
+	type = character_event
+	title = ln_lc.3.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_character_flag = ln_rode_with_the_ranging }
+				desc = ln_lc.3.desc.led
+			}
+			desc = ln_lc.3.desc
+		}
+	}
+	theme = war
+	left_portrait = { character = root  animation = grief }
+
+	immediate = {
+		# Men lost beyond the Wall feed the same clock every lost ranging feeds. Both calls
+		# self-gate: the catalyst only counts in the Long Summer, the accelerant only in Cold Winds.
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_ranging_lost  PHASE = ln_phase_long_summer  POINTS = 4  COOLDOWN = 4 }
+		ln_the_dark_comes_sooner_effect = { YEARS = 1 }
+	}
+
+	option = {
+		# The shared line does not survive the led version: a man who rode back with the survivors is not
+		# writing two hundred names, he is writing the ones who did not come back with him. name = { text = {
+		# first_valid = ... } } is vanilla's own construct for exactly this (chariot_race_ongoing_events.txt:1095).
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { has_character_flag = ln_rode_with_the_ranging }
+						desc = ln_lc.3.a.led
+					}
+					desc = ln_lc.3.a
+				}
+			}
+		}
+		remove_character_flag = ln_rode_with_the_ranging
+		# 1.0.12b -- the ranging is HOME now, whatever ln_ranging_is_out still says. That flag's remaining
+		# lifetime is the rest-and-refit cooldown, and the decision's greyed-out text branches on this marker
+		# so it stops claiming men are on the ice after the player has watched them ride back in.
+		add_character_flag = { flag = ln_ranging_returned  years = 5 }
+		add_prestige = -50
+		stress_impact = { base = minor_stress_impact_gain  compassionate = medium_stress_impact_gain }
+	}
+}
+
+# ── 4. THEY CAME BACK QUIET ─────────────────────────────────────────────────────────────────────────────────
+ln_lc.4 = {
+	type = character_event
+	title = ln_lc.4.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_character_flag = ln_rode_with_the_ranging }
+				desc = ln_lc.4.desc.led
+			}
+			desc = ln_lc.4.desc
+		}
+	}
+	theme = dread
+	left_portrait = { character = root  animation = fear }
+
+	immediate = {
+		random_courtier = {
+			limit = { is_ai = yes }
+			death = { death_reason = death_claimed_by_cold }
+		}
+		ln_the_dark_comes_sooner_effect = { YEARS = 1 }
+	}
+
+	option = {
+		name = ln_lc.4.a
+		remove_character_flag = ln_rode_with_the_ranging
+		# 1.0.12b -- the ranging is HOME now, whatever ln_ranging_is_out still says. That flag's remaining
+		# lifetime is the rest-and-refit cooldown, and the decision's greyed-out text branches on this marker
+		# so it stops claiming men are on the ice after the player has watched them ride back in.
+		add_character_flag = { flag = ln_ranging_returned  years = 5 }
+		add_dread = 10
+		add_character_flag = ln_heard_the_warning
+	}
+}
+
+# ── 10. A CROW AT THE GATE ──────────────────────────────────────────────────────────────────────────────────
+# Root = a duke-or-better with a full dungeon. scope:ln_wandering_crow = the actual sworn brother the
+# Lord Commander sent (saved in the decision; delayed-event scopes persist). If the crow died on the
+# road between courts, the trigger quietly lets the visit lapse -- the roads are what they are.
+ln_lc.10 = {
+	type = character_event
+	title = ln_lc.10.t
+	desc = ln_lc.10.desc
+	theme = realm
+	left_portrait = { character = root  animation = interested }
+	right_portrait = { character = scope:ln_wandering_crow  animation = personality_content }
+
+	trigger = {
+		exists = scope:ln_wandering_crow
+		scope:ln_wandering_crow ?= { is_alive = yes }
+		any_prisoner = { count >= 1 }
+	}
+
+	option = {
+		name = ln_lc.10.a          # empty the dungeons. every unlanded man of them.
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = just }
+			modifier = { add = 15  has_trait = zealous }
+			modifier = { add = 15  has_trait = generous }
+			modifier = { add = 10  has_trait = compassionate }
+		}
+		every_prisoner = {
+			limit = {
+				is_adult = yes
+				is_male = yes
+				is_landed = no
+				is_ai = yes
+			}
+			release_from_prison = yes
+			save_scope_as = ln_nw_recruit
+			agot_add_to_nightswatch_effect = yes
+			# 13 Aug (1.0.6), brindatm's report: "the men stay as your courtiers, just with the nights
+			# watch trait." agot_add_to_nightswatch_effect grants the trait and strips claims -- it has
+			# NEVER moved anybody. AGOT's own control case (agot_send_to_nightswatch_effect) pairs it
+			# with add_courtier on the Lord Commander, so we do the same court move here -- minus their
+			# per-man notification event, which would card a player LC once per prisoner. From the LC's
+			# court the yearly ln_allocate_brothers_effect sweep then posts them on to whichever
+			# company is thinnest, which is the distribution brindatm asked for.
+			if = {
+				limit = {
+					exists = title:k_the_wall.holder
+					NOT = { this = title:k_the_wall.holder }
+				}
+				title:k_the_wall.holder = { add_courtier = scope:ln_nw_recruit }
+			}
+		}
+		add_piety = 100
+		reverse_add_opinion = {
+			modifier = ln_fed_the_watch_opinion
+			target = title:k_the_wall.holder
+		}
+	}
+	option = {
+		name = ln_lc.10.b          # coin for the Wall, and keep my prisoners.
+		trigger = { gold >= 50 }
+		ai_chance = {
+			base = 25
+			modifier = { add = 15  has_trait = paranoid }
+			modifier = { add = 10  has_trait = arbitrary }
+			modifier = { add = -20  has_trait = greedy }
+		}
+		remove_short_term_gold = 50
+		add_piety = 50
+		reverse_add_opinion = {
+			modifier = ln_fed_the_watch_opinion
+			target = title:k_the_wall.holder
+		}
+	}
+	option = {
+		name = ln_lc.10.c          # the Wall gets nothing of mine.
+		ai_chance = {
+			base = 30
+			modifier = { add = 20  has_trait = greedy }
+			modifier = { add = 15  has_trait = cynical }
+			modifier = { add = 10  has_trait = callous }
+		}
+		reverse_add_opinion = {
+			modifier = ln_turned_the_crow_away_opinion
+			target = title:k_the_wall.holder
+		}
+	}
+}

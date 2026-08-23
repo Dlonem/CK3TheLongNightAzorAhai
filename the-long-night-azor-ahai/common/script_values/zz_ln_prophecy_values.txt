@@ -1,0 +1,67 @@
+﻿# AGOT: The Long Night & Azor Ahai -- counting deeds.
+#
+# Eight deeds. Nobody will ever have all eight; six is already an extraordinary life. The count is recomputed
+# live rather than stored, so a deed that depends on holding something (Valyrian steel, a dragon) is LOST when
+# the thing is lost -- and a man can therefore be un-named, which is one of the more interesting things this
+# system can do to a player.
+
+ln_deed_count_value = {
+	value = 0
+	if = { limit = { ln_has_deed_dragon_dreams_trigger = yes }   add = 1 }
+	if = { limit = { ln_has_deed_greensight_trigger = yes }      add = 1 }
+	if = { limit = { ln_has_deed_salt_and_smoke_trigger = yes }  add = 1 }
+	if = { limit = { ln_has_deed_bleeding_star_trigger = yes }   add = 1 }
+	if = { limit = { ln_has_deed_survived_trigger = yes }        add = 1 }
+	if = { limit = { ln_has_deed_valyrian_steel_trigger = yes }  add = 1 }
+	if = { limit = { ln_has_deed_woke_dragons_trigger = yes }    add = 1 }
+	if = { limit = { ln_has_deed_returned_trigger = yes }        add = 1 }
+	if = { limit = { ln_has_deed_hidden_blood_trigger = yes }    add = 1 }
+}
+
+# What dragonglass costs. Thomas: "in some of my playthroughs I can get seventy five gold a month... but also
+# there's times I'm a lower lord and three hundred's really pricey." So it scales with what you actually are.
+# A count pays 150; an emperor pays 600. Both feel it.
+# Thomas's numbers: 200 for a count, 800 for an emperor. It should be a decision that hurts -- "we need to keep
+# affording things for the kingdom, and I don't know that I believe the Long Night is actually coming; it has
+# been eight thousand years." That doubt is the point, and a cheap answer erases it.
+ln_dragonglass_cost_value = {
+	value = 200
+	if = { limit = { highest_held_title_tier >= tier_duchy }   add = 200 }
+	if = { limit = { highest_held_title_tier >= tier_kingdom } add = 200 }
+	if = { limit = { highest_held_title_tier >= tier_empire }  add = 200 }
+	min = 200
+}
+
+# Twice the cost. An AI holding less than this is buying glass it cannot afford.
+ln_dragonglass_comfortable_value = {
+	value = ln_dragonglass_cost_value
+	multiply = 2
+}
+
+# ── HOW LOUDLY THE WORLD REACTS TO A NAMING ─────────────────────────────────────────────────────────────────
+# Read by ln_the_world_forms_a_view_effect. A Chosen man is talked about twice as much as a Favored one, in
+# both directions -- the faithful admire him more and everyone else finds him twice as tiresome.
+ln_named_opinion_up_value = {
+	value = 10
+	if = {
+		limit = { has_trait = chosen_by_rhllor }
+		value = 25
+	}
+	if = {
+		limit = { has_trait = azor_ahai_reborn }
+		value = 40
+	}
+}
+
+ln_named_opinion_down_value = {
+	value = -8
+	if = {
+		limit = { has_trait = chosen_by_rhllor }
+		value = -18
+	}
+	if = {
+		limit = { has_trait = azor_ahai_reborn }
+		# Nobody calls the man who ended it a fraud.
+		value = 0
+	}
+}

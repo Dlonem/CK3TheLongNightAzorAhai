@@ -1,0 +1,76 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the ranging companies, asked as questions.
+#
+# THESE LIVED IN common/scripted_effects/ AND THE GAME REFUSED THEM. CK3 registers scripted effects and
+# scripted triggers in separate databases keyed by the FOLDER, not by what the block contains or what it is
+# called. All three were registered as effects, so every use of them read "Unknown trigger", and their bodies
+# read "Unknown effect: OR" / "Unknown effect: is_alive" -- five errors a launch.
+#
+# It also meant ln_free_ranging_company_trigger could not be evaluated, and that trigger gates Ride Out, which
+# since the restructure is the only door into the Night's Watch. The whole landless-brother feature was
+# unreachable. Moved verbatim; not one line of the logic changed.
+
+# ── IS THERE A COMPANY GOING BEGGING? ───────────────────────────────────────────────────────────────────────
+ln_free_ranging_company_trigger = {
+	# SINCE THE HISTORY SEEDING the companies are never empty at game start -- that is what buys the camps.
+	# So "free" now means what it means in any army: a command the Lord Commander can reassign. Vacant, or
+	# held by an AI brother who can be stood down. A company held by another PLAYER is nobody's to take.
+	OR = {
+		title:d_ln_ranger_01 ?= { OR = { NOT = { exists = holder }  holder = { is_ai = yes } } }
+		title:d_ln_ranger_02 ?= { OR = { NOT = { exists = holder }  holder = { is_ai = yes } } }
+		title:d_ln_ranger_03 ?= { OR = { NOT = { exists = holder }  holder = { is_ai = yes } } }
+		title:d_ln_ranger_04 ?= { OR = { NOT = { exists = holder }  holder = { is_ai = yes } } }
+		title:d_ln_ranger_05 ?= { OR = { NOT = { exists = holder }  holder = { is_ai = yes } } }
+		title:d_ln_ranger_06 ?= { OR = { NOT = { exists = holder }  holder = { is_ai = yes } } }
+		title:d_ln_ranger_07 ?= { OR = { NOT = { exists = holder }  holder = { is_ai = yes } } }
+		title:d_ln_ranger_08 ?= { OR = { NOT = { exists = holder }  holder = { is_ai = yes } } }
+	}
+}
+
+# ── CAN THIS MAN BE SENT OUT? ───────────────────────────────────────────────────────────────────────────────
+# Used by the recruiter. A sworn brother -- not a recruit, `has_trait_xp >= 100` is AGOT's own line between the
+# two and their trait literally renders as "flappers" below it -- who holds nothing and is not already the
+# First Ranger.
+ln_can_go_ranging_trigger = {
+	is_alive = yes
+	is_adult = yes
+	is_male = yes
+	is_landed = no
+	is_ai = yes
+	has_trait = nightswatch
+	has_trait_xp = {
+		trait = nightswatch
+		value >= 100
+	}
+	NOR = {
+		has_trait = maester
+		has_trait = septon
+		has_trait = incapable
+	}
+	trigger_if = {
+		limit = { exists = title:d_nw_landless_first_ranger.holder }
+		NOT = { this = title:d_nw_landless_first_ranger.holder }
+	}
+}
+
+# ── IS THERE A COMPANY THE AI IS ALLOWED TO TAKE? ───────────────────────────────────────────────────────────
+# THE RESERVE, and it is deliberately dumb rather than clever: under the default the AI only ever looks at
+# companies one through five. Six, seven and eight are not "counted as reserved" by any logic that could get
+# the count wrong -- they are simply never named in this trigger. Under `all eight ride` the last three are
+# named too.
+ln_ai_ranging_company_free_trigger = {
+	OR = {
+		NOT = { exists = title:d_ln_ranger_01.holder }
+		NOT = { exists = title:d_ln_ranger_02.holder }
+		NOT = { exists = title:d_ln_ranger_03.holder }
+		NOT = { exists = title:d_ln_ranger_04.holder }
+		NOT = { exists = title:d_ln_ranger_05.holder }
+		AND = {
+			has_game_rule = ln_rangers_all_eight_ride
+			OR = {
+				NOT = { exists = title:d_ln_ranger_06.holder }
+				NOT = { exists = title:d_ln_ranger_07.holder }
+				NOT = { exists = title:d_ln_ranger_08.holder }
+			}
+		}
+	}
+}

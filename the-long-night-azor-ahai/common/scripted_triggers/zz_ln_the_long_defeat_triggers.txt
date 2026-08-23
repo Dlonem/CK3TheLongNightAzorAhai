@@ -1,0 +1,46 @@
+﻿# AGOT: The Long Night & Azor Ahai -- THE LIVING CAN LOSE.
+#
+# design-backlog.md, "Additions worth considering" #3: *"Let the Long Night end badly. Today the only exits
+# are the Night King dying. Nobody has built the version where the living LOSE -- h_the_others holds the
+# continent and the game continues in a frozen world. That is the most distinctive thing this mod could ship."*
+#
+# THE CONDITION IS TIME PLUS GROUND, and both halves matter. Time alone would punish a stalemate the player is
+# actually winning; ground alone would fire the moment the dead take the North, which is where they always
+# start. Together they describe the only thing that should end the world: he has been here a lifetime, and the
+# realm has spent that lifetime losing.
+#
+# EVERY PIECE IS exists-GUARDED. h_the_others has no holder before the invasion and none after the Dawn.
+
+ln_the_dark_has_won_trigger = {
+	# It never fires twice, and never after the Dawn.
+	NOT = { has_global_variable = ln_the_dark_won }
+	NOT = { has_global_variable = ln_dawn_revealed }
+
+	# The dark is actually here, and we know when it arrived.
+	exists = struggle:ln_long_night_struggle
+	struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+	exists = global_var:ln_long_night_started
+
+	# FOUR GENERATIONS. A hundred years (ln_long_defeat_years_value, raised from fifty on 10 Aug at Thomas's
+	# call). The struggle is not on a timer -- the Long Night ends when the Night King dies -- so a realm
+	# still capable of killing him has a century to manage it. Reaching this line means four generations were
+	# each born into the dark, each tried, and each handed it on worse. Nobody alive has seen the sun.
+	ln_long_night_elapsed_value >= ln_long_defeat_years_value
+
+	# AND HE IS STILL STANDING. If the Night King is dead the world is not lost, whatever else is true.
+	exists = title:h_the_others.holder
+	title:h_the_others.holder = { is_alive = yes }
+
+	# AND HE HOLDS THE GROUND. Counted off his own realm rather than a map region, so it reads the same in any
+	# bookmark and cannot be fooled by a bookmark with fewer counties in it.
+	title:h_the_others.holder = {
+		any_sub_realm_county = { count >= ln_long_defeat_counties_value }
+	}
+}
+
+# Root = anything. Is this character one of the dead THIS character used to know?
+# Used by the battlefield recognition scene. Deliberately narrow -- see the event.
+ln_is_one_of_my_dead_trigger = {
+	has_trait = wight_trait
+	is_alive = yes
+}

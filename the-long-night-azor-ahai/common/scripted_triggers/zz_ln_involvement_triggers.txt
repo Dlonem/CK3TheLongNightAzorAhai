@@ -1,0 +1,89 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who is in this war, and who is only near it.
+#
+# THE ENGINE TRUTH, WHICH IS NOT WHAT ANYONE EXPECTS. There is no effect in CK3 that sets a character's struggle
+# involvement. Not one. `involvement = involved` appears 532 times in the base game and EVERY occurrence is a
+# filter on any_character_struggle / every_character_struggle -- a question, never an instruction. Involvement is
+# derived by the engine from three things and nothing else:
+#
+#     * is your realm capital inside the struggle's regions
+#     * is your FAITH one the struggle lists as involved
+#     * is your CULTURE one the struggle lists as involved
+#
+# (Plus involvement_prerequisite_percentage, which can pull a whole faith or culture in once 50% -- our number --
+# of its counties sit inside the region. Also not per-character.)
+#
+# So "let an interloper choose to become involved" has exactly one honest implementation: change one of those
+# three things. Our struggle's region is all of Westeros plus the Wall and beyond it, so a southron lord's
+# capital is ALREADY inside it -- what makes him an interloper is his faith and his culture. Which means the
+# real, engine-level route from interloper to involved is to TAKE A FAITH THAT IS IN THIS WAR. R'hllor is in the
+# involved list for exactly this reason, and that route is what ln_send_for_a_red_priest_decision offers.
+#
+# The alternative was to fake it -- treat a flag as involvement and hope nobody opened the Struggle Involvement
+# panel, which spells out the real reason in plain English and would have called us liars. Instead the flag
+# below is honest about what it is: not involvement, but participation in OUR content.
+
+ln_is_interloper_trigger = {
+	any_character_struggle = {
+		is_struggle_type = ln_long_night_struggle
+		involvement = interloper
+	}
+}
+
+ln_is_involved_trigger = {
+	any_character_struggle = {
+		is_struggle_type = ln_long_night_struggle
+		involvement = involved
+	}
+}
+
+# THE ONE THE REST OF THE MOD SHOULD ASK. "Is this character in the war for the dawn" -- either because the
+# engine says so, or because they swore themselves to it and sent their men north without changing their gods.
+# Anything of ours that gates on being part of this should use THIS, not ln_is_involved_trigger, or the lord who
+# committed everything he had while keeping the Seven gets locked out of his own story.
+ln_participates_in_the_dawn_trigger = {
+	OR = {
+		ln_is_involved_trigger = yes
+		has_character_flag = ln_sworn_to_the_dawn
+	}
+}
+
+# ── HAS THE LONG SUMMER GOT ANY HEADROOM LEFT? ──────────────────────────────────────────────────────────────
+# The third of Thomas's three levers: "we either need to limit how many times the flag gets listened to, how
+# many times it fires, how much that flag contributes." Cooldowns handle the first two. This is the third.
+#
+# The drip never runs ahead of its own schedule, so every point of lead the world has was bought by something
+# that actually happened in it. This caps that lead at fifteen points -- see ln_summer_slack_value. Past it a
+# catalyst is refused outright: no struggle points, no ledger entry, no readout row.
+#
+# trigger_if rather than a plain check, because catalysts also fire in the Long Night, where there is no
+# schedule to be ahead of and this must never block anything.
+ln_summer_has_headroom_trigger = {
+	trigger_if = {
+		limit = { struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_long_summer } }
+		ln_summer_schedule_gap_value < ln_summer_slack_value
+	}
+}
+
+# ── IS THE DARK ALLOWED TO COME AT ALL? ─────────────────────────────────────────────────────────────────────
+# The invasion-CHANCE rule (agot_others_invasion_chance) is rolled ONCE at game start by
+# others_decide_if_invasion_will_happen_effect into global_var:others_invasion_will_happen. The legacy
+# scheduler always respected that roll; the struggle never did -- under "remote odds" a world that rolled NO
+# invasion still marched its Long Summer to the Long Night, which made the chance rule a lie. Every point
+# source now asks this first (9 Aug pacing audit, same pass that retired the legacy schedule).
+#
+# Absent global reads as YES: a save from before the decide effect existed keeps working, and the default
+# chance rule is certain anyway.
+ln_the_dark_may_come_trigger = {
+	# Once the invasion HAS arrived the question is moot and this must never block anything again -- the
+	# Night King's own ending catalyst goes through the same choke, and a jammed wheel would trap the world
+	# in the Long Night forever.
+	trigger_if = {
+		limit = { has_global_variable = others_invasion_has_arrived }
+		always = yes
+	}
+	trigger_else_if = {
+		limit = { exists = global_var:others_invasion_will_happen }
+		global_var:others_invasion_will_happen = yes
+	}
+	trigger_else = { always = yes }
+}

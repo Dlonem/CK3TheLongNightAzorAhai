@@ -1,0 +1,231 @@
+﻿# AGOT: The Long Night & Azor Ahai -- taking the black.
+#
+# THE FULL POST-MORTEM lives in common/scripted_triggers/zz_ln_nights_watch_triggers.txt. The short version:
+# the first cut of this decision granted a Wall county by hand and then called change_government, and Thomas's
+# 111 AC save came back with "Fief of The Nightfort -- Feudal Realm", no Night's Watch government and no liege.
+# nights_watch_government.can_get_government wants a nightswatch trait AND a liege who holds k_the_wall, and a
+# scripted title grant provides neither. AGOT already ships eighteen keepership court positions that do the
+# whole thing correctly, so this decision now walks a man through their door instead of cutting its own.
+
+ln_man_an_empty_castle_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_castle_view.dds" }
+
+	desc = ln_man_an_empty_castle_decision_desc
+	selection_tooltip = ln_man_an_empty_castle_decision_tt
+	confirm_text = ln_man_an_empty_castle_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0        # never AI. The Watch recruits its own; this is a player's door.
+
+	is_shown = {
+		is_ai = no
+		# YOU HAVE TO ALREADY BE ONE OF THEM. See ln_is_an_unplaced_brother_trigger for why this changed --
+		# the Wall is not a place you walk up to and are handed a county.
+		ln_is_an_unplaced_brother_trigger = yes
+		title:k_the_wall.holder = { has_government = nights_watch_government }
+	}
+
+	is_valid = {
+		is_available = yes
+
+		# A CASTLE HAS TO BE AVAILABLE -- which is not the same as standing empty, and the difference matters
+		# more than I realised until I counted. AGOT's own history fills fifteen of sixteen Wall baronies by
+		# 200 AC, so "must be empty" would have made this a greyed-out decision in the bookmarks most people
+		# play. See common/scripted_triggers/zz_ln_relieve_triggers.txt for the numbers.
+		#
+		# So: an empty castle, OR a brother who should not be holding one.
+		custom_description = {
+			text = ln_black_needs_a_castle
+			OR = {
+				ln_wall_has_a_free_keepership_trigger = yes
+				ln_wall_has_a_relievable_keeper_trigger = yes
+			}
+		}
+
+		# YOU HAVE TO BE WORTH A CASTLE. See ln_worth_a_castle_trigger -- the Watch takes anyone, the Lord
+		# Commander does not give anyone a keep.
+		custom_description = {
+			text = ln_black_needs_to_be_somebody
+			ln_worth_a_castle_trigger = yes
+		}
+
+		# THE ONE THING THAT CANNOT BE ALLOWED. A ruler with no heir and no liege has nobody to hand the realm
+		# to, and the transfer would drop his titles into nothing. Landless men are never caught by this.
+		custom_description = {
+			text = ln_black_needs_somewhere_for_the_realm_to_go
+			OR = {
+				is_landed = no
+				exists = primary_heir
+				exists = liege
+			}
+		}
+
+		# AGOT's base_court_position_validity_trigger refuses both of these, and a decision that offers a door
+		# the engine then slams is worse than no door. Checked here so the player is told why.
+		custom_description = {
+			text = ln_black_not_at_war_with_the_watch
+			NOT = { is_at_war_with = title:k_the_wall.holder }
+		}
+		is_imprisoned = no
+	}
+
+	effect = {
+		# No ceremony left to perform -- he took the black already, and everything that goes with it happened
+		# then. All that is left is the appointment.
+		ln_grant_a_keepership_effect = yes
+		trigger_event = { id = ln_watch.1  days = { 5 14 } }
+	}
+
+	# AGOT's own keeper appointments are what fill the Wall, so this is never AI.
+	ai_will_do = { base = 0 }
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE OTHER WAY IN, FOR A WALL THAT IS ALREADY FULL
+#
+# By 200 AC exactly one of the sixteen Wall baronies is unheld. A decision that requires an empty castle is a
+# decision that does not exist in most bookmarks. This is the version for the rest of them: you take the black
+# knowing there is no room, and the Lord Commander makes room.
+#
+# It takes longer -- a rider has to go and tell a man he is finished -- which is why it is a separate door
+# rather than a silent fallback inside the first one. The player should know which of the two happened.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+ln_take_the_black_and_wait_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_castle_view.dds" }
+
+	desc = ln_take_the_black_and_wait_decision_desc
+	selection_tooltip = ln_take_the_black_and_wait_decision_tt
+	confirm_text = ln_take_the_black_and_wait_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0
+
+	is_shown = {
+		is_ai = no
+		# ALSO INTERNAL NOW. A brother of the Watch asking his Lord Commander to take a keep off a man who is
+		# not using it -- which is a conversation between two members of an order, not a way in from outside.
+		OR = {
+			ln_is_an_unplaced_brother_trigger = yes
+			has_government = ln_ranger_government
+		}
+		title:k_the_wall.holder = { has_government = nights_watch_government }
+		# Only when the simple door is genuinely shut. Two decisions offering the same thing is worse than one
+		# decision that sometimes cannot be taken.
+		NOT = { ln_wall_has_a_free_keepership_trigger = yes }
+	}
+
+	is_valid = {
+		is_available = yes
+		is_imprisoned = no
+
+		custom_description = {
+			text = ln_black_needs_someone_to_relieve
+			ln_wall_has_a_relievable_keeper_trigger = yes
+		}
+		custom_description = {
+			text = ln_black_needs_to_be_somebody
+			ln_worth_a_castle_trigger = yes
+		}
+	}
+
+	effect = {
+		# The rider goes out today. AGOT's on_court_position_revoked returns the castle to the Lord Commander
+		# a day later, so the handover lands a week after that -- long enough that it reads as a journey rather
+		# than a menu.
+		ln_relieve_a_brother_effect = yes
+		trigger_event = { id = ln_watch.9  days = 7 }
+	}
+
+	ai_will_do = { base = 0 }
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# REBUILDING WHAT THEY GAVE YOU
+#
+# Thomas: "say I'm given the ruin for the Nightfort. Obviously I'm not gonna be getting any income, but perhaps
+# there's an opportunity to turn it from a ruin into the actual building it's supposed to be. Maybe it's just a
+# matter of getting the funds."
+#
+# Without this the black is a dead end: a ruin generates no tax, no levies and no buildings, so a man who took
+# the black would hold a castle he could never do anything with. That is not a hard start, it is a broken one.
+#
+# set_holding_type is the engine's own route -- 14 vanilla uses for castle_holding alone.
+#
+# TWO PATHS, because after the rewrite above a man can be either. The Nightfort, the Shadow Tower and Eastwatch
+# keeperships grant a COUNTY, so their holder may have several ruined baronies under him. The other fifteen
+# grant a single BARONY, and a baron's ruin is not reachable through any_held_county at all -- which the first
+# version of this decision would have missed entirely.
+ln_rebuild_the_castle_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_castle_view.dds" }
+
+	desc = ln_rebuild_the_castle_decision_desc
+	selection_tooltip = ln_rebuild_the_castle_decision_tt
+	confirm_text = ln_rebuild_the_castle_decision_confirm
+
+	decision_group_type = realm
+	cooldown = { years = 5 }
+	ai_check_interval = 60
+
+	is_shown = {
+		is_landed = yes
+		has_government = nights_watch_government
+		OR = {
+			any_held_county = {
+				any_county_province = { has_holding_type = ruin_holding }
+			}
+			any_held_title = {
+				tier = tier_barony
+				title_province = { has_holding_type = ruin_holding }
+			}
+		}
+	}
+
+	is_valid = {
+		is_available = yes
+		custom_description = {
+			text = ln_rebuild_needs_the_coin
+			gold >= 400
+		}
+	}
+
+	effect = {
+		remove_short_term_gold = 400
+
+		if = {
+			limit = {
+				any_held_county = { any_county_province = { has_holding_type = ruin_holding } }
+			}
+			random_held_county = {
+				limit = { any_county_province = { has_holding_type = ruin_holding } }
+				save_scope_as = ln_rebuilt_county
+				random_county_province = {
+					limit = { has_holding_type = ruin_holding }
+					ln_raise_the_walls_effect = yes
+				}
+				# The county was empty for generations. It does not fill up because a wall went back up.
+				change_county_control = 25
+			}
+		}
+		else = {
+			random_held_title = {
+				limit = {
+					tier = tier_barony
+					title_province = { has_holding_type = ruin_holding }
+				}
+				save_scope_as = ln_rebuilt_county
+				title_province = {
+					ln_raise_the_walls_effect = yes
+					county = { change_county_control = 15 }
+				}
+			}
+		}
+
+		add_prestige = 150
+		trigger_event = { id = ln_watch.5  days = { 10 30 } }
+	}
+
+	ai_will_do = {
+		base = 40
+		modifier = { factor = 0  gold < 800 }
+	}
+}

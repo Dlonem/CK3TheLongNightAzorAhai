@@ -1,0 +1,36 @@
+﻿# AGOT: The Long Night & Azor Ahai -- game concepts for the struggle.
+#
+# WHY THESE EXIST. Vanilla defines a game concept per struggle phase (game/common/game_concepts/: see
+# struggle_phase_iberia_hostility, struggle_persia_phase_unrest). Without one, a phase name cannot be written as
+# a [concept|E] hyperlink anywhere in the game -- it is just flat text, and the player has nothing to hover.
+#
+# NOTE THE NAMING. Vanilla deliberately names the CONCEPT differently from the PHASE
+# (concept struggle_phase_iberia_hostility vs phase struggle_iberia_phase_hostility) so the two keyspaces do not
+# collide. We do the same: phases are ln_phase_*, concepts are ln_struggle_phase_*.
+#
+# Loc lives in localization/english/zz_ln_struggle_l_english.yml as game_concept_<key> / game_concept_<key>_desc.
+
+ln_long_night_struggle_concept = {
+	texture = "gfx/interface/icons/struggle_types/ln_phase_the_long_night.dds"
+	alias = { long_night the_long_night }
+}
+
+ln_struggle_phase_long_summer = {
+	texture = "gfx/interface/icons/struggle_types/ln_phase_long_summer.dds"
+	parent = ln_long_night_struggle_concept
+}
+
+ln_struggle_phase_cold_winds = {
+	texture = "gfx/interface/icons/struggle_types/ln_phase_cold_winds.dds"
+	parent = ln_long_night_struggle_concept
+}
+
+ln_struggle_phase_the_long_night = {
+	texture = "gfx/interface/icons/struggle_types/ln_phase_the_long_night.dds"
+	parent = ln_long_night_struggle_concept
+}
+
+ln_struggle_phase_the_dawn = {
+	texture = "gfx/interface/icons/struggle_types/ln_phase_the_dawn.dds"
+	parent = ln_long_night_struggle_concept
+}

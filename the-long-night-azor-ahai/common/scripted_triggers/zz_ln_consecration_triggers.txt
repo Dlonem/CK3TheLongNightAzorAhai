@@ -1,0 +1,106 @@
+﻿# AGOT: The Long Night & Azor Ahai -- CONSECRATION: the second road to Lightbringer.
+#
+# THE PROMISE THIS KEEPS. Shipped in the 1.0.10b change notes as "Next update" and carried in every work order
+# since: "An alternative to forging Lightbringer -- consecrating a Valyrian steel blade the way Azor Ahai is
+# said to have made the first one -- and a special case for Dawn."
+#
+# WHY IT IS A STAMP AND NOT A NEW SWORD. THE CK3 ARTIFACT API HAS NO RENAME. The complete list of effects that
+# can touch an artifact after creation is add/remove_artifact_modifier, add/remove_house_artifact_claim,
+# add/remove_personal_artifact_claim, copy_artifact_modifiers, destroy_artifact, destroy_owned_artifact,
+# equip_artifact_to_owner, unequip_artifact_from_owner and set_artifact_rarity. set_title_name is the only
+# rename that exists anywhere in the engine and it takes a title.
+#
+# That constraint turned out to be the better design. Consecration does not replace the blade and does not
+# rename it: it adds a modifier, lifts the rarity and stamps ln_is_lightbringer on the artifact itself. So
+# Longclaw stays Longclaw, keeps its own modifier, its history and its house -- and is ALSO the red sword.
+# A destroy-and-recreate would have thrown away the artifact's whole history entry and its house claim, which
+# is most of what makes a named Valyrian blade interesting in AGOT.
+#
+# ONE LIGHTBRINGER PER WORLD (Thomas's call, 20 Aug). Consecration sets the same ln_lightbringer_forged global
+# the forge sets, so whichever road arrives first closes the other, and the consecrated blade answers
+# ln_carries_lightbringer_trigger everywhere -- the reveal, the deed count, and the Night King's death.
+
+# ── THE BLADE ───────────────────────────────────────────────────────────────────────────────────────────────
+# AGOT's own test, verified rather than guessed: common/scripted_triggers/00_agot_artifact_triggers.txt:44
+#     agot_is_valyrian_steel_artifact = { has_variable = valyrian_steel }
+# Artifact scope. The NOT clause stops a blade being consecrated twice and stops the forged sword being
+# offered to itself (it is not marked valyrian_steel, but a future route might hand one over that is).
+ln_blade_can_be_consecrated_trigger = {
+	agot_is_valyrian_steel_artifact = yes
+	NOT = { has_variable = ln_is_lightbringer }
+}
+
+# Character scope. Does he carry something the rite could take hold of? Equipped only -- a sword in a vault is
+# not in his hand at the fire.
+ln_carries_a_blade_to_consecrate_trigger = {
+	any_equipped_character_artifact = {
+		ln_blade_can_be_consecrated_trigger = yes
+	}
+}
+
+# ── DAWN, AND WHY IT IS ITS OWN CASE ────────────────────────────────────────────────────────────────────────
+# Dawn is not Valyrian steel in the books -- it is the heart of a fallen star, forged at Starfall -- but AGOT
+# stamps it valyrian_steel = yes all the same (00_agot_artifact_weapon_effects.txt:30, inside
+# agot_create_artifact_vs_dawn_effect), so the general test above already finds it. What it needs is a
+# different PRICE, not a different route.
+#
+# THE PRICE, SETTLED 1.0.11: no third tempering. A sword already quenched in a falling star does not need a
+# life put through it -- but the bearer has to be the one the star was falling for, which is
+# ln_deed_bleeding_star and nothing else.
+#
+# IDENTIFYING IT. There is no has_artifact_template trigger in this engine, and AGOT sets no dawn-specific
+# variable. has_artifact_modifier IS vanilla (00_court_positions.txt:236, 90_minor_decisions.txt:2504) and
+# vs_dawn_modifier is unique to Dawn, so the modifier is the handle. IF AGOT EVER REUSES vs_dawn_modifier ON
+# A SECOND ARTIFACT THIS TEST GOES WRONG SILENTLY -- re-check it on their updates.
+ln_blade_is_dawn_trigger = {
+	has_artifact_modifier = vs_dawn_modifier
+}
+
+ln_carries_dawn_trigger = {
+	any_equipped_character_artifact = {
+		ln_blade_is_dawn_trigger = yes
+		NOT = { has_variable = ln_is_lightbringer }
+	}
+}
+
+# ── THE PRICE FOR EVERY OTHER BLADE ─────────────────────────────────────────────────────────────────────────
+# Nissa Nissa was his wife, but the mod's argument has never been "your wife" -- it is that the price has to
+# actually cost you. Thomas's call, 20 Aug: spouse, lover, soulmate, best friend, or an adult child.
+#
+# ADULTS ONLY, IN EVERY BRANCH INCLUDING CHILDREN. ln_lightbringer.3's volunteer already carries the same
+# is_adult gate and this is the same rite by another road.
+#
+# WHY A CHILD IS ON THE LIST AT ALL: a champion of R'hllor who is celibate, widowed, or sworn to the Watch has
+# no spouse and no lover, and locking those characters out would have made this whole path unreachable for
+# exactly the people the prophecy layer is most about.
+#
+# The relation forms are vanilla's own -- `any_relation = { type = lover }` and friends appear 418 / 108 / 106
+# times across the base game -- and the selection itself is done branch by branch in ln_consecrate.1's
+# immediate, the same shape ln_lightbringer.3 uses to pick Nissa Nissa. A parameterised "is this person
+# beloved" trigger was tried first and thrown away: it needed `prev` inside an OR inside a scope change, which
+# is exactly the kind of construct that fails quietly rather than loudly.
+ln_has_a_beloved_to_give_trigger = {
+	OR = {
+		primary_spouse ?= { is_alive = yes  is_adult = yes }
+		any_relation = { type = lover        is_alive = yes  is_adult = yes }
+		any_relation = { type = soulmate     is_alive = yes  is_adult = yes }
+		any_relation = { type = best_friend  is_alive = yes  is_adult = yes }
+		any_child     = { is_alive = yes  is_adult = yes }
+	}
+}
+
+# ── CAN HE HOLD THE RITE AT ALL ─────────────────────────────────────────────────────────────────────────────
+# Consecration is a rite in front of a fire, not smithing, so it does NOT want ln_has_a_forge_trigger's court
+# smith. It wants somebody who can say the words. ln_has_red_priest_trigger is this mod's own existing test
+# and is reused rather than duplicated.
+ln_can_consecrate_trigger = {
+	is_adult = yes
+	is_alive = yes
+	ln_is_a_champion_of_rhllor_trigger = yes
+	NOT = { ln_lightbringer_exists_trigger = yes }
+	OR = {
+		ln_has_red_priest_trigger = yes
+		cp:councillor_court_chaplain ?= { has_trait = red_priest }
+		has_trait = red_priest
+	}
+}

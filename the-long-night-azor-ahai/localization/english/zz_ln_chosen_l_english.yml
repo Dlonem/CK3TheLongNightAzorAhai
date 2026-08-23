@@ -1,0 +1,80 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- the Chosen chain.
+
+ ln_chosen.1.t:0 "A Crown Has Decided What I Am For"
+ ln_chosen.1.desc:0 "The offer is overwhelmingly generous, which is exactly how I know it is not truly an offer.\n\nLands, a seat on a royal council, a prestigious marriage—and in return, I ride under [ln_chosen_king.GetTitledFirstName]'s banner. I am seen doing it. And the prophecy that follows me around is quietly transferred to [ln_chosen_king.GetHerHis] political ledger.\n\nThe envoy is careful not to say any of this out loud. He speaks of honor, necessity, and the darkness of the times. Then he lets the silence stretch just slightly too long, ensuring I understand precisely what his king is buying.\n\nWhat makes it difficult is that he might be right. A chosen champion without an army behind them is just a rumor. A champion with a crown behind them is a holy cause."
+ ln_chosen.1.a:0 "I will swear the oath. The realm needs to be united."
+ ln_chosen.1.b:0 "I will fight beside [ln_chosen_king.GetHerHim]. But I belong to no crown."
+ ln_chosen.1.c:0 "Kings are a southern problem. Send the envoy away."
+
+ ln_chosen.2.t:0 "An Envoy From the Other One"
+ ln_chosen.2.desc:0 "He has come with no gifts, no titles, and no demands. That by itself tells me these people are terrifyingly serious.\n\n\"The one who sent me does not say you are false,\" the envoy says quietly. \"Only that they do not know. The same marks, the same priests, and a great wish to be in a room with the only other person alive who understands the problem.\"\n\nHe waits. Then, lowering his voice even further: \"I was asked to say one more thing, exactly like this—if it is you, they will follow you. And to watch your face while I said it.\"\n\nHe is watching my face."
+ ln_chosen.2.a:0 "Then we will meet. One of us is wrong, and it may be me."
+ ln_chosen.2.b:0 "Send him home. I have nothing to say to a rumor."
+ ln_chosen.2.c:0 "Send him home with a name, and where I will be standing."
+
+ ln_chosen.3.t:0 "The Citadel Has Questions"
+ ln_chosen.3.desc:0 "It is eleven pages long and unbelievably polite.\n\nA maester of the Citadel has been assigned to my case, and would be grateful for answers. The names of witnesses. Whether the comet in the year of my birth can be corroborated by anyone outside my household. Whether I would consent to be examined.\n\nEvery question is perfectly reasonable. Every question is also, very precisely, designed to produce an answer that can be written down, filed, and quietly ignored.\n\nThe Citadel has been in the business of making magic not happen for a very long time, and they are terrifyingly good at it."
+ ln_chosen.3.a:0 "Answer all eleven pages. Honestly."
+ ln_chosen.3.b:0 "Burn it. They are not studying me, they are cataloguing me."
+ ln_chosen.3.c:0 "Invite him here. Let him watch me for a year."
+
+ ln_chosen.4.t:0 "They Did Not Ask"
+ ln_chosen.4.desc:0 "The pyre is already built when I walk into the yard, and there is already a man tied to it.\n\nNobody sent for me. That is the detail I cannot get past. This was arranged in my own castle by priests who consider the matter settled, and it did not occur to any of them that the man at the center of their prophecy might need consulting.\n\nThe condemned is a poacher, about forty, sitting in my cells since Maiden's Day. He is not making any noise at all, which is somehow the most horrifying part of it.\n\nThe torch is lit. The priest holding it looks at me with an expression of pure, uncomplicated welcome."
+ ln_chosen.4.a:0 "Put it out. With my own hands if I have to."
+ ln_chosen.4.b:0 "It is too late to stop it. Stand there and watch it."
+ ln_chosen.4.c:0 "Put it out — and hang the man who lit it."
+
+ ln_chosen.5.t:0 "The Knife"
+ ln_chosen.5.desc:0 "He got closer than my guards want to admit.\n\nHe was a servant, four months in my household, with references somebody spent real gold making look genuine. He was quick, but he was not lucky. He sits in the cells now with a shattered arm and an intensely unsettling calm about him.\n\nHe will not say who sent him. He does say, unprompted, that he does not think I am a false claimant—and he believes the prophecy completely. That is precisely why he came. Two men cannot both be the promised prince, and the fastest way to resolve a prophecy is to reduce the number of candidates with a blade in the dark.\n\nSomebody paid a great deal of money for that arithmetic."
+ ln_chosen.5.a:0 "Let it be known he failed. That is worth more than he is."
+ ln_chosen.5.b:0 "Find out who sent him. Quietly, and completely."
+ ln_chosen.5.c:0 "Let him go. Let him tell them what he saw."
+
+ ln_chosen.6.t:0 "They Are Waiting for Something"
+ ln_chosen.6.desc:0 "I can feel it along the entire line before the horns even sound.\n\nThey are not frightened. That is the problem. Frightened men are useful—it keeps them sharp and keeps them listening. This lot are calm, because a story has gone around the fires about who is leading them, and a terrifying number of them have quietly concluded that today is not the day they die.\n\nSo when the line breaks—and lines always break—it will not bend the way lines normally do. It will shatter all at once, because the thing holding it together was never discipline.\n\nMy marshal has said nothing about it. He has also gone out of his way not to look at me once this morning."
+ ln_chosen.6.a:0 "Ride the line and tell them the truth before the horns."
+ ln_chosen.6.b:0 "Say nothing. Let them have it for one more day."
+ ln_chosen.6.c:0 "Ride out in front, where their archers can see me."
+
+ ln_chosen.7.t:0 "Salt and Smoke"
+ ln_chosen.7.desc:0 "I am awake. I am entirely certain I am awake, which is the detail that will not leave me.\n\nThere is salt on my lips—actual salt, and no sea within a hundred miles. There is smoke that is not coming from the hearth. And there is a shape at the edge of the room that is not doing anything at all, only being there, which is infinitely worse than if it moved.\n\nIt lasts, by the candle, about nine minutes.\n\nThen the room is just a room, and I am a person sitting up in bed with shaking hands. There is a rime of salt on the back of my hand. It is still there in the morning."
+ ln_chosen.7.a:0 "Write down exactly what happened. Interpret nothing."
+ ln_chosen.7.b:0 "Take it to the priest. He will know what it was."
+ ln_chosen.7.c:0 "It was a dream. Men have dreams."
+
+ ln_chosen.8.t:0 "The Faith Answers"
+ ln_chosen.8.desc:0 "It was read from the steps of the Great Sept, and will be read in every sept in the realm within the month.\n\nI am not explicitly named a heretic—the High Septon is always careful. What is condemned is 'the foreign fire and those who let it name them', which is the exact same thing said in a way that cannot be answered with a duel.\n\nTwo septons have already fled my lands. A marriage pact three-quarters agreed upon has gone entirely silent. My maester warns me it is being read in the North as well, and there it is not going down well at all.\n\nWhich is not the same as it going down well for me. It is simply a different kind of trouble, further away."
+ ln_chosen.8.a:0 "Let them. I have a war to prepare for."
+ ln_chosen.8.b:0 "Answer it. In writing, to every sept in the realm."
+ ln_chosen.8.c:0 "Good. Let them read it in the North and see what happens."
+
+ ln_chosen.9.t:0 "The One Who Will Not Say It"
+ ln_chosen.9.desc:0 "[ln_holdout.GetTitledFirstName] has never refused me anything, and is not refusing me now. [ln_holdout.GetSheHe|U] has come with [ln_holdout.GetHerHis] levies counted, [ln_holdout.GetHerHis] knights sworn, and a flat refusal to say the word.\n\n\"I will ride where you point me, and I will die there if that is what it takes,\" [ln_holdout.GetSheHe] says, staring me dead in the eye. \"What I will not do is stand in a yard and call a living man a prophecy, because I do not believe it, and I am not going to lie in front of my own sons.\"\n\nThe whole hall heard it. The question is not whether [ln_holdout.GetSheHe] is loyal—plainly [ln_holdout.GetSheHe] is. It is what the rest of my banners do with the fact that saying 'no' out loud to the Prince That Was Promised turned out to be survivable."
+ ln_chosen.9.a:0 "[ln_holdout.GetSheHe|U] does not have to believe it. [ln_holdout.GetSheHe|U] has to ride."
+ ln_chosen.9.b:0 "Make an example of [ln_holdout.GetHerHim]. The rest are watching."
+
+ ln_chosen.10.t:0 "There Is Nothing Left to Do Here"
+ ln_chosen.10.desc.open:0 "The horses are ready and have been since first light. Nobody has asked me again. They have simply got everything ready and then found other things to do within sight of the yard.\n\n"
+ ln_chosen.10.desc.burned:0 "I keep thinking about the poacher I burned. Not the screaming—the quiet. He was forty years old and did not make a sound, as a crowd of my own people watched what they thought was something holy."
+ ln_chosen.10.desc.believed:0 "I keep thinking about the men in the yard. They were not frightened, because they truly believed the prophecy made me invincible. I am thinking about what it will cost them when the line finally breaks."
+ ln_chosen.10.desc.dismissed:0 "I have not tasted salt since. I told myself it was just a fever dream, but I have been very careful, ever since, not to check the back of my hand in the light."
+ ln_chosen.10.desc.risen:0 "I have already been to the other side of this once. It is the only thing that makes the waiting bearable. Whatever is coming out of the deep woods, I have a fair idea of what losing feels like, and it was quieter than people think."
+ ln_chosen.10.desc.plain:0 "My marshal has counted the column three times. He knows exactly how many men are going. He has not said the number out loud, because both of us know it is not enough."
+ ln_chosen.10.desc.close:0 "\n\nThe road north is the only one that has been cleared."
+ ln_chosen.10.a:0 "Then we go."
+ ln_chosen.10.b:0 "Not yet. There is work here first."
+
+ # ── FERVOR REASONS ──────────────────────────────────────────────────────────────────────────────────────────
+ ln_fervor_loss_refusal:0 "The Chosen refused the fire"
+
+ # The friendship reason when two Chosen meet instead of feuding (ln_chosen.2, option a).
+ ln_friend_two_chosen:0 "Met the only other person alive who understands the problem"
+
+ # ── 1.0.13: THE SIGHTED OPTIONS ────────────────────────────────────────────────
+ ln_chosen.3.d:0 "I have already seen what the Citadel does with this letter. Send it back unopened."
+ ln_chosen.7.d:0 "I have dreamed this room. I dreamed it before the salt."
+ ln_chosen.10.desc.dreamt:0 "I have been here before, in the way that matters. Not this room — this hour. I dreamed it years ago and woke up unable to explain to anyone why I was crying, and I have been walking toward it ever since without once being able to say so out loud.\n\nThere is a particular loneliness in recognising the worst day of your life while you are still standing at the start of it.\n\nThe men are looking at me the way men look at somebody who knows something. They are right, and it has never once helped."
+ ln_chosen.10.desc.silent:0 "The Citadel wrote to me eleven pages and I sent them back with the seal unbroken, and I have thought about that more often than I expected to.\n\nThey wanted it written down so it could be filed. Filed things stop being true. Whatever this is, it has stayed dangerous precisely because no maester ever got to put a number on it and set it on a shelf.\n\nThere will be no record of me. There will only be what happens next, and whether anyone is left to tell it badly."
+

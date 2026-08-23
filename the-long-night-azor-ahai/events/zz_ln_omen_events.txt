@@ -1,0 +1,177 @@
+﻿namespace = ln_omen
+
+# AGOT: The Long Night & Azor Ahai -- the two catalysts that need a human being to notice something.
+#
+# Four of the seven catalysts fire off hard game state -- a dragon dies, a house ends, the Watch thins, the Night
+# King falls. Two cannot: a ranging failing to return, and somebody seeing an Other and being believed. Those are
+# not states, they are reports, and a report needs someone to receive it and decide what it was worth.
+#
+# So they are events, and both of them are about the gap between information and belief. That is the same idea
+# the introduction card is built on: your character never gets to see the struggle panel, only the rumours.
+
+# ── A RANGING DID NOT RETURN ─────────────────────────────────────────────────────────────────────────────────
+# Long Summer only. Goes to whoever is closest to it: the Night's Watch first, then a northern lord.
+# The catalyst fires unconditionally -- the rangers are gone whatever the player thinks about it. What the
+# player chooses is only whether anyone looks into it.
+ln_omen.1 = {
+	type = character_event
+	title = ln_omen.1.t
+	desc = ln_omen.1.desc
+	theme = realm
+	override_background = { reference = agot_frozen_forest }
+
+	trigger = {
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_long_summer }
+		NOT = { has_character_flag = ln_omen_cooldown }
+	}
+
+	immediate = {
+		add_character_flag = { flag = ln_omen_cooldown  years = 12 }
+		save_scope_as = ln_catalyst_culprit
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_ranging_lost  PHASE = ln_phase_long_summer  POINTS = 4  COOLDOWN = 4 }
+	}
+
+	# Send men after them. Costs gold, buys nothing but the knowledge that there is nothing to find.
+	option = {
+		name = ln_omen.1.a
+		ai_chance = {
+			base = 55
+			modifier = { add = 20  has_trait = diligent }
+			modifier = { add = 20  has_trait = paranoid }
+			modifier = { add = 10  has_trait = brave }
+		}
+		trigger = { gold >= 25 }
+		remove_short_term_gold = 25
+		add_character_flag = ln_looked_north
+		add_prestige = minor_prestige_gain
+	}
+
+	# Write them off. The Watch has always lost men.
+	option = {
+		name = ln_omen.1.b
+		ai_chance = {
+			base = 45
+			modifier = { add = 15  has_trait = lazy }
+			modifier = { add = 15  has_trait = content }
+			modifier = { add = 15  has_trait = cynical }
+		}
+	}
+}
+
+# ── SOMEONE SAW ONE ──────────────────────────────────────────────────────────────────────────────────────────
+# Cold Winds only, and this is the one that matters: ln_catalyst_other_sighted is worth a quarter of the way to
+# the Long Night, and it ONLY fires if the player believes the man. Disbelieving is not punished and not wrong --
+# the phase is on a ten-year clock either way. It just means the dark arrives without you having said it first.
+ln_omen.2 = {
+	type = character_event
+	title = ln_omen.2.t
+	desc = ln_omen.2.desc
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+
+	trigger = {
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_cold_winds }
+		NOT = { has_character_flag = ln_saw_one_done }
+	}
+
+	# 10 Aug -- NOBODY WAS STANDING THERE. Thomas: "this one... let me have any characters showing up that
+	# I feel like the intent probably was." The card describes a man shaking in your hall with his hands
+	# perfectly still, and then showed an empty forest. He is the whole event; he needs a face.
+	immediate = {
+		add_character_flag = ln_saw_one_done
+
+		hidden_effect = {
+			# A BROTHER YOU ALREADY HAVE, IF YOU HAVE ONE. Far better than a stranger -- the man who came
+			# back is someone the player may recognise, and a Wall keeper or a ranging captain will
+			# usually have one. Not a councillor: the text is a ranger walking in off the ice, not your
+			# First Ranger reporting.
+			if = {
+				limit = {
+					any_courtier = {
+						is_alive = yes
+						is_male = yes
+						is_adult = yes
+						has_trait = nightswatch
+						is_councillor = no
+					}
+				}
+				random_courtier = {
+					limit = {
+						is_alive = yes
+						is_male = yes
+						is_adult = yes
+						has_trait = nightswatch
+						is_councillor = no
+					}
+					weight = {
+						base = 1
+						modifier = { add = 3  has_trait = lifestyle_nw_ranger }
+						modifier = { add = 2  prowess >= 12 }
+					}
+					save_scope_as = ln_came_back
+				}
+			}
+			# ...and a stranger if you have none, because the event fires on southern lords too and they
+			# have never met a crow in their lives. That is arguably the better version of the scene.
+			else = {
+				create_character = {
+					location = root.capital_province
+					culture = root.capital_county.culture
+					faith = root.capital_county.faith
+					gender = male
+					age = { 22 50 }
+					dynasty = none
+					random_traits = yes
+					save_scope_as = ln_came_back
+				}
+			}
+		}
+	}
+
+	left_portrait = { character = root  animation = worry }
+	right_portrait = { character = scope:ln_came_back  animation = fear }
+
+	# Believe him. Say so publicly.
+	option = {
+		name = ln_omen.2.a
+		ai_chance = {
+			base = 30
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = 20  has_trait = honest }
+			modifier = { add = 10  has_trait = zealous }
+		}
+		save_scope_as = ln_catalyst_culprit
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_other_sighted  PHASE = ln_phase_long_summer  POINTS = 15  COOLDOWN = 6 }
+		ln_the_dark_comes_sooner_effect = { YEARS = 4 }
+		ln_the_free_folk_feel_it_effect = yes
+		add_character_flag = ln_named_it_first
+		add_piety = medium_piety_gain
+	}
+
+	# Believe him quietly, and say nothing. A lord who cries wraiths is a lord nobody musters for.
+	option = {
+		name = ln_omen.2.b
+		ai_chance = {
+			base = 50
+			modifier = { add = 20  has_trait = calm }
+			modifier = { add = 15  has_trait = patient }
+			modifier = { add = 10  has_trait = paranoid }
+		}
+		add_character_flag = ln_looked_north
+	}
+
+	# He is drunk, or lying, or both.
+	option = {
+		name = ln_omen.2.c
+		ai_chance = {
+			base = 20
+			modifier = { add = 30  has_trait = cynical }
+			modifier = { add = 15  has_trait = callous }
+			modifier = { add = 10  has_trait = arrogant }
+		}
+		save_scope_as = ln_catalyst_culprit
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_warning_dismissed  PHASE = ln_phase_long_summer  POINTS = 2  COOLDOWN = 3 }
+	}
+}

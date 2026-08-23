@@ -1,0 +1,95 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the horde.
+#
+# The Others shipped with ONE unit: other_maa, at damage 38 / toughness 120, and a fixed 100 stacks handed out at
+# setup that were never reinforced. So the dead were elite, few, and static -- their population snowballed while
+# their army did not.
+#
+# This is the other half. ln_wight_horde is deliberately terrible per man and effectively unlimited in number: the
+# risen dead of every conquered realm, tireless and brainless. It grows with conquest (see
+# common/scripted_effects/zz_ln_horde_effects.txt) while the elite other_maa core stays fixed.
+#
+# The design intent: the dead get SCARIER over time without getting UNBEATABLE. Mass with bad stats loses to
+# quality, which is what keeps "one hybrid on the world's oldest dragon still matters" true.
+
+ln_wight_horde = {
+	type = Other_infantry
+
+	# DAMAGE 8 -> 3, 10 Aug (Thomas: "maybe four actual damage per person, or maybe two -- so it's like, oh my
+	# god, they have so many units, but they're actually weak sauce, and it's the numbers combined that make
+	# it the snowball"). That is the design in one sentence and 8 was not delivering it: at stack 500 it made
+	# each horde regiment hit harder than a vanilla heavy-infantry regiment, so the mass was never actually
+	# cheap. Toughness stays 25 -- they should be hard to CLEAR, which is what makes a horde a horde, and
+	# easy to survive, which is what makes one good knight worth twenty of them.
+	damage = 3
+	toughness = 25
+	pursuit = 4
+	screen = 0
+
+	# ── SIEGE TIER 1 -> 3, 14 Aug, measured off Thomas's live 212-242 AC run ───────────────────────
+	# THE PROBLEM THIS FIXES. CK3 multiplies siege speed by 0.7 for EACH siege tier the besiegers are
+	# short of the fort's threshold (SIEGE_FORT_THRESHOLDS = { 4 6 11 16 31 }, 00_defines.txt). A wight
+	# horde at tier 1 clears only the first rung, so it was eating a compounding penalty at every real
+	# castle in Westeros. Measured, from the dead's own sieges in that save:
+	#     fort  1  ->  3.07 and 4.30 progress/day   (no rung missed)
+	#     fort  6  ->  1.40/day                     (one rung missed, x0.7)
+	#     fort 11  ->  0.64/day                     (two rungs missed, x0.49)
+	# At that rate Winterfell and White Harbor (fort ~25) project past EIGHT YEARS, which is exactly
+	# what the save shows: 30 years into the Long Night the dead hold Moat Cailin and the Neck and have
+	# never taken Winterfell, White Harbor, Karhold, Last Hearth or Barrowton. They were not choosing
+	# the Neck over Winterfell -- the Neck was the only thing they could crack.
+	#
+	# WHY 3 AND NOT 4 (Thomas's call, and it is the better one). Tier 3 fully covers every fort up to
+	# 15, which is every ordinary castle in the game -- that is where the invasion was actually stuck,
+	# and it goes from x0.49 to x1.00, twice as fast. But the GREAT seats (fort 16-30) still cost a
+	# rung, x0.7, so Winterfell and White Harbor go roughly twice as fast while still visibly holding
+	# out longer than everything around them. Tier 4 would erase that gradient and make a great house's
+	# capital no harder than a village keep, which is the opposite of what ln_last_bastion_modifier
+	# exists to say. Casterly Rock at fort 43 still costs two rungs either way.
+	#
+	# NOT A SCALAR. siege_tier is an integer index into that ladder -- 2.5 has no rung to land on.
+	#
+	# siege_value stays at 0.15 DELIBERATELY: one dial per test, so the re-measure is readable. If the
+	# great seats still drag past ~2 years, the next move is siege_value (or tier 4), not both at once.
+	siege_tier = 3
+	siege_value = 0.15
+
+	terrain_bonus = {
+		taiga = { damage = 2 toughness = 4 }
+		forest = { damage = 1 toughness = 2 }
+		mountains = { damage = -2 toughness = -2 }
+		desert = { damage = -4 toughness = -6 }
+		desert_mountains = { damage = -4 toughness = -6 }
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = 2 toughness = 4 pursuit = 1 }
+		harsh_winter = { damage = 4 toughness = 8 pursuit = 2 }
+	}
+
+	# 10 Aug: this threw 3,122 x "untyped trigger [ Scoped object of type 'character' is not valid ]" in an
+	# OBSERVER run -- observer mode has no player character, so a bare trigger at the top of can_recruit is
+	# evaluated against nothing. other_maa carries the identical has_trait check wrapped in an OR and does
+	# NOT error in the same log, so this mirrors the sibling that demonstrably works rather than inventing a
+	# null-scope guard. Costs nothing in normal play; silences the observer runs we test with.
+	can_recruit = {
+		OR = {
+			has_trait = other_trait
+		}
+	}
+
+	counters = {
+	}
+
+	buy_cost = { gold = 20 }
+	low_maintenance_cost = { gold = 2 }
+	high_maintenance_cost = { gold = 6 }
+	ai_quality = { value = 10 }
+	stack = 500
+	hired_stack_size = 1
+	# ICON, 10 Aug. Was `titan` -- the Braavosi Titan -- which both this and other_maa were sharing, so the
+	# Others fielded two units under one borrowed icon and neither looked like anything. This mod already
+	# ships the right art and had never referenced it: Zombie.dds in gfx/interface/icons/regimenttypes/
+	# (jim_zombie_maa.dds is a byte-identical duplicate of it -- one of the two can go). Reported on the
+	# Workshop by Lyon.
+	icon = Zombie
+}

@@ -1,0 +1,66 @@
+﻿# AGOT: The Long Night & Azor Ahai -- THE SPEAR. See common/scripted_effects/zz_ln_spear_effects.txt.
+
+# Root = a character. Is this someone the spear could take out of the sky?
+#
+# ── 1.0.12b: "WHAT IF I TELL MY DRAGON NOT TO FIGHT?" ───────────────────────────────────────────────────────
+# Thomas asked exactly the right question: "what if I decide to bring my children who are Dragon Riders, but I
+# myself am not going to ride a dragon -- I'm gonna tell my dragon don't use in war. Would the code accept
+# that?" The first draft would NOT have. It tested `exists = var:current_dragon`, which is the BOND, not the
+# saddle -- so a man whose dragon was sitting at home in the pit was still a target.
+#
+# is_current_dragonrider_warfare is AGOT's own answer and it is three lines
+# (00_agot_dragon_triggers.txt:78): age >= 14, is_current_dragonrider = yes, and
+# NOT = { has_character_flag = agot_not_using_dragon } -- which IS the "don't use in war" toggle. AGOT pairs
+# this exact trigger with a combat-side commander search in its own combat phase events
+# (00_commander_phase_events.txt:708), so this is their pattern applied to our hook rather than a new one.
+#
+# A dragon left out of the war cannot be speared. A dragon flown into a battle against the dead can.
+ln_is_a_spear_target_trigger = {
+	is_alive = yes
+	is_current_dragonrider_warfare = yes
+	exists = var:current_dragon
+	var:current_dragon ?= {
+		is_alive = yes
+		has_trait = dragon
+
+		# NOT ONE OF THEIRS, on all three markers this mod already trusts -- the Night King's own mount is
+		# house_theothers, anything they raise carries ln_undead_dragon, and a raised body keeps ln_raised_from.
+		NOT = { house ?= house:house_theothers }
+		NOT = { has_trait = ln_undead_dragon }
+		NOT = { has_variable = ln_raised_from }
+	}
+	ln_is_one_of_them_trigger = no
+	NOT = { this = title:h_the_others.holder }
+}
+
+# Root = a combat side (on_combat_end_winner). Is the Night King in this battle at all?
+# All four reachable slots, because he can be commanding or be the primary participant, on either side --
+# the hook only fires for the WINNING side, and the spear is worth throwing whether the dead won or broke.
+ln_night_king_is_in_this_battle_trigger = {
+	exists = title:h_the_others.holder
+	OR = {
+		side_commander ?= { this = title:h_the_others.holder }
+		side_primary_participant ?= { this = title:h_the_others.holder }
+		enemy_side.side_commander ?= { this = title:h_the_others.holder }
+		enemy_side.side_primary_participant ?= { this = title:h_the_others.holder }
+	}
+}
+
+# Root = a combat side. Is there anybody up there to throw at?
+#
+# 1.0.12b -- COMMANDERS AND KNIGHTS, BOTH SIDES. The first draft checked four fixed slots and would have
+# missed every dragonrider who was not commanding. A combat side can hold several armies and therefore
+# several commanders, and any_side_commander / any_side_knight are vanilla's own iterators for exactly that
+# (27 and 48 uses in the base game).
+ln_a_dragon_is_on_this_field_trigger = {
+	OR = {
+		any_side_commander = { ln_is_a_spear_target_trigger = yes }
+		any_side_knight = { ln_is_a_spear_target_trigger = yes }
+		enemy_side = {
+			OR = {
+				any_side_commander = { ln_is_a_spear_target_trigger = yes }
+				any_side_knight = { ln_is_a_spear_target_trigger = yes }
+			}
+		}
+	}
+}

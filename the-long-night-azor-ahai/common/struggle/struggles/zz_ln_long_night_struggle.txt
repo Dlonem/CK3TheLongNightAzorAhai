@@ -1,0 +1,540 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Long Night as a struggle.
+#
+# WHY A STRUGGLE. Before this, the Long Night was binary: not here, then here. There was no way for a player to
+# look at the world and know how close the dark was, and nothing they built read as preparation or as negligence.
+# A struggle gives the whole campaign a visible spine.
+#
+# WHY IT LOOPS. AGOT's own btw_struggle carries a commented-out stub -- "# struggle_btw_phase_others = { # TODO:
+# White Walker invasion" -- so this is finishing something they started. Vanilla's Iberian struggle is confirmed to
+# ship with NO ending phase: four phases that cycle, ended only by decision. We do the same, because the recurrence
+# game rule needs the cycle to be able to turn. Under "Once" the Dawn calls end_struggle and it concludes; under
+# "The Cycle" it flows back to the Long Summer and ln_wave_count ticks over. One clock, not two.
+#
+# PACING IS SCRIPT-DRIVEN. Every catalyst here is ours and fired from our own code, so the game rule tunes how
+# fast points accrue rather than editing thresholds. The Long Summer's 100 points against a 1-point yearly drip is
+# roughly a century, with events pulling it in.
+#
+# NOTE: phase-level `background` is NOT a valid field -- error.log rejects it as an unexpected
+# token. The only occurrence in AGOT is inside a commented-out block, which should have been
+# the clue. The struggle-level `illustration` above is what actually renders.
+#
+# WHERE THE PHASE HOOKS ARE. Not here. CK3's own schema (game/common/struggle/struggles/_struggles.info) gives a
+# phase-level `on_start` to the ENDING phase only; ordinary phases have no such field, and neither vanilla struggle
+# uses one. Phase-entry work is latched in ln_struggle_monthly_effect off the struggle-level on_monthly instead,
+# which is correct no matter how a phase was entered. See zz_ln_struggle_effects.txt for the reasoning in full.
+#
+# WHERE THE MECHANICAL EFFECTS COME FROM. The *_parameters blocks below are NOT engine magic -- confirmed by
+# grepping vanilla: every parameter it ships (holy_order_can_be_created_by_dukes, unlocks_border_raid_casus_belli,
+# invasion_conquest_war_cannot_be_declared, ...) is read back by ordinary script via has_struggle_phase_parameter.
+# A parameter nobody reads does nothing but print a line in the tooltip. So everything here that must actually
+# BITE is a *_character_modifier or a *_county_modifier, which the engine applies on its own; the parameters are
+# the readable summary plus the hooks our own code branches on.
+#
+# INVOLVED vs INTERLOPER vs UNINVOLVED, in this mod's terms:
+#   involved   = the people who already live under the cold -- the North, the free folk, the clans beyond the Wall
+#   interloper = the southern realms inside the region who will find out
+#   uninvolved = Essos and everyone else, who will read about it and sell to the survivors
+
+ln_long_night_struggle = {
+	illustration = "gfx/interface/illustrations/event_story/fp2_compromise.dds"
+
+	# ── 1.0.12: THE REST OF THE NORTH IS INVOLVED TOO ───────────────────────────────────────────────────────
+	# Discord suggestion from bug: "It would probably be a good idea to add the rest of the Northern cultures to
+	# the struggle as Involved rather than Interloper." He is right, and the list was short for no better reason
+	# than that it was written before anyone enumerated AGOT's cultures.
+	#
+	# Interloper is the role for people the war HAPPENS TO. A Bear Islander, a crannogman, a Skagosi -- these are
+	# not people who will find out about the cold. They are the first ones it reaches after the free folk, and
+	# several of them are further north than half the Wall.
+	#
+	# EVERY KEY BELOW WAS READ OUT OF AGOT'S OWN CULTURE FILES, not guessed:
+	#   00_agot_cul_first_man.txt  -- northman, northern_clan, skagosi, barrowman, wolfswood_clansman,
+	#                                 bearman, crannogman, harborman
+	#   00_agot_cul_wildling.txt   -- first_clan, thenn, fangman, forestman, hornfoot, nightrunner, lakefolk,
+	#                                 frozen_shoreman, milkwaterman, cave_dweller, ice_riverman, moon_clan
+	#   00_agot_cul_ancient_races.txt -- giant_culture, children_culture
+	#   ours                       -- frostborn (common/culture/cultures/00_other_culture.txt, the Others' own)
+	#
+	# moon_clan reads like the Vale's mountain clans and is NOT: AGOT files it under heritage_wildling in the
+	# wildling culture file, so it is free folk and it was simply missing.
+	#
+	# DELIBERATELY LEFT OUT. krakenman is the Iron Islands and clawman is Crackclaw Point -- both southern, both
+	# properly interlopers. first_man is the ancestral culture and holds nothing. others_culture is the enemy,
+	# and making the Others *involved* would hand them the involved_character_modifier combat bonuses in every
+	# phase; that may well be right given the Workshop feedback that the Night King is too weak, but it is a
+	# balance change wearing an immersion change's clothes and it should be made on purpose, not here.
+	cultures = {
+		# the Others themselves
+		frostborn
+
+		# beyond the Wall -- the free folk
+		first_clan
+		thenn
+		fangman
+		forestman
+		hornfoot
+		nightrunner
+		lakefolk
+		frozen_shoreman
+		milkwaterman
+		cave_dweller
+		ice_riverman
+		moon_clan
+
+		# beyond the Wall -- the older things
+		giant_culture
+		children_culture
+
+		# the North
+		northman
+		northern_clan
+		skagosi
+		barrowman
+		wolfswood_clansman
+		bearman
+		crannogman
+		harborman
+	}
+	# WHO IS *OF* THIS WAR, AND WHO MERELY LIVES IN IT.
+	#
+	# Involved = faiths whose homeland or whose theology already contains this war. The old gods of the North and
+	# beyond the Wall, the Others' own cold gods, and -- the one that surprises people -- every R'hllor faith.
+	# The red priests have been preaching the Great Other and a promised prince for centuries. Whatever else they
+	# are wrong about, they are the only organised faith in the world that was expecting this.
+	#
+	# The Faith of the Seven is deliberately NOT here, and that is not an oversight. Interloper is a struggle
+	# ROLE, not exclusion -- the Seven are in the region, they get their own phase modifiers, and the whole arc of
+	# the southern realms in this mod is "did not believe it, then did." If they were involved from day one there
+	# would be no one for the story to happen to. To change that, move the nine fots_* keys up into this block.
+	faiths = {
+		# the Others themselves
+		cold_gods
+		cold_gods_wildling
+
+		# the North
+		old_gods_wnw          # "Old Gods of Winter and Wood" -- 157 of 168 northern counties hold this
+		old_gods_children     # the children of the forest
+
+		# beyond the Wall
+		old_gods_btw_pnv
+		old_gods_btw_fnf
+		old_gods_btw_dnc
+		old_gods_btw_sas
+		old_gods_btw_sni
+		old_gods_btw_mns
+		fg_pan_sni
+
+		# R'hllor, all four -- Westerosi and Essosi alike. The Essosi ones are in because the red priests who
+		# will come looking for Azor Ahai come from Asshai and the Free Cities, not from Westeros.
+		rhllor_fots           # "Red God" -- the Westerosi divergence (Beric, Thoros, Stoneheart)
+		rhllor_fc             # "R'hllor" -- the Free Cities
+		rhllor_asshai         # "Heart of Smoke and Shadow"
+		rhllor_hyrkoon        # "Heart of Fire and Blade"
+	}
+	regions = {
+		world_westeros_beyond_the_wall
+		world_westeros_the_wall
+		world_westeros_seven_kingdoms
+	}
+
+	# Lower than the Iberian/BTW 0.8: as the dark spreads, southern realms should be drawn in rather than
+	# watching from outside.
+	involvement_prerequisite_percentage = 0.5
+
+	transition_state_duration = { months = 3 }
+
+	start_phase = ln_phase_long_summer
+
+	phase_list = {
+
+		# ══ THE LONG SUMMER ══════════════════════════════════════════════════════════════════════════════════
+		# The phase a normal campaign lives inside. Nothing is visibly wrong, and that is the point: the summer
+		# is a gentle, unremarkable bonus that everyone stops noticing, so that losing it registers as loss
+		# rather than as the game turning the difficulty up.
+		ln_phase_long_summer = {
+			duration = { points = 100 }
+
+
+			future_phases = {
+				ln_phase_cold_winds = {
+					# KEEP IN STEP WITH THE POINTS ARGUMENT AT EVERY CALL SITE. The catalyst table takes
+					# literals and cannot read a script value, so each number lives here and again in the
+					# POINTS = n passed to ln_fire_catalyst_effect / ln_fire_catalyst_blaming_effect. The
+					# drip's budget is computed from those arguments, so a mismatch here would make the
+					# pacing quietly wrong rather than loudly broken. /tmp/catcheck.py audits the pair.
+					#
+					# ln_catalyst_other_sighted MOVED HERE FROM ln_phase_cold_winds. That phase is TIME BASED
+					# -- and CK3's own _struggles.info draws the line between
+					# "point based" and "time based" phases explicitly: a time-based phase ends on its clock,
+					# so a catalyst aimed at one has no threshold to move. Neither vanilla struggle has a
+					# time-based phase at all, so there was nothing to check the behaviour against, and a
+					# mechanic whose correctness cannot be demonstrated is not one to ship. Seeing an Other
+					# is now the heaviest thing that can happen in the Long Summer instead of the only thing
+					# that could happen in a phase where nothing can.
+					catalysts = {
+						ln_catalyst_year_passed = 1
+						ln_catalyst_minor_house_ended = 1
+						ln_catalyst_warning_dismissed = 2
+						ln_catalyst_watch_undermanned = 3
+						# ln_catalyst_dragon_born = 3 REMOVED 1.0.9. It scored a hatching as three points TOWARD the
+						# Cold Winds -- the catalyst file's own comment called it "the only catalyst that fires on
+						# good news" and then filed the good news alongside dead dragons. Hatchings now bank drip
+						# credit through ln_dragon_hatched_counter_effect and nothing activates this catalyst any
+						# more, so leaving it here would break the invariant this comment block demands: the table
+						# and the POINTS arguments must agree. The catalyst stays DEFINED in zz_ln_catalysts.txt
+						# (an unused definition is inert; a fired-but-unlisted catalyst logs "no catalyst with id").
+						ln_catalyst_ranging_lost = 4
+						ln_catalyst_house_extinguished = 5
+						ln_catalyst_dragon_died = 8
+						ln_catalyst_other_sighted = 15
+					}
+				}
+			}
+
+			war_effects = {
+				name = WAR_EFFECTS_NAME
+				involved_parameters = {
+					ln_summer_peace = yes
+				}
+				involved_character_modifier = {
+					ai_war_cooldown = 0.25          # the north picks fewer fights when there is nothing to fear
+					hostile_raid_time = 0.15
+				}
+			}
+
+			culture_effects = {
+				name = CULTURE_EFFECTS_NAME
+				involved_parameters = {
+					ln_insular_in_good_times = yes
+				}
+				involved_character_modifier = {
+					same_culture_opinion = 5        # comfortable people close ranks
+					different_culture_opinion = -5
+				}
+			}
+
+			faith_effects = {
+				name = FAITH_EFFECTS_NAME
+				common_parameters = {
+					ln_the_gods_are_quiet = yes
+				}
+				involved_character_modifier = {
+					monthly_piety = -0.2            # nobody prays hard when the harvest is good
+				}
+			}
+
+			other_effects = {
+				name = OTHER_EFFECTS_NAME
+				common_parameters = {
+					ln_the_dark_is_distant = yes
+				}
+				uninvolved_parameters = {
+					ln_the_dark_is_a_story = yes
+				}
+				all_county_modifier = {
+					development_growth_factor = 0.05
+					supply_limit_mult = 0.05
+				}
+			}
+
+			ending_decisions = {
+				ln_end_the_long_night_struggle_decision
+			}
+		}
+
+		# ══ THE COLD WINDS RISE ══════════════════════════════════════════════════════════════════════════════
+		# Short and time-based on purpose: it should read as a countdown, not as a thing you can influence.
+		# The warning card (ln_opening.6) fires from ln_struggle_monthly_effect the first month this phase is
+		# live. Mechanically this is the muster: the north arms and the south does not believe it yet.
+		ln_phase_cold_winds = {
+			# WAS 10 YEARS. Thomas: "should Winter Is Coming kinda give you twenty-five to fifty years of warning
+			# before it actually happens?" -- and he is right that ten was too short to be a warning at all.
+			#
+			# The dragonglass decision is gated on this phase. At ten years that is one ruler, one chance, one
+			# harvest of black glass, and if you inherit late you get nothing. At twenty-five it becomes a
+			# GENERATIONAL HAND-OFF: you get the warning, you spend your reign preparing, and your heir is the
+			# one who fights it. That is the shape the mod wants -- the whole reason the introduction card moved
+			# to the Long Summer's midpoint was to give the player decades to act, and then the phase that
+			# actually matters gave them ten years.
+			#
+			# NO LONGER A FLAT TWENTY-FIVE. Thomas, after playing it: "part of Winter Is Coming is we kinda
+			# want it to be vague. We want them to know they have some time. But we want it to sneak up on
+			# people. If winter truly is coming, the struggle's gonna switch, we're gonna know it, but we
+			# won't know exactly when. It could be really soon. It could be fifty years from now. It could be
+			# fifteen years from now."
+			#
+			# He is right, and a fixed number is the one thing that cannot deliver it. So:
+			#
+			#   THIS DURATION IS A CEILING, NOT A SCHEDULE. Sixty years, which nothing should ever reach.
+			#   ln_winter_clock_effect rolls the real length -- twelve to forty-five years -- the month the
+			#   Cold Winds begin, and forces the transition itself with change_struggle_phase when the rolled
+			#   time is up. The engine's own clock is only there as a backstop in case ours ever stops.
+			#
+			# WHY NOT MAKE IT POINT-BASED. Because then catalysts govern it, and a point-based Cold Winds is
+			# a second copy of the entire Long Summer ledger for a phase that is meant to feel like a
+			# countdown rather than an accumulation. Rolling a date and letting sightings pull it forward gets
+			# the same drama out of machinery that already exists and is already proven.
+			#
+			# AND THIS RESTORES THE SIGHTINGS. A time-based phase cannot be shortened by a struggle catalyst
+			# -- that was the finding that moved ln_catalyst_other_sighted out of here. It CAN be shortened by
+			# our own clock, so seeing an Other during the Cold Winds now takes years off the calendar
+			# directly. See ln_the_dark_comes_sooner_effect.
+			duration = { years = 60 }
+
+
+			# NO CATALYSTS, DELIBERATELY. This phase is time based and a time-based phase cannot be hurried by
+			# a struggle catalyst -- see the note in the Long Summer's table above. That is not the same as
+			# saying the date is fixed: ln_winter_clock_effect owns the real clock, so an Other seen and
+			# believed during the Cold Winds takes years straight off it (ln_the_dark_comes_sooner_effect),
+			# floored at five remaining. What the player gets is a warning of unknown length that can get
+			# shorter, which is the whole point.
+			future_phases = {
+				ln_phase_the_long_night = { }
+			}
+
+			war_effects = {
+				name = WAR_EFFECTS_NAME
+				involved_parameters = {
+					ln_the_muster_begins = yes
+				}
+				involved_character_modifier = {
+					levy_reinforcement_rate = 0.15  # every man who can hold a spear is being counted
+					garrison_size = 0.10
+					advantage = 2
+
+					# THE SUPPLY DEBUFF. Thomas: "maybe there could be a supply debuff, because during the War
+					# of the Five Kings it turned into a whole situation of -- winter is in fact coming, and
+					# we're busy trying to head south. Meanwhile they have to prepare for the long winter."
+					#
+					# Exactly the tension the phase wants. The muster bonuses above make it EASIER to raise an
+					# army during the warning decade and this makes it HARDER to keep one in the field, which
+					# is the shape of the whole period: everyone can afford to march and nobody can afford to
+					# stay out. A southern war during Winter Is Coming should be a thing you regret.
+					supply_limit_mult = -0.20
+				}
+				interloper_parameters = {
+					ln_southern_disbelief = yes
+				}
+				interloper_character_modifier = {
+					ai_war_chance = 2               # the south goes on squabbling, and will regret it
+					supply_limit_mult = -0.10       # and finds the granaries emptier than the ledgers said
+				}
+			}
+
+			culture_effects = {
+				name = CULTURE_EFFECTS_NAME
+				involved_parameters = {
+					ln_old_enemies_talk = yes
+				}
+				involved_character_modifier = {
+					different_culture_opinion = 10  # kneelers and free folk start speaking to each other
+				}
+			}
+
+			faith_effects = {
+				name = FAITH_EFFECTS_NAME
+				common_parameters = {
+					ln_prayers_multiply = yes
+				}
+				involved_character_modifier = {
+					monthly_piety = 0.5
+					levy_reinforcement_rate_same_faith = 0.15
+				}
+			}
+
+			other_effects = {
+				name = OTHER_EFFECTS_NAME
+				common_parameters = {
+					ln_the_dark_is_coming = yes
+				}
+				# 1.0.12b (Thomas): the county-wide squeeze retuned to read as a gradient a player can feel
+				# without it flattening the realm -- +5% in the Long Summer, -5% here, -10% in the Long
+				# Night itself. "A little impact."
+				all_county_modifier = {
+					development_growth_factor = -0.05
+					supply_limit_mult = -0.05
+				}
+				involved_county_modifier = {
+					monthly_county_control_growth_add = -0.1
+				}
+			}
+		}
+
+		# ══ THE LONG NIGHT ═══════════════════════════════════════════════════════════════════════════════════
+		# Open-ended. The threshold is deliberately unreachable by drip -- this phase ends when the Night King
+		# dies, which fires ln_catalyst_night_king_slain from script.
+		# Reaching this phase IS the invasion starting: ln_struggle_monthly_effect calls
+		# ln_struggle_reached_long_night_effect, which fires others.1. others.1 self-gates, so if the legacy
+		# schedule already got there this is a no-op.
+		#
+		# The shape of the numbers here is deliberate: the involved get BETTER at fighting and WORSE at
+		# everything else. They are not being rewarded -- they are down to the one thing they still do.
+		ln_phase_the_long_night = {
+			duration = { points = 1000 }
+
+
+			future_phases = {
+				ln_phase_the_dawn = {
+					catalysts = {
+						ln_catalyst_night_king_slain = 1000
+					}
+				}
+			}
+
+			war_effects = {
+				name = WAR_EFFECTS_NAME
+				common_parameters = {
+					ln_wars_of_the_living = yes
+				}
+				involved_parameters = {
+					ln_every_spear_counts = yes
+				}
+				involved_character_modifier = {
+					advantage = 5
+					enemy_hard_casualty_modifier = 0.25
+					levy_reinforcement_rate = 0.25
+					knight_effectiveness_mult = 0.25
+					mercenary_hire_cost_mult = -0.25
+				}
+				interloper_character_modifier = {
+					levy_reinforcement_rate = 0.15
+					mercenary_hire_cost_mult = -0.15
+				}
+			}
+
+			culture_effects = {
+				name = CULTURE_EFFECTS_NAME
+				involved_parameters = {
+					ln_the_living_stand_together = yes
+				}
+				involved_character_modifier = {
+					different_culture_opinion = 15
+					same_culture_opinion = 5
+				}
+				interloper_character_modifier = {
+					different_culture_opinion = 5
+				}
+			}
+
+			faith_effects = {
+				name = FAITH_EFFECTS_NAME
+				common_parameters = {
+					ln_the_red_god_rises = yes
+				}
+				involved_character_modifier = {
+					monthly_piety = 1
+					levy_reinforcement_rate_same_faith = 0.25
+				}
+				interloper_character_modifier = {
+					monthly_piety = 0.5
+				}
+			}
+
+			other_effects = {
+				name = OTHER_EFFECTS_NAME
+				common_parameters = {
+					ln_the_dark_is_here = yes
+				}
+				uninvolved_parameters = {
+					ln_essos_profits = yes
+				}
+				# 1.0.12b (Thomas): -25% was the old value; -10% is the new ceiling of the gradient.
+				all_county_modifier = {
+					development_growth_factor = -0.10
+					supply_limit_mult = -0.10
+					county_opinion_add = -10
+				}
+				involved_county_modifier = {
+					monthly_county_control_decline_add = 0.1
+				}
+				# NOTE: travel_danger is a PROVINCE modifier -- it is legal in neither of the two blocks a struggle
+				# offers (county and character), so the dangerous-roads idea is carried by income and by the
+				# southern realms losing interest in fighting each other.
+				# NOTE: there is no `uninvolved_character_modifier` field. Vanilla offers uninvolved_parameters and
+				# uninvolved_county_modifier only, so ln_essos_profits below is flavour text, not a modifier.
+				interloper_character_modifier = {
+					monthly_income_mult = -0.15     # the roads and the rivers stop carrying trade
+					ai_war_chance = -2              # the south finally stops fighting itself
+				}
+			}
+		}
+
+		# ══ THE DAWN ═════════════════════════════════════════════════════════════════════════════════════════
+		# Under "Once" ln_struggle_dawn_reached_effect ends the struggle here. Under "The Cycle" it flows back
+		# round on its own timer and the wheel turns.
+		# This phase is the rebuilding window, and it is generous on purpose: a player who survived should get
+		# a visible run of good years to spend, not be dropped straight back into ordinary numbers.
+		ln_phase_the_dawn = {
+			duration = { years = 5 }
+
+
+			future_phases = {
+				ln_phase_long_summer = {
+				}
+			}
+
+			war_effects = {
+				name = WAR_EFFECTS_NAME
+				involved_parameters = {
+					ln_no_stomach_for_war = yes
+				}
+				involved_character_modifier = {
+					ai_war_chance = -3              # nobody who was there wants another war
+					ai_war_cooldown = 0.5
+				}
+			}
+
+			culture_effects = {
+				name = CULTURE_EFFECTS_NAME
+				involved_parameters = {
+					ln_bled_together = yes
+				}
+				involved_character_modifier = {
+					different_culture_opinion = 20  # the strongest it ever gets, and it decays with the phase
+				}
+			}
+
+			faith_effects = {
+				name = FAITH_EFFECTS_NAME
+				common_parameters = {
+					ln_reckoning_of_faiths = yes
+				}
+				involved_character_modifier = {
+					monthly_piety = 0.5
+				}
+			}
+
+			other_effects = {
+				name = OTHER_EFFECTS_NAME
+				common_parameters = {
+					ln_the_dark_has_passed = yes
+				}
+				all_county_modifier = {
+					development_growth_factor = 0.15
+					supply_limit_mult = 0.10
+					build_gold_cost = -0.25
+					build_speed = -0.25             # negative is FASTER in CK3
+				}
+			}
+		}
+	}
+
+	# Root = struggle. Run the monthly pass once at creation so a struggle started mid-game (or created for
+	# the first time in a save where the invasion is already running) is consistent immediately.
+	on_start = {
+		ln_struggle_monthly_effect = yes
+	}
+
+	# Root = struggle. Every phase-entry hook in this mod hangs off here. See the header.
+	# ANSWERED. on_monthly on a struggle IS REAL -- ln_proof_on_monthly turned up in the 253 AC save, so this
+	# hook fires and the engine drives it. That is worth writing down because the sibling field, phase-level
+	# on_start, is documented in the same _struggles.info and is silently dead. The two are not the same and
+	# nothing in the schema tells you which is which -- only a save does.
+	#
+	# The diagnostic stamp and the backup event (ln_struggle.3) that ran alongside it are both gone. The
+	# remaining redundancy is ln_struggle_clock_backstop on yearly_playable_pulse, which is an engine pulse
+	# and cannot be lost the way a self-chaining event can.
+	on_monthly = {
+		ln_struggle_monthly_effect = yes
+	}
+}

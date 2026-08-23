@@ -1,0 +1,51 @@
+﻿# AGOT: The Long Night & Azor Ahai -- raising and lowering the last bastions.
+#
+# Called once a year from ln_struggle_yearly_work_effect. See zz_ln_bastion_modifiers.txt for why.
+#
+# WHY A YEARLY LATCH AND NOT A PHASE HOOK. Phase-level on_start exists ONLY on an ending phase -- confirmed
+# against vanilla's Iberian and Persian struggles and recorded in ck3-verified-api-notes.md. A hook written on a
+# normal phase is silent dead code. So this runs on the yearly work effect and is written to be idempotent:
+# it adds only what is missing, every year, which also picks up great houses that rise, fall, or change hands
+# mid-war.
+#
+# COST. every_ruler is a few hundred characters once a year and each one does a single county check. The
+# expensive sweep -- every_county, thousands of entries -- runs EXACTLY ONCE, at the Dawn, behind a global
+# latch. It is not on the yearly path.
+ln_bastion_upkeep_effect = {
+	if = {
+		limit = {
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+		every_ruler = {
+			limit = {
+				ln_holds_a_last_bastion_trigger = yes
+				capital_county = {
+					NOT = { has_county_modifier = ln_last_bastion_modifier }
+				}
+			}
+			capital_county = {
+				add_county_modifier = ln_last_bastion_modifier
+			}
+		}
+	}
+
+	# THE DAWN, AND ONLY THE DAWN. Not a bare else: the else branch would also run through every Long Summer
+	# year, set the latch decades before the walls were ever raised, and then never clean up after the war.
+	else_if = {
+		limit = {
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_dawn }
+			NOT = { has_global_variable = ln_bastions_lowered }
+		}
+		set_global_variable = { name = ln_bastions_lowered  value = yes }
+		every_county = {
+			limit = { has_county_modifier = ln_last_bastion_modifier }
+			remove_county_modifier = ln_last_bastion_modifier
+		}
+	}
+}

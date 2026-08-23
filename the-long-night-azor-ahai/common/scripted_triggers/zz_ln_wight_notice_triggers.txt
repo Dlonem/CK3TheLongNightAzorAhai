@@ -1,0 +1,23 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who is told when someone they loved gets back up.
+#
+# is_ai = no is the volume control. During a full invasion hundreds of characters convert every year; the AI does
+# not read notifications, so restricting to human players removes the flood at the source rather than by throttling.
+
+ln_wight_notice_recipient_trigger = {
+	is_alive = yes
+	is_ai = no
+	# The dead do not mourn the dead.
+	NOT = { has_trait = wight_trait }
+	NOT = { has_trait = other_trait }
+	NOT = { this = scope:ln_risen }
+}
+
+# 1.0.8 -- who is owed the marriage card. Deliberately NOT ln_wight_notice_recipient_trigger: that one
+# carries `is_ai = no` (human players only, by design -- see the notice file's header). Thomas's ruling
+# on THIS card, 13 Aug, is players and AI alike, and the AI clause is the only difference between them.
+# The dead do not mourn the dead: a spouse who is themselves one of them is owed nothing.
+ln_wight_marriage_card_recipient_trigger = {
+	is_alive = yes
+	NOT = { this = scope:ln_risen }
+	NOT = { ln_is_one_of_them_trigger = yes }
+}

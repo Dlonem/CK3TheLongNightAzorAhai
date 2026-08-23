@@ -1,0 +1,42 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- coming home on a dragon.
+
+ ln_return_with_fire_decision:0 "Return With Fire"
+ ln_return_with_fire_decision_title:0 "Return With Fire"
+ ln_return_with_fire_decision_desc:0 "Your hall is still standing.\n\nYou had assumed it would not be. You ran south with the rest of them when the dark came down, and everything you knew said that what you left behind would be a scorched footprint by now.\n\nIt is not. Somebody kept the roof on it, and put a new gate in it, and is sitting in your father's chair this evening eating your father's grain, and has been for years, and has quite reasonably stopped expecting anyone to come back.\n\nNobody in that hall has ever seen a dragon."
+ # NO SCOPE REFERENCE HERE. ln_lost_seat is a VARIABLE on the character, not a saved scope, and a decision
+ # selection_tooltip has no scopes saved yet -- the effect block has not run. [ln_lost_seat.GetName] would
+ # print as an unresolved key. Plain text.
+ ln_return_with_fire_decision_tt:0 "Fly to the seat you abandoned and settle the question of who holds it.\n\nThere are four ways this goes and only one of them is quiet."
+ ln_return_with_fire_decision_confirm:0 "Take the dragon up."
+
+ ln_return.1.t:0 "Over Your Own Hall"
+ ln_return.1.desc:0 "You come in low out of the north with the light behind you, and the first thing you notice is that they have rebuilt the eastern wall badly.\n\nThe second thing you notice is the screaming.\n\nBy the time you set down in the yard there is nobody in it. The doors are barred, which is almost funny.\n\nThen they open, and [ln_squatter.GetTitledFirstName] comes out alone. No guard, no sword, hands where you can see them. [ln_squatter.GetSheHe|U] stops at what [ln_squatter.GetSheHe] has evidently judged to be a survivable distance, and waits — because there is nothing [ln_squatter.GetSheHe] can say that will change anything, and the only thing left is to find out what kind of man came back."
+ ln_return.1.a:0 "Kneel, and it is yours to keep holding. For me."
+ ln_return.1.b:0 "Nothing. Take [ln_dragon.GetHerHim] up again, and burn it."
+ ln_return.1.c:0 "[ln_squatter.GetHerHim|U], and [ln_squatter.GetHerHis] line. Leave nobody to press a claim."
+ ln_return.1.d:0 "I have a claim and I will press it like a man. Not like this."
+ ln_return.1.e:0 "Then let us settle it the old way. Fetch [ln_squatter.GetHerHim] a sword."
+
+ ln_return.2.t:0 "[ln_squatter.GetSheHe|U] Kept the Roof On"
+ ln_return.2.desc:0 "The books are immaculate.\n\nThat is what you did not expect. You came back braced for ruin and a decade of theft, and instead there is a ledger in a steady hand going back to the year the dark lifted: every harvest, every levy, every repair, every death. [ln_squatter.GetSheHe|U] buried your household staff properly. There is a list of where.\n\n[ln_squatter.GetSheHe|U] is at the other end of the table not saying any of this, because saying it would sound like a plea, and has decided not to plead.\n\nThe eastern wall really is badly built, though. [ln_squatter.GetSheHe|U] ran out of stone and used what was to hand."
+ ln_return.2.a:0 "You will hold a seat under me. You have earned that much."
+ ln_return.2.b:0 "A horse and the road. Be gone by dark."
+
+ ln_return.3.t:0 "[ln_squatter.GetSheHe|U] Called It"
+ ln_return.3.desc:0 "'No,' [ln_squatter.GetSheHe] says.\n\nAnd then, when you do not immediately do anything: 'You have been up there a long while, my lord. A dragon can burn my hall. It cannot hold it. It cannot sit in it and take oaths and marry my daughter to somebody's son. The day after you burn this place you will have a dragon and no roof, and every lord from here to the Neck will know it.'\n\n[ln_squatter.GetSheHe|U] is not even frightened any more. That happened somewhere in the middle of the sentence.\n\n'So burn it or do not burn it. But do not stand in my yard and tell me it is a choice you are making.'"
+ ln_return.3.a:0 "Then we do it the long way. Raise the banners."
+ ln_return.3.b:0 "[ln_squatter.GetSheHe|U] is right. That is not who I am any more."
+
+ ln_return.4.t:0 "What the Fire Left"
+ ln_return.4.desc.burned:0 "You went back over it at first light because you wanted to see.\n\nThere is no hall. There is a black shape where a hall was, with the chimney still standing, because chimneys always stand. The village below it went too — you did not intend the village, and that is not a distinction anybody is going to make.\n\nThe people who got out are in the treeline, and there are more of them than you thought. They are not doing anything — just standing in the cold looking at the place where they lived, and one by one, as your shadow goes over them, they look up.\n\nIt was not yours to burn. It is very much yours now."
+ ln_return.4.desc.blood:0 "It took less time than you expected, which is the detail you will keep.\n\n[ln_squatter.GetSheHe|U] did not run and neither did they. There was a moment in the yard where [ln_squatter.GetHerHis] youngest looked up with an expression of uncomplicated wonder, because she was six and she had never seen one, and nobody had had time to tell her what was about to happen.\n\nThe hall is yours. The ledgers are in the solar in [ln_squatter.GetHerHis] hand. The people who worked for [ln_squatter.GetHerHim] are still here — where else would they go — and not one will meet your eye.\n\nYou have what you came for. It is going to be very quiet here for a while."
+ ln_return.4.a:0 "It is done. It does not need explaining."
+ ln_return.4.b:0 "Find the ones who ran. See that they are fed."
+
+ ln_dragonfire_scar_modifier:0 "Dragonfire"
+ ln_dragonfire_scar_modifier_desc:0 "Burned by its own lord, from the air, in living memory. Nothing has been rebuilt on the site and the people here have a very long way to go before they forget."
+
+ ln_the_lord_who_left_modifier:0 "The Lord Who Left"
+ ln_the_lord_who_left_modifier_desc:0 "They watched the banners go south and they stayed. Somebody else kept the granary honest for years and then you came back out of the sky and took it in an afternoon. They will get over it. It will take about fifteen years."

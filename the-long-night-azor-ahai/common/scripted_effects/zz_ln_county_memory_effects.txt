@@ -1,0 +1,159 @@
+﻿# AGOT: The Long Night & Azor Ahai -- county memory: what the land was before the dead came. (1.0.10)
+#
+# Strider, on the Workshop: after the Dawn "the cultures and religions of the restored areas remain
+# Others and Winter." True, and by construction: counties convert under Other holders through CK3's
+# ordinary conversion; the scour changes HOLDERS, and county culture and faith survive both a holder
+# change and ruination; CK3 exposes no previous-culture link on a title. The value must be recorded
+# before it is lost. Measured in the 8293 post-Dawn save: 18 counties sat converted (culture=frostborn /
+# faith=cold_gods) -- a mix of beyond-Wall land (which KEEPS its winter, Thomas's ruling) and northern
+# counties like c_greyward_tower (which this repairs).
+#
+# Thomas's rulings, 15 Aug: stamp at conquest, never a global stamp at invasion start; restore at the
+# Dawn; de-jure-kingdom-holder fallback for counties converted before the stamp existed ("wrong in
+# detail -- a Northern county may get the wrong specific culture -- but the North looks Northern again",
+# his call, made explicitly); THE RUINS THEMSELVES STAY -- only culture and faith come back.
+# Every path fails OPEN: no stamp and no cold mark means no write; no living kingdom holder means skip.
+
+# Root = a county title. Stamp once, at the moment the dead first take it -- on the transfer day the
+# county still carries its living culture and faith, because conversion needs years.
+ln_stamp_county_memory_effect = {
+	if = {
+		limit = {
+			NOT = { has_variable = ln_prev_culture }
+			# A county already of the dead's own kind has nothing worth remembering: stamping Winter in
+			# order to restore Winter later is a no-op that costs two variables per county forever.
+			NOR = {
+				culture = { has_cultural_parameter = other_parameter }
+				faith = faith:cold_gods
+			}
+		}
+		set_variable = { name = ln_prev_culture  value = culture }
+		set_variable = { name = ln_prev_faith    value = faith }
+	}
+}
+
+# Root = a county title. Restore what was stamped; fall back to the de jure kingdom's living holder for
+# counties that converted before the stamp existed (every save older than 1.0.10). Beyond the Wall no
+# kingdom has a living non-cold holder, so the guarded chain skips and the far north keeps its winter --
+# exactly Thomas's intent. A stamped beyond-Wall county (free folk land taken while still living) DOES
+# restore, from the stamp, which writes back what was genuinely there.
+ln_restore_county_memory_effect = {
+	if = {
+		limit = { has_variable = ln_prev_culture }
+		set_county_culture = var:ln_prev_culture
+		remove_variable = ln_prev_culture
+	}
+	if = {
+		limit = { has_variable = ln_prev_faith }
+		set_county_faith = var:ln_prev_faith
+		remove_variable = ln_prev_faith
+	}
+	if = {
+		limit = {
+			culture = { has_cultural_parameter = other_parameter }
+			kingdom ?= { holder ?= { NOT = { culture = { has_cultural_parameter = other_parameter } } } }
+		}
+		set_county_culture = kingdom.holder.culture
+	}
+	if = {
+		limit = {
+			faith = faith:cold_gods
+			kingdom ?= { holder ?= { NOT = { faith = faith:cold_gods } } }
+		}
+		set_county_faith = kingdom.holder.faith
+	}
+}
+
+# Root = anything. The yearly catch-up stamper: counties the dead hold that never passed through
+# on_title_gain (whatever route missed them) get stamped on the next yearly tick -- year-one culture is
+# still the original, conversion is slower than that. The limit self-empties once the dead hold nothing,
+# leaving one county walk a year as the steady-state cost, same order as ln_ruins_decay_effect.
+ln_stamp_swept_counties_effect = {
+	# PERFORMANCE GATE (Thomas's standing ask). every_county walks ~1,280 titles to test its limit, so
+	# without this it ran once a year from game start to the end of time -- including every year before
+	# the Long Night begins and every year after the Dawn, when it can never match anything. Two cheap
+	# global checks fence it to the invasion window: ln_invasion_opening is set the moment the dead come
+	# (zz_ln_invasion_opening_effects.txt, all three openings), ln_aftermath_started when the Dawn
+	# arrives (the_long_night.txt:222). Fails CLOSED on purpose and that is safe: the on_title_gain hook
+	# is the primary stamper, this is only the catch-up, and the Dawn restore falls back to the de jure
+	# kingdom for anything unstamped.
+	if = {
+		limit = {
+			has_global_variable = ln_invasion_opening
+			NOT = { has_global_variable = ln_aftermath_started }
+		}
+		every_county = {
+			limit = {
+				exists = holder
+				holder = {
+					ln_is_one_of_them_trigger = yes
+					NOT = { has_government = ruins_government }
+				}
+				NOT = { has_variable = ln_prev_culture }
+			}
+			ln_stamp_county_memory_effect = yes
+		}
+	}
+}
+
+# Root = anything. The post-Dawn self-heal, and the ONLY route for saves where the Dawn already came
+# and went before 1.0.10 (Strider's). Gated to near-zero: runs only while ln_county_memory_pending is
+# set (the scour sets it; a pass that leaves nothing to repair clears it and latches
+# ln_county_memory_done_1). Mid-save activation: aftermath evidence + no done-latch kicks it once.
+# Ruins-held counties ARE swept -- ln_is_one_of_them_trigger counts ruins_government as theirs, but a
+# ruin waiting for colonists is exactly the land Strider is looking at; only the actively dead are
+# excluded. Beyond the Wall is excluded wholesale: unstamped winter stays, and stamped beyond-Wall
+# counties were already restored by the scour itself.
+ln_county_memory_sweep_effect = {
+	if = {
+		limit = {
+			NOT = { has_global_variable = ln_county_memory_pending }
+			NOT = { has_global_variable = ln_county_memory_done_1 }
+			exists = global_var:ln_aftermath_started
+		}
+		set_global_variable = { name = ln_county_memory_pending  value = yes }
+	}
+	if = {
+		limit = { has_global_variable = ln_county_memory_pending }
+		every_county = {
+			limit = {
+				NOT = { title_province ?= { geographical_region = world_westeros_beyond_the_wall } }
+				OR = {
+					has_variable = ln_prev_culture
+					has_variable = ln_prev_faith
+					culture = { has_cultural_parameter = other_parameter }
+					faith = faith:cold_gods
+				}
+				holder ?= {
+					OR = {
+						has_government = ruins_government
+						NOT = { ln_is_one_of_them_trigger = yes }
+					}
+				}
+			}
+			ln_restore_county_memory_effect = yes
+		}
+		# Clean pass: nothing left that this sweep is allowed to touch -> latch done, stop paying.
+		if = {
+			limit = {
+				NOT = {
+					any_county = {
+						NOT = { title_province ?= { geographical_region = world_westeros_beyond_the_wall } }
+						OR = {
+							culture = { has_cultural_parameter = other_parameter }
+							faith = faith:cold_gods
+						}
+						holder ?= {
+							OR = {
+								has_government = ruins_government
+								NOT = { ln_is_one_of_them_trigger = yes }
+							}
+						}
+					}
+				}
+			}
+			remove_global_variable = ln_county_memory_pending
+			set_global_variable = { name = ln_county_memory_done_1  value = yes }
+		}
+	}
+}

@@ -1,0 +1,4 @@
+﻿l_russian:
+ call_antiother_interaction:0 "Призвать на помощь"
+ call_antiother_interaction_desc:0 "Призвать их на помощь в вашей войне"
+ CALL_OTHER_WAR_NOTIFICATION:0 "Я взываю к вашей помощи."

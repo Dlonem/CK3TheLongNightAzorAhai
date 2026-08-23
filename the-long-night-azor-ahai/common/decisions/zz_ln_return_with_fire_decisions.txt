@@ -1,0 +1,61 @@
+﻿# AGOT: The Long Night & Azor Ahai -- coming home on a dragon.
+#
+# THOMAS'S SCENARIO, and it is the best one he has pitched: "maybe one of the returning event chains, so you
+# don't have to go to war -- if you have a dragon and you're returning back, then it's like, okay, well, I can
+# burn the place to the ground, or you can make me your king again, or you can kill the person ruling and their
+# entire family. That'd be a pretty badass thing to do. It just makes the world so full."
+#
+# The pieces were already on the board. Long Night+ ships flee_south_decision, which stamps dawn_refugee on a
+# lord who abandons his seat and stores where he ran from in var:ln_lost_seat, and ln_return_north_decision,
+# which lets that refugee come back and resettle if the land has gone to wilderness.
+#
+# What neither covers is the case where the land did NOT go to wilderness -- somebody else is sitting in your
+# hall, perfectly comfortably, and you are outside it, and you have a dragon. There is no decision in the game
+# for that, because there is no decision in the game that assumes you have a dragon.
+#
+# FOUR ROADS, and the point is that none of them is free. Demanding costs your reputation if they call the
+# bluff. Burning gets you nothing but a scar on the map. Murder gets you the seat and a realm that watched.
+# Asking gets you a claim and a war you have to fight like everyone else.
+
+ln_return_with_fire_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_dragons.dds" }
+
+	title = ln_return_with_fire_decision_title
+	desc = ln_return_with_fire_decision_desc
+	selection_tooltip = ln_return_with_fire_decision_tt
+	confirm_text = ln_return_with_fire_decision_confirm
+
+	decision_group_type = major
+	sort_order = 160
+	ai_check_interval = 0        # a player's decision. The AI has never been able to do this and should not start.
+
+	is_shown = {
+		is_ai = no
+		has_character_flag = dawn_refugee
+		is_adult = yes
+
+		# You rode out of it and you rode back. See zz_ln_dragon_triggers.txt -- this also excludes anything
+		# the Others raised, which would be a very different scene.
+		ln_rides_a_living_dragon_trigger = yes
+
+		# There is a hall to come back to and somebody is in it. If the land went to wilderness this is the
+		# wrong decision and ln_return_north_decision is the right one.
+		has_variable = ln_lost_seat
+		var:ln_lost_seat ?= { exists = holder }
+		NOT = { var:ln_lost_seat.holder = root }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_travelling = no
+	}
+
+	effect = {
+		var:ln_lost_seat = { save_scope_as = ln_old_seat }
+		var:ln_lost_seat.holder = { save_scope_as = ln_squatter }
+		var:current_dragon = { save_scope_as = ln_dragon }
+		trigger_event = { id = ln_return.1  days = { 5 15 } }
+	}
+
+	ai_will_do = { base = 0 }
+}

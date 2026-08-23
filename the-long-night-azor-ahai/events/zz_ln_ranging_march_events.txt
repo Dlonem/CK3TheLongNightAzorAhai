@@ -1,0 +1,118 @@
+﻿namespace = ln_ranging
+
+# AGOT: The Long Night & Azor Ahai -- where does the ranging march?
+#
+# The destination card for ln_march_the_ranging_decision. Three named grounds beyond the Wall, one
+# option to stay. Each march records its ground in var:ln_ranging_ground and arrives through the
+# ln_ranging_arrival on_action -- the single hook every future piece of ranging content (losses on
+# the road, dragonglass, the ranging that does not come back) is meant to hang from.
+
+ln_ranging.1 = {
+	type = character_event
+	title = ln_ranging.1.t
+	desc = ln_ranging.1.desc
+	theme = realm
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	trigger = {
+		exists = domicile
+		is_travelling = no
+	}
+
+	# 13 Aug (1.0.6): THE WALL FILLS THE SLEDGES. When the march is called from inside the Watch's own
+	# lands, the stores top the camp up to the same 1,500 AGOT hands a new First Ranger. Out beyond the
+	# Wall there is no refill -- going deeper spends what you carried, which is the whole loop. Thomas's
+	# live test stranded on 0 provisions because nothing had ever filled the camp.
+	immediate = {
+		if = {
+			limit = {
+				domicile ?= {
+					provisions < 1500
+					domicile_location = { county ?= { target_is_de_jure_liege_or_above = title:k_the_wall } }
+				}
+			}
+			domicile = { change_provisions = 1500 }
+		}
+	}
+
+	# Craster's Keep -- the near ground. A known roof and a bad host, a few days out.
+	option = {
+		name = ln_ranging.1.a
+		set_variable = { name = ln_ranging_ground  value = flag:crasters_keep }
+		start_travel_plan = {
+			destination = title:c_crasters_keep.title_province
+			on_arrival_on_action = ln_ranging_arrival
+			on_arrival_destinations = last
+			return_trip = no
+			travel_with_domicile = yes
+		}
+	}
+
+	# Whitetree -- the deep forest and the old gods' trees.
+	option = {
+		name = ln_ranging.1.b
+		set_variable = { name = ln_ranging_ground  value = flag:whitetree }
+		start_travel_plan = {
+			destination = title:c_whitetree.title_province
+			on_arrival_on_action = ln_ranging_arrival
+			on_arrival_destinations = last
+			return_trip = no
+			travel_with_domicile = yes
+		}
+	}
+
+	# Hardhome -- the far shore. The one the older brothers go quiet about.
+	option = {
+		name = ln_ranging.1.c
+		set_variable = { name = ln_ranging_ground  value = flag:hardhome }
+		start_travel_plan = {
+			destination = title:c_hardhome.title_province
+			on_arrival_on_action = ln_ranging_arrival
+			on_arrival_destinations = last
+			return_trip = no
+			travel_with_domicile = yes
+		}
+	}
+
+	# Stay.
+	option = {
+		name = ln_ranging.1.d
+	}
+}
+
+# THE ARRIVAL. Deliberately quiet for now: it confirms the camp stands somewhere new and closes the
+# loop so the march is a complete, visible feature. The ranging CONTENT -- what the ground actually
+# holds -- belongs here, branching on var:ln_ranging_ground.
+ln_ranging.2 = {
+	type = character_event
+	title = ln_ranging.2.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { var:ln_ranging_ground ?= flag:castle_black }
+				desc = ln_ranging.2.desc.home
+			}
+			desc = ln_ranging.2.desc.north
+		}
+	}
+	theme = realm
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		exists = domicile
+	}
+
+	option = {
+		name = ln_ranging.2.a
+	}
+}

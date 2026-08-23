@@ -1,0 +1,21 @@
+# Treat every file as binary — no line-ending translation, ever.
+#
+# WHY THIS FILE EXISTS AND WHY IT MATTERS MORE THAN IT LOOKS:
+# Git on Windows defaults to core.autocrlf=true, which rewrites LF to CRLF on
+# checkout. CK3 mod files are text (.txt, .yml, .gui, .mod), so that rewrite
+# changes their bytes — and CK3's multiplayer checksum is computed over the
+# loaded files. A checksum that drifts by even one byte means you can't join a
+# friend who is running the Workshop copy.
+#
+# `* -text` disables the conversion for everything, so what git hands back is
+# byte-for-byte what went in.
+* -text
+
+# Belt and braces for the formats that are already binary.
+*.dds  binary
+*.mesh binary
+*.anim binary
+*.ogg  binary
+*.wav  binary
+*.png  binary
+*.tga  binary

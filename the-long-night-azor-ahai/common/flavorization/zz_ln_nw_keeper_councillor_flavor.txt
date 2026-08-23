@@ -1,0 +1,98 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the officers of a Wall castle, who are not the officers of the order.
+#
+# Thomas, holding the Nightfort: "my council is showing essentially the way that it would show if I were the
+# Lord Commander... a First Ranger shouldn't have a First Steward. Do we need to create for a brother? It's
+# not a First Builder or keyword sort of thing." And then the constraint that shaped this file: "how do we
+# change it without coding stuff that could get overwritten back if they decide to change anything? I want
+# the most compatible kind of thing."
+#
+# ══ WHY FLAVORIZATION AND NOT A SHADOW ═════════════════════════════════════════════════════════════════════
+# AGOT renames the standard council by government flag, inside first_valid blocks in the council-position
+# definitions themselves:
+#
+#     councillor_marshal    -> agot_councillor_marshal_nights_watch     "First Ranger"
+#     councillor_castellan  -> agot_councillor_castellan_nights_watch   "First Steward"
+#     councillor_steward    -> agot_councillor_steward_nights_watch     "First Builder"
+#     councillor_chancellor -> agot_councillor_chancellor_nights_watch  "Wandering Crow"
+#
+# Their trigger is `government_has_flag = government_is_nw`, which is true for EVERY brother from the Lord
+# Commander down to a ranging captain. The three orders of the Watch are led from Castle Black; the keeper of
+# the Nightfort does not have his own First Ranger.
+#
+# The obvious fix is to shadow those four positions and add a triggered_desc. That is four ~100-line copies of
+# somebody else's file, and every one of them silently freezes if AGOT ever touches them. Exactly what Thomas
+# asked us not to do.
+#
+# FLAVORIZATION IS PURELY ADDITIVE. Each entry below is its own new database key. Nothing of AGOT's is
+# replaced, overridden or copied. If they rewrite their council positions tomorrow these keep working; if they
+# ever add keeper-specific names of their own, priority decides and we can simply delete this file. It is the
+# most compatible mechanism the engine offers for this, and it is the one AGOT themselves use for the ranging
+# council (councillor_ranger_1_flavor .. _4_flavor in 00_agot_flavorization_councillor.txt).
+#
+# ══ HOW THE LORD COMMANDER IS EXCLUDED ═════════════════════════════════════════════════════════════════════
+# `flavourization_rules = { only_vassals = yes }`. The Lord Commander holds k_the_wall and answers to nobody,
+# so he is not a vassal and none of this touches him -- he keeps First Ranger, First Steward, First Builder and
+# the Wandering Crow, which are his to have. Every other brother is his vassal by construction: keepers swear
+# for their castle, ranging captains swear for their company. One rule, no title list to keep in sync, and it
+# stays correct if we ever add a nineteenth castle or a ninth company.
+#
+# `governments = { nights_watch_government ln_ranger_government }` keeps it off everyone else in the world.
+#
+# ══ THE NAMES ══════════════════════════════════════════════════════════════════════════════════════════════
+# Chosen to be defensible from the books rather than invented:
+#   Master-at-Arms   -- a real Wall rank, held at Castle Black by Alliser Thorne and later Endrew Tarth.
+#                       The man who drills the garrison. The correct counterpart to a marshal.
+#   Steward of the Keep -- stewards serve at every castle; only their head at Castle Black is First Steward.
+#   Master Builder   -- likewise for the builders. A castle under repair has one; the order has a First Builder.
+#   Recruiter        -- the Wandering Crow rides the Seven Kingdoms for the whole order. A castle sends its
+#                       own men south for the same reason on a smaller circuit.
+#
+# Personal Steward and Spymaster are deliberately untouched: neither is a Lord Commander's office, so neither
+# is wrong on a keeper, and leaving them alone is two fewer keys to own.
+#
+# Priority 400 -- one above AGOT's 399 councillor flavors, so if both ever match on the same character ours is
+# the specific case and wins. They cannot currently collide: theirs require titles = { d_nw_landless_first_ranger }.
+
+ln_nw_keeper_marshal_flavor = {
+	type = character
+	special = councillor
+	priority = 400
+	council_position = councillor_marshal
+	governments = { nights_watch_government ln_ranger_government }
+	flavourization_rules = {
+		only_vassals = yes
+	}
+}
+
+ln_nw_keeper_castellan_flavor = {
+	type = character
+	special = councillor
+	priority = 400
+	council_position = councillor_castellan
+	governments = { nights_watch_government ln_ranger_government }
+	flavourization_rules = {
+		only_vassals = yes
+	}
+}
+
+ln_nw_keeper_steward_flavor = {
+	type = character
+	special = councillor
+	priority = 400
+	council_position = councillor_steward
+	governments = { nights_watch_government ln_ranger_government }
+	flavourization_rules = {
+		only_vassals = yes
+	}
+}
+
+ln_nw_keeper_chancellor_flavor = {
+	type = character
+	special = councillor
+	priority = 400
+	council_position = councillor_chancellor
+	governments = { nights_watch_government ln_ranger_government }
+	flavourization_rules = {
+		only_vassals = yes
+	}
+}

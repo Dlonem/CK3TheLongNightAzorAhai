@@ -1,0 +1,120 @@
+﻿# AGOT: The Long Night & Azor Ahai -- catalyst hooks.
+# on_actions = { } sub-lists, which merge. Never an `effect` block on a shared on_action.
+
+ln_death_catalysts = {
+	# Cheap gate first: if the struggle is not running there is nothing to accelerate, and on_death fires a LOT.
+	#
+	# `is_alive = no` USED TO LIVE HERE AND IT WAS SILENTLY EATING CATALYSTS. The guard was added to kill
+	# 35,494 log lines: on_death does NOT only fire for characters who are dead by the time the effect runs --
+	# Thomas's four-hour run produced 5,916 passes on a LIVING root, and every death_reason check inside
+	# errored on each one ("Trying to check death reason on living character Alester Lowborn").
+	#
+	# The guard fixed the noise and created a hole. Those 5,916 passes are REAL DEATHS whose is_alive has not
+	# flipped yet at the moment this on_action runs -- and gating the whole effect on it threw ALL of them
+	# away, including the branches that never look at death_reason at all:
+	#
+	#     * a dragon died          (has_trait = dragon)
+	#     * a great house ended    (last member, landed, noble)
+	#     * a minor house ended    (same, smaller)
+	#     * THE NIGHT KING IS SLAIN (has_trait = nightking)
+	#
+	# That last one is why this is not a tidy-up. The Night King's death catalyst is worth 1,000 points and
+	# carries the reveal chain and the war-ending sweep with it. Any death of his that arrived on a pass where
+	# is_alive had not flipped produced NO dawn: no reveal, no slayer, no wars ended, the Long Night simply
+	# continuing with the Night King dead. Reported from the wild on 9 Aug by a player who could not get dragon
+	# deaths to register (r/CK3AGOT) -- same hole, cheaper symptom.
+	#
+	# SO THE GUARD MOVED DOWN, not away. It now sits on each of the six branches that actually read
+	# death_reason, which is the only thing it was ever protecting. The log stays quiet; the catalysts stop
+	# vanishing.
+	trigger = {
+		exists = struggle:ln_long_night_struggle
+	}
+	effect = {
+		ln_death_catalyst_effect = yes
+	}
+}
+
+# ln_watch_strength_pulse DELETED, 9 Aug. It was defined here and listed in no hook -- exactly the
+# "sub-list nothing references" failure this file's own header warns about. Nothing was lost: the Watch
+# strength check runs once a year from ln_struggle_yearly_work_effect, behind the calendar gate.
+
+# ── THE WATCH GOES ON ───────────────────────────────────────────────────────────────────────────────────────
+# A separate sub-list from ln_death_catalysts because the two have nothing to do with each other and merging
+# them would mean the catalyst's `is_alive = no` guard silently gating the succession too.
+#
+# `is_alive = no` HERE AS WELL, and for the same reason it is on the catalysts: on_death fires for LIVING
+# characters as well as dead ones -- 5,916 passes in one of Thomas's saves, free folk churning beyond the Wall.
+# Without it this would try to hand play to somebody every time a wildling wandered off a map edge.
+ln_watch_succession = {
+	trigger = {
+		is_alive = no
+		government_has_flag = government_is_nw
+	}
+	effect = {
+		ln_the_watch_continues_effect = yes
+
+		# THE FIRST RANGERSHIP IS WON, NOT SPAWNED -- Thomas: "they can compete for first ranger." When the
+		# First Ranger dies, the best serving captain steps up -- martial, prowess and the ranger's life all
+		# weigh the roll. His own company passes on through the same succession the game rule respects.
+		# AGOT's own new-First-Ranger machinery then runs on the promoted man exactly as it runs on anyone;
+		# we choose WHO, their systems handle what happens to him. If no AI captain is fit -- or the
+		# companies are all in player hands -- we stand aside and AGOT fills the seat the way it always has.
+		if = {
+			limit = { any_held_title = { this = title:d_nw_landless_first_ranger } }
+			random_ruler = {
+				limit = {
+					is_ai = yes
+					is_alive = yes
+					any_held_title = { has_variable = ln_is_a_ranger_title }
+				}
+				weight = {
+					base = 1
+					modifier = { add = 2  martial >= 12 }
+					modifier = { add = 2  prowess >= 12 }
+					modifier = { add = 3  has_trait = lifestyle_nw_ranger }
+					modifier = { add = 2  has_trait = brave }
+				}
+				save_scope_as = ln_next_first_ranger
+			}
+			if = {
+				limit = { exists = scope:ln_next_first_ranger }
+				scope:ln_next_first_ranger = {
+					random_held_title = {
+						limit = { has_variable = ln_is_a_ranger_title }
+						save_scope_as = ln_promoted_mans_company
+					}
+				}
+				create_title_and_vassal_change = {
+					type = granted
+					save_scope_as = ln_fr_succession
+					add_claim_on_loss = no
+				}
+				title:d_nw_landless_first_ranger = {
+					change_title_holder = {
+						holder = scope:ln_next_first_ranger
+						change = scope:ln_fr_succession
+					}
+				}
+				resolve_title_and_vassal_change = scope:ln_fr_succession
+				scope:ln_next_first_ranger = { change_government = first_ranger_government }
+				if = {
+					limit = { exists = scope:ln_promoted_mans_company }
+					ln_company_changes_hands_effect = { COMPANY = scope:ln_promoted_mans_company }
+				}
+			}
+		}
+
+		# A DYING CAPTAIN'S COMPANY, before the engine's succession can fumble it. With
+		# destroy_if_invalid_heir gone the title cannot vanish, but where it lands without this is whatever
+		# the succession laws improvise; this makes it land where the Watch would actually put it.
+		if = {
+			limit = { any_held_title = { has_variable = ln_is_a_ranger_title } }
+			random_held_title = {
+				limit = { has_variable = ln_is_a_ranger_title }
+				save_scope_as = ln_dead_captains_company
+			}
+			ln_company_changes_hands_effect = { COMPANY = scope:ln_dead_captains_company }
+		}
+	}
+}

@@ -1,0 +1,19 @@
+﻿l_english:
+
+ # Taking the red -- the seed, the deepening, the ask.
+ ln_red.1.t:0 "A Colder Kind of Doubt"
+ ln_red.1.desc.named:0 "There is a whisper that follows me — spoken just quietly enough to be deniable. *Named*. A priest of a foreign god looked at me and spoke a title eight thousand years old. And ever since, I have been doing the one thing I swore I would not do: I am wondering.\n\nNot about the prophecy. About the god. If the title is real—if even a fraction of it is real—then something out there was watching. Something chose me. And it was not the gods my ancestors built their sept-songs and weirwood prayers around, because those gods have never once spoken my name aloud."
+ ln_red.1.desc.priest:0 "[ln_red_priest.GetTitledFirstName] has been in my service long enough that the strangeness has worn off. The red robes are just robes now. The nightfires are just what he does, the way a maester climbs to his ravens.\n\nThat is precisely the problem. Somewhere in the years of his patience, his terrible certainty, the evenings he speaks of the fire as if reporting the day's news—the question stopped being his and started being my own. I no longer wonder if he is mad. I wonder if he is right."
+ ln_red.1.desc.dark:0 "I know things now. Not rumors—things. I have read the letters, heard the frantic accounts coming back from the North, and felt the terrifying shape of what is waiting past the edge of every comfortable map.\n\nAnd in the whole long roll of gods my people have prayed to, exactly one of them has ever claimed to be about THIS—the dark, and the fire that pushes back against it. It is a foreign god with a burning heart and priests who unsettle everyone they meet. But it is also, as far as I can tell, the only god that saw this coming."
+ ln_red.1.a:0 "Let the thought linger."
+ ln_red.1.b:0 "Put it out of my mind. The old gods are enough."
+
+ ln_red.2.t:0 "The Nightfire"
+ ln_red.2.desc:0 "It happens on an entirely ordinary evening. A fire is banked high against the biting cold, and I catch myself standing in front of it far longer than warmth explains.\n\nThe words are there in my mind, secondhand but whole—heard often enough from red robes that they recite themselves. *The night is dark and full of terrors.* I do not say them aloud. But I stand there while they echo, and when I finally turn away, the darkness just past the firelight looks—for one terrifying breath—exactly as deep as the priests say it is."
+ ln_red.2.a:0 "Stay by the fire a while longer."
+ ln_red.2.b:0 "This madness has gone far enough."
+
+ ln_red.3.t:0 "Take the Red"
+ ln_red.3.desc:0 "It has stopped being a mere thought and become a door. I can see both sides of it with terrible clarity.\n\nThrough it: the fire, the absolute certainty, a god that is unmistakably AWAKE while the dark gathers—and the cost, paid in full and in public. The septons, the singers, the loyal men whose grandfathers fought beside my own, every one of them watching me take up a foreign flame. They will call it madness at best, and heresy at worst.\n\nOn this side of it: the gods of my ancestors, who have said nothing. Who may yet be owed everything. Who have never once, in all these years, answered."
+ ln_red.3.a:0 "Light the fire. R'hllor, defend me."
+ ln_red.3.b:0 "No. Not while my fathers' gods are watching."

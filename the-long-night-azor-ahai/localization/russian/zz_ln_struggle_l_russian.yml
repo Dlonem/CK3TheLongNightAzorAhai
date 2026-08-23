@@ -1,0 +1,86 @@
+﻿l_russian:
+
+ # ============================================================================================================
+ # AGOT: The Long Night & Azor Ahai -- struggle localization.
+ #
+ # STRUCTURE, copied from vanilla (game/localization/english/struggles/):
+ #   * Each phase gets a GAME CONCEPT in common/game_concepts/zz_ln_struggle_concepts.txt, so the phase name can
+ #     be written as a hoverable link anywhere in the game.
+ #   * The concept desc holds the real prose. The phase _desc key then just references it, exactly as vanilla
+ #     does -- struggle_iberia_phase_hostility_desc:0 "$game_concept_struggle_phase_iberia_hostility_desc$".
+ #     One source of truth; the two can never drift apart.
+ #   * Every catalyst needs BOTH <key> and <key>_desc, or the struggle window prints the raw key at the player.
+ #
+ # LINK FORMS. Plurals are ALIASES on the singular concept, not bare plurals:
+ #   struggle_catalyst = { alias = { struggle_catalyst_catalyst struggle_catalyst_catalysts } }
+ # so it is [struggle_catalyst_catalysts|E], never [struggle_catalysts|E]. There is no "wall" concept in either
+ # vanilla or AGOT, so the Wall is plain text throughout.
+ # ============================================================================================================
+
+ # ── GAME CONCEPTS ───────────────────────────────────────────────────────────────────────────────────────────
+ game_concept_ln_long_night_struggle_concept:0 "Долгая Ночь"
+ game_concept_ln_long_night_struggle_concept_desc:0 "$game_concept_ln_long_night_struggle_concept$ — это [struggle|E], охватывающая Вестерос и земли за Стеной.\n\nС тем, что выходит с севера, мира не заключают. Вопрос лишь в том, сколько государства ещё стоит, когда тьма отступает.\n\nЧетыре [struggle_phase_phases|E], по порядку: [ln_struggle_phase_long_summer|E], [ln_struggle_phase_cold_winds|E], [ln_struggle_phase_the_long_night|E], [ln_struggle_phase_the_dawn|E]."
+
+ game_concept_ln_struggle_phase_long_summer:0 "Долгое лето"
+ game_concept_ln_struggle_phase_long_summer_desc:0 "Урожаи хороши, дороги безопасны, и о [winter|E] говорят только те, кого никто не слушает.\n\n#EMP Всякая игра начинается здесь, и большинство остаётся здесь добрую часть столетия.#! То, что следующей [struggle_phase_phase|E] названа [ln_struggle_phase_cold_winds|E], означает лишь, куда эта [struggle|E] в итоге идёт, — а не то, что она началась. Пока за вами ничего не идёт.\n\nКаждый умерший дракон и каждый невернувшийся поход — это год, снятый с часов. Завершайте [struggle_catalyst_catalysts|E], чтобы приблизить [ln_struggle_phase_cold_winds|E].\n\n#weak Дурное столетие подтягивает тьму ближе, но лишь до предела: если убежать слишком далеко вперёд выбранного вами правила сроков, [struggle_catalyst_catalysts|E] перестают считаться, пока годы не нагонят.#!"
+
+ game_concept_ln_struggle_phase_cold_winds:0 "Зима близко"
+ game_concept_ln_struggle_phase_cold_winds_desc:0 "Разведчики перестают возвращаться. Вольный народ уходит на юг в числах, которые ничем разумным не объяснить, и это не набеги — они бегут.\n\n#EMP Никто не знает, сколько это продлится.#! Достаточно долго, чтобы что-то построить, если начать сейчас; недостаточно долго, чтобы успеть, если ждать полной уверенности. И каждый, кто возвращается, действительно увидев одного из них, приближает тьму.\n\nЭто предупреждение. Что вы построите за него, то у вас и будет.\n\nТорговля страдает по всей [struggle_region|E]."
+
+ game_concept_ln_struggle_phase_the_long_night:0 "Долгая Ночь"
+ game_concept_ln_struggle_phase_the_long_night_desc:0 "Она здесь. Что государство построило за лето, то у государства и есть.\n\nМёртвые к югу от Стены и движутся, а холод лежит на каждом [county|E] в [struggle_region|E].\n\n#EMP Кончается только со смертью Короля Ночи.#! Не по таймеру и не по накоплению."
+
+ game_concept_ln_struggle_phase_the_dawn:0 "Рассвет"
+ game_concept_ln_struggle_phase_the_dawn_desc:0 "Мёртвые лежат недвижно, и холод отступает. Где-то к югу от Перешейка пробивается первая зелень.\n\nПри правиле #EMP Однажды#! [struggle|E] здесь заканчивается. При правиле #EMP Круг#! она перетекает обратно в [ln_struggle_phase_long_summer|E], и колесо поворачивается снова — с каждым разом тяжелее."
+
+ # ── THE STRUGGLE ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_long_night_struggle:0 "Долгая Ночь"
+ ln_long_night_struggle_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$\n\nПравители [struggle_involved|E] уже живут под холодом. Правителям [struggle_interloper|E] это ещё предстоит узнать."
+
+ # ── PHASES (desc references the concept, vanilla-style) ─────────────────────────────────────────────────────
+ ln_phase_long_summer:0 "Долгое лето"
+ ln_phase_long_summer_desc:0 "$game_concept_ln_struggle_phase_long_summer_desc$"
+ ln_phase_long_summer_effects:0 "Долгое лето"
+
+ ln_phase_cold_winds:0 "Зима близко"
+ ln_phase_cold_winds_desc:0 "$game_concept_ln_struggle_phase_cold_winds_desc$"
+ ln_phase_cold_winds_effects:0 "Зима близко"
+
+ ln_phase_the_long_night:0 "Долгая Ночь"
+ ln_phase_the_long_night_desc:0 "$game_concept_ln_struggle_phase_the_long_night_desc$"
+ ln_phase_the_long_night_effects:0 "Долгая Ночь"
+
+ ln_phase_the_dawn:0 "Рассвет"
+ ln_phase_the_dawn_desc:0 "$game_concept_ln_struggle_phase_the_dawn_desc$"
+ ln_phase_the_dawn_effects:0 "Рассвет"
+
+
+ # ── CATALYSTS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_catalyst_year_passed:0 "Ещё год, и юг забывает"
+ ln_catalyst_year_passed_desc:0 "Время идёт, и люди забывают. Скорость задаёт правило сроков вторжения.\n\n#weak Молчит в тот год, когда тьма и так опережает расписание.#!"
+ ln_catalyst_dragon_died:0 "Умер дракон"
+ ln_catalyst_dragon_died_desc:0 "Где-то в мире умирает дракон. С каждым ушедшим магия истончается.\n\n#weak Самый весомый здесь. Не чаще раза в три года.#!"
+ ln_catalyst_house_extinguished:0 "Пресёкся великий дом"
+ ln_catalyst_house_extinguished_desc:0 "Великий [house|E] теряет последнего своего члена.\n\n#weak Не чаще раза в три года.#!"
+ ln_catalyst_watch_undermanned:0 "Дозор редеет"
+ ln_catalyst_watch_undermanned_desc:0 "Дозор опускается ниже той силы, что нужна ему для удержания Стены.\n\n#weak Не чаще раза в пять лет.#!"
+ ln_catalyst_ranging_lost:0 "Поход не вернулся"
+ ln_catalyst_ranging_lost_desc:0 "Разведчики уходят за Стену и не возвращаются.\n\n#weak Не чаще раза в четыре года.#!"
+ ln_catalyst_warning_dismissed:0 "Над предупреждением посмеялись"
+ ln_catalyst_warning_dismissed_desc:0 "Тому, кому есть что сказать, не верят.\n\n#weak Не чаще раза в три года.#!"
+ ln_catalyst_other_sighted:0 "Иного видели — и поверили"
+ ln_catalyst_other_sighted_desc:0 "Кто-то видит одного из них, выживает, и ему верят. Нужны все три условия.\n\n#weak Не чаще раза в шесть лет. Продвигает [ln_struggle_phase_cold_winds|E] дальше.#!"
+ ln_catalyst_night_king_slain:0 "Король Ночи убит"
+ ln_catalyst_night_king_slain_desc:0 "Удар достигает цели.\n\nЗавершает [ln_struggle_phase_the_long_night|E] сразу. Больше ничто на это не способно."
+
+ # ── THE ENDING DECISION ─────────────────────────────────────────────────────────────────────────────────────
+ # The schema requires at least one phase to list an ending decision. This is that entry, and it is never shown
+ # to a player -- the struggle actually ends from script when the Dawn is reached under the "Once" rule.
+ ln_end_the_long_night_struggle_decision_title:0 "Долгая Ночь кончается"
+ ln_end_the_long_night_struggle_decision_desc:0 "Колесо перестаёт вращаться."
+ ln_end_the_long_night_struggle_decision_confirm:0 "На том и конец."
+ ln_end_the_long_night_struggle_decision_tt:0 "Завершает [struggle|E] $ln_long_night_struggle$."
+ ln_catalyst_dragon_born:0 "Драконы возвращаются в мир"
+ ln_catalyst_dragon_born_desc:0 "Дракон вылупляется в мире, где их осталось трое или меньше.\n\n#weak Не чаще раза в три года и никогда, пока драконы обычны.#!"
+ ln_catalyst_minor_house_ended:0 "Пресёкся малый дом"
+ ln_catalyst_minor_house_ended_desc:0 "Малый [house|E] теряет последнего своего члена. Здесь важно их число.\n\n#weak Не чаще раза в два года.#!"

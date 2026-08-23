@@ -1,0 +1,24 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the killing blow's hook.
+# Declared in zz_ln_00_hooks.txt like every other vanilla on_action this mod attaches to.
+# Root of on_combat_end_winner is the WINNING combat_side -- verified from AGOT's own
+# agot_combat_event.1000 (scope = combat_side) and agot_others_events.9000, both hung off this same hook.
+
+ln_dawn_combat = {
+	# Cheap gate first, because this fires after every battle in the game. If the dark is not here, stop.
+	trigger = {
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+
+		# THE REFUSAL LATCH -- added 10 Aug from the live log, where ln_dawn_death_refused turned up
+		# eight times as "set but never used": the one variable in this chain nothing read.
+		# ln_dawn.3 sets it when the engine declines the scripted `death` on the Night King (he carries
+		# an immortal trait, and whether `death` beats that has never once been confirmed in a live
+		# game). If it cannot be scripted in this campaign the confrontation has to STOP being offered,
+		# or the player picks "End it", the fullscreen tells him the thing fell, and it is standing in
+		# the field again three weeks later. Once refused, never offered again.
+		NOT = { has_global_variable = ln_dawn_death_refused }
+	}
+	events = {
+		ln_dawn.1
+	}
+}

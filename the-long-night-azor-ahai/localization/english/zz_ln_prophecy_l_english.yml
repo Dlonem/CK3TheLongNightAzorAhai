@@ -1,0 +1,38 @@
+﻿l_english:
+
+ # ── THE NAMING ──────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.1.t:0 "A Sword Drawn From Fire"
+
+ ln_prophecy.1.desc.priest:0 "[ln_priest.GetTitledFirstName] asked to speak with me alone, something [ln_priest.GetSheHe] has never once done before.\n\nThe flames have shown [ln_priest.GetHerHim] the same visions since spring, [ln_priest.GetSheHe] says, and [ln_priest.GetSheHe] has been laying them beside one another ever since. Salt and smoke. A star bleeding above the sea. A sword drawn burning from a fire and not consumed by it. And at the end of every reading, my face.\n\n\"You are Azor Ahai come again,\" [ln_priest.GetSheHe] tells me, [ln_priest.GetHerHis] eyes wide with an unsettling certainty. \"The Prince That Was Promised. Born again when the world grows cold, to stand against what comes with it.\"\n\n[ln_priest.GetFirstName] intends to declare this publicly, and asks my leave first. If [ln_priest.GetSheHe] is right, the realm has its champion. If [ln_priest.GetSheHe] is wrong, I am just another fool who let a priest name them a god's chosen—and men have burned for less."
+
+ ln_prophecy.1.desc.self:0 "I have told no one, because there is no one I would trust with it.\n\nThe dreams do not come as prophecy. They come as memory. A sword burning in my hand. A star bleeding over black water. Snow falling on a battlefield I have never walked. I wake certain these things have already happened, yet I know they have not even begun.\n\nEvery child in the Seven Kingdoms knows the title reserved for the one who bears these signs. Azor Ahai come again. The Prince That Was Promised.\n\nI have counted my own marks a hundred times in the dark, hoping to come up short. I never do."
+
+ ln_prophecy.1.desc.greenseer:0 "[ln_greenseer.GetTitledFirstName] found me at dusk and did not bother with courtesies.\n\nThe weirwoods have held the same face since long before I drew breath, [ln_greenseer.GetSheHe] says. Beside it, the same handful of signs: smoke over a birthing bed, a star that bled in the sky, a blade that burns but is not eaten by its own fire. The face in the trees is mine.\n\n\"You are the one who is promised,\" [ln_greenseer.GetSheHe] says, voice rustling like dead leaves. \"The trees were only waiting to see whose face it would turn out to be.\"\n\n[ln_greenseer.GetSheHe] wants the North to know it before winter truly hits. Nothing is asked of me in return, which somehow sits worse than if a price were demanded."
+
+ ln_prophecy.1.desc.witch:0 "The old woman was standing among my people before anyone announced her, and none can say afterward how she slipped past the guards.\n\nShe has been walking a long while, she tells me, and counting as she walked. Smoke on the day of a birth. A star that bled over the water. Dreams that arrive as memory instead of prophecy. She has been gathering these signs for years, from camp to hall, and every one of them has led her here.\n\n\"It is you,\" she croaks, pointing a gnarled finger. \"The one who is promised, born again when the world grows cold.\" She refuses to use the name the red priests use. She speaks an older one, and my maester goes pale translating it.\n\nThen she turns and walks out, leaving half my household staring at me in absolute silence."
+
+ ln_prophecy.1.a:0 "If the realm needs a champion, let them call me Azor Ahai."
+ ln_prophecy.1.b:0 "Keep your voice down. Tell no one else yet."
+ ln_prophecy.1.c:0 "You read the signs wrong. I am no one's savior."
+
+ # ── CHOSEN ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.2.t:0 "The Prince That Was Promised"
+
+ ln_prophecy.2.desc.first:0 "It is no longer just one voice saying it.\n\nWhat [ln_speaker.GetTitledFirstName] said of me has traveled the way word travels between temples—which is far faster than it travels between kings. It has come back agreeing with itself, and that almost never happens. Priests who have never seen my face have counted the same marks and reached the exact same total.\n\nThey are calling me the Prince That Was Promised. The bolder ones use the older name, Azor Ahai come again, and the bolder ones are not usually the ones who turn out to be right.\n\nThis does not make me a champion. It makes me a claim. There are men who will take up arms for it, and men who will take up arms against it.\n\n#N No one in this knows whether it is actually true. I least of all.#!"
+
+ ln_prophecy.2.desc.rival:0 "It is no longer one voice saying it, and worse, I am not the only one it is said of.\n\nThere is already another wearing the title, with a temple behind them and an army of followers besides. They have a telling of the prophecy in which their marks are the true ones, and mine are simply [ln_speaker.GetTitledFirstName] reading desperate hope into a fire.\n\nYet now, the exact same is said of me, by priests every bit as certain.\n\nWe cannot both be the Prince That Was Promised. The faith is perfectly able to hold that thought and fund us both regardless—for a faith that has waited eight thousand years has learned to hedge its wagers.\n\n#N One of us will be remembered as the fool who only believed it.#!"
+
+ ln_prophecy.2.a:0 "Then let the world know I am chosen."
+ ln_prophecy.2.b:0 "Silence these rumors. They have the wrong claimant."
+
+ # ── THE DOUBT ───────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.3.t:0 "A Faltering Flame"
+
+ ln_prophecy.3.desc:0 "[ln_speaker.GetFirstName] does not say it outright. [ln_speaker.GetFirstName] is no fool, and I am not exactly known for my patience.\n\nSo the doubt arrives sideways. Do I still hold what I held? Does the star still count, and the smoke, and the dreams? There is a heavy, lingering pause at each mark that no longer stands, and those pauses are the entirety of the message.\n\nThe prophecy was only ever a tally, and mine has gone backward.\n\n\"I am not saying you are not the one,\" [ln_speaker.GetSheHe] says at last, looking away. That is the worst of it. [ln_speaker.GetSheHe] no longer knows whether [ln_speaker.GetSheHe] was ever certain, or only wished to be."
+
+ ln_prophecy.3.a:0 "If your fires lied, admit it to my face."
+ ln_prophecy.3.b:0 "We have come too far. You do not get to unname me now."
+
+ # ── THE CAPSTONE TRAIT ──────────────────────────────────────────────────────────────────────────────────
+ trait_azor_ahai_reborn:0 "Azor Ahai Reborn"
+ trait_azor_ahai_reborn_desc:0 "Killed the Night King.\n\nNot named by a priest. Not acclaimed by a temple. They met the dark with steel in hand and broke it. They hold the one rung of this ladder no one can argue with, earned by the deed itself rather than by anyone's hopeful reading of a fire.\n\nWhether that truly makes them the Prince That Was Promised is a different question, but a great many people are going to answer it very confidently in both directions."

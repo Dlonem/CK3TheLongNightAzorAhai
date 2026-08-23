@@ -1,0 +1,21 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- three names the Others never had.
+ #
+ # NOT AN OVERRIDE OF ANY FILE. Localization merges by KEY, so these are new definitions and nothing in
+ # theothers_l_english.yml or anywhere else is shadowed.
+ #
+ # All three were being asked for by script and defined nowhere, which CK3 reports as "Unrecognized loc key"
+ # and renders in game as an empty string -- a war declared against nothing, and an army with no name over it.
+
+ # longnight_create_other_for_scouring -> create_dynamic_title = { tier = duchy  name = others_duchy_title }
+ #
+ # A shell duchy, made so that a scouring Other is a thing war can be declared on. The player meets it in the
+ # war declaration and the war list, so it has to read as a place rather than as a unit. Deliberately not
+ # "the Land of Always Winter" -- that is h_the_others, the whole empire, and this is one advance out of it.
+ others_duchy_title:0 "The Cold Beyond"
+
+ # longnight_spawn_army_for_scouring -> spawn_army = { name = scouring_army_name }
+ #
+ # Sits over the stack. Short, because army names are drawn on the map at map-pin size.
+ scouring_army_name:0 "The Scouring"

@@ -1,0 +1,32 @@
+﻿l_russian:
+
+ ln_wight.1.t:0 "У одного из мёртвых знакомое вам лицо"
+
+ ln_wight.1.desc.spouse:0 "С севера приезжает всадник с вестью, которую вы заставляете его повторить дважды.\n\n[scope:ln_risen.GetTitledFirstName] ходит. Не живёт — ходит. Говорят, глаза цвета звезды, увиденной сквозь лёд, и то, что носит [scope:ln_risen.GetHerHis] лицо, не знает собственного имени.\n\nВы венчались перед богом. И не знаете, кого из вас этот обет ещё держит."
+
+ ln_wight.1.desc.soulmate:0 "Письмо короткое, потому что тот, кто его писал, не смог тянуть слова дальше.\n\n[scope:ln_risen.GetTitledFirstName] — среди мёртвых, которые ходят. Из всех на свете именно [scope:ln_risen.GetFirstNameNoTooltip] мог бы понять, что вы чувствуете, читая это. Вот эта часть и не желает улечься в груди."
+
+ ln_wight.1.desc.child:0 "Вы читаете это стоя, а потом садитесь.\n\n[scope:ln_risen.GetTitledFirstName] умер — и мёртвым не остался. Что-то холодное вошло в дверь, за которой стоял [scope:ln_risen.GetSheHe], и теперь [scope:ln_risen.GetSheHe] идёт с ним на север, прочь от всего, чем [scope:ln_risen.GetSheHe] был.\n\nВы когда-то хоронили родителя и называли это естественным порядком вещей. Здесь никакого порядка нет."
+
+ ln_wight.1.desc.parent:0 "Всадник не смотрит вам в глаза.\n\n[scope:ln_risen.GetTitledFirstName] пал, когда пала крепость, а потом [scope:ln_risen.GetSheHe] поднялся. То, что подняло [scope:ln_risen.GetHerHim], оставило облик и забрало всё прочее — голос, нрав, мелкие привычки, по которым вы узнали бы [scope:ln_risen.GetHerHim] в тёмной комнате.\n\nМёртвые не помнят, что были кому-то матерью или отцом."
+
+ ln_wight.1.desc.sibling:0 "Вы узнаёте почерк. Остального знать не хотите.\n\n[scope:ln_risen.GetTitledFirstName] ходит с мёртвыми. Вы росли в одних чертогах, спорили об одном наследстве, и вы всегда полагали, что успеете это уладить.\n\nУлаживать больше нечего. Остаётся одно: сумеете ли вы это прекратить."
+
+ ln_wight.1.desc.best_friend:0 "Вы прочли письмо трижды, и оно не изменилось.\n\n[scope:ln_risen.GetTitledFirstName] — среди мёртвых. Не убит ими — один из них: идёт на север в холоде, с лицом, которое вы узнали бы за сотню шагов.\n\nИ нет на свете никого, кого вам сейчас недостаёт так, как [scope:ln_risen.GetHerHim]."
+
+ ln_wight.1.desc.lover:0 "Гонец скакал четыре дня, и по нему это видно.\n\n[scope:ln_risen.GetTitledFirstName] ходит с мёртвыми. Иные переделали [scope:ln_risen.GetHerHim] всего, но лицо забрать не потрудились. Оно всё то же самое лицо.\n\nИ вы обнаруживаете, что от этого почему-то хуже."
+
+ ln_wight.1.desc.friend:0 "Весть идёт на юг, из рук в руки, и доходит до вас сильно потрёпанной.\n\n[scope:ln_risen.GetTitledFirstName] восстал. Мёртвые не собираются по знамёнам — они просто накапливаются, и [scope:ln_risen.GetFirstNameNoTooltip] теперь часть этого накопления: холодный, неутомимый и совершенно равнодушный к тому, что когда-то был вашим другом."
+
+ ln_wight.1.desc.generic:0 "Весть идёт с севера на юг так, как всегда идут дурные вести: поздно и наверняка.\n\n[scope:ln_risen.GetTitledFirstName] ходит с мёртвыми. Вы знали [scope:ln_risen.GetHerHim]. Когда-то это что-то значило, а для того, что носит [scope:ln_risen.GetHerHis] лицо, не значит ровным счётом ничего."
+
+ ln_wight.1.a:0 "[scope:ln_risen.GetHerHim] больше нет."
+ ln_wight.1.b:0 "Тогда я встречу [scope:ln_risen.GetHerHim] в поле и покончу с этим."
+
+ # 1.0.8 -- the marriage card. NOTE THE TOKEN FORM: bare saved-scope names, [ln_lost.GetTitledFirstName],
+ # NOT [scope:ln_lost...]. Vanilla uses the scope: form zero times across its whole localization; the bare
+ # form is the one proven live in this mod (the reveal chain's slayer attribution, 13 Aug run).
+ ln_wight.2.t:0 "Смерть разлучила нас"
+ ln_wight.2.desc:0 "Всадник ждёт во дворе, потому что в доме этого не скажет.\n\n[ln_lost.GetTitledFirstName] пал — и павшим не остался. То, что ходит теперь, идёт на север вместе с остальными, в холоде, с лицом, рядом с которым вы просыпались.\n\nСептон осторожен с вами. Обеты были до смерти, говорит он, а смерть уже пришла и ушла. Здесь не о чем ходатайствовать и некому подать прошение о разводе. Всё, что связывало вас и [ln_lost.GetHerHim], оборвалось в тот миг, когда [ln_lost.GetSheHe] поднялся снова."
+ ln_wight.2.a:0 "Отпеть [ln_lost.GetHerHim]. Всё кончилось тогда же, когда кончился [ln_lost.GetSheHe]."
+ ln_wight.2.b:0 "Тогда я найду [ln_lost.GetHerHim] в поле и покончу с этим."

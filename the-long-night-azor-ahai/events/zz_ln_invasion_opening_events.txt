@@ -1,0 +1,693 @@
+﻿namespace = ln_opening
+
+# AGOT: The Long Night & Azor Ahai -- the precursor, and the five openings.
+#
+# ln_opening.6  -- THE WARNING. Fired when the struggle enters The Cold Winds Rise. This is the card that did not
+#                  exist before: the realm gets roughly a decade of knowing, which is what makes the Long Summer
+#                  worth having spent well.
+# ln_opening.1-4 -- THE DARK ARRIVES. One of five, chosen in ln_invasion_opening_effect. Same invasion underneath;
+#                  a different memory of how it started.
+#
+# DEVELOPED 9 Aug (Session 10, flavor round 2): every opening now reads differently from the stations that live
+# closest to it -- the Watch and the North on every card, the free folk on the exodus (they ARE the exodus), the
+# red faith on the infiltration (the Great Other's servants wearing faces is their oldest sermon) -- and every
+# card offers two answers, trait-weighted for the AI, with small honest costs: the marshal's answer and the
+# other one. Fallback desc on every card is the original text, unchanged.
+
+# ────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# DEVELOPED 9 Aug (Session 10). This card fires once per game, for every player, at the mod's single most
+# important pacing moment -- and after the clock-race fix it fires in 100% of games instead of 45%, which is
+# what finally earned it the intro card's treatment. One generic paragraph and a nod was a placeholder.
+#
+# Same station ladder as ln_intro.1, but the MOMENT is different: at the intro nobody can prove anything, and
+# every branch is wrong in its own direction. Here the signs are real, so every branch is about what knowing
+# looks like from where you stand -- the Watch counts it, the free folk are running from it, the North stops
+# calling it a story, the dragon dreams it, the red priests are vindicated by it, and the south reads it in a
+# report it would rather argue with.
+#
+# The options are not cosmetic, matching the intro card's rule:
+#   * the muster is the marshal's answer -- a little prestige, because the realm sees someone take it in hand
+#   * the Citadel is the SECOND DOOR to ln_heard_the_warning -- a ruler who dismissed the intro card forty
+#     years ago (or inherited after it) gets one more honest chance at the dragonglass knowledge gate
+#   * looking away costs the WORLD time, not the character -- ln_the_dark_comes_sooner_effect, self-gated and
+#     rate-limited (once per four years globally), so a realm of deniers cannot chain-bite the clock
+# 1.0.9 LIVE-RUN FIX -- THIS EVENT WAS ln_opening.0 AND INDEX ZERO IS NOT USABLE.
+# Thomas's 14 Aug run: "Duplicated event ID 'ln_opening.0' found", with New Location and Previous
+# Location printing the IDENTICAL file and line -- this file, this event, colliding with itself. The
+# file is not double-loaded: none of the other six events in it (.1-.5, .10) reported anything, and no
+# other loaded mod ships this path.
+#
+# The evidence that settles it: VANILLA DECLARES NO EVENT AT INDEX .0 ANYWHERE. Zero, across every
+# events file it ships. Neither does AGOT. We were the only thing in the playset using it, and it was
+# the only index that collided. Index 0 is not a free number.
+#
+# Renumbered to .6, the first free index in this namespace. The rename was safe to do on a live save
+# because the only fire site (ln_struggle_cold_winds_reached_effect) uses a bare `trigger_event` with no
+# `days =`, so nothing is ever queued under the old id and no save can hold a dangling reference.
+ln_opening.6 = {
+	type = character_event
+	window = fullscreen_event
+
+	# 13 Aug (1.0.6a) -- THE SECOND LOCK. Two workshop reports of this card repeating (Zetsuji: "I keep
+	# getting the cold winds rise event like it's spamming me"; GhostzER: "the cold winter noti keeps
+	# popping up"). The global latch (ln_latch_cold_winds, set in ln_struggle_monthly_effect before this
+	# is ever called) audits as correct and I cannot reproduce a path that fires it twice -- so rather
+	# than argue with two players, the card now carries its own per-character one-shot as well. A global
+	# and a character flag cannot both fail, and the two are independent: whatever route re-enters the
+	# effect, no player sees this card twice in one winter. Cleared with the other latches when the wheel
+	# turns (ln_struggle_monthly_effect's Long Summer re-arm), so wave two still gets its warning.
+	trigger = {
+		NOT = { has_character_flag = ln_saw_the_cold_winds }
+	}
+	title = ln_opening.6.t
+	desc = {
+		first_valid = {
+			# STATION LADDER, re-sorted 1.0.11a ------------------------------------------------------------------------------------------
+			# first_valid is first-match-wins, so this order IS the priority. Deliberate choices:
+			#   watch beats faith      -- a sworn brother who follows R'hllor is a sworn brother first
+			#   free folk beats faith  -- a wildling who follows the red god is still beyond the Wall
+			#   DRAGON BEATS NORTH     -- a northman on a dragon reads as a dragonrider that day
+			#   red beats lord/nobody  -- if you follow R'hllor you have a priest to hear it from
+			# `dragon` is no longer dynasty-only. ln_has_deed_woke_dragons_trigger means you actually HAVE
+			# one (any_relation type agot_dragon), so a lowborn who tamed a dragon now reads as one.
+			# Any background stack on this event is kept in the SAME order, for the same reason.
+			triggered_desc = {
+				trigger = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen  ln_the_dance_era_trigger = yes }
+				desc = ln_opening.6.desc.dance
+			}
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_opening.6.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+						culture = culture:frostborn
+						culture = culture:thenn
+						culture = culture:first_clan
+					}
+				}
+				desc = ln_opening.6.desc.free_folk
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						ln_has_deed_woke_dragons_trigger = yes
+						AND = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+					}
+				}
+				desc = ln_opening.6.desc.dragon
+			}
+			triggered_desc = {
+				trigger = { culture = culture:northman }
+				desc = ln_opening.6.desc.north
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						faith = faith:rhllor_fots
+						faith = faith:rhllor_fc
+						faith = faith:rhllor_asshai
+						faith = faith:rhllor_hyrkoon
+					}
+				}
+				desc = ln_opening.6.desc.red
+			}
+			triggered_desc = {
+				trigger = { ln_age_of_dragons_trigger = yes }
+				desc = ln_opening.6.desc.dragons
+			}
+			triggered_desc = {
+				trigger = { is_landed = yes  highest_held_title_tier >= tier_county }
+				desc = ln_opening.6.desc.lord
+			}
+			triggered_desc = {
+				trigger = { is_landed = no }
+				desc = ln_opening.6.desc.nobody
+			}
+			desc = ln_opening.6.desc
+		}
+	}
+	theme = murder_scheme
+	# ── ONE BACKGROUND PER STATION (1.0.11a) ─────────────────────────────────────────────────────────
+	# Winter Is Coming is the only card in this file that varies its background: it is the "the air has
+	# changed" beat, so where you are standing matters. ln_opening.1-.5 all keep agot_frozen_forest,
+	# because by then the Long Night has begun and the answer is the same everywhere.
+	# Triggers are copied VERBATIM from the desc ladder below and kept in the SAME ORDER -- first match
+	# wins for both, so if one moves the other must move with it.
+	# NOTE: agot_northern_castle is declared by AGOT but ships no art, so the North uses the weirwood.
+	override_background = { trigger = { has_government = nights_watch_government }  reference = agot_the_wall }
+	override_background = {
+		trigger = {
+			OR = {
+				capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+				culture = culture:frostborn
+				culture = culture:thenn
+				culture = culture:first_clan
+			}
+		}
+		reference = agot_beyond_the_wall
+	}
+	override_background = { trigger = { culture = culture:northman }  reference = agot_weirwood_event }
+	override_background = {
+		trigger = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+		reference = agot_dragonpit
+	}
+	override_background = {
+		trigger = {
+			OR = {
+				faith = faith:rhllor_fots
+				faith = faith:rhllor_fc
+				faith = faith:rhllor_asshai
+				faith = faith:rhllor_hyrkoon
+			}
+		}
+		reference = bp1_bonfire
+	}
+	override_background = { trigger = { is_landed = yes  highest_held_title_tier >= tier_county }  reference = council_chamber }
+	override_background = { trigger = { is_landed = no }  reference = farmland }
+	override_background = { reference = agot_frozen_forest }
+	immediate = {
+		play_music_cue = "mood_the_others"
+		# THE KEY TO THE SECOND LOCK in the trigger above. It MUST live in this block: an event may only
+		# have one `immediate`, and a duplicate is silently discarded -- which is exactly how the first
+		# version of this fix shipped a lock that nobody could ever hold the key to. Thomas caught it by
+		# asking the right question: "are we positive people are getting that flag?"
+		add_character_flag = ln_saw_the_cold_winds
+	}
+
+	# Begin the muster. The phase itself already pays the levy and garrison bonuses; this is the realm
+	# watching its lord act like the reports are true.
+	option = {
+		name = ln_opening.6.a
+		add_prestige = 100
+		ai_chance = {
+			base = 40
+			modifier = { add = 30  OR = { has_trait = brave  has_trait = diligent  has_education_martial_trigger = yes } }
+			modifier = { add = 25  OR = { culture = culture:northman  has_government = nights_watch_government } }
+			modifier = { add = -30  has_trait = craven }
+		}
+	}
+
+	# Ask the Citadel. The same flag the intro card offers -- and the last honest chance to get it.
+	option = {
+		name = ln_opening.6.b
+		add_character_flag = ln_heard_the_warning
+		ai_chance = {
+			base = 25
+			modifier = { add = 30  OR = { has_education_learning_trigger = yes  has_trait = shrewd } }
+			modifier = { add = 15  has_trait = humble }
+			modifier = { add = -15  has_trait = arrogant }
+		}
+	}
+
+	# Look away. Nothing happens to you. Something happens to the calendar.
+	option = {
+		name = ln_opening.6.c
+		ln_the_dark_comes_sooner_effect = { YEARS = 2 }
+		ai_chance = {
+			base = 20
+			modifier = { add = 25  OR = { has_trait = arbitrary  has_trait = content  has_trait = lazy } }
+			modifier = { add = -20  OR = { has_trait = zealous  culture = culture:northman } }
+			modifier = { add = -25  has_government = nights_watch_government }
+		}
+	}
+}
+
+# ── 1. The Wall comes down ──────────────────────────────────────────────────────────────────────────────────
+# RETIRED AS AN OPENING, 13 Aug (Thomas, live run): the card narrated the Wall down on day 0 while the
+# simulation dropped it years later. Nothing triggers this event any more -- the wall_breached slot in
+# ln_invasion_opening_effect now belongs to ln_opening.5, The Proof. Kept defined for old saves with the
+# event mid-queue.
+ln_opening.1 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_opening.1.t
+	desc = {
+		first_valid = {
+			# STATION LADDER, re-sorted 1.0.11a ------------------------------------------------------------------------------------------
+			# first_valid is first-match-wins, so this order IS the priority. Deliberate choices:
+			#   watch beats faith      -- a sworn brother who follows R'hllor is a sworn brother first
+			#   free folk beats faith  -- a wildling who follows the red god is still beyond the Wall
+			#   DRAGON BEATS NORTH     -- a northman on a dragon reads as a dragonrider that day
+			#   red beats lord/nobody  -- if you follow R'hllor you have a priest to hear it from
+			# `dragon` is no longer dynasty-only. ln_has_deed_woke_dragons_trigger means you actually HAVE
+			# one (any_relation type agot_dragon), so a lowborn who tamed a dragon now reads as one.
+			# Any background stack on this event is kept in the SAME order, for the same reason.
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_opening.1.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+						culture = culture:frostborn
+						culture = culture:thenn
+						culture = culture:first_clan
+					}
+				}
+				desc = ln_opening.1.desc.free_folk
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						ln_has_deed_woke_dragons_trigger = yes
+						AND = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+					}
+				}
+				desc = ln_opening.1.desc.dragon
+			}
+			triggered_desc = {
+				trigger = { culture = culture:northman }
+				desc = ln_opening.1.desc.north
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						faith = faith:rhllor_fots
+						faith = faith:rhllor_fc
+						faith = faith:rhllor_asshai
+						faith = faith:rhllor_hyrkoon
+					}
+				}
+				desc = ln_opening.1.desc.red
+			}
+			triggered_desc = {
+				trigger = { is_landed = yes  highest_held_title_tier >= tier_county }
+				desc = ln_opening.1.desc.lord
+			}
+			triggered_desc = {
+				trigger = { is_landed = no }
+				desc = ln_opening.1.desc.nobody
+			}
+			desc = ln_opening.1.desc
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+	immediate = { play_music_cue = "mood_the_others" }
+
+	option = {
+		name = ln_opening.1.a
+		add_prestige = 50
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  OR = { has_trait = brave  has_education_martial_trigger = yes } }
+			modifier = { add = -30  has_trait = craven }
+		}
+	}
+	option = {
+		name = ln_opening.1.b
+		add_piety = 50
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  OR = { has_trait = compassionate  has_trait = calm  has_trait = patient } }
+		}
+	}
+}
+
+# ── 2. The last ranging ─────────────────────────────────────────────────────────────────────────────────────
+ln_opening.2 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_opening.2.t
+	desc = {
+		first_valid = {
+			# STATION LADDER, re-sorted 1.0.11a ------------------------------------------------------------------------------------------
+			# first_valid is first-match-wins, so this order IS the priority. Deliberate choices:
+			#   watch beats faith      -- a sworn brother who follows R'hllor is a sworn brother first
+			#   free folk beats faith  -- a wildling who follows the red god is still beyond the Wall
+			#   DRAGON BEATS NORTH     -- a northman on a dragon reads as a dragonrider that day
+			#   red beats lord/nobody  -- if you follow R'hllor you have a priest to hear it from
+			# `dragon` is no longer dynasty-only. ln_has_deed_woke_dragons_trigger means you actually HAVE
+			# one (any_relation type agot_dragon), so a lowborn who tamed a dragon now reads as one.
+			# Any background stack on this event is kept in the SAME order, for the same reason.
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_opening.2.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+						culture = culture:frostborn
+						culture = culture:thenn
+						culture = culture:first_clan
+					}
+				}
+				desc = ln_opening.2.desc.free_folk
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						ln_has_deed_woke_dragons_trigger = yes
+						AND = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+					}
+				}
+				desc = ln_opening.2.desc.dragon
+			}
+			triggered_desc = {
+				trigger = { culture = culture:northman }
+				desc = ln_opening.2.desc.north
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						faith = faith:rhllor_fots
+						faith = faith:rhllor_fc
+						faith = faith:rhllor_asshai
+						faith = faith:rhllor_hyrkoon
+					}
+				}
+				desc = ln_opening.2.desc.red
+			}
+			triggered_desc = {
+				trigger = { is_landed = yes  highest_held_title_tier >= tier_county }
+				desc = ln_opening.2.desc.lord
+			}
+			triggered_desc = {
+				trigger = { is_landed = no }
+				desc = ln_opening.2.desc.nobody
+			}
+			desc = ln_opening.2.desc
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+	immediate = { play_music_cue = "mood_the_others" }
+
+	option = {
+		name = ln_opening.2.a
+		add_dread = 5
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  OR = { has_trait = wrathful  has_trait = zealous } }
+		}
+	}
+	option = {
+		name = ln_opening.2.b
+		add_piety = 50
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  OR = { has_trait = just  has_trait = patient  has_trait = compassionate } }
+		}
+	}
+}
+
+# ── 3. The exodus ───────────────────────────────────────────────────────────────────────────────────────────
+ln_opening.3 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_opening.3.t
+	desc = {
+		first_valid = {
+			# STATION LADDER, re-sorted 1.0.11a ------------------------------------------------------------------------------------------
+			# first_valid is first-match-wins, so this order IS the priority. Deliberate choices:
+			#   watch beats faith      -- a sworn brother who follows R'hllor is a sworn brother first
+			#   free folk beats faith  -- a wildling who follows the red god is still beyond the Wall
+			#   DRAGON BEATS NORTH     -- a northman on a dragon reads as a dragonrider that day
+			#   red beats lord/nobody  -- if you follow R'hllor you have a priest to hear it from
+			# `dragon` is no longer dynasty-only. ln_has_deed_woke_dragons_trigger means you actually HAVE
+			# one (any_relation type agot_dragon), so a lowborn who tamed a dragon now reads as one.
+			# Any background stack on this event is kept in the SAME order, for the same reason.
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_opening.3.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+						culture = culture:frostborn
+						culture = culture:thenn
+						culture = culture:first_clan
+					}
+				}
+				desc = ln_opening.3.desc.free_folk
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						ln_has_deed_woke_dragons_trigger = yes
+						AND = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+					}
+				}
+				desc = ln_opening.3.desc.dragon
+			}
+			triggered_desc = {
+				trigger = { culture = culture:northman }
+				desc = ln_opening.3.desc.north
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						faith = faith:rhllor_fots
+						faith = faith:rhllor_fc
+						faith = faith:rhllor_asshai
+						faith = faith:rhllor_hyrkoon
+					}
+				}
+				desc = ln_opening.3.desc.red
+			}
+			triggered_desc = {
+				trigger = { is_landed = yes  highest_held_title_tier >= tier_county }
+				desc = ln_opening.3.desc.lord
+			}
+			triggered_desc = {
+				trigger = { is_landed = no }
+				desc = ln_opening.3.desc.nobody
+			}
+			desc = ln_opening.3.desc
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+	immediate = { play_music_cue = "mood_the_others" }
+
+	option = {
+		name = ln_opening.3.a
+		ai_chance = {
+			base = 50
+			modifier = { add = 20  has_trait = compassionate }
+		}
+	}
+	option = {
+		name = ln_opening.3.b
+		add_prestige = 50
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  OR = { has_trait = compassionate  has_trait = brave  culture = culture:northman } }
+			modifier = { add = -25  OR = { has_trait = callous  has_trait = paranoid } }
+		}
+	}
+}
+
+# ── 4. It was already inside ────────────────────────────────────────────────────────────────────────────────
+ln_opening.4 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_opening.4.t
+	desc = {
+		first_valid = {
+			# STATION LADDER, re-sorted 1.0.11a ------------------------------------------------------------------------------------------
+			# first_valid is first-match-wins, so this order IS the priority. Deliberate choices:
+			#   watch beats faith      -- a sworn brother who follows R'hllor is a sworn brother first
+			#   free folk beats faith  -- a wildling who follows the red god is still beyond the Wall
+			#   DRAGON BEATS NORTH     -- a northman on a dragon reads as a dragonrider that day
+			#   red beats lord/nobody  -- if you follow R'hllor you have a priest to hear it from
+			# `dragon` is no longer dynasty-only. ln_has_deed_woke_dragons_trigger means you actually HAVE
+			# one (any_relation type agot_dragon), so a lowborn who tamed a dragon now reads as one.
+			# Any background stack on this event is kept in the SAME order, for the same reason.
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_opening.4.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+						culture = culture:frostborn
+						culture = culture:thenn
+						culture = culture:first_clan
+					}
+				}
+				desc = ln_opening.4.desc.free_folk
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						ln_has_deed_woke_dragons_trigger = yes
+						AND = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+					}
+				}
+				desc = ln_opening.4.desc.dragon
+			}
+			triggered_desc = {
+				trigger = { culture = culture:northman }
+				desc = ln_opening.4.desc.north
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						faith = faith:rhllor_fots
+						faith = faith:rhllor_fc
+						faith = faith:rhllor_asshai
+						faith = faith:rhllor_hyrkoon
+					}
+				}
+				desc = ln_opening.4.desc.red
+			}
+			triggered_desc = {
+				trigger = { is_landed = yes  highest_held_title_tier >= tier_county }
+				desc = ln_opening.4.desc.lord
+			}
+			triggered_desc = {
+				trigger = { is_landed = no }
+				desc = ln_opening.4.desc.nobody
+			}
+			desc = ln_opening.4.desc
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+	immediate = { play_music_cue = "mood_the_others" }
+
+	option = {
+		name = ln_opening.4.a
+		add_dread = 10
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  OR = { has_trait = paranoid  has_trait = wrathful } }
+		}
+	}
+	option = {
+		name = ln_opening.4.b
+		ai_chance = {
+			base = 40
+			modifier = { add = 30  OR = { has_trait = deceitful  has_trait = patient  has_trait = shrewd } }
+		}
+	}
+}
+
+# ── THE VETERAN (wave two and after) ────────────────────────────────────────────────────────────────────────
+# Fired from ln_struggle_reached_long_night_effect at living holders of ln_stood_at_the_dawn (the first
+# roll-call) or azor_ahai_reborn, human players only; the modifier lands on AI veterans silently.
+ln_opening.10 = {
+	type = character_event
+	title = ln_opening.10.t
+	desc = ln_opening.10.desc
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = personality_bold }
+
+	trigger = {
+		OR = {
+			has_character_flag = ln_stood_at_the_dawn
+			has_trait = azor_ahai_reborn
+		}
+	}
+
+	option = {
+		name = ln_opening.10.a
+	}
+}
+
+# ── 5. THE PROOF ────────────────────────────────────────────────────────────────────────────────────────────
+# Thomas's replacement for the retired wall_breached opening, in his own words: "someone bringing a
+# living Wight to King's Landing to be executed and make the King/Queen a believer instead, proving it
+# has indeed started." The realm's problem was never that nobody saw anything -- it was that nobody was
+# believed. This opening is the one where the proof walks into the throne room on a chain.
+# The believer flag on the crown is granted in ln_invasion_opening_effect, beside the roll.
+ln_opening.5 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_opening.5.t
+	desc = {
+		first_valid = {
+			# STATION LADDER, re-sorted 1.0.11a ------------------------------------------------------------------------------------------
+			# first_valid is first-match-wins, so this order IS the priority. Deliberate choices:
+			#   watch beats faith      -- a sworn brother who follows R'hllor is a sworn brother first
+			#   free folk beats faith  -- a wildling who follows the red god is still beyond the Wall
+			#   DRAGON BEATS NORTH     -- a northman on a dragon reads as a dragonrider that day
+			#   red beats lord/nobody  -- if you follow R'hllor you have a priest to hear it from
+			# `dragon` is no longer dynasty-only. ln_has_deed_woke_dragons_trigger means you actually HAVE
+			# one (any_relation type agot_dragon), so a lowborn who tamed a dragon now reads as one.
+			# Any background stack on this event is kept in the SAME order, for the same reason.
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_opening.5.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+						culture = culture:frostborn
+						culture = culture:thenn
+						culture = culture:first_clan
+					}
+				}
+				desc = ln_opening.5.desc.free_folk
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						ln_has_deed_woke_dragons_trigger = yes
+						AND = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+					}
+				}
+				desc = ln_opening.5.desc.dragon
+			}
+			triggered_desc = {
+				trigger = { culture = culture:northman }
+				desc = ln_opening.5.desc.north
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						faith = faith:rhllor_fots
+						faith = faith:rhllor_fc
+						faith = faith:rhllor_asshai
+						faith = faith:rhllor_hyrkoon
+					}
+				}
+				desc = ln_opening.5.desc.red
+			}
+			triggered_desc = {
+				trigger = { this = title:h_the_iron_throne.holder }
+				desc = ln_opening.5.desc.crown
+			}
+			triggered_desc = {
+				trigger = { is_landed = yes  highest_held_title_tier >= tier_county }
+				desc = ln_opening.5.desc.lord
+			}
+			triggered_desc = {
+				trigger = { is_landed = no }
+				desc = ln_opening.5.desc.nobody
+			}
+			desc = ln_opening.5.desc
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+	immediate = { play_music_cue = "mood_the_others" }
+
+	option = {
+		name = ln_opening.5.a          # then it is all true. all of it.
+		add_piety = 50
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  OR = { has_trait = zealous  has_trait = humble } }
+		}
+	}
+	option = {
+		name = ln_opening.5.b          # burn the thing. then muster.
+		add_prestige = 50
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  OR = { has_trait = brave  has_education_martial_trigger = yes } }
+			modifier = { add = -30  has_trait = craven }
+		}
+	}
+}

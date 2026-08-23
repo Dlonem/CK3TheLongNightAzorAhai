@@ -1,0 +1,183 @@
+﻿# AGOT: The Long Night & Azor Ahai -- how fast the Long Summer is allowed to run out.
+#
+# THE PROBLEM, FROM A LIVE SAVE. Thomas, 121 AC on the Fire & Blood bookmark, default rules:
+#
+#   "It's been eleven years, and we are forty three out of one hundred done Long Summer, which in my opinion
+#    isn't reasonable."
+#   "I'm on the year one twenty one AC, and we are sixty seven out of one hundred of the way through the Long
+#    Summer. And the Dance of Dragons hasn't even started. Do you see what I was talking about the balancing?
+#    This flag keeps firing. We either need to limit how many times the flag gets listened to, how many times
+#    it fires, how much that flag contributes."
+#
+# The catalyst readout said 39 x ln_catalyst_year_passed, 5 x ln_catalyst_ranging_lost, 3 x
+# ln_catalyst_watch_undermanned. Two separate faults:
+#
+#   * THE DRIP RAN ROUGHLY TWICE. The default rule should tick about 1.1 points a year and 39 firings in
+#     twenty years is nearly double that. The yearly work was gated on an auto-expiring global
+#     (`ln_yearly_done`, years = 1) with two independent drivers racing for it. Rather than work out which
+#     driver was slipping through -- the whole failure mode of this project has been reasoning about things
+#     instead of pinning them down -- the gate is now the CALENDAR: a global holding the last year the work
+#     ran, compared against current_year. That cannot drift, cannot expire early, and does not care how many
+#     drivers call it or in what order.
+#
+#   * THE CATALYSTS WERE UNCAPPED AND UNACCOUNTED. Twenty-nine of his sixty-eight points came from events,
+#     none of which had any idea what the others were doing. A ranging lost is worth four points every single
+#     time it happens, forever.
+#
+# THE FIX IS A BUDGET, NOT A NERF. The mod now keeps its own ledger of every point it has spent
+# (ln_summer_points) and knows how many years the summer is supposed to last (ln_summer_target, rolled from
+# the invasion-timing rule when the summer begins). Each year the drip asks one question: are we ahead of
+# schedule or behind? If behind, it ticks. If ahead by more than the slack, it stays silent and lets the
+# catalysts' lead stand.
+#
+# So catalysts still MATTER -- a bad decade genuinely pulls the dark forward -- but they can only pull it
+# forward by so much, and a quiet century still ends on time. And this is self-correcting for any catalyst
+# anyone adds later, which per-catalyst tuning never would be.
+#
+# NO DIVISION. Comparing progress to schedule is points/100 vs years/target; cross-multiplied that is
+# points*target vs years*100, which is exact in integers and needs no rounding rules.
+
+# Negative = behind schedule. Zero = exactly on pace. Positive = the catalysts have pulled it forward.
+# Absent globals read as zero, which makes a fresh save look "behind" and tick normally -- the safe default.
+ln_summer_schedule_gap_value = {
+	value = 0
+	if = {
+		limit = {
+			exists = global_var:ln_summer_points
+			exists = global_var:ln_summer_target
+		}
+		add = {
+			value = global_var:ln_summer_points
+			multiply = global_var:ln_summer_target
+		}
+	}
+	if = {
+		limit = { exists = global_var:ln_summer_years }
+		subtract = {
+			value = global_var:ln_summer_years
+			multiply = 100
+		}
+	}
+}
+
+# HOW FAR AHEAD OF ITS OWN SCHEDULE THE WORLD IS ALLOWED TO GET.
+#
+# Fifteen points. The drip itself never runs ahead -- it stops the moment the gap reaches zero -- so this
+# headroom belongs entirely to the catalysts. A century of dead dragons, lost rangings and a hollowed-out Watch
+# ends its Long Summer up to fifteen per cent early; on the default ninety-five-year roll that is fourteen
+# years. Past that the choke points refuse outright, so no run of bad luck can delete a century.
+#
+# THIS IS THE ONE NUMBER TO TURN if the dark should be more or less responsive to what actually happens in the
+# world. Everything else scales off it.
+#
+# Expressed in the same cross-multiplied units as the gap, hence the target multiplier.
+ln_summer_slack_value = {
+	value = 0
+	if = {
+		limit = { exists = global_var:ln_summer_target }
+		add = {
+			value = global_var:ln_summer_target
+			multiply = 15
+		}
+	}
+}
+
+# HOW MANY POINTS THE DRIP SPENDS THIS YEAR.
+#
+# The obvious implementation is 100 / target points a year, and it is wrong twice: CK3 script values are
+# floats, `while = { count = 1.33 }` truncates by rules I could not find written down anywhere, and there is no
+# round_down in the vanilla script-value grammar (zero uses across the entire base game). Anything built on
+# division would have been a guess dressed as arithmetic.
+#
+# So the drip does not compute a rate. It looks at how far behind schedule the world is and spends accordingly,
+# in thresholds measured in units of the target -- which makes the whole ladder scale-free, correct for a
+# twenty-five-year summer and a two-hundred-and-forty-year one from the same six lines, and self-correcting if
+# a catalyst lands or a save is loaded mid-century.
+#
+# SIMULATED BEFORE SHIPPING, because "it should converge" is exactly the kind of reasoning that produced the
+# 39-firing drip in the first place. Quiet world, no catalysts, years the summer actually ends on:
+#
+#     target  25 -> 28    target  70 -> 71    target 110 -> 109    target 150 -> 149
+#     target  45 -> 47    target  95 -> 96    target 125 -> 124    target 240 -> 238
+#
+# Within one to three years across the whole range. The short end runs long because the ladder tops out at
+# five points a year, which only the fastest roll of `others_full_random_invasion` can reach.
+ln_summer_drip_ticks_value = {
+	value = 0
+	if = {
+		limit = { ln_summer_schedule_gap_value >= 0 }
+		value = 0                                          # on or ahead of schedule: spend nothing
+	}
+	else_if = {
+		limit = { ln_summer_schedule_gap_value >= ln_summer_behind_2_value }
+		value = 1
+	}
+	else_if = {
+		limit = { ln_summer_schedule_gap_value >= ln_summer_behind_6_value }
+		value = 2
+	}
+	else_if = {
+		limit = { ln_summer_schedule_gap_value >= ln_summer_behind_12_value }
+		value = 3
+	}
+	else_if = {
+		limit = { ln_summer_schedule_gap_value >= ln_summer_behind_20_value }
+		value = 4
+	}
+	else = {
+		value = 5
+	}
+}
+
+# The rungs of that ladder, in gap units. Kept as their own values because the gap is cross-multiplied and a
+# literal would silently mean something different for every target.
+ln_summer_behind_2_value = {
+	value = 0
+	if = { limit = { exists = global_var:ln_summer_target }  add = { value = global_var:ln_summer_target  multiply = -2 } }
+}
+ln_summer_behind_6_value = {
+	value = 0
+	if = { limit = { exists = global_var:ln_summer_target }  add = { value = global_var:ln_summer_target  multiply = -6 } }
+}
+ln_summer_behind_12_value = {
+	value = 0
+	if = { limit = { exists = global_var:ln_summer_target }  add = { value = global_var:ln_summer_target  multiply = -12 } }
+}
+ln_summer_behind_20_value = {
+	value = 0
+	if = { limit = { exists = global_var:ln_summer_target }  add = { value = global_var:ln_summer_target  multiply = -20 } }
+}
+
+# THE HISTORICAL RULE. AGOT's calendar is AC + 8000, so the canonical Long Night is year 8300. The summer ends
+# twenty-five years before that, which is the MEAN of the Cold Winds roll (12/20/28/36/45, weighted; see
+# zz_ln_winter_clock_effects.txt) rather than a fixed length. So the historical run lands near 8300 rather than
+# exactly on it, and which side of the date it falls on is not knowable in advance -- which is the correct
+# amount of certainty to give a player about a prophecy.
+# Floored at ten so a bookmark that starts after 8265 still gets a summer rather than a negative one.
+ln_historical_summer_target_value = {
+	value = 8300
+	subtract = current_year
+	subtract = 25
+	min = 10
+}
+
+# THE OVERDUE HISTORICAL START -- how many years of Cold Winds are left before the canonical date.
+#
+# Reported from the workshop within a day of release: "I dont see the long night starting even tho im setting
+# it to historical start (300)." Correct, and the arithmetic is brutal. At a 300 AC bookmark the summer target
+# above computes 8300 - 8300 - 25 = -25 and floors to 10 -- and the drip cannot beat 5 points a year
+# (ln_summer_drip_ticks_value), so 100 points takes TWENTY years no matter what the target says. Twenty years
+# of summer, then a 12-45 year winter, put the "historical" Long Night at 332-365 AC. Forty years late, on the
+# one rule whose entire purpose is a date.
+#
+# So when there is no room left for a summer the drip could actually deliver, the summer is skipped and this
+# carries the whole remaining distance instead: the struggle opens in The Cold Winds Rise and the winter clock
+# is set to expire on 8300.
+#   start 8255 -> 45 years of winter -> the Long Night in 8300
+#   start 8283 -> 17 -> 8300
+#   start 8300 -> floored to 5 -> 8305, which is where the story actually happens anyway
+ln_historical_overdue_winter_value = {
+	value = 8300
+	subtract = current_year
+	min = 5
+}

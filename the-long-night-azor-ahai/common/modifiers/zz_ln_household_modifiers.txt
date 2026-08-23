@@ -1,0 +1,21 @@
+﻿# AGOT: The Long Night & Azor Ahai -- household administration.
+#
+# RETAINED, NOT DELETED, AND THE REASON IS SAVE COMPATIBILITY RATHER THAN TIDINESS.
+# 1.0.9 dropped the ten-year cooldown on ln_household_ledger_decision at Thomas's request. Nothing
+# applies this modifier any more and nothing reads it. It stays defined because Thomas is running a live
+# save in which the decision has already been taken, and a save that carries a character modifier whose
+# definition has vanished logs on every load until it expires. Ten years of quiet log noise to save five
+# lines of dead script is a bad trade.
+#
+# 1.0.12 -- IT IS NO LONGER JUST SITTING THERE. common/on_action/zz_ln_household_on_actions.txt now carries
+# ln_household_yearly, which strips this modifier off anyone still holding it, once a year, from every
+# playable character. Two things follow. Any save that loads 1.0.12 is clean of it within a game year, so
+# the wait is on a clock we control rather than on the longest-running save in circulation. And because
+# remove_character_modifier is a script reference to the key, the engine stops calling it a waste:
+#     [static_modifier.cpp:200]: Modifier ... was not used by the script or code but exists in the database.
+#
+# DELETE ALL OF IT IN 1.1.0 -- this definition, ln_household_yearly, its line in zz_ln_00_hooks.txt, and the
+# two loc keys in zz_ln_household_l_english.yml.
+ln_household_ledger_cooldown_modifier = {
+	icon = stewardship_positive
+}

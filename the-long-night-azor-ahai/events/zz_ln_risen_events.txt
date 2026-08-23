@@ -1,0 +1,667 @@
+﻿namespace = ln_risen
+
+# AGOT: The Long Night & Azor Ahai -- what it costs to come back.
+#
+# Thomas has asked for this chain since the beginning: "I don't want just ten events for resurrected, favored
+# and chosen. I want ten for each." This is the Resurrected ten, and it went first because resurrected_by_rhllor
+# had NO content at all -- the trait has existed in this mod's lineage since Freeholder and nothing in the game
+# could grant it until this session, so nothing was ever written for it either.
+#
+# THE RULE FOR THIS WHOLE CHAIN, and it is Thomas's: "just because it costs you something doesn't mean it has to
+# have good outcomes only." Every event below has at least one option that is clearly the wise one and still
+# takes something off you, and at least one that is obviously wrong and pays. Beric Dondarrion came back six
+# times and each time there was less of him. That is the arc.
+#
+# Fired from ln_risen_pulse_effect, one every three years at most, in a random order that is different every
+# campaign. Each has a one-shot flag so nothing repeats.
+
+# ── 1. WHAT YOU REMEMBER ────────────────────────────────────────────────────────────────────────────────────
+ln_risen.1 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.1.t
+	desc = ln_risen.1.desc
+	theme = death
+	left_portrait = { character = root  animation = thinking }
+
+	option = {
+		name = ln_risen.1.a          # nothing. there was nothing.
+		ai_chance = {
+			base = 55
+			modifier = { add = 15  has_trait = calm }
+			modifier = { add = 10  has_trait = deceitful }
+		}
+		add_character_flag = ln_risen_saw_nothing
+		stress_impact = { base = medium_stress_impact_gain  cynical = minor_stress_impact_loss }
+		add_learning_lifestyle_xp = 40
+	}
+	option = {
+		name = ln_risen.1.b          # something. and you will not say what.
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = honest }
+			modifier = { add = 10  has_trait = paranoid }
+		}
+		add_character_flag = ln_risen_saw_something
+		add_piety = 100
+		stress_impact = { base = minor_stress_impact_gain  zealous = medium_stress_impact_loss }
+	}
+
+	# ── 1.0.13: THE SIGHTED OPTION ──────────────────────────────────────────────────────────────────────
+	# AGOT ships `greensight` and `dragon_dreams` as real prophetic traits (00_agot_traits.txt) and this mod
+	# had never read either. They are the two ways a person in this world can know a thing before being told
+	# it, and the prophecy chain -- 81 options across three files, two of them gated before this release --
+	# is exactly where that should change what you are able to say.
+	#
+	# THE GATE IS ITS OWN EXPLANATION. CK3 renders an option's trigger as that option's tooltip and draws the
+	# trait icon inline, so the player is shown WHY this door is open to him and nobody else. Vanilla's own
+	# dominant option idiom -- 899 trait-gated options in a 220-file sample of game/events/.
+	option = {
+		name = ln_risen.1.d
+		trigger = { has_trait = greensight }
+		add_piety = 150
+		add_character_flag = ln_risen_named_the_corridor
+		stress_impact = { base = medium_stress_impact_loss }
+		ai_chance = {
+			base = 80
+			modifier = { add = 20  has_trait = honest }
+		}
+	}
+
+}
+
+# ── 2. THE TASTE OF THINGS ──────────────────────────────────────────────────────────────────────────────────
+ln_risen.2 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.2.t
+	desc = ln_risen.2.desc
+	theme = healthcare
+	left_portrait = { character = root  animation = sick }
+
+	option = {
+		name = ln_risen.2.a          # eat anyway. the body needs it.
+		ai_chance = {
+			base = 55
+			modifier = { add = 20  has_trait = compassionate }
+			modifier = { add = 10  has_trait = patient }
+		}
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	option = {
+		name = ln_risen.2.b          # stop pretending. let them see.
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = honest }
+			modifier = { add = 10  has_trait = wrathful }
+			modifier = { add = 10  has_trait = impatient }
+		}
+		add_character_flag = ln_risen_stopped_pretending
+		add_dread = 8
+		every_courtier = {
+			limit = { NOT = { faith = root.faith } }
+			add_opinion = { modifier = scared_opinion  target = root  opinion = -10 }
+		}
+	}
+}
+
+# ── 3. SHE CANNOT LOOK AT YOU ───────────────────────────────────────────────────────────────────────────────
+ln_risen.3 = {
+	type = character_event
+	title = ln_risen.3.t
+	desc = ln_risen.3.desc
+	theme = love
+	left_portrait = { character = root  animation = sadness }
+	right_portrait = { character = scope:ln_close  animation = worry }
+
+	trigger = {
+		exists = primary_spouse
+		has_trait = resurrected_by_rhllor
+	}
+
+	immediate = { primary_spouse = { save_scope_as = ln_close } }
+
+	option = {
+		name = ln_risen.3.a          # give her time.
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = patient }
+			modifier = { add = 20  has_trait = compassionate }
+		}
+		stress_impact = { base = medium_stress_impact_gain  compassionate = minor_stress_impact_gain }
+		scope:ln_close = { add_opinion = { modifier = grateful_opinion  target = root  opinion = 15 } }
+	}
+	option = {
+		name = ln_risen.3.b          # make her say it to your face.
+		ai_chance = {
+			base = 25
+			modifier = { add = 20  has_trait = wrathful }
+			modifier = { add = 15  has_trait = impatient }
+			modifier = { add = 10  has_trait = arrogant }
+		}
+		add_dread = 5
+		scope:ln_close = { add_opinion = { modifier = scared_opinion  target = root  opinion = -20 } }
+		stress_impact = { base = minor_stress_impact_loss  callous = minor_stress_impact_loss }
+	}
+	option = {
+		name = ln_risen.3.c          # send her away from you, for her sake.
+		ai_chance = {
+			base = 25
+			modifier = { add = 10  has_trait = humble }
+			modifier = { add = 10  has_trait = generous }
+		}
+		add_character_flag = ln_risen_sent_them_away
+		add_piety = 50
+		stress_impact = { base = major_stress_impact_gain  compassionate = medium_stress_impact_gain }
+		scope:ln_close = { add_opinion = { modifier = grateful_opinion  target = root  opinion = 30 } }
+	}
+}
+
+# ── 4. THE PRIEST WANTS SOMETHING ───────────────────────────────────────────────────────────────────────────
+ln_risen.4 = {
+	type = character_event
+	title = ln_risen.4.t
+	desc = ln_risen.4.desc
+	theme = faith
+	left_portrait = { character = root  animation = worry }
+	right_portrait = { character = scope:ln_close  animation = personality_zealous }
+
+	trigger = {
+		ln_has_red_priest_trigger = yes
+		has_trait = resurrected_by_rhllor
+	}
+
+	immediate = {
+		if = {
+			limit = { cp:councillor_court_chaplain ?= { has_trait = red_priest } }
+			cp:councillor_court_chaplain = { save_scope_as = ln_close }
+		}
+		else_if = {
+			limit = { court_position:camp_priest_camp_officer ?= { has_trait = red_priest } }
+			court_position:camp_priest_camp_officer = { save_scope_as = ln_close }
+		}
+	}
+
+	option = {
+		name = ln_risen.4.a          # give him the temple. he earned it.
+		ai_chance = {
+			base = 55
+			modifier = { add = 30  has_trait = generous }
+			modifier = { add = 25  has_trait = zealous }
+			modifier = { add = 10  has_trait = just }
+		}
+		trigger = { gold >= 250 }
+		remove_short_term_gold = 250
+		add_piety = 150
+		faith = { change_fervor = { value = 1  desc = ln_fervor_gain_blessing } }
+		if = { limit = { exists = scope:ln_close } scope:ln_close = { add_opinion = { modifier = grateful_opinion  target = root  opinion = 40 } } }
+	}
+	option = {
+		name = ln_risen.4.b          # he did not do it for me. he did it for his god.
+		ai_chance = {
+			base = 45
+			modifier = { add = 25  has_trait = greedy }
+			modifier = { add = 25  has_trait = cynical }
+			modifier = { add = 10  has_trait = callous }
+		}
+		add_prestige = 50
+		if = { limit = { exists = scope:ln_close } scope:ln_close = { add_opinion = { modifier = disappointed_opinion  target = root  opinion = -25 } } }
+	}
+}
+
+# ── 5. THE MOTHER AT THE GATE ───────────────────────────────────────────────────────────────────────────────
+# The one nobody gets right. Every option here costs something and none of them fixes anything.
+ln_risen.5 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.5.t
+	desc = ln_risen.5.desc
+	theme = death
+	left_portrait = { character = root  animation = grief }
+
+	option = {
+		name = ln_risen.5.a          # tell her the truth: it does not work like that.
+		ai_chance = {
+			base = 45
+			modifier = { add = 25  has_trait = honest }
+			modifier = { add = 15  has_trait = compassionate }
+			modifier = { add = 10  has_trait = brave }
+		}
+		add_character_flag = ln_risen_told_the_truth
+		stress_impact = { base = medium_stress_impact_gain  honest = minor_stress_impact_loss  compassionate = medium_stress_impact_gain }
+		add_prestige = 25
+	}
+	option = {
+		name = ln_risen.5.b          # let the priest try. let her watch him try.
+		ai_chance = {
+			base = 25
+			modifier = { add = 25  has_trait = zealous }
+			modifier = { add = 10  has_trait = trusting }
+		}
+		add_piety = -75
+		stress_impact = { base = major_stress_impact_gain }
+		add_character_flag = ln_risen_let_them_hope
+	}
+	option = {
+		name = ln_risen.5.c          # do not come out. let the steward handle it.
+		ai_chance = {
+			base = 30
+			modifier = { add = 15  has_trait = craven }
+			modifier = { add = 15  has_trait = callous }
+		}
+		stress_impact = { base = minor_stress_impact_gain  callous = medium_stress_impact_loss }
+		add_dread = 5
+		add_prestige = -50
+	}
+}
+
+# ── 6. YOU DO NOT HEAL ──────────────────────────────────────────────────────────────────────────────────────
+ln_risen.6 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.6.t
+	desc = ln_risen.6.desc
+	theme = healthcare
+	left_portrait = { character = root  animation = pain }
+
+	option = {
+		name = ln_risen.6.a          # hide it. bind it. say nothing.
+		ai_chance = {
+			base = 55
+			modifier = { add = 25  has_trait = paranoid }
+			modifier = { add = 15  has_trait = deceitful }
+		}
+		add_character_flag = ln_risen_hid_the_wound
+		add_intrigue_lifestyle_xp = 40
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	option = {
+		name = ln_risen.6.b          # show the maester. let him write it down.
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = honest }
+			modifier = { add = 15  has_trait = trusting }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		add_learning_lifestyle_xp = 60
+		add_character_flag = ln_risen_studied
+		# The Citadel has a page about you now, and pages travel.
+		add_prestige = -25
+	}
+}
+
+# ── 7. THE ABOMINATION ──────────────────────────────────────────────────────────────────────────────────────
+ln_risen.7 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.7.t
+	desc = ln_risen.7.desc
+	theme = faith
+	left_portrait = { character = root  animation = anger }
+	right_portrait = { character = scope:ln_close  animation = personality_zealous }
+
+	immediate = {
+		if = {
+			limit = { any_courtier = { faith = { religion_tag = the_seven_religion } } }
+			random_courtier = {
+				limit = { faith = { religion_tag = the_seven_religion } }
+				save_scope_as = ln_close
+			}
+		}
+	}
+
+	option = {
+		name = ln_risen.7.a          # let him preach it. a man who cannot say it will say it quieter.
+		ai_chance = {
+			base = 40
+			modifier = { add = 20  has_trait = calm }
+			modifier = { add = 15  has_trait = humble }
+			modifier = { add = 10  has_trait = just }
+		}
+		add_prestige = 75
+		add_piety = -25
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	option = {
+		name = ln_risen.7.b          # silence him.
+		ai_chance = {
+			base = 25
+			modifier = { add = 30  has_trait = wrathful }
+			modifier = { add = 15  has_trait = sadistic }
+			modifier = { add = 10  has_trait = paranoid }
+		}
+		add_dread = 12
+		add_piety = -50
+		if = {
+			limit = { exists = scope:ln_close }
+			scope:ln_close = { add_opinion = { modifier = scared_opinion  target = root  opinion = -40 } }
+		}
+		every_courtier = {
+			limit = { faith = { religion_tag = the_seven_religion } }
+			add_opinion = { modifier = scared_opinion  target = root  opinion = -12 }
+		}
+	}
+	option = {
+		name = ln_risen.7.c          # ask him what he thinks I am. and listen to the answer.
+		ai_chance = {
+			base = 35
+			modifier = { add = 20  has_trait = patient }
+			modifier = { add = 10  has_trait = honest }
+			modifier = { add = 10  has_trait = gregarious }
+		}
+		add_learning_lifestyle_xp = 50
+		add_piety = 50
+		if = {
+			limit = { exists = scope:ln_close }
+			scope:ln_close = { add_opinion = { modifier = respect_opinion  target = root  opinion = 25 } }
+		}
+		stress_impact = { base = medium_stress_impact_gain  arrogant = medium_stress_impact_gain }
+	}
+}
+
+# ── 8. BERIC'S PROBLEM ──────────────────────────────────────────────────────────────────────────────────────
+# The heart of the chain. Beric on his sixth: "Every time I come back I'm a bit less."
+ln_risen.8 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.8.t
+	desc = ln_risen.8.desc
+	theme = mental_health
+	left_portrait = { character = root  animation = disbelief }
+
+	option = {
+		name = ln_risen.8.a          # write it down. all of it. before it goes.
+		ai_chance = {
+			base = 55
+			modifier = { add = 30  has_trait = diligent }
+			modifier = { add = 10  has_trait = patient }
+		}
+		add_character_flag = ln_risen_wrote_it_down
+		add_learning_lifestyle_xp = 80
+		stress_impact = { base = medium_stress_impact_gain }
+	}
+	option = {
+		name = ln_risen.8.b          # let it go. what is left is enough to hold a sword.
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = content }
+			modifier = { add = 20  has_trait = lazy }
+			modifier = { add = 10  has_trait = calm }
+		}
+		add_character_flag = ln_risen_let_it_go
+		add_martial_lifestyle_xp = 80
+		add_dread = 10
+		stress_impact = { base = medium_stress_impact_loss  callous = medium_stress_impact_loss }
+	}
+}
+
+# ── 9. SOMEONE TESTS IT ─────────────────────────────────────────────────────────────────────────────────────
+ln_risen.9 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.9.t
+	desc = ln_risen.9.desc
+	theme = dread
+	left_portrait = { character = root  animation = shock }
+
+	option = {
+		name = ln_risen.9.a          # hang him.
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = wrathful }
+			modifier = { add = 20  has_trait = just }
+			modifier = { add = 10  has_trait = arbitrary }
+		}
+		add_dread = 15
+		add_prestige = 50
+		stress_impact = { base = minor_stress_impact_gain  just = medium_stress_impact_gain }
+	}
+	option = {
+		name = ln_risen.9.b          # let him go. he has learned more than I have.
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = forgiving }
+			modifier = { add = 10  has_trait = cynical }
+			modifier = { add = 10  has_trait = humble }
+		}
+		add_prestige = -25
+		add_piety = 75
+		add_character_flag = ln_risen_spared_the_tester
+		stress_impact = { base = minor_stress_impact_loss  compassionate = medium_stress_impact_loss }
+	}
+}
+
+# ── 10. WOULD YOU DO IT AGAIN ───────────────────────────────────────────────────────────────────────────────
+# The closer. Reads back whichever of the earlier nine actually happened, which is why it is last in the list
+# and why every event above sets a flag.
+ln_risen.10 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.10.t
+	desc = {
+		desc = ln_risen.10.desc.open
+		first_valid = {
+			# 1.0.13 -- THE SIGHTED BRANCH, FIRST. A man who saw this coming reads the last card of his own
+			# chain differently from a man it happened to, and optioncheck's dead-flag rule is what says so:
+			# a choice the player made that nothing later reads is a choice the world forgot.
+			triggered_desc = { trigger = { has_character_flag = ln_risen_named_the_corridor } desc = ln_risen.10.desc.corridor }
+			triggered_desc = { trigger = { has_character_flag = ln_risen_let_it_go }      desc = ln_risen.10.desc.less }
+			triggered_desc = { trigger = { has_character_flag = ln_risen_wrote_it_down }  desc = ln_risen.10.desc.pages }
+			triggered_desc = { trigger = { has_character_flag = ln_risen_saw_nothing }    desc = ln_risen.10.desc.nothing }
+			desc = ln_risen.10.desc.plain
+		}
+		desc = ln_risen.10.desc.close
+	}
+	theme = faith
+	left_portrait = { character = root  animation = personality_content }
+
+	option = {
+		name = ln_risen.10.a         # yes. without hesitating.
+		ai_chance = {
+			base = 50
+			modifier = { add = 15  has_trait = brave }
+			modifier = { add = 15  has_trait = zealous }
+			modifier = { add = 10  has_trait = ambitious }
+		}
+		add_piety = 150
+		add_character_flag = ln_would_do_it_again
+		add_dread = 5
+	}
+	option = {
+		name = ln_risen.10.b         # no. and I would not let anyone do it for me.
+		ai_chance = {
+			base = 50
+			modifier = { add = 15  has_trait = compassionate }
+			modifier = { add = 10  has_trait = honest }
+			modifier = { add = 10  has_trait = content }
+		}
+		add_character_flag = ln_wishes_it_had_not_worked
+		add_prestige = 100
+		stress_impact = { base = medium_stress_impact_loss }
+	}
+}
+
+# ── 11. WHAT IT GAVE YOU ────────────────────────────────────────────────────────────────────────────────────
+# THOMAS'S CORRECTION, and it was needed: "if I'm resurrected, I don't want shit to just keep going downhill. I
+# want there to actually be some benefit. The way Jon Snow was resurrected, that shit actually worked out for
+# him really well. He might not have been as happy as he could have been, but you see what I'm saying."
+#
+# He is right and the first ten were too bleak on their own. Ten events of loss with no counterweight is not an
+# arc, it is a mood. What the books and the show both actually do is harder and better: coming back genuinely
+# works. Jon gets the Watch's respect, then the North, then a crown offered to him. The cost is real and it is
+# also not the whole story.
+#
+# So this one is unambiguously GOOD, it is gated behind having lived through the chain rather than handed out
+# for free, and it is the only event in the ten that ends with the man being glad. The trait already carries
+# the mechanical upside -- martial +6, prowess +12, health +1.5, twenty years of life, lower_chance_of_dying_in_combat.
+# This is where the story finally says so out loud.
+ln_risen.11 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_trait = resurrected_by_rhllor
+	}
+	title = ln_risen.11.t
+	desc = {
+		desc = ln_risen.11.desc.open
+		first_valid = {
+			triggered_desc = { trigger = { has_character_flag = ln_risen_spared_the_tester } desc = ln_risen.11.desc.spared }
+			triggered_desc = { trigger = { has_character_flag = ln_risen_told_the_truth }    desc = ln_risen.11.desc.truth }
+			triggered_desc = { trigger = { has_character_flag = ln_risen_wrote_it_down }     desc = ln_risen.11.desc.pages }
+			desc = ln_risen.11.desc.plain
+		}
+		desc = ln_risen.11.desc.close
+	}
+	theme = friendly
+	left_portrait = { character = root  animation = personality_content }
+
+	option = {
+		name = ln_risen.11.a          # take it. lead them.
+		ai_chance = {
+			base = 60
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = 20  has_trait = brave }
+		}
+		add_character_flag = ln_risen_they_follow_me
+		add_prestige = 250
+		add_martial_lifestyle_xp = 100
+		add_character_modifier = ln_death_holds_no_terror_modifier
+		every_courtier = {
+			add_opinion = { modifier = admiration_opinion  target = root  opinion = 20 }
+		}
+		every_vassal = {
+			add_opinion = { modifier = admiration_opinion  target = root  opinion = 15 }
+		}
+		stress_impact = { base = medium_stress_impact_loss }
+	}
+	option = {
+		name = ln_risen.11.b          # they should follow a living man.
+		ai_chance = {
+			base = 40
+			modifier = { add = 30  has_trait = humble }
+			modifier = { add = 15  has_trait = content }
+		}
+		add_character_flag = ln_risen_refused_to_lead
+		add_piety = 150
+		add_prestige = 50
+		add_character_modifier = ln_death_holds_no_terror_modifier
+		stress_impact = { base = major_stress_impact_loss  humble = medium_stress_impact_loss }
+	}
+}
+
+# ── 12. THE FIRE THAT STAYED ────────────────────────────────────────────────────────────────────────────────
+# Not guaranteed (35% per return, rolled in ln_the_fire_takes_something_effect), and not a choice:
+# the fire decides, the man finds out. Strength arrives, and the part of him that flinched does not
+# come back with it -- a compassionate man wakes callous. The options are only how he carries it.
+ln_risen.12 = {
+	type = character_event
+	title = ln_risen.12.t
+	desc = ln_risen.12.desc
+	theme = faith
+	left_portrait = { character = root  animation = personality_bold }
+
+	trigger = {
+		has_trait = resurrected_by_rhllor
+		is_alive = yes
+		NOT = { has_character_modifier = ln_fire_in_the_blood_modifier }
+	}
+
+	immediate = {
+		add_character_modifier = ln_fire_in_the_blood_modifier
+		# What burned away was the part that flinched. Sadists keep their cruelty; everyone else
+		# drifts toward cold. Guarded like every personality swap: opposites block add_trait.
+		if = {
+			limit = { has_trait = compassionate }
+			remove_trait = compassionate
+			add_trait = callous
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					has_trait = callous
+					has_trait = sadistic
+				}
+			}
+			add_trait = callous
+		}
+	}
+
+	option = {
+		name = ln_risen.12.a          # then let it burn.
+		ai_chance = {
+			base = 55
+			modifier = { add = 25  has_trait = zealous }
+			modifier = { add = 15  has_trait = ambitious }
+		}
+		add_piety = 50
+	}
+	option = {
+		name = ln_risen.12.b          # tell no one.
+		ai_chance = {
+			base = 45
+			modifier = { add = 25  has_trait = paranoid }
+			modifier = { add = 15  has_trait = deceitful }
+		}
+		add_intrigue_lifestyle_xp = 50
+	}
+}

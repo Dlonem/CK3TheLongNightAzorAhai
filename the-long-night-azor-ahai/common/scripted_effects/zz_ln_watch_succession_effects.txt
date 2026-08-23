@@ -1,0 +1,116 @@
+﻿# AGOT: The Long Night & Azor Ahai -- "It shall not end until my death."
+#
+# THE PROBLEM THE PLAYABLE-WATCH FIX EXPOSES. A man of the Night's Watch takes no wife and fathers no sons, and
+# the nightswatch trait carries `inheritance_blocker = all`. So a Night's Watch player has NO HEIR, ever, by
+# design -- Thomas's own character-select screen said so in red: "No Player Heir".
+#
+# Which means that without this file, unlocking the Watch buys you exactly one lifetime. You take the black,
+# you hold a castle for thirty years, you die, and the campaign is over. That is not a faction, it is a
+# scenario.
+#
+# THE FIX IS THE OATH. "Night gathers, and now my watch begins. It shall not end until my death." The
+# institution outlives the man -- that is the entire point of the Night's Watch and it has been the point for
+# eight thousand years. So when a brother dies, play passes to another brother, and the Wall goes on being
+# held. No dynasty, no inheritance, no heir. Continuity through the order instead of through the blood, which
+# is the only faction in the game that works that way.
+#
+# THIS ALSO FIXES IT FOR THE LORD COMMANDER, who AGOT already allowed you to play. agot_nw_elect_lc chooses a
+# successor but never hands the player over to him, so a player Lord Commander hit the same wall.
+#
+# VERIFIED: set_player_character inside on_death is vanilla's own pattern --
+# game/common/on_action/death.txt:2100, inside on_death, guarded by `is_playable_character = no`. Same guard
+# used here.
+
+# Root = the brother who just died.
+ln_the_watch_continues_effect = {
+	if = {
+		limit = {
+			is_ai = no
+			government_has_flag = government_is_nw
+			exists = title:k_the_wall.holder
+		}
+
+		# ── WHO PICKS UP THE WATCH ──────────────────────────────────────────────────────────────────────────
+		# In order: a fellow keeper who already holds one of the Wall's castles; then the Lord Commander
+		# himself; then nobody, and the campaign ends the way it did before.
+		#
+		# A LANDED brother first, because the playable rule requires it -- see
+		# common/scripted_rules/zz_ln_playable_rules.txt. Handing play to a landless courtier would put the
+		# player straight back into the spectator's chair Thomas was already stuck in.
+		# BLOOD FIRST, IF THERE IS ANY ON THE WALL. Thomas thought this would be too hard to code; it is four
+		# lines, because the successor search already exists and this only reorders it. A man who took the
+		# black and whose brother or son took it after him is an ordinary Westerosi story -- it is what the
+		# Mormonts do -- and a player who has been quietly steering his own kin north deserves to have that
+		# noticed at the exact moment it pays off.
+		if = {
+			limit = {
+				title:k_the_wall.holder = {
+					any_vassal_or_below = {
+						government_has_flag = government_is_nw
+						is_landed = yes
+						is_alive = yes
+						is_adult = yes
+						NOT = { this = root }
+						is_close_or_extended_family_of = root
+					}
+				}
+			}
+			title:k_the_wall.holder = {
+				random_vassal_or_below = {
+					limit = {
+						government_has_flag = government_is_nw
+						is_landed = yes
+						is_alive = yes
+						is_adult = yes
+						NOT = { this = root }
+						is_close_or_extended_family_of = root
+					}
+					save_scope_as = ln_next_brother
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				title:k_the_wall.holder = {
+					any_vassal_or_below = {
+						government_has_flag = government_is_nw
+						is_landed = yes
+						is_alive = yes
+						is_adult = yes
+						NOT = { this = root }
+					}
+				}
+			}
+			title:k_the_wall.holder = {
+				random_vassal_or_below = {
+					limit = {
+						government_has_flag = government_is_nw
+						is_landed = yes
+						is_alive = yes
+						is_adult = yes
+						NOT = { this = root }
+					}
+					save_scope_as = ln_next_brother
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				title:k_the_wall.holder = {
+					is_alive = yes
+					NOT = { this = root }
+				}
+			}
+			title:k_the_wall.holder = { save_scope_as = ln_next_brother }
+		}
+
+		if = {
+			limit = { exists = scope:ln_next_brother }
+			set_player_character = scope:ln_next_brother
+			scope:ln_next_brother = {
+				add_character_flag = ln_took_up_the_watch
+				trigger_event = { id = ln_watch.7  days = 2 }
+			}
+		}
+	}
+}

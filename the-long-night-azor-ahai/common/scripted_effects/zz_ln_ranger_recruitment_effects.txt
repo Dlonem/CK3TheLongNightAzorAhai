@@ -1,0 +1,124 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Watch appoints its own.
+#
+# See common/game_rules/zz_ln_ranger_rules.txt for why this is a rule and how the reserve works.
+#
+# ONE APPOINTMENT A YEAR, AT MOST. Not because of performance -- because a Wall that fills all five companies
+# in the first spring is a Wall that was always full, and the point of the ranging companies is that they are
+# something the Watch is visibly struggling to keep manned.
+
+# Root = anything. Called once a year from ln_struggle_yearly_work_effect.
+ln_watch_recruits_rangers_effect = {
+	if = {
+		limit = {
+			NOT = { has_game_rule = ln_rangers_players_only }
+			exists = title:k_the_wall.holder
+			title:k_the_wall.holder = { has_government = nights_watch_government }
+			ln_ai_ranging_company_free_trigger = yes
+		}
+		title:k_the_wall.holder = {
+			# WHO RIDES OUT. A sworn brother in the Lord Commander's own court -- landless, adult, male,
+			# actually sworn rather than a green recruit, and not the First Ranger, who already has a company.
+			# Weighted toward men who are good at it, because the Watch is not sentimental about this.
+			if = {
+				limit = {
+					any_courtier = {
+						ln_can_go_ranging_trigger = yes
+					}
+				}
+				random_courtier = {
+					limit = { ln_can_go_ranging_trigger = yes }
+					weight = {
+						base = 1
+						modifier = { add = 2  martial >= 12 }
+						modifier = { add = 2  prowess >= 12 }
+						modifier = { add = 3  has_trait = lifestyle_nw_ranger }
+						modifier = { add = 2  has_trait = brave }
+					}
+					save_scope_as = ln_new_ranger
+				}
+			}
+		}
+
+		if = {
+			limit = { exists = scope:ln_new_ranger }
+			scope:ln_new_ranger = {
+				ln_send_out_a_ranging_company_effect = yes
+			}
+		}
+	}
+}
+
+# Root = the brother being sent out. He is already the Lord Commander's man and already sworn, so none of the
+# take-the-black ceremony applies -- he is being handed a company, not joining an order.
+ln_send_out_a_ranging_company_effect = {
+	# See the note in ln_take_the_black_as_a_ranger_effect: the game-start stamp does not survive into a save
+	# that started before the companies existed, and the AI route needs the variable just as much.
+	ln_mark_ranger_titles_effect = yes
+
+	# GOVERNMENT BEFORE THE TITLE -- 10 Aug, straight off the live log.
+	# get_title fires on_title_gain, and AGOT is listening: agot_on_title_gain_nightswatch
+	# (agot_title_on_actions.txt:1602) ends with
+	#
+	#     if = { limit = { NOT = { government_has_flag = government_is_nw } ... }
+	#         change_government = nights_watch_government }
+	#
+	# On a brother who was a plain courtier one line ago, nights_watch_government is not legal for
+	# what he has just this instant become, and the run threw "Trying to set illegal government"
+	# seven times in seventeen minutes. The noise is the small half. For the length of that handler
+	# he is is_ruler = yes with no NW government AND no liege yet -- the exact state AGOT own
+	# depose clause is written to catch. The player route was rewritten away from this order on
+	# 8 Aug after a live Game Over (see ln_take_the_black_as_a_ranger_effect); the AI route was
+	# never brought along. It is now. With government_is_nw already on him AGOT skips its clause
+	# entirely and the window never opens.
+	#
+	# can_get_government is not consulted by the change_government EFFECT -- it gates the
+	# interaction. This is the identical order the player route has shipped with since 8 Aug.
+	#
+	# 10 Aug, SECOND PASS, off the 13:59 live log: `is_ruler = yes` added. The order above is right for the
+	# PLAYER, who is always already a ruler when he reaches the ceremony -- landed lord, landless adventurer,
+	# either way `change_government` is legal on him. The AI route recruits out of the Lord Commander's COURT,
+	# and a courtier is not a ruler: the engine refused the call outright with "Character needs to be a ruler
+	# to change government", eight times in the first forty-seven minutes. The pre-emption was never landing
+	# on the AI path at all, which is why the "illegal government" line it exists to prevent kept appearing
+	# right behind it.
+	#
+	# Guarded rather than moved. A ruler still gets the government BEFORE the title and AGOT's clause never
+	# opens; a courtier skips this, takes the title, and is caught by the backstop below -- which by then is
+	# operating on a ruler and works. Both entrant classes now end in ln_ranger_government, and neither logs.
+	if = {
+		limit = {
+			is_ruler = yes
+			NOT = { has_government = ln_ranger_government }
+		}
+		change_government = ln_ranger_government
+	}
+
+	ln_grant_an_ai_ranging_company_effect = yes
+
+	# Same liege trap as the player route: get_title on an unheld title makes a ruler with no liege, and
+	# can_get_government would then refuse him. See ln_take_the_black_as_a_ranger_effect.
+	if = {
+		limit = { exists = title:k_the_wall.holder }
+		create_title_and_vassal_change = {
+			type = swear_fealty
+			save_scope_as = ln_ai_fealty
+			add_claim_on_loss = no
+		}
+		change_liege = {
+			liege = title:k_the_wall.holder
+			change = scope:ln_ai_fealty
+		}
+		resolve_title_and_vassal_change = scope:ln_ai_fealty
+	}
+
+	# BACKSTOP. Normally a no-op now -- the government went on above, before the title. Kept because
+	# if that ever fails this is the line that has always worked, and a ranger with the wrong
+	# government has no camp, no contracts and no event layer.
+	if = {
+		limit = { NOT = { has_government = ln_ranger_government } }
+		change_government = ln_ranger_government
+	}
+
+	ln_pitch_the_camp_effect = yes
+	add_character_flag = ln_rode_out
+}

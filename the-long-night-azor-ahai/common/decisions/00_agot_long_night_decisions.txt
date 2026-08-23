@@ -1,0 +1,539 @@
+﻿
+
+## AI decision to start (or join) the war for the dawn.
+war_for_the_dawn_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	# Never shown, so it doesn't matter what we write here
+	title = war_for_the_dawn_decision_title
+	desc = war_for_the_dawn_decision_desc
+	confirm_text = war_for_the_dawn_decision_confirm
+	selection_tooltip = war_for_the_dawn_decision_tt
+
+	decision_group_type = major
+
+	ai_check_interval = 36
+
+	is_shown = {
+		exists = title:h_the_others.holder
+		# 13 Aug (LN, Thomas's live run): the cooldown flag re-applies when a War for the Dawn starts,
+		# which was hiding this decision at the exact moment a latecomer could still JOIN the running
+		# war (the effect's add_defender branches exist for precisely that). The cooldown now only
+		# suppresses the door while NO such war is running.
+		AND = {
+			exists = title:h_the_others.holder
+			OR = {
+				title:h_the_others.holder = { NOT = { has_character_flag = war_for_dawn_cooldown } }
+				title:h_the_others.holder = {
+					any_character_war = {
+						OR = {
+							using_cb = other_cb
+							using_cb = other_cb_duchy
+							using_cb = other_cb_empire
+							using_cb = war_for_the_dawn_cb
+						}
+					}
+				}
+			}
+		}
+		OR = { 
+				is_ai = no 
+				highest_held_title_tier >= tier_duchy
+				AND = {
+					exists = title:h_the_others.holder
+					title:h_the_others.holder = { is_at_war = yes }
+				}
+				}
+		NOT = { highest_held_title_tier < tier_county }
+		max_military_strength >= 1000
+		dynasty ?= { dynasty_prestige_level >= 3 }   # LN+: only houses of real standing engage in the War for the Dawn
+				
+		
+	}
+
+	# Must be a landed ruler, not a nightswatch, nightswatch must exist, and one of NW de jure lands must be held by a non-vassal wildling
+	is_valid = {
+		is_landed = yes
+		exists = title:h_the_others.holder
+		#highest_held_title_tier >= tier_county
+		NOT = { has_faith = faith:cold_gods }
+		# 13 Aug (LN, Thomas's live run): the cooldown flag re-applies when a War for the Dawn starts,
+		# which was hiding this decision at the exact moment a latecomer could still JOIN the running
+		# war (the effect's add_defender branches exist for precisely that). The cooldown now only
+		# suppresses the door while NO such war is running.
+		#
+		# 1.0.12b -- WRAPPED IN custom_description, from Lyon's report and Lyon's own patch shape (Discord,
+		# bugs-and-feedback, "War for the Dawn Decision Localization"). Without it CK3 auto-renders the raw
+		# trigger: "Hegemon Other does not has the war_for_dawn_cooldown flag" and FOUR lines of "Casus Belli
+		# is CASUS_BELLI" -- using_cb has no loc of its own, so the requirements panel printed the fallback
+		# once per CB in the OR. custom_description swallows the machinery and shows one honest sentence.
+		custom_description = {
+			text = ln_wfd_no_recent_victory
+			AND = {
+				exists = title:h_the_others.holder
+				OR = {
+					title:h_the_others.holder = { NOT = { has_character_flag = war_for_dawn_cooldown } }
+					title:h_the_others.holder = {
+						any_character_war = {
+							OR = {
+								using_cb = other_cb
+								using_cb = other_cb_duchy
+								using_cb = other_cb_empire
+								using_cb = war_for_the_dawn_cb
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	is_valid_showing_failures_only = {
+		is_at_war = no
+	}
+
+	effect = {
+		title:h_the_others.holder = { 
+				 if = { limit = { any_character_war = {
+								is_attacker = title:h_the_others.holder
+								OR = { using_cb = other_cb using_cb = other_cb_duchy using_cb = other_cb_empire }	}
+										   }
+								random_character_war = {
+								limit = {
+								is_attacker = title:h_the_others.holder
+								OR = { using_cb = other_cb using_cb = other_cb_duchy using_cb = other_cb_empire }
+							}
+
+							add_defender = root
+						}
+							}
+				
+		
+					else_if = { limit = { any_character_war = {
+								is_defender = title:h_the_others.holder
+								using_cb = war_for_the_dawn_cb	}
+										   }
+								random_character_war = {
+								limit = {
+								is_defender = title:h_the_others.holder
+								using_cb = war_for_the_dawn_cb
+							}
+
+							add_attacker = root
+						}
+							}
+							else = {
+						# LN+: if the Iron Throne still stands, the King leads the War for the Dawn. We cannot
+						# transfer war leadership mid-war, so the King is made primary attacker from the start.
+						if = {
+							limit = {
+								exists = title:h_the_iron_throne.holder
+								NOT = { title:h_the_iron_throne.holder = root }
+								title:h_the_iron_throne.holder = {
+									is_alive = yes
+									NOT = { has_faith = faith:cold_gods }
+									NOT = { is_at_war_with = title:h_the_others.holder }
+								}
+							}
+							title:h_the_iron_throne.holder = {
+								# target_title ADDED 9 Aug -- the CB declares `target_titles = all`, which
+								# means a declaration MUST name one, and neither branch here ever did. The
+								# engine rejects the start_war silently: "the War for the Dawn event has
+								# appeared... but attempting to initiate it does nothing" (Velociraptorius,
+								# Aug 4, and Rupture before him on the ancestor mods' workshops). Vanilla's
+								# own invasion shape is cb + target + target_title
+								# (00_mongol_invasion_effects.txt:1925). claimant removed -- this CB has no
+								# claim logic and vanilla's invasion declarations carry none.
+								start_war = {
+									cb = war_for_the_dawn_cb
+									target = title:h_the_others.holder
+									target_title = title:h_the_others
+								}
+							}
+							# the lord who called the banners joins the King's host
+							title:h_the_others.holder = {
+								random_character_war = {
+									limit = { is_defender = title:h_the_others.holder  using_cb = war_for_the_dawn_cb }
+									add_attacker = root
+								}
+							}
+						}
+						else = {
+							root = {
+								# Same fix as the King's branch above: target_title was missing, so a lord
+								# calling the banners with no Iron Throne standing declared nothing at all.
+								# `prev` here is the Night King (the enclosing character scope), which is
+								# the correct target; the title the war is FOR is his empire.
+								start_war = {
+									cb = war_for_the_dawn_cb
+									target = prev
+									target_title = title:h_the_others
+								}
+							}
+						}
+					}
+									
+	}
+	}
+
+	ai_will_do = {
+		base = -45
+
+		ai_value_modifier = {
+			who = root
+			ai_boldness = tiny_chance_impact_positive_ai_value
+			ai_compassion = tiny_chance_impact_positive_ai_value
+			ai_sociability = 1.0
+			ai_greed = tiny_chance_impact_negative_ai_value
+			ai_energy = tiny_chance_impact_positive_ai_value
+			ai_honor = tiny_chance_impact_positive_ai_value
+			ai_rationality = tiny_chance_impact_positive_ai_value
+			ai_vengefulness = 1.0
+			ai_zeal = tiny_chance_impact_positive_ai_value
+			max = 35.50
+		}
+		modifier = {
+			add = 30
+			is_landed = yes
+			exists = title:h_the_others.holder
+			any_sub_realm_county = { is_neighbor_to_realm = title:h_the_others.holder }
+		}
+		modifier = {
+			add = 30
+			is_landed = yes
+			root.capital_barony.title_province = { geographical_region = world_westeros_the_north }
+		}
+		modifier = {
+			add = 5
+			has_faith = faith:old_gods_wnw
+			
+		}
+		modifier = {
+			add = 5
+			has_faith = faith:fots_oldnew
+			
+		}
+		modifier = {
+			add = -150
+			is_landed = yes
+		NOT = {	root.capital_barony.title_province = { geographical_region = world_westeros_seven_kingdoms } }
+		}
+		
+		modifier = {
+			add = 50
+			faith = faith:rhllor_fc
+		}
+		modifier = {
+			add = 50
+			faith = faith:rhllor_fots
+		
+		}
+		
+		
+		modifier = {
+			add = 100
+			dynasty = dynasty:dynn_Stark
+		}
+		modifier = {
+			add = 100
+			dynasty = dynasty:dynn_Dayne
+		}
+			modifier = {
+			add = 50
+			dynasty = dynasty:dynn_Hightower
+		}
+		modifier = {
+			add = 50
+			dynasty = dynasty:dynn_Targaryen
+		}
+		modifier = {
+			add = 25
+			dynasty = dynasty:dynn_Umber
+		}
+		modifier = {
+			add = -100
+			has_culture = culture:ironborn
+		}
+		modifier = {
+			add = -25
+			faith = faith:fc_pan_tyrosh
+		}
+		
+		modifier = {
+			add = -100
+			has_government = pirate_government
+		}
+		modifier = {
+			add = -75
+			has_government = republic_government
+		}
+		modifier = {
+			add = 1000
+			has_title = title:k_the_wall
+			has_government = nights_watch_government
+		}
+		modifier = {
+			add = 50
+			exists = title:h_the_others.holder
+			is_vassal_or_below_of = title:h_the_others.holder
+		}
+		modifier = {
+			add = 5
+			exists = title:h_the_others.holder
+			any_liege_or_above = { is_at_war_with = title:h_the_others.holder }
+		}
+		modifier = {
+			add = 30
+			has_title = title:k_the_wall
+		}
+		modifier = {
+			add = -50
+			highest_held_title_tier < tier_county
+		}
+		modifier = {
+			add = 10
+			highest_held_title_tier >= tier_kingdom
+		}
+		
+			
+		# 1.0.9 LIVE-RUN FIX -- ALL SEVEN OF THESE WERE DEAD.
+		# "Inconsistent trigger scopes (landed_title vs. province)", jomini_trigger.cpp:752, seven times in
+		# Thomas's 14 Aug run -- one per modifier below, logged at load. any_sub_realm_county yields a COUNTY
+		# (a landed_title); geographical_region is a PROVINCE trigger. The county has to be stepped through
+		# title_province first. Because these failed validation they never contributed at all, so the AI has
+		# never once been more willing to march because the dead held the North.
+		# `?=` is required, not stylistic: a titular title has no province, and a bare `=` on an unset link
+		# logs on every evaluation. This is vanilla's own county->region idiom, ~2280 uses.
+		modifier = {
+			add = 5
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_the_north } } }
+		}
+		modifier = {
+			add = 5
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_the_riverlands } } }
+		}
+		modifier = {
+			add = 5
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_the_vale } } }
+		}
+		modifier = {
+			add = 5
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_the_westerlands } } }
+		}
+		modifier = {
+			add = 5
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_the_crownlands } } }
+		}
+		modifier = {
+			add = 5
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_dorne } } }
+		}
+		modifier = {
+			add = 5
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_the_reach } } }
+		}
+		
+
+
+
+		modifier = {
+			factor = 0
+			root = {
+				debt_level > 0
+			}
+		}
+
+		
+	}
+}
+
+
+
+
+others_trigger_invasion = {
+	decision_group_type = major
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	# Never shown, so it doesn't matter what we write here
+	title = others_trigger_title
+	desc = others_trigger_desc
+	confirm_text = others_trigger_confirm
+	selection_tooltip = others_trigger_tooltip
+
+	
+	ai_check_interval = 0
+	
+	is_shown = {
+		NOT = {
+			has_global_variable = others_invasion_has_arrived
+		}
+		OR = {
+			debug_only = yes
+			has_game_rule = others_manual_invasion
+		}
+	}
+	
+	effect = {
+		# 9 Aug: others.1 now refuses to land while the struggle is mid-Summer/mid-Cold-Winds (the anti-race
+		# gate). This decision is one of the two doors that ARE allowed to open early, so it announces itself
+		# -- the gate excepts ln_invasion_called_by_hand and others.1 consumes the flag on arrival.
+		set_global_variable = { name = ln_invasion_called_by_hand  value = yes }
+		trigger_event = others.1
+	}
+}
+
+
+# The Long Night+: a landed ruler targeted by an Other invasion CB may abandon everything and flee
+# south, becoming a landless "refugee of the Dawn". AI-takeable (cowards flee, the brave never do).
+flee_south_decision = {
+	decision_group_type = major
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	title = flee_south_decision_title
+	desc = flee_south_decision_desc
+	confirm_text = flee_south_decision_confirm
+	selection_tooltip = flee_south_decision_tooltip
+
+	ai_check_interval = 6
+
+	is_shown = {
+		exists = title:h_the_others.holder
+		is_landed = yes
+		highest_held_title_tier >= tier_county
+		NOT = { has_trait = other_trait }
+		NOT = { has_trait = wight_trait }
+		NOT = { has_character_flag = dawn_refugee }
+		# 10 Aug -- OPENED EARLIER, and moved into one named trigger so the whole condition lives in one place.
+		# The old test was "a war involving you, OR the front within three county-rings" -- both of which mean
+		# the dead are effectively already here. Thomas, having tested it: "I feel like we should be able to
+		# flee south as early as them being on your doorstep, maybe even earlier if there's more canon logic
+		# behind that." There is, and it is now arm (C): the dead hold any county in the de jure kingdom your
+		# capital sits in. On AGOT's map that is your March -- Last Hearth has fallen and you are in Karhold.
+		# Full reasoning above ln_the_dark_is_coming_for_you_trigger in
+		# common/scripted_triggers/zz_long_night_plus_proximity.txt.
+		ln_the_dark_is_coming_for_you_trigger = yes
+
+		# 11 Aug -- BUT NOT THE KING. brindatm on the Workshop: "iron throne ruler can use the flee south
+		# decision - doesnt make much sense there isnt really any more south to flee."
+		#
+		# He is right, and it is worse than a geography problem. Every other lord who takes this decision
+		# is running TOWARD something -- a rump realm in the Reach, a ship out of Oldtown, a king who is
+		# still holding. The man on the Iron Throne is the thing they are running toward. If he abandons
+		# the realm and becomes a landless refugee, the Dawn has nowhere left to rally to, and the mod's
+		# own endgame -- the Iron Throne reformation, the Last Bastion, the reformed Watch -- is aimed at
+		# a seat that no longer has anyone in it.
+		#
+		# Hidden rather than merely invalid: he should never be looking at this card at all. His options
+		# are the ones the story is actually about -- hold, or fall with the city.
+		NOT = { title:h_the_iron_throne.holder ?= root }
+	}
+
+	is_valid = {
+		is_landed = yes
+		is_imprisoned = no
+		# Respect the landless-adventurer cap for the AI, but the player may ALWAYS flee (their explicit choice; a
+		# low cap is usually a performance setting, and one player adventurer is negligible).
+		OR = {
+			is_ai = no
+			ai_can_valid_to_create_laamp_trigger = yes
+		}
+	}
+
+	effect = {
+		flee_noble_south_effect = yes
+	}
+
+	# --- AI behaviour ---
+	ai_will_do = {
+		base = 0
+
+		# Cowards run; the brave stand and fall (and fleeing wracks the brave with shame, see effect).
+		modifier = { add = 50  has_trait = craven }
+		modifier = { add = 15  has_trait = content }
+		modifier = { add = -10000  has_trait = brave }
+		ai_value_modifier = {
+			who = root
+			ai_boldness = tiny_chance_impact_negative_ai_value
+		}
+
+		# The more outmatched by the dead, the likelier to run.
+		modifier = { add = 30  max_military_strength < 2500 }
+		modifier = { add = -40  max_military_strength >= 8000 }
+
+		# Already losing the realm — counties falling to the Others.
+		modifier = {
+			add = 25
+			# tier gate first: county_controller only exists on county/barony titles (475x3 live errors without it)
+			any_held_title = { tier = tier_county  county_controller = title:h_the_others.holder }
+		}
+	}
+}
+
+
+# The Long Night+: once the Others are broken, the Watch must be re-founded. This is no longer automatic —
+# only the King on the Iron Throne or an independent King of the North may restore the Night's Watch and
+# install a new Lord Commander on the Wall.
+reform_nights_watch_decision = {
+	decision_group_type = major
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	title = reform_nights_watch_decision_title
+	desc = reform_nights_watch_decision_desc
+	confirm_text = reform_nights_watch_decision_confirm
+	selection_tooltip = reform_nights_watch_decision_tooltip
+
+	ai_check_interval = 12
+
+	is_shown = {
+		# LN+ AFTERMATH (2026-07-02): RETIRED from the panel — absorbed by the mandatory Question of the North
+		# (event ln_aftermath.1, option A calls longnight_reform_nightswatch_effect directly). Keeping the
+		# decision visible in parallel would let the Crown preempt/contradict the forced dilemma.
+		always = no
+		# The Long Night is over — the Others have been broken and the Night King's title sits empty...
+		NOT = { exists = title:h_the_others.holder }
+		# ...but the Watch lies shattered: Castle Black is no longer held under a Night's Watch government.
+		exists = title:c_castle_black
+		NOT = { title:c_castle_black.holder = { has_government = nights_watch_government } }
+		# Only the King on the Iron Throne, or an independent King of the North, has the standing to refound it.
+		# NB: in AGOT 1.19 the North's lord-paramount title is e_the_north (empire tier) — k_the_north does NOT exist.
+		OR = {
+			AND = {
+				exists = title:h_the_iron_throne.holder
+				title:h_the_iron_throne.holder = root
+			}
+			AND = {
+				has_title = title:e_the_north
+				is_independent_ruler = yes
+			}
+		}
+	}
+
+	is_valid = {
+		is_landed = yes
+		is_imprisoned = no
+	}
+
+	effect = {
+		longnight_reform_nightswatch_effect = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

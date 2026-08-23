@@ -1,0 +1,101 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the ranging marches.
+#
+# 13 Aug (1.0.6), MPREG's report: "the camp was completely unable to move... The AI rangings don't
+# move either." There was never a mover: the engine's free camp movement belongs to
+# mechanic_type = landless_adventurer, which neither AGOT's ranger government nor ours uses (it drags
+# the whole adventurer-contract system in with it). AGOT's own First Ranger camp has no mover either.
+#
+# So movement is DECISION-DRIVEN, which is also the design: a ranging marches to named grounds within
+# the Watch's world -- Craster's Keep, Whitetree, Hardhome -- or home to Castle Black, and nowhere
+# else. "Sit safe at the Wall, or range north" is enforced by construction: there is no free
+# destination picker to wander to Dorne with.
+#
+# CONTENT HOOKS (deliberate, currently minimal): every march arrives through the
+# ln_ranging_arrival on_action in zz_ln_ranging_on_actions.txt. Losses on the road, dragonglass
+# finds, rangings that never come back -- all of that hangs off that one on_action when it gets
+# written. The destination is recorded in var:ln_ranging_ground on the captain for it to read.
+
+ln_march_the_ranging_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_beyond_the_wall.dds" }
+
+	desc = ln_march_the_ranging_decision_desc
+	selection_tooltip = ln_march_the_ranging_decision_tt
+	confirm_text = ln_march_the_ranging_decision_confirm
+
+	decision_group_type = realm
+	ai_check_interval = 12
+
+	is_shown = {
+		# ONLY IF: a captain of one of the mod's ranging companies, with a camp to march.
+		government_has_flag = government_is_nw
+		is_landed = no
+		any_held_title = { has_variable = ln_is_a_ranger_title }
+		exists = domicile
+	}
+
+	is_valid = {
+		# NEVER IF: already on the road, or a prisoner.
+		is_travelling = no
+		is_imprisoned = no
+	}
+
+	# 13 Aug, Thomas's live test: he cancelled a march (no provisions) and the 30-day cooldown locked
+	# the decision for the rest of the month. The cooldown only exists to stop AI churn, and the AI
+	# checks yearly -- seven days is enough.
+	cooldown = { days = 7 }
+
+	effect = {
+		trigger_event = ln_ranging.1
+	}
+
+	# The AI ranges too -- rarely, so the map does not churn, but MPREG's "the AI rangings don't
+	# move either" stops being true.
+	ai_will_do = {
+		base = 10
+	}
+}
+
+ln_return_to_the_wall_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_castle_view.dds" }
+
+	desc = ln_return_to_the_wall_decision_desc
+	selection_tooltip = ln_return_to_the_wall_decision_tt
+	confirm_text = ln_return_to_the_wall_decision_confirm
+
+	decision_group_type = realm
+	ai_check_interval = 12
+
+	is_shown = {
+		# ONLY IF: a ranging captain whose camp is NOT already in the Watch's own lands.
+		government_has_flag = government_is_nw
+		is_landed = no
+		any_held_title = { has_variable = ln_is_a_ranger_title }
+		exists = domicile
+		domicile = {
+			NOT = {
+				domicile_location = { county ?= { target_is_de_jure_liege_or_above = title:k_the_wall } }
+			}
+		}
+	}
+
+	is_valid = {
+		# NEVER IF: already on the road, or a prisoner.
+		is_travelling = no
+		is_imprisoned = no
+	}
+
+	effect = {
+		set_variable = { name = ln_ranging_ground  value = flag:castle_black }
+		start_travel_plan = {
+			destination = title:c_castle_black.title_province
+			on_arrival_on_action = ln_ranging_arrival
+			on_arrival_destinations = last
+			return_trip = no
+			travel_with_domicile = yes
+		}
+	}
+
+	ai_will_do = {
+		base = 20
+	}
+}

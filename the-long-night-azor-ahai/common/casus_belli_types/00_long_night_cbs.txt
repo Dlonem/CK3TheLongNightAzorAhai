@@ -1,0 +1,1543 @@
+﻿### War for the Dawn CB ###
+
+war_for_the_dawn_cb = {
+	group = invasion
+	icon = invasion
+
+	allow_hostages = no
+	interface_priority = 110
+
+	allowed_for_character = {
+	NOT = { has_trait = other_trait }
+	}
+
+	allowed_against_character = {
+		has_trait = nightking
+		NOT = { has_character_flag = war_for_dawn_cooldown }
+		#has_character_flag = long_night_cooldown 
+	}
+
+	target_titles = all
+	ignore_effect = change_title_holder
+
+	white_peace_possible = no 
+
+	ai_score = {
+		value = 100 # TODO
+	}
+
+	should_invalidate = {
+		scope:defender = {
+			NOT = { primary_title.tier >= tier_kingdom }
+		}
+	}
+
+	cost = {
+}
+
+	on_declaration = {
+		on_declared_war = yes
+		#scope:defender = { every_vassal = { limit = { NOT = { has_faith = faith:cold_gods } } scope:war =  { add_attacker = prev } } }
+	}
+
+	on_victory_desc = {
+		first_valid = {
+			desc = war_for_the_dawn_victory_desc
+		}
+	}
+
+	on_victory = {
+	set_global_variable = {
+					name = war_for_dawn_victory
+					value = yes
+				}
+	scope:defender = { death = {
+							death_reason = death_battle
+							killer = scope:attacker
+					}
+					}
+	
+	}
+
+	on_defeat_desc = {
+		first_valid = {
+			desc = war_for_the_dawn_defeat_desc
+		}
+	}
+
+	on_defeat = {
+		#EP2 accolade glory gain for winning against higher ranked enemy
+		scope:defender = { accolade_defender_war_end_glory_gain_low_effect = yes }
+		scope:defender = { add_character_flag = { flag = war_for_dawn_cooldown years = 5 } }
+		# Prestige loss for the attacker
+		scope:attacker = {
+			add_prestige = -500
+		}
+		
+		# 10 Aug: the create used to sit HERE, outside the loop, while the resolve sat inside
+		# every_war_attacker. A title&vassal change is single-use -- created, filled, resolved, gone --
+		# so the first attacker consumed scope:change and every attacker after it hit "No transfer type
+		# set for title&vassal change": 73 on the setup_invasion_cb line and 73 on the resolve, per run.
+		# Now created per attacker, inside the loop, immediately before it is used.
+		
+	scope:war = { every_war_attacker = {
+				create_title_and_vassal_change = {
+					type = conquest
+					save_scope_as = change
+					add_claim_on_loss = yes
+				}
+				setup_invasion_cb = {
+				titles = target_titles
+				attacker = scope:defender
+				defender = this
+				change = scope:change
+				take_occupied = yes
+			}
+			resolve_title_and_vassal_change = scope:change
+
+
+				}
+			}
+			
+		# Prestige for the defender
+		scope:defender = {
+			add_prestige = 5000
+		}
+		
+		# Prestige for the attacker's war allies
+		add_from_contribution_attackers = {
+			prestige = minor_prestige_value
+			opinion = {
+				modifier = contributed_in_war
+			}
+		}
+
+		# Prestige for the defender's war allies
+		add_from_contribution_defenders = {
+			prestige = minor_prestige_value
+			opinion = {
+				modifier = contributed_in_war
+			}
+		}
+
+		# Truce
+		add_truce_attacker_defeat_effect = yes
+	}
+
+	on_white_peace_desc = {
+		first_valid = {
+			desc = great_ranging_white_peace_desc
+		}
+	}
+
+	on_invalidated_desc = {
+		first_valid = {
+			desc = great_ranging_invalidated_desc
+		}
+	}
+
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
+	defender_capital_gives_war_score = no 				# No warscore from defender capital
+	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
+	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
+	attacker_score_from_battles_scale = 300
+	defender_score_from_battles_scale = 300
+	attacker_score_from_occupation_scale = 10
+	defender_score_from_occupation_scale = 10
+	max_attacker_score_from_battles = 350
+	max_defender_score_from_occupation = 50
+	war_name = WAR_FOR_THE_DAWN_WAR_NAME
+	war_name_base = WAR_FOR_THE_DAWN_WAR_NAME_BASE
+	cb_name = WAR_FOR_THE_DAWN_WAR_CB
+
+}
+
+other_cb = {
+	icon = invasion
+	group = invasion
+
+	combine_into_one = yes
+	should_show_war_goal_subview = yes
+	mutually_exclusive_titles = { always = yes }
+	allow_hostages = no
+
+	allowed_for_character = {
+		has_game_rule = others_cb_kingdom
+	scope:attacker = {	has_trait = nightking
+		NOT = { has_character_flag = long_night_cooldown }
+	}
+	
+	}
+
+	allowed_for_character_display_regardless = {
+		
+	}
+	
+	allowed_against_character = {
+	
+		NOT = { has_trait = other_trait }
+	}
+	target_titles = neighbor_land_or_water
+	target_title_tier = kingdom
+	target_de_jure_regions_above = yes
+	ignore_effect = change_title_holder
+
+	ai_can_target_all_titles = {
+		has_trait = other_trait
+	}
+	ai_score_mult = {
+		value = viking_conquest_ai_score_value
+
+		# AI in struggles act insularly for wars that don't have a familial or legal basis.
+		multiply = struggle_wars_prioritise_struggle_targets_value
+		#AGOT Disabled
+		## Tell the Romans to stop going adventuring into the steppe for no gods-damned reason.
+		#multiply = byzantium_conquests_ai_score_value
+		#multiply = muslim_invasions_prefer_nonmuslims_ai_score_value
+
+		#AGOT Disabled
+		##Declaring war on the frankokratia leader can really ruin the whole thing
+		#if = {
+		#	limit = {
+		#		scope:defender = {
+		#			any_owned_story = {
+		#				story_type = frankokratia_story
+		#				NOT = { has_variable = franko_war_complete }
+		#			}
+		#		}
+		#	}
+		#	multiply = 0
+		#}
+	}
+
+	valid_to_start = {
+		scope:target = {
+	
+				is_neighbor_to_realm = scope:attacker
+			}
+		}
+		
+	
+
+	should_invalidate = {
+		NOT = {
+			any_in_list = {
+				list = target_titles
+				any_in_de_jure_hierarchy = {
+					tier = tier_county
+					holder = {
+						target_is_same_character_or_above = scope:defender
+					}
+				}
+			}
+		}
+	}
+
+	on_invalidated_desc = msg_invasion_war_invalidated_message
+	
+	on_invalidated = {
+		scope:attacker = {
+			if = {
+				limit = {
+					is_alive = yes
+				}
+				#remove_character_flag = used_lifetime_invasion # If the war is invalidated, you should be permitted to try again
+			}
+		}
+	}
+
+	cost = {
+
+	}
+	
+	on_declaration = {
+		on_declared_war = yes
+		scope:attacker = {
+			#add_character_flag = used_lifetime_invasion
+		}
+			scope:defender = {
+			
+			
+			every_vassal_or_below = {
+					if = {
+						limit = {
+							any_held_title = {
+								OR = {
+
+									any_title_to_title_neighboring_and_across_water_county = {
+										exists = holder
+                                    holder = {   
+											OR = { 
+												is_vassal_or_below_of = scope:attacker
+												this = scope:attacker
+											} 
+										}
+									}
+
+									any_title_to_title_neighboring_and_across_water_duchy = {
+										exists = holder
+                                    holder = {   
+											OR = { 
+												is_vassal_or_below_of = scope:attacker
+												this = scope:attacker
+											} 
+										}
+									}
+								}
+							}
+						}
+						scope:war = { add_defender = prev } 
+						
+					}
+				}
+			
+			
+		}
+	}	
+
+	on_victory_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:attacker = { is_local_player = yes } }
+				desc = invasion_war_victory_desc_attacker
+			}
+			desc = invasion_war_victory_desc
+		}
+		triggered_desc = {
+			trigger = { scope:attacker = { is_local_player = yes } }
+			desc = invasion_war_warning_desc
+		}
+	}
+	
+	on_victory = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		
+		# Legitimacy
+		add_legitimacy_attacker_victory_effect = yes
+
+		# Influence
+		add_influence_attacker_victory_effect = yes
+
+		#EP2 accolade glory gain for winning against higher ranked enemy
+		scope:attacker = { accolade_attacker_war_end_glory_gain_high_effect = yes }
+
+		create_title_and_vassal_change = {
+			type = conquest
+			save_scope_as = change
+			add_claim_on_loss = yes
+		}
+
+		show_as_tooltip = {
+			every_in_list = {
+				list = target_titles
+				custom_tooltip = invasion_title_transfer_tt
+				custom_tooltip = invasion_title_transfer_2_tt
+				every_in_de_jure_hierarchy = {
+					limit = { holder.top_liege = scope:defender }
+					change_title_holder = {
+						holder = scope:attacker
+						change = scope:change
+					}
+				}
+			}
+			# 1.0.10 -- WAS a literal walk of every occupied county in the loser's realm, which is what the
+			# war used to pay out. It does not any more (zz_ln_contiguity_effects.txt), and a tooltip that
+			# promises land the peace will not actually hand over is worse than no tooltip at all.
+			custom_tooltip = ln_contiguous_transfer_tt
+		}
+		
+		hidden_effect = {
+		scope:war = { every_war_defender = { 
+			# 1.0.9b -- PRIMARY DEFENDER ONLY. Session 26, proven from the 8258-8291 save: on 8264.1.28 one
+			# war settlement moved c_hide_point and c_taldrsek (the legal beyond-Wall goal) AND c_sullen_hills
+			# (Umber land, five years before the Wall fell). setup_invasion_cb with take_occupied ran for
+			# EVERY defender, so an ally called into a beyond-Wall war lost every county the dead had
+			# occupied -- conquest teleporting past every targeting gate, and the map growing pockets in
+			# places the wave never touched. The invasion takes what the WAR was for: allies now keep their
+			# land until the wave actually comes for them.
+			limit = { this = scope:defender }
+			setup_invasion_cb = {
+				titles = target_titles
+				attacker = scope:attacker
+				defender = this
+				change = scope:change
+				# 1.0.10 -- WAS take_occupied = yes, which paid out every occupied county in the loser's
+				# realm at any distance from the front. That is how the dead reached the Trident with the
+				# North still free. The goal still transfers in full; occupied land outside it now has to be
+				# contiguous with ground they already hold. See zz_ln_contiguity_effects.txt.
+				take_occupied = no
+			}
+			}
+			}
+			ln_contiguous_conquest_effect = yes
+			resolve_title_and_vassal_change = scope:change
+
+		}
+
+		# Attacker gets Prestige Experience, Defender loses Prestige, all other participants gain Prestige based on their war contribution.
+		modify_all_participants_fame_values = {
+			WINNER = scope:attacker
+			LOSER = scope:defender
+			FAME_BASE = scope:cb_prestige_factor # Set by 'setup_invasion_cb'
+			IS_RELIGIOUS_WAR = no
+			WINNER_FAME_SCALE = 10
+			LOSER_FAME_SCALE = -10
+			WINNER_ALLY_FAME_SCALE = 10
+			LOSER_ALLY_FAME_SCALE = 10
+		}
+
+		# Truce
+		#add_truce_attacker_victory_effect = yes
+
+		# FP1: note the victory for future memorialisation via stele (if applicable).
+		scope:attacker = { fp1_remember_recent_conquest_victory_effect = yes }
+	}
+
+	on_white_peace_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:defender = { is_local_player = yes } }
+				desc = invasion_war_white_peace_desc_defender
+			}
+			desc = invasion_war_white_peace_desc
+		}
+	}
+	
+	on_white_peace = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		# 1.0.10 -- see the twin block in on_defeat: a white peace against the Watch is still the
+		# Wall holding, and it refills the stage-two clock the same way.
+		if = {
+			limit = {
+				NOT = { has_global_variable = ln_castle_black_fell }
+				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
+				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+			}
+			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+		}
+
+		#EP2 accolade glory gain for doing ok against higher ranked enemy
+		scope:attacker = { accolade_attacker_war_end_glory_gain_low_effect = yes }
+		scope:defender = { accolade_defender_war_end_glory_gain_med_effect = yes }
+
+		# Allies on both sides get full prestige value for helping in the war, based on their war participation.
+		modify_allies_of_participants_fame_values = {
+			WINNER = scope:attacker # Not important as the scales are identical
+			FAME_BASE = major_prestige_value
+			IS_RELIGIOUS_WAR = no
+			WINNER_ALLY_FAME_SCALE = 1
+			LOSER_ALLY_FAME_SCALE = 1
+		}
+
+		# Truce
+		#add_truce_white_peace_effect = yes
+
+		scope:attacker = {
+			add_prestige = mongol_invasion_cb_prestige_white_peace
+			stress_impact = {
+				ambitious = medium_stress_impact_gain
+				arrogant = medium_stress_impact_gain
+			}
+		}
+
+		scope:defender = {
+			stress_impact = {
+				arrogant = medium_stress_impact_gain
+			}
+		}
+	}
+
+	on_defeat_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:defender = { is_local_player = yes } }
+				desc = invasion_war_white_peace_desc_defender
+			}
+			desc = invasion_war_white_peace_desc
+		}
+	}
+	
+	on_defeat = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		# FIX (v0.1.0): was the un-braced `add_character_flag = long_night_cooldown years = 5`, which creates a
+		# PERMANENT flag and leaves `years = 5` as an orphan token. That flag gates BOTH the 30-day expansion pulse
+		# (the_long_night.txt) and allowed_for_character on both invasion CBs -- so the first time the Night King lost
+		# any war he froze forever. That is the "sits idle for years" report. Same file uses the braced form
+		# correctly for war_for_dawn_cooldown a few lines above.
+		# 1.0.10 -- WAS A FLAT FIVE YEARS, and it is the single largest source of the zero-conquest years
+		# measured across two runs (eight of them in the 8258-8291 save). A defeat should cost the dead a
+		# campaign season, not half a generation of the map standing still -- the living winning a war is
+		# supposed to buy them breathing room, not switch the Long Night off. Rolled one to three years,
+		# so a defeat is still a real setback and no two defeats read the same.
+		scope:attacker = {
+			random_list = {
+				30 = { add_character_flag = { flag = long_night_cooldown  years = 1 } }
+				45 = { add_character_flag = { flag = long_night_cooldown  years = 2 } }
+				25 = { add_character_flag = { flag = long_night_cooldown  years = 3 } }
+			}
+		}
+		# 1.0.10 -- THE WALL CAN HOLD (Thomas). If the man who just threw the dead back is seated on
+		# the Wall itself, the stage-two clock refills: a Watch actually holding the Wall IS the
+		# fantasy, and the escape clock exists to break stalls, not to punish garrisons that win.
+		# Fenced on Castle Black standing and on the clock having ever started; both fail open.
+		if = {
+			limit = {
+				NOT = { has_global_variable = ln_castle_black_fell }
+				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
+				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+			}
+			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+		}
+		# Legitimacy
+		add_legitimacy_attacker_defeat_effect = yes
+
+		# Influence
+		add_influence_attacker_defeat_effect = yes
+
+		#EP2 accolade glory gain for winning against higher ranked enemy
+		scope:defender = { accolade_defender_war_end_glory_gain_high_effect = yes }
+
+		# Prestige loss for the attacker
+		scope:attacker = {
+			pay_short_term_gold_reparations_effect = {
+				GOLD_VALUE = 5
+			}
+			add_prestige = {
+				value = massive_prestige_value
+				multiply = -1.0
+			}
+		}
+		
+		setup_invasion_cb = {
+			titles = target_titles
+			attacker = scope:attacker
+			defender = scope:defender
+			claimant = scope:claimant
+			victory = no
+		}
+
+		# Attacker loses Prestige, all other war participants gain Prestige (Defender gains full prestige, all allies on both sides gain based on war contribution).
+		modify_all_participants_fame_values = {
+			WINNER = scope:defender
+			LOSER = scope:attacker
+			FAME_BASE = scope:cb_prestige_factor # Set by 'setup_claim_cb'
+			IS_RELIGIOUS_WAR = no
+			WINNER_FAME_SCALE = scale_10_war_defender_win
+			LOSER_FAME_SCALE = -10
+			WINNER_ALLY_FAME_SCALE = 10
+			LOSER_ALLY_FAME_SCALE = 10
+		}
+	
+		#add_truce_attacker_defeat_effect = yes
+		
+		scope:attacker = {
+			save_temporary_scope_as = loser
+		}
+		on_lost_aggression_war_discontent_loss = yes
+	}
+	
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+	
+	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
+	defender_capital_gives_war_score = no 				# No warscore from defender capital
+	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
+	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
+
+
+	war_name = "OTHER_WAR_NAME"
+	war_name_base = "OTHER_WAR_NAME_BASE"
+	cb_name = "OTHER_COUNTY_CB_NAME"
+
+	interface_priority = 79
+
+	use_de_jure_wargoal_only = yes
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE DUCHY INVASION -- and why this is now the default.
+#
+# Thomas, watching a live run: the Others' ownership appears at Winterfell and spreads outward, when it should
+# be the reverse -- the countryside lost first, the capital encircled, the great seat last.
+#
+# The cause was not target selection and not army pathing. other_cb is target_title_tier = KINGDOM, and its
+# on_victory runs every_in_de_jure_hierarchy and transfers the WHOLE KINGDOM in one go. Every county in the
+# North changed hands in a single war, Winterfell among them. There was no intermediate step to observe, so
+# the capital simply appeared first. The rule that governs this, agot_others_cb_tier, offered exactly two
+# settings -- kingdom and empire -- and both take enormous bites.
+#
+# This is the missing third setting. Identical to other_cb in every other respect, but a duchy at a time.
+# With target_titles = neighbor_land_or_water already in place, the dead work southward from the Wall duchy
+# by duchy: the northern coasts and the wolfswood first, Winterfell's own duchy late, and the conquest of the
+# North becomes a war of years and many battles instead of one afternoon. Lords in the path get time to see
+# it coming and decide whether to answer the call, which is the entire point of the War for the Dawn.
+#
+# LOCALIZATION IS DELIBERATELY SHARED with other_cb: it is the same war, told at a different pace, and a
+# second set of near-identical strings is a maintenance liability for no player-visible gain.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+other_cb_duchy = {
+	icon = invasion
+	group = invasion
+
+	combine_into_one = yes
+	should_show_war_goal_subview = yes
+	mutually_exclusive_titles = { always = yes }
+	allow_hostages = no
+
+	allowed_for_character = {
+		# 11 Aug -- REACHABLE UNDER THE KINGDOM RULE TOO. Axel on the Workshop: "once the actual Long Night
+		# starts, the Others tend to have trouble spreading through any province Beyond the Wall that's part
+		# of a Duchy or higher realm... the Long Night can start and years will pass without the Others
+		# continuing to grow."
+		#
+		# Beyond the Wall the de jure kingdoms are held by NOBODY -- k_first_forest is 44 counties split
+		# among a dozen four-county tribes -- so a kingdom-tier war goal there is roughly ten times the size
+		# of the realm actually being fought. Occupation war score is a ratio against the goal, so taking a
+		# tribe's entire realm moves the bar about nine percent and the war grinds for years. South of the
+		# Wall the same CB works fine, because a Karstark holds most of his own March: session 16 measured
+		# +89% at ten months against Karhold on this exact CB.
+		#
+		# So the tier follows the VICTIM, not the map. The defender-side test lives in
+		# allowed_against_character below, where the defender is actually in scope.
+		#
+		# This is smaller grab size AND faster wars at once, which is the "gradual, you can kinda see the
+		# dead marching" reading rather than the opposite one.
+		OR = {
+			has_game_rule = others_cb_duchy
+			has_game_rule = others_cb_kingdom
+		}
+	scope:attacker = {	has_trait = nightking
+		NOT = { has_character_flag = long_night_cooldown }
+	}
+	
+	}
+
+	allowed_for_character_display_regardless = {
+		
+	}
+	
+	allowed_against_character = {
+	
+		NOT = { has_trait = other_trait }
+
+		# Under the KINGDOM rule this CB is the small-victim path only -- anyone who actually holds a kingdom
+		# title still gets the kingdom-tier war, so nothing south of the Wall changes. Under the DUCHY rule
+		# the trigger_if is inert and every victim is fair game, exactly as before.
+		trigger_if = {
+			limit = { has_game_rule = others_cb_kingdom }
+			NOT = { highest_held_title_tier >= tier_kingdom }
+		}
+	}
+	target_titles = neighbor_land_or_water
+	target_title_tier = duchy
+	target_de_jure_regions_above = yes
+	ignore_effect = change_title_holder
+
+	ai_can_target_all_titles = {
+		has_trait = other_trait
+	}
+	ai_score_mult = {
+		value = viking_conquest_ai_score_value
+
+		# AI in struggles act insularly for wars that don't have a familial or legal basis.
+		multiply = struggle_wars_prioritise_struggle_targets_value
+		#AGOT Disabled
+		## Tell the Romans to stop going adventuring into the steppe for no gods-damned reason.
+		#multiply = byzantium_conquests_ai_score_value
+		#multiply = muslim_invasions_prefer_nonmuslims_ai_score_value
+
+		#AGOT Disabled
+		##Declaring war on the frankokratia leader can really ruin the whole thing
+		#if = {
+		#	limit = {
+		#		scope:defender = {
+		#			any_owned_story = {
+		#				story_type = frankokratia_story
+		#				NOT = { has_variable = franko_war_complete }
+		#			}
+		#		}
+		#	}
+		#	multiply = 0
+		#}
+	}
+
+	valid_to_start = {
+		scope:target = {
+	
+				is_neighbor_to_realm = scope:attacker
+			}
+		}
+		
+	
+
+	should_invalidate = {
+		NOT = {
+			any_in_list = {
+				list = target_titles
+				any_in_de_jure_hierarchy = {
+					tier = tier_county
+					holder = {
+						target_is_same_character_or_above = scope:defender
+					}
+				}
+			}
+		}
+	}
+
+	on_invalidated_desc = msg_invasion_war_invalidated_message
+	
+	on_invalidated = {
+		scope:attacker = {
+			if = {
+				limit = {
+					is_alive = yes
+				}
+				#remove_character_flag = used_lifetime_invasion # If the war is invalidated, you should be permitted to try again
+			}
+		}
+	}
+
+	cost = {
+
+	}
+	
+	on_declaration = {
+		on_declared_war = yes
+		scope:attacker = {
+			#add_character_flag = used_lifetime_invasion
+		}
+			scope:defender = {
+			
+			
+			every_vassal_or_below = {
+					if = {
+						limit = {
+							any_held_title = {
+								OR = {
+
+									any_title_to_title_neighboring_and_across_water_county = {
+										exists = holder
+                                    holder = {   
+											OR = { 
+												is_vassal_or_below_of = scope:attacker
+												this = scope:attacker
+											} 
+										}
+									}
+
+									any_title_to_title_neighboring_and_across_water_duchy = {
+										exists = holder
+                                    holder = {   
+											OR = { 
+												is_vassal_or_below_of = scope:attacker
+												this = scope:attacker
+											} 
+										}
+									}
+								}
+							}
+						}
+						scope:war = { add_defender = prev } 
+						
+					}
+				}
+			
+			
+		}
+	}	
+
+	on_victory_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:attacker = { is_local_player = yes } }
+				desc = invasion_war_victory_desc_attacker
+			}
+			desc = invasion_war_victory_desc
+		}
+		triggered_desc = {
+			trigger = { scope:attacker = { is_local_player = yes } }
+			desc = invasion_war_warning_desc
+		}
+	}
+	
+	on_victory = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+
+		# THE PAUSE BETWEEN WARS -- 10 Aug. long_night_cooldown was only ever set on_defeat, so a WIN re-armed
+		# the 30-day expansion pulse instantly. That was survivable at kingdom tier, where one victory takes
+		# years and swallows a whole region. At duchy tier it is nine wars where there used to be one, and
+		# Thomas is right that that reads as spam from the receiving end. Phase-scaled -- see
+		# common/scripted_effects/zz_ln_invasion_target_effects.txt. Deliberately NOT added to other_cb or
+		# other_cb_empire: those are already slow, and pausing them is how the sits-idle bug came back.
+		scope:attacker = { ln_invasion_cooldown_effect = yes }
+		
+		# Legitimacy
+		add_legitimacy_attacker_victory_effect = yes
+
+		# Influence
+		add_influence_attacker_victory_effect = yes
+
+		#EP2 accolade glory gain for winning against higher ranked enemy
+		scope:attacker = { accolade_attacker_war_end_glory_gain_high_effect = yes }
+
+		create_title_and_vassal_change = {
+			type = conquest
+			save_scope_as = change
+			add_claim_on_loss = yes
+		}
+
+		show_as_tooltip = {
+			every_in_list = {
+				list = target_titles
+				custom_tooltip = invasion_title_transfer_tt
+				custom_tooltip = invasion_title_transfer_2_tt
+				every_in_de_jure_hierarchy = {
+					limit = { holder.top_liege = scope:defender }
+					change_title_holder = {
+						holder = scope:attacker
+						change = scope:change
+					}
+				}
+			}
+			# 1.0.10 -- WAS a literal walk of every occupied county in the loser's realm, which is what the
+			# war used to pay out. It does not any more (zz_ln_contiguity_effects.txt), and a tooltip that
+			# promises land the peace will not actually hand over is worse than no tooltip at all.
+			custom_tooltip = ln_contiguous_transfer_tt
+		}
+		
+		hidden_effect = {
+		scope:war = { every_war_defender = { 
+			# 1.0.9b -- PRIMARY DEFENDER ONLY. Session 26, proven from the 8258-8291 save: on 8264.1.28 one
+			# war settlement moved c_hide_point and c_taldrsek (the legal beyond-Wall goal) AND c_sullen_hills
+			# (Umber land, five years before the Wall fell). setup_invasion_cb with take_occupied ran for
+			# EVERY defender, so an ally called into a beyond-Wall war lost every county the dead had
+			# occupied -- conquest teleporting past every targeting gate, and the map growing pockets in
+			# places the wave never touched. The invasion takes what the WAR was for: allies now keep their
+			# land until the wave actually comes for them.
+			limit = { this = scope:defender }
+			setup_invasion_cb = {
+				titles = target_titles
+				attacker = scope:attacker
+				defender = this
+				change = scope:change
+				# 1.0.10 -- WAS take_occupied = yes, which paid out every occupied county in the loser's
+				# realm at any distance from the front. That is how the dead reached the Trident with the
+				# North still free. The goal still transfers in full; occupied land outside it now has to be
+				# contiguous with ground they already hold. See zz_ln_contiguity_effects.txt.
+				take_occupied = no
+			}
+			}
+			}
+			# MORE THAN ONE DUCHY -- 10 Aug. Must sit between setup_invasion_cb and the resolve: it adds to the
+			# change already in flight rather than opening a second one, because two changes resolving over the
+			# same titles is how a county ends up held by nobody. Full reasoning and the phase table are in
+			# common/scripted_effects/zz_ln_invasion_target_effects.txt.
+			ln_expand_the_conquest_effect = yes
+
+			# ...and only then the occupied ground outside the goal, filtered to what the wave can walk to.
+			# After the expansion on purpose: both add to the same change in flight, and the flood should be
+			# judged against the front as it stood when the war was won.
+			ln_contiguous_conquest_effect = yes
+
+			resolve_title_and_vassal_change = scope:change
+
+		}
+
+		# Attacker gets Prestige Experience, Defender loses Prestige, all other participants gain Prestige based on their war contribution.
+		modify_all_participants_fame_values = {
+			WINNER = scope:attacker
+			LOSER = scope:defender
+			FAME_BASE = scope:cb_prestige_factor # Set by 'setup_invasion_cb'
+			IS_RELIGIOUS_WAR = no
+			WINNER_FAME_SCALE = 10
+			LOSER_FAME_SCALE = -10
+			WINNER_ALLY_FAME_SCALE = 10
+			LOSER_ALLY_FAME_SCALE = 10
+		}
+
+		# Truce
+		#add_truce_attacker_victory_effect = yes
+
+		# FP1: note the victory for future memorialisation via stele (if applicable).
+		scope:attacker = { fp1_remember_recent_conquest_victory_effect = yes }
+	}
+
+	on_white_peace_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:defender = { is_local_player = yes } }
+				desc = invasion_war_white_peace_desc_defender
+			}
+			desc = invasion_war_white_peace_desc
+		}
+	}
+	
+	on_white_peace = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		# 1.0.10 -- see the twin block in on_defeat: a white peace against the Watch is still the
+		# Wall holding, and it refills the stage-two clock the same way.
+		if = {
+			limit = {
+				NOT = { has_global_variable = ln_castle_black_fell }
+				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
+				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+			}
+			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+		}
+
+		#EP2 accolade glory gain for doing ok against higher ranked enemy
+		scope:attacker = { accolade_attacker_war_end_glory_gain_low_effect = yes }
+		scope:defender = { accolade_defender_war_end_glory_gain_med_effect = yes }
+
+		# Allies on both sides get full prestige value for helping in the war, based on their war participation.
+		modify_allies_of_participants_fame_values = {
+			WINNER = scope:attacker # Not important as the scales are identical
+			FAME_BASE = major_prestige_value
+			IS_RELIGIOUS_WAR = no
+			WINNER_ALLY_FAME_SCALE = 1
+			LOSER_ALLY_FAME_SCALE = 1
+		}
+
+		# Truce
+		#add_truce_white_peace_effect = yes
+
+		scope:attacker = {
+			add_prestige = mongol_invasion_cb_prestige_white_peace
+			stress_impact = {
+				ambitious = medium_stress_impact_gain
+				arrogant = medium_stress_impact_gain
+			}
+		}
+
+		scope:defender = {
+			stress_impact = {
+				arrogant = medium_stress_impact_gain
+			}
+		}
+	}
+
+	on_defeat_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:defender = { is_local_player = yes } }
+				desc = invasion_war_white_peace_desc_defender
+			}
+			desc = invasion_war_white_peace_desc
+		}
+	}
+	
+	on_defeat = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		# FIX (v0.1.0): was the un-braced `add_character_flag = long_night_cooldown years = 5`, which creates a
+		# PERMANENT flag and leaves `years = 5` as an orphan token. That flag gates BOTH the 30-day expansion pulse
+		# (the_long_night.txt) and allowed_for_character on both invasion CBs -- so the first time the Night King lost
+		# any war he froze forever. That is the "sits idle for years" report. Same file uses the braced form
+		# correctly for war_for_dawn_cooldown a few lines above.
+		# 1.0.10 -- WAS A FLAT FIVE YEARS, and it is the single largest source of the zero-conquest years
+		# measured across two runs (eight of them in the 8258-8291 save). A defeat should cost the dead a
+		# campaign season, not half a generation of the map standing still -- the living winning a war is
+		# supposed to buy them breathing room, not switch the Long Night off. Rolled one to three years,
+		# so a defeat is still a real setback and no two defeats read the same.
+		scope:attacker = {
+			random_list = {
+				30 = { add_character_flag = { flag = long_night_cooldown  years = 1 } }
+				45 = { add_character_flag = { flag = long_night_cooldown  years = 2 } }
+				25 = { add_character_flag = { flag = long_night_cooldown  years = 3 } }
+			}
+		}
+		# 1.0.10 -- THE WALL CAN HOLD (Thomas). If the man who just threw the dead back is seated on
+		# the Wall itself, the stage-two clock refills: a Watch actually holding the Wall IS the
+		# fantasy, and the escape clock exists to break stalls, not to punish garrisons that win.
+		# Fenced on Castle Black standing and on the clock having ever started; both fail open.
+		if = {
+			limit = {
+				NOT = { has_global_variable = ln_castle_black_fell }
+				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
+				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+			}
+			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+		}
+		# Legitimacy
+		add_legitimacy_attacker_defeat_effect = yes
+
+		# Influence
+		add_influence_attacker_defeat_effect = yes
+
+		#EP2 accolade glory gain for winning against higher ranked enemy
+		scope:defender = { accolade_defender_war_end_glory_gain_high_effect = yes }
+
+		# Prestige loss for the attacker
+		scope:attacker = {
+			pay_short_term_gold_reparations_effect = {
+				GOLD_VALUE = 5
+			}
+			add_prestige = {
+				value = massive_prestige_value
+				multiply = -1.0
+			}
+		}
+		
+		setup_invasion_cb = {
+			titles = target_titles
+			attacker = scope:attacker
+			defender = scope:defender
+			claimant = scope:claimant
+			victory = no
+		}
+
+		# Attacker loses Prestige, all other war participants gain Prestige (Defender gains full prestige, all allies on both sides gain based on war contribution).
+		modify_all_participants_fame_values = {
+			WINNER = scope:defender
+			LOSER = scope:attacker
+			FAME_BASE = scope:cb_prestige_factor # Set by 'setup_claim_cb'
+			IS_RELIGIOUS_WAR = no
+			WINNER_FAME_SCALE = scale_10_war_defender_win
+			LOSER_FAME_SCALE = -10
+			WINNER_ALLY_FAME_SCALE = 10
+			LOSER_ALLY_FAME_SCALE = 10
+		}
+	
+		#add_truce_attacker_defeat_effect = yes
+		
+		scope:attacker = {
+			save_temporary_scope_as = loser
+		}
+		on_lost_aggression_war_discontent_loss = yes
+	}
+	
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+	
+	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
+	defender_capital_gives_war_score = no 				# No warscore from defender capital
+	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
+	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
+
+
+	war_name = "OTHER_WAR_NAME"
+	war_name_base = "OTHER_WAR_NAME_BASE"
+	cb_name = "OTHER_COUNTY_CB_NAME"
+
+	interface_priority = 79
+
+	use_de_jure_wargoal_only = yes
+}
+
+
+# The Long Night+: empire-tier variant of other_cb (game rule agot_others_cb_tier = others_cb_empire).
+other_cb_empire = {
+	icon = invasion
+	group = invasion
+
+	combine_into_one = yes
+	should_show_war_goal_subview = yes
+	mutually_exclusive_titles = { always = yes }
+	allow_hostages = no
+
+	allowed_for_character = {
+		has_game_rule = others_cb_empire
+	scope:attacker = {	has_trait = nightking
+		NOT = { has_character_flag = long_night_cooldown }
+	}
+	
+	}
+
+	allowed_for_character_display_regardless = {
+		
+	}
+	
+	allowed_against_character = {
+	
+		NOT = { has_trait = other_trait }
+	}
+	target_titles = neighbor_land_or_water
+	target_title_tier = empire
+	target_de_jure_regions_above = yes
+	ignore_effect = change_title_holder
+
+	ai_can_target_all_titles = {
+		has_trait = other_trait
+	}
+	ai_score_mult = {
+		value = viking_conquest_ai_score_value
+
+		# AI in struggles act insularly for wars that don't have a familial or legal basis.
+		multiply = struggle_wars_prioritise_struggle_targets_value
+		#AGOT Disabled
+		## Tell the Romans to stop going adventuring into the steppe for no gods-damned reason.
+		#multiply = byzantium_conquests_ai_score_value
+		#multiply = muslim_invasions_prefer_nonmuslims_ai_score_value
+
+		#AGOT Disabled
+		##Declaring war on the frankokratia leader can really ruin the whole thing
+		#if = {
+		#	limit = {
+		#		scope:defender = {
+		#			any_owned_story = {
+		#				story_type = frankokratia_story
+		#				NOT = { has_variable = franko_war_complete }
+		#			}
+		#		}
+		#	}
+		#	multiply = 0
+		#}
+	}
+
+	valid_to_start = {
+		scope:target = {
+	
+				is_neighbor_to_realm = scope:attacker
+			}
+		}
+		
+	
+
+	should_invalidate = {
+		NOT = {
+			any_in_list = {
+				list = target_titles
+				any_in_de_jure_hierarchy = {
+					tier = tier_county
+					holder = {
+						target_is_same_character_or_above = scope:defender
+					}
+				}
+			}
+		}
+	}
+
+	on_invalidated_desc = msg_invasion_war_invalidated_message
+	
+	on_invalidated = {
+		scope:attacker = {
+			if = {
+				limit = {
+					is_alive = yes
+				}
+				#remove_character_flag = used_lifetime_invasion # If the war is invalidated, you should be permitted to try again
+			}
+		}
+	}
+
+	cost = {
+
+	}
+	
+	on_declaration = {
+		on_declared_war = yes
+		scope:attacker = {
+			#add_character_flag = used_lifetime_invasion
+		}
+			scope:defender = {
+			
+			
+			every_vassal_or_below = {
+					if = {
+						limit = {
+							any_held_title = {
+								OR = {
+
+									any_title_to_title_neighboring_and_across_water_county = {
+										exists = holder
+                                    holder = {   
+											OR = { 
+												is_vassal_or_below_of = scope:attacker
+												this = scope:attacker
+											} 
+										}
+									}
+
+									any_title_to_title_neighboring_and_across_water_duchy = {
+										exists = holder
+                                    holder = {   
+											OR = { 
+												is_vassal_or_below_of = scope:attacker
+												this = scope:attacker
+											} 
+										}
+									}
+								}
+							}
+						}
+						scope:war = { add_defender = prev } 
+						
+					}
+				}
+			
+			
+		}
+	}	
+
+	on_victory_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:attacker = { is_local_player = yes } }
+				desc = invasion_war_victory_desc_attacker
+			}
+			desc = invasion_war_victory_desc
+		}
+		triggered_desc = {
+			trigger = { scope:attacker = { is_local_player = yes } }
+			desc = invasion_war_warning_desc
+		}
+	}
+	
+	on_victory = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		
+		# Legitimacy
+		add_legitimacy_attacker_victory_effect = yes
+
+		# Influence
+		add_influence_attacker_victory_effect = yes
+
+		#EP2 accolade glory gain for winning against higher ranked enemy
+		scope:attacker = { accolade_attacker_war_end_glory_gain_high_effect = yes }
+
+		create_title_and_vassal_change = {
+			type = conquest
+			save_scope_as = change
+			add_claim_on_loss = yes
+		}
+
+		show_as_tooltip = {
+			every_in_list = {
+				list = target_titles
+				custom_tooltip = invasion_title_transfer_tt
+				custom_tooltip = invasion_title_transfer_2_tt
+				every_in_de_jure_hierarchy = {
+					limit = { holder.top_liege = scope:defender }
+					change_title_holder = {
+						holder = scope:attacker
+						change = scope:change
+					}
+				}
+			}
+			# 1.0.10 -- WAS a literal walk of every occupied county in the loser's realm, which is what the
+			# war used to pay out. It does not any more (zz_ln_contiguity_effects.txt), and a tooltip that
+			# promises land the peace will not actually hand over is worse than no tooltip at all.
+			custom_tooltip = ln_contiguous_transfer_tt
+		}
+		
+		hidden_effect = {
+		scope:war = { every_war_defender = { 
+			# 1.0.9b -- PRIMARY DEFENDER ONLY. Session 26, proven from the 8258-8291 save: on 8264.1.28 one
+			# war settlement moved c_hide_point and c_taldrsek (the legal beyond-Wall goal) AND c_sullen_hills
+			# (Umber land, five years before the Wall fell). setup_invasion_cb with take_occupied ran for
+			# EVERY defender, so an ally called into a beyond-Wall war lost every county the dead had
+			# occupied -- conquest teleporting past every targeting gate, and the map growing pockets in
+			# places the wave never touched. The invasion takes what the WAR was for: allies now keep their
+			# land until the wave actually comes for them.
+			limit = { this = scope:defender }
+			setup_invasion_cb = {
+				titles = target_titles
+				attacker = scope:attacker
+				defender = this
+				change = scope:change
+				# 1.0.10 -- WAS take_occupied = yes, which paid out every occupied county in the loser's
+				# realm at any distance from the front. That is how the dead reached the Trident with the
+				# North still free. The goal still transfers in full; occupied land outside it now has to be
+				# contiguous with ground they already hold. See zz_ln_contiguity_effects.txt.
+				take_occupied = no
+			}
+			}
+			}
+			ln_contiguous_conquest_effect = yes
+			resolve_title_and_vassal_change = scope:change
+
+		}
+
+		# Attacker gets Prestige Experience, Defender loses Prestige, all other participants gain Prestige based on their war contribution.
+		modify_all_participants_fame_values = {
+			WINNER = scope:attacker
+			LOSER = scope:defender
+			FAME_BASE = scope:cb_prestige_factor # Set by 'setup_invasion_cb'
+			IS_RELIGIOUS_WAR = no
+			WINNER_FAME_SCALE = 10
+			LOSER_FAME_SCALE = -10
+			WINNER_ALLY_FAME_SCALE = 10
+			LOSER_ALLY_FAME_SCALE = 10
+		}
+
+		# Truce
+		#add_truce_attacker_victory_effect = yes
+
+		# FP1: note the victory for future memorialisation via stele (if applicable).
+		scope:attacker = { fp1_remember_recent_conquest_victory_effect = yes }
+	}
+
+	on_white_peace_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:defender = { is_local_player = yes } }
+				desc = invasion_war_white_peace_desc_defender
+			}
+			desc = invasion_war_white_peace_desc
+		}
+	}
+	
+	on_white_peace = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		# 1.0.10 -- see the twin block in on_defeat: a white peace against the Watch is still the
+		# Wall holding, and it refills the stage-two clock the same way.
+		if = {
+			limit = {
+				NOT = { has_global_variable = ln_castle_black_fell }
+				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
+				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+			}
+			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+		}
+
+		#EP2 accolade glory gain for doing ok against higher ranked enemy
+		scope:attacker = { accolade_attacker_war_end_glory_gain_low_effect = yes }
+		scope:defender = { accolade_defender_war_end_glory_gain_med_effect = yes }
+
+		# Allies on both sides get full prestige value for helping in the war, based on their war participation.
+		modify_allies_of_participants_fame_values = {
+			WINNER = scope:attacker # Not important as the scales are identical
+			FAME_BASE = major_prestige_value
+			IS_RELIGIOUS_WAR = no
+			WINNER_ALLY_FAME_SCALE = 1
+			LOSER_ALLY_FAME_SCALE = 1
+		}
+
+		# Truce
+		#add_truce_white_peace_effect = yes
+
+		scope:attacker = {
+			add_prestige = mongol_invasion_cb_prestige_white_peace
+			stress_impact = {
+				ambitious = medium_stress_impact_gain
+				arrogant = medium_stress_impact_gain
+			}
+		}
+
+		scope:defender = {
+			stress_impact = {
+				arrogant = medium_stress_impact_gain
+			}
+		}
+	}
+
+	on_defeat_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:defender = { is_local_player = yes } }
+				desc = invasion_war_white_peace_desc_defender
+			}
+			desc = invasion_war_white_peace_desc
+		}
+	}
+	
+	on_defeat = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		# FIX (v0.1.0): was the un-braced `add_character_flag = long_night_cooldown years = 5`, which creates a
+		# PERMANENT flag and leaves `years = 5` as an orphan token. That flag gates BOTH the 30-day expansion pulse
+		# (the_long_night.txt) and allowed_for_character on both invasion CBs -- so the first time the Night King lost
+		# any war he froze forever. That is the "sits idle for years" report. Same file uses the braced form
+		# correctly for war_for_dawn_cooldown a few lines above.
+		# 1.0.10 -- WAS A FLAT FIVE YEARS, and it is the single largest source of the zero-conquest years
+		# measured across two runs (eight of them in the 8258-8291 save). A defeat should cost the dead a
+		# campaign season, not half a generation of the map standing still -- the living winning a war is
+		# supposed to buy them breathing room, not switch the Long Night off. Rolled one to three years,
+		# so a defeat is still a real setback and no two defeats read the same.
+		scope:attacker = {
+			random_list = {
+				30 = { add_character_flag = { flag = long_night_cooldown  years = 1 } }
+				45 = { add_character_flag = { flag = long_night_cooldown  years = 2 } }
+				25 = { add_character_flag = { flag = long_night_cooldown  years = 3 } }
+			}
+		}
+		# 1.0.10 -- THE WALL CAN HOLD (Thomas). If the man who just threw the dead back is seated on
+		# the Wall itself, the stage-two clock refills: a Watch actually holding the Wall IS the
+		# fantasy, and the escape clock exists to break stalls, not to punish garrisons that win.
+		# Fenced on Castle Black standing and on the clock having ever started; both fail open.
+		if = {
+			limit = {
+				NOT = { has_global_variable = ln_castle_black_fell }
+				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
+				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+			}
+			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+		}
+		# Legitimacy
+		add_legitimacy_attacker_defeat_effect = yes
+
+		# Influence
+		add_influence_attacker_defeat_effect = yes
+
+		#EP2 accolade glory gain for winning against higher ranked enemy
+		scope:defender = { accolade_defender_war_end_glory_gain_high_effect = yes }
+
+		# Prestige loss for the attacker
+		scope:attacker = {
+			pay_short_term_gold_reparations_effect = {
+				GOLD_VALUE = 5
+			}
+			add_prestige = {
+				value = massive_prestige_value
+				multiply = -1.0
+			}
+		}
+		
+		setup_invasion_cb = {
+			titles = target_titles
+			attacker = scope:attacker
+			defender = scope:defender
+			claimant = scope:claimant
+			victory = no
+		}
+
+		# Attacker loses Prestige, all other war participants gain Prestige (Defender gains full prestige, all allies on both sides gain based on war contribution).
+		modify_all_participants_fame_values = {
+			WINNER = scope:defender
+			LOSER = scope:attacker
+			FAME_BASE = scope:cb_prestige_factor # Set by 'setup_claim_cb'
+			IS_RELIGIOUS_WAR = no
+			WINNER_FAME_SCALE = scale_10_war_defender_win
+			LOSER_FAME_SCALE = -10
+			WINNER_ALLY_FAME_SCALE = 10
+			LOSER_ALLY_FAME_SCALE = 10
+		}
+	
+		#add_truce_attacker_defeat_effect = yes
+		
+		scope:attacker = {
+			save_temporary_scope_as = loser
+		}
+		on_lost_aggression_war_discontent_loss = yes
+	}
+	
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+	
+	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
+	defender_capital_gives_war_score = no 				# No warscore from defender capital
+	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
+	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
+
+
+	war_name = "OTHER_WAR_NAME"
+	war_name_base = "OTHER_WAR_NAME_BASE"
+	cb_name = "OTHER_COUNTY_CB_NAME"
+
+	interface_priority = 79
+
+	use_de_jure_wargoal_only = yes
+}
+
+
+
+
+
+# Only copied over from Vanilla to remove references to innovation_reconquista, which we don't have.
+# GT, 25 Jan 21
+#
+ 
+scouring_cb = {
+	group = ambush
+	#ai_only_against_neighbors = yes
+	
+	target_titles = all
+	target_title_tier = all
+	target_top_liege_if_outside_realm = no
+	on_declaration = {
+		on_declared_war = yes
+	}
+
+	# Root is the title
+	# scope:attacker is the attacker
+	# scope:defender is the defender
+	
+	transfer_behavior = transfer
+	on_victory_desc = {}
+	on_white_peace_desc = {}
+	on_defeat_desc = {}
+	on_invalidated_desc = {}
+	on_invalidated = {
+		war = {end_war	= defender}
+		scope:attacker = {
+			trigger_event = {
+				id = agot_events_generic.0001
+				days = 5
+			}
+		}
+	}
+	on_defeat = {
+		scope:attacker = {
+			trigger_event = {
+				id = agot_events_generic.0001
+				days = 5
+			}
+		}
+		scope:defender = {
+		
+			trigger_event = {
+				id = others_occupation.3
+				days = 5
+			}
+		}
+
+		scope:defender = {add_gold = 15 }
+	}
+	on_victory = {
+		scope:defender = {
+			trigger_event = {
+				id = others_occupation.4
+				days = 5
+			}
+		}
+		
+		scope:attacker = {
+			trigger_event = {
+				id = agot_events_generic.0001
+				days = 5
+			}
+		}
+		
+		scope:defender.dynasty = {add_dynasty_prestige = -100}
+	}
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+	
+	war_name = SCOURING_CB_NAME
+	war_name_base = SCOURING_CB_NAME_BASE
+	cb_name = SCOURING_CB
+	interface_priority = 59
+	
+	ticking_war_score_targets_entire_realm = no
+	max_defender_score_from_occupation = 150
+	max_attacker_score_from_occupation = 150
+	attacker_ticking_warscore = 0
+	attacker_wargoal_percentage = 0.8
+	
+	max_ai_diplo_distance_to_title = 500
+	
+	on_primary_defender_death = invalidate
+	on_primary_attacker_death = invalidate
+	#transfer_behavior = invalidate
+	
+}

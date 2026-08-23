@@ -1,0 +1,126 @@
+﻿# AGOT: The Long Night & Azor Ahai -- omen pulses.
+#
+# yearly_struggle_playable_pulse is purpose-built for this and is documented in the base game
+# (game/common/on_action/struggle_on_actions.txt): "root: is involved (or interloper) character. Scope:struggle
+# is the currently pulsing struggle." So Root is already a character who is IN a struggle, and scope:struggle
+# tells us which -- no every_player sweep, no manual involvement test.
+# on_actions = { } sub-lists, which merge. Never an `effect` block on a shared on_action.
+
+ln_omen_pulse = {
+	trigger = {
+		# is_struggle_type compares by TYPE, which is the vanilla pattern
+		# (common/decisions/00_major_decisions_iberia_north_africa.txt: is_struggle_type = iberian_struggle).
+		scope:struggle = { is_struggle_type = ln_long_night_struggle }
+	}
+	# `is_ai = no` USED TO BE HERE AND IT WAS THE BUG. Thomas's 54-year observer run finished with
+	# ln_catalyst_ranging_lost, ln_catalyst_other_sighted and ln_catalyst_warning_dismissed all on x0, and this
+	# line is why: every one of those three is fired by an omen EVENT, and the events only ever reached human
+	# players. In a game where the player is a Dornish lord -- or where there is no player at all -- the North
+	# generated no omens whatsoever and three of the nine catalysts were decoration.
+	#
+	# The Long Night is supposed to be happening to the WORLD. A ranging that does not come back does not stop
+	# mattering because the person it happened to is run by the computer. The AI branch inside
+	# ln_omen_pulse_effect fires the catalyst without the card.
+	effect = {
+		ln_omen_pulse_effect = yes
+	}
+}
+
+# Root = a playable character. Silverwing's refusal -- see zz_ln_dragon_wall_effects.txt.
+# The trigger is deliberately thin: the real gate is inside the effect, because it needs to read the rider's
+# dragon variable and a trigger block here would be re-evaluated for every playable character every year to
+# reach the same answer.
+ln_dragon_wall_pulse = {
+	effect = {
+		ln_dragon_refusal_effect = yes
+	}
+}
+
+# ── THE CROSSING ITSELF, NOT THE YEAR AFTERWARDS ────────────────────────────────────────────────────────────
+# 1.0.12b, Thomas in play: "I got that little event mentioning that the dragon wanted to turn around, but I was
+# way past the wall by the time I got it, not when I literally went past the wall."
+#
+# Two delays stacked. ln_dragon_wall_pulse hangs off yearly_playable_pulse, so the check could be up to a year
+# behind the moment it is about; and ln_omen.10 then waits another 5-30 days on top. A beat whose entire point
+# is "she will not go on" landing six months after she plainly did is worse than not having it.
+#
+# on_army_enter_province is vanilla's own hook and it says so in its header: "called for armies whenever they
+# enter a province / root is the owner of the army / scope:army is the army". So the crossing is now caught on
+# the crossing, and ln_omen.10 follows within two days instead of a month.
+#
+# THE YEARLY PULSE STAYS as the backstop and cannot double-fire: ln_dragon_refused_the_wall is a one-shot flag
+# and whichever hook gets there first sets it. It also still covers the case this one cannot -- a rider who
+# never marches an army at all, and the wider world_westeros_the_north catch.
+#
+# NARROWER ON PURPOSE. The pulse tests the Wall, beyond it, AND the whole North; this tests only the Wall and
+# what is past it, because that is what a crossing IS. A dragon balking in the Rills is a different beat and
+# the pulse already owns it.
+ln_dragon_wall_crossing = {
+	trigger = {
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = {
+			OR = {
+				is_struggle_phase = ln_phase_cold_winds
+				is_struggle_phase = ln_phase_the_long_night
+			}
+		}
+		NOT = { has_character_flag = ln_dragon_refused_the_wall }
+		ln_rides_a_living_dragon_trigger = yes
+		scope:army ?= {
+			location ?= {
+				OR = {
+					geographical_region = world_westeros_the_wall
+					geographical_region = world_westeros_beyond_the_wall
+				}
+			}
+		}
+	}
+	effect = {
+		add_character_flag = ln_dragon_refused_the_wall
+		var:current_dragon = { save_scope_as = ln_dragon }
+		trigger_event = { id = ln_omen.10  days = { 0 2 } }
+	}
+}
+
+# -- THE SAME CROSSING, WITHOUT AN ARMY --------------------------------------------------------------------
+# 1.0.12, Thomas: "Wouldn't you want to make that an OR? On army enter province, or is travelling beyond the
+# Wall with your dragon? The only way that would pop up -- there's a caravan travel option to take flight."
+#
+# He is right, and on_army_enter_province genuinely cannot see it. That hook is declared in vanilla's
+# army_on_actions.txt:656 and its own header says "called for armies whenever they enter a province" -- a
+# travel plan is not an army, so a rider who takes flight to Castle Black crosses the Wall with nothing
+# firing. That is most of the times a player actually flies north.
+#
+# on_travel_plan_movement is vanilla's equivalent for the other case (travel_on_actions.txt:2) and it fires per
+# leg of the journey with root as the traveller. Its own upstream trigger is `is_ruler = yes / is_adult = yes`,
+# which is why this is a SEPARATE on_action rather than another entry on the same list: the two hooks hand us
+# different scopes. There is no scope:army here, so the region test reads the traveller's own location.
+#
+# THE ONE-SHOT FLAG IS WHAT MAKES THREE HOOKS SAFE. ln_dragon_refused_the_wall is set by whichever of the
+# three -- march, flight, or the yearly backstop -- reaches the Wall first, and the other two then fail their
+# own trigger. Adding coverage here cannot produce a second Silverwing beat.
+ln_dragon_wall_flight = {
+	trigger = {
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = {
+			OR = {
+				is_struggle_phase = ln_phase_cold_winds
+				is_struggle_phase = ln_phase_the_long_night
+			}
+		}
+		NOT = { has_character_flag = ln_dragon_refused_the_wall }
+		ln_rides_a_living_dragon_trigger = yes
+		location ?= {
+			OR = {
+				geographical_region = world_westeros_the_wall
+				geographical_region = world_westeros_beyond_the_wall
+			}
+		}
+	}
+	effect = {
+		add_character_flag = ln_dragon_refused_the_wall
+		var:current_dragon = { save_scope_as = ln_dragon }
+		trigger_event = { id = ln_omen.10  days = { 0 2 } }
+	}
+}
+

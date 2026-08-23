@@ -1,0 +1,32 @@
+﻿# AGOT: The Long Night & Azor Ahai
+# The struggle schema requires at least one phase to list an ending decision. This is that decision. It is never
+# shown to anyone -- the struggle actually ends from ln_struggle_dawn_reached_effect under the "Once" game rule.
+# Long Night+ uses the same never-shown pattern for war_for_the_dawn_decision.
+
+ln_end_the_long_night_struggle_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_golden_age.dds" }
+
+	title = ln_end_the_long_night_struggle_decision_title
+	desc = ln_end_the_long_night_struggle_decision_desc
+	confirm_text = ln_end_the_long_night_struggle_decision_confirm
+	selection_tooltip = ln_end_the_long_night_struggle_decision_tt
+
+	decision_group_type = major
+
+	# game.log warns on any decision with ai_check_interval negative or unset and silently forces it to 0.
+	# Setting it explicitly keeps our name out of that list -- and this decision is never shown anyway.
+	ai_check_interval = 0
+
+	is_shown = {
+		always = no
+	}
+
+	effect = {
+		struggle:ln_long_night_struggle ?= {
+			# end_struggle takes `yes`, not a decision key (vanilla: struggle:iberian_struggle ?= { end_struggle = yes }).
+			end_struggle = yes
+		}
+	}
+
+	ai_will_do = { base = 0 }
+}

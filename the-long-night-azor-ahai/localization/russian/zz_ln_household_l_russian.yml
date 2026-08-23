@@ -1,0 +1,24 @@
+﻿l_russian:
+
+ # AGOT: The Long Night & Azor Ahai -- household administration.
+ # Deliberately dull where it can be. Nothing here should read as remarkable to a player who is not
+ # looking for it -- an estate in order, a house writing itself down, a ship coming home late.
+
+ ln_household_ledger_decision:0 "Взяться за домовую книгу"
+ ln_household_ledger_decision_desc:0 "Счета не читались годами. Оброк не собран, долги не взысканы, слуги не отблагодарены.\n\nОдин вечер с книгой и стюардом — и дом снова в порядке: причитавшиеся вам монеты найдены, а люди, хранившие верность в скудные годы, записаны как люди, хранившие верность. Кому-то из них нужно напомнить, чего они стоят. Одному-двум — чего они не стоят."
+ ln_household_ledger_decision_tt:0 "Привести дом в порядок."
+ ln_household_ledger_decision_confirm:0 "Послать за стюардом"
+
+ ln_household_charter_decision:0 "Составить устав дома"
+ ln_household_charter_decision_desc:0 "Всякий дом, который стоит долго, рано или поздно записывает сам себя: для чего он, чего он не станет делать и чего ждёт от тех, кто придёт после.\n\nБольшинство не утруждается — и большинство забывают за три поколения. Ваш дом не забудут."
+ ln_household_charter_decision_tt:0 "Закрепить дом на письме."
+ ln_household_charter_decision_confirm:0 "Записать"
+
+ ln_household_valyria_decision:0 "Парус из Дымного моря"
+ ln_household_valyria_decision_desc:0 "Её списали много лет назад — наёмный ког из Волантиса с капитаном, достаточно безумным, чтобы взять фригольдскую грамоту, и командой, достаточно безумной, чтобы её подписать. К востоку от Дымного моря не ходят и не возвращаются. Это не суеверие, это арифметика.\n\nОна вернулась.\n\nТо, что осталось от команды, не скажет, что они видели за пепельными отмелями, а капитан вовсе не сходит на берег. Но трюм вскрыли прямо на причале, при свидетелях: сундук старых монет, всё ещё ярких; клинок волнистой стали, какой не сложил бы ни один живой кузнец; и на дне, в песке, в гнезде промасленной ткани — два яйца, тяжёлые, как камень, и тёплые, как спящие существа.\n\nКапитан не просит платы. Он просит лишь забрать всё это с корабля нынче же ночью и вычеркнуть его имя из грамоты. Что-то в трюме не давало ему спать, и он решил, что оно искало семью, а не богатство."
+ ln_household_valyria_decision_tt:0 "Принять то, что привёз корабль."
+ ln_household_valyria_decision_confirm:0 "Пусть вынесут на берег"
+
+ # Retained for saves that still carry it. No decision applies or reads this any more.
+ ln_household_ledger_cooldown_modifier:0 "Счета сведены"
+ ln_household_ledger_cooldown_modifier_desc:0 "Домовые книги недавно свели. Найти в них что-то ещё какое-то время будет нечего."

@@ -1,0 +1,67 @@
+﻿# The Long Night+ — override of can_be_commander_basic_trigger (copy of AGOT's version + a Night King exemption).
+# AGOT bars any hegemony-tier holder from commanding when the army owner is AI (so emperors/hegemons delegate).
+# But the Night King holds h_the_others (hegemony tier, our anti-vassalisation promotion of e_others), which made
+# him INELIGIBLE to lead his own host — assign_commander failed silently and he sat frozen in his capital instead
+# of marching at the front. We exempt the Night King from that one clause so he can lead the dead in person.
+# Resync note: if AGOT changes can_be_commander_basic_trigger, recopy their body and re-add the nightking OR.
+can_be_commander_basic_trigger = {
+	is_available_quick = {
+		alive = yes
+		#AGOT Disabled
+		# adult = yes
+		incapable = no
+		hostage = no
+	}
+	NAND = {
+		is_clergy = yes
+		NOR = {
+			has_trait = order_member # Order Members will fight for their faith even if their faith says no
+			faith = { has_doctrine_parameter = clergy_can_fight }
+			culture = { has_cultural_parameter = culture_clergy_can_fight }
+		}
+	}
+
+	OR = { # You can always lead your own armies
+		this = $ARMY_OWNER$
+		can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = $ARMY_OWNER$ }
+	}
+
+	trigger_if = {
+		limit = { $ARMY_OWNER$ = { is_ai = yes } }
+		#AGOT Disabled
+		# is_ai = yes
+		# The Long Night+: the Night King leads his own host despite holding the hegemony h_the_others; and a
+		# living hegemon (the Iron Throne king) may lead in person too, but ONLY while fighting the dead in the
+		# War for the Dawn — never in ordinary times (AGOT's hegemon-delegation still holds the rest of the game).
+		OR = {
+			highest_held_title_tier < tier_hegemony
+			has_trait = nightking
+			any_character_war = { using_cb = war_for_the_dawn_cb }
+		}
+	}
+
+	#AGOT Added
+	OR = {
+		is_adult = yes
+		AND = {
+			age >= 14
+			is_current_dragonrider_warfare = yes
+		}
+	}
+	OR = {
+		is_ai = yes
+		AND = {
+			OR = {
+				this = $ARMY_OWNER$
+				NOT = { has_character_flag = cannot_be_knight_and_commander }
+			}
+			is_travelling = no
+			NOT = { exists = involved_activity }
+		}
+	}
+	NOR = {
+		has_character_flag = agot_is_at_unknown_place
+		has_trait = maester
+		NOT = { is_human = yes } # TT error if trigger not formatted this way
+	}
+}

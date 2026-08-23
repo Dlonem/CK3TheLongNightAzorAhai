@@ -1,0 +1,14 @@
+﻿# AGOT: The Long Night & Azor Ahai -- wandering dead pulse.
+# Rides the three-yearly playable pulse. The event's own trigger does the real gating (proximity + cooldown), so
+# this stays cheap: most years, for most rulers, it evaluates one trigger and stops.
+
+ln_wandering_dead_pulse = {
+	trigger = {
+		exists = title:h_the_others.holder
+	}
+	random_events = {
+		# heavily weighted toward nothing happening -- this is seasoning, not a treadmill
+		800 = 0
+		200 = ln_wandering_dead.1
+	}
+}

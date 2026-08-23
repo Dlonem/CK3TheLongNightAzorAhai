@@ -1,0 +1,65 @@
+﻿# AGOT: The Long Night & Azor Ahai -- driving the Favored chain.
+# Same shape as ln_risen_pulse_effect; see that file for why it is a random_list with a no-op weight at the
+# bottom rather than a fixed sequence.
+#
+# FOUR YEARS RATHER THAN THREE. The Resurrected chain is about a thing that already happened to you and it can
+# afford to come quickly. Favored is a claim being built around you by other people, and it should take most of
+# a reign to arrive -- ten events at one per four years is forty years, which is a whole life spent being
+# slowly turned into a symbol.
+
+ln_favored_pulse_effect = {
+	if = {
+		limit = {
+			OR = {
+				has_trait = favored_by_rhllor
+				has_trait = chosen_by_rhllor
+				has_trait = azor_ahai_reborn
+			}
+			is_alive = yes
+			is_adult = yes
+			NOT = { has_character_flag = ln_favored_cooldown }
+		}
+		add_character_flag = { flag = ln_favored_cooldown  years = 4 }
+
+		random_list = {
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_1_done } }
+				add_character_flag = ln_favored_1_done   trigger_event = { id = ln_favored.1   days = { 5 250 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_2_done } }
+				add_character_flag = ln_favored_2_done   trigger_event = { id = ln_favored.2   days = { 5 250 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_3_done } }
+				add_character_flag = ln_favored_3_done   trigger_event = { id = ln_favored.3   days = { 5 250 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_4_done } }
+				add_character_flag = ln_favored_4_done   trigger_event = { id = ln_favored.4   days = { 5 250 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_5_done } }
+				add_character_flag = ln_favored_5_done   trigger_event = { id = ln_favored.5   days = { 5 250 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_6_done }  ln_has_red_priest_trigger = yes }
+				add_character_flag = ln_favored_6_done   trigger_event = { id = ln_favored.6   days = { 5 250 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_7_done }  exists = primary_heir }
+				add_character_flag = ln_favored_7_done   trigger_event = { id = ln_favored.7   days = { 5 250 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_8_done } }
+				add_character_flag = ln_favored_8_done   trigger_event = { id = ln_favored.8   days = { 5 250 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_favored_9_done }  is_landed = yes }
+				add_character_flag = ln_favored_9_done   trigger_event = { id = ln_favored.9   days = { 5 250 } } }
+
+			# The closer. Only once the claim has had time to become a real thing in the world, and only while
+			# there is actually a war to be asked about -- being asked to ride north during the Long Summer
+			# would read as a man with a map and a hobby.
+			4 = {
+				trigger = {
+					NOT = { has_character_flag = ln_favored_10_done }
+					NOT = { has_character_flag = ln_sworn_to_the_dawn }
+					has_character_flag = ln_favored_1_done
+					struggle:ln_long_night_struggle ?= {
+						OR = {
+							is_struggle_phase = ln_phase_cold_winds
+							is_struggle_phase = ln_phase_the_long_night
+						}
+					}
+				}
+				add_character_flag = ln_favored_10_done  trigger_event = { id = ln_favored.10  days = { 5 250 } }
+			}
+
+			10 = { }
+		}
+	}
+}

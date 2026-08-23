@@ -1,0 +1,227 @@
+﻿# AGOT: The Long Night & Azor Ahai -- letting a sworn brother be played.
+#
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THIS FILE OVERRIDES A RULE. IT IS THE ONLY ONE IN THE MOD THAT DOES. READ THIS BEFORE TOUCHING IT.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+#
+# THE SYMPTOM. Thomas took the black, got the Nightfort, got the Night's Watch government and got the Lord
+# Commander as his liege -- all correct -- and then:
+#
+#   "Cannot play a vassal of the Night's Watch. I was only able to spectate my previous character. So as of
+#    right now, I still can't even play as the Night's Watch."
+#
+# THE CAUSE, and it is not a bug in this mod. $A/common/scripted_rules/00_rules.txt:341, inside vanilla's
+# is_character_allowed_to_be_player, AGOT adds:
+#
+#     custom_description = {
+#         text = "GAME_OVER_CANNOT_PLAY_NW_VASSAL"
+#         NAND = {
+#             government_has_flag = government_is_nw
+#             NOR = {
+#                 is_independent_ruler = yes
+#                 AND = { has_domicile = yes  has_dlc_feature = landless_playable }
+#             }
+#         }
+#     }
+#
+# Read plainly: you may play the Night's Watch only as the Lord Commander, or as a landless brother with a
+# camp. A brother who holds a castle -- the entire premise of this mod's Night's Watch layer -- is refused.
+#
+# WHY AGOT DID IT, most likely, and it was reasonable at the time: a Night's Watch vassal had nothing to do.
+# No content, no decisions, no economy, no succession, and a keepership that evaporates when you die. Handing
+# a player that seat would have been handing them a spectator's chair with extra steps.
+#
+# WHY WE ARE UNDOING IT: that is no longer true. There are eighteen keeperships, a way in, a way to rebuild
+# what you are given, a way for the Watch to feed itself, life on the Wall, and a war coming that the Watch is
+# the only institution positioned to see first.
+#
+# ── THE HAZARD, STATED PLAINLY ──────────────────────────────────────────────────────────────────────────────
+#
+# Scripted rules are keyed singletons: one definition wins, and the last-loaded file is the one that counts.
+# There is no additive way to relax one clause of a rule. So this file is a VERBATIM COPY of the rule with
+# exactly one block changed, which means:
+#
+#   ⚠ EVERY OTHER CLAUSE HERE IS FROZEN AT THE VERSION IT WAS COPIED FROM.
+#
+# If Paradox adds a government type that should not be playable, or AGOT adds another exclusion, this file
+# silently reverts it and nothing logs a thing. That is the same failure mode that kept knight_killed out of
+# this mod (see common/combat_phase_events/zz_ln_knight_phase_events.txt) -- and the reason it is accepted HERE
+# and refused THERE is that there was no other way to get the feature, and this rule is 130 lines that change
+# rarely rather than 993 lines that AGOT edits heavily.
+#
+# ON EVERY CK3 OR AGOT UPDATE: diff this against $A/common/scripted_rules/00_rules.txt and re-copy, keeping
+# only the marked change. It is a two-minute job and skipping it is how a mod quietly breaks a base-game rule.
+#
+# COPIED FROM: AGOT's 00_rules.txt as of this build. The ONLY edit is the block marked ★ below.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+is_character_allowed_to_be_player = {
+	trigger_if = {
+		limit = {
+			scope:will_override_government = no
+		}
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_THEOCRACY"
+			NOT = { government_has_flag = government_is_theocracy }
+		}
+
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_REPUBLIC"
+			NOT = { government_has_flag = government_is_republic }
+		}
+
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_MERCENARY"
+			NOT = { government_has_flag = government_is_mercenary }
+		}
+
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_HOLY_ORDER"
+			NOT = { government_has_flag = government_is_holy_order }
+		}
+
+		trigger_if = {
+			limit = {
+				NOT = { has_dlc_feature = admin_gov }
+			}
+			custom_description = {
+				text = "GAME_OVER_CANNOT_PLAY_ADMIN"
+				NOT = { government_has_flag = government_is_administrative }
+			}
+		}
+
+		# We cannot become landless adventurers
+		trigger_if = {
+			limit = {
+				NOT = { has_dlc_feature = roads_to_power }
+			}
+			custom_description = {
+				text = "GAME_OVER_CANNOT_PLAY_ADVENTURER"
+				NOT = { government_has_flag = government_is_landless_adventurer }
+			}
+			custom_description = {
+				text = "GAME_OVER_CANNOT_PLAY_BARON"
+				NOT = { highest_held_title_tier = tier_barony }
+			}
+
+			# This is a generic "catch all", we should have caught it before this
+			is_playable_character = yes
+		}
+
+		# This character is not playable
+		trigger_if = {
+			limit = {
+				government_is_japanese_trigger = yes
+				is_landed = no
+			}
+
+			custom_tooltip = {
+				text = GAME_OVER_CANNOT_PLAY_ESTATELESS
+				has_domicile = yes
+			}
+		}
+
+		# We can become landless adventurers
+		trigger_else = {
+			# This is a generic "catch all", we should have caught it before this
+			OR = {
+				AND = {
+					is_ruler = no # We're not a ruler, but we can become a landless adventurer
+					is_valid_for_laampdom = yes
+				}
+				is_playable_character = yes # General catch-all, we can continue playing
+			}
+			NOT = { has_character_flag = declined_become_laamp }
+
+		}
+
+		#AGOT Added, Ruins
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_RUINS"
+			NOT = { has_government = ruins_government }
+		}
+
+		#AGOT Added, Unknown
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_REMOVED_REALM"
+			NOT = { has_government = unknown_government }
+		}
+
+		#AGOT Added, Wilderness
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_WILDERNESS"
+			NOT = { has_government = wilderness_government }
+		}
+
+		# ★★★ THE ONE CHANGE ★★★ ────────────────────────────────────────────────────────────────────────────
+		# AGOT's original third clause was:
+		#
+		#     NOR = {
+		#         is_independent_ruler = yes
+		#         AND = { has_domicile = yes  has_dlc_feature = landless_playable }
+		#     }
+		#
+		# One line added to that NOR: `is_landed = yes`. A brother who holds one of the Wall's castles is now
+		# playable. Everything else about this clause is untouched, so a landless Night's Watch courtier with no
+		# camp is still refused exactly as before -- that man genuinely has nothing to do, and AGOT was right
+		# about him.
+		# ── CARRIED HERE IN 1.0.13, AND IT HAD NEVER RUN ────────────────────────────────────────────────────
+		# This block came from Long Night+ and lived in our copy of AGOT's 00_rules.txt. That copy also defined
+		# is_character_allowed_to_be_player -- and so does THIS file, which loads later, so in our own
+		# mod the
+		# block was overridden by the very file meant to relax the rule beside it. It never fired once. The
+		# localization for it has shipped in English and Russian since 1.0.x describing behaviour the game did
+		# not have.
+		#
+		# A player raised as a wight is a mindless thrall of the Night King: not a valid player. The engine
+		# re-evaluates this rule on state change (as it does for ruins and wilderness above), so the moment a
+		# human is raised they are handed off to a playable heir, or the game ends -- no death, no landlessness,
+		# and the wight stays landed in the dead's host. It also excludes wights as continuation targets, so you
+		# are never handed one to play.
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_WIGHT"
+			NOT = { has_trait = wight_trait }
+		}
+
+		#AGOT Added, NW Vassals -- relaxed by The Long Night & Azor Ahai
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_NW_VASSAL"
+			NAND = {
+				government_has_flag = government_is_nw
+				NOR = {
+					is_independent_ruler = yes
+					is_landed = yes
+					AND = {
+						has_domicile = yes
+						has_dlc_feature = landless_playable
+					}
+					# ★ SECOND CHANGE, 8 August ★ A brother who rides out is playable full stop.
+					#
+					# AGOT's three ways out of this clause are independence, land, or a domicile. A ranging
+					# company is none of them by design, and it turned out the camp was not being created at
+					# all -- four AI rangers in Thomas's 8109 save hold ln_ranger_government and not one of
+					# them has a domicile, while AGOT's First Ranger has his. So every ranger, player and AI
+					# alike, was landing on this clause.
+					#
+					# NARROW ON PURPOSE: has_government, not government_has_flag. This names one government --
+					# ours -- so AGOT's own First Ranger, their Lord Commander and every keeper of a castle are
+					# all judged by exactly the rules they were judged by before.
+					has_government = ln_ranger_government
+				}
+			}
+		}
+		# ★★★ END OF THE CHANGE ★★★ ─────────────────────────────────────────────────────────────────────────
+
+		#AGOT Added, Wilderness
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_GOLDFUROR_DURING_NPK"
+			NAND = {
+				this = character:starter_plc_10
+				game_start_date = 8258.12.21
+				NOT = { has_game_rule = agot_story_sandbox }
+				agot_has_any_shattered_rule_trigger = no
+			}
+		}
+
+	}
+}

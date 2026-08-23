@@ -1,0 +1,12 @@
+﻿# AGOT: The Long Night & Azor Ahai
+#
+# INTENTIONALLY EMPTY as of 1.0.8.
+#
+# This file used to declare a SECOND on_game_start_after_lobby (firing others_maintenance.1) alongside
+# the one in zz_ln_00_hooks.txt. That file's header lays down the rule that a vanilla on_action is
+# declared there and nowhere else, precisely because a hook that loses a last-wins race produces
+# silence rather than an error. others_maintenance.1 now lives in zz_ln_00_hooks.txt with the rest.
+#
+# The file is kept rather than deleted because it is inherited: AGOT does NOT ship anything at this
+# relative path (checked), so nothing upstream is being shadowed either way, but leaving a signpost
+# beats a future session finding the path gone and wondering what used to be here.

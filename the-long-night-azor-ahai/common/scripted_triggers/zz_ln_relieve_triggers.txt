@@ -1,0 +1,61 @@
+﻿# AGOT: The Long Night & Azor Ahai -- there is a man at Greyguard who has not sent a report in four years.
+#
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE PROBLEM THIS SOLVES, MEASURED RATHER THAN GUESSED
+#
+# Thomas asked whether the ranging companies would ever be filled by AI. Chasing that question through the
+# files turned up something worse about the OTHER door. AGOT ships holder history for every castle on the Wall,
+# and counting it at three dates:
+#
+#     100 AC -- 11 of 16 baronies held,  5 free
+#     200 AC -- 15 of 16 held,           1 free
+#     300 AC -- 15 of 16 held,           1 free
+#
+# Thomas's 108 AC run had five free, which is why he got the Nightfort without noticing anything was wrong.
+# A player starting at 300 AC -- the bookmark most people actually play -- gets ONE, and if an AI has it, the
+# headline feature of this mod is a greyed-out decision.
+#
+# THE ANSWER IS NOT MORE CASTLES. There are nineteen and there have always been nineteen. The answer is that
+# the Lord Commander can take one off a man who is not using it, which is a thing Lord Commanders demonstrably
+# do -- Jon Snow hands castles to Stannis and to the free folk over the objections of men who already had
+# claims on them.
+#
+# So a castle being spoken for is no longer a locked door. It is a different conversation, and a better one:
+# you do not arrive to find a vacancy, you arrive and are told which of your new brothers is the weakest link.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# ── IS THERE A BROTHER WHO SHOULD NOT BE HOLDING A CASTLE? ──────────────────────────────────────────────────
+# Deliberately narrow. This is not "take a castle off anybody you fancy" -- it is the Lord Commander noticing
+# that a keep is being held by a man who cannot hold it. Incapable, or past the age where anyone should be on
+# that wall, or a green recruit who was handed a command he never earned.
+#
+# NEVER A PLAYER. Whatever else this mod does, it does not take another human's castle away to give it to you.
+ln_brother_should_be_relieved_trigger = {
+	is_ai = yes
+	is_alive = yes
+	government_has_flag = government_is_nw
+	is_landed = yes
+	NOT = { this = title:k_the_wall.holder }
+	OR = {
+		has_trait = incapable
+		age >= 70
+		NOT = {
+			has_trait_xp = {
+				trait = nightswatch
+				value >= 100
+			}
+		}
+	}
+}
+
+# Is there one at all, and does the Lord Commander have someone to complain to about it?
+ln_wall_has_a_relievable_keeper_trigger = {
+	exists = title:k_the_wall.holder
+	title:k_the_wall.holder = {
+		has_government = nights_watch_government
+		any_vassal_or_below = {
+			ln_brother_should_be_relieved_trigger = yes
+		}
+	}
+}
+

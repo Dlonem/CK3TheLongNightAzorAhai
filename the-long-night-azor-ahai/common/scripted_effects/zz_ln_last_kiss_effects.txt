@@ -1,0 +1,63 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the last kiss.
+#
+# Root = the character who was about to die of natural causes and did not. Called from our sub-list on
+# on_natural_death_second_chance.
+
+ln_last_kiss_effect = {
+	# THE GATE IS REPEATED, NOT TRUSTED. on_natural_death_second_chance fires because
+	# has_natural_death_second_chance said yes, so in principle this could just run -- but the two are separate
+	# pieces of script in separate files and if they ever drift apart, the version that grants a permanent trait
+	# is the one that must be right. It is four trigger calls. Let it be redundant.
+	if = {
+		limit = {
+			# WAS ONCE PER LIFETIME, AND THOMAS IS RIGHT THAT IT SHOULD NOT BE. Beric Dondarrion died six
+			# times. What limits this is not a counter on the man, it is
+			# ln_priest_can_give_the_last_kiss_trigger: a priest who has given the last kiss can never give
+			# another one, ever. So every return costs a NEW priest, permanently, and a realm runs out of red
+			# priests long before it runs out of deaths. That is also exactly why Beric needed Thoros and
+			# Thoros only ever managed Beric.
+			#
+			# ln_had_the_last_kiss is still checked -- as a COOLDOWN now rather than a lock. See below.
+			NOT = { has_character_flag = ln_had_the_last_kiss }
+			faith = { has_doctrine_parameter = can_heal_via_flames }
+			ln_has_last_kiss_priest_trigger = yes
+			ln_died_with_life_left_trigger = yes
+			ln_worth_the_fire_trigger = yes
+		}
+		# TEN YEARS between returns. Without a duration this was the permanent lock; with one it is the
+		# breathing space that stops a single bad decade producing four resurrections and a man with no face.
+		add_character_flag = { flag = ln_had_the_last_kiss  years = 10 }
+
+		# Grab the priest who did it -- the one who actually QUALIFIES, not merely the one in red -- so the card
+		# can name them and so the price lands on the right person.
+		if = {
+			limit = { cp:councillor_court_chaplain ?= { ln_priest_can_give_the_last_kiss_trigger = yes } }
+			cp:councillor_court_chaplain = { save_scope_as = ln_the_priest }
+		}
+		else_if = {
+			limit = { court_position:camp_priest_camp_officer ?= { ln_priest_can_give_the_last_kiss_trigger = yes } }
+			court_position:camp_priest_camp_officer = { save_scope_as = ln_the_priest }
+		}
+
+		# ── THE PRICE ────────────────────────────────────────────────────────────────────────────────────────
+		# It comes out of the priest. Thoros came back from Beric's sixth kiss looking like something that had
+		# been left out in the weather, and Melisandre says plainly that the fire takes from whoever feeds it.
+		# Mechanically this is also what stops a court from farming resurrection: the modifier is permanent, and
+		# ln_priest_can_give_the_last_kiss_trigger refuses anyone carrying it. One priest, one life, ever.
+		if = {
+			limit = { exists = scope:ln_the_priest }
+			scope:ln_the_priest = {
+				add_character_modifier = ln_gave_the_last_kiss_modifier
+				add_piety = 300
+			}
+		}
+		# And out of you. You do not get to be casual about this.
+		add_piety = -150
+
+		# ADDS THE TRAIT THE FIRST TIME AND DEEPENS THE TRACK EVERY TIME AFTER, and takes a piece of him for
+		# each one. See common/scripted_effects/zz_ln_returned_effects.txt. It calls ln_check_naming_effect
+		# itself, so this no longer does.
+		ln_the_fire_takes_something_effect = yes
+		trigger_event = { id = ln_prophecy.20  days = 1 }
+	}
+}

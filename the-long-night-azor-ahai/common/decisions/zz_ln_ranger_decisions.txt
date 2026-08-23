@@ -1,0 +1,130 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the other door, and the way back in from the cold.
+#
+# Thomas: "instead of just starting out at the Nightfort, maybe they could upgrade to that... Life of being a
+# ranger has been good, I wanna serve the watch more. And so they'd get a decision to build a new holding."
+#
+# Two doors into the Watch now, and they are genuinely different games:
+#
+#   RIDE OUT   -- a camp, a company, no walls and no income from land. You go north of the Wall, which is
+#                 where everything interesting is and where nothing will feed you.
+#   HOLD A WALL -- one of nineteen castles, a ruin to rebuild, and a stretch of ice that is your problem.
+#
+# And a road between them, which is the part that makes it a campaign rather than a character choice.
+
+ln_take_the_black_as_a_ranger_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_beyond_the_wall.dds" }
+
+	desc = ln_take_the_black_as_a_ranger_decision_desc
+	selection_tooltip = ln_take_the_black_as_a_ranger_decision_tt
+	confirm_text = ln_take_the_black_as_a_ranger_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0
+
+	is_shown = {
+		is_ai = no
+		ln_can_take_the_black_trigger = yes
+		exists = title:k_the_wall.holder
+		title:k_the_wall.holder = {
+			has_government = nights_watch_government
+			NOT = { this = root }
+		}
+	}
+
+	is_valid = {
+		is_available = yes
+		is_imprisoned = no
+
+		custom_description = {
+			text = ln_ranger_needs_a_company
+			ln_free_ranging_company_trigger = yes
+		}
+		# NO PRESTIGE GATE, DELIBERATELY, and this is the whole reason both doors exist. The Lord Commander
+		# does not hand a castle to a nobody -- see ln_worth_a_castle_trigger -- but he will absolutely hand a
+		# nobody a horse, a cloak and a direction. That is what the Night's Watch has always been for, and it
+		# means the poorest start in the mod is also the most authentic one.
+		custom_description = {
+			text = ln_black_needs_somewhere_for_the_realm_to_go
+			OR = {
+				is_landed = no
+				exists = primary_heir
+				exists = liege
+			}
+		}
+		custom_description = {
+			text = ln_black_not_at_war_with_the_watch
+			NOT = { is_at_war_with = title:k_the_wall.holder }
+		}
+	}
+
+	effect = {
+		ln_take_the_black_as_a_ranger_effect = yes
+	}
+
+	ai_will_do = { base = 0 }
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# COMING IN FROM THE COLD
+#
+# A ranger who has served long enough can ask for a roof. He gives up the company and the camp for one of the
+# nineteen castles, through exactly the same keepership machinery a man who walked up and asked would use.
+#
+# THE GATE IS SERVICE, NOT MONEY. nightswatch trait XP is AGOT's own measure of how long a man has been on the
+# Wall -- under 100 the trait even renders as "flappers", their word for a recruit. A hundred is a sworn
+# brother who has been at it. That is the right currency for this, and it is one a player cannot buy.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+ln_ask_for_a_castle_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_castle_view.dds" }
+
+	desc = ln_ask_for_a_castle_decision_desc
+	selection_tooltip = ln_ask_for_a_castle_decision_tt
+	confirm_text = ln_ask_for_a_castle_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0
+
+	is_shown = {
+		has_government = ln_ranger_government
+		is_adult = yes
+		is_alive = yes
+	}
+
+	is_valid = {
+		is_available = yes
+		is_imprisoned = no
+
+		custom_description = {
+			text = ln_ranger_needs_to_have_served
+			has_trait_xp = {
+				trait = nightswatch
+				value >= 100
+			}
+		}
+		# Same widening as the front door: by 200 AC fifteen of sixteen Wall baronies are held, so "must be
+		# empty" would retire a thirty-year ranger to nothing. A man who has been out there that long is
+		# exactly who the Lord Commander relieves somebody FOR.
+		custom_description = {
+			text = ln_black_needs_a_castle
+			OR = {
+				ln_wall_has_a_free_keepership_trigger = yes
+				ln_wall_has_a_relievable_keeper_trigger = yes
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { ln_wall_has_a_free_keepership_trigger = yes }
+			ln_ranger_takes_a_castle_effect = yes
+		}
+		else = {
+			# Nothing standing empty, so somebody stands down. The company is kept until the castle is
+			# actually his -- a ranger with neither a camp nor a keep is a bug, not a story.
+			ln_relieve_a_brother_effect = yes
+			trigger_event = { id = ln_ranger.3  days = { 14 40 } }
+		}
+	}
+
+	ai_will_do = { base = 0 }
+}

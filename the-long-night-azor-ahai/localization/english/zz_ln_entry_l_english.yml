@@ -1,0 +1,13 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- the orientation card.
+
+ ln_prophecy.30.t:0 "They Have Been Saying It for a While"
+ ln_prophecy.30.desc_open:0 "[ln_the_seer.GetTitledFirstName] has been circling this for weeks and has finally come out with it, in the flat unembarrassed way of a man who has decided the embarrassment is not the important part.\n\n"
+ ln_prophecy.30.desc_favored:0 "'There is a thing people say about you. Not to your face. It is the old prophecy — the one about the prince that was promised, the man born again amidst salt and smoke to wake dragons out of stone and end the long night before it starts.'\n\n'They say it about somebody in every generation. They have been wrong every single time.'\n\n"
+ ln_prophecy.30.desc_chosen:0 "'There is a thing people say about you, and it stopped being a whisper some time ago. The prince that was promised. Azor Ahai come again.'\n\n'Understand what that means practically. Priests will come. Men who believe it will follow you further than sense allows. And somewhere there is a second man being told the same thing, and someone doing the arithmetic on how to resolve that.'\n\n"
+ ln_prophecy.30.desc_risen:0 "'You died. I want to be clear that I am not speaking poetically. Your heart stopped and your body cooled and then it did not stay that way, and every man who was in that room has told the story since with the same face.'\n\n'The Red Faith has a word for what you are and I am not going to use it in front of you yet. But you should know that people will start using it, and that not all of them will mean it kindly.'\n\n"
+ ln_prophecy.30.desc_azor:0 "'You already know. You were there. But the histories are going to need somebody to have said it out loud in a room with witnesses, so: Azor Ahai come again, the prince that was promised, and the man who ended it.'\n\n'I have nothing to teach you. I came a very long way to stand here and be certain, and I am.'\n\n"
+ ln_prophecy.30.desc_close:0 "'Nothing has to be done about any of it today. But it will keep happening, and it will get louder, and one day somebody is going to arrive who wants something from it. Better you heard it from me sitting down.'"
+ ln_prophecy.30.a:0 "I know what they say. Say it anyway."
+ ln_prophecy.30.b:0 "I did not ask for this and I do not want it."

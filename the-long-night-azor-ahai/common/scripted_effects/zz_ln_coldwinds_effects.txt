@@ -1,0 +1,78 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the cold winds, felt before they are believed.
+#
+# Thomas's design, settled for 1.0.7: "only for the Wall and the North." Frequent for anyone at or
+# north of the Wall; occasional for northern lords; NEVER for southern lords -- their silence is
+# itself the point about the realm not believing. And STRICTLY flavour: these cards carry no
+# catalyst, no points, no winter-clock erosion (sightings already erode the hidden clock through
+# the omen pulse -- adding more here would double-charge the same dread). Nothing below calls
+# ln_fire_catalyst_blaming_effect or ln_the_dark_comes_sooner_effect, and that is a rule, not an
+# accident.
+#
+# Root = a playable character involved in (or interloping on) the struggle; scope:struggle
+# guaranteed by yearly_struggle_playable_pulse (see zz_ln_coldwinds_on_actions.txt). Human players
+# only -- an AI lord needs no atmosphere. Each card is once per character (its own flag); the
+# shared cooldown paces them so the phase whispers rather than nags (the Zetsuji lesson).
+ln_coldwinds_pulse_effect = {
+	if = {
+		limit = {
+			scope:struggle = { is_struggle_phase = ln_phase_cold_winds }
+			is_ai = no
+			is_available_adult = yes
+			NOT = { has_character_flag = ln_coldwinds_cooldown }
+		}
+		# ── AT OR NORTH OF THE WALL: the wind is not a rumour here ─────────────────────────────────
+		if = {
+			limit = {
+				OR = {
+					has_government = nights_watch_government
+					culture = culture:frostborn
+					capital_province ?= { geographical_region = world_westeros_the_wall }
+					capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+				}
+			}
+			random = {
+				chance = 30
+				add_character_flag = { flag = ln_coldwinds_cooldown  years = 2 }
+				random_list = {
+					10 = {
+						trigger = { NOT = { has_character_flag = ln_cw_saw_nobody } }
+						trigger_event = { id = ln_coldwinds.1  days = { 5 200 } }
+					}
+					10 = {
+						trigger = { NOT = { has_character_flag = ln_cw_saw_quiet } }
+						trigger_event = { id = ln_coldwinds.2  days = { 5 200 } }
+					}
+					10 = {
+						trigger = { NOT = { has_character_flag = ln_cw_saw_fires } }
+						trigger_event = { id = ln_coldwinds.3  days = { 5 200 } }
+					}
+				}
+			}
+		}
+		# ── THE NORTH: it reaches them second ──────────────────────────────────────────────────────
+		else_if = {
+			limit = {
+				OR = {
+					culture = culture:northman
+					capital_province ?= { geographical_region = world_westeros_the_north_mainland }
+				}
+			}
+			random = {
+				chance = 12
+				add_character_flag = { flag = ln_coldwinds_cooldown  years = 4 }
+				random_list = {
+					10 = {
+						trigger = { NOT = { has_character_flag = ln_cw_saw_wolves } }
+						trigger_event = { id = ln_coldwinds.4  days = { 5 200 } }
+					}
+					10 = {
+						trigger = { NOT = { has_character_flag = ln_cw_saw_grandmother } }
+						trigger_event = { id = ln_coldwinds.5  days = { 5 200 } }
+					}
+				}
+			}
+		}
+		# ── SOUTHERN LORDS: nothing. Ever. The realm that does not believe gets no atmosphere to
+		# believe in, and the first thing the south hears from this mod should be the thing itself.
+	}
+}

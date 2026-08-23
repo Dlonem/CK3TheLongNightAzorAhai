@@ -1,0 +1,117 @@
+﻿namespace = ln_wight
+
+# AGOT: The Long Night & Azor Ahai
+# ln_wight.1 -- word reaches you that someone you knew has risen as a wight.
+#
+# NO STRESS, by design. During a full invasion this can fire many times over a reign, and a notification that
+# quietly kills the player through accumulated stress is a bug, not drama. The weight is in the text.
+# The delay (3-30 days) is deliberate: news travels slowly, and it staggers a wave of conversions into a
+# trickle of letters rather than one screenful.
+
+ln_wight.1 = {
+	type = character_event
+	title = ln_wight.1.t
+	desc = {
+		first_valid = {
+			triggered_desc = { trigger = { scope:ln_risen = { is_spouse_of = root } }   desc = ln_wight.1.desc.spouse }
+			triggered_desc = { trigger = { has_relation_soulmate = scope:ln_risen }     desc = ln_wight.1.desc.soulmate }
+			triggered_desc = { trigger = { scope:ln_risen = { is_child_of = root } }    desc = ln_wight.1.desc.child }
+			triggered_desc = { trigger = { scope:ln_risen = { is_parent_of = root } }   desc = ln_wight.1.desc.parent }
+			triggered_desc = { trigger = { scope:ln_risen = { is_sibling_of = root } }  desc = ln_wight.1.desc.sibling }
+			triggered_desc = { trigger = { has_relation_best_friend = scope:ln_risen }  desc = ln_wight.1.desc.best_friend }
+			triggered_desc = { trigger = { has_relation_lover = scope:ln_risen }        desc = ln_wight.1.desc.lover }
+			triggered_desc = { trigger = { has_relation_friend = scope:ln_risen }       desc = ln_wight.1.desc.friend }
+			desc = ln_wight.1.desc.generic
+		}
+	}
+	theme = death
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+	right_portrait = {
+		character = scope:ln_risen
+	}
+
+	immediate = {
+		# Suppresses the wider ring for a while. Set here rather than in the effect so an inner-ring notice
+		# quiets the friend/lover notices too.
+		add_character_flag = { flag = ln_wight_notice_cooldown  days = 60 }
+		play_music_cue = "mood_the_others"
+	}
+
+	# The plain answer. No mechanical effect -- see the note above.
+	option = {
+		name = ln_wight.1.a
+	}
+
+	# Only if you are already fighting the dead. Costs nothing; it is there so the moment can land differently
+	# for someone in the war than for someone hearing about it from a thousand miles away.
+	option = {
+		name = ln_wight.1.b
+		trigger = {
+			exists = title:h_the_others.holder
+			is_at_war_with = title:h_the_others.holder
+		}
+	}
+}
+
+
+# ln_wight.2 -- 1.0.8. The thing wearing his face is not your husband.
+#
+# Fires from ln_wight_marriage_card_effect at the moment of the raise, 3-10 days out. By the time it
+# lands the marriage is ALREADY over -- which is exactly why the wight travels in a VARIABLE and not a
+# saved scope: a queued event does not carry the scope. Rebuilt in immediate, then cleared so the slot
+# can be reused if this character is widowed by the dead twice.
+#
+# Players AND AI alike (Thomas, 13 Aug). NO STRESS, for the same reason ln_wight.1 carries none: during
+# a full invasion this can fire many times over a reign, and a card that quietly kills the player
+# through accumulated stress is a bug, not drama. The weight is in the text.
+#
+# KNOWN EDGE: a polygamous character who loses two spouses to the same raise gets one card, not two --
+# the second set_variable overwrites the first before either lands, and the losing event fails its own
+# `exists` trigger and is discarded silently. Both marriages still end. Deemed acceptable: the
+# severance is the feature, and the case needs a Targaryen and a very bad week.
+ln_wight.2 = {
+	type = character_event
+	title = ln_wight.2.t
+	desc = ln_wight.2.desc
+	theme = death
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = grief
+	}
+	right_portrait = {
+		character = scope:ln_lost
+	}
+
+	# The variable is the whole payload. If it is gone the card has nothing to say -- drop it.
+	trigger = {
+		exists = var:ln_lost_to_the_dead
+	}
+
+	immediate = {
+		var:ln_lost_to_the_dead = { save_scope_as = ln_lost }
+		remove_variable = ln_lost_to_the_dead
+		play_music_cue = "mood_the_others"
+	}
+
+	# The plain answer. No mechanical effect -- see the note above.
+	option = {
+		name = ln_wight.2.a
+	}
+
+	# Only if you are already fighting the dead, so the moment can land differently for someone in the
+	# war than for someone hearing it from a thousand miles away. Mirrors ln_wight.1.b.
+	option = {
+		name = ln_wight.2.b
+		trigger = {
+			exists = title:h_the_others.holder
+			is_at_war_with = title:h_the_others.holder
+		}
+	}
+}

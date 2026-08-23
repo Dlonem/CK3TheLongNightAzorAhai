@@ -1,0 +1,56 @@
+﻿namespace = ln_prophecy
+
+# The dragonglass arrives.
+#
+# WAS ln_prophecy.30, AND SO IS THE SEER'S CARD IN zz_ln_entry_events.txt. Two events, one ID. CK3 keeps the
+# last one parsed and drops the other without a word, and "zz_ln_preparation" sorts after "zz_ln_entry", so
+# this card was quietly eating the one that tells a man what people have started calling him. Renumbered here
+# rather than there because this one has a single caller and three localization keys.
+# DEVELOPED 9 Aug (Session 10). This is the payoff card of the mod's core decision and it was a single
+# paragraph with a nod. Branched: the Watch has no master-at-arms to convince, only a vow that finally makes
+# sense; a man who has SEEN one (believed a sighting, or carries the greensight) is not arguing with the
+# Citadel, he is arguing with his own memory; everyone else keeps the original scene.
+ln_prophecy.31 = {
+	type = character_event
+	title = ln_prophecy.31.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_prophecy.31.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_character_flag = ln_named_it_first
+						ln_has_deed_greensight_trigger = yes
+					}
+				}
+				desc = ln_prophecy.31.desc.seen
+			}
+			desc = ln_prophecy.31.desc
+		}
+	}
+	theme = realm
+	override_background = { reference = agot_frozen_forest }
+
+	# Arm everyone, and let the realm laugh until it stops laughing.
+	option = {
+		name = ln_prophecy.31.a
+		ai_chance = {
+			base = 60
+			modifier = { add = 20  OR = { has_trait = brave  has_trait = zealous  has_government = nights_watch_government } }
+		}
+	}
+
+	# Arm them quietly. A lord who hands out glass knives with no explanation is a lord people watch.
+	option = {
+		name = ln_prophecy.31.b
+		add_dread = 5
+		ai_chance = {
+			base = 20
+			modifier = { add = 25  OR = { has_trait = paranoid  has_trait = deceitful } }
+			modifier = { add = -20  has_government = nights_watch_government }
+		}
+	}
+}

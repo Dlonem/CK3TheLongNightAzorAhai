@@ -1,0 +1,516 @@
+﻿other_trait = {
+	icon = other_trait.dds
+	birth = 0
+	random_creation = 0
+	claim_inheritance_blocker = all   # FIX: blocks_from_claim_inheritance is not a CK3 field
+	negate_prowess_penalty_add = 25
+	shown_in_ruler_designer = no
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					NOT = { exists = this }
+				}
+				desc = trait_other_trait_desc
+			}
+			desc = trait_other_trait_character_desc
+		}
+	}
+	
+	#portrait_extremity_shift = 0.5
+	#ugliness_portrait_extremity_shift = 0.7
+	
+	same_culture_opinion = 75
+	# REMOVED: hostile_scheme_resistance_mult is not a CK3 modifier and the modern scheme system has no
+	# multiplicative equivalent. The resistance intent is carried by the scheme fields below.
+	diplomatic_range_mult = 1
+	domain_limit = -2
+	
+	
+	
+	prowess = 18 # Being a Maiar does not guarentee great skill in combat - better represented by high initial stats
+	health = 50
+	negate_health_penalty_add = 50
+	dread_baseline_add = 50
+	dread_gain_mult = 0.5
+	stress_gain_mult = -0.9
+	flag = can_not_marry
+	can_have_children = no
+	immortal = yes
+	life_expectancy = 12000
+	vassal_limit = -150
+	knight_limit = 12
+	same_faith_opinion = 1000
+	different_faith_opinion = -200
+	general_opinion = -200
+	ruler_designer_cost = 500
+	scheme_discovery_chance_mult = 15.0
+	enemy_personal_scheme_success_chance_add = -500
+	flag = lower_chance_of_dying_in_combat
+	levy_size = 2
+	enemy_hostile_scheme_success_chance_add = -200   # FIX: hostile_scheme_resistance_add is not a CK3 modifier
+	attraction_opinion = -50
+	
+	triggered_opinion = {
+		parameter = witchcraft_illegal
+		opinion_modifier = other_crime
+		ignore_opinion_value_if_same_trait = yes
+	}
+triggered_opinion = {
+		parameter = witchcraft_shunned
+		opinion_modifier = other_crime
+		ignore_opinion_value_if_same_trait = yes
+	}
+
+	flag = is_immortal
+	flag = immortal_visuals
+	flag = immortal_fertility
+	flag = immortal_incapability
+	no_prowess_loss_from_age = yes
+	long_reign_bonus_mult = -1000
+
+	opposites = {
+		withering_mind
+		fragile_bones
+		faltering_heart
+		clouded_eyes
+		infirm
+		gout_ridden
+		consumption
+		leper
+		bubonic_plague
+		ill
+		pneumonic
+		typhus
+		smallpox
+		measles
+		ergotism
+		greyscale
+		dysentery
+		wounded_1
+		wounded_2
+		wounded_3
+		maimed
+		blind
+		incapable
+		one_legged
+		disfigured
+		lovers_pox
+		early_great_pox
+		great_pox
+	}
+}
+
+nightking = {
+	icon = other_trait.dds
+	# The Long Night+ — REMOVED `disables_combat_leadership = yes` (present in the base mod / original Long Night).
+	# The base mod kept the NK out of armies to "protect" him, but that left him sitting in his holding where a
+	# siege could capture/kill him (death_siege) — an anti-climactic premature end of the Long Night. Letting him
+	# COMMAND his host means CK3's vanilla `siege_0001_can_be_captured` shields any `commanding_army`/`knight_army`
+	# holder from siege capture/death, while he can still fall gloriously in open BATTLE. Re-asserted every ~15d in
+	# others_heartbeat.1 (assign_commander of his largest army); belt-and-suspenders via desirable_for_capture_trigger.
+	life_expectancy = 12000
+	# The Long Night+ — the Night King rules like a great conqueror, not a fragile lord:
+	# dread floored at 100 (suppresses factions AND peasant uprisings), a solvent treasury so he never goes
+	# into debt, supply for his endless host, and quieted smallfolk in his own lands (fewer uprisings).
+	dread_baseline_add = 100
+	monthly_income = 25
+	supply_limit_mult = 0.5
+	supply_duration = 1.0
+	county_opinion_add = 50
+	vassal_limit = 10000
+	# 1.0.9 -- RESTORED, AT THE NUMBER THOMAS PICKED. This shipped as `#domain_limit = 100`, commented out,
+	# directly under a LIVE vassal_limit = 10000. I first read that asymmetry as a half-finished edit; on a
+	# closer look it is the design, and Thomas confirmed it: "the dead do spread as a swarm of vassals."
+	# Infinite vassals, small personal demesne. 100 would have handed the Night King the continent
+	# personally and undone that.
+	#
+	# But five holdings for the man conquering Westeros was too few, and it was never a decision either --
+	# it is base minus other_trait's -2 and nothing else. Seven here nets +5 against that -2, which is what
+	# Thomas asked for: a real seat of power, still nowhere near enough to hold what he takes.
+	#
+	# NOTE FOR ANYONE TUNING THE DEAD'S STRENGTH: this is NOT the lever for their army size. The horde is
+	# create_maa_regiment in ln_horde_reinforce_effect, scaling on SUB-REALM counties (vassals included) and
+	# capped at 120 regiments. Domain limit does not gate it. See zz_ln_horde_effects.txt.
+	domain_limit = 7
+	enemy_hostile_scheme_success_chance_add = -1000
+	flag = lower_chance_of_dying_in_combat
+	prowess = 30
+	shown_in_ruler_designer = no
+
+	immortal = yes
+	flag = is_immortal
+	flag = immortal_visuals
+	flag = immortal_fertility
+	flag = immortal_incapability
+	no_prowess_loss_from_age = yes
+	long_reign_bonus_mult = -1000
+	health = 0.5
+
+	opposites = {
+		withering_mind
+		fragile_bones
+		faltering_heart
+		clouded_eyes
+		infirm
+		gout_ridden
+		consumption
+		leper
+		bubonic_plague
+		ill
+		pneumonic
+		typhus
+		smallpox
+		measles
+		ergotism
+		greyscale
+		dysentery
+		wounded_1
+		wounded_2
+		wounded_3
+		maimed
+		blind
+		incapable
+		one_legged
+		disfigured
+		lovers_pox
+		early_great_pox
+		great_pox
+	}
+}		
+
+
+# Wight — a corpse reanimated to serve the Others. Temporary thrall: dies automatically when
+# the Long Night ends (see the_long_night story cycle resolution). NOT the Others race itself.
+wight_trait = {
+	icon = wight.dds
+	birth = 0
+	random_creation = 0
+	shown_in_ruler_designer = no
+	# Wights must never inherit anything: distant southern titles were being inherited by wights via normal
+	# succession, then got spuriously scoured at the Long Night's end. Block all succession + claim lines.
+	inheritance_blocker = all
+	claim_inheritance_blocker = all
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					NOT = { exists = this }
+				}
+				desc = trait_wight_trait_desc
+			}
+			desc = trait_wight_trait_character_desc
+		}
+	}
+
+	# Undead flesh: a clumsy, mindless corpse — tireless and fearless, but a poor, slow fighter.
+	prowess = -5
+	health = 50
+	negate_health_penalty_add = 50
+	negate_prowess_penalty_add = 25
+	dread_baseline_add = 25
+	stress_gain_mult = -0.9
+	general_opinion = -150
+	attraction_opinion = -50
+	can_have_children = no
+	# Mindless thrall: excluded from activities and most life events; also stops it ever leading/being a knight.
+	# Regency that this would normally trigger on landed wights is suppressed via an override of
+	# regency_for_personal_reasons_trigger (see common/scripted_triggers/zz_long_night_plus_regency.txt).
+	incapacitating = yes
+
+	# Does not age or die naturally — only the end of the Long Night ends it (via death effect).
+	immortal = yes
+	flag = is_immortal
+	flag = immortal_visuals
+	flag = immortal_fertility
+	flag = immortal_incapability
+	flag = can_not_marry
+	flag = lower_chance_of_dying_in_combat
+	no_prowess_loss_from_age = yes
+	long_reign_bonus_mult = -1000
+	life_expectancy = 12000
+
+	opposites = {
+		withering_mind
+		fragile_bones
+		faltering_heart
+		clouded_eyes
+		infirm
+		gout_ridden
+		consumption
+		leper
+		bubonic_plague
+		ill
+		pneumonic
+		typhus
+		smallpox
+		measles
+		ergotism
+		greyscale
+		dysentery
+		wounded_1
+		wounded_2
+		wounded_3
+		maimed
+		blind
+		incapable
+		one_legged
+		disfigured
+		lovers_pox
+		early_great_pox
+		great_pox
+	}
+}
+
+chosen_by_rhllor = {
+	icon = rhllor.dds
+	category = fame
+
+	# v0.5.0: martial 12 -> 10, prowess 25 -> 20. Thomas's call, and the reasoning is worth keeping: this is the
+	# religious equivalent of vanilla's `conqueror` (00_traits.txt:17485) -- a single enormous trait you have to
+	# earn through an entire campaign, not a stat stick. Conqueror does not apologise for itself and neither
+	# should this. The trim is a trim, not a rebalance.
+	martial = 10
+	prowess = 20
+	stewardship = 6
+	
+	ruler_designer_cost = 600
+	
+	group = rhllor_champion
+	level = 2
+
+	
+	negate_health_penalty_add = 0.9
+	health = 5.0
+	life_expectancy = 30
+	stress_gain_mult = -0.3
+	
+	diplomatic_range_mult = 1.2
+	
+	flag = lower_chance_of_dying_in_combat
+	same_faith_opinion = 40
+	monthly_piety = 2.25
+}
+
+favored_by_rhllor = {
+	icon = rhllor.dds
+	category = fame
+	
+	martial = 6
+	prowess = 12
+	stewardship = 3
+	
+	ruler_designer_cost = 300
+	
+	group = rhllor_champion
+	level = 1
+
+	
+	negate_health_penalty_add = 0.9
+
+	health = 2.5
+	life_expectancy = 20
+	stress_gain_mult = -0.3
+	
+	diplomatic_range_mult = 1.2
+	same_faith_opinion = 25
+	monthly_piety = 1.00
+	flag = lower_chance_of_dying_in_combat
+
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# RESURRECTED BY R'HLLOR -- and every time, a little less of you comes back.
+#
+# THOMAS'S IDEA, and it is the right one: "if you see the opportunity to have a trait track for it developing...
+# the more times you get resurrected, you can add trait XP into whatever event handles the resurrection status.
+# That way if it occurs, it'll basically be a reapplication but increasing the XP... the same way Beric had lost
+# an eye, or one-armed, one-legged kind of thing."
+#
+# That is exactly Beric Dondarrion. Six deaths in the books, and by the last one he has lost an eye, a great
+# deal of his face, and most of his memory -- "every time I come back, I'm a bit less of me." Thoros says it
+# plainly: the fire gives him back, but not all of him.
+#
+# SO THE TRACK GOES DOWN, NOT UP. This is the only progression in the mod where advancing makes you worse at
+# being a person and better at frightening people. Dread and piety climb; health, fertility and how anyone
+# feels about you fall off a cliff. The base trait keeps the numbers Thomas already tuned -- the track adds
+# character, not power.
+#
+# WHAT STOPS IT BEING FARMED is not a counter, it is ln_priest_can_give_the_last_kiss_trigger: a priest who has
+# given the last kiss can never give another. Every return costs a NEW priest, permanently. Which is also why
+# Beric needed Thoros and Thoros only ever managed Beric.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+resurrected_by_rhllor = {
+	icon = resurrected.dds
+	category = fame
+
+	martial = 6
+	prowess = 12
+	stewardship = 3
+
+	ruler_designer_cost = 300
+
+
+	negate_health_penalty_add = 0.9
+	fertility = -0.35
+	health = 1.5
+	life_expectancy = 20
+	stress_gain_mult = -0.3
+
+	diplomatic_range_mult = 1.2
+	same_faith_opinion = 25
+	monthly_piety = 1.00
+	flag = lower_chance_of_dying_in_combat
+
+	# The name changes with the count, because "Resurrected by R'hllor" stops covering it after the third time.
+	name = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { NOT = { exists = this } }
+				desc = trait_resurrected_by_rhllor
+			}
+			triggered_desc = {
+				trigger = { has_trait_xp = { trait = resurrected_by_rhllor  track = returned  value >= 100 } }
+				desc = trait_resurrected_by_rhllor_4
+			}
+			triggered_desc = {
+				trigger = { has_trait_xp = { trait = resurrected_by_rhllor  track = returned  value >= 75 } }
+				desc = trait_resurrected_by_rhllor_3
+			}
+			triggered_desc = {
+				trigger = { has_trait_xp = { trait = resurrected_by_rhllor  track = returned  value >= 50 } }
+				desc = trait_resurrected_by_rhllor_2
+			}
+			desc = trait_resurrected_by_rhllor
+		}
+	}
+
+	tracks = {
+		returned = {
+			# ONE. You have a scar that will not close and everybody in the hall has decided not to mention it.
+			25 = {
+				dread_baseline_add = 5
+				monthly_piety = 0.5
+				health = -0.25
+			}
+			# TWO. People stop meeting your eye. The ones who share your faith stop being able to look away.
+			50 = {
+				dread_baseline_add = 10
+				same_faith_opinion = 10
+				health = -0.5
+				fertility = -0.25
+			}
+			# THREE. You are frightening now, and the part of you that minded is one of the things that did not
+			# come back.
+			75 = {
+				dread_baseline_add = 15
+				general_opinion = -10
+				attraction_opinion = -15
+				prowess = 2
+				health = -1
+				fertility = -0.5
+			}
+			# FOUR. There is not much of the man left. What there is, is very hard to kill.
+			100 = {
+				dread_baseline_add = 25
+				general_opinion = -20
+				attraction_opinion = -25
+				prowess = 4
+				health = -1.5
+				fertility = -1
+				monthly_piety = 1
+			}
+		}
+	}
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# AZOR AHAI REBORN -- level 3 of rhllor_champion, and the only rung nobody can be talked into.
+#
+# You do not get this for being named. You get it for killing the Night King, and it is granted to whoever
+# actually lands the blow whether or not a single priest ever said their name. That is deliberate, and it is
+# what makes the hidden truth mean anything: if the prophecy was real and an unnamed man ends it, then every
+# red priest in the world spent a century naming the wrong people -- and this trait is the proof, sitting on a
+# character nobody was watching.
+#
+# Stronger than chosen_by_rhllor, but not by much. The point of the rung is that it is a FACT rather than a
+# claim; it should not also be the biggest number in the game.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+azor_ahai_reborn = {
+	icon = rhllor.dds
+	category = fame
+
+	group = rhllor_champion
+	level = 3
+
+	martial = 12
+	prowess = 24
+	stewardship = 8
+
+	ruler_designer_cost = 1000
+	shown_in_ruler_designer = no
+
+	negate_health_penalty_add = 0.9
+	health = 5.0
+	life_expectancy = 30
+	stress_gain_mult = -0.3
+
+	diplomatic_range_mult = 1.2
+	flag = lower_chance_of_dying_in_combat
+
+	same_faith_opinion = 50
+	general_opinion = 20
+	monthly_piety = 3
+	dread_baseline_add = 15
+
+	# The man who ended the Long Night does not get talked down to.
+	enemy_hostile_scheme_success_chance_add = -30
+}
+
+# ── THE UNDEAD DRAGON ───────────────────────────────────────────────────────────────────────────────────────
+# What Vhagar becomes. Thomas asked for both a nickname and a trait so that the thing reads correctly on the
+# character sheet: it is still the dragon everyone knew, and it is very obviously not that dragon any more.
+#
+# It is also LOAD-BEARING, not decoration. ln_record_fallen_dragon_effect refuses to record any dragon carrying
+# this trait, which is one of the three guards that stop a raised dragon being raised again -- living, undead,
+# dead, and dead is the end of it.
+#
+# No health penalty and no combat penalty: it is dead already, and the whole point of the thing is that it is a
+# siege engine that does not tire. The immortal trait comes with it from create_character.
+ln_undead_dragon = {
+	# icon: reusing the wight icon rather than shipping a texture that does not exist yet -- a missing trait
+	# icon renders as a "?" in the character sheet, which is the exact class of bug that cost a whole pass on
+	# the struggle panel. Worth its own art later.
+	icon = wight.dds
+	category = fame
+	shown_in_ruler_designer = no
+	random_creation = 0
+	birth = 0
+
+	# Nothing gets inherited out of a thing the Others own. Same reasoning as wight_trait.
+	inheritance_blocker = all
+	claim_inheritance_blocker = all
+
+	# NOTE ON FIELDS: an unknown property inside a trait is silently read as a MODIFIER on the holder, so every
+	# line below was checked against the base game's own trait file. `monthly_dread` is NOT a trait field
+	# anywhere in vanilla -- dread_baseline_add is the one that exists (43 uses) and it is what is used here.
+	dread_baseline_add = 20
+	health = 1
+	same_opinion = -30
+	general_opinion = -20
+
+	# ── 1.0.7, DOOR TWO ─────────────────────────────────────────────────────────────────────────────
+	# A CONVERTED dragon never passes through create_character, so nothing hands it the vanilla
+	# `immortal` trait the way the clone template did. The trait itself must therefore say what
+	# "already dead" means. Diffed against other_trait and taking only what applies to a dragon:
+	# no death by old age, no decay with age. immortal_fertility is deliberately NOT taken -- that
+	# flag preserves fertility, and nothing breeds out of a thing the Others own.
+	immortal = yes
+	life_expectancy = 12000
+	no_prowess_loss_from_age = yes
+	flag = is_immortal
+	flag = immortal_visuals
+	flag = immortal_incapability
+}

@@ -1,0 +1,60 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the roads the dead hold.
+#
+# Lyon, on the Discord, 17 Aug: "The original mod I think was made before travel mechanics. It would be a good
+# idea to have any territory occupied by the Others to have very high danger and 1 or 2 events that involve
+# having to fight a random wight or white walker." Dlonem: "obviously it can't exist BEFORE the long night, and
+# only make it so for territories they control, and maybe a medium danger surrounding territories they don't."
+# Thomas: "I kinda want the lands themselves to be problematic. Hey -- even if you do have mercenaries, this is
+# still dangerous as fuck, don't go this way."
+#
+# WHY A PROVINCE MODIFIER AND NOT AN EVENT GATE. `travel_danger` is a PROVINCE modifier -- proven in vanilla's
+# own castle buildings, which hand out `province_modifier = { travel_danger = -10 }` for a keep
+# (00_castle_buildings.txt:433). That number feeds the travel planner directly, so raising it does the thing
+# events cannot: it paints the route red BEFORE the player commits to it. An event can only punish a decision
+# already made. This changes the decision.
+#
+# HOW BIG. NTravel|TRAVEL_DANGER_MINIMUM is 1 and a fully built castle buys -10, so 60 is not a tuning nudge --
+# it is "there is no safe way through here". That is deliberate and it is what was asked for. Escort quality
+# (travel_safety) still subtracts, so a large well-guarded party is meaningfully better off than a lone rider;
+# it is just never actually safe.
+#
+# NO `icon` LINE. Icon paths are file claims, and this project has already shipped two of those wrong (a
+# men-at-arms icon pointing at the Braavosi Titan, and 626 log errors a session from two invented decision
+# illustrations). A modifier with no icon renders with CK3's default. Nothing is worth finding out the hard way.
+
+# The dead's own country: their counties, the Wall itself once it is theirs, and everything past it once the
+# invasion has opened. Painted yearly from ln_paint_the_dead_roads_effect and given a two-year life so that
+# ground taken back by the living quietly stops being lethal without any removal bookkeeping.
+ln_the_dead_hold_this_land = {
+	travel_danger = 60
+}
+
+# One county out. Dlonem's suggestion, and it is the right one: the border of dead country is not safe either,
+# because what is in the dead country does not respect the border. Applied only to counties NOT held by the
+# dead -- a county that is both a neighbour and theirs gets the strong band and only the strong band.
+ln_the_dead_are_near = {
+	travel_danger = 25
+}
+
+# 1.0.12a -- THE BAND THAT EXISTS BECAUSE THE OTHER ONE WAS LYING.
+#
+# Thomas, looking at a travel tooltip over Maulnock Hold: "It says the dead hold this land. I don't think they
+# specifically hold certain parts of the land. They don't hold it yet." He is right, and the political map in
+# the same screenshot proves it -- Maulnock sits in k_the_frozen_shore, which is free folk ground, while the
+# Others' realm is the separate territory to the east.
+#
+# The 1.0.12 painter applied ln_the_dead_hold_this_land to EVERY county beyond the Wall with no holder test at
+# all. The reasoning was sound and the label was not: the Haunted Forest during the Long Night genuinely is
+# the most dangerous ground on the map, but "the dead hold this land" is a claim about ownership, and Thenn is
+# not owned by the dead.
+#
+# So the danger stays and the sentence becomes true. Three bands now, and each says what it means:
+#     ln_the_dead_hold_this_land  +60   counties actually held by the Others
+#     ln_past_the_wall            +40   beyond the Wall, held by anyone else or nobody
+#     ln_the_dead_are_near        +25   one county out from ground the dead hold
+#
+# THE GENERAL RULE, and it is the same one the white dragons taught: a name is a claim. If a modifier asserts
+# something about the world, the gate that applies it has to make that assertion true.
+ln_past_the_wall = {
+	travel_danger = 40
+}

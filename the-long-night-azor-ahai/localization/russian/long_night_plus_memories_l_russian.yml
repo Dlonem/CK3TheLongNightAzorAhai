@@ -1,0 +1,9 @@
+﻿l_russian:
+
+ wight_raised_memory:0 "восстал упырём"
+ wight_raised_memory_desc:0 "Я умер — и холодное колдовство Иных вытащило меня обратно, упырём в их воинстве."
+ wight_raised_memory_desc_second_perspective:0 "вы умерли — и холодное колдовство Иных вытащило вас обратно, упырём в их воинстве."
+ wight_raised_memory_desc_third_perspective:0 "[owner.GetName] умер — и холодное колдовство Иных вытащило [owner.GetHerHim] обратно, упырём в их воинстве."
+
+ wight_government:0 "Восставший невольник"
+ wight_government_desc:0 "Труп, поднятый Иными для службы в смерти, — больше не хозяин самому себе."

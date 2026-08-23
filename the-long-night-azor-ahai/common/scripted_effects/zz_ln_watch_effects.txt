@@ -1,0 +1,66 @@
+﻿# AGOT: The Long Night & Azor Ahai -- life on the Wall, once you hold one of the nineteen.
+# Same random_list shape as the three prophecy chains; see zz_ln_risen_effects.txt for the reasoning.
+
+ln_watch_pulse_effect = {
+	if = {
+		limit = {
+			has_government = nights_watch_government
+			is_alive = yes
+			is_adult = yes
+			is_landed = yes
+			NOT = { has_character_flag = ln_watch_cooldown }
+		}
+		add_character_flag = { flag = ln_watch_cooldown  years = 3 }
+
+		random_list = {
+			10 = { trigger = { NOT = { has_character_flag = ln_watch_2_done } }
+				add_character_flag = ln_watch_2_done  trigger_event = { id = ln_watch.2  days = { 5 200 } } }
+
+			# The Fist is the Watch's own road to dragonglass and should not be available in a warm century --
+			# the ranger only starts telling it once the rangings stop coming back.
+			10 = {
+				trigger = {
+					NOT = { has_character_flag = ln_watch_3_done }
+					NOT = { has_character_modifier = ln_dragonglass_stores_modifier }
+					struggle:ln_long_night_struggle ?= {
+						OR = {
+							is_struggle_phase = ln_phase_cold_winds
+							is_struggle_phase = ln_phase_the_long_night
+						}
+					}
+				}
+				add_character_flag = ln_watch_3_done  trigger_event = { id = ln_watch.3  days = { 5 200 } }
+			}
+
+			10 = { trigger = { NOT = { has_character_flag = ln_watch_4_done } }
+				add_character_flag = ln_watch_4_done  trigger_event = { id = ln_watch.4  days = { 5 200 } } }
+
+			10 = { }
+		}
+	}
+}
+
+
+# Root = the giver. One place that owns what a gift to the Wall actually does, so the three tiers in
+# ln_watch.10 cannot drift apart. $AMOUNT$ has already been removed from the giver by the option.
+ln_feed_the_wall_effect = {
+	# STRAIGHT TO THE MAN WHO NEEDS IT. Not a tax, not a tribute, not a contract -- a gift, which is the only
+	# shape this relationship has ever had.
+	title:k_the_wall.holder ?= {
+		add_gold = $AMOUNT$
+		# Slow decay on purpose: the Watch keeps a list, and it is a short one.
+		add_opinion = { modifier = ln_fed_the_wall_opinion  target = root  opinion = $OPINION$ }
+	}
+
+	# THE WATCH REMEMBERS. Self-seeding: ln_struggle_start_if_absent_effect owns the seed, but this decision does
+	# not gate on the struggle existing, so on a mid-save add there is a window where the global is not there yet.
+	if = {
+		limit = { NOT = { has_global_variable = ln_realm_fed_the_watch } }
+		set_global_variable = { name = ln_realm_fed_the_watch  value = 0 }
+	}
+	change_global_variable = { name = ln_realm_fed_the_watch  add = $LEDGER$ }
+
+	add_piety = $PIETY$
+	add_prestige = $PRESTIGE$
+	trigger_event = { id = ln_watch.8  days = { 20 60 } }
+}

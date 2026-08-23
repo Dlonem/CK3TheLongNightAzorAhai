@@ -1,0 +1,70 @@
+﻿# AGOT: The Long Night & Azor Ahai -- finishing AGOT's TODO.
+#
+# AGOT ships three characters whose history entry carries a COMMENTED-OUT `trait = resurrected_by_rhllor` with
+# `# AGOT TODO trait` beside it, because the trait does not exist in their mod:
+#   Dondarrion_2  (00_agot_char_stormlands.txt:11153)  -- Beric Dondarrion
+#   Tully_5       (00_agot_char_riverlands.txt:369)    -- Lady Stoneheart
+#   Westford_2    (00_agot_char_westerlands.txt:9517)
+# All three are given `trait = faith_warrior` as a live stand-in with the comment "# Favored by Rhllor".
+#
+# We have the trait. So we grant it, at game start, to whichever of them exist in the selected bookmark. This is
+# the whole reason Thomas wanted this mod: the thing everyone marked TODO and nobody finished.
+#
+# `?=` throughout because a bookmark that predates or postdates them will not have the character, and a missing
+# character:X reference is an error rather than a silent no-op.
+
+ln_grant_historical_resurrections_effect = {
+	character:Dondarrion_2 ?= {
+		if = {
+			limit = {
+				is_alive = yes
+				NOT = { has_trait = resurrected_by_rhllor }
+			}
+			add_trait = resurrected_by_rhllor
+			# HE IS THE REASON THE TRACK EXISTS. Beric dies six times in the books and by the end he has lost
+			# an eye, most of his face and nearly all of his memory -- "every time I come back, I'm a bit less
+			# of me." Starting him at 75 puts him three rungs down before a player ever meets him, which is
+			# the correct read of a man who is already famous for it.
+			add_trait_xp = {
+				trait = resurrected_by_rhllor
+				track = returned
+				value = 75
+			}
+			if = { limit = { NOT = { has_trait = one_eyed } }  add_trait = one_eyed }
+			if = { limit = { NOT = { has_trait = scarred } }   add_trait = scarred }
+			add_character_flag = ln_had_the_last_kiss   # he has had his; no second-chance interception on top
+		}
+	}
+	character:Tully_5 ?= {
+		if = {
+			limit = {
+				is_alive = yes
+				NOT = { has_trait = resurrected_by_rhllor }
+			}
+			add_trait = resurrected_by_rhllor
+			# Once, and days late, and it shows. One rung, and the throat.
+			add_trait_xp = {
+				trait = resurrected_by_rhllor
+				track = returned
+				value = 25
+			}
+			if = { limit = { NOT = { has_trait = disfigured } } add_trait = disfigured }
+			add_character_flag = ln_had_the_last_kiss
+		}
+	}
+	character:Westford_2 ?= {
+		if = {
+			limit = {
+				is_alive = yes
+				NOT = { has_trait = resurrected_by_rhllor }
+			}
+			add_trait = resurrected_by_rhllor
+			add_trait_xp = {
+				trait = resurrected_by_rhllor
+				track = returned
+				value = 25
+			}
+			add_character_flag = ln_had_the_last_kiss
+		}
+	}
+}

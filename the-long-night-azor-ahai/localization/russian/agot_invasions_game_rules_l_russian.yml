@@ -1,0 +1,101 @@
+﻿l_russian:
+
+ 
+ #The Long Night
+ rule_the_long_night_startdate:0 "#P (AGOT:Invasions):#!  #bold Долгая Ночь#!"
+ 
+ setting_longnight_historical:0 "Исторически"
+ setting_longnight_historical_desc:0 "Иные вторгаются около #bold 299 года от Завоевания#! ."
+ 
+ setting_longnight_immediately:0 "Немедленно"
+ setting_longnight_immediately_desc:0 "Иные вторгаются #bold сейчас#! ."
+ 
+ setting_longnight_random_300:0 "Случайно за 300 лет"
+ setting_longnight_random_300_desc:0 "Иные вторгнутся #bold в случайный год в ближайшие 300 лет#! ."
+ 
+  setting_longnight_random_150:0 "Случайно за 150 лет"
+ setting_longnight_random_150_desc:0 "Иные вторгнутся #bold в случайный год в ближайшие 150 лет#! ."
+ 
+ setting_longnight_never:0 "Никогда"
+ setting_longnight_never_desc:0 "Мне страшно!"
+ 
+ 
+ 
+  #Mountain Clansmen
+ rule_mountain_clans_invasion_startdate:0 "#P (AGOT:Invasions):#!  #bold Горные кланы#!"
+ 
+ 
+ setting_mountain_clans_invasion_immediately:0 "Не реализовано"
+ setting_mountain_clans_invasion_immediately_desc:0 "Не реализовано"
+ 
+ setting_mountain_clans_invasion_random_300:0 "Не реализовано"
+ setting_mountain_clans_invasion_random_300_desc:0 "Не реализовано"
+ 
+  setting_mountain_clans_invasion_random_150:0 "Случайно за 150 лет"
+ setting_mountain_clans_invasion_random_150_desc:0 "Не реализовано"
+ 
+ setting_mountain_clans_invasion_never:0 "Не реализовано"
+ setting_mountain_clans_invasion_never_desc:0 "Не реализовано"
+ 
+ 
+ 
+  #Dothraki
+ rule_dothraki_invasion_startdate:0 "#P (AGOT:Invasions):#!  #bold Дотракийцы#!"
+ 
+ 
+ setting_dothraki_invasion_immediately:0 "Не реализовано"
+ setting_dothraki_invasion_immediately_desc:0 "Не реализовано"
+ 
+ setting_dothraki_invasion_random_300:0 "Не реализовано"
+ setting_dothraki_invasion_random_300_desc:0 "Не реализовано"
+ 
+  setting_dothraki_invasion_random_150:0 "Случайно за 150 лет"
+ setting_dothraki_invasion_random_150_desc:0 "Не реализовано"
+ 
+ setting_dothraki_invasion_never:0 "Не реализовано"
+ setting_dothraki_invasion_never_desc:0 "Не реализовано"
+ 
+ 
+ 
+  #Summer Islander
+ rule_summer_islander_invasion_startdate:0 "#P (AGOT:Invasions):#!  #bold Дотракийцы#!"
+ 
+ 
+ setting_summer_islander_invasion_immediately:0 "Не реализовано"
+ setting_summer_islander_invasion_immediately_desc:0 "Не реализовано"
+ 
+ setting_summer_islander_invasion_random_300:0 "Не реализовано"
+ setting_summer_islander_invasion_random_300_desc:0 "Не реализовано"
+ 
+  setting_summer_islander_invasion_random_150:0 "Случайно за 150 лет"
+ setting_summer_islander_invasion_random_150_desc:0 "Не реализовано"
+ 
+ setting_summer_islander_invasion_never:0 "Не реализовано"
+ setting_summer_islander_invasion_never_desc:0 "Не реализовано"
+ 
+ 
+ 
+   #Robbers and Brigands
+ rule_brigands_invasion_startdate:0 "#P (AGOT:Invasions):#!  #bold Разбойники и головорезы#!"
+ 
+ 
+ setting_brigands_invasion_immediately:0 "Не реализовано"
+ setting_brigands_invasion_immediately_desc:0 "Не реализовано"
+ 
+ setting_brigands_invasion_random_300:0 "Не реализовано"
+ setting_brigands_invasion_random_300_desc:0 "Не реализовано"
+ 
+  setting_brigands_invasion_random_150:0 "Случайно за 150 лет"
+ setting_brigands_invasion_random_150_desc:0 "Не реализовано"
+ 
+ setting_brigands_invasion_never:0 "Не реализовано"
+ setting_brigands_invasion_never_desc:0 "Не реализовано"
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,61 @@
+﻿# AGOT: The Long Night & Azor Ahai -- driving the Chosen chain.
+#
+# GATED ON chosen_by_rhllor OR azor_ahai_reborn, and NOT on favored. The two chains are meant to overlap in a
+# campaign -- a man who climbs the ladder carries both cooldowns and gets material from both -- but a Favored
+# claimant must never see the Chosen events, because every one of them assumes the world has already committed.
+#
+# FIVE YEARS. The slowest of the three, because these are the heaviest cards in the mod and they should never
+# arrive two to a reign in a bunch.
+
+ln_chosen_pulse_effect = {
+	if = {
+		limit = {
+			OR = {
+				has_trait = chosen_by_rhllor
+				has_trait = azor_ahai_reborn
+			}
+			is_alive = yes
+			is_adult = yes
+			NOT = { has_character_flag = ln_chosen_cooldown }
+		}
+		add_character_flag = { flag = ln_chosen_cooldown  years = 5 }
+
+		random_list = {
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_1_done }  is_independent_ruler = no }
+				add_character_flag = ln_chosen_1_done   trigger_event = { id = ln_chosen.1   days = { 5 300 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_2_done } }
+				add_character_flag = ln_chosen_2_done   trigger_event = { id = ln_chosen.2   days = { 5 300 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_3_done } }
+				add_character_flag = ln_chosen_3_done   trigger_event = { id = ln_chosen.3   days = { 5 300 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_4_done }  ln_has_red_priest_trigger = yes }
+				add_character_flag = ln_chosen_4_done   trigger_event = { id = ln_chosen.4   days = { 5 300 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_5_done } }
+				add_character_flag = ln_chosen_5_done   trigger_event = { id = ln_chosen.5   days = { 5 300 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_6_done }  is_at_war = yes }
+				add_character_flag = ln_chosen_6_done   trigger_event = { id = ln_chosen.6   days = { 5 120 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_7_done } }
+				add_character_flag = ln_chosen_7_done   trigger_event = { id = ln_chosen.7   days = { 5 300 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_8_done } }
+				add_character_flag = ln_chosen_8_done   trigger_event = { id = ln_chosen.8   days = { 5 300 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_chosen_9_done }  any_vassal = { is_alive = yes } }
+				add_character_flag = ln_chosen_9_done   trigger_event = { id = ln_chosen.9   days = { 5 300 } } }
+
+			# The closer, and it needs the war to actually exist.
+			5 = {
+				trigger = {
+					NOT = { has_character_flag = ln_chosen_10_done }
+					NOT = { has_character_flag = ln_sworn_to_the_dawn }
+					struggle:ln_long_night_struggle ?= {
+						OR = {
+							is_struggle_phase = ln_phase_cold_winds
+							is_struggle_phase = ln_phase_the_long_night
+						}
+					}
+				}
+				add_character_flag = ln_chosen_10_done  trigger_event = { id = ln_chosen.10  days = { 5 200 } }
+			}
+
+			10 = { }
+		}
+	}
+}

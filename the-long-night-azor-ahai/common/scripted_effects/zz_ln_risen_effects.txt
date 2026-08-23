@@ -1,0 +1,73 @@
+﻿# AGOT: The Long Night & Azor Ahai -- driving the Resurrected chain.
+#
+# WHY A RANDOM_LIST AND NOT A FIXED ORDER. Ten events on rails would play identically every campaign and the
+# player would learn the sequence by the second one. Instead each has a one-shot flag and the pulse picks any
+# still-unseen event each time, so the same ten arrive in a different order in every game -- except ln_risen.10,
+# which is weighted to come last because it reads back the flags the others leave behind.
+#
+# ONE EVERY THREE YEARS AT MOST. ln_risen_cooldown is an auto-expiring character flag (the BRACED form -- the
+# unbraced `add_character_flag = X years = 3` silently creates a permanent flag and drops the duration, which is
+# in the API notes for exactly this reason). Ten events at one per three years is thirty years of material,
+# which is most of a reign and none of it in a lump.
+#
+# THE EMPTY WEIGHT AT THE BOTTOM IS DELIBERATE. Once every event has fired, every trigger below is false, and a
+# random_list with no valid entries is not something to find out about in a log. The `10 = { }` is always valid
+# and does nothing.
+
+ln_risen_pulse_effect = {
+	if = {
+		limit = {
+			has_trait = resurrected_by_rhllor
+			is_alive = yes
+			is_adult = yes
+			NOT = { has_character_flag = ln_risen_cooldown }
+		}
+		add_character_flag = { flag = ln_risen_cooldown  years = 3 }
+
+		random_list = {
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_1_done } }
+				add_character_flag = ln_risen_1_done   trigger_event = { id = ln_risen.1   days = { 5 200 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_2_done } }
+				add_character_flag = ln_risen_2_done   trigger_event = { id = ln_risen.2   days = { 5 200 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_3_done }  exists = primary_spouse }
+				add_character_flag = ln_risen_3_done   trigger_event = { id = ln_risen.3   days = { 5 200 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_4_done }  ln_has_red_priest_trigger = yes }
+				add_character_flag = ln_risen_4_done   trigger_event = { id = ln_risen.4   days = { 5 200 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_5_done } }
+				add_character_flag = ln_risen_5_done   trigger_event = { id = ln_risen.5   days = { 5 200 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_6_done } }
+				add_character_flag = ln_risen_6_done   trigger_event = { id = ln_risen.6   days = { 5 200 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_7_done } }
+				add_character_flag = ln_risen_7_done   trigger_event = { id = ln_risen.7   days = { 5 200 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_8_done } }
+				add_character_flag = ln_risen_8_done   trigger_event = { id = ln_risen.8   days = { 5 200 } } }
+			10 = { trigger = { NOT = { has_character_flag = ln_risen_9_done } }
+				add_character_flag = ln_risen_9_done   trigger_event = { id = ln_risen.9   days = { 5 200 } } }
+
+			# The closer. Weighted low and gated behind four of the others having happened, so it lands as a
+			# summing-up rather than as the opening question.
+			3 = {
+				trigger = {
+					NOT = { has_character_flag = ln_risen_10_done }
+					has_character_flag = ln_risen_1_done
+					has_character_flag = ln_risen_8_done
+				}
+				add_character_flag = ln_risen_10_done   trigger_event = { id = ln_risen.10  days = { 5 200 } }
+			}
+
+			# THE COUNTERWEIGHT, last of all and only after the chain has actually been lived through. See the
+			# header of ln_risen.11 for why the ten events needed an eleventh that is simply good.
+			3 = {
+				trigger = {
+					NOT = { has_character_flag = ln_risen_11_done }
+					has_character_flag = ln_risen_10_done
+					is_landed = yes
+				}
+				add_character_flag = ln_risen_11_done  trigger_event = { id = ln_risen.11  days = { 5 200 } }
+			}
+
+			# Always-valid no-op. See the note above.
+			10 = { }
+		}
+	}
+}

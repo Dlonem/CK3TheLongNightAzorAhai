@@ -1,0 +1,257 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Lord Commander's war.
+# Thomas: "is there a Night's Watch event chain that helps them lead up into the long night? ...once
+# the phase changes to winter is coming, then perhaps they can send a ranging party north." This is
+# that: the LORD COMMANDER'S lever, distinct from the ranger companies (who range on their own) and
+# from the castle brothers (who hold stone). He spends the Watch's men to buy the realm knowledge,
+# and sometimes the north keeps the men and the knowledge both.
+
+ln_call_the_great_ranging_decision = {
+	# 10 Aug -- REPOINTED, off 626 log errors EACH per session:
+	#   "VFSOpen Error: gfx/interface/illustrations/decisions/decision_personal_default.dds not found"
+	#   "VFSOpen Error: gfx/interface/illustrations/decisions/decision_travel_map.dds not found"
+	# Both filenames were invented. This is the same mistake as the men-at-arms icon that shipped pointing at
+	# the Braavosi Titan: a plausible vanilla asset path, never verified, and the decision card renders empty.
+	# decision_beyond_the_wall.dds is the only decision illustration this playset provably has that suits
+	# either of these -- AGOT ships exactly six and no others resolve here. RULE: a picture reference is a
+	# file claim. Verify the file, or omit the block and take CK3's default.
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_beyond_the_wall.dds" }
+
+	desc = ln_call_the_great_ranging_decision_desc
+	selection_tooltip = ln_call_the_great_ranging_decision_tt
+	confirm_text = ln_call_the_great_ranging_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 12
+
+	# 1.0.12 -- WIDENED, off Thomas's live run: "I changed characters to Lord Commander, and great ranging
+	# wasn't showing up anywhere. So make sure that it would show up. Verify that the way you wrote it is the
+	# way base Game of Thrones would write it."
+	#
+	# It was written as a bare `this = title:k_the_wall.holder` with nothing in front of it. AGOT never
+	# writes that comparison anywhere -- zero hits across their whole common/ and events/ -- and every one
+	# of their own reaches through that title is either preceded by `exists = title:k_the_wall.holder`
+	# (00_agot_nights_watch_decisions.txt:86, :231, :317) or uses the safe switch `title:k_the_wall.holder ?=`
+	# (00_agot_character_triggers.txt:135). The `exists` line below is theirs, and it matters for more than
+	# style: with no holder, `title:k_the_wall.holder` returns an unset scope, the comparison ERRORS rather
+	# than returning false, and it errors once per character per decision refresh for the whole game.
+	#
+	# The OR is the actual repair. A Lord Commander is normally the holder of k_the_wall, but this mod has
+	# two roads that break that assumption -- reform_nights_watch_decision refounds the order under a new
+	# man, and ln_lay_down_the_realm_effect walks a landed lord into the Watch -- and in either case the
+	# identity test can be false for someone the game and the player both call the Lord Commander. AGOT's
+	# own way of asking "is this man the Watch" is government_has_flag = government_is_nw (used in their
+	# decisions, triggers and councillor gates alike); paired with is_independent_ruler that is exactly
+	# "the top of the Night's Watch" without depending on which title he happens to be holding.
+	is_shown = {
+		exists = title:k_the_wall.holder
+		OR = {
+			this = title:k_the_wall.holder
+			AND = {
+				government_has_flag = government_is_nw
+				is_independent_ruler = yes
+			}
+		}
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = {
+			OR = {
+				is_struggle_phase = ln_phase_cold_winds
+				is_struggle_phase = ln_phase_the_long_night
+			}
+		}
+	}
+
+	# 1.0.12 -- THE COOLDOWN IS THE OTHER HALF OF "IT WASN'T SHOWING UP ANYWHERE", AND IT IS THE HALF THAT
+	# ACTUALLY HIDES THINGS. A decision inside its `cooldown` window is removed from the list outright, not
+	# greyed with a timer -- so a player who takes over a Lord Commander the AI has been running finds no
+	# Great Ranging and no explanation, for up to five years. And the AI DOES take it: ai_will_do is base 40
+	# rising to 80 in the Long Night, on a twelve-month check.
+	#
+	# So the five years move out of `cooldown` and into a flag read by is_valid, which is the same shape
+	# Send Out the Crows already uses. The decision now always appears for a Lord Commander in the right
+	# phase, greyed, saying in his own voice why he cannot call one today. A reason he can read beats a
+	# decision that is not there.
+	#
+	# The one-year `cooldown` stays as a double-click backstop only. It is short enough that it can never be
+	# the thing a player runs into and cannot explain.
+	#
+	# TWO YEARS IN THE LONG NIGHT, FOUR IN COLD WINDS, by the same logic as the crows: the cadence should
+	# tighten as the thing gets worse, not stay fixed while the world ends.
+	cooldown = { years = 1 }
+
+	is_valid = {
+		is_available = yes
+		prestige >= 100
+		# 1.0.12b (Thomas's live run): he was told "the last ranging is still out" YEARS after it had come back,
+		# because ln_ranging_is_out is doing two jobs -- while the outcome event is genuinely pending it means
+		# men on the ice, and after they return its remaining lifetime is the rest-and-refit cooldown. One flag,
+		# two truths, one message: it read as a ranging that never came home. The outcome events now stamp
+		# ln_ranging_returned, and the greyed text tells whichever truth is actually in effect.
+		custom_tooltip = {
+			text = ln_ranging_still_out
+			NOT = {
+				AND = {
+					has_character_flag = ln_ranging_is_out
+					NOT = { has_character_flag = ln_ranging_returned }
+				}
+			}
+		}
+		custom_tooltip = {
+			text = ln_ranging_men_need_rest
+			NOT = {
+				AND = {
+					has_character_flag = ln_ranging_is_out
+					has_character_flag = ln_ranging_returned
+				}
+			}
+		}
+	}
+
+	effect = {
+		add_prestige = -100
+		if = {
+			limit = { struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night } }
+			add_character_flag = { flag = ln_ranging_is_out  years = 2 }
+		}
+		else = {
+			add_character_flag = { flag = ln_ranging_is_out  years = 4 }
+		}
+		trigger_event = { id = ln_lc.1  days = { 20 40 } }
+	}
+
+	ai_will_do = {
+		base = 40
+		modifier = { add = 20  has_trait = diligent }
+		modifier = { add = 15  has_trait = brave }
+		modifier = { add = 15  has_trait = paranoid }
+		modifier = {
+			add = 40
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+		}
+		modifier = { add = -20  has_trait = craven }
+		modifier = { add = -15  has_trait = lazy }
+	}
+}
+
+# THE WANDERING CROWS. Thomas: the Mortimer card works because the Wall is a SOCIAL FACT -- a place
+# the realm sends men -- and the south should meet the Watch the way the show introduces it: a crow
+# at the gate, asking for the men you were going to hang anyway. The crow is a REAL sworn brother
+# out of the Lord Commander's own court (his scope rides the delayed events), the visits are
+# staggered over months as he travels, and the ten-year flag on each lord keeps it from ever being
+# a nag. Available in every phase -- the Watch has always recruited; the dark just sharpens it.
+ln_send_out_the_crows_decision = {
+	# 1.0.10b -- THE OLD NOTE HERE WAS RIGHT ABOUT THE RULE AND WRONG ABOUT THE INVENTORY.
+	# It read "none of the six illustrations this playset provably ships fits" and took CK3's default.
+	# Six is AGOT's count. Vanilla ships sixty-odd more in the same folder and they resolve here exactly
+	# the same way -- decision_recruitment.dds is one of them, and recruiting is literally what a
+	# wandering crow does at every gate between here and the Wall. Verified present in
+	# game/gfx/interface/illustrations/decisions/ before this line was written, per the rule below.
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_recruitment.dds" }
+
+	desc = ln_send_out_the_crows_decision_desc
+	selection_tooltip = ln_send_out_the_crows_decision_tt
+	confirm_text = ln_send_out_the_crows_decision_confirm
+
+	decision_group_type = realm
+	ai_check_interval = 24
+
+	is_shown = {
+		this = title:k_the_wall.holder
+		# 1.0.12b -- AND THE WATCH HAS TO STILL BE THE WATCH. Thomas: "if the Night's Watch is fallen, or is
+		# owned by the Night King, then that decision's disabled." A Lord Commander who has been raised does
+		# not send men out to beg the south for prisoners; he has other plans for them.
+		ln_is_one_of_them_trigger = no
+	}
+
+	# ── 1.0.12b: TEN YEARS WAS TOO LONG, AND IT SHOULD NOT BE ONE NUMBER ────────────────────────────────
+	# Thomas: "It looks like it's a ten year. That's pretty rough, dude. That should at least be maybe four
+	# years. And then every two years during the Winter Is Coming struggle phase, and then maybe every one
+	# year during the Long Night itself."
+	#
+	# A decision's `cooldown` is a single static block -- it takes no script value and cannot read the
+	# struggle. So the engine cooldown is set to the SHORTEST cadence we ever want (one year) and the real
+	# gate is a character flag whose DURATION is chosen by phase in the effect below. Same shape as
+	# ln_the_forge_is_cold_modifier and ln_the_rite_is_spent_modifier, and it means one place decides the
+	# cadence instead of two disagreeing.
+	#
+	# The engine cooldown is kept rather than removed: it is the backstop if the flag is ever lost to a
+	# mid-save migration, and a one-year floor is harmless.
+	cooldown = { years = 1 }
+
+	is_valid = {
+		is_available = yes
+		custom_description = {
+			text = ln_crows_are_still_on_the_road
+			NOT = { has_character_flag = ln_crows_are_out }
+		}
+		custom_description = {
+			text = ln_crows_need_a_brother_to_send
+			any_courtier = {
+				is_adult = yes
+				is_ai = yes
+				is_available = yes
+				is_male = yes
+			}
+		}
+	}
+
+	effect = {
+		# THE CADENCE, AND IT TIGHTENS AS THE DARK ARRIVES. Four years in an ordinary century; two once the
+		# Cold Winds are blowing and the realm has started to notice; one during the Long Night itself, when
+		# the Watch is asking every hall in Westeros every year and nobody thinks that is strange.
+		if = {
+			limit = {
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+			}
+			add_character_flag = { flag = ln_crows_are_out  years = 1 }
+		}
+		else_if = {
+			limit = {
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds }
+			}
+			add_character_flag = { flag = ln_crows_are_out  years = 2 }
+		}
+		else = {
+			add_character_flag = { flag = ln_crows_are_out  years = 4 }
+		}
+
+		random_courtier = {
+			limit = {
+				is_adult = yes
+				is_ai = yes
+				is_available = yes
+				is_male = yes
+			}
+			save_scope_as = ln_wandering_crow
+		}
+		custom_tooltip = ln_send_out_the_crows_effect_tt
+		hidden_effect = {
+			every_ruler = {
+				limit = {
+					highest_held_title_tier >= tier_duchy
+					NOT = { government_has_flag = government_is_nw }
+					NOT = { has_character_flag = ln_crow_visited }
+					capital_province ?= { geographical_region = world_westeros_seven_kingdoms }
+					any_prisoner = { count >= 3 }
+				}
+				add_character_flag = { flag = ln_crow_visited  years = 10 }
+				trigger_event = { id = ln_lc.10  days = { 30 240 } }
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 30
+		modifier = { add = 20  has_trait = diligent }
+		modifier = { add = 15  has_trait = gregarious }
+		modifier = {
+			add = 30
+			struggle:ln_long_night_struggle ?= {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+		modifier = { add = -15  has_trait = lazy }
+	}
+}

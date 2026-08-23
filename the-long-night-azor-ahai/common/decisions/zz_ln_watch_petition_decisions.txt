@@ -1,0 +1,53 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Watch, begging.
+#
+# Thomas, holding the Nightfort: "I currently have no income. Owning a ruin shows my income to be minus one
+# thousand percent... that's gonna be problematic."
+#
+# It is worse than problematic, it is a closed loop. ln_rebuild_the_castle_decision wants 400 gold; a ruin
+# generates nothing; so the man who takes the black can never rebuild the castle he was given, which is the
+# only way he would ever generate anything.
+#
+# THE FIX IS THE LORE, NOT A NUMBER. The Night's Watch has never funded itself and has never pretended to. It
+# lives on the Gift, on donations from northern lords, and on the standing obligation of the realm to keep the
+# Wall manned -- Jon Snow spends most of A Dance with Dragons begging, borrowing and mortgaging the Watch's
+# future to feed it. So a Watch player begs too. That is not a workaround for a broken economy; it IS the
+# economy, and it is the correct one for this faction.
+ln_petition_the_realm_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_social.dds" }
+
+	desc = ln_petition_the_realm_decision_desc
+	selection_tooltip = ln_petition_the_realm_decision_tt
+	confirm_text = ln_petition_the_realm_decision_confirm
+
+	decision_group_type = realm
+	cooldown = { years = 3 }
+	ai_check_interval = 60
+
+	is_shown = {
+		OR = {
+			AND = {
+				has_government = nights_watch_government
+				is_landed = yes
+			}
+			has_government = ln_ranger_government
+		}
+	}
+
+	is_valid = {
+		is_available = yes
+	}
+
+	effect = {
+		custom_tooltip = ln_petition_the_realm_effect_tt
+		trigger_event = { id = ln_watch.6  days = { 20 60 } }
+	}
+
+	ai_will_do = {
+		base = 60
+		modifier = { factor = 0  gold >= 300 }
+		# Personality (v0.2.1 pass): begging is a skill and pride is its enemy.
+		modifier = { add = 15  has_trait = humble }
+		modifier = { add = 10  has_trait = diligent }
+		modifier = { add = -20  has_trait = arrogant }
+	}
+}

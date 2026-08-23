@@ -1,0 +1,435 @@
+﻿namespace = ln_travel
+
+# AGOT: The Long Night & Azor Ahai -- what is on the road once the dead hold it.
+#
+# See zz_ln_travel_danger_modifiers.txt for the province danger that makes these likely, and
+# zz_ln_travel_danger_on_actions.txt for how they are hooked without touching vanilla's danger tombola.
+#
+# THE ESCORT IS OPTIONAL IN BOTH EVENTS AND THAT IS DELIBERATE. Vanilla's own occupied-territory event
+# (travel_danger_events.1008) requires an entourage of more than three before it will fire, which is correct for
+# a lord on progress and wrong for the best version of this scene -- a lone ranger, or a landless adventurer with
+# two followers, on a road they should not have taken. So the guard is saved with ordered_entourage_character,
+# which saves NOTHING when there is nobody to save, and every option that needs one is gated on
+# `exists = scope:ln_travel_guard`. A man alone still gets the event; he just has fewer ways out of it.
+
+# -- WIGHTS ON THE ROAD ---------------------------------------------------------------------------------------
+ln_travel.1 = {
+	type = character_event
+	title = ln_travel.1.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { location ?= { geographical_region = world_westeros_beyond_the_wall } }
+				desc = ln_travel.1.desc.btw
+			}
+			desc = ln_travel.1.desc
+		}
+	}
+	theme = travel_danger
+	override_background = { reference = battlefield }
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+	lower_center_portrait = {
+		character = scope:ln_travel_guard
+	}
+
+	trigger = {
+		is_available_travelling_adult = yes
+		is_location_valid_for_travel_event_on_land = yes
+		ln_is_one_of_them_trigger = no
+		ln_on_a_dead_road_trigger = yes
+	}
+
+	# SIX MONTHS, NOT ONE. Vanilla's danger events sit at `cooldown = { months = 1 }` because they are weather --
+	# a wagon wheel, an insect swarm, a bad night. This is not weather. Being caught on the road by the dead
+	# should be the thing that happened on that journey, not a recurring toll.
+	cooldown = { months = 6 }
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		mp_delay_travel_plan = { DAYS = 30 }
+		location ?= { save_scope_as = ln_travel_where }
+		current_travel_plan ?= {
+			ordered_entourage_character = {
+				order_by = {
+					value = prowess
+					if = {
+						limit = { is_knight = yes }
+						multiply = 2
+					}
+					if = {
+						limit = { has_court_position = bodyguard_court_position }
+						multiply = 3
+					}
+				}
+				limit = {
+					is_available_ai_adult = yes
+					can_be_warrior_trigger = { ARMY_OWNER = root }
+					NOT = { this = root }
+				}
+				save_scope_as = ln_travel_guard
+			}
+		}
+	}
+
+	option = { # Ride through them
+		name = ln_travel.1.a
+		duel = {
+			skill = prowess
+			value = high_skill_rating
+			55 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 2.5
+				}
+				desc = ln_travel.1.a_through
+				send_interface_toast = {
+					type = event_toast_effect_good
+					title = ln_travel.1.a_through
+					left_icon = root
+					add_prestige = medium_prestige_gain
+				}
+				current_travel_plan ?= {
+					delay_travel_plan = { days = 10 }
+				}
+			}
+			45 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -2.5
+				}
+				desc = ln_travel.1.a_caught
+				send_interface_toast = {
+					type = event_toast_effect_bad
+					title = ln_travel.1.a_caught
+					left_icon = root
+					add_trait = wounded_1
+				}
+				current_travel_plan ?= {
+					delay_travel_plan = { days = 60 }
+				}
+			}
+		}
+		stress_impact = {
+			brave = medium_stress_impact_loss
+			craven = medium_stress_impact_gain
+		}
+		ai_chance = {
+			base = 40
+			ai_value_modifier = {
+				ai_boldness = 0.6
+			}
+			modifier = {
+				add = 40
+				prowess >= high_skill_rating
+			}
+			modifier = {
+				factor = 0.2
+				health < 0.5
+			}
+		}
+	}
+
+	option = { # Form a line and burn them
+		name = ln_travel.1.b
+		trigger = {
+			exists = scope:ln_travel_guard
+			current_travel_plan ?= {
+				any_entourage_character = {
+					count >= 3
+				}
+			}
+		}
+		custom_tooltip = ln_travel.1.b_tt
+		current_travel_plan ?= {
+			delay_travel_plan = { days = 45 }
+		}
+		random_list = {
+			80 = {
+				show_chance = no
+				desc = ln_travel.1.b_burned
+				send_interface_toast = {
+					type = event_toast_effect_good
+					title = ln_travel.1.b_burned
+					left_icon = root
+					right_icon = scope:ln_travel_guard
+					add_prestige = major_prestige_gain
+				}
+			}
+			20 = {
+				show_chance = no
+				desc = ln_travel.1.b_cost
+				send_interface_toast = {
+					type = event_toast_effect_bad
+					title = ln_travel.1.b_cost
+					left_icon = root
+					right_icon = scope:ln_travel_guard
+					add_prestige = minor_prestige_gain
+				}
+				# HE IS TAKEN OFF THE TRAVEL PLAN BEFORE HE IS KILLED. Ordering rule, and it is not
+				# cosmetic here: removing a dead character from a travel plan is the kind of thing that
+				# either no-ops or errors depending on the engine's mood, and neither is worth finding out
+				# live. Off the plan first, then dead.
+				current_travel_plan ?= {
+					remove_character = scope:ln_travel_guard
+				}
+				scope:ln_travel_guard = {
+					death = { death_reason = death_claimed_by_cold }
+				}
+			}
+		}
+		stress_impact = {
+			craven = minor_stress_impact_loss
+			impatient = medium_stress_impact_gain
+		}
+		ai_chance = {
+			base = 100
+			modifier = {
+				add = 50
+				ln_carries_something_that_can_hurt_them_trigger = yes
+			}
+		}
+	}
+
+	option = { # Leave the wagons and ride
+		name = ln_travel.1.c
+		custom_tooltip = ln_travel.1.c_tt
+		remove_short_term_gold = medium_gold_value
+		add_prestige = minor_prestige_loss
+		current_travel_plan ?= {
+			delay_travel_plan = { days = 20 }
+		}
+		stress_impact = {
+			craven = medium_stress_impact_loss
+			brave = medium_stress_impact_gain
+			arrogant = medium_stress_impact_gain
+		}
+		ai_chance = {
+			base = 60
+			ai_value_modifier = {
+				ai_boldness = -0.5
+			}
+			modifier = {
+				add = 60
+				health < 0.5
+			}
+		}
+	}
+
+	after = {
+		mp_resume_travel_plan = yes
+	}
+}
+
+# -- ONE OF THEM ----------------------------------------------------------------------------------------------
+# Rarer and worse. ln_a_walker_could_be_here_trigger keeps this to the Long Night proper and to their own ground
+# or past the Wall -- a county merely NEXT to theirs never produces one, because an Other should stay the thing
+# a player remembers rather than the thing a player routes around.
+ln_travel.2 = {
+	type = character_event
+	title = ln_travel.2.t
+	desc = ln_travel.2.desc
+	theme = travel_danger
+	override_background = { reference = battlefield }
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+	lower_center_portrait = {
+		character = scope:ln_travel_guard
+	}
+
+	trigger = {
+		is_available_travelling_adult = yes
+		is_location_valid_for_travel_event_on_land = yes
+		ln_is_one_of_them_trigger = no
+		ln_a_walker_could_be_here_trigger = yes
+	}
+
+	cooldown = { months = 6 }
+
+	weight_multiplier = {
+		base = 1
+	}
+
+	immediate = {
+		mp_delay_travel_plan = { DAYS = 30 }
+		location ?= { save_scope_as = ln_travel_where }
+		current_travel_plan ?= {
+			ordered_entourage_character = {
+				order_by = {
+					value = prowess
+					if = {
+						limit = { is_knight = yes }
+						multiply = 2
+					}
+				}
+				limit = {
+					is_available_ai_adult = yes
+					can_be_warrior_trigger = { ARMY_OWNER = root }
+					NOT = { this = root }
+				}
+				save_scope_as = ln_travel_guard
+			}
+		}
+	}
+
+	option = { # Meet it
+		name = ln_travel.2.a
+		# THE PAYOFF FOR THE PREPARATION DECISIONS, and the only reason this option exists. Steel shatters on
+		# them. A man who armed his household with dragonglass or carries Valyrian steel has a fight; a man who
+		# did not has a death, and the other two options are what that looks like.
+		trigger = {
+			ln_carries_something_that_can_hurt_them_trigger = yes
+		}
+		duel = {
+			skill = prowess
+			value = very_high_skill_rating
+			45 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 3.0
+				}
+				desc = ln_travel.2.a_shatter
+				send_interface_toast = {
+					type = event_toast_effect_good
+					title = ln_travel.2.a_shatter
+					left_icon = root
+					add_prestige = massive_prestige_gain
+					add_trait = wounded_1
+				}
+			}
+			55 = {
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -3.0
+				}
+				desc = ln_travel.2.a_cold
+				send_interface_toast = {
+					type = event_toast_effect_bad
+					title = ln_travel.2.a_cold
+					left_icon = root
+					add_trait = wounded_2
+					add_prestige = medium_prestige_gain
+				}
+				current_travel_plan ?= {
+					delay_travel_plan = { days = 90 }
+				}
+			}
+		}
+		stress_impact = {
+			brave = major_stress_impact_loss
+			craven = major_stress_impact_gain
+		}
+		ai_chance = {
+			base = 30
+			ai_value_modifier = {
+				ai_boldness = 0.8
+			}
+			modifier = {
+				add = 50
+				prowess >= very_high_skill_rating
+			}
+		}
+	}
+
+	option = { # Leave the slowest man
+		name = ln_travel.2.b
+		trigger = {
+			exists = scope:ln_travel_guard
+		}
+		custom_tooltip = ln_travel.2.b_tt
+		current_travel_plan ?= {
+			remove_character = scope:ln_travel_guard
+			delay_travel_plan = { days = 30 }
+		}
+		scope:ln_travel_guard = {
+			death = { death_reason = death_claimed_by_cold }
+		}
+		add_prestige = medium_prestige_loss
+		stress_impact = {
+			compassionate = major_stress_impact_gain
+			just = medium_stress_impact_gain
+			callous = medium_stress_impact_loss
+			craven = minor_stress_impact_loss
+		}
+		ai_chance = {
+			base = 60
+			ai_value_modifier = {
+				ai_compassion = -0.6
+				ai_honor = -0.3
+			}
+		}
+	}
+
+	option = { # Ride, and do not look back
+		name = ln_travel.2.c
+		current_travel_plan ?= {
+			delay_travel_plan = { days = 60 }
+		}
+		random_list = {
+			45 = {
+				show_chance = no
+				desc = ln_travel.2.c_clear
+				send_interface_toast = {
+					type = event_toast_effect_neutral
+					title = ln_travel.2.c_clear
+					left_icon = root
+				}
+			}
+			35 = {
+				show_chance = no
+				desc = ln_travel.2.c_hurt
+				send_interface_toast = {
+					type = event_toast_effect_bad
+					title = ln_travel.2.c_hurt
+					left_icon = root
+					add_trait = wounded_1
+				}
+			}
+			20 = {
+				# ONLY REACHABLE WITH AN ESCORT. Without one there is nobody for it to take, so the weight is
+				# zeroed rather than the branch being allowed to fire against an unset scope -- a saved scope
+				# that does not exist does not resolve false, it errors, and it errors every time.
+				trigger = {
+					exists = scope:ln_travel_guard
+				}
+				show_chance = no
+				desc = ln_travel.2.c_taken
+				send_interface_toast = {
+					type = event_toast_effect_bad
+					title = ln_travel.2.c_taken
+					left_icon = root
+					right_icon = scope:ln_travel_guard
+				}
+				current_travel_plan ?= {
+					remove_character = scope:ln_travel_guard
+				}
+				scope:ln_travel_guard = {
+					death = { death_reason = death_claimed_by_cold }
+				}
+			}
+		}
+		stress_impact = {
+			craven = medium_stress_impact_loss
+			brave = medium_stress_impact_gain
+		}
+		ai_chance = {
+			base = 100
+			ai_value_modifier = {
+				ai_boldness = -0.4
+			}
+		}
+	}
+
+	after = {
+		mp_resume_travel_plan = yes
+	}
+}

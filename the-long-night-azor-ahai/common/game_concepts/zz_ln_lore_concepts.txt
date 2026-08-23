@@ -1,0 +1,61 @@
+﻿# AGOT: The Long Night & Azor Ahai -- lore game concepts.
+#
+# Neither vanilla nor AGOT defines a game concept for the Wall, the Others, the Night's Watch, wights or the free
+# folk. That was checked, key by key, before writing this file -- every key and alias below was confirmed unused
+# across base CK3, AGOT and this mod, so nothing here overrides anything.
+#
+# Why bother: without a concept, a term cannot be written as a [hoverable|E] link anywhere in the game. A player
+# who has never read the books gets no explanation of what a wight is, and there is nowhere to put one. With
+# these, every event, decision and struggle description in this mod can link its own vocabulary.
+#
+# Plurals and variants are ALIASES on the singular, matching vanilla's convention
+# (struggle_catalyst = { alias = { struggle_catalyst_catalyst struggle_catalyst_catalysts } }).
+# Loc lives in localization/english/zz_ln_concepts_l_english.yml.
+
+wall = {
+	alias = { the_wall walls }
+}
+
+the_others = {
+	texture = "gfx/interface/icons/struggle_types/ln_phase_the_long_night.dds"
+	alias = { others white_walker white_walkers }
+}
+
+wight = {
+	alias = { wights }
+	parent = the_others
+}
+
+nights_watch = {
+	alias = { the_nights_watch black_brothers }
+	parent = wall
+}
+
+free_folk = {
+	alias = { wildlings beyond_the_wall }
+}
+
+dragonglass = {
+	alias = { obsidian }
+}
+
+valyrian_steel = {
+}
+
+# THE MEN-AT-ARMS CATEGORY THE DEAD FIGHT IN.
+#
+# Thomas: "I feel like we should hard code it in the game so it feels intentional. The way skirmishers is an
+# option and it's blue text, meaning we have an in-game definition for it... say Others and then have it linked
+# to tell you more about it. That way it feels more comprehensive."
+#
+# Both undead regiments carry `type = Other_infantry`, which is a CUSTOM category on purpose: nothing in CK3's
+# ordinary counter system touches the dead and they counter nothing back. Without a concept behind it the
+# tooltip printed the raw string "Other_infantry", which reads like a leak rather than a design.
+#
+# AGOT's own precedent is exact -- anti_dragon_maa, parented to men_at_arms with a regimenttypes texture, and
+# `anti_dragon:0 "[anti_dragon_maa|E]"` in agot_regiment_l_english.yml. Same shape here, with our own icon.
+ln_others_infantry = {
+	alias = { the_dead risen_dead undead_infantry }
+	parent = men_at_arms
+	texture = "gfx/interface/icons/regimenttypes/Zombie.dds"
+}

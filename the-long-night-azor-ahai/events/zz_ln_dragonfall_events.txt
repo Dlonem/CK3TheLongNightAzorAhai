@@ -1,0 +1,60 @@
+﻿namespace = ln_dragonfall
+
+# AGOT: The Long Night & Azor Ahai -- the rider who lived while his dragon did not.
+#
+# Thomas asked for this by name: it happens, and it was under-served. The natural companion to Door
+# Two -- the man who watched his dragon go down in the snow, and then watched it get up wearing the
+# wrong colour. Fired from ln_the_dead_claim_dragon_effect, human riders only, two days after the
+# combat so the death-and-rising has had time to be the thing everyone in the camp is not saying.
+#
+# THE DRAGON ARRIVES AS A VARIABLE, NOT A SAVED SCOPE (var:ln_lost_to_the_cold, stamped by the claim
+# effect), per the standing rule: never rely on saved scopes in a queued card; rebuild in immediate.
+
+# ── 1. THE WRONG COLOUR ─────────────────────────────────────────────────────────────────────────────────────
+ln_dragonfall.1 = {
+	type = character_event
+
+	# STILL QUALIFIES? He must still carry the stamp -- and if he somehow bonded another dragon in the
+	# two days, the card still reads right: this is about the one he lost.
+	trigger = {
+		exists = var:ln_lost_to_the_cold
+	}
+
+	immediate = {
+		var:ln_lost_to_the_cold = { save_scope_as = ln_cold_dragon }
+		remove_variable = ln_lost_to_the_cold
+	}
+
+	title = ln_dragonfall.1.t
+	desc = ln_dragonfall.1.desc
+	theme = dread
+	left_portrait = { character = root  animation = grief }
+	right_portrait = { character = scope:ln_cold_dragon  animation = anger }
+
+	option = {
+		name = ln_dragonfall.1.a          # she will know me. even now.
+		ai_chance = {
+			base = 40
+			modifier = { add = 20  has_trait = compassionate }
+			modifier = { add = 10  has_trait = forgiving }
+		}
+		stress_impact = {
+			base = major_stress_impact_gain
+			cynical = minor_stress_impact_loss
+		}
+	}
+	option = {
+		name = ln_dragonfall.1.b          # that is not her. kill it twice.
+		ai_chance = {
+			base = 60
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = 10  has_trait = vengeful }
+		}
+		stress_impact = {
+			base = medium_stress_impact_gain
+			brave = minor_stress_impact_loss
+			vengeful = minor_stress_impact_loss
+		}
+		add_martial_lifestyle_xp = 40
+	}
+}

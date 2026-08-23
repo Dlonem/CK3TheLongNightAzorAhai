@@ -1,0 +1,26 @@
+﻿# AGOT: The Long Night & Azor Ahai -- save repair for dragons raised before 1.0.4.
+#
+# Declared here as a named sub-list and listed in zz_ln_00_hooks.txt, per the rule at the top of that file:
+# a vanilla on_action is declared THERE and nowhere else, and a sub-list that nothing references does not
+# exist. This is the only thing in this file and it is meant to stay that way.
+#
+# 1.0.9: this calls the FULL SWEEP, not the yearly one. The two are different iterators on purpose --
+# ln_repair_raised_dragons_effect walks AGOT's `living_dragons` global list (tens of entries, cheap enough
+# to run every year), and ln_repair_raised_dragons_full_sweep_effect walks every living character once at
+# load so it can also reach clones raised before they were registered in that list.
+#
+# 1.0.9b CORRECTION, proven live in session 26: on_game_start_after_lobby fires on NEW GAME ONLY --
+# never when loading a save. This hook therefore only ever runs when there is nothing to repair, and
+# the real full-sweep home is the version-latched one-shot inside ln_undead_dragon_upkeep_effect
+# (zz_ln_ice_dragon_effects.txt), driven by the yearly heartbeat. This registration stays: it is
+# correct for new games, costs nothing, and removing a hook buys nothing.
+#
+# Self-gating: both select undead dragons carrying no ln_gene_storage_sync_2 stamp (versioned from _1 in 1.0.9b -- see ln_repair_one_dragon_effect), and the repair stamps
+# each dragon as it goes. On a healthy save this iterates once at load, stamps, and does nothing else --
+# and on every load after the first the limit rejects everything.
+ln_dragon_repair_game_start = {
+	effect = {
+		debug_log = "LN_TRACE: game-start dragon repair sweep fired (on_game_start_after_lobby)"
+		ln_repair_raised_dragons_full_sweep_effect = yes
+	}
+}

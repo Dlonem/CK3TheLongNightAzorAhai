@@ -1,0 +1,42 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Night King has no hair.
+#
+# He shipped with a full head of hair and a beard, which reads as a bearded old king in ice armour rather than
+# as an Other. Templates verified against AGOT's own gene files:
+#   hairstyles -> no_hairstyles   (common/genes/03_genes_special_accessories_hairstyles.txt)
+#   beards     -> no_beard        (common/genes/04_genes_special_accessories_beards.txt, note: singular)
+# Same shape AGOT uses in gfx/portraits/portrait_modifiers/00_agot_visible_disfigurement_overrides.txt and that
+# Long Night+ uses in zz_wight_nudity.txt.
+#
+# Gated on `nightking` only, so ordinary Others are untouched for now. Book-accurately every White Walker is
+# hairless -- widening this to has_trait = other_trait is a one-line change to the weight block below.
+
+ln_nightking_hairless = {
+
+	usage = game
+	selection_behavior = max
+	priority = 6
+
+	ln_nightking_bald = {
+		dna_modifiers = {
+			accessory = {
+				mode = add
+				gene = hairstyles
+				template = no_hairstyles
+				range = { 0 1 } # range kept so the randomness selection resolves correctly
+			}
+			accessory = {
+				mode = add
+				gene = beards
+				template = no_beard
+				range = { 0 1 }
+			}
+		}
+		weight = {
+			base = 0
+			modifier = {
+				add = 99999
+				has_trait = nightking
+			}
+		}
+	}
+}

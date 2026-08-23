@@ -1,0 +1,57 @@
+﻿# AGOT: The Long Night & Azor Ahai -- does the Long Night know WHEN it is landing?
+#
+# Thomas: "does the long night code well into the Dance of the Dragons? Are there events with
+# Rhaenyra and Viserys? What if it happens during their time?"
+#
+# EVERY ID BELOW WAS READ OUT OF AGOT'S OWN HISTORY FILES, not guessed. From
+# history/characters/00_agot_char_dragonstone_ancestors.txt, cross-checked against the ID comments
+# AGOT writes into common/bookmarks/bookmarks/01_agot_bookmarks.txt:
+#
+#     Targaryen_60  Viserys I   born 8077, dies 8129 (death_ill)
+#     Targaryen_61  Daemon      born 8081, dies 8130 (death_dragon_duel, "Battle above the God's Eye")
+#     Targaryen_63  Rhaenyra    born 8097, dies 8130
+#     Targaryen_66  Helaena     born 8109, dies 8130
+#
+# So AGOT scripts the Dance historically, and the war itself is 8129-8131. There is NO Dance
+# bookmark -- the nearest start is 8106.4.18 ("Fire and Blood"), twenty-three years before it -- so
+# a player only reaches this by playing forward, and history can diverge on the way. That is exactly
+# why these triggers test STATE and never a date: if Rhaenyra died as a child in your timeline,
+# there is no Dance, and the mod should not pretend otherwise.
+#
+# EVERY character: REFERENCE IS exists-GUARDED. The Great_Other bug (a dummy character born 8300,
+# referenced unguarded, erroring at every invasion in every earlier start) cost a live session to
+# find. Reference a historical character without proving it exists and you have written that bug
+# again.
+
+# ── THE AGE OF DRAGONS ──────────────────────────────────────────────────────────────────────────
+# The mechanically important half, and it needs no IDs at all. AGOT maintains `living_dragons` as a
+# global list (add_to_global_variable_list, 00_agot_dragon_effects.txt), which the mod already reads
+# for the dragon census. Five is the threshold because it is the point where dragons stop being a
+# rumour and start being an order of battle -- and because the Others raising ONE stops being bad
+# luck and starts being arithmetic.
+ln_age_of_dragons_trigger = {
+	any_in_global_list = {
+		variable = living_dragons
+		count >= 5
+	}
+}
+
+# ── THEIR TIME ──────────────────────────────────────────────────────────────────────────────────
+# Rhaenyra grown, or Daemon alive. Either one means the succession question exists and the realm has
+# somewhere else to look. OR rather than AND so that one of them dying early does not silently
+# switch the whole thing off.
+ln_the_dance_era_trigger = {
+	OR = {
+		AND = {
+			exists = character:Targaryen_63
+			character:Targaryen_63 = {
+				is_alive = yes
+				is_adult = yes
+			}
+		}
+		AND = {
+			exists = character:Targaryen_61
+			character:Targaryen_61 = { is_alive = yes }
+		}
+	}
+}

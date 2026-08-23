@@ -1,0 +1,118 @@
+﻿agot_others_invasion_chance = {
+	categories = {
+		agot
+	}
+	default = others_certain_invasion_chance
+
+	others_certain_invasion_chance = { }
+	others_near_certain_invasion_chance = { }
+	others_even_odds_invasion_chance = { }
+	others_remote_odds_invasion_chance = { }
+	others_invasion_wont_happen = { }
+}
+agot_others_invasion_moment = {
+	categories = {
+		agot
+	}
+	# FIX (v0.1.0): was others_immediate_invasion -- the Long Night landed 7-14 days into EVERY new game at every
+	# bookmark for anyone who never opened the rules screen, which also left this mod's entire historical/random
+	# timing table as dead code.
+	# v0.2.0: default is now the randomised window below. It picks ONE date up front from a weighted spread of
+	# sub-ranges, so no two games land the same -- but the Long Night is always SCHEDULED, never rolled, so it
+	# cannot fail to arrive.
+	default = others_random_window_invasion
+
+	others_random_window_invasion = { }
+	others_immediate_invasion = { }
+	others_invasion_in_50_years = { }
+	others_invasion_in_100_years = { }
+	others_invasion_in_150_years = { }
+	others_historical_invasion = { }
+	others_full_random_invasion = { }
+	others_manual_invasion = { }
+}
+agot_others_invasion_strength = {
+	categories = {
+		agot
+	}
+	default = others_standard_invasion 
+
+	others_weak_invasion = { }
+	others_standard_invasion = { }
+	others_strong_invasion = { }
+	others_insane_invasion = { }
+}
+agot_others_resolution = {
+	categories = {
+		agot
+	}
+	default = others_death_resolution
+
+	others_war_resolution = { }
+	others_death_resolution = { }
+}
+
+agot_longnight_iron_throne_reformation = {
+	categories = {
+		agot
+	}
+	default = longnight_iron_throne_reformation_on
+
+	longnight_iron_throne_reformation_on = { }
+	longnight_iron_throne_reformation_off = { }
+}
+
+agot_long_night_dragon = {
+	categories = {
+		agot
+	}
+	# v0.3.0 -- THE DEFAULT IS NOW "THEY RAISE ONE THEY KILLED".
+	# The old default handed the Others a dragon out of nowhere as long as dragons existed somewhere in the
+	# world. Thomas's rule is the show's rule and the better one: the living lose a dragon TO THEM, and they
+	# raise that one. If they never manage it, they never get one. See zz_ln_ice_dragon_effects.txt.
+	default = agot_long_night_dragon_raise
+
+	agot_long_night_dragon_raise = { }   # they raise a dragon they brought down. No kill, no dragon.
+	agot_long_night_dragon_on = { }      # legacy: one appears if dragons exist anywhere
+	agot_long_night_dragon_off = { }     # never
+}
+
+agot_others_cb_tier = {
+	categories = {
+		agot
+	}
+	# 10 Aug, SECOND PASS -- KINGDOM IS THE DEFAULT AGAIN, for a reason the first pass had backwards.
+	#
+	# Duchy tier was made default to stop Winterfell falling first. It did not, because TIER WAS NEVER THE
+	# CAUSE: the engine picked the war goal on ai_score and ai_score does not know which castle is in the
+	# books. Both tiers went for Winterfell. What fixed it was naming the target ourselves.
+	#
+	# And on AGOT's map, kingdom is the honest unit. The North's Marches -- Winterfell, the Dreadfort, Last
+	# Hearth, Karhold, the Neck, Skagos and the rest -- are KINGDOM titles, eight of them under e_the_north.
+	# Duchy tier was cutting below the level the map is drawn in, so every duchy the dead took still read to
+	# the player as "they are in the March of Winterfell", because that is the label on the region.
+	#
+	# With ln_pick_invasion_kingdom_effect naming the goal, kingdom tier gives the shape Thomas asked for:
+	# Last Hearth, then Karhold, then the Dreadfort, and Winterfell only once it is surrounded.
+	default = others_cb_kingdom
+
+	others_cb_duchy = { }
+	others_cb_kingdom = { }
+	others_cb_empire = { }
+}
+
+# v0.2.0 -- THE LONG NIGHT RECURS.
+# Off by default, because it changes the shape of a campaign completely. On, the dead come back roughly every
+# 90-130 years, and every wave is harder than the last, until the living finally break the cycle or are broken by
+# it. This turns the mod from one event into a multi-generational survival campaign -- and gives the Targaryen
+# "closer to gods than men" fantasy somewhere to actually point: you are not surviving one winter, you are building
+# a dynasty that can eventually end this for good.
+agot_long_night_recurrence = {
+	categories = {
+		agot
+	}
+	default = long_night_once
+
+	long_night_once = { }
+	long_night_recurs = { }
+}

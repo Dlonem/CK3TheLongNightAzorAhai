@@ -1,0 +1,210 @@
+﻿# AGOT: The Long Night & Azor Ahai -- somebody actually turns up.
+#
+# THE GAP THIS FILLS. ln_pledge.1 has always spoken of a red priest and never produced one: its immediate
+# looks for a priest already in the hall and, finding none, simply narrates around him. That was fine while
+# the decision was only an interloper's conversion door -- the point was the faith, not the man. It is not
+# fine now that the decision is open to people who already follow R'hllor, because for them the man IS the
+# point.
+#
+# AND THE MAN IS WORTH MORE THAN HE LOOKS. ln_has_red_priest_trigger reads cp:councillor_court_chaplain for
+# has_trait = red_priest; ln_has_a_seer_trigger reads that; and being named CHOSEN requires a seer
+# (zz_ln_prophecy_effects.txt:165). So seating this priest as Court Chaplain is what opens the door to
+# Favored and Chosen. The whole loop already existed. Only the arrival was missing.
+#
+# Root = the ruler who sent for one. Caller must have tried to fill scope:ln_priest first; this is a no-op
+# if somebody is already standing there.
+ln_summon_the_red_priest_effect = {
+	if = {
+		limit = { NOT = { exists = scope:ln_priest } }
+
+		# ── ONE IN TWENTY, IT IS SOMEBODY YOU HAVE HEARD OF ────────────────────────────────────────────
+		# Thomas raised this from 1% to 5%: "that way there's a bigger chance people will find it and be
+		# appreciative of it, because then people are gonna comment on the mod and be like, oh my god,
+		# this is so awesome." Five per cent is rare enough to be a story and common enough to be found.
+		#
+		# The coin is fair between the two rather than ranking them, and each side falls through to the
+		# other -- so a game where Melisandre is in a player's court can still produce Thoros, and a game
+		# set before Thoros is born can still produce Melisandre.
+		# NOTE, 1.0.12: the once-per-lord gate is on the `if` below, NOT here. A `trigger = {}` inside
+		# `random = {}` appears nowhere in the base game -- and an effect key the engine does not know is
+		# parsed, kept and never evaluated, which would have silently removed the gate rather than failing
+		# loudly. Standing rule 1. The cost of gating downstream is one wasted 5% roll for a lord who already
+		# drew a named priest, and he falls through to the ordinary one, which is the right answer anyway.
+		# 1.0.12 -- ONE IN TEN, AND THE FLAMES PREFER A CLAIMANT.
+		#
+		# Thomas raised this from 5% to 10%: "make it a ten percent chance to get one of those relevant
+		# characters because then it would be really cool that more people would be experiencing it."
+		#
+		# AND THE COIN IS NO LONGER FAIR. His second point is the better one: "what if I already have four out of
+		# the seven? I feel like it'd be a cooler idea to make it more likely that Melisandre would become my red
+		# priestess if I'm actually closer to being the prince that was promised." That is exactly how she behaves
+		# in the books -- she does not wander into a hall at random, she goes where she believes the prophecy is.
+		# So the deed count tilts the draw toward her, and a man with no marks at all still meets Thoros as often
+		# as not, which is right: Thoros is a drunk who happens to be a priest, and he goes where the wine is.
+		#
+		# ln_deed_count_value is recomputed live (zz_ln_prophecy_values.txt) and tops out at nine. At zero deeds
+		# this is the old even coin; at four it is roughly two to one; at six or more she is the overwhelming
+		# favourite. Each branch still falls through to the other, so a game where she is already in a player's
+		# court can still produce Thoros and a game set before his birth can still produce her.
+		#
+		# ANOTHER PLAYER'S COURT IS ALREADY SAFE and always was -- ln_named_priest_is_free_trigger requires
+		# is_ai = yes on the priest, so neither of them can ever be pulled out of a human player's hall.
+		random = {
+			chance = 10
+			random_list = {
+				50 = {
+					modifier = { add = 15  ln_deed_count_value >= 2 }
+					modifier = { add = 20  ln_deed_count_value >= 4 }
+					modifier = { add = 30  ln_deed_count_value >= 6 }
+					modifier = { add = 15  ln_is_a_champion_of_rhllor_trigger = yes }
+					if = {
+						limit = { ln_named_priest_is_free_trigger = { PRIEST = Melisandre_1 } }
+						character:Melisandre_1 = { save_scope_as = ln_priest }
+					}
+					else_if = {
+						limit = { ln_named_priest_is_free_trigger = { PRIEST = Brotherhood_8 } }
+						character:Brotherhood_8 = { save_scope_as = ln_priest }
+					}
+				}
+				50 = {
+					if = {
+						limit = { ln_named_priest_is_free_trigger = { PRIEST = Brotherhood_8 } }
+						character:Brotherhood_8 = { save_scope_as = ln_priest }
+					}
+					else_if = {
+						limit = { ln_named_priest_is_free_trigger = { PRIEST = Melisandre_1 } }
+						character:Melisandre_1 = { save_scope_as = ln_priest }
+					}
+				}
+			}
+		}
+
+		if = {
+			# Somebody famous answered. set_employer rather than add_courtier because they already exist
+			# somewhere and this is a move, not a birth -- the same idiom ln_scatter.2 uses for the
+			# scattered brothers.
+			#
+			# 1.0.12 -- AND ONCE PER LORD. ln_a_named_priest_answered was stamped here and read nowhere; the
+			# engine reported it every boot as "set but is never used". Thomas's call was to wire the markers
+			# rather than retire them, and reading it HERE is the one place it earns its keep: without it a
+			# lord who called and drew Thoros could call again and draw Melisandre, and again, until one hall
+			# held every named red priest in the world. There are only a handful of these people in Westeros
+			# and they are the whole reason the branch exists. One to a man.
+			limit = {
+				exists = scope:ln_priest
+				NOT = { has_character_flag = ln_a_named_priest_answered }
+			}
+			scope:ln_priest = { set_employer = root }
+			add_character_flag = ln_a_named_priest_answered
+		}
+
+		# ── AND OTHERWISE, A PRIEST OF NO PARTICULAR FAME ──────────────────────────────────────────────
+		# Which is the overwhelmingly common outcome and should read as its own thing rather than as a
+		# consolation prize. Learning 12-20 is Thomas's band, and it is worth noting the canon article
+		# sits inside it: Melisandre ships with learning = 13.
+		#
+		# Two branches only because faith cannot be chosen conditionally inside one create_character. A
+		# man who already follows the red god gets a priest of HIS OWN faith, so the Court Chaplain seat
+		# will actually accept him; an interloper who has not converted yet gets one out of Essos.
+		# Myrish, either way -- they come from the Free Cities, and it is the culture AGOT gives Thoros.
+		else = {
+			if = {
+				limit = { faith = { religion = religion:the_rhllor_religion } }
+				create_character = {
+					# 1.0.9 LIVE-RUN FIX -- `location` WAS HERE AND IT IS MUTUALLY EXCLUSIVE WITH `employer`.
+					# The engine's own words, from Thomas's 14 Aug run: "create_character effect [ Cannot
+					# specify both location and employer ]", twice, and PostValidate returning false both
+					# times -- which means the priest WAS NEVER CREATED. The whole fallback branch, i.e. the
+					# overwhelmingly common outcome of this decision, silently produced nobody. It passed
+					# every static check I have because both keywords are real and spelled right.
+					# employer is the correct one to keep: it puts him in the court, which is the entire
+					# point, and CK3 derives his location from the employer anyway.
+					employer = root
+					faith = root.faith
+					culture = culture:myrish
+					gender_female_chance = 50
+					age = { 30 55 }
+					trait = red_priest
+					trait = zealous
+					# 1.0.9 -- LOYAL, AND NOT A MONSTER. Thomas, 14 Aug: "I love my red priest. Like, I
+					# want them to be a little pocket red priest... zealous red priest, make them loyal
+					# as well... we don't want them to be sadistic if they're getting assigned to a
+					# player personally."
+					#
+					# loyal is category = fame, opposite `disloyal` -- a different axis from zealous, so
+					# the two never conflict. Vanilla pairs them the same way in
+					# 00_historical_characters_scripted_effects.txt:22.
+					#
+					# random_traits = no is doing the real work: left on, CK3 rolls the whole personality
+					# table and a sadistic or callous priest walks into the player's hall. The curated
+					# list below buys back the variety without the bad apples -- every entry is something
+					# a red priest could plausibly be, and none of them is cruel.
+					# This applies ONLY to a priest we invent. A named priest who answers keeps whatever
+					# AGOT gave them; Melisandre is callous in her own history entry and should stay so.
+					trait = loyal
+					random_traits = no
+					random_traits_list = {
+						count = 1
+						patient = {}
+						calm = {}
+						diligent = {}
+						gregarious = {}
+						stubborn = {}
+						arrogant = {}
+					}
+					learning = { 12 20 }
+					dynasty = none
+					save_scope_as = ln_priest
+				}
+			}
+			else = {
+				create_character = {
+					# 1.0.9 LIVE-RUN FIX -- `location` WAS HERE AND IT IS MUTUALLY EXCLUSIVE WITH `employer`.
+					# The engine's own words, from Thomas's 14 Aug run: "create_character effect [ Cannot
+					# specify both location and employer ]", twice, and PostValidate returning false both
+					# times -- which means the priest WAS NEVER CREATED. The whole fallback branch, i.e. the
+					# overwhelmingly common outcome of this decision, silently produced nobody. It passed
+					# every static check I have because both keywords are real and spelled right.
+					# employer is the correct one to keep: it puts him in the court, which is the entire
+					# point, and CK3 derives his location from the employer anyway.
+					employer = root
+					faith = faith:rhllor_fc
+					culture = culture:myrish
+					gender_female_chance = 50
+					age = { 30 55 }
+					trait = red_priest
+					trait = zealous
+					# 1.0.9 -- LOYAL, AND NOT A MONSTER. Thomas, 14 Aug: "I love my red priest. Like, I
+					# want them to be a little pocket red priest... zealous red priest, make them loyal
+					# as well... we don't want them to be sadistic if they're getting assigned to a
+					# player personally."
+					#
+					# loyal is category = fame, opposite `disloyal` -- a different axis from zealous, so
+					# the two never conflict. Vanilla pairs them the same way in
+					# 00_historical_characters_scripted_effects.txt:22.
+					#
+					# random_traits = no is doing the real work: left on, CK3 rolls the whole personality
+					# table and a sadistic or callous priest walks into the player's hall. The curated
+					# list below buys back the variety without the bad apples -- every entry is something
+					# a red priest could plausibly be, and none of them is cruel.
+					# This applies ONLY to a priest we invent. A named priest who answers keeps whatever
+					# AGOT gave them; Melisandre is callous in her own history entry and should stay so.
+					trait = loyal
+					random_traits = no
+					random_traits_list = {
+						count = 1
+						patient = {}
+						calm = {}
+						diligent = {}
+						gregarious = {}
+						stubborn = {}
+						arrogant = {}
+					}
+					learning = { 12 20 }
+					dynasty = none
+					save_scope_as = ln_priest
+				}
+			}
+		}
+	}
+}

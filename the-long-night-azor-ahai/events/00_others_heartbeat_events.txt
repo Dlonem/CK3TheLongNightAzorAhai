@@ -1,0 +1,223 @@
+﻿namespace = others_heartbeat
+
+others_heartbeat.1 = {
+	type = character_event
+	hidden = yes
+
+	trigger = {
+		has_trait = other_trait
+	}
+
+	immediate = {
+		save_scope_as = thegreatother
+
+		# 13 Aug (1.0.6) -- SELF-HEAL for saves where the Night King already rolled a random
+		# personality (creation now sets random_traits = no, but the mid-save policy says repair,
+		# not just prevent). Craven is the one that actively contradicts him -- it drove the
+		# "Analytic Craven" AI personality in Thomas's run. Removed once; the trigger keeps this
+		# free on every later beat.
+		if = {
+			limit = {
+				has_trait = nightking
+				has_trait = craven
+			}
+			remove_trait = craven
+		}
+
+		# Mutate the Night King's direct courtiers if any are not mutated.
+		# PERF FIX (v0.2.1, live-log find): these limits checked other_trait only -- but the effect
+		# raises WIGHTS (wight_trait), so no converted character ever counted as done, and the whole
+		# conversion re-ran on EVERY wight in the realm EVERY 15 days for the rest of the campaign.
+		# Thousands of characters, forever -- the hottest loop in the mod and the error-log firehose.
+		# Same behavior, one pass per character: done means other_trait OR wight_trait.
+		every_courtier_or_guest = {
+			limit = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
+			mutate_into_other_effect = yes
+		}
+
+		# Mutate vassals and their courtiers only if they are not already mutated. Restructured with
+		# the same fix, plus one more: the old shape ran mutate on an ALREADY-CONVERTED vassal whenever
+		# any of his courtiers still needed doing. Now the vassal only mutates if he himself needs it.
+		every_vassal_or_below = {
+			limit = {
+				OR = {
+					NOR = { has_trait = other_trait  has_trait = wight_trait }
+					any_courtier_or_guest = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
+				}
+			}
+			if = {
+				limit = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
+				mutate_into_other_effect = yes
+			}
+			every_courtier_or_guest = {
+				limit = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
+				mutate_into_other_effect = yes
+			}
+		}
+
+		# ONE-TIME REPAIR for saves from before tonight's dragonglass fix: wights raised under the old
+		# code kept their preparation modifiers, and the re-run that would have cleaned them is
+		# (correctly) gone now. One sweep, once per save, then never again.
+		# ...and heal the faith the broken is_head_of_faith guard skipped (see mutate): wights
+		# converted while it was live kept their living faith. One sweep, then never again.
+		if = {
+			limit = { NOT = { has_global_variable = ln_wight_faith_repaired_once } }
+			set_global_variable = { name = ln_wight_faith_repaired_once  value = yes }
+			every_vassal_or_below = {
+				limit = {
+					has_trait = wight_trait
+					NOT = { faith = faith:cold_gods }
+					NOT = { any_held_title = { is_head_of_faith = yes } }
+				}
+				set_character_faith = faith:cold_gods
+				set_culture = culture:frostborn
+			}
+		}
+
+		if = {
+			limit = { NOT = { has_global_variable = ln_wights_disarmed_once } }
+			set_global_variable = { name = ln_wights_disarmed_once  value = yes }
+			every_vassal_or_below = {
+				limit = { has_trait = wight_trait }
+				remove_character_modifier = ln_dragonglass_armed_modifier
+				remove_character_modifier = ln_dragonglass_knight_modifier
+				remove_character_modifier = ln_dragonglass_stores_modifier
+				remove_character_modifier = ln_valyrian_armed_modifier
+			}
+		}
+		
+		# LN+ cleanup: a handful of characters end up with BOTH other_trait and wight_trait — the Other-promotion
+		# (story cycle) and the wight-conversion both touched them across ticks despite their gates. The Others are
+		# the elite, so they win: strip the stray wight_trait (and stale wight flags) from any dual-trait character.
+		every_vassal_or_below = {
+			limit = { has_trait = other_trait  has_trait = wight_trait }
+			remove_trait = wight_trait
+			remove_character_flag = wight_v1
+			remove_character_flag = wight_v2
+			remove_character_flag = wight_v3
+			remove_character_flag = wight_pose_wounded
+			remove_character_flag = wight_pose_loss
+			remove_character_flag = wight_pose_aggressive
+			remove_character_flag = wight_pose_yield
+			remove_character_flag = wight_pose_stayback
+		}
+		every_courtier_or_guest = {
+			limit = { has_trait = other_trait  has_trait = wight_trait }
+			remove_trait = wight_trait
+			remove_character_flag = wight_v1
+			remove_character_flag = wight_v2
+			remove_character_flag = wight_v3
+			remove_character_flag = wight_pose_wounded
+			remove_character_flag = wight_pose_loss
+			remove_character_flag = wight_pose_aggressive
+			remove_character_flag = wight_pose_yield
+			remove_character_flag = wight_pose_stayback
+		}
+
+		# LN+ — keep the Night King leading his largest host from the FRONT. As a `commanding_army` holder he is
+		# shielded from siege capture/death by vanilla's siege_0001_can_be_captured (which excludes any commander /
+		# knight from the capture-or-kill pool), so he no longer dies anticlimactically to a siege — yet he can still
+		# fall gloriously in open battle. Re-asserted on this ~15-day pulse if the AI ever leaves him without a command.
+		if = {
+			limit = {
+				has_trait = nightking
+				is_commanding_army = no
+				any_army = { army_owner = root }
+			}
+			ordered_army = {
+				limit = { army_owner = root }
+				order_by = army_size
+				position = 0
+				assign_commander = root
+			}
+		}
+
+		# -- 1.0.8: THE DEAD DO NOT TIRE ------------------------------------------------------------
+		# WHY THIS EXISTS -- the White Harbor stall, which was never about White Harbor.
+		#
+		# CK3 scores a siege in DEFENDER MORALE, not in bodies. A holding needs 100 + 75 x fort_level
+		# progress (NSiege.BASE_DEFENDER_MORALE / DEFENDER_MORALE_PER_FORT_LEVEL, 00_defines.txt), the
+		# daily drain is base 1 + men-at-arms siege_value + 0.01 per 200 men over the garrison, and the
+		# whole thing is then multiplied by 0.7 for EACH siege tier the besiegers are short of the fort's
+		# threshold (SIEGE_FORT_THRESHOLDS = { 4 6 11 16 31 }), floored at MIN_DAILY_MORALE_LOSS = 0.5.
+		#
+		# The dead cannot reach the only term that scales. NCombat.LEVY_SIEGE = 0 -- a levy is worth
+		# NOTHING to a siege -- and our own live-run notes record the Others fielding 429,171 men of which
+		# 392,200 (91%) was accumulated scouring levies. Worse, a levy-only stack is siege tier 0, so
+		# against White Harbor's b_new_castle (fort 25, read out of the 13 Aug save; 28 under our own
+		# ln_last_bastion_modifier) it also eats 0.7^4 = x0.24. Two thousand two hundred points of progress
+		# at half a point a day IS the five-year siege -- and it is universal, not local. Fort 6 is 550
+		# points; fort 11 is 925. Every castle in Westeros does this to the dead. White Harbor is only
+		# where it became impossible to miss.
+		#
+		# THE FIX IS THE LEVIES, because the levies are the disease. See zz_ln_siege_modifiers.txt for
+		# which of the three values is additive, which two are percentages, and the retuning arithmetic.
+		#
+		# NOTE ON ROOT -- this event fires for EVERY other_trait character, not only the Night King (see
+		# the trigger at the top of this file; the loop is started from 00_others_on_actions.txt on
+		# on_title_gain). That is load-bearing here: longnight_create_other_for_scouring builds the
+		# scouring Others as INDEPENDENT, LANDLESS dukes with no liege, and longnight_spawn_army_for_
+		# scouring spawns their hosts inside THEIR scope -- so those armies are not the Night King's, and
+		# a sweep rooted on him would never have seen the hosts that were actually stuck. Each Other
+		# services his own.
+
+		# The captain goes on FIRST, so a host that gains one this pulse is buffed in the same pulse.
+		#
+		# The owner leads his own host. On a scouring Other that is the entire answer: he has no liege, no
+		# vassals and no court to draw a captain from, and he is standing idle with brave, logistician and
+		# a martial education. Deliberately NOT a vassal or courtier search -- trawling the realm for an
+		# idle body can pull a wight lord out of a field host where he is serving as a KNIGHT, and quietly
+		# changing the outcome of field battles is exactly what this fix must not do. Rooting it on the
+		# owner also means no shared saved scope, so there is no way to hand one character two commands.
+		# ONLY IF: he is leading nothing already, the host is his, it is ACTUALLY besieging, and it has
+		# nobody at its head.
+		# NEVER IF: any of those is false -- then nothing happens at all, and the host simply waits.
+		if = {
+			limit = { is_commanding_army = no }
+			ordered_army = {
+				limit = {
+					army_owner = root
+					is_army_in_siege = yes
+					NOT = { exists = army_commander }
+				}
+				order_by = army_size
+				position = 0
+				assign_commander = root
+			}
+		}
+
+		# ONLY IF: the character is leading one of this Other's hosts.
+		# NEVER IF: they are not -- siege_morale_loss is a COMMAND modifier and is worth nothing off the
+		# front. AGOT's dragon code says it outright ("If I am not a commander, I get no buffs") and strips
+		# it the moment the rider stops commanding. The 30-day duration is our removal mechanism: against a
+		# ~15-day pulse it gives one full pulse of slack and then lapses on its own. Remove-then-add cannot
+		# stack, and removing an absent modifier is a silent no-op.
+		every_army = {
+			limit = { army_owner = root }
+			army_commander ?= {
+				remove_character_modifier = ln_the_dead_do_not_tire_modifier
+				add_character_modifier = { modifier = ln_the_dead_do_not_tire_modifier  days = 30 }
+
+				# THE MEASUREMENT (needs -develop). Whether the AI's siege split leaves pure levies on the
+				# walls or keeps some of the host's tier-4 other_maa swings the siege length by an order of
+				# magnitude, and it cannot be read out of the files. When this line appears, open that siege
+				# and divide its progress by its days: that rate against the holding's fort level is the one
+				# number levy_siege should be tuned from.
+				if = {
+					limit = { commanding_army ?= { is_army_in_siege = yes } }
+					debug_log = "LN_TRACE: undead siege active - commander buffed. Measure daily siege progress against fort level here."
+				}
+			}
+		}
+
+		# Prevent overlapping loops
+		if = {
+			limit = { NOT = { has_character_flag = others_heartbeat_active } }
+			add_character_flag = { flag = others_heartbeat_active days = 14 }
+			trigger_event = {
+				id = others_heartbeat.1
+				days = 15
+			}
+		}
+	}
+}

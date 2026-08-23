@@ -1,0 +1,12 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the last kiss sub-list.
+# The vanilla on_action declaration lives in zz_ln_00_hooks.txt; this file only defines our named sub-list.
+
+ln_last_kiss = {
+	trigger = {
+		NOT = { has_character_flag = ln_had_the_last_kiss }
+		faith = { has_doctrine_parameter = can_heal_via_flames }
+	}
+	effect = {
+		ln_last_kiss_effect = yes
+	}
+}

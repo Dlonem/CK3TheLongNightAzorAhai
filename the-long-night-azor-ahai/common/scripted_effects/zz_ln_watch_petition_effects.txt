@@ -1,0 +1,95 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what the North sends back.
+#
+# Scales off how bad things actually are, which is the whole point: nobody sends grain to the Wall in a warm
+# century and everybody sends it once the Cold Winds are visible. A Watch player's income therefore doubles as
+# a barometer of how seriously the realm is taking the thing he is standing in front of -- a far better
+# mechanic for this faction than a tax rate.
+ln_petition_yield_effect = {
+	# WRITING TO PEOPLE COSTS SOMETHING. Not much, and it wears off, which is exactly why you have to write
+	# again in three years -- but a Lord of the North who gets a letter from the Wall every third spring
+	# forms a view about it, and that view is the mechanic.
+	every_ruler = {
+		limit = {
+			is_alive = yes
+			OR = {
+				culture = culture:northman
+				culture = culture:frostborn
+			}
+			NOT = { this = root }
+		}
+		add_opinion = {
+			modifier = ln_asks_the_north_for_help_opinion
+			target = root
+			opinion = -5
+		}
+	}
+
+	# THE BASELINE. A few northern houses answer out of habit and obligation.
+	add_gold = 120
+	add_prestige = 25
+
+	# A RANGING COMPANY IS CHEAPER TO KEEP THAN A CASTLE, and everyone writing the cheques knows it. Less
+	# comes back -- but a man riding out for the Watch has as much claim on the North's conscience as one
+	# holding a wall, and before this he was the only member of the order who could not ask at all.
+	if = {
+		limit = { has_government = ln_ranger_government }
+		remove_short_term_gold = 45
+	}
+
+	# THE COLD WINDS ARE VISIBLE. Suddenly everyone remembers the Wall exists.
+	if = {
+		limit = {
+			struggle:ln_long_night_struggle ?= {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+		add_gold = 180
+	}
+
+	# A LORD WHO TOOK THE BLACK is owed by everyone he used to sit beside.
+	if = {
+		limit = { has_character_flag = ln_took_the_black }
+		add_gold = 80
+	}
+
+	# AND A LORD WHO EMPTIED HIS OWN VAULTS FOR THE WALL is owed rather more than that.
+	# 1.0.12 -- ln_emptied_the_vaults is set by ln_watch.10's third option (1,500 gold, the whole treasury)
+	# and until now nothing in the mod ever read it: the engine reported it every boot as "set but is never
+	# used". Thomas's call was to wire the markers rather than retire them, and this is the honest place for
+	# this one. A man who bankrupted himself for the Watch and later comes asking is the one case where the
+	# North's conscience should be loudest, and the flag already records exactly that.
+	if = {
+		limit = { has_character_flag = ln_emptied_the_vaults }
+		add_gold = 120
+		add_prestige = 50
+	}
+
+	# AND A NAMED MAN can ask for anything.
+	if = {
+		limit = { ln_is_a_champion_of_rhllor_trigger = yes }
+		add_gold = 100
+		add_piety = 50
+	}
+
+	# A REALM THAT HAS BEEN GIVING ALREADY GIVES MORE. ln_realm_fed_the_watch counts every lord who has ever
+	# taken ln_send_men_and_grain_decision, so a world where the south has been paying attention is a world
+	# where the Wall can actually ask. This is the only place in the mod where the AI's choices change a
+	# player's income, and it is the right place for it.
+	if = {
+		limit = {
+			exists = global_var:ln_realm_fed_the_watch
+			global_var:ln_realm_fed_the_watch >= 3
+		}
+		add_gold = 100
+	}
+	if = {
+		limit = {
+			exists = global_var:ln_realm_fed_the_watch
+			global_var:ln_realm_fed_the_watch >= 8
+		}
+		add_gold = 150
+	}
+}

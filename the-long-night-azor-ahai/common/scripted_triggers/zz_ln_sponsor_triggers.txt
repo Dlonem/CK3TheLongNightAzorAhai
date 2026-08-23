@@ -1,0 +1,46 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the priest and his charge.
+#
+# THOMAS'S PLAYTHROUGH, which is what this whole file exists to make possible: "it would be a cool playthrough
+# if I was playing as an adventurer as a red priest, and I was helping my boy Joe who was landed. And he'd be
+# like, yeah, you want me to be your red priest? And we have a fun little back and forth dynamic. Like, I could
+# basically sponsor him as favored."
+#
+# And the question underneath it -- "do I have to character interaction bless him? Is it permission based?" --
+# has one right answer, and it is yes. A priest declaring you the chosen one without asking is a thing that
+# happens TO you; a priest asking and you saying yes is a relationship. It is also Jon Snow's arc exactly: he
+# died before Melisandre was at the Wall and it did not take, and later she was there and it did. Presence and
+# consent, in that order.
+#
+# THE LINK IS TWO VARIABLES, one each way, mirroring how AGOT does dragon bonds (var:current_dragon /
+# var:current_rider) rather than inventing a different shape for the same idea:
+#     charge -> priest : var:ln_blessing_sponsor
+#     priest -> charge : var:ln_blessed_charge
+
+# Root = anyone. Is a living priest standing behind this character?
+ln_has_living_sponsor_trigger = {
+	exists = var:ln_blessing_sponsor
+	var:ln_blessing_sponsor = {
+		is_alive = yes
+		has_trait = red_priest
+	}
+}
+
+# Root = a priest. Has he already given his one life away? See ln_gave_the_last_kiss_modifier -- this is the
+# rate limit, and it is what stops a court from farming resurrection.
+ln_sponsor_can_still_pay_trigger = {
+	NOT = { has_character_modifier = ln_gave_the_last_kiss_modifier }
+}
+
+# Root = the priest, scope:recipient = the proposed charge. Would the fire even be interested?
+# Deliberately wider than ln_worth_the_fire_trigger: a priest may bet on somebody LONG before there is any sign
+# on them, and betting wrong is part of the story. What he may not do is bless the dead.
+ln_can_be_blessed_trigger = {
+	is_alive = yes
+	is_adult = yes
+	NOT = { has_trait = nightking }
+	NOT = { has_trait = other_trait }
+	NOT = { has_trait = wight_trait }
+	NOT = { has_trait = dragon }
+	NOT = { has_trait = resurrected_by_rhllor }
+	NOT = { exists = var:ln_blessing_sponsor }
+}

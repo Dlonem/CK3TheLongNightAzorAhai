@@ -1,0 +1,62 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- the ranging companies.
+
+ ln_ranger_government:0 "Ranging Company"
+ ln_ranger_government_desc:0 "A sworn brother of the Night's Watch in the field, with a company at his back, a camp that moves, and no walls anywhere."
+ d_ln_ranger_01:0 "The Long Ranging"
+ d_ln_ranger_01_adj:0 "Long Ranging"
+ d_ln_ranger_02:0 "The Deep Ranging"
+ d_ln_ranger_02_adj:0 "Deep Ranging"
+ d_ln_ranger_03:0 "The Cold Ranging"
+ d_ln_ranger_03_adj:0 "Cold Ranging"
+ d_ln_ranger_04:0 "The Silent Ranging"
+ d_ln_ranger_04_adj:0 "Silent Ranging"
+ d_ln_ranger_05:0 "The Black Ranging"
+ d_ln_ranger_05_adj:0 "Black Ranging"
+ d_ln_ranger_06:0 "The Winter Ranging"
+ d_ln_ranger_06_adj:0 "Winter Ranging"
+ d_ln_ranger_07:0 "The Far Ranging"
+ d_ln_ranger_07_adj:0 "Far Ranging"
+ d_ln_ranger_08:0 "The Last Ranging"
+ d_ln_ranger_08_adj:0 "Last Ranging"
+
+ # ── RIDING OUT ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_take_the_black_as_a_ranger_decision:0 "Take the Black"
+ ln_take_the_black_as_a_ranger_decision_desc:0 "Taking the black is supposed to be a punishment. This is the door where it is not.\n\n#T What it costs#!\nEvery title you hold, your marriage and betrothal, every claim, and any dragon that answers to you. That is the oath.\n\n#T What you are handed instead#!\n#P A ranging company of your own#! — sworn to the Lord Commander, a camp that travels, rangers raised at a fraction of a lord's upkeep.\n\n#T Where it goes#!\nNorth of the Wall. Serve well and a castle, First Ranger, even the Lord Commander's chair may follow."
+ ln_take_the_black_as_a_ranger_decision_tt:0 "Take the black and ride out: master of a ranging company, the Lord Commander's vassal, with a camp instead of a castle.\n\n#N You give up every title, claim, marriage, betrothal and any bonded dragon.#! That is the oath.\n\n#P You gain a landless-playable command#! — cheap sworn brothers and rangers, martial and prowess that scale with renown.\n\n#weak No prestige required. A castle is earned afterwards, from the inside.#!"
+ ln_take_the_black_as_a_ranger_decision_confirm:0 "Night gathers, and now my watch begins."
+ ln_ranger_needs_a_company:0 "The Lord Commander must have a company to give — vacant, or led by a captain he can stand down"
+
+ ln_ranger.1.t:0 "A Horse and a Direction"
+ ln_ranger.1.desc:0 "[ln_lord_commander.GetTitledFirstName] does the whole thing in about four minutes, which you get the impression is the usual.\n\nYou get a cloak. You get a horse that has clearly done this before and has opinions about it. You get eleven men, four of whom will not meet your eye and one of whom has been north of the Wall more times than he can count.\n\nAnd you get the only instruction the Watch has ever really given a ranger, delivered on his way back inside without turning round:\n\n'Go and look. Come back and say what you saw. If you cannot do the second one, do not bother with the first.'"
+ ln_ranger.1.a:0 "North, then. That is the whole of it."
+ ln_ranger.1.b:0 "Give me the men who have been up there before."
+ ln_ranger.1.c:0 "What is actually out there? Nobody has written any of this down."
+
+ # ── COMING IN ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_ask_for_a_castle_decision:0 "Ask for a Castle"
+ ln_ask_for_a_castle_decision_desc:0 "You have been doing this a long time.\n\nLong enough that the men who came up with you are mostly dead or mostly south, and the cold has stopped being weather and started being a thing that lives in your hands.\n\nThere are nineteen castles on the Wall and men enough for three, and the Lord Commander has never once said no to a ranger who came in and asked — because a man who has spent his life on the wrong side of the ice knows exactly what a wall is for."
+ ln_ask_for_a_castle_decision_tt:0 "Give up your ranging company and take one of the Wall's empty castles instead.\n\n#weak Your camp is struck and the company stood down — a man cannot hold a castle and range at once, and if he could, nobody would ever go ranging.#!"
+ ln_ask_for_a_castle_decision_confirm:0 "I would like a roof."
+ ln_ranger_needs_to_have_served:0 "You must be a sworn brother in full — a recruit does not get given a castle"
+
+ ln_ranger.2.t:0 "In From the Cold"
+ ln_ranger.2.desc:0 "The company took it better than you expected, which stung slightly.\n\nThey struck the camp in a morning. Somebody else will have those tents by winter and will not know whose they were, and that is exactly how it should work and it is still strange to watch.\n\nThe castle is worse than the camp in every measurable way. It is colder inside than out, the well is frozen, and there is a room on the second floor nobody will explain to you.\n\nBut the gate shuts. You had forgotten what that was like."
+ ln_ranger.2.a:0 "I served my time out there. Somebody else's turn."
+ ln_ranger.2.b:0 "Keep my saddle by the gate."
+ ln_ranger.3.t:0 "A Man Stood Down"
+ ln_ranger.3.desc:0 "It took eight days and it was not pleasant for anybody.\n\nThe Lord Commander does not enjoy this and does not pretend to. He signed the order in front of you and then sat looking at it for a while, and said the thing that senior men say when they have done something necessary: that there is no version of the Watch where nineteen castles get held by the men who most deserve to hold them.\n\nThe company is stood down. The camp is struck. The horse goes back to whoever needs a horse.\n\nYou have a roof for the first time since you took the cloak, and you are not yet sure you like it."
+ ln_ranger.3.a:0 "I will hold it better than he did."
+ ln_ranger.3.b:0 "Nothing came free. Back to the horse, then."
+ ln_ranger_government_adjective:0 "Ranging"
+
+ # The truth the decision card tells instead of AGOT's ceremony internals -- the raw effect list read
+ # "You are Deposed", which never happens at runtime (the tooltip evaluates against pre-click state).
+ ln_take_black_tt_vows:0 "Your former life is settled the Watch's way: marriage, betrothal, claims and debts all end at the Wall"
+ ln_take_black_tt_shell:0 "Any adventurer company you led is disbanded"
+
+ # Brother allocation -- the Lord Commander posts men out to the companies. See
+ # common/scripted_effects/zz_ln_brother_allocation_effects.txt.
+ ln_brother_posted_toast:0 "A Brother Joins Your Company"
+ ln_brother_posted_toast_desc:0 "The Lord Commander has sent a sworn brother north to serve under you. He is yours to make a ranger of — or to bury."

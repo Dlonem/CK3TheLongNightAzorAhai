@@ -1,0 +1,7 @@
+﻿l_russian:
+
+ # The rider who lived while his dragon did not -- fired from ln_the_dead_claim_dragon_effect.
+ ln_dragonfall.1.t:0 "Неверный цвет"
+ ln_dragonfall.1.desc:0 "[ln_cold_dragon.GetFirstName] пал. Мягче не скажешь — крылья сложились не так, снег взметнулся вверх, и то, что носило [ROOT.Char.GetHerHis] на спине всю жизнь, ударилось о землю, как заваливающаяся набок башня.\n\n[ROOT.Char.GetSheHe|U] не стал отводить взгляд — и потому [ROOT.Char.GetSheHe] увидел всё остальное. Мёртвые подошли к телу без спешки, как подходят к уже накрытому столу. А потом [ln_cold_dragon.GetFirstName] поднялся.\n\nОчертания верные. Очертания совершенно верные, и это худшее из всего. Но чешуя стала серой, как недельный лёд, а глаза, что находили [ROOT.Char.GetHerHim] на любом поле мира, теперь слепого, варёного синего цвета — и они скользнули по [ROOT.Char.GetHerHim], словно [ROOT.Char.GetSheHe] был землёй под ногами."
+ ln_dragonfall.1.a:0 "[ln_cold_dragon.GetSheHe|U] меня узнает. Даже теперь."
+ ln_dragonfall.1.b:0 "Это не [ln_cold_dragon.GetHerHim]. Убейте это во второй раз."

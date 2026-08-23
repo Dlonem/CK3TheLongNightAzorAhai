@@ -1,0 +1,86 @@
+﻿l_english:
+
+ # ============================================================================================================
+ # AGOT: The Long Night & Azor Ahai -- struggle localization.
+ #
+ # STRUCTURE, copied from vanilla (game/localization/english/struggles/):
+ #   * Each phase gets a GAME CONCEPT in common/game_concepts/zz_ln_struggle_concepts.txt, so the phase name can
+ #     be written as a hoverable link anywhere in the game.
+ #   * The concept desc holds the real prose. The phase _desc key then just references it, exactly as vanilla
+ #     does -- struggle_iberia_phase_hostility_desc:0 "$game_concept_struggle_phase_iberia_hostility_desc$".
+ #     One source of truth; the two can never drift apart.
+ #   * Every catalyst needs BOTH <key> and <key>_desc, or the struggle window prints the raw key at the player.
+ #
+ # LINK FORMS. Plurals are ALIASES on the singular concept, not bare plurals:
+ #   struggle_catalyst = { alias = { struggle_catalyst_catalyst struggle_catalyst_catalysts } }
+ # so it is [struggle_catalyst_catalysts|E], never [struggle_catalysts|E]. There is no "wall" concept in either
+ # vanilla or AGOT, so the Wall is plain text throughout.
+ # ============================================================================================================
+
+ # ── GAME CONCEPTS ───────────────────────────────────────────────────────────────────────────────────────────
+ game_concept_ln_long_night_struggle_concept:0 "The Long Night"
+ game_concept_ln_long_night_struggle_concept_desc:0 "The $game_concept_ln_long_night_struggle_concept$ is a [struggle|E] spanning Westeros and the lands beyond the Wall.\n\nThere is no negotiated peace with what comes out of the north. Only how much of the realm is still standing when the dark lifts.\n\nFour [struggle_phase_phases|E], in order: [ln_struggle_phase_long_summer|E], [ln_struggle_phase_cold_winds|E], [ln_struggle_phase_the_long_night|E], [ln_struggle_phase_the_dawn|E]."
+
+ game_concept_ln_struggle_phase_long_summer:0 "The Long Summer"
+ game_concept_ln_struggle_phase_long_summer_desc:0 "Harvests are good, the roads are safe, and the only men who talk about [winter|E] are the ones nobody listens to.\n\n#EMP Every game starts here, and most stay here for the better part of a century.#! Seeing [ln_struggle_phase_cold_winds|E] named as the next [struggle_phase_phase|E] is this [struggle|E] telling you where it is eventually going — not that it has begun. Nothing is coming for you yet.\n\nEvery dragon that dies and every ranging that does not return is a year off the clock. Complete [struggle_catalyst_catalysts|E] to bring on [ln_struggle_phase_cold_winds|E].\n\n#weak A bad century pulls the dark forward, but only so far — run far enough ahead of the timing rule you chose and [struggle_catalyst_catalysts|E] stop counting until the years catch up.#!"
+
+ game_concept_ln_struggle_phase_cold_winds:0 "Winter Is Coming"
+ game_concept_ln_struggle_phase_cold_winds_desc:0 "The rangers stop coming back. The free folk are moving south in numbers nobody can explain away, and they are not raiding — they are running.\n\n#EMP Nobody knows how long this lasts.#! Long enough to build something if you start now; not long enough to finish if you wait to be certain. And every man who comes back having actually seen one brings the dark closer.\n\nThis is the warning. What you build in it is what you will have.\n\nTrade suffers across the [struggle_region|E]."
+
+ game_concept_ln_struggle_phase_the_long_night:0 "The Long Night"
+ game_concept_ln_struggle_phase_the_long_night_desc:0 "It is here. Whatever the realm built during the summer is what the realm has.\n\nThe dead are south of the Wall and moving, and the cold sits on every [county|E] in the [struggle_region|E].\n\n#EMP Ends only when the Night King dies.#! Not on a timer, not by accumulation."
+
+ game_concept_ln_struggle_phase_the_dawn:0 "The Dawn"
+ game_concept_ln_struggle_phase_the_dawn_desc:0 "The dead lie still and the cold breaks. Somewhere south of the Neck the first green shows through.\n\nUnder #EMP Once#! the [struggle|E] ends here. Under #EMP The Cycle#! it flows back to [ln_struggle_phase_long_summer|E] and the wheel turns again — heavier every time."
+
+ # ── THE STRUGGLE ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_long_night_struggle:0 "The Long Night"
+ ln_long_night_struggle_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$\n\n[struggle_involved|E] rulers already live under the cold. [struggle_interloper|E] rulers are the ones who will find out."
+
+ # ── PHASES (desc references the concept, vanilla-style) ─────────────────────────────────────────────────────
+ ln_phase_long_summer:0 "The Long Summer"
+ ln_phase_long_summer_desc:0 "$game_concept_ln_struggle_phase_long_summer_desc$"
+ ln_phase_long_summer_effects:0 "The Long Summer"
+
+ ln_phase_cold_winds:0 "Winter Is Coming"
+ ln_phase_cold_winds_desc:0 "$game_concept_ln_struggle_phase_cold_winds_desc$"
+ ln_phase_cold_winds_effects:0 "Winter Is Coming"
+
+ ln_phase_the_long_night:0 "The Long Night"
+ ln_phase_the_long_night_desc:0 "$game_concept_ln_struggle_phase_the_long_night_desc$"
+ ln_phase_the_long_night_effects:0 "The Long Night"
+
+ ln_phase_the_dawn:0 "The Dawn"
+ ln_phase_the_dawn_desc:0 "$game_concept_ln_struggle_phase_the_dawn_desc$"
+ ln_phase_the_dawn_effects:0 "The Dawn"
+
+
+ # ── CATALYSTS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_catalyst_year_passed:0 "Another year, and the south forgets"
+ ln_catalyst_year_passed_desc:0 "Time passes, and people forget. The invasion-timing rule sets how fast.\n\n#weak Silent in a year the dark already runs ahead of schedule.#!"
+ ln_catalyst_dragon_died:0 "A dragon died"
+ ln_catalyst_dragon_died_desc:0 "A dragon dies anywhere in the world. The magic thins every time one goes.\n\n#weak The heaviest here. At most once every three years.#!"
+ ln_catalyst_house_extinguished:0 "A great house ended"
+ ln_catalyst_house_extinguished_desc:0 "A great [house|E] loses its last member.\n\n#weak At most once every three years.#!"
+ ln_catalyst_watch_undermanned:0 "The Watch dwindles"
+ ln_catalyst_watch_undermanned_desc:0 "The Watch falls below the strength it needs to hold the Wall.\n\n#weak At most once every five years.#!"
+ ln_catalyst_ranging_lost:0 "A ranging did not return"
+ ln_catalyst_ranging_lost_desc:0 "Rangers go north of the Wall and do not come back.\n\n#weak At most once every four years.#!"
+ ln_catalyst_warning_dismissed:0 "A warning was laughed at"
+ ln_catalyst_warning_dismissed_desc:0 "Someone with something worth saying is not believed.\n\n#weak At most once every three years.#!"
+ ln_catalyst_other_sighted:0 "An Other was seen, and believed"
+ ln_catalyst_other_sighted_desc:0 "Someone sees one, survives, and is believed. All three must happen.\n\n#weak At most once every six years. Carries [ln_struggle_phase_cold_winds|E] onward.#!"
+ ln_catalyst_night_king_slain:0 "The Night King is slain"
+ ln_catalyst_night_king_slain_desc:0 "The blow lands.\n\nEnds [ln_struggle_phase_the_long_night|E] outright. Nothing else can."
+
+ # ── THE ENDING DECISION ─────────────────────────────────────────────────────────────────────────────────────
+ # The schema requires at least one phase to list an ending decision. This is that entry, and it is never shown
+ # to a player -- the struggle actually ends from script when the Dawn is reached under the "Once" rule.
+ ln_end_the_long_night_struggle_decision_title:0 "The Long Night Ends"
+ ln_end_the_long_night_struggle_decision_desc:0 "The wheel stops turning."
+ ln_end_the_long_night_struggle_decision_confirm:0 "So it ends."
+ ln_end_the_long_night_struggle_decision_tt:0 "Ends the $ln_long_night_struggle$ [struggle|E]."
+ ln_catalyst_dragon_born:0 "Dragons return to the world"
+ ln_catalyst_dragon_born_desc:0 "A dragon hatches into a world with three or fewer left alive.\n\n#weak At most once every three years, and never while dragons are common.#!"
+ ln_catalyst_minor_house_ended:0 "A lesser house ends"
+ ln_catalyst_minor_house_ended_desc:0 "A minor [house|E] loses its last member. It is the count of them that matters.\n\n#weak At most once every two years.#!"

@@ -1,0 +1,100 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Lord Commander posts men to the companies.
+#
+# See common/scripted_triggers/zz_ln_brother_allocation_triggers.txt for who is eligible and why Castle Black
+# was acting as a holding pen.
+#
+# ONE MAN, PER COMPANY, PER YEAR. Same reasoning as ln_watch_recruits_rangers_effect one file over: a Wall
+# that staffs eight full companies in the first spring is a Wall that was never short of men, and short of men
+# is the entire premise. Eight companies from empty to six brothers is forty-odd years of postings, which is
+# about how long it should take to notice the order is alive.
+#
+# WHY YEARLY AND NOT AN ON_ACTION AT THE GATE. Catching each man as he arrives would mean hooking every road
+# into the Watch -- the decision, the prisoner disposal, AGOT's own recruitment, the trait grant -- and each
+# hook would need to know which company is thinnest at that instant. The men pool in the Lord Commander's
+# court either way. Reading the pool once a year is one sweep instead of four hooks, and it self-corrects:
+# a company that loses its brothers to a bad ranging is short again next spring and gets refilled.
+
+# Root = anything. Called once a year from ln_struggle_yearly_work_effect.
+ln_allocate_brothers_effect = {
+	if = {
+		limit = {
+			exists = title:k_the_wall.holder
+			title:k_the_wall.holder = {
+				has_government = nights_watch_government
+				ln_wall_has_men_to_spare_trigger = yes
+			}
+		}
+		title:k_the_wall.holder = { save_scope_as = ln_posting_lc }
+
+		ln_post_a_brother_effect = { COMPANY = title:d_ln_ranger_01  IDX = 01 }
+		ln_post_a_brother_effect = { COMPANY = title:d_ln_ranger_02  IDX = 02 }
+		ln_post_a_brother_effect = { COMPANY = title:d_ln_ranger_03  IDX = 03 }
+		ln_post_a_brother_effect = { COMPANY = title:d_ln_ranger_04  IDX = 04 }
+		ln_post_a_brother_effect = { COMPANY = title:d_ln_ranger_05  IDX = 05 }
+		ln_post_a_brother_effect = { COMPANY = title:d_ln_ranger_06  IDX = 06 }
+		ln_post_a_brother_effect = { COMPANY = title:d_ln_ranger_07  IDX = 07 }
+		ln_post_a_brother_effect = { COMPANY = title:d_ln_ranger_08  IDX = 08 }
+	}
+}
+
+# $COMPANY$ = a ranging company title. $IDX$ = its number, used ONLY to keep the saved scope names apart.
+#
+# THE INDEX IS NOT DECORATION. Saved scopes live for the whole execution, not for one macro call, so eight
+# calls sharing one scope name would leave company 01's captain sitting in scope:ln_captain for all eight
+# postings and send the entire year's drafts to the same man. $IDX$ gives each call its own name. Same class
+# of bug as the un-braced flag: invisible until it is the only thing wrong.
+ln_post_a_brother_effect = {
+	if = {
+		limit = {
+			exists = $COMPANY$.holder
+			$COMPANY$.holder = {
+				has_government = ln_ranger_government
+				is_alive = yes
+				ln_company_is_short_handed_trigger = yes
+			}
+			scope:ln_posting_lc = { ln_wall_has_men_to_spare_trigger = yes }
+		}
+
+		$COMPANY$.holder = { save_scope_as = ln_captain_$IDX$ }
+
+		scope:ln_posting_lc = {
+			random_courtier = {
+				limit = { ln_can_be_posted_out_trigger = yes }
+				# WHO GETS SENT. The Watch posts its rangers to the ranging companies and keeps its stewards
+				# on the steps, but it is not precious about it -- a man who is merely young and willing is
+				# still better than an empty tent.
+				weight = {
+					base = 1
+					modifier = { add = 3  has_trait = lifestyle_nw_ranger }
+					modifier = { add = 2  prowess >= 12 }
+					modifier = { add = 2  has_trait = brave }
+					modifier = { add = 1  martial >= 10 }
+					modifier = { add = -3  has_trait = lifestyle_nw_steward }
+					modifier = { add = -3  has_trait = lifestyle_nw_builder }
+					modifier = { add = -2  age >= 55 }
+				}
+				save_scope_as = ln_posted_brother_$IDX$
+			}
+		}
+
+		if = {
+			limit = { exists = scope:ln_posted_brother_$IDX$ }
+			scope:ln_posted_brother_$IDX$ = {
+				set_employer = scope:ln_captain_$IDX$
+				add_character_flag = ln_posted_to_a_company
+			}
+			# The captain is told, because a man arriving in your camp is the whole point of the feature and
+			# a silent court change is indistinguishable from nothing happening.
+			scope:ln_captain_$IDX$ = {
+				if = {
+					limit = { is_ai = no }
+					send_interface_toast = {
+						title = ln_brother_posted_toast
+						left_icon = scope:ln_posted_brother_$IDX$
+						custom_tooltip = ln_brother_posted_toast_desc
+					}
+				}
+			}
+		}
+	}
+}

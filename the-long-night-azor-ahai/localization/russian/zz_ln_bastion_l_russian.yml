@@ -1,0 +1,12 @@
+﻿l_russian:
+
+ ln_last_bastion_modifier:0 "Последний оплот"
+ ln_last_bastion_modifier_desc:0 "Родовое гнездо великого дома, и вся округа стекается за эти стены. Каждый межевой рыцарь, каждый мелкий землевладелец, каждый, кто мог поднять копьё и найти дорогу к воротам. Открытую землю мёртвые берут за один сезон. Это они будут брать долго."
+
+ # THE MEN-AT-ARMS TYPE LABEL. Both our undead regiments carry `type = Other_infantry`, a custom category
+ # so that nothing in the ordinary rock-paper-scissors counters them and they counter nothing -- the dead
+ # are not skirmishers. But a MAA type's loc key IS the type string (AGOT does the same for anti_dragon in
+ # agot_regiment_l_english.yml), and nobody had written one, so the tooltip read "Type: Other_infantry".
+ Other_infantry:0 "[ln_others_infantry|E]"
+ game_concept_ln_others_infantry:0 "Мёртвые"
+ game_concept_ln_others_infantry_desc:0 "Полки восставших. Их поднимают из того, что Долгая Ночь уже убила, и они не солдаты ни в каком смысле, привычном остальному миру: ни строевой выучки, ни жалованья, ни боевого духа, который можно сломить, ни малейшего интереса к земле, на которой они стоят.\n\nМеханически они стоят #EMP вне обычной системы контрмер#!. Ничто в ополчениях Вестероса не создано, чтобы отвечать им, и сами они не отвечают ничему: пики их не притупляют, и они не притупляют конницу. Взамен у них есть число. Один рыцарь может зарубить двадцать и не стать от этого в большей безопасности — потому что их никогда не было только двадцать.\n\n#weak Упыри, которых поднимают Иные, и те твари похолоднее, что приходят с ними на юг, сражаются в этой же категории.#!"

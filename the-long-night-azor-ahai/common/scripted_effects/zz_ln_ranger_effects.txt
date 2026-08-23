@@ -1,0 +1,646 @@
+﻿# AGOT: The Long Night & Azor Ahai -- riding out instead of holding a wall.
+#
+# See common/landed_titles/zz_ln_ranger_titles.txt and common/domiciles/types/00_agot_domicile_types.txt for
+# how the eight ranging companies hang together. This file is the machinery.
+
+# ── STAMP THE TITLES, ONCE, AT GAME START ───────────────────────────────────────────────────────────────────
+# Both the government's can_get_government and the camp's allowed_for_character ask "does he hold a title with
+# ln_is_a_ranger_title on it". A variable rather than a list of eight keys, because the list would otherwise
+# have to be edited in three files every time the number changes -- and the third one would eventually get
+# missed.
+ln_mark_ranger_titles_effect = {
+	title:d_ln_ranger_01 ?= { set_variable = { name = ln_is_a_ranger_title  value = yes } }
+	title:d_ln_ranger_02 ?= { set_variable = { name = ln_is_a_ranger_title  value = yes } }
+	title:d_ln_ranger_03 ?= { set_variable = { name = ln_is_a_ranger_title  value = yes } }
+	title:d_ln_ranger_04 ?= { set_variable = { name = ln_is_a_ranger_title  value = yes } }
+	title:d_ln_ranger_05 ?= { set_variable = { name = ln_is_a_ranger_title  value = yes } }
+	title:d_ln_ranger_06 ?= { set_variable = { name = ln_is_a_ranger_title  value = yes } }
+	title:d_ln_ranger_07 ?= { set_variable = { name = ln_is_a_ranger_title  value = yes } }
+	title:d_ln_ranger_08 ?= { set_variable = { name = ln_is_a_ranger_title  value = yes } }
+}
+
+
+# Root = the brother being sent out. Fills from ONE UPWARD, while players are handed the first free counting
+# the same way -- so a player who joins early takes a low number and the AI fills in around him. The reserve
+# holds either way because the AI never looks past five.
+ln_grant_an_ai_ranging_company_effect = {
+	if = {
+		limit = { NOT = { exists = title:d_ln_ranger_01.holder } }
+		get_title = title:d_ln_ranger_01
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_02.holder } }
+		get_title = title:d_ln_ranger_02
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_03.holder } }
+		get_title = title:d_ln_ranger_03
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_04.holder } }
+		get_title = title:d_ln_ranger_04
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_05.holder } }
+		get_title = title:d_ln_ranger_05
+	}
+	else_if = {
+		limit = {
+			has_game_rule = ln_rangers_all_eight_ride
+			NOT = { exists = title:d_ln_ranger_06.holder }
+		}
+		get_title = title:d_ln_ranger_06
+	}
+	else_if = {
+		limit = {
+			has_game_rule = ln_rangers_all_eight_ride
+			NOT = { exists = title:d_ln_ranger_07.holder }
+		}
+		get_title = title:d_ln_ranger_07
+	}
+	else_if = {
+		limit = {
+			has_game_rule = ln_rangers_all_eight_ride
+			NOT = { exists = title:d_ln_ranger_08.holder }
+		}
+		get_title = title:d_ln_ranger_08
+	}
+}
+
+# ── HAND HIM THE FIRST FREE ONE ─────────────────────────────────────────────────────────────────────────────
+# Root = the new brother, already carrying the nightswatch trait and already the Lord Commander's man.
+#
+# get_title rather than a change scope: these are unheld titular titles with no vassals and nothing to
+# reshuffle, which is exactly the case get_title is for. `liege = k_the_wall` on the title's history is what
+# makes him the Lord Commander's vassal, which is what satisfies can_get_government.
+ln_grant_a_ranging_company_effect = {
+	# REWRITTEN 8 Aug for the history seeding. The old body only knew how to fill a VACANT company, and the
+	# seeding means there rarely is one -- the camps exist precisely because the companies do not stand
+	# empty. Vacancies still win first (a title with no holder costs nobody anything); after that the Lord
+	# Commander stands down a serving AI captain and hands you his company -- and his camp, because the camp
+	# belongs to the TITLE. That is the whole point of the redesign.
+	if = {
+		limit = { NOT = { exists = title:d_ln_ranger_01.holder } }
+		get_title = title:d_ln_ranger_01
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_02.holder } }
+		get_title = title:d_ln_ranger_02
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_03.holder } }
+		get_title = title:d_ln_ranger_03
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_04.holder } }
+		get_title = title:d_ln_ranger_04
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_05.holder } }
+		get_title = title:d_ln_ranger_05
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_06.holder } }
+		get_title = title:d_ln_ranger_06
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_07.holder } }
+		get_title = title:d_ln_ranger_07
+	}
+	else_if = {
+		limit = { NOT = { exists = title:d_ln_ranger_08.holder } }
+		get_title = title:d_ln_ranger_08
+	}
+	else_if = {
+		limit = { title:d_ln_ranger_01.holder ?= { is_ai = yes } }
+		ln_take_over_company_effect = { COMPANY = title:d_ln_ranger_01 }
+	}
+	else_if = {
+		limit = { title:d_ln_ranger_02.holder ?= { is_ai = yes } }
+		ln_take_over_company_effect = { COMPANY = title:d_ln_ranger_02 }
+	}
+	else_if = {
+		limit = { title:d_ln_ranger_03.holder ?= { is_ai = yes } }
+		ln_take_over_company_effect = { COMPANY = title:d_ln_ranger_03 }
+	}
+	else_if = {
+		limit = { title:d_ln_ranger_04.holder ?= { is_ai = yes } }
+		ln_take_over_company_effect = { COMPANY = title:d_ln_ranger_04 }
+	}
+	else_if = {
+		limit = { title:d_ln_ranger_05.holder ?= { is_ai = yes } }
+		ln_take_over_company_effect = { COMPANY = title:d_ln_ranger_05 }
+	}
+	else_if = {
+		limit = { title:d_ln_ranger_06.holder ?= { is_ai = yes } }
+		ln_take_over_company_effect = { COMPANY = title:d_ln_ranger_06 }
+	}
+	else_if = {
+		limit = { title:d_ln_ranger_07.holder ?= { is_ai = yes } }
+		ln_take_over_company_effect = { COMPANY = title:d_ln_ranger_07 }
+	}
+	else_if = {
+		limit = { title:d_ln_ranger_08.holder ?= { is_ai = yes } }
+		ln_take_over_company_effect = { COMPANY = title:d_ln_ranger_08 }
+	}
+}
+
+# Root = the man receiving the company. $COMPANY$ = the title changing hands.
+# change_title_holder inside a change scope is vanilla's own shape (00_decisions_effects.txt:49). The old
+# captain is not discarded: he returns to the Lord Commander's court -- add_courtier is legal again the
+# moment the title leaves him, because he stops being a ruler.
+ln_take_over_company_effect = {
+	$COMPANY$.holder ?= { save_scope_as = ln_old_captain }
+	create_title_and_vassal_change = {
+		type = granted
+		save_scope_as = ln_handover
+		add_claim_on_loss = no
+	}
+	$COMPANY$ = {
+		change_title_holder = {
+			holder = root
+			change = scope:ln_handover
+		}
+	}
+	resolve_title_and_vassal_change = scope:ln_handover
+	# 1.0.12 -- AND ONLY IF HE IS NOT ALREADY THERE. From Thomas's 20 Aug run:
+	#     Error: add_courtier effect [ Trying to put character ('Theomar Lowborn ... ln_captain_g4_c1') in
+	#            the court they're already in ('Ormond Orme of k_the_wall') ]
+	# The relieved captain is very often ALREADY a courtier of the Lord Commander -- that is the ordinary
+	# state of a sworn brother without a castle -- so the common case was the error case. Harmless, and it
+	# fired three times on one click. is_courtier_of is vanilla's own test for this.
+	if = {
+		limit = {
+			exists = scope:ln_old_captain
+			scope:ln_old_captain = { is_alive = yes  is_ruler = no }
+			exists = title:k_the_wall.holder
+			NOT = { scope:ln_old_captain = { is_courtier_of = title:k_the_wall.holder } }
+		}
+		title:k_the_wall.holder = { add_courtier = scope:ln_old_captain }
+	}
+}
+
+
+# ── TAKING THE BLACK, THE OTHER WAY ─────────────────────────────────────────────────────────────────────────
+# Same ceremony as ln_lay_down_the_realm_effect right up to the last step, and then a camp instead of a castle.
+# (That effect was called ln_take_the_black_effect until 1.0.10; the prose here outlived the rename.)
+#
+# Thomas: "instead of starting at the Nightfort, maybe they could upgrade to that... life of being a ranger has
+# been good, I wanna serve the watch more."
+ln_take_the_black_as_a_ranger_effect = {
+	# BELT AND BRACES. The stamp normally happens once at on_game_start_after_lobby, which does not fire when a
+	# save is loaded -- so a campaign carried forward from a build without the ranging companies would have
+	# eight unstamped titles, and both can_get_government and the camp's allowed_for_character read that
+	# variable. Idempotent, eight lines, and it removes an entire class of "works on a new game only".
+	ln_mark_ranger_titles_effect = yes
+
+	# ══ ORDER IS LIFE AND DEATH HERE -- rewritten 8 Aug after a live Game Over ══════════════════════════════
+	# agot_add_to_nightswatch_effect carries this (00_agot_nightswatch_effects.txt:333):
+	#
+	#     if = { limit = { is_ruler = yes  NOR = { government_has_flag = government_is_nw
+	#         any_liege_or_above = { government_has_flag = government_is_nw } } }  depose = yes }
+	#
+	# The old order called it FIRST. A landed lord survived by accident -- ln_lay_down had already handed his
+	# realm to his heir, so is_ruler was false when AGOT looked. A LANDLESS ADVENTURER had nothing to lay
+	# down, walked in still a ruler, still non-NW -- and AGOT deposed him mid-ceremony. depose strips every
+	# title, and for a player that is the "lost all of his titles and became landless" Game Over, fired in
+	# the same click as the decision. Thomas hit it live at 8286.12.8 as x_d_laamp_222.
+	#
+	# NEW ORDER: company first, fealty second, and only then the ceremony. From the moment the fealty
+	# resolves, `any_liege_or_above = { government_has_flag = government_is_nw }` is true (the Lord
+	# Commander's own government carries the flag), so AGOT's depose clause passes over him no matter what
+	# he was before -- and every one of their OTHER cleanups (dragon unbonding, kingsguard removal, divorce,
+	# Iron Bank shares, house headship, the nightswatch trait itself) still runs, on a man who now already
+	# holds his company. He is never titleless for a single tick.
+	#
+	# add_courtier is GONE, not moved: by the time the Lord Commander could take him in, he is always a
+	# ruler, and add_courtier on a ruler is a logged error and a no-op -- the live log had four of them, one
+	# per AI brother, from AGOT's own court maintenance trying the same thing.
+
+	title:k_the_wall.holder ?= { save_scope_as = ln_lord_commander }
+
+	# GOVERNMENT FIRST -- moved 8 Aug after the popup survived the depose fix. This morning's click produced
+	# a Game Over prompt with NOT ONE log line: no depose, no script error, nothing. That is the signature of
+	# the engine's own is_character_allowed_to_be_player re-check failing at some instant MID-ceremony -- and
+	# the old order contained exactly one state vanilla never allows: a landless-ADVENTURER-government ruler
+	# with a liege, which existed from the fealty until change_government, and which vanilla's laamp rules
+	# have no reason to bless. With the government changed up front, every later instant is a state the
+	# playable rule explicitly passes: our safety-net arm (has_government = ln_ranger_government, added to
+	# AGOT's NW clause) holds through title grant, fealty, lay-down and AGOT's ceremony alike -- landed,
+	# landless, adventurer or courtier.
+	change_government = ln_ranger_government
+
+	ln_grant_a_ranging_company_effect = yes
+
+	# change_liege inside a change scope is vanilla's own shape -- game/common/scripted_effects/00_decisions_effects.txt:2513.
+	ln_lay_down_the_realm_effect = yes
+
+	# ADVENTURER RESIDUE. A laamp's own titular title (x_d_laamp_*) is not "landed", so ln_lay_down ignores
+	# it, and with the depose gone nothing else would ever clean it up -- he would carry a dead adventurer
+	# title under the black for the rest of his life. Vanilla stamps adventurer_creation_reason on every
+	# adventurer title it creates (07_dlc_ep3_scripted_effects.txt, create_landless_adventurer_title
+	# machinery), which makes it safe to name them precisely.
+	hidden_effect = {
+	# Unrolled twice: a designer-made adventurer can arrive carrying a second shell, and there is no
+		# character-scope loop that destroys as it goes. The limit is NOT-the-company rather than the vanilla
+		# adventurer variable, because ruler-designer adventurers turn out not to carry it -- this morning's
+		# entrant kept his "Inquisitors of the Bastion" shell as his primary title for exactly that reason.
+		# Landed titles are long gone by this line (ln_lay_down handed them to the heir), so everything this can
+		# touch is a landless shell a sworn brother has no business keeping.
+		if = {
+			limit = { any_held_title = { NOT = { has_variable = ln_is_a_ranger_title } } }
+			random_held_title = {
+				limit = { NOT = { has_variable = ln_is_a_ranger_title } }
+				save_scope_as = ln_shed_title
+			}
+			destroy_title = scope:ln_shed_title
+		}
+		if = {
+			limit = { any_held_title = { NOT = { has_variable = ln_is_a_ranger_title } } }
+			random_held_title = {
+				limit = { NOT = { has_variable = ln_is_a_ranger_title } }
+				save_scope_as = ln_shed_title_2
+			}
+			destroy_title = scope:ln_shed_title_2
+		}
+	}
+
+
+	# THE OATH, LAST AND ONLY IF NEEDED -- QA pass, 8 Aug evening. Two corrections over the morning version:
+	#
+	#   1. THE STALE else_if IS GONE. The rewrite that stopped us re-swearing already-vassalized men left the
+	#      old second branch alive underneath it -- which fired EXACTLY when the entrant already had a liege,
+	#      re-seating every taken-over captain directly under the Lord Commander and silently flattening the
+	#      First Ranger hierarchy the takeover had just inherited. The bug survived as its own dead twin.
+	#
+	#   2. THE OATH MOVED BELOW THE LAY-DOWN. change_liege refuses a liege whose primary tier is not above
+	#      the vassal's -- and a KING taking the black still had his kingdom when the old oath ran, so his
+	#      swear to k_the_wall (kingdom under kingdom) was refused, leaving him independent until the yearly
+	#      self-heal. Down here his realm is already with his heir and his primary title is a ranging
+	#      company: duchy under kingdom, valid for every entrant class that can reach this decision.
+	#
+	# The takeover path never enters this block at all -- the seeded title carries its own chain of command.
+	# 13 Aug (1.0.6), Thomas's live test: his ranging company ended up a vassal OF HIS OWN TEN-YEAR-OLD
+	# SON. The old gate only swore fealty when NO liege existed -- but a lord who abdicates to his heir
+	# can come out of the handover still carrying a vassal contract, now anchored to the realm he just
+	# gave away. The oath is not conditional on being conveniently unattached: a sworn brother answers
+	# to the Lord Commander, full stop.
+	# ONLY IF: the Wall has a holder. NEVER IF: he is already the Lord Commander's vassal (or IS the
+	# Lord Commander, whom change_liege to himself would reject).
+	if = {
+		limit = {
+			exists = title:k_the_wall.holder
+			NOT = { this = title:k_the_wall.holder }
+			NOT = { liege ?= title:k_the_wall.holder }
+		}
+		create_title_and_vassal_change = {
+			type = swear_fealty
+			save_scope_as = ln_fealty
+			add_claim_on_loss = no
+		}
+		change_liege = {
+			liege = title:k_the_wall.holder
+			change = scope:ln_fealty
+		}
+		resolve_title_and_vassal_change = scope:ln_fealty
+	}
+
+	custom_tooltip = ln_take_black_tt_vows
+	custom_tooltip = ln_take_black_tt_shell
+	hidden_effect = {
+		agot_add_to_nightswatch_effect = yes
+	}
+	# (change_government moved to the top of the ceremony -- see the note there.)
+
+	# PITCH THE TENT. Without this the camp exists and is empty -- see the note above. Guarded on the domicile
+	# existing at all, because change_government is what creates it and a government change that failed for
+	# any reason must not then throw on a missing scope.
+	# 1.0.10 -- BACKSTOP, mirrored from the AI route (zz_ln_ranger_recruitment_effects.txt:117-120).
+	# The government goes on at the top of the ceremony, before the title and the fealty, because
+	# can_get_government is false until then. If that ever fails, this is the line that has always
+	# worked -- and a ranger on the wrong government has no camp, no contracts and no event layer.
+	# Normally a no-op: one trigger check on a decision nobody takes twice.
+	if = {
+		limit = { NOT = { has_government = ln_ranger_government } }
+		change_government = ln_ranger_government
+	}
+
+	ln_pitch_the_camp_effect = yes
+
+	add_character_flag = ln_took_the_black
+	add_character_flag = ln_rode_out
+	add_character_flag = ln_heard_the_warning
+
+	trigger_event = { id = ln_ranger.1  days = { 4 12 } }
+}
+
+# ── THE MEN WHO GOT OUT ─────────────────────────────────────────────────────────────────────────────────────
+# 13 Aug (1.0.6a). Thomas, on the brothers-come-south card: "I was expecting one to three Night's Watch
+# members that were able to escape the wall, live, and still want to fight... it would be cool if a Tarly
+# could show up -- like Randyll Tarly was sent to the Wall, and then he was one of the people that survived
+# and fled south. That's the fantasy people were wanting, not just three random characters."
+#
+# He is right, and the reason it was three strangers is that by the time the card fires there is nothing left
+# to draw from: the Watch's court has been wighted or destroyed. So the snapshot has to happen EARLIER, at the
+# moment the Wall comes down, while the brothers are still alive and still themselves.
+#
+# WHO GETS OUT, AND HOW IT IS DECIDED. Every sworn brother in the Lord Commander's realm rolls once. Most do
+# not make it -- that is the point of the scene. The ones who do are flagged, remembered in a global list, and
+# moved to the pool at Winterfell so the conversion sweep that follows cannot reach them. They are REAL men
+# with real names, houses and histories: if a Tarly took the black forty years ago, a Tarly can walk into your
+# hall. AGOT's own pattern for displaced brothers is the same pool move (00_agot_nightswatch_effects.txt).
+#
+# ONLY IF: the Wall has a holder to lose men from. NEVER IF: a brother already fled (one-shot per man), or he
+# is one of the dead already.
+ln_brothers_flee_south_effect = {
+	if = {
+		limit = { exists = title:k_the_wall.holder }
+		title:k_the_wall.holder = {
+			every_vassal_or_below = {
+				limit = {
+					is_alive = yes
+					has_trait = nightswatch
+					ln_is_one_of_them_trigger = no
+					NOT = { has_character_flag = ln_fled_the_wall }
+				}
+				random_list = {
+					80 = { }
+					20 = { ln_this_brother_flees_effect = yes }
+				}
+			}
+			every_courtier_or_guest = {
+				limit = {
+					is_alive = yes
+					has_trait = nightswatch
+					ln_is_one_of_them_trigger = no
+					NOT = { has_character_flag = ln_fled_the_wall }
+				}
+				random_list = {
+					80 = { }
+					20 = { ln_this_brother_flees_effect = yes }
+				}
+			}
+		}
+	}
+}
+
+# Root = one sworn brother, running.
+#
+# WHERE HE RUNS TO. Thomas: "perhaps you can have it random list moved to the pool at Winterfell,
+# Karhold, the Last Hearth possibly... we don't want them teleporting all the way to the Reach or the
+# Stormlands. Be like, why the hell is the Night's Watch all the way down here?" Right, and it is the
+# same instinct as the geographic gate on the card. A man walking from a fallen Wall reaches the first
+# northern seat that will have him. These three are the nearest halls of any size, and each is checked
+# for a holder before it is offered -- in a world where the North has already been scoured, some of
+# them will not exist, and the fallbacks run down the list.
+ln_this_brother_flees_effect = {
+	add_character_flag = ln_fled_the_wall
+	add_to_global_variable_list = { name = ln_wall_survivors  target = this }
+	random_list = {
+		34 = {
+			trigger = { exists = title:d_winterfell.holder }
+			move_to_pool_at = title:d_winterfell.holder.capital_province
+		}
+		33 = {
+			trigger = { exists = title:c_karhold.holder }
+			move_to_pool_at = title:c_karhold.holder.capital_province
+		}
+		33 = {
+			trigger = { exists = title:c_last_hearth.holder }
+			move_to_pool_at = title:c_last_hearth.holder.capital_province
+		}
+		# Every northern seat is gone. He is still out there; he simply has nowhere to be put.
+		1 = {
+			trigger = {
+				NOR = {
+					exists = title:d_winterfell.holder
+					exists = title:c_karhold.holder
+					exists = title:c_last_hearth.holder
+				}
+			}
+		}
+	}
+}
+
+# ── NOTHING OF THE DEAD KEEPS LAND AFTER THE DAWN ───────────────────────────────────────────────────────────
+# 13 Aug (1.0.6a). agot_long_night_scour_others_lands_effect now catches every one of the dead, but it only
+# runs ONCE, from the story cycle's on_end. A save whose Long Night is already over -- Thomas's, and every
+# subscriber who finished a war before this build -- keeps its "Lord Other The Others" feudal realms forever.
+# Standing mid-save policy: prefer a self-healing sweep to a one-time event.
+#
+# ONLY IF: the Long Night is over (the Others' hegemony sits empty) and somebody of the dead still holds a
+# county. NEVER IF: they are already ruins, which is what this turns them into.
+# Idempotent, and a no-op in every normal year -- the limit fails on the first clause and costs one check.
+ln_no_dead_landlords_effect = {
+	if = {
+		limit = {
+			ln_long_night_over_trigger = yes
+			any_county = {
+				exists = holder
+				holder = {
+					ln_is_one_of_them_trigger = yes
+					NOT = { has_government = ruins_government }
+				}
+			}
+		}
+		debug_log = "LN_TRACE: dead landlords still holding after the Dawn - scouring them"
+		agot_long_night_scour_others_lands_effect = yes
+	}
+}
+
+# ── THE OATH RE-ANCHORS ITSELF ──────────────────────────────────────────────────────────────────────────────
+# 13 Aug (1.0.6a). The take-the-black ceremony now always swears a new captain to the Lord Commander, but
+# saves made before that fix carry captains anchored to whatever realm they abdicated -- Thomas's own father
+# came out of his handover still a vassal of his son, which then made him eligible to be that son's REGENT.
+# Per the standing mid-save policy: prefer a self-healing sweep to a one-time event. Runs yearly, costs one
+# check per captain, and is a no-op the moment every company answers to the Wall.
+#
+# ONLY IF: a living captain of one of our companies whose liege is not the Lord Commander.
+# NEVER IF: he IS the Lord Commander, or the Wall has no holder to swear to.
+ln_reanchor_the_companies_effect = {
+	if = {
+		limit = { exists = title:k_the_wall.holder }
+		every_ruler = {
+			limit = {
+				is_alive = yes
+				any_held_title = { has_variable = ln_is_a_ranger_title }
+				NOT = { this = title:k_the_wall.holder }
+				NOT = { liege ?= title:k_the_wall.holder }
+			}
+			create_title_and_vassal_change = {
+				type = swear_fealty
+				save_scope_as = ln_reanchor
+				add_claim_on_loss = no
+			}
+			change_liege = {
+				liege = title:k_the_wall.holder
+				change = scope:ln_reanchor
+			}
+			resolve_title_and_vassal_change = scope:ln_reanchor
+			debug_log = "LN_TRACE: re-anchored a ranging company to the Lord Commander"
+		}
+	}
+}
+
+# ── AND LATER, A ROOF ───────────────────────────────────────────────────────────────────────────────────────
+# The promotion. He gives up the company and the camp and takes one of the nineteen castles instead, through
+# exactly the same keepership machinery a man who walked up and asked for one would use.
+ln_ranger_takes_a_castle_effect = {
+	# The company is stood down. A man cannot hold a castle and a ranging company at once -- and if he could,
+	# nobody would ever go ranging again.
+	save_scope_as = ln_stepping_down
+	# THE COMPANY IS HANDED ON, NOT DESTROYED -- rewritten 8 Aug. Its camp lives on the title, runtime
+	# script cannot build a new one, so destroying the title on promotion would bury a camp forever every
+	# time a ranger earned a roof. The Lord Commander appoints the next captain instead.
+	random_held_title = {
+		limit = { has_variable = ln_is_a_ranger_title }
+		save_scope_as = ln_stood_down_company
+	}
+	if = {
+		limit = { exists = scope:ln_stood_down_company }
+		ln_company_changes_hands_effect = { COMPANY = scope:ln_stood_down_company }
+	}
+
+	ln_grant_a_keepership_effect = yes
+
+	add_character_flag = ln_came_in_from_the_cold
+	# ln_ranger.2, not ln_watch.1. Both are "here is your castle" cards and they are about different things:
+	# ln_watch.1 is a stranger being walked to a gate by the Lord Commander, ln_ranger.2 is a man who has been
+	# out there for thirty years watching his own camp get struck. A promoted ranger should get the second one.
+	trigger_event = { id = ln_ranger.2  days = { 7 21 } }
+}
+
+# ── PITCH THE TENT ──────────────────────────────────────────────────────────────────────────────────────────
+# Root = a new ranger who has just taken ln_ranger_government. AGOT's ranger_camp_main_01 gives
+# domicile_external_slots_capacity_add, men_at_arms_cap and domicile_monthly_gold_add -- it is the difference
+# between a camp and a map pin.
+ln_pitch_the_camp_effect = {
+	if = {
+		limit = {
+			has_domicile = yes
+			# _or_higher (live-log fix, 22:46): a camp inherited through the takeover door can already
+			# be UPGRADED past main_01 -- the plain has_domicile_building check missed main_02 and the
+			# add errored against the running construction. Trigger verified: 07_ep3_triggers.txt:1627.
+			NOT = { domicile = { has_domicile_building_or_higher = ranger_camp_main_01 } }
+		}
+		domicile = {
+			add_domicile_building = ranger_camp_main_01
+		}
+	}
+
+	# 13 Aug (1.0.6): THE SLEDGES START LOADED. AGOT tops a new First Ranger's camp up to 1,500
+	# provisions at appointment (agot_nw_ranger_events.txt:342) -- that is why their camp "just works"
+	# and ours marched on empty. Same figure, same guard, same moment.
+	if = {
+		limit = {
+			has_domicile = yes
+			domicile = { provisions < 1500 }
+		}
+		domicile = { change_provisions = 1500 }
+	}
+
+	# ── AND PITCH IT AT THE WALL ────────────────────────────────────────────────────────────────────────────
+	# 1.0.12, Thomas in play: "when I click to take the black, it sent me to Hardhome instead of the Wall."
+	#
+	# WE WERE NEVER PLACING THE CAMP AT ALL. change_government creates the domicile and the engine puts it
+	# somewhere on its own; this effect added the buildings and filled the sledges and never said WHERE. For
+	# Thomas that came out as Hardhome -- a ruin two hundred miles beyond the Wall, which is a place the Watch
+	# marches TO on a great ranging, not the place a man who has just said the words is standing.
+	#
+	# The ranging company titles already declare `capital = c_castle_black`
+	# (common/landed_titles/zz_ln_ranger_titles.txt), so the title always knew. Only the tent did not.
+	#
+	# The Lord Commander's own seat first -- he swore fealty to that man about four lines ago, and a company
+	# rides out from where its orders come from -- falling back to Castle Black itself if the Wall is holderless
+	# (the Watch can be extinct in a late save and this effect still has to complete). move_domicile is
+	# vanilla's own, in domicile scope: 00_major_decisions_scripted_effects.txt:673.
+	#
+	# NOT A TRAVEL PLAN. Thomas floated one -- "it'd be pretty badass if a travel plan was created ... to travel
+	# from wherever I go to the wall" -- and it would be, but a man mid-ceremony who is also mid-journey is a
+	# state this chain has never been tested in, and the camp would be moving underneath him while it resolves.
+	# Worth building deliberately later, not worth bolting on the day before a release.
+	if = {
+		limit = { has_domicile = yes }
+		domicile = {
+			if = {
+				limit = { exists = title:k_the_wall.holder.capital_province }
+				move_domicile = title:k_the_wall.holder.capital_province
+			}
+			else_if = {
+				limit = { exists = title:c_castle_black.title_province }
+				move_domicile = title:c_castle_black.title_province
+			}
+		}
+	}
+}
+
+
+# ── THE COMPANY OUTLIVES THE CAPTAIN ────────────────────────────────────────────────────────────────────────
+# $COMPANY$ = a title-scope target. Root may be the dying/promoted captain; the effect never assumes he is
+# usable. The chain: a sworn brother from the Lord Commander's court if one qualifies, else a ranger created
+# whole (the create_character block is AGOT's own First Ranger fallback, agot_nw_ranger_on_creation, with
+# the scopes renamed), else the Lord Commander holds it himself -- a company commanded from Castle Black is
+# unglamorous but alive, and so is its camp. destroy_if_invalid_heir was removed from the eight titles for
+# exactly this reason: succession is script's job now, and script never destroys a company.
+ln_company_changes_hands_effect = {
+	# LEAVE THEM FOR PLAYERS. Under that rule the Watch appoints nobody: the title stays vacant -- which is
+	# safe now, a vacant title keeps its camp (the First Ranger's own history has holder = 0 spans) -- and
+	# the vacancy path in ln_grant_a_ranging_company_effect hands the next player the title, camp and all.
+	if = {
+		limit = { has_game_rule = ln_rangers_players_only }
+	}
+	else_if = {
+		limit = { exists = title:k_the_wall.holder }
+		title:k_the_wall.holder = {
+			random_courtier = {
+				limit = { ln_can_go_ranging_trigger = yes }
+				save_scope_as = ln_next_captain
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:ln_next_captain } }
+			title:k_the_wall.holder = {
+				create_character = {
+					age = { 18 40 }
+					dynasty = none
+					culture = culture:northman
+					faith = faith:old_gods_wnw
+					location = title:b_castle_black.title_province
+					gender = male
+					trait = nightswatch
+					trait = lifestyle_nw_ranger
+					save_scope_as = ln_next_captain
+					after_creation = {
+						add_trait_xp = {
+							trait = nightswatch
+							value = 100
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:ln_next_captain } }
+			title:k_the_wall.holder = { save_scope_as = ln_next_captain }
+		}
+		if = {
+			limit = { exists = scope:ln_next_captain }
+			create_title_and_vassal_change = {
+				type = granted
+				save_scope_as = ln_company_succession
+				add_claim_on_loss = no
+			}
+			$COMPANY$ = {
+				change_title_holder = {
+					holder = scope:ln_next_captain
+					change = scope:ln_company_succession
+				}
+			}
+			resolve_title_and_vassal_change = scope:ln_company_succession
+			if = {
+				limit = { scope:ln_next_captain = { NOT = { has_government = ln_ranger_government } } }
+				scope:ln_next_captain = { change_government = ln_ranger_government }
+			}
+		}
+	}
+}

@@ -1,0 +1,22 @@
+﻿# The Long Night -- CONVERSION HOOKS.
+#
+# WHAT THIS IS. A place for another mod to say what should happen to a character at the moment the
+# dead take them, without having to shadow agot_long_night_scripted_effects.txt -- a 5,000-line file
+# that would go stale the day this mod updates.
+#
+# On its own this does nothing at all. Vanilla ships empty scripted effects for exactly this purpose
+# (game/common/scripted_effects/00_camp_officer_effects.txt:131), so an empty body is the supported
+# form and costs nothing per call.
+#
+# WHO OVERRIDES IT TODAY. The AGOT: Supernatural & The Long Night Compatibility Patch, to unmake
+# whatever a character was before the Others got the body -- a vampire raised as a wight would
+# otherwise keep its immortality, its thirst events and its trait track while standing in the Night
+# King's line.
+#
+# WHERE IT IS CALLED. ln_mutate_into_other_unguarded_effect, next to the dragonglass strip and
+# DELIBERATELY OUTSIDE the one-shot has-wight_trait guard, so the heartbeat re-runs it on wights that
+# already exist in a running save and the cleanup arrives within a game year rather than never.
+# That means it fires once per wight per heartbeat: any override must open with a single cheap
+# trigger and fall straight through for the ordinary corpse, which is all of them.
+
+ln_on_raised_as_wight_effect = {}

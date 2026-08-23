@@ -1,0 +1,123 @@
+﻿namespace = ln_prophecy
+
+# AGOT: The Long Night & Azor Ahai -- the priest and his charge.
+# ln_prophecy.40 : the blessing lands.
+# ln_prophecy.21 : he has fallen in battle, and it is the priest's decision now.
+
+# ── THE BLESSING ────────────────────────────────────────────────────────────────────────────────────────────
+# Root = the man who just said yes. Fired from ln_lords_blessing_interaction's on_accept.
+ln_prophecy.40 = {
+	type = character_event
+	title = ln_prophecy.40.t
+	desc = ln_prophecy.40.desc
+	theme = faith
+	left_portrait = { character = root  animation = personality_zealous }
+	right_portrait = { character = scope:ln_blessing_sponsor  animation = personality_honorable }
+
+	trigger = { exists = var:ln_blessing_sponsor }
+
+	immediate = {
+		var:ln_blessing_sponsor = { save_scope_as = ln_blessing_sponsor }
+	}
+
+	option = {
+		name = ln_prophecy.40.a
+		add_piety = 50
+	}
+
+	option = {
+		name = ln_prophecy.40.b
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+}
+
+# ── THE KILLING BLOW ────────────────────────────────────────────────────────────────────────────────────────
+# Root = THE PRIEST. Thomas: "he dies in combat, and I get the option to resurrect him."
+#
+# This is the whole point of the sponsorship, and it is deliberately the priest's event rather than the fallen
+# man's -- he is face down in the mud and has no opinions. Read the header of
+# common/combat_phase_events/zz_ln_knight_phase_events.txt for why the death is pre-empted rather than undone;
+# the short version is that CK3 cannot un-kill anybody and AGOT rewrites the file that would let us intercept.
+ln_prophecy.21 = {
+	type = character_event
+	title = ln_prophecy.21.t
+	desc = ln_prophecy.21.desc
+	theme = death
+	left_portrait = { character = root  animation = grief }
+	right_portrait = { character = scope:ln_the_fallen  animation = dead }
+
+	trigger = { exists = scope:ln_the_fallen }
+
+	# ── GIVE IT. The one life this priest has to give.
+	option = {
+		name = ln_prophecy.21.a
+		trigger = { ln_sponsor_can_still_pay_trigger = yes }
+
+		# The price, identical to the last kiss given at a bedside -- because it is the same act.
+		add_character_modifier = ln_gave_the_last_kiss_modifier
+		add_piety = 300
+
+		scope:ln_the_fallen = {
+			add_character_flag = ln_had_the_last_kiss
+			# Same escalation as the last kiss -- one route, one price. See zz_ln_returned_effects.txt.
+			ln_the_fire_takes_something_effect = yes
+			if = {
+				limit = { has_character_modifier = ln_fell_in_the_dark_modifier }
+				remove_character_modifier = ln_fell_in_the_dark_modifier
+			}
+			# Coming back is itself a deed, so the naming may be in reach now. A man who just stood up off a
+			# battlefield is exactly when a priest starts saying things out loud.
+			ln_check_naming_effect = yes
+			trigger_event = { id = ln_prophecy.20  days = 2 }
+		}
+
+		# YOU DO NOT WALK AWAY FROM THIS THE SAME. Thomas: "if I resurrect him, shouldn't that red priest, if
+		# they're not already friends or best friends, shouldn't that kinda happen?" It should, and it is the
+		# cheapest possible way to make the act stick -- a man who gave up part of himself for you, and a man
+		# who owes his existence to you, are not acquaintances afterwards.
+		if = {
+			limit = {
+				scope:ln_the_fallen = { has_relation_friend = root }
+				NOT = { scope:ln_the_fallen = { has_relation_best_friend = root } }
+			}
+			set_relation_best_friend = scope:ln_the_fallen
+		}
+		else_if = {
+			limit = { NOT = { scope:ln_the_fallen = { has_relation_friend = root } } }
+			set_relation_friend = scope:ln_the_fallen
+		}
+
+		# Thomas asked whether this moves the faith. It does -- publicly, in front of an army.
+		faith = {
+			change_fervor = {
+				value = 2
+				desc = ln_fervor_gain_resurrection
+			}
+		}
+
+		ai_chance = {
+			base = 70
+			modifier = { add = 40  scope:ln_the_fallen = { has_relation_friend = root } }
+			modifier = { add = 50  scope:ln_the_fallen = { ln_worth_the_fire_trigger = yes } }
+		}
+	}
+
+	# ── LET HIM GO. Not a punishment and not a trap -- the priest has exactly one of these, ever, and spending
+	# it on the wrong man is the mistake he will actually have to live with.
+	option = {
+		name = ln_prophecy.21.b
+
+		add_piety = 100
+		stress_impact = { base = medium_stress_impact_gain }
+
+		scope:ln_the_fallen = {
+			death = { death_reason = death_wounds }
+		}
+
+		ai_chance = {
+			base = 30
+			modifier = { add = 60  scope:ln_the_fallen = { NOT = { ln_worth_the_fire_trigger = yes } } }
+			modifier = { factor = 0.2  scope:ln_the_fallen = { has_relation_friend = root } }
+		}
+	}
+}

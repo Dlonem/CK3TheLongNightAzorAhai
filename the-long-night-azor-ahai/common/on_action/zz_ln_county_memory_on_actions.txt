@@ -1,0 +1,17 @@
+﻿# AGOT: The Long Night & Azor Ahai -- county memory stamp, at the moment of conquest. (1.0.10)
+#
+# Declared here as a named sub-list and listed in zz_ln_00_hooks.txt, per the rule at the top of that
+# file. Root = the character who gained the title; scope:title = the title that changed hands (vanilla
+# on_title_gain contract, title_on_actions.txt:187). The one_of_them test runs FIRST because this fires
+# for every title transfer in the game and must fail in one cheap check for every ordinary human.
+ln_county_memory_on_title_gain = {
+	effect = {
+		if = {
+			limit = {
+				ln_is_one_of_them_trigger = yes
+				scope:title ?= { tier = tier_county }
+			}
+			scope:title = { ln_stamp_county_memory_effect = yes }
+		}
+	}
+}

@@ -1,0 +1,684 @@
+﻿# AGOT: The Long Night & Azor Ahai -- WHICH duchy, and HOW OFTEN.
+#
+# Two problems that arrived together with other_cb_duchy, both of them Thomas's, both of them real:
+#
+#   1. "I just don't want Winterfell to get taken as the very first thing... we want them to take all of the
+#      weaker surrounding lands first and then save the big strongholds for last."
+#
+#      start_war without a target_title lets the ENGINE pick from the CB's valid list, and the engine picks on
+#      ai_score, which knows nothing about which castle is in the books. The 294 AC run took Winterfell early
+#      and then rolled outward from it, which is backwards from every version of this story ever told.
+#      Fixed here by naming the target ourselves -- vanilla's own shape, see the Almohad invasion
+#      (00_almohad_invasion_effects.txt:311, start_war with target_title = scope:maghreb_target_title).
+#
+#   2. "I'd hate to get war spammed every year or every six months."
+#
+#      A kingdom-tier war swallows nine duchies in one victory and takes years to win, so it declared rarely by
+#      accident. A duchy-tier war resolves in months -- and long_night_cooldown was only ever set ON DEFEAT, so
+#      after a WIN the 30-day pulse re-armed immediately. Nine wars where there used to be one. The pause has
+#      to be deliberate now that the wars are small.
+#
+# WHAT MARKS A STRONGHOLD: ln_last_bastion_modifier, already stamped on every living great house's capital
+# county by ln_bastion_upkeep_effect and already maintained yearly. No second definition of "great seat", no
+# hardcoded title list that goes stale the moment somebody's dynasty dies out. If House Stark falls to a
+# lesser branch and stops clearing ln_is_a_great_house_trigger, Winterfell stops being saved for last, which
+# is correct.
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE TARGET
+#
+# Root = the Night King (this is called from inside `story_owner = { }` in the_long_night.txt).
+# Reads scope:othervictim_character. Saves scope:ln_invasion_target if it finds one -- and deliberately may
+# not, in which case the caller falls back to the engine's own pick rather than skipping the war. A
+# targeting preference must never be able to stall the invasion.
+#
+# LIMIT ORDER IS DELIBERATE. is_neighbor_to_realm is the most selective clause by far -- of a ~300-county
+# realm it passes for a handful -- so it goes early and the de jure walk for bastion counties, which is the
+# expensive one, only runs on what survives it. This fires at most once per 30 days, on one character.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+ln_pick_invasion_duchy_effect = {
+	save_scope_as = ln_night_king
+
+	# STAMP BEFORE YOU READ. ln_last_bastion_modifier is maintained once a YEAR and this fires every 30 DAYS,
+	# so for up to twelve months after Cold Winds opens the marks do not exist yet and PASS 1 would happily
+	# pick the duchy Winterfell sits in -- the exact bug this file was written to stop, arriving through a
+	# calendar gap instead of through the engine. The upkeep effect was already built idempotent (it adds only
+	# what is missing), so calling it here costs one every_ruler sweep per invasion pulse and closes the window
+	# completely. It is self-gating: outside Cold Winds and the Long Night it does nothing at all.
+	ln_bastion_upkeep_effect = yes
+
+	# ── PASS 1: THE SOFT FLANK ────────────────────────────────────────────────────────────────────────────
+	# Any bordering duchy that does not contain a great house's seat. This is where they spend most of the
+	# invasion, and it is what makes the map go dark from the edges in.
+	scope:othervictim_character = {
+		random_sub_realm_county = {
+			limit = {
+				exists = duchy
+				duchy = {
+					is_neighbor_to_realm = scope:ln_night_king
+					NOT = { holder ?= scope:ln_night_king }
+					NOT = {
+						any_in_de_jure_hierarchy = {
+							tier = tier_county
+							has_county_modifier = ln_last_bastion_modifier
+						}
+					}
+				}
+			}
+			duchy = { save_scope_as = ln_invasion_target }
+		}
+	}
+
+	# ── PASS 2: NOT FIRST OR SECOND ───────────────────────────────────────────────────────────────────────
+	# No soft ground left on this border, so a stronghold becomes fair game -- but not yet, and not because
+	# of who its immediate neighbours are.
+	#
+	# 11 Aug -- THIS PASS CARRIED THE BUG THE KINGDOM PICKER HAD FIXED ON 10 AUG, and it was flagged as the
+	# top item on the 1.0.5 roadmap because game rules are locked into a save: every campaign begun before
+	# 1.0.4 still runs others_cb_duchy and therefore still ran this. Tonight it stopped being a legacy-only
+	# problem -- the beyond-the-Wall fix for Axel's report routes sub-kingdom victims through this picker
+	# under the DEFAULT kingdom rule, so from 1.0.5 new games reach it too.
+	#
+	# The old test was adjacency: half a great seat's bordering counties already dead-held. That is very
+	# hard to satisfy, so the picker kept refusing the seat and reaching for whatever soft ground it could
+	# find instead, however far away -- which is the sprawl Thomas saw: "it kinda looks like they're
+	# expanding in a weird way. Like, they're supposed to be coming from the north." A rule that says
+	# "never here" without saying "so go there instead" produces sprawl.
+	#
+	# Same replacement the kingdom picker got, same reasoning, same numbers: REGIONAL FOOTPRINT, not
+	# adjacency. His spec was "I don't want you to hard code the order they go. I want them to be able to
+	# just not do Winterfell first or second. They can be third." Two Marches held, or ten counties, inside
+	# the same de jure empire -- and the seat opens. Nothing is ordered anywhere, and it scales to any
+	# region without a list.
+	if = {
+		limit = { NOT = { exists = scope:ln_invasion_target } }
+		scope:othervictim_character = {
+			random_sub_realm_county = {
+				limit = {
+					exists = duchy
+					duchy = {
+						is_neighbor_to_realm = scope:ln_night_king
+						NOT = { holder ?= scope:ln_night_king }
+						any_in_de_jure_hierarchy = {
+							tier = tier_county
+							has_county_modifier = ln_last_bastion_modifier
+						}
+						empire ?= {
+							OR = {
+								# TWO MARCHES ALREADY THEIRS -- the exact reading of "not first or second".
+								any_in_de_jure_hierarchy = {
+									tier = tier_kingdom
+									count >= 2
+									holder ?= { ln_is_one_of_them_trigger = yes }
+								}
+								# ...OR ten counties, whichever lands first. Belt and braces for the same reason
+								# the kingdom picker has it: if the kingdom TITLE never transfers on victory and
+								# only its counties do, the test above would never pass and the great seats would
+								# be unreachable forever. A stall is a worse failure than an occasional early
+								# Winterfell. Ten counties is two northern Marches' worth.
+								any_in_de_jure_hierarchy = {
+									tier = tier_county
+									count >= 10
+									holder ?= { ln_is_one_of_them_trigger = yes }
+								}
+							}
+						}
+					}
+				}
+				duchy = { save_scope_as = ln_invasion_target }
+			}
+		}
+	}
+
+	# ── PASS 3: NOTHING LEFT TO SOFTEN ────────────────────────────────────────────────────────────────────
+	# Every bordering duchy holds a seat and none of them are surrounded yet -- an island realm, a single
+	# great house holding a narrow front, a border of one duchy. The invasion does not get to stop because
+	# our preference ran out of options.
+	if = {
+		limit = { NOT = { exists = scope:ln_invasion_target } }
+		scope:othervictim_character = {
+			random_sub_realm_county = {
+				limit = {
+					exists = duchy
+					duchy = {
+						is_neighbor_to_realm = scope:ln_night_king
+						NOT = { holder ?= scope:ln_night_king }
+					}
+				}
+				duchy = { save_scope_as = ln_invasion_target }
+			}
+		}
+	}
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE PAUSE BETWEEN WARS
+#
+# Root = the Night King. Called from other_cb_duchy's on_victory.
+#
+# Phase-scaled, because "how often does the dark declare war" is the same question as "what phase are we in"
+# and answering it with one number wastes the struggle we already ship. Long Summer they are barely real;
+# by the Long Night they do not stop. The pulse that reads this flag is every 30 days and only when the
+# Others are at peace, so the real cadence is this number PLUS however long the last war took.
+#
+# No cooldown is set on kingdom or empire tier. Those wars are slow enough on their own -- one victory there
+# swallows a whole region, and adding a pause to them would be the "sits idle for years" bug again.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+ln_invasion_cooldown_effect = {
+	# THE MARCH, NOT THE JUMP -- 10 Aug, Thomas's call after watching a run: "I only said duchies because that
+	# way it could kinda look more of like a gradual, like, you can kinda see the dead marching... we want them
+	# to maintain the same similar momentum as wage war against a kingdom."
+	#
+	# Those two wants pull against each other and the resolution is CADENCE, not size. A three-duchy grab has
+	# kingdom-era speed but the map still jumps in chunks -- a third of the North goes dark the instant a war
+	# resolves, which is a scoreboard, not an advance. One duchy at a time with a short pause covers the same
+	# ground in the same years and you can watch the front line move.
+	#
+	# FIVE MONTHS. The real gap is this plus however long the war takes, so a duchy war of six to twelve months
+	# lands the dead a new declaration roughly twice a year -- fast enough to read as relentless, and still not
+	# the every-six-weeks stream that duchy tier threatened before any pause existed at all.
+	#
+	# The phase test stays even though only two answers are reachable (see the note on ln_expand_the_conquest_effect):
+	# if a war is being won at all it is the Long Night, whether or not a struggle is running to say so.
+	if = {
+		limit = { struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_dawn } }
+		add_character_flag = { flag = long_night_cooldown  years = 3 }
+	}
+	# 1.0.8 -- BEYOND THE WALL, ONE MONTH INSTEAD OF FIVE.
+	# The five months above was tuned against the SOUTH, where a duchy war is six to twelve months and
+	# the pause reads as the front regrouping. Beyond the Wall the same number is the sag: every war up
+	# there is other_cb_duchy (no victim holds a kingdom title), so every single victory bought a five-
+	# month freeze, thirteen years running. The paired change on the pulse trigger means the free fealty
+	# absorptions no longer stop during this window at all -- so what is left here is purely 'how long
+	# until the dead may declare the NEXT war', and one pulse is enough to keep it a march, not a jump.
+	# ONLY IF: the Wall still stands. NEVER IF: it has fallen -- then the five months below apply again,
+	# unchanged, and southern cadence is exactly what it was before 1.0.8.
+	else_if = {
+		limit = { NOT = { has_global_variable = ln_castle_black_fell } }
+		# 1.0.10 -- ROLLED, not fixed. Was a flat one month. Same cadence, no metronome.
+		random_list = {
+			50 = { add_character_flag = { flag = long_night_cooldown  months = 1 } }
+			35 = { add_character_flag = { flag = long_night_cooldown  months = 2 } }
+			15 = { add_character_flag = { flag = long_night_cooldown  months = 3 } }
+		}
+	}
+	else = {
+		# 1.0.10 -- WAS A FLAT FIVE MONTHS, AND CONTIGUITY IS WHY IT MOVED.
+		# Until this release a won war also paid out every occupied county in the loser's realm, wherever
+		# it lay -- so the map advanced faster than the wars did, and five months between declarations
+		# looked like a reasonable pace. zz_ln_contiguity_effects.txt takes that windfall away on purpose:
+		# the dead now gain only the goal plus land they can walk to. The front is honest, and it has to
+		# move under its own power, so the pause between wars comes down and is ROLLED rather than fixed.
+		# Two to six months, mean about three and a half: faster than the old five, and no two campaigns
+		# pace identically. Keep it RNG where a choice could be rolled -- the standing rule in this mod.
+		random_list = {
+			25 = { add_character_flag = { flag = long_night_cooldown  months = 2 } }
+			30 = { add_character_flag = { flag = long_night_cooldown  months = 3 } }
+			25 = { add_character_flag = { flag = long_night_cooldown  months = 4 } }
+			15 = { add_character_flag = { flag = long_night_cooldown  months = 5 } }
+			5  = { add_character_flag = { flag = long_night_cooldown  months = 6 } }
+		}
+	}
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# TAKING MORE THAN ONE DUCHY AT A TIME
+#
+# Thomas, after watching twenty years pass without the dead reaching the Twins: "What if they could declare
+# war against the Iron Throne but be able to take two duchies at a time? That way it's not the slog of duchy
+# after duchy after duchy... I just wanna make sure the Long Night doesn't take seventy-five years to
+# complete. We want this to be more of a twenty-five to fifty year completion."
+#
+# THE ARITHMETIC HE IS REACTING TO. Westeros is roughly forty de jure duchies. One duchy per war, plus the
+# post-victory pause, plus however long each war takes, is a century and a half. Kingdom tier solved that by
+# swallowing nine duchies in one bite and was un-tellable as a story; duchy tier tells the story and never
+# finishes it. This is the middle: ONE war, several duchies, and the number scales with the phase.
+#
+#   Cold Winds       -> 1 extra duchy  (2 per war). Probing. The North notices and the South does not.
+#   The Long Night   -> 2 extra duchies (3 per war). Now it moves.
+#   anything else    -> nothing extra. Long Summer is not the hour of the dead.
+#
+# ONLY THE NIGHT KING, AND THAT IS FREE. This is called from other_cb_duchy's on_victory, and that CB's
+# allowed_for_character already requires has_trait = nightking. No separate gate needed, and adding one
+# would be a second place to keep in sync.
+#
+# THE ENCIRCLEMENT RULE STILL HOLDS. Extra duchies are picked with the same ln_last_bastion_modifier test as
+# ln_pick_invasion_duchy_effect -- a stronghold is never taken as a bonus. Great seats fall to a war fought
+# for them, at the end, or they do not fall. Speeding the invasion up must not quietly undo the one thing
+# Thomas asked for by name.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# Root = the CB's on_victory scope. Reads scope:attacker, scope:defender and scope:change, and must run
+# BEFORE resolve_title_and_vassal_change -- it adds to the change already in flight rather than opening a
+# second one. Two changes resolving over the same titles is how you get a county held by nobody.
+ln_expand_the_conquest_effect = {
+	# ONE DUCHY A WAR, DELIBERATELY -- and this effect is now a no-op that exists to be honest about that.
+	#
+	# It briefly took two or three, which was the wrong lever: it bought speed by making the map jump instead
+	# of march. The speed now comes from ln_invasion_cooldown_effect's five-month gap, which covers the same
+	# ground in the same decades while the front line stays a line. Same total pace, entirely different to
+	# watch, and the great seats still fall last either way.
+	#
+	# KEPT RATHER THAN DELETED because the machinery underneath it is correct and was expensive to get right --
+	# it adds to the change already in flight rather than opening a second one, it excludes the war goal duchy
+	# and any duchy an earlier call took, and it honours the ln_last_bastion_modifier rule so a stronghold is
+	# never a bonus prize. If a future game rule wants a faster or harsher Long Night, this is one uncommented
+	# line away from being it. Deleting working, tested machinery to re-derive it in a month is not thrift.
+	#
+	# always = no rather than commented-out lines, on purpose. Dead script that is never referenced is script
+	# nobody notices has rotted; this way the macro is still parsed, still validated, and still proven to
+	# resolve every symbol it names. Flip this one condition to a phase test and the feature is back.
+	if = {
+		limit = { always = no }
+		ln_take_one_more_duchy_effect = { N = 1 }
+		ln_take_one_more_duchy_effect = { N = 2 }
+	}
+}
+
+# $N$ keeps the saved scopes apart across calls -- see the note on $IDX$ in zz_ln_brother_allocation_effects.txt.
+# Without it the second call reads the first call's duchy and the war takes one duchy twice.
+ln_take_one_more_duchy_effect = {
+	scope:defender = {
+		random_sub_realm_county = {
+			limit = {
+				exists = duchy
+				duchy = {
+					is_neighbor_to_realm = scope:attacker
+					NOT = { holder ?= scope:attacker }
+
+					# Not the duchy the war was actually fought for. setup_invasion_cb has already staged
+					# that one into scope:change but nothing is resolved yet, so its counties still read as
+					# the defender's and it would happily be picked again as a "bonus".
+					trigger_if = {
+						limit = { exists = scope:target }
+						NOT = { this = scope:target }
+					}
+					trigger_if = {
+						limit = { exists = scope:ln_extra_duchy_1 }
+						NOT = { this = scope:ln_extra_duchy_1 }
+					}
+
+					# The bastion rule, unchanged. A duchy holding a living great house's seat is never a
+					# bonus prize.
+					NOT = {
+						any_in_de_jure_hierarchy = {
+							tier = tier_county
+							has_county_modifier = ln_last_bastion_modifier
+						}
+					}
+				}
+			}
+			duchy = { save_scope_as = ln_extra_duchy_$N$ }
+		}
+	}
+
+	if = {
+		limit = { exists = scope:ln_extra_duchy_$N$ }
+		scope:ln_extra_duchy_$N$ = {
+			every_in_de_jure_hierarchy = {
+				limit = {
+					tier = tier_county
+					holder ?= { target_is_same_character_or_above = scope:defender }
+				}
+				change_title_holder = {
+					holder = scope:attacker
+					change = scope:change
+				}
+			}
+		}
+	}
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE SAME RULE, ONE TIER UP
+#
+# Thomas, watching a live run and reading the de jure map properly: "a lot of these other places are
+# considered kingdom titles... I do think we should probably be doing this on a kingdom basis. I think the
+# thing I was trying to have you specifically change was the fact that they keep beelining for the Winterfell
+# title. They should absolutely be going for Last Hearth first, then Karhold, the Dreadfort."
+#
+# HE IS READING THE MAP CORRECTLY AND IT CHANGES THE DESIGN. AGOT's North is not a kingdom of duchies. The
+# Marches themselves are KINGDOM titles, eight of them under e_the_north:
+#
+#     k_winterfell   k_red_lands (the Dreadfort)   k_the_white_knife   k_barrows_and_rills
+#     k_the_wolfswood   k_the_neck   k_last_lands (Last Hearth)   k_skagos
+#
+# So "one duchy at a time" was cutting BELOW the unit the map is actually drawn in, and every duchy the dead
+# took still read to the player as "they are in the March of Winterfell" because that is the label on the
+# region. Taking a March whole is both the coherent unit and the one the player can see.
+#
+# WHICH LEAVES THE REAL COMPLAINT, WHICH WAS NEVER ABOUT TIER: they went for Winterfell first. That is what
+# this fixes, and the fix is the same encirclement rule applied one tier up.
+#
+# THE ORDER IT PRODUCES, AND WHY IT IS THE ONE HE ASKED FOR. Every northern March holds a great house's seat,
+# so "no great seat" alone would exclude all of them and fall through to a coin flip. The discriminator that
+# actually separates them is WHO holds the seat:
+#
+#     Umber at Last Hearth        holds k_last_lands              -- a kingdom
+#     Karstark at Karhold         holds a kingdom
+#     Bolton at the Dreadfort     holds k_red_lands               -- a kingdom
+#     Stark at Winterfell         holds k_winterfell AND e_the_north -- the crown of the North
+#
+# One clause, `highest_held_title_tier >= tier_empire`, puts the paramount's own seat last and the bannermen
+# first. It is not a northern special case: it says "the seat of whoever wears the regional crown falls last"
+# and it is just as true of Highgarden, Casterly Rock and Sunspear.
+#
+# Proximity takes care of itself. is_neighbor_to_realm means only the frontier is ever eligible, so the dead
+# work outward from the Wall by construction -- Last Hearth and Karhold border the Gift, Winterfell does not.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# Root = the Night King (called from inside `story_owner = { }` in the_long_night.txt).
+# Reads scope:othervictim_character. Saves scope:ln_invasion_target if it finds one -- and deliberately may
+# not, in which case the caller falls back to the engine's own pick. A preference must never stall the war.
+ln_pick_invasion_kingdom_effect = {
+	save_scope_as = ln_night_king
+
+	# Same calendar hole as the duchy picker: the bastion marks are maintained yearly and this fires every
+	# 30 days, so stamp before reading. Idempotent and self-gating.
+	ln_bastion_upkeep_effect = yes
+
+	# ── PASS 1: NO GREAT SEAT AT ALL ──────────────────────────────────────────────────────────────────────
+	# Rare in the North, common everywhere else. A March with nobody of consequence in it goes first.
+	scope:othervictim_character = {
+		random_sub_realm_county = {
+			limit = {
+				exists = kingdom
+				kingdom = {
+					is_neighbor_to_realm = scope:ln_night_king
+					NOT = { holder ?= scope:ln_night_king }
+					NOT = {
+						any_in_de_jure_hierarchy = {
+							tier = tier_county
+							has_county_modifier = ln_last_bastion_modifier
+						}
+					}
+				}
+			}
+			kingdom = { save_scope_as = ln_invasion_target }
+		}
+	}
+
+	# ── PASS 2: BANNERMEN BEFORE THE CROWN ────────────────────────────────────────────────────────────────
+	# A March whose great seats belong to lords who hold a kingdom and no more. Last Hearth, Karhold, the
+	# Dreadfort. This is the pass that does almost all the work in the North and it is the one Thomas asked
+	# for by name.
+	if = {
+		limit = { NOT = { exists = scope:ln_invasion_target } }
+		scope:othervictim_character = {
+			random_sub_realm_county = {
+				limit = {
+					exists = kingdom
+					kingdom = {
+						is_neighbor_to_realm = scope:ln_night_king
+						NOT = { holder ?= scope:ln_night_king }
+						NOT = {
+							any_in_de_jure_hierarchy = {
+								tier = tier_county
+								has_county_modifier = ln_last_bastion_modifier
+								holder ?= { highest_held_title_tier >= tier_empire }
+							}
+						}
+					}
+				}
+				kingdom = { save_scope_as = ln_invasion_target }
+			}
+		}
+	}
+
+	# ── PASS 3: THE CROWN'S OWN SEAT, ONCE THEY ARE ALREADY IN THE REGION ─────────────────────────────────
+	# LOOSENED 10 Aug, and the old version was causing the thing Thomas was actually complaining about.
+	#
+	# It required Winterfell to be ENCIRCLED -- half its bordering counties already dead-held. That is very
+	# hard to satisfy, so the picker kept refusing Winterfell and reaching for whatever soft March it could
+	# find instead, however far away. Result: "it kinda looks like they're expanding in a weird way. Like,
+	# they're supposed to be coming from the north." Correct, and it was this clause doing it. A rule that
+	# says "never here" without saying "so go there instead" produces sprawl.
+	#
+	# His actual spec, which is looser and better: "I don't want you to hard code the order they go. I want
+	# them to be able to just not do Winterfell first or second. They can be third."
+	#
+	# So the test is now REGIONAL FOOTPRINT, not adjacency: the crown's seat opens up once the dead already
+	# hold TWO KINGDOM TITLES or TEN COUNTIES inside the same de jure empire (the OR below -- the comment
+	# used to say "six or more counties", which matched neither branch of the code; 13 Aug). Two northern
+	# Marches is two kingdoms, so Winterfell becomes fair game as the third target and not before -- exactly
+	# what he asked for, with no order hardcoded anywhere. It scales to any region without a list: ten
+	# counties of the Reach means Highgarden is on the table, ten of the Westerlands means Casterly Rock is.
+	if = {
+		limit = { NOT = { exists = scope:ln_invasion_target } }
+		scope:othervictim_character = {
+			random_sub_realm_county = {
+				limit = {
+					exists = kingdom
+					kingdom = {
+						is_neighbor_to_realm = scope:ln_night_king
+						NOT = { holder ?= scope:ln_night_king }
+						empire ?= {
+							OR = {
+								# TWO MARCHES ALREADY THEIRS -- the exact reading of "not first or second".
+								any_in_de_jure_hierarchy = {
+									tier = tier_kingdom
+									count >= 2
+									holder ?= { ln_is_one_of_them_trigger = yes }
+								}
+								# ...OR ten counties, whichever lands first. Belt and braces on purpose: if the
+								# kingdom TITLE does not transfer on victory (only its counties do), the test
+								# above would never pass and the crown's seat would be unreachable forever --
+								# a stall is a worse failure than an occasional early Winterfell. Ten counties
+								# is two northern Marches' worth, so it cannot fire off the back of one.
+								any_in_de_jure_hierarchy = {
+									tier = tier_county
+									count >= 10
+									holder ?= { ln_is_one_of_them_trigger = yes }
+								}
+							}
+						}
+					}
+				}
+				kingdom = { save_scope_as = ln_invasion_target }
+			}
+		}
+	}
+
+	# ── PASS 4: NOTHING LEFT TO SOFTEN ────────────────────────────────────────────────────────────────────
+	# One March left on the border and it is the crown's. The invasion does not get to stop because our
+	# preference ran out of options.
+	if = {
+		limit = { NOT = { exists = scope:ln_invasion_target } }
+		scope:othervictim_character = {
+			random_sub_realm_county = {
+				limit = {
+					exists = kingdom
+					kingdom = {
+						is_neighbor_to_realm = scope:ln_night_king
+						NOT = { holder ?= scope:ln_night_king }
+					}
+				}
+				kingdom = { save_scope_as = ln_invasion_target }
+			}
+		}
+	}
+}
+
+# ==========================================================================================================
+# 1.0.8 -- THE FROZEN WASTE, AND THE LATCH THAT LETS THE WALL FALL
+#
+# THE HOLE. The candidate limit in the_long_night.txt carries
+#     NOR = { has_government = wilderness_government  has_government = ruins_government }
+# which sits ABOVE the war/fealty fork, so a county held by AGOT's Wilderness_Empress or Ruin_Empress can be
+# taken by neither branch. There is no third road: it is the only place in the mod that moves land to the dead.
+#
+# MEASURED, from AGOT's own title history at 8298 (not estimated): world_westeros_beyond_the_wall is 25 de
+# jure duchies and 123 counties. Fourteen of them sit with the placeholders at bookmark. The invasion opening
+# already grabs four by name (c_ask_vith, c_basordryn, c_roveggs_spine, c_vurk_ryg -- all of d_tor_rag_dur),
+# which leaves TEN permanently untakeable:
+#     d_west_shelf     c_spider_flow, c_trappers_rest, c_shining_ledge, c_shurl_arer, c_cracked_sund  (5 of 5)
+#     d_hardhome       c_hardhome                                                                     (1 of 1)
+#     d_stalkingshore  c_hide_point, c_selkie_sund
+#     d_haunted_forest c_crows_creek
+#     d_storrolds_point c_woodvetch
+# Two of those are ENTIRE duchies. The old "~17% of the land beyond the Wall" in the comments is a misreading
+# of an older note that said SEVENTEEN COUNTIES, map-wide; the real beyond-Wall share is 8.1%.
+#
+# WHY IT MATTERS NOW. 1.0.8 makes the Wall's fall the climax of the beyond-Wall phase, gated on the dead
+# holding the whole of it. Written against a set containing ten counties they can never enter, that gate
+# would never fire and the Wall would never fall. So the hole gets closed rather than designed around.
+#
+# HOW. get_title, the same effect the invasion opening already uses on wilderness-held counties -- it moves
+# the COUNTY and nothing else. Never the realm: Wilderness_Empress holds land all over the map, and a fealty
+# grab of her realm would hand the dead territory in the Reach. One county per 30-day pulse, so the waste
+# fills in visibly behind the front instead of popping in one tick -- cadence, not grab size, same as always.
+# Self-terminating: when nothing matches, random_county selects nothing and the guard below skips.
+#
+# ONLY IF: the Wall still stands, the county lies in world_westeros_beyond_the_wall, and its holder is an AI
+# placeholder government.
+# NEVER IF: the Wall has fallen (this stops dead), the holder is a player, or the county is anywhere else on
+# the map -- the government test is not enough on its own, the geography is what fences this.
+ln_absorb_the_frozen_waste_effect = {
+	if = {
+		limit = { NOT = { has_global_variable = ln_castle_black_fell } }
+		random_county = {
+			limit = {
+				title_province ?= { geographical_region = world_westeros_beyond_the_wall }
+				# NEVER the dragon-storage placeholder. AGOT parks every living non-historical dragon's
+				# portrait genes in a story attached to title:c_ruins.holder (knowledge base §7), and the
+				# standing rule is that the invasion must never touch it. The geography test above already
+				# excludes c_ruins -- a titular title has no title_province, so ?= fails -- but the failure
+				# mode is 'every dragon in the game loses its face', so it gets named explicitly and a later
+				# edit to the region test cannot silently re-expose it. Ruin_Empress keeps c_ruins and
+				# c_skane and is never left landless by this.
+				NOT = { this = title:c_ruins }
+				exists = holder
+				holder = {
+					is_ai = yes
+					OR = {
+						has_government = wilderness_government
+						has_government = ruins_government
+					}
+				}
+			}
+			save_temporary_scope_as = ln_frozen_county
+		}
+		if = {
+			limit = { exists = scope:ln_frozen_county }
+			get_title = scope:ln_frozen_county
+		}
+	}
+}
+
+# The completeness latch. Called ONCE per pulse from the_long_night.txt, never from the candidate limit --
+# any_county walks every county in the world and the candidate limit is evaluated per neighbour.
+#
+# ln_is_one_of_them_trigger is the ownership test used everywhere else in the mod. One caveat worth writing
+# down: it counts ruins_government as theirs (line 94 of zz_ln_ice_dragon_triggers.txt) but NOT
+# wilderness_government, so c_hardhome reads as already-theirs before it is taken while the thirteen
+# wilderness counties never can. That asymmetry is harmless here only because ln_absorb_the_frozen_waste_effect
+# above takes both kinds anyway -- if that effect is ever removed, this latch stops being reachable.
+#
+# `exists = holder` first: an unheld county must not hold the latch open forever.
+ln_refresh_beyond_the_wall_latch_effect = {
+	# WALL-DOWN GUARD (adversarial review). Once the Wall has fallen nothing reads ln_btw_unfinished
+	# ever again -- the only gate that consults it is fenced on this same global. Without this branch
+	# the walk below kept crawling every county title in the game every 30 days for the rest of the
+	# campaign to compute an answer nobody asks for. It now stops when the absorb effect stops.
+	if = {
+		limit = { has_global_variable = ln_castle_black_fell }
+		if = {
+			limit = { has_global_variable = ln_btw_unfinished }
+			remove_global_variable = ln_btw_unfinished
+		}
+
+		# ── 1.0.10: THE NORTH LADDER ─────────────────────────────────────────────────────────────────
+		# Stage three of the region ladder. Computed here, once per pulse, for the same reason the
+		# beyond-Wall latch is: any_county walks every county title in the game and the candidate limit
+		# is evaluated per neighbour. It starts only once the Wall has fallen, because until then the
+		# stages above bind anyway and this walk would be answering a question nobody is asking.
+		#
+		# ln_north_done is what stops it. Without it this walk would run every 30 days for the rest of
+		# the campaign to keep re-deciding a question that can never change back -- the dead do not give
+		# the North away. One clean pass latches it and the walk never happens again.
+		if = {
+			limit = { NOT = { has_global_variable = ln_north_done } }
+
+			# THE CLOCK. Twenty years from the Wall's fall -- long enough that a healthy invasion never
+			# reaches it, and the same fail-open escape the other two stages carry, for the same reason:
+			# a targeting gate must never be the thing that stops the Long Night. The stranding case is
+			# real and documented at the stage-one gate -- a northern county held by a VASSAL of a
+			# southern liege is never selectable, because the search returns top lieges only.
+			if = {
+				limit = { NOT = { has_character_flag = ln_north_gate_started } }
+				add_character_flag = ln_north_gate_started
+				add_character_flag = { flag = ln_north_gate_window  years = 20 }
+			}
+			if = {
+				limit = {
+					any_county = {
+						title_province ?= { geographical_region = world_westeros_the_north }
+						exists = holder
+						NOT = { holder = { ln_is_one_of_them_trigger = yes } }
+						# A county that can never be taken must not hold the gate open. The frozen-waste absorb
+						# covers beyond the Wall only, so a wilderness holder in the North is precisely the
+						# permanent stall this clause exists to prevent. (ruins_government already reads as
+						# theirs inside ln_is_one_of_them_trigger, so ruined land needs no clause of its own.)
+						NOT = { holder = { has_government = wilderness_government } }
+					}
+				}
+				set_global_variable = { name = ln_north_unfinished  value = yes }
+			}
+			else = {
+				if = {
+					limit = { has_global_variable = ln_north_unfinished }
+					remove_global_variable = ln_north_unfinished
+				}
+				set_global_variable = { name = ln_north_done  value = yes }
+			}
+		}
+	}
+	else = {
+		# THE ESCAPE CLOCK, started on the first pulse of this Long Night and never restarted. The gate
+		# in the_long_night.txt explains why a hard targeting gate needs one at all. A wave-2 Night King
+		# is a new character and gets a fresh eight years. An old save that never ran this line has no
+		# window flag at all, so the gate simply never binds and targeting behaves exactly as it did
+		# before 1.0.8 -- the mid-save policy, unchanged: missing old saves is fine, breaking them is not.
+		if = {
+			limit = { NOT = { has_character_flag = ln_btw_gate_started } }
+			add_character_flag = ln_btw_gate_started
+			add_character_flag = { flag = ln_btw_gate_window  years = 8 }
+		}
+		if = {
+			limit = {
+				any_county = {
+					title_province ?= { geographical_region = world_westeros_beyond_the_wall }
+					exists = holder
+					NOT = { holder = { ln_is_one_of_them_trigger = yes } }
+				}
+			}
+			set_global_variable = { name = ln_btw_unfinished  value = yes }
+		}
+		else = {
+		# Guarded, matching the house idiom at zz_ln_struggle_effects.txt:144. Once the north is
+		# finished this else-branch is taken every 30 days for the rest of the game, and an unguarded
+		# remove of an absent global is exactly the kind of thing that quietly fills an error log.
+			if = {
+				limit = { has_global_variable = ln_btw_unfinished }
+				remove_global_variable = ln_btw_unfinished
+			}
+		}
+		# 1.0.9b -- STAGE TWO'S CLOCK. Started the first pulse where stage one no longer binds (the far
+		# north finished, or its eight-year window gone) while Castle Black still stands. Four years for
+		# the dead to put the Watch down before the gate gives up and opens the south -- the same
+		# fail-open escape-clock shape as stage one, for the same reason: a phase that ends slightly
+		# wrong beats an invasion that stops forever. Runs in the same root as the other flags (the
+		# pulse Night King), and a wave-2 king is a new character with a fresh clock, same as stage one.
+		if = {
+			limit = {
+				NOT = { has_character_flag = ln_wall_gate_started }
+				OR = {
+					NOT = { has_global_variable = ln_btw_unfinished }
+					NOT = { has_character_flag = ln_btw_gate_window }
+				}
+			}
+			add_character_flag = ln_wall_gate_started
+			add_character_flag = { flag = ln_wall_gate_window  years = 4 }
+		}
+	}
+}

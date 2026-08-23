@@ -1,0 +1,50 @@
+﻿# AGOT: The Long Night & Azor Ahai -- household administration.
+# Declared here as a named sub-list and listed in zz_ln_00_hooks.txt, per the rule at the top of that
+# file: a vanilla on_action is declared THERE and nowhere else, and a sub-list that nothing references
+# does not exist.
+#
+# 1.0.9: the yearly pass that used to live here is GONE, deliberately. See the note on
+# ln_household_key_trigger -- the key is only true at game start, and a yearly re-check could match the
+# wrong player years later. One check, once, at load.
+
+# AND AT GAME START, which is the pass that will actually catch the code -- see the drift caveat on
+# ln_household_key_trigger. on_game_start_after_lobby carries no character root, so the players have to
+# be reached explicitly; every_player is the same shape ln_struggle_cold_winds_reached_effect uses.
+ln_household_game_start = {
+	effect = {
+		every_player = {
+			ln_household_claim_effect = yes
+		}
+	}
+}
+
+# ── THE LEDGER COOLDOWN, RETIRING ITSELF ────────────────────────────────────────────────────────────────
+# 1.0.12, Thomas's call: "remove it from being granted ... that way, in a week or two, nobody's gonna have a
+# save game with it stamped into their game, meaning you'll be able to remove it with no problems."
+#
+# ln_household_ledger_cooldown_modifier lost its job in 1.0.9 when the ten-year cooldown on
+# ln_household_ledger_decision was dropped. Nothing has applied it since. It stayed DEFINED only because a
+# save that carries a character modifier whose definition has vanished complains on every load until it
+# expires -- so deleting the definition would have punished exactly the people already carrying it.
+#
+# That left it in the worst state available: defined, unapplied, unread, and costing one error line a boot --
+#     [static_modifier.cpp:200]: Modifier ... was not used by the script or code but exists in the database,
+#     this is a waste.
+# Waiting it out passively meant waiting on the longest-running save in circulation, with no way to know when
+# that was. Stripping it ACTIVELY ends it on a clock we control: every playable character is checked once a
+# year, so any save still carrying it is clean within a game year of loading 1.0.12.
+#
+# AND IT ANSWERS THE ENGINE TOO. remove_character_modifier is a script reference to the key, so the "waste"
+# line goes with it -- the modifier is now used by script, to delete itself.
+#
+# DELETE THE DEFINITION OUTRIGHT IN 1.1.0, along with this sub-action, its two loc keys in
+# zz_ln_household_l_english.yml, and the note at the top of common/modifiers/zz_ln_household_modifiers.txt.
+# By then no save that has been loaded even once can still be carrying it.
+ln_household_yearly = {
+	effect = {
+		if = {
+			limit = { has_character_modifier = ln_household_ledger_cooldown_modifier }
+			remove_character_modifier = ln_household_ledger_cooldown_modifier
+		}
+	}
+}

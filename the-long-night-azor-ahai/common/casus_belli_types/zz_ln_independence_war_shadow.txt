@@ -1,0 +1,354 @@
+﻿# AGOT: The Long Night & Azor Ahai -- a SHADOW of ONE vanilla/AGOT casus belli, and nothing else.
+#
+# SOURCE: common/casus_belli_types/00_civil_war.txt, independence_war, copied verbatim on 10 Aug 2026
+# except for the block marked "THE ONLY CHANGED BLOCK IN THIS FILE".
+#
+# WHY A SHADOW. A casus_belli_type is a keyed database object: last definition loaded wins, whole. There is
+# no way to add one clause to somebody else's allowed_for_character from outside it. zz_ prefix so we load
+# after both vanilla and AGOT. database_conflicts.log will confirm on next launch:
+#   "Overriding entry 'independence_war' for database 'common/casus_belli_types' in
+#    file: common/casus_belli_types/zz_ln_independence_war_shadow.txt"
+# If that line is absent the shadow lost and a brother can still secede -- say so rather than assuming.
+#
+# WHAT IT COSTS. If a future CK3 or AGOT patch changes independence_war, our copy silently keeps the old
+# body. Re-copy it, or delete this file if they ever add an NW gate of their own.
+#
+# EVERYTHING ELSE -- the war goals, the on_victory title transfers, the AI scoring, the tooltips -- is
+# verbatim. This file exists to add four lines to one trigger.
+
+independence_war = {
+	icon = independence_faction_war
+	group = independence
+	ai = no # AI targeting is handled through game_rule events.
+
+	target_top_liege_if_outside_realm = no # In case of Adventurers starting this war
+
+	allow_hostages = no
+	allowed_for_character = {
+		scope:attacker = {
+			NOT = { government_allows = administrative }
+		}
+		# ── THE LONG NIGHT+: THE ONLY CHANGED BLOCK IN THIS FILE ──────────────────────────────────────
+		# A sworn brother cannot declare independence. Thomas, playing a Wall keeper: "I was able to
+		# declare war against the Lord Commander for independence, and we cannot have that occurring."
+		#
+		# WHY IT WAS POSSIBLE. AGOT already blocks the FACTION routes -- immune_to_factions_trigger
+		# carries government_is_nw, so independence_faction_war and liberty_faction_war are both dead
+		# for the Watch. This CB needs no faction at all. Its whole gate is "your government is not
+		# administrative", which nights_watch_government and ln_ranger_government both pass without
+		# noticing. It is the one door AGOT's own NW gating missed.
+		#
+		# BOTH SIDES CHECKED, NOT JUST THE ATTACKER'S GOVERNMENT. A brother who somehow holds a
+		# non-NW government is still a brother; and the Lord Commander should be unable to be seceded
+		# from by anyone, including a wildling chief or a southron who ended up his vassal by script.
+		custom_description = {
+			text = ln_cannot_forsake_the_watch
+			NOR = {
+				scope:attacker = { government_has_flag = government_is_nw }
+				scope:attacker = { ln_is_a_sworn_brother_trigger = yes }
+				scope:defender = { government_has_flag = government_is_nw }
+				scope:defender = { has_title = title:k_the_wall }
+			}
+		}
+		#AGOT Added, Megawars
+		NOT = { agot_mw_start_regular_mw_trigger = { ATTACKER = scope:attacker DEFENDER = scope:defender } }
+	}
+	allowed_against_character = {
+		scope:attacker = {
+			liege = scope:defender
+		}
+	}
+
+	cost = {
+		piety = {
+			value = 0
+			add = common_cb_impious_piety_cost
+		}
+		prestige = {
+			value = 0
+			add = {
+				value = 500
+				desc = CB_BASE_COST
+			}
+			multiply = common_cb_prestige_cost_multiplier
+		}
+	}
+
+	on_declaration = {
+		on_declared_war = yes
+		# Remove offending HumSac modifiers.
+		scope:attacker = {
+			hidden_effect = { fp1_remove_humsac_offended_counties_effect = yes }
+		}
+	}
+
+	on_victory_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { # Desc for only one player attacker
+					scope:attacker = {
+						is_local_player = yes
+					}
+				}
+				desc = independence_war_victory_desc_local_player_attacker_alone
+			}
+			triggered_desc = { # Desc for only one attacker, player defender
+				trigger = {
+					scope:defender = {
+						is_local_player = yes
+					}
+				}
+				desc = player_independence_war_victory_desc_local_player_defender_attacker_alone
+			}
+			desc = independence_war_victory_desc_local_player_attacker_alone # Desc for a third party involved
+		}
+
+	}
+
+	on_victory = {
+		#AGOT Added, Megawars
+		# makes sure that if vassal was direct vassal of liege pre war now secceding vassal will become neutral in ongoing mw
+		# and at the end of it will become vassal of the King
+		if = {
+			limit = {
+				scope:defender = {
+					exists = var:agot_pwl_direct
+					var:agot_pwl_direct.primary_title.tier = tier_hegemony
+				}
+				any_ruler = {
+					any_owned_story = {
+						story_type = story_agot_mw_crown
+						is_target_in_variable_list = { name = mw_neutral_list target = scope:attacker.liege }
+					}
+				}
+			}
+			random_ruler = {
+				limit = {
+					any_owned_story = {
+						story_type = story_agot_mw_crown
+						is_target_in_variable_list = { name = mw_neutral_list target = scope:attacker.liege }
+					}
+				}
+				random_owned_story = {
+					limit = {
+						story_type = story_agot_mw_crown
+						is_target_in_variable_list = { name = mw_neutral_list target = scope:attacker.liege }
+					}
+					save_scope_as = mw_crown_story
+				}
+				agot_mw_add_character_to_mw_list = {
+					CHARACTER_SCOPE = scope:attacker
+					STORY_SCOPE = scope:mw_crown_story
+					LIST = mw_neutral_list
+					PRE_WAR_LIEGE_SCOPE = scope:attacker.liege.var:agot_pwl_direct
+				}
+			}
+		}
+		#AGOT end
+
+		scope:attacker = { show_pow_release_message_effect = yes }
+
+		#EP2 Accolade glory gain from winning against higher ranked enemy
+		scope:attacker = { accolade_attacker_war_end_glory_gain_high_effect = yes }
+
+		scope:attacker = {
+			add_character_flag = ai_should_not_transfer
+		}
+		create_title_and_vassal_change = {
+			type = independency
+			save_scope_as = change
+		}
+		scope:attacker = {
+			change_liege_or_become_independent = {
+				CHANGE = scope:change
+				VASSAL = this
+			}
+
+			hidden_effect = {
+				set_variable = {
+					name = independence_war_former_liege
+					value = scope:defender
+				}
+				add_truce_both_ways = {
+					character = scope:defender
+					days = 1825
+					war = root.war
+					result = victory
+				}
+			}
+		}
+
+		scope:defender = {
+
+			# Struggle Catalyst
+			hidden_effect = {
+				if = {
+					limit = {
+						catalyst_gave_independence_to_powerful_diff_faith_culture_vassal_preliminary_trigger = {
+							CHAR1 = scope:defender
+							CHAR2 = scope:attacker
+						}
+						any_character_struggle = {
+							involvement = involved
+							activate_struggle_catalyst_secondary_character_involvement_involved_trigger = {
+								CATALYST = catalyst_gave_independence_to_powerful_diff_faith_culture_vassal
+								CHAR = scope:attacker
+							}
+						}
+					}
+					every_character_struggle = {
+						involvement = involved
+						limit = {
+							activate_struggle_catalyst_secondary_character_involvement_either_trigger = {
+								CATALYST = catalyst_gave_independence_to_powerful_diff_faith_culture_vassal
+								CHAR = scope:attacker
+							}
+						}
+						activate_struggle_catalyst = {
+								catalyst = catalyst_gave_independence_to_powerful_diff_faith_culture_vassal
+								character = scope:defender
+							}
+					}
+				}
+			}
+		}
+
+		# LEGITIMACY FROM LOSING FACTION WAR
+		faction_war_end_defeat_legitimacy_effect = yes
+
+		#Mandalas gain or lose piety/devotion depending on Decree
+		mandala_war_victory_effects = yes
+
+		resolve_title_and_vassal_change = scope:change
+
+
+		#AGOT Added
+		agot_war_victory_effects = yes
+	}
+
+	on_white_peace_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:defender = { is_local_player = yes } }
+				desc = player_independence_war_white_peace_defender_desc
+			}
+			triggered_desc = {
+				trigger = {
+					scope:attacker = {
+						is_local_player = yes
+					}
+				}
+				desc = player_independence_war_white_peace_attacker_desc
+			}
+			desc = player_independence_war_white_peace_desc
+		}
+
+	}
+
+	on_white_peace = {
+		scope:attacker = {
+			show_pow_release_message_effect = yes
+			stress_impact = {
+ 				ambitious = medium_stress_impact_gain
+ 				arrogant = medium_stress_impact_gain
+ 			}
+		}
+		hidden_effect = {
+			scope:attacker = {
+				add_truce_both_ways = {
+					character = scope:defender
+					days = 1825
+					war = root.war
+					result = white_peace
+				}
+			}
+		}
+
+		scope:defender = {
+			add_prestige = minor_prestige_value
+			stress_impact = {
+ 				arrogant = medium_stress_impact_gain
+ 			}
+		}
+	}
+
+	on_defeat_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:defender = { is_local_player = yes } }
+				desc = player_independence_defeat_defender_desc
+			}
+			triggered_desc = {
+				trigger = {
+					scope:attacker = {
+						is_local_player = yes
+					}
+				}
+				desc = player_independence_defeat_attacker_desc
+			}
+			desc = player_independence_war_defeat_desc
+		}
+
+	}
+
+	on_defeat = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		scope:defender = {
+			mandala_peacemaker_perk_serenity_effect = yes
+			add_dread = medium_dread_gain
+			# Prestige for Defender
+			add_prestige_war_defender_effect = {
+				PRESTIGE_VALUE = medium_prestige_value
+			}
+
+			# LEGITIMACY FROM WINNING FACTION WAR
+			faction_war_end_victory_legitimacy_effect = yes
+		}
+
+		scope:attacker = {
+			hard_imprison_character_effect = {
+				TARGET = this
+				IMPRISONER = scope:defender
+			}
+			scope:defender = {
+				add_opinion = {
+					target = prev
+					modifier = vassal_lost_faction_revolt_war
+				}
+			}
+		}
+
+		#Mandalas gain or lose piety/devotion depending on Decree
+		mandala_war_defeat_effects = yes
+	}
+
+	should_invalidate = {
+		scope:attacker.liege != scope:defender
+	}
+
+	on_invalidated_desc = msg_invalidate_war_title
+
+	check_defender_inheritance_validity = no
+
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+
+	transfer_behavior = transfer
+
+	war_name = "INDEPENDENCE_WAR_NAME"
+
+	interface_priority = 120
+
+	attacker_wargoal_percentage = 0.8
+
+	max_attacker_score_from_battles = 100
+	max_defender_score_from_battles = 50
+	
+	max_defender_score_from_occupation = 150
+	max_attacker_score_from_occupation = 150
+
+	max_ai_diplo_distance_to_title = 500
+}

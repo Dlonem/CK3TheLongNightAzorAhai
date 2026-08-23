@@ -1,0 +1,43 @@
+﻿# AGOT: The Long Night & Azor Ahai -- THE DEAD DO NOT TIRE (1.0.8)
+#
+# The diagnosis lives at the application site, events/00_others_heartbeat_events.txt. Short version:
+# CK3 scores a siege in DEFENDER MORALE. A holding needs 100 + 75 x fort_level progress; the daily drain
+# is base 1 + men-at-arms siege_value + 0.01 per 200 men over the garrison, all multiplied by 0.7 for
+# EACH siege tier the besiegers lack (SIEGE_FORT_THRESHOLDS = { 4 6 11 16 31 }) and floored at 0.5.
+# NCombat.LEVY_SIEGE = 0, so a levy is worth nothing to a siege -- and ~91% of an Others host is
+# accumulated scouring levies, which are also siege tier 0 and therefore eat the full x0.7^4 penalty
+# against a great seat. That is the five-year White Harbor siege, and it is universal to every castle.
+#
+# ── WHY THESE THREE, AND WHY THESE NUMBERS ────────────────────────────────────────────────────────
+#
+# levy_siege -- THE ACTUAL FIX. Additive, per levy soldier, the direct counterpart to the LEVY_SIEGE
+#   define. modifier_definition_formats/00_definitions.txt:2806 -> `{ prefix = ... decimals = 2 }` with
+#   NO percent flag, so it is a flat add and not a multiplier on a near-zero base. This is the only
+#   lever that makes the horde's mass do what the horde is FOR: no engineering, just weight against a
+#   wall, arriving and arriving. At 0.002 a besieging force of ~4,000 is worth ~8 progress/day.
+#
+# siege_morale_loss -- a PERCENT MULTIPLIER, not a flat add. This was got wrong once and caught on
+#   review, so it is written down: 00_definitions.txt:1308 -> `{ decimals = 0  percent = yes }`, and
+#   the tell is the sibling pair at :1313/:1316 where only the _mult variant carries the flag. Every
+#   value shipped anywhere is a fraction -- vanilla tops out at 0.25, AGOT at 0.98
+#   (castle_storming_event_modifier), and AGOT's own dragons carry 0.05. 0.5 = +50%, deliberately
+#   modest, because a multiplier cannot rescue a base that the tier penalty has already crushed.
+#
+# siege_phase_time -- also a percent (:1302). -0.25 against BASE_SIEGE_PHASE_LENGTH = 20 gives 15-day
+#   phases, so roughly a third more breach/assault/desertion rolls. In band: AGOT ships -0.98 and -0.3.
+#
+# ── TUNING, AND THE ONE THING THE FILES CANNOT ANSWER ─────────────────────────────────────────────
+# Expected outcomes at White Harbor (b_new_castle, fort 25 read out of the 13 Aug save, 28 under our own
+# ln_last_bastion_modifier -> 2,200 progress required):
+#   * if the AI's siege split leaves PURE LEVIES on the walls (tier 0, x0.24 penalty):  ~1.5 years
+#   * if it keeps any of the host's tier-4 other_maa (no penalty at all):               ~3 months
+# Which of those happens depends on how CK3 composes a siege split, and that is NOT determinable from
+# the files -- it swings the result by an order of magnitude. The boot test settles it: launch with
+# -develop, find an undead siege, and read the siege window's daily progress against the fort level.
+# Then set levy_siege from the measurement. Nothing else in the feature needs to move.
+ln_the_dead_do_not_tire_modifier = {
+	icon = martial_positive
+	levy_siege = 0.002
+	siege_morale_loss = 0.5
+	siege_phase_time = -0.25
+}

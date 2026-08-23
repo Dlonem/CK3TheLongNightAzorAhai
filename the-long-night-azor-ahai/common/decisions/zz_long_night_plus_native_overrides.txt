@@ -1,0 +1,69 @@
+﻿# The Long Night+ — overrides of NATIVE AGOT decisions (same key redefined → ours, loaded after AGOT, wins).
+#
+# restore_the_nights_watch: verbatim copy of AGOT's decision (00_agot_nights_watch_decisions.txt) with ONE
+# added is_shown gate — once the Long Night has ended (global ln_aftermath_started), Watch restoration belongs
+# EXCLUSIVELY to the Question of the North (event ln_aftermath.1): if the free folk were welcomed the Watch
+# must never rise again, and even while the Question is pending this decision must not preempt it. Before the
+# Long Night resolves, the native decision behaves exactly as in AGOT.
+# ⚠️ RESYNC if AGOT changes its restore_the_nights_watch decision.
+restore_the_nights_watch = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = restore_the_nights_watch_desc
+	selection_tooltip = restore_the_nights_watch_tooltip
+	decision_group_type = major
+
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 0
+		duchy = 0
+		kingdom = 120
+		empire = 120
+		hegemony = 120
+	}
+
+	is_shown = {
+		# LN+ AFTERMATH: after the Long Night, the Question of the North owns this choice (see header).
+		NOT = { exists = global_var:ln_aftermath_started }
+		is_ruler = yes
+		is_landed = yes
+		OR = {
+			NOT = { exists = title:k_the_wall.holder }
+			has_title = title:k_the_wall
+			any_vassal = {
+				has_title = title:k_the_wall
+			}
+		}
+		OR = {
+			has_title = title:h_the_iron_throne
+			has_title = title:e_the_north
+		}
+	}
+
+	is_valid = {
+		prestige_level >= 3
+		agot_is_independent_ruler = yes
+		completely_controls_region = world_westeros_the_wall_only
+	}
+
+	is_valid_showing_failures_only = {
+		is_at_war = no
+	}
+
+	cost = {
+		gold = 500
+		prestige = 250
+	}
+
+	effect = {
+		trigger_event = agot_nights_watch.0024
+		custom_tooltip = restore_the_nights_watch.tooltip.1
+		custom_tooltip = restore_the_nights_watch.tooltip.2
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

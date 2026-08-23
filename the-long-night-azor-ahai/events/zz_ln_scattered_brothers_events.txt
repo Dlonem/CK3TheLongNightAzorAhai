@@ -1,0 +1,327 @@
+﻿namespace = ln_scatter
+
+# AGOT: The Long Night & Azor Ahai -- THE SCATTERED WATCH (Session 10, Thomas's design).
+#
+# "Not all the people who took the black die when the Night King gets there. They scatter to different
+# kingdoms in the realm... three black brothers showed up at my gates, and they want to say that the Wall
+# has fallen... we want it to be a minor delayed way of letting everybody else know."
+#
+# So: when the struggle reaches the Long Night, ln_struggle_reached_long_night_effect schedules the hidden
+# director 45-120 days out, and the director staggers each player's card by a further 30-300 days. Word
+# arrives on foot, in rags, months behind the ravens that never came -- no two realms hear it in the same
+# season, which is the point. Once per wave: the ln_brothers_scattered global re-arms when the wheel turns
+# (cleared in the per-summer reset alongside the other latches).
+#
+# The card is the warning delivered the fun way, and the options carry real freight:
+#   * take them in  -> an actual veteran of the Wall joins your court (the fork's proven create_character
+#                      shape, nightswatch + lifestyle_nw_ranger), plus ln_heard_the_warning -- the same
+#                      knowledge-gate flag the intro card and the Citadel option grant
+#   * send them on  -> the warning flag and a little honor; the word keeps travelling
+#   * the sentence  -> the law of the realm says deserters die. These men swear the Wall is DOWN, which
+#                      would make them no deserters at all -- if you believe them. No flag: the cost of
+#                      the sword is the warning that died with them. No death mechanics are scripted
+#                      against any real character (standing rule 5) -- the brothers in this option exist
+#                      only in the text.
+
+# ── THE DIRECTOR. Hidden, rootless, fires once per wave. ───────────────────────────────────────────────────
+ln_scatter.1 = {
+	scope = none
+	hidden = yes
+
+	immediate = {
+		# NOT EVERYBODY -- Thomas: "I want just, like, relevant. The Lannisters, big powerhouses in
+		# Westeros. They're trying to go to the big kingdoms that'll take them, and also be able to help."
+		# Survivors walk to gates worth walking to: human dukes and up, and every independent AI king in
+		# the Seven Kingdoms. A one-county lord hears the rumors like everyone else; the brothers were
+		# never coming to his hall.
+		every_player = {
+			limit = {
+				is_alive = yes
+				is_landed = yes
+				highest_held_title_tier >= tier_duchy
+				NOT = { government_has_flag = government_is_nw }
+				capital_province ?= { geographical_region = world_westeros_seven_kingdoms }
+			}
+			trigger_event = { id = ln_scatter.2  days = { 30 300 } }
+		}
+		every_independent_ruler = {
+			limit = {
+				is_ai = yes
+				is_alive = yes
+				is_landed = yes
+				highest_held_title_tier >= tier_kingdom
+				NOT = { government_has_flag = government_is_nw }
+				capital_province ?= { geographical_region = world_westeros_seven_kingdoms }
+			}
+			trigger_event = { id = ln_scatter.2  days = { 30 300 } }
+		}
+	}
+}
+
+# ── CROWS AT YOUR GATES. ───────────────────────────────────────────────────────────────────────────────────
+ln_scatter.2 = {
+	type = character_event
+	title = ln_scatter.2.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { culture = culture:northman }
+				desc = ln_scatter.2.desc.north
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						faith = faith:rhllor_fots
+						faith = faith:rhllor_fc
+						faith = faith:rhllor_asshai
+						faith = faith:rhllor_hyrkoon
+					}
+				}
+				desc = ln_scatter.2.desc.red
+			}
+			desc = ln_scatter.2.desc
+		}
+	}
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = worry }
+	right_portrait = { character = scope:ln_scattered_brother  animation = beg }
+
+	trigger = {
+		is_alive = yes
+		is_landed = yes
+		NOT = { government_has_flag = government_is_nw }
+		# If the dawn already came while the word was on the road, the card is stale -- let it die.
+		has_global_variable = others_invasion_has_arrived
+		# 13 Aug (1.0.6a), Thomas: "obviously you can't get this event in Dorne or the Reach or the
+		# Stormlands." Men walking from a fallen Wall do not reach the far south -- they stop at the
+		# first hall that will have them, and the ones who keep going are a different story than this
+		# one. The North, the Riverlands, the Vale and the Westerlands can all plausibly be walked to.
+		capital_province ?= {
+			NOR = {
+				geographical_region = world_westeros_dorne
+				geographical_region = world_westeros_the_reach
+				geographical_region = world_westeros_the_stormlands
+			}
+		}
+	}
+
+	# 13 Aug (1.0.6a) -- THE MEN ARE MADE BEFORE THE CARD DRAWS, NOT AFTER YOU ANSWER IT.
+	# Thomas: "I was expecting one to three Night's Watch members that were able to escape the wall...
+	# there was no indication they would be joining my court. There was no indication that there were
+	# specific people." Correct on both counts: the veteran was created inside the ACCEPT option, so he
+	# could not appear on the card that was asking about him, and nothing told you he had arrived.
+	#
+	# Three men now, made here: a spokesman who does the talking and two who came with him. They stand
+	# in the courtyard at root's seat (location, never employer -- create_character rejects both together)
+	# and only take service if you say yes.
+	#
+	# WHY GENERATED AND NOT SURVIVORS PLUCKED FROM THE WATCH'S ROSTER. Thomas asked for real men who
+	# actually got out. CK3 cannot answer that: by the time this fires the Wall's court has been wighted
+	# or destroyed and the brothers who "escaped" were never modelled as anything -- there is no roster
+	# left to pull from. Generating them at the door is the honest version of the same fiction, and they
+	# are built to be exactly who he described: hardened, prowess 14-24, a full nightswatch trait.
+	immediate = {
+		play_music_cue = "mood_the_others"
+
+		# REAL MEN FIRST. ln_brothers_flee_south_effect banked the brothers who actually got out when the
+		# Wall came down -- names, houses, histories intact. A Tarly who took the black forty years ago can
+		# walk into your hall, which is the whole fantasy. Only when the list is empty (an old save, or a
+		# Wall that fell with nobody left in it) are strangers generated to fill the gap.
+		if = {
+			limit = {
+				any_in_global_list = {
+					variable = ln_wall_survivors
+					is_alive = yes
+					is_landed = no
+					NOT = { has_character_flag = ln_took_service }
+				}
+			}
+			random_in_global_list = {
+				variable = ln_wall_survivors
+				limit = {
+					is_alive = yes
+					is_landed = no
+					NOT = { has_character_flag = ln_took_service }
+				}
+				add_character_flag = ln_took_service
+				save_scope_as = ln_scattered_brother
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:ln_scattered_brother } }
+			create_character = {
+				age = { 30 50 }
+				dynasty = none
+				culture = culture:northman
+				faith = faith:old_gods_wnw
+				location = root.capital_province
+				gender = male
+				martial = { 10 16 }
+				prowess = { 16 24 }
+				trait = nightswatch
+				trait = lifestyle_nw_ranger
+				trait = brave
+				save_scope_as = ln_scattered_brother
+				after_creation = { add_trait_xp = { trait = nightswatch  value = 100 } }
+			}
+		}
+		# THE TWO WHO CAME WITH HIM ARE REAL OR THEY ARE NOBODY. Thomas: "if the list is empty, it should
+		# probably only generate one stranger... make sure the person can't get too many Night's Watchmen."
+		# So exactly one man is ever invented, above, and only when nobody actually got out. Companions are
+		# drawn from the survivors or the party is simply smaller, which is the honest outcome anyway.
+		if = {
+			limit = {
+				any_in_global_list = {
+					variable = ln_wall_survivors
+					is_alive = yes
+					is_landed = no
+					NOT = { has_character_flag = ln_took_service }
+				}
+			}
+			random_in_global_list = {
+				variable = ln_wall_survivors
+				limit = {
+					is_alive = yes
+					is_landed = no
+					NOT = { has_character_flag = ln_took_service }
+				}
+				add_character_flag = ln_took_service
+				save_scope_as = ln_scattered_brother_2
+			}
+		}
+		if = {
+			limit = {
+				any_in_global_list = {
+					variable = ln_wall_survivors
+					is_alive = yes
+					is_landed = no
+					NOT = { has_character_flag = ln_took_service }
+				}
+			}
+			random_in_global_list = {
+				variable = ln_wall_survivors
+				limit = {
+					is_alive = yes
+					is_landed = no
+					NOT = { has_character_flag = ln_took_service }
+				}
+				add_character_flag = ln_took_service
+				save_scope_as = ln_scattered_brother_3
+			}
+		}
+	}
+
+	# Take them in. They swear to you and they can hold a spear, which is the whole point of them.
+	option = {
+		name = ln_scatter.2.a
+		add_character_flag = ln_heard_the_warning
+		custom_tooltip = ln_scatter_brothers_join_tt
+		scope:ln_scattered_brother = { set_employer = root }
+		if = { limit = { exists = scope:ln_scattered_brother_2 }  scope:ln_scattered_brother_2 = { set_employer = root } }
+		if = { limit = { exists = scope:ln_scattered_brother_3 }  scope:ln_scattered_brother_3 = { set_employer = root } }
+		# The follow-up, once they have had a season to settle in. See ln_scatter.3.
+		trigger_event = { id = ln_scatter.3  days = { 30 90 } }
+		ai_chance = {
+			base = 40
+			modifier = { add = 25  OR = { has_trait = brave  has_trait = compassionate  culture = culture:northman } }
+			modifier = { add = 15  has_trait = zealous }
+			modifier = { add = -20  has_trait = paranoid }
+		}
+	}
+
+	# Feed them, arm them, send them south. The word keeps moving, which is what the word is for.
+	option = {
+		name = ln_scatter.2.b
+		add_character_flag = ln_heard_the_warning
+		add_prestige = 50
+		# They keep walking. Into the pool at your seat, so the world still has them.
+		# 1.0.12 -- guarded. A brother already standing in that pool threw
+		#     move_to_pool_at effect [ Trying to move courtier to pool they're already in ]
+		# once in the 18 Aug run. Harmless, but it is one error line for a move that was a no-op anyway.
+		# is_in_pool_at is AGOT's own guard for this (agot_on_title_gain_nightswatch's courtier sweep).
+		# exists = root.capital_province as well, because this option is reachable by a landless root and a
+		# missing province would fail the same call for a different reason.
+		hidden_effect = {
+			if = {
+				limit = {
+					exists = root.capital_province
+					scope:ln_scattered_brother = { NOT = { is_in_pool_at = root.capital_province } }
+				}
+				scope:ln_scattered_brother = { move_to_pool_at = root.capital_province }
+			}
+			if = { limit = { exists = root.capital_province  exists = scope:ln_scattered_brother_2  scope:ln_scattered_brother_2 = { NOT = { is_in_pool_at = root.capital_province } } }  scope:ln_scattered_brother_2 = { move_to_pool_at = root.capital_province } }
+			if = { limit = { exists = root.capital_province  exists = scope:ln_scattered_brother_3  scope:ln_scattered_brother_3 = { NOT = { is_in_pool_at = root.capital_province } } }  scope:ln_scattered_brother_3 = { move_to_pool_at = root.capital_province } }
+		}
+		ai_chance = {
+			base = 35
+			modifier = { add = 20  OR = { has_trait = generous  has_trait = just } }
+		}
+	}
+
+	# The law says men who abandon the Wall die. The law was written when there was a Wall.
+	option = {
+		name = ln_scatter.2.c
+		add_dread = 10
+		# The one place the mod scripts a death, and it is against three men it made ten seconds ago for
+		# exactly this scene -- no pre-existing character is ever touched (standing rule 5).
+		hidden_effect = {
+			scope:ln_scattered_brother = { death = { death_reason = death_execution  killer = root } }
+			if = { limit = { exists = scope:ln_scattered_brother_2 }  scope:ln_scattered_brother_2 = { death = { death_reason = death_execution  killer = root } } }
+			if = { limit = { exists = scope:ln_scattered_brother_3 }  scope:ln_scattered_brother_3 = { death = { death_reason = death_execution  killer = root } } }
+		}
+		stress_impact = {
+			compassionate = medium_stress_impact_gain
+			just = minor_stress_impact_gain
+		}
+		ai_chance = {
+			base = 10
+			modifier = { add = 25  OR = { has_trait = callous  has_trait = wrathful  has_trait = arbitrary } }
+			modifier = { add = -10  has_trait = compassionate }
+			modifier = { add = -10  culture = culture:northman }
+		}
+	}
+}
+
+# ── AND WHAT THEY TURNED OUT TO BE ──────────────────────────────────────────────────────────────────────────
+# 13 Aug (1.0.6a). Thomas: "is there a part two event that if you actually do accept them, then that option
+# will eventually trigger within thirty to ninety days?" Yes -- and it is the payoff that makes taking them in
+# feel like a decision rather than a courtesy. Fires only from ln_scatter.2's accept option, only if the man
+# is still alive and still yours, and it is the first time the player learns what he actually took in.
+ln_scatter.3 = {
+	type = character_event
+	title = ln_scatter.3.t
+	desc = ln_scatter.3.desc
+	theme = martial
+	override_background = { reference = courtyard }
+
+	left_portrait = { character = root  animation = personality_content }
+	right_portrait = { character = scope:ln_scattered_brother  animation = personality_bold }
+
+	# ONLY IF: the man is alive and still in this court. NEVER IF: he died, left, or was never taken in --
+	# a card about a man who is not there is worse than no card.
+	trigger = {
+		exists = scope:ln_scattered_brother
+		scope:ln_scattered_brother = {
+			is_alive = yes
+			employer ?= root
+		}
+	}
+
+	# Put him to work on the walls: garrison and levies, the thing a Wall veteran actually knows.
+	option = {
+		name = ln_scatter.3.a
+		add_character_modifier = { modifier = ln_black_cloaks_in_the_garrison_modifier  years = 20 }
+		add_prestige = 25
+		ai_chance = { base = 55  modifier = { add = 20  has_trait = diligent } }
+	}
+
+	# Send him to your commanders instead: he has seen what is coming and they have not.
+	option = {
+		name = ln_scatter.3.b
+		scope:ln_scattered_brother = { add_martial_lifestyle_xp = 100 }
+		add_character_flag = ln_looked_north
+		add_martial_lifestyle_xp = 50
+		ai_chance = { base = 45  modifier = { add = 20  has_trait = brave } }
+	}
+}

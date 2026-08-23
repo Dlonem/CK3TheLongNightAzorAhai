@@ -1,0 +1,6 @@
+﻿# AGOT: The Long Night & Azor Ahai
+ln_faced_the_dead_modifier = {
+	dread_baseline_add = 15
+	monthly_prestige = 0.5
+	same_faith_opinion = 5
+}

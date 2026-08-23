@@ -1,0 +1,248 @@
+﻿namespace = ln_consecrate
+
+# AGOT: The Long Night & Azor Ahai -- CONSECRATION, the rite at the fire.
+#
+# Four events. .1 is the choice, .2 is the life, .3 is Dawn, .4 is walking away. The shape deliberately
+# mirrors ln_lightbringer.3/.4/.6/.7 -- same beats, same weights, same one-stress-hit rule -- because it is
+# the same decision reached by a different road, and a player who has seen one should recognise the other.
+#
+# NOTHING HERE IS RANDOM. Which blade and which beloved are both picked by branch order in the immediate
+# (see zz_ln_consecration_effects.txt); the only real decision in the chain is the option the player takes.
+
+# ── 1. THE FIRE IS LIT ──────────────────────────────────────────────────────────────────────────────────────
+ln_consecrate.1 = {
+	type = character_event
+	title = ln_consecrate.1.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { exists = scope:ln_the_blade  scope:ln_the_blade = { ln_blade_is_dawn_trigger = yes } }
+				desc = ln_consecrate.1.desc.dawn
+			}
+			triggered_desc = {
+				trigger = { exists = scope:ln_beloved }
+				desc = ln_consecrate.1.desc.beloved
+			}
+			desc = ln_consecrate.1.desc
+		}
+	}
+	theme = faith
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = personality_zealous }
+	right_portrait = { character = scope:ln_beloved  animation = sadness }
+
+	# STILL QUALIFIES? The same re-check every queued event in this mod carries: fourteen days pass between the
+	# click and this card, and in that time the blade can be stolen, the champion can renounce the name, or
+	# somebody else can finish the forge.
+	trigger = {
+		is_alive = yes
+		ln_is_a_champion_of_rhllor_trigger = yes
+		NOT = { ln_lightbringer_exists_trigger = yes }
+		ln_carries_a_blade_to_consecrate_trigger = yes
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		ln_pick_the_blade_effect = yes
+		ln_pick_the_beloved_effect = yes
+	}
+
+	# ── THE LIFE ────────────────────────────────────────────────────────────────────────────────────────────
+	option = {
+		name = ln_consecrate.1.a
+		trigger = {
+			exists = scope:ln_beloved
+			exists = scope:ln_the_blade
+			scope:ln_the_blade = { NOT = { ln_blade_is_dawn_trigger = yes } }
+		}
+		ai_chance = {
+			base = 15
+			modifier = { add = 35  has_trait = zealous }
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = 10  has_trait = sadistic }
+			modifier = { add = -40  has_trait = compassionate }
+		}
+		trigger_event = { id = ln_consecrate.2  days = 1 }
+	}
+
+	# ── THE STAR ALREADY PAID ───────────────────────────────────────────────────────────────────────────────
+	option = {
+		name = ln_consecrate.1.b
+		trigger = {
+			exists = scope:ln_the_blade
+			scope:ln_the_blade = { ln_blade_is_dawn_trigger = yes }
+			has_character_flag = ln_deed_bleeding_star
+		}
+		ai_chance = {
+			base = 80
+			modifier = { add = 20  has_trait = zealous }
+			modifier = { add = -20  has_trait = craven }
+		}
+		trigger_event = { id = ln_consecrate.3  days = 1 }
+	}
+
+	# ── PUT IT BACK IN THE SCABBARD ─────────────────────────────────────────────────────────────────────────
+	option = {
+		name = ln_consecrate.1.c
+		ai_chance = {
+			base = 25
+			modifier = { add = 35  has_trait = compassionate }
+			modifier = { add = 10  has_trait = content }
+			modifier = { add = -20  has_trait = zealous }
+		}
+		trigger_event = { id = ln_consecrate.4  days = 1 }
+	}
+}
+
+# ── 2. NISSA NISSA, BY ANOTHER NAME ─────────────────────────────────────────────────────────────────────────
+# The opinion consequences are ln_lightbringer.4's, key for key, and that is deliberate rather than lazy. A
+# man who put a sword through someone he loved does not get a gentler reception from his household because he
+# used a blade that already had a name.
+ln_consecrate.2 = {
+	type = character_event
+	title = ln_consecrate.2.t
+	desc = ln_consecrate.2.desc
+	theme = death
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = shock }
+
+	trigger = {
+		is_alive = yes
+		exists = scope:ln_beloved
+		exists = scope:ln_the_blade
+		scope:ln_beloved = { is_alive = yes }
+		NOT = { ln_lightbringer_exists_trigger = yes }
+	}
+
+	immediate = {
+		scope:ln_beloved = {
+			death = {
+				killer = root
+				death_reason = death_sacrificed
+			}
+		}
+		ln_consecrate_blade_effect = yes
+		add_character_flag = ln_paid_in_full
+	}
+
+	option = {
+		name = ln_consecrate.2.a
+		add_dread = 30
+		add_piety = 300
+		add_prestige = 200
+		# ONE stress hit, not a cascade. Standing rule.
+		stress_impact = {
+			base = massive_stress_impact_gain
+			callous = medium_stress_impact_loss
+			zealous = medium_stress_impact_loss
+			compassionate = medium_stress_impact_gain
+		}
+		every_close_family_member = {
+			limit = { is_alive = yes }
+			add_opinion = {
+				modifier = ln_killed_her_for_a_sword_opinion
+				target = root
+				opinion = -60
+			}
+		}
+		every_player = {
+			limit = {
+				NOT = { this = root }
+				is_alive = yes
+				OR = {
+					has_trait = zealous
+					faith = root.faith
+				}
+			}
+			add_opinion = {
+				modifier = ln_paid_the_price_opinion
+				target = root
+				opinion = 30
+			}
+		}
+		every_courtier_or_guest = {
+			limit = {
+				is_alive = yes
+				has_trait = zealous
+				faith = root.faith
+			}
+			add_opinion = {
+				modifier = ln_paid_the_price_opinion
+				target = root
+				opinion = 25
+			}
+		}
+	}
+}
+
+# ── 3. DAWN, AND THE STAR THAT ALREADY PAID ─────────────────────────────────────────────────────────────────
+# Nobody dies here, and that is the point rather than an oversight. Thomas settled it in 1.0.11: Dawn takes no
+# third tempering because the falling star was the tempering, and the only thing the rite still needs is that
+# the man holding it be the one the star came down for -- ln_deed_bleeding_star and nothing else.
+#
+# It is therefore the single cheapest route to Lightbringer in the mod, and it should be: it requires holding
+# the sword of House Dayne AND carrying a deed that a handful of characters in any given world will ever have.
+ln_consecrate.3 = {
+	type = character_event
+	title = ln_consecrate.3.t
+	desc = ln_consecrate.3.desc
+	theme = faith
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = personality_honorable }
+
+	trigger = {
+		is_alive = yes
+		exists = scope:ln_the_blade
+		has_character_flag = ln_deed_bleeding_star
+		NOT = { ln_lightbringer_exists_trigger = yes }
+	}
+
+	immediate = {
+		ln_consecrate_blade_effect = yes
+		add_character_flag = ln_the_star_paid_for_it
+	}
+
+	option = {
+		name = ln_consecrate.3.a
+		add_piety = 300
+		add_prestige = 300
+		# No dread. He did not frighten anybody -- he picked up a sword his house has carried for eight thousand
+		# years and it answered him, which is the opposite kind of story.
+		stress_impact = { base = medium_stress_impact_loss }
+		every_player = {
+			limit = {
+				NOT = { this = root }
+				is_alive = yes
+				OR = {
+					has_trait = zealous
+					faith = root.faith
+				}
+			}
+			add_opinion = {
+				modifier = ln_paid_the_price_opinion
+				target = root
+				opinion = 20
+			}
+		}
+	}
+}
+
+# ── 4. HE PUT IT BACK ───────────────────────────────────────────────────────────────────────────────────────
+# Same treatment the forge gives a refusal: not a consolation prize, a different answer to the question.
+# ln_would_not_pay_the_price_modifier already exists and already says exactly this.
+ln_consecrate.4 = {
+	type = character_event
+	title = ln_consecrate.4.t
+	desc = ln_consecrate.4.desc
+	theme = faith
+	left_portrait = { character = root  animation = personality_compassionate }
+
+	trigger = { is_alive = yes }
+
+	option = {
+		name = ln_consecrate.4.a
+		add_piety = 100
+		add_character_modifier = ln_would_not_pay_the_price_modifier
+		stress_impact = { base = medium_stress_impact_loss }
+	}
+}

@@ -1,0 +1,29 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who gets to go ranging.
+#
+# THOMAS ASKED THE RIGHT QUESTION: "Will they ever get filled by AI? Or is there a limit, like, the seat is
+# not filled yet?"
+#
+# It matters more than it looks, because the two ways people will play this mod want opposite answers:
+#
+#   A DISCORD GROUP wants every seat left open. Eight brothers, eight players, and an AI taking one is an AI
+#   taking a friend's seat.
+#   A SOLO PLAYER wants the opposite. Eight empty ranging companies is a dead Wall -- no brothers riding out,
+#   no rangings failing, nobody to lose. The Watch should look like an institution rather than a vacancy list.
+#
+# So it is a rule, and the default splits the difference rather than picking a side: the Watch fills its own
+# ranks, and THREE COMPANIES ARE ALWAYS HELD BACK. A solo player gets a living Wall. A group of four still
+# walks into three guaranteed seats plus whatever the AI has not taken yet.
+#
+# HOW THE RESERVE IS ENFORCED, and it is deliberately dumb: the AI only ever looks at companies one through
+# five, and players are handed the first free company counting from one. No counting, no list, no race
+# condition -- six, seven and eight are simply never offered to an AI under the default.
+ln_ranger_recruitment = {
+	categories = {
+		agot
+	}
+	default = ln_rangers_watch_fills_ranks
+
+	ln_rangers_watch_fills_ranks = { }
+	ln_rangers_players_only = { }
+	ln_rangers_all_eight_ride = { }
+}

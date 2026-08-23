@@ -1,0 +1,154 @@
+﻿namespace = ln_intro
+
+# AGOT: The Long Night & Azor Ahai -- the introduction card.
+#
+# THE PROBLEM THIS SOLVES. Vanilla opens the Iberian struggle with a fullscreen card that tells the player, in a
+# neutral omniscient voice, what the struggle is. We cannot do that honestly. The struggle window is metagame
+# furniture -- your CHARACTER has no access to it. Only Viserys knew Aegon's dream; a Reach hedge lord in 106 AC
+# has no idea he is standing inside anything.
+#
+# So the card reports what the player's court BELIEVES, and every branch is wrong in a different direction:
+#   * the Night's Watch know the most and still know almost nothing
+#   * the North has the story from Old Nan and half-believes it
+#   * a Targaryen knows their house keeps a prophecy and does not have it
+#   * a red priest is certain, loudly, and specific about the wrong things
+#   * a southern lord has a maester's marginal note he never read
+#   * everyone else has nothing at all
+#
+# None of them says "the Long Night is coming." That is the point. The struggle panel is the only place the truth
+# lives, and the player is meant to notice the gap between it and what their character can act on.
+#
+# The two options are not cosmetic: dismissing it fires ln_catalyst_warning_dismissed, so the first choice the
+# player makes in this mod moves the clock. Quietly. Nobody tells them it did.
+ln_intro.1 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_intro.1.t
+	desc = {
+		first_valid = {
+			# STATION LADDER, re-sorted 1.0.11a ------------------------------------------------------------
+			# first-match-wins, so this order IS the priority: watch beats faith, free folk beats faith,
+			# DRAGON BEATS NORTH, and red beats lord/nobody. `dragon` now means you actually HAVE one.
+			# NOTE: this event's catch-all is .desc.nobody -- there is no bare ln_intro.1.desc key.
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_intro.1.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+						culture = culture:frostborn
+						culture = culture:thenn
+						culture = culture:first_clan
+					}
+				}
+				desc = ln_intro.1.desc.free_folk
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						ln_has_deed_woke_dragons_trigger = yes
+						AND = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+					}
+				}
+				desc = ln_intro.1.desc.dragon
+			}
+			triggered_desc = {
+				trigger = { culture = culture:northman }
+				desc = ln_intro.1.desc.north
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						faith = faith:rhllor_fots
+						faith = faith:rhllor_fc
+						faith = faith:rhllor_asshai
+						faith = faith:rhllor_hyrkoon
+					}
+				}
+				desc = ln_intro.1.desc.red
+			}
+			triggered_desc = {
+				trigger = { is_landed = yes  highest_held_title_tier >= tier_county }
+				desc = ln_intro.1.desc.lord
+			}
+			desc = ln_intro.1.desc.nobody
+		}
+	}
+	theme = murder_scheme
+	# ── ONE BACKGROUND PER BRANCH (1.0.11) ───────────────────────────────────────────────────────────
+	# Triggers are copied VERBATIM from the desc branches above and kept in the SAME ORDER, because
+	# override_background resolves first-match-wins exactly as first_valid does. Edit a desc trigger and
+	# you must edit its twin here, or the picture and the words drift apart.
+	# Precedent: 1,265 triggered override_background blocks in vanilla. The bare one last is the fallback.
+	# agot_frozen_forest was the single background here before and is no longer used; it is the obvious
+	# swap for the free folk branch if beyond_the_wall reads too literal.
+	override_background = { trigger = { has_government = nights_watch_government }  reference = agot_the_wall }
+	override_background = {
+		trigger = {
+			OR = {
+				capital_province = { geographical_region = world_westeros_beyond_the_wall }
+				culture = culture:frostborn
+				culture = culture:thenn
+				culture = culture:first_clan
+			}
+		}
+		reference = agot_beyond_the_wall
+	}
+	# agot_northern_castle is declared in AGOT's 02_agot_event_backgrounds.txt:263 but the art it points
+	# at -- gfx/interface/illustrations/event_scenes/northern_castle.dds -- IS NOT SHIPPED. That is why
+	# the North branch drew an empty frame. Every other background used here was checked the same way,
+	# by reading the reference path out of the definition and testing the file. weirwood_event.dds is
+	# present, and the heart tree carries the North better than a castle interior anyway.
+	override_background = {
+		trigger = {
+			OR = {
+				ln_has_deed_woke_dragons_trigger = yes
+				AND = { is_lowborn = no  dynasty = dynasty:dynn_Targaryen }
+			}
+		}
+		reference = agot_dragonpit
+	}
+	override_background = { trigger = { culture = culture:northman }  reference = agot_weirwood_event }
+	override_background = {
+		trigger = {
+			OR = {
+				faith = faith:rhllor_fots
+				faith = faith:rhllor_fc
+				faith = faith:rhllor_asshai
+				faith = faith:rhllor_hyrkoon
+			}
+		}
+		reference = bp1_bonfire
+	}
+	override_background = { trigger = { is_landed = yes  highest_held_title_tier >= tier_county }  reference = council_chamber }
+	override_background = { reference = farmland }
+
+	# ONCE PER WORLD. Not once per character, and never again on succession -- when your heir takes over he does
+	# not get told the story a second time. The global is set by whoever reads it first; in multiplayer every
+	# player still gets their own card because trigger_event was already fanned out before this runs.
+	trigger = {
+		NOT = { has_character_flag = ln_saw_the_intro }
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		add_character_flag = ln_saw_the_intro
+		set_global_variable = { name = ln_intro_shown value = yes }
+	}
+
+	# Take it seriously. Costs nothing, changes nothing mechanically, and is the only branch where the character
+	# is right. Deliberately unrewarded -- being right early should not be a bonus, it should just be true.
+	option = {
+		name = ln_intro.1.a
+		add_character_flag = ln_heard_the_warning
+	}
+
+	# Dismiss it. This is a real cost, applied silently.
+	option = {
+		name = ln_intro.1.b
+		save_scope_as = ln_catalyst_culprit
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_warning_dismissed  PHASE = ln_phase_long_summer  POINTS = 2  COOLDOWN = 3 }
+	}
+}

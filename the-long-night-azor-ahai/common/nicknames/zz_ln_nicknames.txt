@@ -1,0 +1,20 @@
+﻿# AGOT: The Long Night & Azor Ahai -- nicknames.
+# Vanilla's nickname entries are bare; is_bad = yes only affects how the AI feels about carrying it.
+
+# Given to a dragon the Others have brought back. See ln_raise_fallen_dragon_effect.
+nick_the_undead = { is_bad = yes }
+
+# ── THE MAN WHO ENDED IT ────────────────────────────────────────────────────────────────────────────────────
+# A nickname is the cheapest and loudest way a CK3 character says what he did: it goes in the title bar, the
+# family tree, every other realm's diplomacy screen, and it outlives the campaign in a screenshot. Which one
+# you get depends on HOW you did it -- see ln_name_the_dawn_effect. A man who ended the Long Night carrying a
+# sword he forged himself is not the same story as a man who did it with a borrowed axe.
+# Empty bodies are vanilla's own format: `nick_bluetooth = {}` (game/common/nicknames/00_nicknames.txt).
+nick_the_dawnbringer = {}
+nick_the_dawn = {}
+nick_the_prince_that_was_promised = {}
+
+# -- THE MAN WHO DID NOT END IT ------------------------------------------------------------------------------
+# Given in ln_dawn.4 to a commander who walked into the reach of the Night King and came back out without
+# killing him. Not is_bad: the realm does not think less of him for it, and neither does the AI.
+nick_the_undaunted = {}

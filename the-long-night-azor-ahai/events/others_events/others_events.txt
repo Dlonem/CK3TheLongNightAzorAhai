@@ -1,0 +1,260 @@
+﻿
+namespace = others
+
+
+
+others.1 = { #HIDDEN: start the invader story
+	# No `type` field: vanilla's pattern for a rootless hidden event is scope = none + hidden = yes and
+	# nothing else (game/events/, 10 instances). `type = empty` is REJECTED by the parser -- Long Night+
+	# used it and it has been erroring since before the fork. character_event is also wrong here: these
+	# fire from struggle and story scopes with no character root.
+	scope = none
+	hidden = yes
+	
+	trigger = {
+		NOT = {
+			has_global_variable = others_invasion_has_arrived
+		}
+
+		# 9 Aug pacing audit: the legacy game-start schedule is retired (see others_maintenance.1), but a
+		# save made BEFORE the fix has its rolled arrival already baked into the event queue, and a queued
+		# trigger_event cannot be unscheduled. So the event itself now refuses to land mid-Summer or
+		# mid-Cold-Winds: arriving then is precisely the bug -- it skips or cuts the warning act and the
+		# 310 AC observer run proved it (invasion at 8309 against a summer paced for ~90 years). Every
+		# legitimate route still passes: the struggle's own call arrives with the phase ALREADY at the
+		# Long Night; the recurrence fallback only runs when no struggle exists; and the manual decision
+		# and the immediate rule are the two doors that are ALLOWED to open early, so they are excepted.
+		trigger_if = {
+			limit = {
+				exists = struggle:ln_long_night_struggle
+				struggle:ln_long_night_struggle = {
+					OR = {
+						is_struggle_phase = ln_phase_long_summer
+						is_struggle_phase = ln_phase_cold_winds
+					}
+				}
+				NOR = {
+					has_game_rule = others_immediate_invasion
+					has_game_rule = others_manual_invasion
+					# ...and the by-hand door: others_trigger_invasion (debug console / manual rule's own
+					# decision) announces itself with this flag so a tester can still summon the dark at will.
+					has_global_variable = ln_invasion_called_by_hand
+				}
+			}
+			always = no
+		}
+	}
+	
+	immediate = {
+		# Consume the by-hand flag whichever route fired us, so a stale flag can never hold the gate open.
+		if = {
+			limit = { has_global_variable = ln_invasion_called_by_hand }
+			remove_global_variable = ln_invasion_called_by_hand
+		}
+
+		# 13 Aug (1.0.6): THE STALE VICTORY. war_for_dawn_victory is set by war_for_the_dawn_cb's on_victory
+		# and was never cleared anywhere. Under the recurrence rule that meant every Long Night after the
+		# first started already-won: the moment the new Night King died for ANY reason, on_owner_death saw
+		# the wave-one victory still standing and ended the whole invasion on the spot. The dawn must be
+		# earned per wave, so the ledger is wiped the moment a new dark begins.
+		if = {
+			limit = { has_global_variable = war_for_dawn_victory }
+			debug_log = "LN_TRACE: clearing stale war_for_dawn_victory from a previous wave"
+			remove_global_variable = war_for_dawn_victory
+		}
+
+		the_long_night_setup_effect = yes
+	
+		set_global_variable = {
+			name = others_invasion_has_arrived
+			value = yes
+		}
+
+		set_global_variable = {
+			name = others_invasion_year
+			value = current_year
+		}
+		# v0.4.0: one of FIVE openings rather than always the same card, and the struggle is pulled to the
+		# Long Night phase whichever route got us here (legacy schedule, the invasion decision, or the struggle
+		# itself). change_struggle_phase to the phase you are already in is a no-op, so this is safe both ways.
+		ln_invasion_opening_effect = yes
+		ln_sync_struggle_to_invasion_effect = yes
+		
+		
+	}
+}
+
+
+# v0.3.0: the announcement now knows which winter this is.
+# Under the "Once" rule nothing changes -- ln_wave_count never exists and the original text is used. Under "The
+# Cycle" the card gets heavier every time, which is the entire point of the rule: a player should be able to feel
+# their great-grandfather's failure in the wording.
+others.2 = { #ANY PLAYER: First landing notification
+	type = character_event
+	window = fullscreen_event
+	title = others.2.title
+	# THE DRAGON IS THE BANNER. AGOT dragons are characters, so a portrait slot takes one directly, and a
+	# dragon filling the right of a fullscreen card is the closest thing this mod has to a banner. The scope
+	# is saved in `immediate` below -- which runs before the window draws, the same shape ln_pledge.2 uses for
+	# its objector -- because localization resolves a SAVED SCOPE with the bare [name.GetX] form our other
+	# files already use. A global variable would need [global_var:...] and has no precedent here.
+	right_portrait = {
+		character = scope:ln_last_dawn_dragon
+		animation = anger
+		trigger = { exists = scope:ln_last_dawn_dragon  scope:ln_last_dawn_dragon = { is_alive = yes } }
+	}
+
+	desc = {
+		first_valid = {
+			# ── WHAT THE WORLD REMEMBERS ABOUT LAST TIME ────────────────────────────────────────────────
+			# Most specific first; first_valid stops at the first match. These sit ABOVE the wave-counter
+			# branches deliberately: how the last one ENDED is a better opening line than how many there
+			# have been.
+
+			# The dragon that ended the last Long Night is still alive.
+			triggered_desc = {
+				trigger = { exists = scope:ln_last_dawn_dragon  scope:ln_last_dawn_dragon = { is_alive = yes } }
+				desc = ln_others.2.desc.dragon_lives
+			}
+			# It is dead and so is every other dragon. The bleakest card in the mod.
+			triggered_desc = {
+				trigger = {
+					exists = scope:ln_last_dawn_dragon
+					NOT = { any_in_global_list = { variable = living_dragons  count >= 1 } }
+				}
+				desc = ln_others.2.desc.dragon_gone
+			}
+			# It is dead, but the world still has dragons in it.
+			triggered_desc = {
+				trigger = { exists = scope:ln_last_dawn_dragon }
+				desc = ln_others.2.desc.dragon_dead
+			}
+			# No dragon last time, but the man who ended it is somehow still breathing.
+			triggered_desc = {
+				trigger = { exists = scope:ln_last_dawn_champion  scope:ln_last_dawn_champion = { is_alive = yes } }
+				desc = ln_others.2.desc.champion_lives
+			}
+			# -- HOW LONG AGO, AND WHETHER THE PROPHECY WORKED ------------------------------------------
+			# All three read stamps ln_night_king_slain_reveal_effect has written since the reveal shipped
+			# and nothing has ever looked at (live log, 10 Aug: ln_last_dawn_year and ln_last_dawn_was_named,
+			# "set but never used"). Triggers ONLY -- deliberately no [GetX] on a global variable anywhere in
+			# here, because that is the exact trap that nearly shipped a raw key on this very card.
+			triggered_desc = {
+				trigger = {
+					has_global_variable = ln_last_dawn_year
+					ln_years_since_the_last_dawn_value <= 60
+				}
+				desc = ln_others.2.desc.living_memory
+			}
+			triggered_desc = {
+				trigger = { has_global_variable = ln_last_dawn_was_named }
+				desc = ln_others.2.desc.named_true
+			}
+			triggered_desc = {
+				trigger = { has_global_variable = ln_last_dawn_champion }
+				desc = ln_others.2.desc.named_false
+			}
+			triggered_desc = {
+				trigger = { exists = global_var:ln_wave_count  global_var:ln_wave_count >= 6 }
+				desc = ln_others.2.desc.wave_last
+			}
+			triggered_desc = {
+				trigger = { exists = global_var:ln_wave_count  global_var:ln_wave_count >= 4 }
+				desc = ln_others.2.desc.wave_late
+			}
+			triggered_desc = {
+				trigger = { exists = global_var:ln_wave_count  global_var:ln_wave_count >= 2 }
+				desc = ln_others.2.desc.wave_again
+			}
+			desc = others.2.desc
+		}
+	}
+	theme = murder_scheme
+	override_background = {
+		reference = agot_frozen_forest
+	}
+	immediate = {
+		play_music_cue = "mood_the_others"
+
+		# Lift the permanent record into scopes so both the portrait and the localization can reach it.
+		# Neither global exists on wave one, and the dragon may be centuries dead on a later one -- the
+		# reference still resolves because it was locked unpruneable at the dawn that recorded it.
+		if = {
+			limit = { exists = global_var:ln_last_dawn_dragon }
+			global_var:ln_last_dawn_dragon = { save_scope_as = ln_last_dawn_dragon }
+		}
+		if = {
+			limit = { exists = global_var:ln_last_dawn_champion }
+			global_var:ln_last_dawn_champion = { save_scope_as = ln_last_dawn_champion }
+		}
+	}
+	
+
+	
+	
+	option = {
+	
+		name = others.2.a
+	}
+}
+
+
+others.3 = { #ANY PLAYER: the Long Night ends
+	type = character_event
+	window = fullscreen_event
+	title = others.3.title
+	# v0.5.0: the Dawn card now remembers how the dark ARRIVED. ln_invasion_opening is set by
+	# ln_invasion_opening_effect when the invasion starts and this is the only thing that reads it -- which is
+	# the point of having recorded it. A world whose Wall came down gets a different last line to a world where
+	# it was already inside.
+	desc = {
+		first_valid = {
+			# Under the cycle rule the dawn is a reprieve, not a victory, and the text should say so.
+			triggered_desc = {
+				trigger = { has_game_rule = long_night_recurs }
+				desc = ln_others.3.desc.cycle
+			}
+			triggered_desc = {
+				trigger = { exists = global_var:ln_invasion_opening  global_var:ln_invasion_opening = flag:wall_breached }
+				desc = ln_others.3.desc.wall
+			}
+			triggered_desc = {
+				trigger = { exists = global_var:ln_invasion_opening  global_var:ln_invasion_opening = flag:the_proof }
+				desc = ln_others.3.desc.proof
+			}
+			triggered_desc = {
+				trigger = { exists = global_var:ln_invasion_opening  global_var:ln_invasion_opening = flag:already_inside }
+				desc = ln_others.3.desc.inside
+			}
+			triggered_desc = {
+				trigger = { global_var:ln_invasion_opening = flag:the_exodus }
+				desc = ln_others.3.desc.exodus
+			}
+			triggered_desc = {
+				trigger = { global_var:ln_invasion_opening = flag:last_ranging }
+				desc = ln_others.3.desc.ranging
+			}
+			desc = others.3.desc
+		}
+	}
+	theme = murder_scheme
+	override_background = {
+		# 13 Aug (1.0.7): was agot_dragon_forest_clearing, which exists in neither vanilla nor AGOT --
+		# an invented symbol inherited from the ancestor mods, so this card has been falling back to a
+		# default background since before the fork. Found by the full symbol audit.
+		reference = agot_frozen_forest
+	}
+	immediate = {
+
+	play_music_cue = "mood_jennyofoldstones"
+		}
+	
+
+	
+	
+	option = {
+	
+		name = others.3.a
+	}
+}
+

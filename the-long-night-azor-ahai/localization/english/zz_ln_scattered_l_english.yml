@@ -1,0 +1,17 @@
+﻿l_english:
+
+ # ── THE SCATTERED WATCH (Session 10) ────────────────────────────────────────────────────────────────────────
+ ln_scatter.2.t:0 "Black Cloaks at Your Gates"
+ ln_scatter.2.desc:0 "There are three of them at the gates, and your guards do not know what to do with them, because nothing about them makes sense this far south.\n\nBlack cloaks, or what is left of black cloaks. One is missing fingers to frostbite. They have walked, by their boots, a very long way, and they all say the same thing in the flat voices of men who have stopped expecting to be believed:\n\nThe Wall has fallen. The Watch is broken. The dead are walking south behind them, and they are not walking fast, because they do not need to.\n\nYou had heard rumors. Rumors are weather. These men are the storm's own survivors, standing in your yard."
+ ln_scatter.2.desc.north:0 "Every northerner knows the one thing the Night's Watch never does: it does not leave the Wall.\n\nSo when your guards report three black brothers at the gates -- ragged, frostbitten, one of them missing half a hand -- you are already moving before they finish, because black cloaks this far from the Wall are not deserters or beggars. They are arithmetic. The Watch is gone, and these are the remainder.\n\nThey say it plainly, the way northmen say things: the Wall has fallen. The dead are coming down the kingsroad, and they are in no hurry.\n\nOld Nan told you how this story goes. She never told you it would arrive at your own gate in a black cloak."
+ ln_scatter.2.desc.red:0 "The Lord of Light does not send ravens. He sends witnesses.\n\nThree brothers of the fallen Watch at your gates, burned dark by cold the way men are burned by fire, and every word out of them is a sermon you have already preached: the Wall has fallen, the dark is loose, the dead walk. Your nightfire drew them from half a kingdom away -- the only light on the road, they said, that did not turn out to be a corpse-candle.\n\nR'hllor has delivered the proof to your door, still breathing.\n\nWhat is done with proof is the measure of the faithful."
+ ln_scatter.2.a:0 "There is room in my hall for men who have seen it."
+ ln_scatter.2.b:0 "Feed them. Arm them. And send them to every keep south of here."
+ ln_scatter.2.c:0 "The penalty for abandoning the Wall is death."
+ ln_scatter_brothers_join_tt:0 "The three brothers take service in your court. They are sworn men of a Watch that no longer exists — hard, experienced, and worth more in a battle line than their years suggest."
+ ln_scatter.3.t:0 "What the Watch Left You"
+ ln_scatter.3.desc:0 "[ln_scattered_brother.GetTitledFirstName] has been in your hall a season now, and he has not once asked for anything.\n\nHe eats with the guard. He is up before them. Word came up from the barracks three days ago, awkward about it, that the man has forgotten more about holding a wall in winter than anyone in this castle has ever learned — and that the garrison has started standing straighter when he walks past, which is not something you can order men to do.\n\nHe still wakes in the dark sometimes. Nobody asks him about that."
+ ln_scatter.3.a:0 "Put him on the walls. That is what he is for."
+ ln_scatter.3.b:0 "Sit him down with my commanders. They need to hear it."
+ ln_black_cloaks_in_the_garrison_modifier:0 "Black Cloaks on the Walls"
+ ln_black_cloaks_in_the_garrison_modifier_desc:0 "Men of a Watch that no longer exists stand in this castle's garrison. They have held worse walls than this one."

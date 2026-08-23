@@ -1,0 +1,740 @@
+﻿namespace = ln_favored
+
+# AGOT: The Long Night & Azor Ahai -- the Favored chain.
+#
+# You have been named, and it was not your idea. Favored is the rung where the claim is still deniable: nobody
+# outside the temple has committed to it, and you can still put it down. Everything here is about whether you do.
+#
+# THE SHAPE, and it is different from the Resurrected chain on purpose. Resurrected is about what was taken from
+# you and you have no say in it. Favored is about what people want FROM you, and every single event is somebody
+# arriving with an ask. The recurring cost is that agreeing makes the claim more real and refusing makes you
+# smaller in the eyes of people who came a long way.
+#
+# Driven by ln_favored_pulse_effect, one every four years at most, random order.
+
+# ── 1. THE FIRST PILGRIM ────────────────────────────────────────────────────────────────────────────────────
+ln_favored.1 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	title = ln_favored.1.t
+	desc = ln_favored.1.desc
+	theme = faith
+	left_portrait = { character = root  animation = worry }
+	right_portrait = { character = scope:ln_pilgrim  animation = personality_zealous }
+
+	# HE HAS TO EXIST TO BE LOOKED AT. Volantene by culture and R'hllor by faith because that is where he
+	# walked from and why he came; `dynasty = none` because a man who walked for two years has no house left.
+	immediate = {
+		create_character = {
+			location = root.capital_province
+			culture = culture:volantene
+			faith = faith:rhllor_fc
+			gender = male
+			age = { 24 55 }
+			dynasty = none
+			random_traits = yes
+			trait = zealous
+			save_scope_as = ln_pilgrim
+		}
+	}
+
+	option = {
+		name = ln_favored.1.a          # feed him. hear him. send him home.
+		ai_chance = {
+			base = 50
+			modifier = { add = 20  has_trait = generous }
+			modifier = { add = 15  has_trait = compassionate }
+			modifier = { add = 10  has_trait = humble }
+		}
+		add_piety = 50
+		add_prestige = 25
+		stress_impact = { base = minor_stress_impact_gain  arrogant = minor_stress_impact_loss }
+	}
+	option = {
+		name = ln_favored.1.b          # have the guard turn him around.
+		ai_chance = {
+			base = 25
+			modifier = { add = 20  has_trait = callous }
+			modifier = { add = 15  has_trait = paranoid }
+			modifier = { add = 15  has_trait = cynical }
+		}
+		add_character_flag = ln_favored_turned_them_away
+		add_piety = -50
+		add_prestige = -25
+		stress_impact = { base = minor_stress_impact_loss  callous = medium_stress_impact_loss }
+	}
+	option = {
+		name = ln_favored.1.c          # keep him. a man who walked that far is worth having.
+		ai_chance = {
+			base = 35
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = 10  has_trait = trusting }
+			modifier = { add = 10  has_trait = gregarious }
+		}
+		add_character_flag = ln_favored_kept_the_pilgrim
+		add_piety = 75
+		add_diplomacy_lifestyle_xp = 40
+	}
+
+	# ── 1.0.13: THE SIGHTED OPTION ──────────────────────────────────────────────────────────────────────
+	# AGOT ships `greensight` and `dragon_dreams` as real prophetic traits (00_agot_traits.txt) and this mod
+	# had never read either. They are the two ways a person in this world can know a thing before being told
+	# it, and the prophecy chain -- 81 options across three files, two of them gated before this release --
+	# is exactly where that should change what you are able to say.
+	#
+	# THE GATE IS ITS OWN EXPLANATION. CK3 renders an option's trigger as that option's tooltip and draws the
+	# trait icon inline, so the player is shown WHY this door is open to him and nobody else. Vanilla's own
+	# dominant option idiom -- 899 trait-gated options in a 220-file sample of game/events/.
+	option = {
+		name = ln_favored.1.d
+		trigger = {
+			OR = {
+				has_trait = dragon_dreams
+				has_trait = greensight
+			}
+		}
+		add_piety = 100
+		add_character_flag = ln_favored_recognised_him
+		stress_impact = { base = minor_stress_impact_loss }
+		ai_chance = {
+			base = 70
+			modifier = { add = 20  has_trait = compassionate }
+		}
+	}
+
+}
+
+# ── 2. THERE IS ANOTHER ─────────────────────────────────────────────────────────────────────────────────────
+ln_favored.2 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	title = ln_favored.2.t
+	desc = ln_favored.2.desc
+	theme = faith
+	left_portrait = { character = root  animation = disbelief }
+
+	option = {
+		name = ln_favored.2.a          # good. let them look at him instead.
+		ai_chance = {
+			base = 40
+			modifier = { add = 25  has_trait = content }
+			modifier = { add = 20  has_trait = humble }
+			modifier = { add = 10  has_trait = calm }
+		}
+		add_character_flag = ln_favored_ceded_gladly
+		stress_impact = { base = medium_stress_impact_loss }
+		add_prestige = -50
+	}
+	option = {
+		name = ln_favored.2.b          # write to him. whatever this is, we are both in it.
+		ai_chance = {
+			base = 30
+			modifier = { add = 15  has_trait = trusting }
+			modifier = { add = 15  has_trait = gregarious }
+			modifier = { add = 10  has_trait = honest }
+		}
+		add_character_flag = ln_favored_wrote_to_the_rival
+		add_diplomacy_lifestyle_xp = 60
+		add_piety = 25
+	}
+	option = {
+		name = ln_favored.2.c          # he is wrong. say so, loudly, in front of the priests.
+		ai_chance = {
+			base = 30
+			modifier = { add = 25  has_trait = arrogant }
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = 15  has_trait = zealous }
+		}
+		add_character_flag = ln_favored_denied_the_rival
+		add_prestige = 75
+		add_piety = -25
+		stress_impact = { base = minor_stress_impact_gain  humble = medium_stress_impact_gain }
+	}
+}
+
+# ── 3. YOUR OWN SEPTON ──────────────────────────────────────────────────────────────────────────────────────
+ln_favored.3 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	title = ln_favored.3.t
+	desc = ln_favored.3.desc
+	theme = faith
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { character = scope:ln_asker  animation = beg }
+
+	immediate = {
+		if = {
+			limit = { exists = cp:councillor_court_chaplain }
+			cp:councillor_court_chaplain = { save_scope_as = ln_asker }
+		}
+		else_if = {
+			limit = { any_courtier = { is_adult = yes } }
+			random_courtier = { limit = { is_adult = yes } save_scope_as = ln_asker }
+		}
+	}
+
+	option = {
+		name = ln_favored.3.a          # renounce it. publicly. be done.
+		ai_chance = {
+			base = 30
+			modifier = { add = 30  has_trait = humble }
+			modifier = { add = 20  has_trait = content }
+			modifier = { add = 10  has_trait = craven }
+		}
+		trigger = { NOT = { has_trait = chosen_by_rhllor } }
+		add_character_flag = ln_refused_the_name
+		remove_trait = favored_by_rhllor
+		ln_the_world_forms_a_view_effect = yes   # 1.0.10b: renouncing the name drops the opinion modifier too
+		add_piety = 100
+		add_prestige = -75
+		if = { limit = { exists = scope:ln_asker } scope:ln_asker = { add_opinion = { modifier = grateful_opinion  target = root  opinion = 40 } } }
+		stress_impact = { base = medium_stress_impact_loss  ambitious = medium_stress_impact_gain }
+	}
+	option = {
+		name = ln_favored.3.b          # I did not claim it. I will not disclaim it either.
+		ai_chance = {
+			base = 45
+			modifier = { add = 15  has_trait = calm }
+			modifier = { add = 15  has_trait = patient }
+			modifier = { add = 10  has_trait = honest }
+		}
+		add_character_flag = ln_named_quietly
+		add_prestige = 25
+		if = { limit = { exists = scope:ln_asker } scope:ln_asker = { add_opinion = { modifier = disappointed_opinion  target = root  opinion = -20 } } }
+	}
+	option = {
+		name = ln_favored.3.c          # I keep it. Say that in your sept on the seventh day.
+		ai_chance = {
+			base = 25
+			modifier = { add = 30  has_trait = ambitious }
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = 20  has_trait = arrogant }
+		}
+		add_character_flag = ln_kept_the_name_anyway
+		add_prestige = 100
+		add_piety = -50
+		add_dread = 8
+		if = { limit = { exists = scope:ln_asker } scope:ln_asker = { add_opinion = { modifier = scared_opinion  target = root  opinion = -35 } } }
+	}
+}
+
+# ── 4. THE DYING MAN ────────────────────────────────────────────────────────────────────────────────────────
+ln_favored.4 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	title = ln_favored.4.t
+	desc = ln_favored.4.desc
+	theme = healthcare
+	# 13 Aug (1.0.6) -- Thomas made this event the DEFINITION of "incomplete": a dying man, his son,
+	# a priest's claim about me -- and not one of them was in a portrait, over a sunny Dornish solar.
+	# The two people the scene is about are now created and on screen, and the room is a bedchamber
+	# at a deathbed. The father dies when the card closes -- the text has already promised that --
+	# and the boy goes back to the pool.
+	override_background = { reference = bedchamber }
+	immediate = {
+		create_character = {
+			age = { 50 65 }
+			gender = male
+			location = root.location
+			culture = root.culture
+			faith = root.faith
+			random_traits = no
+			trait = ill
+			save_scope_as = ln_dying_father
+		}
+		create_character = {
+			age = { 9 14 }
+			gender = male
+			location = root.location
+			culture = root.culture
+			faith = root.faith
+			random_traits = no
+			save_scope_as = ln_watching_son
+		}
+	}
+	left_portrait = { character = root  animation = grief }
+	right_portrait = { character = scope:ln_dying_father  animation = severelywounded }
+	lower_center_portrait = { character = scope:ln_watching_son }
+
+	after = {
+		# The night ends the way the text said it would, whatever you chose.
+		hidden_effect = {
+			scope:ln_dying_father ?= {
+				death = { death_reason = death_natural_causes }
+			}
+		}
+	}
+
+	option = {
+		name = ln_favored.4.a          # put your hand on him. it costs nothing.
+		ai_chance = {
+			base = 55
+			modifier = { add = 30  has_trait = compassionate }
+			modifier = { add = 20  has_trait = zealous }
+			modifier = { add = 10  has_trait = generous }
+		}
+		add_piety = 50
+		add_prestige = 50
+		stress_impact = { base = minor_stress_impact_gain  honest = medium_stress_impact_gain }
+	}
+	option = {
+		name = ln_favored.4.b          # tell his son the truth in the corridor.
+		ai_chance = {
+			base = 45
+			modifier = { add = 30  has_trait = honest }
+			modifier = { add = 15  has_trait = cynical }
+			modifier = { add = 10  has_trait = callous }
+		}
+		add_character_flag = ln_favored_told_the_truth
+		add_learning_lifestyle_xp = 40
+		stress_impact = { base = medium_stress_impact_gain }
+	}
+}
+
+# ── 5. THE ORDEAL ───────────────────────────────────────────────────────────────────────────────────────────
+ln_favored.5 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	title = ln_favored.5.t
+	desc = ln_favored.5.desc
+	theme = dread
+	left_portrait = { character = root  animation = shock }
+
+	option = {
+		name = ln_favored.5.a          # put your hand in it.
+		ai_chance = {
+			base = 20
+			modifier = { add = 40  has_trait = zealous }
+			modifier = { add = 25  has_trait = brave }
+			modifier = { add = 10  has_trait = arrogant }
+			modifier = { add = -15  has_trait = craven }
+		}
+		add_character_flag = ln_favored_took_the_ordeal
+		increase_wounds_effect = { REASON = death_burned }
+		add_prestige = 150
+		add_piety = 100
+		add_dread = 10
+		stress_impact = { base = major_stress_impact_gain  brave = medium_stress_impact_loss }
+
+		# THE PAYOFF COMES LATER, AND IT HAS TO. Thomas put his hand in the fire, took the wound, and got
+		# nothing that felt like a reward: "I feel like there should be some kind of hint that if I do go that
+		# route there will be a payoff eventually -- perhaps the Lord of Light will reward me. You kind of have
+		# to have that blind faith in being able to be rewarded like that."
+		#
+		# Exactly right, and the delay is the whole mechanism. A reward handed over in the same card is a
+		# transaction; a reward that arrives four months later, after the wound has had time to be a real
+		# problem, is faith being answered. The option text now says the fire will decide, so the player knows
+		# something is coming without knowing what.
+		trigger_event = { id = ln_favored.11  days = { 90 200 } }
+	}
+	option = {
+		name = ln_favored.5.b          # no. and the man who suggested it can leave.
+		ai_chance = {
+			base = 80
+			modifier = { add = 20  has_trait = craven }
+			modifier = { add = 20  has_trait = cynical }
+			modifier = { add = 10  has_trait = calm }
+		}
+		add_prestige = -50
+		add_character_flag = ln_favored_refused_the_ordeal
+		stress_impact = { base = minor_stress_impact_loss }
+	}
+}
+
+# ── 6. THE PRIEST WANTS A FIRE ──────────────────────────────────────────────────────────────────────────────
+# The one that decides what kind of Azor Ahai you are going to be. Nobody makes you choose again after this.
+ln_favored.6 = {
+	type = character_event
+	title = ln_favored.6.t
+	desc = ln_favored.6.desc
+	theme = dread
+	left_portrait = { character = root  animation = anger }
+
+	trigger = {
+		ln_has_red_priest_trigger = yes
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+
+	option = {
+		name = ln_favored.6.a          # no. not while I hold this hall.
+		ai_chance = {
+			base = 65
+			modifier = { add = 30  has_trait = compassionate }
+			modifier = { add = 20  has_trait = just }
+			modifier = { add = 10  has_trait = honest }
+		}
+		add_character_flag = ln_favored_forbade_the_fire
+		add_prestige = 75
+		add_piety = -50
+		stress_impact = { base = minor_stress_impact_loss  compassionate = medium_stress_impact_loss }
+	}
+	option = {
+		name = ln_favored.6.b          # let him burn. he was going to hang anyway.
+		ai_chance = {
+			base = 35
+			modifier = { add = 35  has_trait = sadistic }
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = 20  has_trait = callous }
+			modifier = { add = 10  has_trait = arbitrary }
+		}
+		add_character_flag = ln_favored_allowed_the_fire
+		add_piety = 150
+		add_dread = 15
+		faith = { change_fervor = { value = 1  desc = ln_fervor_gain_blessing } }
+		every_courtier = {
+			limit = { faith = { religion_tag = the_seven_religion } }
+			add_opinion = { modifier = scared_opinion  target = root  opinion = -15 }
+		}
+		stress_impact = { base = medium_stress_impact_gain  callous = medium_stress_impact_loss  sadistic = major_stress_impact_loss }
+	}
+}
+
+# ── 7. DOES IT PASS? ────────────────────────────────────────────────────────────────────────────────────────
+ln_favored.7 = {
+	type = character_event
+	title = ln_favored.7.t
+	desc = ln_favored.7.desc
+	theme = family
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { character = scope:ln_asker  animation = interested }
+
+	trigger = {
+		exists = primary_heir
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	immediate = { primary_heir = { save_scope_as = ln_asker } }
+
+	option = {
+		name = ln_favored.7.a          # no. it is not a title and you cannot inherit it.
+		ai_chance = {
+			base = 35
+			modifier = { add = 20  has_trait = honest }
+			modifier = { add = 15  has_trait = just }
+		}
+		add_prestige = 25
+		scope:ln_asker = { add_opinion = { modifier = disappointed_opinion  target = root  opinion = -15 } }
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	option = {
+		name = ln_favored.7.b          # I do not know. Nobody does. That is the honest answer.
+		ai_chance = {
+			base = 40
+			modifier = { add = 15  has_trait = humble }
+			modifier = { add = 15  has_trait = honest }
+		}
+		add_learning_lifestyle_xp = 50
+		scope:ln_asker = { add_opinion = { modifier = respect_opinion  target = root  opinion = 20 } }
+	}
+	option = {
+		name = ln_favored.7.c          # let them think it does. It costs us nothing.
+		ai_chance = {
+			base = 25
+			modifier = { add = 30  has_trait = deceitful }
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = 15  has_trait = cynical }
+		}
+		add_character_flag = ln_favored_let_them_believe
+		add_prestige = 100
+		add_piety = -25
+		scope:ln_asker = { add_opinion = { modifier = grateful_opinion  target = root  opinion = 30 } }
+	}
+}
+
+# ── 8. THE MIRACLE YOU DID NOT PERFORM ──────────────────────────────────────────────────────────────────────
+ln_favored.8 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	title = ln_favored.8.t
+	desc = ln_favored.8.desc
+	theme = intrigue
+	left_portrait = { character = root  animation = disapproval }
+
+	option = {
+		name = ln_favored.8.a          # expose it. all of it, in the square.
+		ai_chance = {
+			base = 30
+			modifier = { add = 35  has_trait = honest }
+			modifier = { add = 20  has_trait = just }
+			modifier = { add = 10  has_trait = zealous }
+		}
+		add_character_flag = ln_favored_broke_the_lie
+		add_prestige = -75
+		add_piety = 100
+		add_learning_lifestyle_xp = 40
+		stress_impact = { base = minor_stress_impact_gain  honest = medium_stress_impact_loss }
+	}
+	option = {
+		name = ln_favored.8.b          # say nothing. it is a good story and it is helping.
+		ai_chance = {
+			base = 40
+			modifier = { add = 20  has_trait = cynical }
+			modifier = { add = 10  has_trait = calm }
+			modifier = { add = 10  has_trait = deceitful }
+		}
+		add_character_flag = ln_favored_kept_the_lie
+		add_prestige = 100
+		add_intrigue_lifestyle_xp = 50
+		stress_impact = { base = medium_stress_impact_gain  honest = major_stress_impact_gain  deceitful = medium_stress_impact_loss }
+	}
+	option = {
+		name = ln_favored.8.c          # find who staged it, and find out who paid them.
+		ai_chance = {
+			base = 30
+			modifier = { add = 30  has_trait = paranoid }
+			modifier = { add = 10  has_trait = deceitful }
+			modifier = { add = 10  has_trait = vengeful }
+		}
+		add_intrigue_lifestyle_xp = 70
+		add_dread = 8
+	}
+}
+
+# ── 9. THEY HAVE BUILT YOU A SHRINE ─────────────────────────────────────────────────────────────────────────
+ln_favored.9 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	title = ln_favored.9.t
+	desc = ln_favored.9.desc
+	theme = faith
+	left_portrait = { character = root  animation = disbelief }
+
+	option = {
+		name = ln_favored.9.a          # tear it down before somebody else does it for you.
+		ai_chance = {
+			base = 35
+			modifier = { add = 20  has_trait = zealous }
+			modifier = { add = 15  has_trait = paranoid }
+			modifier = { add = 10  has_trait = arbitrary }
+		}
+		add_piety = 50
+		add_prestige = -50
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	option = {
+		name = ln_favored.9.b          # leave it. Let them have something.
+		ai_chance = {
+			base = 65
+			modifier = { add = 15  has_trait = compassionate }
+			modifier = { add = 10  has_trait = cynical }
+			modifier = { add = 10  has_trait = content }
+		}
+		add_character_flag = ln_favored_left_the_shrine
+		add_prestige = 75
+		add_piety = -25
+		capital_county ?= {
+			add_county_modifier = {
+				modifier = ln_shrine_county_modifier
+				years = 30
+			}
+		}
+	}
+}
+
+# ── 10. THE ASK ─────────────────────────────────────────────────────────────────────────────────────────────
+# The closer, and the point of the whole rung: somebody finally wants you to spend the name on something.
+ln_favored.10 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		OR = {
+			has_trait = favored_by_rhllor
+			has_trait = chosen_by_rhllor
+			has_trait = azor_ahai_reborn
+		}
+	}
+	title = ln_favored.10.t
+	desc = {
+		desc = ln_favored.10.desc.open
+		first_valid = {
+			# 1.0.13 -- THE SIGHTED BRANCH, FIRST. A man who saw this coming reads the last card of his own
+			# chain differently from a man it happened to, and optioncheck's dead-flag rule is what says so:
+			# a choice the player made that nothing later reads is a choice the world forgot.
+			triggered_desc = { trigger = { has_character_flag = ln_favored_recognised_him }   desc = ln_favored.10.desc.knew }
+			triggered_desc = { trigger = { has_character_flag = ln_favored_took_the_ordeal }  desc = ln_favored.10.desc.ordeal }
+			triggered_desc = { trigger = { has_character_flag = ln_favored_kept_the_lie }     desc = ln_favored.10.desc.lie }
+			triggered_desc = { trigger = { has_character_flag = ln_named_quietly }            desc = ln_favored.10.desc.quiet }
+			desc = ln_favored.10.desc.plain
+		}
+		desc = ln_favored.10.desc.close
+	}
+	theme = martial
+	left_portrait = { character = root  animation = personality_bold }
+
+	option = {
+		name = ln_favored.10.a         # go north with them.
+		ai_chance = {
+			base = 25
+			modifier = { add = 30  has_trait = brave }
+			modifier = { add = 25  has_trait = zealous }
+			modifier = { add = 15  has_trait = ambitious }
+			modifier = { add = -20  has_trait = craven }
+		}
+		add_character_flag = ln_sworn_to_the_dawn
+		add_character_flag = ln_heard_the_warning
+		add_character_modifier = ln_sworn_to_the_dawn_modifier
+		add_prestige = 200
+		add_piety = 100
+	}
+	option = {
+		name = ln_favored.10.b         # send men. stay.
+		ai_chance = {
+			base = 45
+			modifier = { add = 15  has_trait = generous }
+			modifier = { add = 15  has_trait = calm }
+			modifier = { add = 10  has_trait = content }
+		}
+		add_prestige = 25
+		# add_gold REFUSES NEGATIVE VALUES -- "Error: add_gold effect [ Negative value in: {}. {} ]".
+		# Spending is remove_short_term_gold. Caught in Thomas's 106 AC run; three sites.
+		remove_short_term_gold = 100
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	option = {
+		name = ln_favored.10.c         # no. I am a lord, not a sign.
+		ai_chance = {
+			base = 30
+			modifier = { add = 20  has_trait = cynical }
+			modifier = { add = 15  has_trait = craven }
+			modifier = { add = 10  has_trait = arrogant }
+		}
+		add_character_flag = ln_refused_the_name
+		add_prestige = -100
+		add_piety = -100
+		stress_impact = { base = medium_stress_impact_loss  craven = medium_stress_impact_loss }
+	}
+}
+
+# ── 11. WHAT THE BURN DID ───────────────────────────────────────────────────────────────────────────────────
+# The answer to the ordeal, months later. Deliberately NOT a miracle -- the hand is scarred and always will be.
+# What is remarkable is that it healed at all, and quickly, and clean, on a man who put it in a brazier.
+#
+# Whether that is R'hllor or whether it is simply what happens to a burn that is looked after is the same
+# question the whole mod refuses to answer, and the prophecy game rule already decided it at game start without
+# telling anybody.
+ln_favored.11 = {
+	type = character_event
+	title = ln_favored.11.t
+	desc = ln_favored.11.desc
+	theme = faith
+	left_portrait = { character = root  animation = admiration }
+
+	trigger = {
+		has_character_flag = ln_favored_took_the_ordeal
+	}
+
+	option = {
+		name = ln_favored.11.a         # the Lord of Light kept his side of it.
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = 10  has_trait = gregarious }
+			modifier = { add = 10  has_trait = arrogant }
+		}
+		add_piety = 200
+		add_prestige = 150
+		add_character_modifier = ln_the_hand_that_did_not_burn_modifier
+		faith = { change_fervor = { value = 1  desc = ln_fervor_gain_blessing } }
+	}
+	option = {
+		name = ln_favored.11.b         # it is a scar. men get scars.
+		ai_chance = {
+			base = 50
+			modifier = { add = 20  has_trait = humble }
+			modifier = { add = 20  has_trait = cynical }
+			modifier = { add = 10  has_trait = calm }
+		}
+		add_prestige = 100
+		add_character_modifier = ln_the_hand_that_did_not_burn_modifier
+		add_learning_lifestyle_xp = 60
+		stress_impact = { base = minor_stress_impact_loss  cynical = medium_stress_impact_loss }
+	}
+}

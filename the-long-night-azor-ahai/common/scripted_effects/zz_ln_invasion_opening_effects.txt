@@ -1,0 +1,141 @@
+﻿# AGOT: The Long Night & Azor Ahai -- how the dark actually arrives.
+#
+# TWO-WAY SYNC. The struggle and the legacy others.1 schedule can BOTH start the invasion, and they must never
+# disagree about what phase the world is in:
+#   * struggle reaches ln_phase_the_long_night  ->  trigger_event = others.1
+#   * others.1 fires by ANY route               ->  force the struggle to ln_phase_the_long_night
+# Both directions are idempotent: others.1 self-gates on others_invasion_has_arrived, and change_struggle_phase to
+# the phase you are already in is a no-op. So it does not matter which one gets there first, and the legacy
+# timing rules (historical, manual, the invasion decision) keep working untouched.
+
+# Called from the struggle's Long Night phase on_start.
+ln_struggle_reached_long_night_effect = {
+	trigger_event = { id = others.1 }
+
+	# WHEN IT ARRIVED. Read by ln_long_night_elapsed_value, which the long-defeat condition needs -- a world
+	# can only be judged lost against how long it has been losing. Stamped once per wave and cleared with the
+	# other latches when the wheel turns, so a second Long Night is timed from its own arrival.
+	if = {
+		limit = { NOT = { has_global_variable = ln_long_night_started } }
+		set_global_variable = { name = ln_long_night_started  value = current_year }
+	}
+
+	# THE SCATTERED WATCH (Session 10). Survivors of the Wall carry the word south on foot -- the director
+	# fires 45-120 days after the dark arrives and staggers each realm's card by another 30-300, so the
+	# news travels the way news actually travels. Once per wave; the global is cleared with the other
+	# latches when the wheel turns. See events/zz_ln_scattered_brothers_events.txt.
+	if = {
+		limit = { NOT = { has_global_variable = ln_brothers_scattered } }
+		set_global_variable = { name = ln_brothers_scattered  value = yes }
+		trigger_event = { id = ln_scatter.1  days = { 45 120 } }
+	}
+
+	# THE VETERANS (v0.2.1, Thomas). From wave two on (ln_last_dawn_champion only exists after a
+	# first dawn), anyone still alive who stood in the first roll-call -- or who landed the first
+	# blow -- is recognised the moment the dark returns: a permanent standing modifier, and a card
+	# for human veterans. One sweep, once per wave, at the single moment it means something.
+	if = {
+		limit = { has_global_variable = ln_last_dawn_champion }
+		every_living_character = {
+			limit = {
+				OR = {
+					has_character_flag = ln_stood_at_the_dawn
+					has_trait = azor_ahai_reborn
+				}
+				NOT = { has_character_modifier = ln_saw_the_first_dawn_modifier }
+			}
+			add_character_modifier = ln_saw_the_first_dawn_modifier
+			if = {
+				limit = { is_ai = no }
+				trigger_event = { id = ln_opening.10  days = { 3 10 } }
+			}
+		}
+	}
+}
+
+# Called from others.1, whatever started it. Drags the struggle into line.
+ln_sync_struggle_to_invasion_effect = {
+	if = {
+		limit = {
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = { NOT = { is_struggle_phase = ln_phase_the_long_night } }
+		}
+		struggle:ln_long_night_struggle = {
+			change_struggle_phase = ln_phase_the_long_night
+		}
+	}
+}
+
+# Called from the struggle's Dawn phase on_start, alongside the recurrence handling.
+ln_sync_struggle_to_dawn_effect = {
+	debug_log = "LN_TRACE: ln_sync_struggle_to_dawn_effect called - struggle moving to the Dawn"
+	if = {
+		limit = { exists = struggle:ln_long_night_struggle }
+		struggle:ln_long_night_struggle = {
+			if = {
+				limit = { NOT = { is_struggle_phase = ln_phase_the_dawn } }
+				change_struggle_phase = ln_phase_the_dawn
+			}
+		}
+	}
+}
+
+
+# ── THE OPENING ────────────────────────────────────────────────────────────────────────────────────────────────
+# There is no single way the Long Night begins. Five openings, each a different fullscreen card and each leaving
+# the world in a slightly different state. The variation is recorded in ln_invasion_opening so later content can
+# reference how this world's dark actually started.
+ln_invasion_opening_effect = {
+	random_list = {
+		# The original Winds of Winter card, kept as the most common opening -- it is the one the mod has always
+		# used and it is still the best of them. It is also the only one that is wave-aware (others.2's desc
+		# changes with ln_wave_count), so under the recurrence rule this is the card that escalates.
+		30 = {
+			set_global_variable = { name = ln_invasion_opening value = flag:winds_of_winter }
+			every_player = { trigger_event = others.2 }
+		}
+
+		# RETIRED, 13 Aug (Thomas, live run): "No way in HELL does the RP that specific event triggering
+		# FIRST where the night's watch falls DAY 0." The wall_breached opening narrated a Wall already
+		# down while the simulation dropped it years later -- a cooked-up fantasy that contradicted the
+		# world. The Wall now always falls when the war actually reaches it (the cinematic + monument
+		# machinery), and this slot belongs to the opening Thomas asked for instead:
+		#
+		# THE PROOF. Somebody drags a living wight south in chains to the greatest court in the realm to
+		# be executed -- and it will not die, and the crown watches it not die, and the realm believes.
+		25 = {
+			set_global_variable = { name = ln_invasion_opening value = flag:the_proof }
+			every_player = { trigger_event = ln_opening.5 }
+			# The crown SAW it. Whoever holds the Iron Throne is a believer now -- the knowledge flag is
+			# the same one every other road to belief grants, and the dragonglass door opens with it.
+			if = {
+				limit = { exists = title:h_the_iron_throne.holder }
+				title:h_the_iron_throne.holder = { add_character_flag = ln_heard_the_warning }
+			}
+		}
+
+		# The Watch's last ranging comes back. Not all of it, and not as itself.
+		20 = {
+			set_global_variable = { name = ln_invasion_opening value = flag:last_ranging }
+			every_player = { trigger_event = ln_opening.2 }
+			if = {
+				limit = { exists = title:c_castle_black.holder }
+				title:c_castle_black.holder = {
+					add_character_modifier = { modifier = ln_the_watch_knows_modifier years = 20 }
+				}
+			}
+		}
+
+		# The free folk arrive at the Wall in numbers, running from something behind them.
+		15 = {
+			set_global_variable = { name = ln_invasion_opening value = flag:the_exodus }
+			every_player = { trigger_event = ln_opening.3 }
+		}
+
+		# It was already inside. Rarest, and the one nobody forgets.
+		10 = {
+			set_global_variable = { name = ln_invasion_opening value = flag:already_inside }
+			every_player = { trigger_event = ln_opening.4 }
+		}
+	}
+}

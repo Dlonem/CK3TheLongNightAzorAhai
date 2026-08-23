@@ -1,0 +1,220 @@
+﻿namespace = ln_red
+
+# AGOT: The Long Night & Azor Ahai -- taking the red, in three cards.
+#
+# The seed (ln_red.1, one-off per character), the deepening (ln_red.2), the ask (ln_red.3).
+# Three doors in, each with its own text: the priest you keep, the name you were given, the thing
+# you saw. Backing out is free at every step and the AI takes the exits heavily -- conversion is
+# meant to be rare, visible, and expensive. See zz_ln_red_conversion_effects.txt for the pulse.
+
+# ── 1. THE SEED ─────────────────────────────────────────────────────────────────────────────────────────────
+ln_red.1 = {
+	type = character_event
+
+	# STILL QUALIFIES? Faith can have changed between scheduling and landing.
+	trigger = {
+		NOT = { faith = { religion = religion:the_rhllor_religion } }
+	}
+
+	immediate = {
+		# If the door is the priest, he is standing in the room. Same idiom as ln_pledge.1.
+		if = {
+			limit = { ln_has_red_priest_trigger = yes }
+			if = {
+				limit = { cp:councillor_court_chaplain ?= { has_trait = red_priest } }
+				cp:councillor_court_chaplain = { save_scope_as = ln_red_priest }
+			}
+			else_if = {
+				limit = { court_position:camp_priest_camp_officer ?= { has_trait = red_priest } }
+				court_position:camp_priest_camp_officer = { save_scope_as = ln_red_priest }
+			}
+		}
+	}
+
+	title = ln_red.1.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_trait = chosen_by_rhllor
+						has_trait = favored_by_rhllor
+					}
+				}
+				desc = ln_red.1.desc.named
+			}
+			triggered_desc = {
+				trigger = { exists = scope:ln_red_priest }
+				desc = ln_red.1.desc.priest
+			}
+			desc = ln_red.1.desc.dark
+		}
+	}
+	theme = faith
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { character = scope:ln_red_priest  animation = personality_zealous }
+
+	option = {
+		name = ln_red.1.a          # let the thought stay
+		ai_chance = {
+			base = 20
+			modifier = { add = 25  has_trait = chosen_by_rhllor }
+			modifier = { add = 15  has_trait = favored_by_rhllor }
+			modifier = { add = 10  has_character_flag = ln_heard_the_warning }
+			modifier = { add = 10  has_character_flag = ln_looked_north }
+			modifier = { add = 10  has_trait = cynical }
+			modifier = {
+				add = 15
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+			}
+			modifier = { factor = 0.2  has_trait = zealous }
+		}
+		add_character_flag = ln_red_doubt
+		stress_impact = {
+			zealous = medium_stress_impact_gain
+			cynical = minor_stress_impact_loss
+		}
+		trigger_event = { id = ln_red.2  days = { 90 270 } }
+	}
+	option = {
+		name = ln_red.1.b          # put it out
+		ai_chance = { base = 80 }
+		add_piety = 50
+		stress_impact = {
+			zealous = minor_stress_impact_loss
+		}
+	}
+}
+
+# ── 2. THE DEEPENING ────────────────────────────────────────────────────────────────────────────────────────
+ln_red.2 = {
+	type = character_event
+
+	trigger = {
+		has_character_flag = ln_red_doubt
+		NOT = { faith = { religion = religion:the_rhllor_religion } }
+	}
+
+	immediate = {
+		if = {
+			limit = { ln_has_red_priest_trigger = yes }
+			if = {
+				limit = { cp:councillor_court_chaplain ?= { has_trait = red_priest } }
+				cp:councillor_court_chaplain = { save_scope_as = ln_red_priest }
+			}
+			else_if = {
+				limit = { court_position:camp_priest_camp_officer ?= { has_trait = red_priest } }
+				court_position:camp_priest_camp_officer = { save_scope_as = ln_red_priest }
+			}
+		}
+	}
+
+	title = ln_red.2.t
+	desc = ln_red.2.desc
+	theme = faith
+	left_portrait = { character = root  animation = worry }
+	right_portrait = { character = scope:ln_red_priest  animation = personality_zealous }
+
+	option = {
+		name = ln_red.2.a          # watch the fires with him tonight
+		ai_chance = {
+			base = 30
+			modifier = { add = 25  has_trait = chosen_by_rhllor }
+			modifier = { add = 15  has_trait = favored_by_rhllor }
+			modifier = { add = 10  has_trait = cynical }
+			modifier = {
+				add = 15
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+			}
+			modifier = { factor = 0.2  has_trait = zealous }
+		}
+		add_character_flag = ln_red_doubt_deepened
+		add_piety = -25
+		stress_impact = {
+			base = minor_stress_impact_gain
+		}
+		trigger_event = { id = ln_red.3  days = { 90 270 } }
+	}
+	option = {
+		name = ln_red.2.b          # this has gone far enough
+		ai_chance = { base = 70 }
+		remove_character_flag = ln_red_doubt
+		add_piety = 50
+		stress_impact = {
+			base = minor_stress_impact_gain
+			zealous = medium_stress_impact_loss
+		}
+	}
+}
+
+# ── 3. THE ASK ──────────────────────────────────────────────────────────────────────────────────────────────
+ln_red.3 = {
+	type = character_event
+
+	trigger = {
+		has_character_flag = ln_red_doubt_deepened
+		NOT = { faith = { religion = religion:the_rhllor_religion } }
+	}
+
+	immediate = {
+		if = {
+			limit = { ln_has_red_priest_trigger = yes }
+			if = {
+				limit = { cp:councillor_court_chaplain ?= { has_trait = red_priest } }
+				cp:councillor_court_chaplain = { save_scope_as = ln_red_priest }
+			}
+			else_if = {
+				limit = { court_position:camp_priest_camp_officer ?= { has_trait = red_priest } }
+				court_position:camp_priest_camp_officer = { save_scope_as = ln_red_priest }
+			}
+		}
+	}
+
+	title = ln_red.3.t
+	desc = ln_red.3.desc
+	theme = faith
+	left_portrait = { character = root  animation = personality_bold }
+	right_portrait = { character = scope:ln_red_priest  animation = personality_zealous }
+
+	# ── TAKE THE RED. Same engine transition, same price, same flags as the pledge road
+	# (ln_pledge.1.a) -- one mechanic, two doors into it, and the tooltip says the quiet part.
+	option = {
+		name = ln_red.3.a
+		custom_tooltip = ln_pledge.1.a.tt
+		ai_chance = {
+			# HEAVILY AGAINST, by design. The Seven consider R'hllor evil; a convert pays for it.
+			base = 5
+			modifier = { add = 20  has_trait = chosen_by_rhllor }
+			modifier = { add = 10  has_trait = favored_by_rhllor }
+			modifier = { add = 10  has_trait = cynical }
+			modifier = {
+				add = 15
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+			}
+			modifier = { factor = 0.5  faith = { religion = religion:the_seven_religion } }
+			modifier = { factor = 0 has_trait = zealous }
+		}
+		remove_character_flag = ln_red_doubt
+		remove_character_flag = ln_red_doubt_deepened
+		set_character_faith = faith:rhllor_fc
+		add_character_flag = ln_took_the_red
+		add_character_modifier = {
+			modifier = ln_took_the_red_modifier
+			years = 20
+		}
+		add_piety = -200
+		add_prestige = -100
+	}
+	option = {
+		name = ln_red.3.b          # no. not while my fathers' gods watch.
+		ai_chance = { base = 95 }
+		remove_character_flag = ln_red_doubt
+		remove_character_flag = ln_red_doubt_deepened
+		add_piety = 100
+		stress_impact = {
+			base = medium_stress_impact_gain
+			zealous = medium_stress_impact_loss
+			cynical = minor_stress_impact_gain
+		}
+	}
+}

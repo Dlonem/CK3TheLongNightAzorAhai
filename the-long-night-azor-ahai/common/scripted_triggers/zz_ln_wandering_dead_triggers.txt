@@ -1,0 +1,24 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the front is close enough to smell.
+#
+# Between "the Long Night has not reached me" and "the Long Night is at my gates" there was nothing. This fills it:
+# while the dead are within three county-rings, bands of them wander into your land. Uses Long Night+'s own
+# ln_others_within_3_county_rings_trigger (common/scripted_triggers/zz_long_night_plus_proximity.txt), which
+# measures the front by county ADJACENCY rather than crow-flies distance -- the dead spread by conquering
+# neighbours, so adjacency is the honest measure.
+
+ln_wandering_dead_target_trigger = {
+	is_landed = yes
+	is_alive = yes
+	is_adult = yes
+	is_imprisoned = no
+	# not one of them
+	NOT = { has_trait = wight_trait }
+	NOT = { has_trait = other_trait }
+	NOT = { has_faith = faith:cold_gods }
+	NOT = { has_character_flag = ln_wandering_dead_cooldown }
+	# the dead exist, and they are close
+	exists = title:h_the_others.holder
+	NOT = { this = title:h_the_others.holder }
+	exists = capital_county
+	capital_county = { ln_others_within_3_county_rings_trigger = yes }
+}

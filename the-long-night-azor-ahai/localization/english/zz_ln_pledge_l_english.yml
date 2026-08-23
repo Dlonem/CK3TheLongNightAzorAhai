@@ -1,0 +1,47 @@
+﻿l_english:
+
+ # ── THE DECISION ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_send_for_a_red_priest_decision_desc:0 "Somewhere east of here there are men who have been preaching about a long night and a promised prince since before your house had a name. You have always thought them mad. With the winds growing colder, you are far less sure than you were.\n\nA letter to Myr, and coin enough to make the crossing worth a priest's while."
+ ln_send_for_a_red_priest_decision_tt:0 "Send across the narrow sea for a priest of R'hllor. The crossing takes months, and you are not obliged to like what you are told at the end of it."
+ ln_send_for_a_red_priest_decision_confirm:0 "Send word to Myr."
+
+ # ── THE ARRIVAL ─────────────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.1.t:0 "The Priest at the Gate"
+
+ ln_pledge.1.desc.summer:0 "The priest is thinner than I expected, older, and does not bother to bow.\n\n\"You sent for me because something has been keeping you awake, and you have not confessed it to your septon.\" The priest lets that sit in the quiet room. \"I will not tell you the world is ending. I will tell you it has ended before—and that one man stood where the dark was thickest and did not run. My order has been waiting a long time to find out who stands there next.\"\n\nThe look the priest gives me lasts a moment too long.\n\n\"It is usually not the one who sends for us.\""
+ ln_pledge.1.desc.cold:0 "The summer broke while the ship was still at sea.\n\nThe priest comes in out of a wind that has no business blowing this far south. He stands dripping in my hall, and his first words are not a greeting.\n\n\"How long has it been cold?\"\n\nWhen I answer, the nod that comes back is the nod of someone confirming a date they already had. \"Then we have less time than I hoped and more than I feared. My lord—the Seven are a fine faith for a world that is going to keep existing. I am here because mine is the only god who has ever been asked this particular question, and he answered it. I can show you what the answer cost.\""
+
+ ln_pledge.1.desc.night:0 "The priest did not come to convert me. There is no time left for that, and both of us know it.\n\nHe came off a ship, walked north through freezing refugees going the other way, and arrived at my gate with a satchel and the face of someone arriving exactly where they meant to.\n\n\"You know what is happening,\" the priest says. \"What nobody in this hall knows is that it can be fought, that it has been fought before, and that fire is not a metaphor.\" The satchel goes down with a heavy thud. \"I can teach your smiths three things before I die of this cold. Or you can burn me and feel very righteous for about a season.\""
+
+ ln_pledge.1.a:0 "Then your god is my god."
+ ln_pledge.1.a.tt:0 "You convert to R'hllor.\n\nThis is the ONLY thing that makes an [struggle_interloper|E] [struggle_involved|E] in the Long Night — involvement is decided by faith, culture and capital, and R'hllor is a faith of this war. Your bannermen will not thank you."
+ ln_pledge.1.b:0 "Keep your fire, priest. I have my steel, and I will use it."
+ ln_pledge.1.c:0 "Burn this fanatic."
+
+ # ── AFTER THE CONVERSION ────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.2.t:0 "What the Hall Heard"
+ ln_pledge.2.desc:0 "It took eleven days for the news to reach everyone who mattered, and on the twelfth, [ln_objector.GetTitledFirstName] came to say it to my face.\n\n\"I have sworn to a great many things in your service,\" [ln_objector.GetSheHe] says, voice trembling with tightly coiled anger. \"I did not swear to this. My father is buried under a sept. My children were named in one.\" A pause, and then comes the part [ln_objector.GetSheHe] has clearly been rehearsing. \"I am not asking you to explain yourself. I am asking whether I am expected to follow you into it.\""
+ ln_pledge.2.a:0 "You are. All of you are."
+ ln_pledge.2.b:0 "No. I did not do this to force anyone's hand."
+
+ # ── AFTER THE PLEDGE ────────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.3.t:0 "The Column North"
+ ln_pledge.3.desc:0 "I watch them march up the kingsroad in the first grey of the morning. It is a smaller column than I imagined when I said the words.\n\nMy marshal has the numbers written down and reads them to me anyway, the way men do when they want it on record that they warned you: so many spears gone, so many harvests short of hands, so many years before any come back. He does not say 'if'. He is being kind.\n\nThere is a heavy wagon at the back with the smiths' gear in it. I had not thought about the smiths."
+ ln_pledge.3.a:0 "Send the second levy after them."
+ ln_pledge.3.b:0 "That is what I promised. Someone has to hold the south."
+
+ # ── AFTER THE BURNING ───────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.4.t:0 "What Was Said in the Fire"
+ ln_pledge.4.desc:0 "The priest did not scream, and that is the part I cannot put out of my mind.\n\nMen scream. I have burned men before—brigands, a poisoner, once a traitorous cousin—and they scream, and then it is over and you go and have your supper. The priest looked at me the entire time with an expression I have been unable to name for weeks. Near the end, he said something the guards heard differently. My captain says it was a prayer. The boy who lit the pyre says it was a date.\n\nIt has been bitterly cold in the mornings."
+ ln_pledge.4.a:0 "It was a prayer. Nothing more."
+ ln_pledge.4.b:0 "Say it was a prayer. Say it loudly, and often."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_sworn_to_the_dawn_modifier:0 "Sworn to the Dawn"
+ ln_sworn_to_the_dawn_modifier_desc:0 "Men, coin, and smiths committed to a war in the North that half your court does not believe in."
+ ln_burned_the_red_priest_modifier:0 "Burned the Red Priest"
+ ln_burned_the_red_priest_modifier_desc:0 "The septons speak very warmly of you. So does everyone who has never been north of the Neck."
+ ln_took_the_red_modifier:0 "Took the Red God"
+ ln_took_the_red_modifier_desc:0 "You changed your gods in front of your own bannermen, and they were watching."
+ ln_gave_the_last_kiss_modifier:0 "Gave the Last Kiss"
+ ln_gave_the_last_kiss_modifier_desc:0 "Called a soul back out of the fire, and paid the difference. Whatever was taken has not been given back."

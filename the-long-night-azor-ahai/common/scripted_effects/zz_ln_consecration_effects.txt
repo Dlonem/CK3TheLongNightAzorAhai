@@ -1,0 +1,122 @@
+﻿# AGOT: The Long Night & Azor Ahai -- CONSECRATION, the second road to Lightbringer.
+# Design and the no-rename constraint are written out in common/scripted_triggers/zz_ln_consecration_triggers.txt.
+
+# Root = the champion. scope:ln_the_blade = the artifact being consecrated, saved by the caller.
+#
+# WHAT THIS DELIBERATELY DOES NOT DO: destroy_artifact + create_artifact. That was the obvious way to get a
+# blade called Lightbringer out of a blade called Longclaw, and it is wrong twice over -- the engine cannot
+# carry a history entry or a house claim across the swap, so the sword would arrive in the world with no past
+# and no owner-house, and AGOT's own Valyrian steel content (the house claim interactions in
+# common/character_interactions/00_agot_valyrian_steel_interactions.txt) would stop recognising it.
+#
+# EVERY EFFECT BELOW IS ONE THE ENGINE ACTUALLY HAS ON AN EXISTING ARTIFACT. The complete list is in
+# common/effect_localization/01_ep1_effects.txt: add/remove_artifact_modifier, add/remove_house_artifact_claim,
+# add/remove_personal_artifact_claim, copy_artifact_modifiers, create_artifact, destroy_artifact,
+# destroy_owned_artifact, equip_artifact_to_owner, unequip_artifact_from_owner, set_artifact_rarity.
+ln_consecrate_blade_effect = {
+	set_global_variable = { name = ln_lightbringer_forged  value = yes }
+	set_global_variable = { name = ln_lightbringer_forger  value = root }
+	add_character_flag = ln_forged_lightbringer
+	# (ln_consecrated_the_blade, a second flag here, is gone -- nothing ever read it, the engine said so in
+	# Thomas's log, and the artifact's own ln_was_consecrated variable is the record that matters.)
+	create_character_memory = { type = ln_forged_lightbringer_memory }
+
+	scope:ln_the_blade = {
+		# The marker the rest of the mod reads. ln_carries_lightbringer_trigger, the reveal chain and the Night
+		# King's death all test this variable ON THE ARTIFACT, never the character, so a consecrated blade that
+		# is looted, inherited or buried carries its consecration with it exactly as a forged one does.
+		set_variable = { name = ln_is_lightbringer  value = yes }
+		set_variable = { name = ln_was_consecrated  value = yes }
+		add_artifact_modifier = ln_lightbringer_consecrated_modifier
+		# Vanilla's own post-creation rarity call, artifact scope -- 05_dlc_bp2_effects.txt:355.
+		set_artifact_rarity = illustrious
+		equip_artifact_to_owner = yes
+	}
+
+	# Same world-news card the forge sends. ln_lightbringer.8 reads global_var:ln_lightbringer_forger and asks
+	# whether the hearer believes it, which is the right question either way -- a consecration is a rumour of a
+	# red sword exactly as a forging is.
+	every_player = {
+		limit = { NOT = { this = root } }
+		trigger_event = { id = ln_lightbringer.8  days = { 3 30 } }
+	}
+}
+
+# Root = the champion. Picks the blade the rite will take hold of and saves it as scope:ln_the_blade.
+#
+# DAWN FIRST, ALWAYS. A Dayne who somehow carries two Valyrian blades should not have the rite land on the
+# other one -- Dawn is the case the whole special path exists for.
+ln_pick_the_blade_effect = {
+	if = {
+		limit = {
+			ln_carries_dawn_trigger = yes
+			has_character_flag = ln_deed_bleeding_star
+		}
+		random_equipped_character_artifact = {
+			limit = {
+				ln_blade_is_dawn_trigger = yes
+				NOT = { has_variable = ln_is_lightbringer }
+			}
+			save_scope_as = ln_the_blade
+		}
+	}
+	else = {
+		# DAWN IS EXCLUDED FROM THE ORDINARY ROUTE ON PURPOSE. No life will consecrate Dawn: it was quenched in
+		# a falling star before House Dayne had a name, and it does not take a lesser payment. A Dayne without
+		# the bleeding star who happens to carry a second Valyrian blade consecrates THAT one instead, which is
+		# why this is an exclusion here rather than a refusal in the decision.
+		random_equipped_character_artifact = {
+			limit = {
+				ln_blade_can_be_consecrated_trigger = yes
+				NOT = { ln_blade_is_dawn_trigger = yes }
+			}
+			save_scope_as = ln_the_blade
+		}
+	}
+}
+
+# Root = the champion. Picks who the rite would cost him, and saves scope:ln_beloved.
+#
+# THE ORDER IS THE PRIORITY AND IT IS DELIBERATE, the same way ln_opening.1's station ladder is: spouse first
+# because that is the tale, then soulmate, then lover, then best friend, then an adult child last -- a man
+# reaches for the person he swore to before he reaches for the child he raised.
+#
+# NOTHING HERE IS RANDOM IN THE SENSE THAT MATTERS. random_relation with a limit of one is a selector, not a
+# dice roll; the branch order decides which category, and only the tie inside a category is arbitrary.
+ln_pick_the_beloved_effect = {
+	if = {
+		limit = { primary_spouse ?= { is_alive = yes  is_adult = yes } }
+		primary_spouse = { save_scope_as = ln_beloved }
+	}
+	else_if = {
+		limit = { any_relation = { type = soulmate  is_alive = yes  is_adult = yes } }
+		random_relation = {
+			type = soulmate
+			limit = { is_alive = yes  is_adult = yes }
+			save_scope_as = ln_beloved
+		}
+	}
+	else_if = {
+		limit = { any_relation = { type = lover  is_alive = yes  is_adult = yes } }
+		random_relation = {
+			type = lover
+			limit = { is_alive = yes  is_adult = yes }
+			save_scope_as = ln_beloved
+		}
+	}
+	else_if = {
+		limit = { any_relation = { type = best_friend  is_alive = yes  is_adult = yes } }
+		random_relation = {
+			type = best_friend
+			limit = { is_alive = yes  is_adult = yes }
+			save_scope_as = ln_beloved
+		}
+	}
+	else_if = {
+		limit = { any_child = { is_alive = yes  is_adult = yes } }
+		random_child = {
+			limit = { is_alive = yes  is_adult = yes }
+			save_scope_as = ln_beloved
+		}
+	}
+}

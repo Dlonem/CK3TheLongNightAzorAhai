@@ -1,0 +1,105 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what the sword is worth.
+#
+# EVERY KEY HERE IS ONE AGOT ALREADY USES ON AN ARTIFACT MODIFIER (00_agot_artifact_modifiers.txt) or that this
+# mod already applies to a character and has audited -- see /tmp/ourmods.py, which derives the county-vs-
+# character key sets from the base game and checks every ln_ modifier against how it is actually applied.
+# Thomas caught the class of bug this prevents: "I can't have a modifier that reduces my control by forty.
+# My control of what?"
+
+# ── THE FULL SWORD ──────────────────────────────────────────────────────────────────────────────────────────
+# Tempered in a life freely given or a life the forger loved. Stronger than any Valyrian steel blade AGOT
+# ships -- mountain_sword_modifier, their heaviest, is prowess 8 -- because this one cost a person.
+ln_lightbringer_full_modifier = {
+	prowess_no_portrait = 12
+	advantage = 3
+	monthly_piety = 2
+	same_faith_opinion = 20
+	general_opinion = 10
+	dread_baseline_add = 10
+	monthly_dynasty_prestige_mult = 0.10
+	monthly_martial_lifestyle_xp_gain_mult = 0.15
+}
+
+# ── THE LESSER SWORD ────────────────────────────────────────────────────────────────────────────────────────
+# Tempered in a volunteer. The steel took, but it took a stranger, and a stranger is not what the story asks
+# for. Roughly sixty per cent, and the difference is meant to be legible on the tooltip: this is what refusing
+# to pay the full price buys you, and it is still the best sword in Westeros.
+ln_lightbringer_lesser_modifier = {
+	prowess_no_portrait = 7
+	advantage = 2
+	monthly_piety = 1
+	same_faith_opinion = 12
+	general_opinion = 5
+	monthly_martial_lifestyle_xp_gain_mult = 0.10
+}
+
+# ── PUT THE HAMMER DOWN ─────────────────────────────────────────────────────────────────────────────────────
+# For refusing the third forging. Not a consolation prize -- a different answer to the question, and the mod
+# should be as willing to reward it as it is to reward the sword.
+ln_would_not_pay_the_price_modifier = {
+	icon = piety_positive
+	stress_loss_mult = 0.25
+	monthly_piety = 0.5
+	dynasty_opinion = 15
+	same_faith_opinion = 10
+}
+
+# ── THE FORGE IS COLD ───────────────────────────────────────────────────────────────────────────────────────
+# Applied after a failed temper. Stops the chain being re-entered the same week and gives the failure a weight
+# the player can see on his own sheet.
+ln_the_forge_is_cold_modifier = {
+	icon = stress_negative
+	monthly_prestige = -0.5
+}
+
+# ── THE HOLE IN HIS CHEST ───────────────────────────────────────────────────────────────────────────────────
+# What tempering the sword in your own heart costs a man who has already died once. Permanent, no duration.
+# He lives, he keeps the full sword, and he is never right again -- which is the correct price for the only
+# route through this chain that does not kill somebody else.
+ln_hole_in_his_chest_modifier = {
+	icon = health_negative
+	health = -1
+	fertility = -0.5
+	dread_baseline_add = 15
+	monthly_piety = 1
+	same_faith_opinion = 15
+}
+
+# ── THE CONSECRATED BLADE ───────────────────────────────────────────────────────────────────────────────────
+# 1.0.12. ADDED TO an existing Valyrian steel artifact rather than replacing its modifier, because the engine
+# has no artifact rename and destroying-and-recreating would throw away the blade's history and its house
+# claim. Longclaw keeps vs_longclaw_modifier AND gains this.
+#
+# THE ARITHMETIC, WHICH IS THE WHOLE BALANCE ARGUMENT. Every named Valyrian sword AGOT ships sits at
+# prowess_no_portrait 9 (ice, oathkeeper, widow's wail, longclaw all measured); Dawn is 10. So:
+#     forged, full     12 prowess + advantage 3   <- still the strongest thing in the game
+#     Dawn consecrated 10 + 2 = 12 prowess, advantage 1
+#     a named VS blade  9 + 2 = 11 prowess, advantage 1
+#     forged, lesser    7 prowess + advantage 2
+# The forge route stays the stronger road on the number that decides duels, and stays well ahead on the
+# advantage, the piety and the opinion package. Consecration's argument is not that it is stronger -- it is
+# that it costs no gold, needs no smith, takes one rite instead of three forgings, and turns a sword the
+# player already loves into the red sword without taking its name away.
+#
+# DO NOT RAISE prowess_no_portrait HERE WITHOUT REDOING THAT LIST. It is additive on top of a blade that
+# already has a number, which is exactly the trap the forged modifiers do not have.
+ln_lightbringer_consecrated_modifier = {
+	prowess_no_portrait = 2
+	advantage = 1
+	monthly_piety = 1.5
+	same_faith_opinion = 15
+	general_opinion = 5
+	dread_baseline_add = 8
+	monthly_martial_lifestyle_xp_gain_mult = 0.10
+}
+
+# ── THE RITE IS SPENT ───────────────────────────────────────────────────────────────────────────────────────
+# 1.0.12. The consecration decision's own version of ln_the_forge_is_cold_modifier, and it exists for the same
+# reason: 13 Aug, live run, the forge button did not grey out between the click and the queued event landing,
+# so Thomas clicked it repeatedly and every click spent the gold and queued another stage. Consecration spends
+# no gold, but a second click inside the fourteen days would queue a second rite against a blade the first one
+# is about to consecrate. Applied on the click, outlasting the event.
+ln_the_rite_is_spent_modifier = {
+	icon = piety_negative
+	monthly_piety = -0.5
+}

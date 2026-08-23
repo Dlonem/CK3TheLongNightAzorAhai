@@ -1,0 +1,39 @@
+﻿# AGOT: The Long Night & Azor Ahai -- THE LONG DEFEAT.
+#
+# What happens when the living lose. Checked once a year from ln_struggle_yearly_work_effect (behind the
+# calendar stamp, so exactly once per year however many characters pass through it).
+#
+# WHY THE STRUGGLE ENDS RATHER THAN SITTING IN THE LONG NIGHT FOREVER. Leaving it running would keep every
+# Long Night phase parameter live -- the levy penalties, the war effects, the invasion CB -- against a realm
+# that no longer has the strength to use any of it, and the panel would sit at a progress bar that can never
+# fill. Ending it stops the machinery and leaves the WORLD changed, which is the honest version: nothing is
+# still happening, because it already happened.
+#
+# THE CYCLE STOPS TOO. Under long_night_recurs the wheel turns because somebody won and the world got another
+# summer. Nobody won here. ln_the_dark_won is checked by ln_struggle_dawn_reached_effect's counterpart in the
+# recurrence chain -- and more simply, the struggle is gone and ln_struggle_ever_started keeps the bootstrap
+# shut, so no second wave can start. That is deliberate: this is an ending, not an intermission.
+ln_the_long_defeat_effect = {
+	if = {
+		limit = { ln_the_dark_has_won_trigger = yes }
+
+		set_global_variable = { name = ln_the_dark_won  value = yes }
+		set_global_variable = { name = ln_the_dark_won_year  value = current_year }
+
+		# Everyone still breathing sees it. Fanned per-player like every other fullscreen beat in this mod.
+		every_player = {
+			trigger_event = { id = ln_defeat.1  days = { 1 20 } }
+		}
+
+		# The world does not warm up again. Applied to the Night King's own realm rather than the map, so it
+		# lands exactly where the dead actually are and needs no province iteration.
+		title:h_the_others.holder ?= {
+			add_character_modifier = ln_the_dark_won_modifier
+		}
+
+		# And the struggle stops pretending there is a contest.
+		struggle:ln_long_night_struggle ?= {
+			end_struggle = yes
+		}
+	}
+}

@@ -1,0 +1,17 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what the fire sometimes leaves behind (ln_risen.12).
+# Modest on purpose: the returned are already carrying wounds from ln_the_fire_takes_something_effect,
+# and this is the one roll in the mod that pays a man for having died. Fields verified against the
+# empirical modifier list built from vanilla's own common/modifiers/.
+ln_fire_in_the_blood_modifier = {
+	icon = prowess_positive
+	prowess = 3
+	health = 0.25
+}
+
+# The second time the dark rises, the men who were there the first time are worth more than gold
+# (ln_struggle_reached_long_night_effect). Permanent -- there is no taking this away from a man.
+ln_saw_the_first_dawn_modifier = {
+	icon = prestige_positive
+	monthly_prestige = 0.25
+	vassal_opinion = 5
+}

@@ -1,0 +1,522 @@
+﻿# AGOT: The Long Night & Azor Ahai -- household administration.
+# See zz_ln_household_triggers.txt for what this is and what its limits are.
+
+# Root = a playable character. Runs ONCE, at game start, from ln_household_game_start. The yearly pass
+# this used to have is gone -- see the drift note on ln_household_key_trigger. After the stamp is set
+# this costs one `exists` and stops.
+ln_household_claim_effect = {
+	if = {
+		limit = {
+			NOT = { has_global_variable = ln_household_dynasty }
+			ln_household_key_trigger = yes
+			exists = dynasty
+		}
+		set_global_variable = { name = ln_household_dynasty  value = dynasty }
+	}
+}
+
+# ── THE RETAINER PASS ────────────────────────────────────────────────────────────────────────────────
+# Root = one courtier. Factored out of ln_household_ledger_effect because it is now four statements and
+# it runs three times; inlining it three times is three places to get it wrong later.
+#
+# WHY disloyal IS HANDLED AND THOMAS DID NOT ASK FOR IT: the picking limit is `NOT = { has_trait = loyal }`,
+# and a courtier carrying `disloyal` passes that limit. loyal's own definition lists disloyal as its
+# opposite (vanilla 00_traits.txt:11551 -- loyal is a FAME trait, category = fame, not a personality
+# one). Handing add_trait to a character already holding the opposite is exactly the sort of thing that
+# either silently no-ops or quietly swaps something, and neither was worth finding out live. Removed
+# first, explicitly, so the add lands on a clean slot.
+#
+# The other three are Thomas's list: "I would like it to remove callous and to remove sadistic and to
+# remove arrogant from the characters that it might be adding loyal to." All three are vanilla
+# personality traits and none of them collides with loyal, so this is a deliberate second act rather
+# than a side effect of the first. Guarded anyway -- remove_trait on an absent trait is quiet, but a
+# guard costs nothing and this file's whole job is not being quiet about things.
+ln_household_amend_retainer_effect = {
+	# ── THE OATH ─────────────────────────────────────────────────────────────────────────────────────
+	# disloyal comes off first. The picking limit upstream is `NOT = { has_trait = loyal }`, and a
+	# courtier carrying disloyal passes it -- loyal lists disloyal as its opposite (vanilla
+	# 00_traits.txt:11551, category = fame), and trait opposites BLOCK add_trait while the opposite is
+	# still on. Without this the decision would silently fail on exactly the men most worth fixing.
+	if = { limit = { has_trait = disloyal }  remove_trait = disloyal }
+	add_trait_force_tooltip = loyal
+
+	# ── THE CHARACTER ────────────────────────────────────────────────────────────────────────────────
+	# Nine vices, each swapped for its own opposite rather than simply deleted. Thomas asked whether
+	# anything could make his court good people "as organically as possible", and deleting a personality
+	# trait does not make somebody kind -- it makes them blank. Replacing it is what CK3 itself does when
+	# a character is redeemed.
+	#
+	# VANILLA'S EXACT IDIOM, and it is `remove_trait` followed by `add_trait_force_tooltip`, not plain
+	# add_trait. Confirmed at two independent sites: hold_court_events_general.txt:4163 and
+	# culture_tradition_events.txt:2386, both doing `remove_trait = callous` then
+	# `add_trait_force_tooltip = compassionate`. 220 uses across vanilla's scripted effects and decisions,
+	# and its effect_localization entry (00_character_effects.txt:345) maps to the same ADD_TRAIT strings
+	# as add_trait -- so it genuinely adds the trait, the suffix only forces the tooltip line.
+	#
+	# WHY THE SUFFIX MATTERS HERE SPECIFICALLY, and it is the same bug class as the duplicate-Loyal
+	# tooltip: a decision PREVIEW walks the effect without applying it. At tooltip-build time the vice has
+	# not actually been removed yet, so the opposite is still present and a plain add_trait would be
+	# judged impossible and silently dropped from the preview. The trait would still land on execution --
+	# the player would just be told it wouldn't. A tooltip that lies is a bug even when the code is right.
+	#
+	# THE PAIRINGS, read off vanilla's own `opposites` blocks rather than assumed. Note that callous,
+	# sadistic and compassionate are ALL mutually exclusive with each other, so the first two branches can
+	# never both fire on one man and compassionate can never be added twice.
+	#
+	# Unlike callous/sadistic/compassionate, the last three pairs are clean one-to-one: wrathful opposes
+	# only calm, paranoid only trusting, greedy only generous, and each is symmetric in both directions.
+	# Nothing there can collide with anything above it.
+	#
+	# Deliberately NOT touched: shy, stubborn, eccentric, content, fickle, lustful, cynical and the rest.
+	# Those make a man difficult or particular, not bad, and stripping them would be flattening people
+	# rather than improving them. craven, lazy, gluttonous and impatient are left alone too -- that is a
+	# competence pass, not a moral one, and craven -> brave in particular is a large prowess swing that
+	# would quietly stop Thomas's castellan being the Callous Craven the UI calls him.
+	if = { limit = { has_trait = callous }    remove_trait = callous    add_trait_force_tooltip = compassionate }
+	if = { limit = { has_trait = sadistic }   remove_trait = sadistic   add_trait_force_tooltip = compassionate }
+	if = { limit = { has_trait = arrogant }   remove_trait = arrogant   add_trait_force_tooltip = humble }
+	if = { limit = { has_trait = deceitful }  remove_trait = deceitful  add_trait_force_tooltip = honest }
+	if = { limit = { has_trait = vengeful }   remove_trait = vengeful   add_trait_force_tooltip = forgiving }
+	if = { limit = { has_trait = arbitrary }  remove_trait = arbitrary  add_trait_force_tooltip = just }
+	if = { limit = { has_trait = wrathful }   remove_trait = wrathful   add_trait_force_tooltip = calm }
+	if = { limit = { has_trait = paranoid }   remove_trait = paranoid   add_trait_force_tooltip = trusting }
+	if = { limit = { has_trait = greedy }     remove_trait = greedy     add_trait_force_tooltip = generous }
+}
+
+# Root = the head of that house. The repeatable one: the treasury, and the loyalty pass Thomas already
+# does by hand -- "I like to add the loyalty to a lot of people in my court, especially if they're
+# working for me."
+#
+# NO COOLDOWN, 1.0.9. Thomas: "technically, we don't need a cooldown." He is right, and it is worth
+# writing down WHY it is safe rather than just that he said so: nothing else can reach this decision.
+# is_shown gates it to one dynasty, ai_will_do is base 0 and ai_check_interval is 0, so the AI never
+# evaluates it as a choice. There is no spam surface for anyone but him, and he is the one asking.
+#
+# Three separate random_courtier calls rather than one iterator with a count, because CK3's every_
+# iterators take no count. Each excludes anyone already loyal, so the first pass makes its pick
+# ineligible for the second and the three are distinct without any scope bookkeeping.
+ln_household_ledger_effect = {
+	add_gold = 1000
+
+	# Padding, at Thomas's numbers -- "50 prestige and 75 piety... so it can help pad me a little."
+	# Both are CHARACTER-scope effects and both are already proven live in this mod: the Night King kill
+	# reward pays add_prestige = 2000 and add_piety = 1000 from character scope in
+	# zz_ln_conclusion_effects.txt and always has. Authority is vanilla's own
+	# common/effect_localization/00_character_effects.txt -- add_prestige at :264, add_piety at :1070.
+	#
+	# Worth stating why these two are safe where add_dynasty_prestige on the same character was not:
+	# dynasty prestige is RENOWN and belongs to the dynasty, so it needs a dynasty = { } switch. Character
+	# prestige and piety belong to the man. That distinction is exactly what made the 1.0.9 kill reward
+	# silently pay nothing for the mod's whole life while the two lines beneath it worked.
+	add_prestige = 50
+	add_piety = 75
+
+	# 1.0.9 -- EXPLICIT EXCLUSION, not just "not already loyal". Thomas's live run showed the tooltip
+	# listing the same follower gaining Loyal twice: he is a landless adventurer with exactly two
+	# followers, and a decision PREVIEW does not apply effects as it walks them, so all three picks
+	# evaluated against an unchanged court and could name the same man. Execution was fine -- the first
+	# add really does make him ineligible for the second -- but the tooltip was lying to the player, and a
+	# tooltip that lies is a bug even when the code underneath is right.
+	#
+	# `this ?= scope:X` rather than `this = scope:X`: with fewer courtiers than picks the earlier scopes
+	# are never saved, and comparing against an unset scope without the safety operator is a log line on
+	# every render. Unset compares false, so NOT resolves true and the courtier stays eligible -- which is
+	# the correct answer anyway.
+	random_courtier = {
+		limit = { is_adult = yes  NOT = { has_trait = loyal } }
+		save_scope_as = ln_loyal_1
+		ln_household_amend_retainer_effect = yes
+	}
+	random_courtier = {
+		limit = {
+			is_adult = yes
+			NOT = { has_trait = loyal }
+			NOT = { this ?= scope:ln_loyal_1 }
+		}
+		save_scope_as = ln_loyal_2
+		ln_household_amend_retainer_effect = yes
+	}
+	random_courtier = {
+		limit = {
+			is_adult = yes
+			NOT = { has_trait = loyal }
+			NOT = { this ?= scope:ln_loyal_1 }
+			NOT = { this ?= scope:ln_loyal_2 }
+		}
+		ln_household_amend_retainer_effect = yes
+	}
+}
+
+# Root = the head of that house. The one Thomas takes once at the start of a game -- but NOT gated to
+# once, deliberately: "I still have the option if I personally want to trigger it multiple times so that
+# it won't break." So the ln_household_chartered flag that used to gate is_shown is gone. Every branch
+# below is idempotent -- the legacies are guarded on has_dynasty_perk, and perk points simply accumulate
+# -- so a second fire is wasteful rather than damaging. Old saves carrying the retired flag are fine;
+# nothing reads it any more.
+#
+# LEGACIES DIRECTLY, NOT RENOWN. Thomas: "instead of giving just dynasty prestige, aka renown, my
+# intent would be, like, can we unlock specific legacies." add_dynasty_perk does exactly that, and it
+# is quieter -- no suspicious renown spike, just tracks that are already open.
+# Only the BASE-GAME trees, deliberately: every id below ships with the vanilla game, so this cannot
+# break for anyone missing a DLC.
+# ── THE RENOWN FLOOR ─────────────────────────────────────────────────────────────────────────────────
+# Dynasty scope. 1.0.10b -- THE CRATER, AND HOW IT GOT PAST EVERY CHECK WE HAVE.
+#
+# add_dynasty_perk CHARGES THE RENOWN COST. Nothing in the effect said so and nothing in the tooling
+# could have caught it: the symbol exists, the signature is right, the wiring is right, the perk lands.
+# It simply also takes the money. Thomas's 16 Aug run, from the decision panel: renown -42,249.
+#
+# That number is not approximate, it is the arithmetic. NDynasty in vanilla 00_defines.txt:
+#     PERK_COST_BASE = 250 ; PERK_COST_MULTIPLIER = 500
+#     COST = PERK_COST_BASE + (perks already unlocked * PERK_COST_MULTIPLIER)
+# Thirteen perks granted from an empty tree therefore cost
+#     13*250 + 500*(0+1+...+12) = 3250 + 39000 = 42,250
+# against a dynasty sitting at ~1 renown. -42,249. The charter did not misfire; it paid list price.
+#
+# AND IT IS NOT COSMETIC. Level of Splendor reads CURRENT renown against NDynasty::LEVELS_PRESTIGE
+# ({ 300 1000 2000 4000 7000 11000 16000 22000 29000 37000 }), so the crater dropped the house to
+# Base Origins and locked it there -- 42,549 renown to climb at +0.55/month is 6,400 years. Worse,
+# our own content gates on it: war_for_the_dawn_decision wants dynasty_prestige_level >= 3, and
+# 00_rules.txt wants >= 4. Taking the charter was quietly locking a player out of the War for the Dawn.
+#
+# WHY A LOOP AND NOT ARITHMETIC. The honest fix is "read renown, put it back". dynasty_prestige is
+# readable as a TRIGGER -- vanilla compares against it in thirty-odd places -- but it appears as a
+# script VALUE (value =, subtract =, save_scope_value_as) exactly nowhere: not in vanilla, not in AGOT,
+# not in any of the thirty-one workshop mods in this playset. An unverified value form that silently
+# resolves to 0 would make the refund a no-op and look fixed. So this uses only the proven trigger form
+# and climbs out in 1,000s. `while` with `limit` and no `count` is vanilla's own shape
+# (00_courtier_guest_management_effects.txt:1288); each pass provably increases the tested quantity, so
+# it terminates -- 43 passes from Thomas's -42,250.
+# 1.0.12b -- THE LOOP COULD NOT REACH THE BOTTOM OF THE HOLE IT WAS DIGGING OUT OF.
+# Thomas's 20 Aug run, four times: "while loop with no specified max aborted after executing 1000 times",
+# at this line. The engine caps an unbounded `while` at 1,000 passes; at 1,000 renown a pass that is a
+# ceiling of 1,000,000 renown recovered per call -- and his dynasty was sitting at -3,642,219.
+#
+# So the effect was not wrong, it was too slow to matter, and its failure mode was silent in exactly the way
+# this project keeps getting caught by: the log line says "warning", the perk still lands, and the player is
+# still four hundred thousand renown short of Base Origins with no indication anything stopped early.
+#
+# STAGED CLIMB, BIGGEST STEP FIRST. Each loop can only run while the debt is larger than its own step, so
+# each one terminates in at most ten passes except the first, which covers a hole up to a billion. Total
+# overshoot is bounded at 100 renown -- a rounding gift, against a system whose failure mode is a six-
+# thousand-year climb.
+#
+# STILL ONLY THE PROVEN TRIGGER FORM. dynasty_prestige reads as a trigger in thirty-odd vanilla places and
+# appears as a script VALUE nowhere in vanilla, AGOT, or any mod in this playset -- so "read it and put it
+# back" is still not available, and this is still the honest way to do it.
+ln_charter_renown_floor_effect = {
+	while = {
+		limit = { dynasty_prestige < -1000000 }
+		add_dynasty_prestige = 1000000
+	}
+	while = {
+		limit = { dynasty_prestige < -100000 }
+		add_dynasty_prestige = 100000
+	}
+	while = {
+		limit = { dynasty_prestige < -10000 }
+		add_dynasty_prestige = 10000
+	}
+	while = {
+		limit = { dynasty_prestige < -1000 }
+		add_dynasty_prestige = 1000
+	}
+	while = {
+		limit = { dynasty_prestige < 0 }
+		add_dynasty_prestige = 100
+	}
+}
+
+
+
+ln_household_charter_effect = {
+	# ── EVERY LINE BELOW IS A NO-OP WHEN THERE IS NOTHING TO DO ──────────────────────────────────────
+	# Thomas: "if my dynasty does not already have that unlocked, then unlock it. If it is unlocked, then
+	# just skip it. I don't want any bugs, no errors, or any issues." That is what each guard buys, and
+	# the outer `exists = dynasty` buys the case underneath it: has_dynasty_perk asked of a character with
+	# no dynasty at all has nothing to answer about. ln_household_has_the_ledger_trigger already requires
+	# is_dynast, so this cannot currently fail -- it is here so that it still cannot fail if this effect is
+	# ever called from somewhere else, which is exactly how this kind of thing goes wrong later.
+	# 1.0.9 LIVE-RUN FIX -- `exists = dynasty` WAS NOT ENOUGH; IT NEEDED A SCOPE SWITCH.
+	# has_dynasty_perk is a DYNASTY-scope trigger. Asked at character scope it does not return false,
+	# it ERRORS: "has_dynasty_perk trigger [ Wrong scope for trigger: character, expected dynasty ]",
+	# 2,717 times in five minutes of Thomas's 14 Aug run, most of them tagged "while building
+	# tooltip/description" -- i.e. once per legacy, every time the decision panel drew.
+	#
+	# And it was worse than noise. A trigger that errors resolves false, so `NOT = { has_dynasty_perk }`
+	# resolved TRUE every time and the effect re-added all eleven legacies on every fire. It looked
+	# correct in game precisely because it always fired -- the legacies did unlock. The guard Thomas
+	# actually asked for ("if it is unlocked, then just skip it") was doing nothing at all.
+	#
+	# Note the asymmetry, because it is what hid this: add_dynasty_perk (the EFFECT) auto-resolves from
+	# character to dynasty and never complained; has_dynasty_perk (the TRIGGER) does not. Same family as
+	# the 1.0.9 add_dynasty_prestige bug, mirrored.
+	#
+	# Vanilla's own shape, from 00_mongol_invasion_effects.txt:155 -- a dynasty = { } block containing
+	# add_dynasty_perk warfare_legacy_1..4 -- is what this now copies. Decision call sites use
+	# `dynasty ?= { has_dynasty_perk = X }` (00_guest_decisions.txt:105, mpo_pax_mongolica_decision.txt:20).
+	# ── 1.0.12b: THE METER, THE BANK AND THE PRE-PAY ARE GONE, AND THIS COMMENT IS THEIR HEADSTONE ──
+	# Thomas's live run: he took the charter, and a while later found he could BUY more legacies -- renown
+	# he never had. The chain that put it there: the meter priced the nineteen grants, the pre-pay ADDED
+	# that price as renown so "the engine's charge" would net to zero... and the engine never charges.
+	# add_dynasty_perk is a FREE grant -- vanilla's own Mongol invasion hands Genghis warfare_legacy_1..5
+	# with no compensation and a 10,000-renown GIFT stacked on top (00_mongol_invasion_effects.txt:156).
+	# Nobody bills the Khan. So the pre-pay was a pure gift of the whole metered bill, the splendor bank
+	# was insurance against a charge that never lands, and three generations of machinery (flat pre-pay ->
+	# metered pre-pay -> bank-and-climb) were all solving a problem that never existed. The original
+	# 1.0.10 crater was our OWN charging code subtracting renown -- also gone.
+	#
+	# What remains is exactly what Thomas asked for on day one: "just add that my dynasty has it unlocked,
+	# no renown costs, no change to the splendor of my dynasty." Grants are free, so renown never moves,
+	# so splendor never moves. Zero machinery, correct by construction, idempotent because every grant is
+	# guarded. (ln_charter_renown_floor_effect stays, separately, on the yearly pulse -- it heals saves
+	# the OLD charging code damaged, and Thomas's -3.6M save still needs it.)
+
+
+
+
+	if = {
+		limit = { exists = dynasty }
+		dynasty = {
+			# 1.0.10b (Thomas): "have it give the first two levels of the legacy, of all of the options."
+			# Two rungs on every track we open, not one -- warfare still runs the whole way to five because
+			# that is where Private Army sits. Every id below was checked against common/dynasty_perks/ in
+			# this playset before it was written: the seven base-game tracks all define _1.._5, and AGOT's
+			# dragonrider track does too. The AGOT REGIONAL tracks (north, dornish, ironborn, reachman,
+			# riverlander, stormlander, valeman, westerman, crownlander) are deliberately NOT here -- handing
+			# one house the Dornish AND the Northern legacy at once reads as a bug for the same reason the
+			# far-eastern trees were left out. Same for every DLC track: an id that ships with a DLC the
+			# player does not own is a silent failure, and this decision has to be safe for anyone.
+			if = { limit = { NOT = { has_dynasty_perk = blood_legacy_1 } }      add_dynasty_perk = blood_legacy_1 }
+			if = { limit = { NOT = { has_dynasty_perk = blood_legacy_2 } }      add_dynasty_perk = blood_legacy_2 }
+			if = { limit = { NOT = { has_dynasty_perk = glory_legacy_1 } }      add_dynasty_perk = glory_legacy_1 }
+			if = { limit = { NOT = { has_dynasty_perk = glory_legacy_2 } }      add_dynasty_perk = glory_legacy_2 }
+			if = { limit = { NOT = { has_dynasty_perk = kin_legacy_1 } }        add_dynasty_perk = kin_legacy_1 }
+			if = { limit = { NOT = { has_dynasty_perk = kin_legacy_2 } }        add_dynasty_perk = kin_legacy_2 }
+			if = { limit = { NOT = { has_dynasty_perk = law_legacy_1 } }        add_dynasty_perk = law_legacy_1 }
+			if = { limit = { NOT = { has_dynasty_perk = law_legacy_2 } }        add_dynasty_perk = law_legacy_2 }
+			# THE WHOLE WARFARE TRACK, because Thomas asked for one specific perk at the top of it: "I want the one
+			# under the warfare row called private army... you can recruit house guard as men-at-arms."
+			# That is warfare_legacy_5 -- confirmed from vanilla's own file, which labels it `# Private Army` and
+			# gives men_at_arms_cap = 1 plus the House Guard unlock. Rungs one to four come with it rather than
+			# handing him a rung-five perk sitting on an empty track; the UI unlocks these in order and there is no
+			# reason to find out the hard way what a gap does.
+			if = { limit = { NOT = { has_dynasty_perk = warfare_legacy_1 } }    add_dynasty_perk = warfare_legacy_1 }
+			if = { limit = { NOT = { has_dynasty_perk = warfare_legacy_2 } }    add_dynasty_perk = warfare_legacy_2 }
+			if = { limit = { NOT = { has_dynasty_perk = warfare_legacy_3 } }    add_dynasty_perk = warfare_legacy_3 }
+			if = { limit = { NOT = { has_dynasty_perk = warfare_legacy_4 } }    add_dynasty_perk = warfare_legacy_4 }
+			if = { limit = { NOT = { has_dynasty_perk = warfare_legacy_5 } }    add_dynasty_perk = warfare_legacy_5 }
+			if = { limit = { NOT = { has_dynasty_perk = guile_legacy_1 } }      add_dynasty_perk = guile_legacy_1 }
+			if = { limit = { NOT = { has_dynasty_perk = guile_legacy_2 } }      add_dynasty_perk = guile_legacy_2 }
+			if = { limit = { NOT = { has_dynasty_perk = erudition_legacy_1 } }  add_dynasty_perk = erudition_legacy_1 }
+			if = { limit = { NOT = { has_dynasty_perk = erudition_legacy_2 } }  add_dynasty_perk = erudition_legacy_2 }
+			# 1.0.10 (Thomas): the second rung of the blood -- Noble Veins' next step -- and the dragon
+			# cradle: dragonrider_dynasty_legacy_1 is AGOT's own 'Cradle to Grave'
+			# (00_agot_generic_perks.txt:3). add_dynasty_perk bypasses pick-gating by design, same as
+			# every grant above. The far-eastern DLC trees (tgp_*) are deliberately NOT here -- a
+			# Westerosi dynasty with a Chinese legacy reads as a bug even behind a hidden door.
+			if = { limit = { NOT = { has_dynasty_perk = dragonrider_dynasty_legacy_1 } }  add_dynasty_perk = dragonrider_dynasty_legacy_1 }
+			if = { limit = { NOT = { has_dynasty_perk = dragonrider_dynasty_legacy_2 } }  add_dynasty_perk = dragonrider_dynasty_legacy_2 }
+		}
+	}
+
+	# ── ALL SIX VANILLA LIFESTYLES, FIVE EACH ────────────────────────────────────────────────────────
+	# Thomas: "I would like five perk points in all of the vanilla lifestyle trees."
+	#
+	# SIX, NOT FIVE, AND THE SIXTH WAS NEARLY MISSED THE SAME WAY THE BUILD CACHE MISSED 365 SYMBOLS.
+	# vanilla common/lifestyles/00_lifestyles.txt is sixty-five lines and defines exactly six lifestyles:
+	# diplomacy, martial, stewardship, intrigue, learning, wanderer. Grepping it for a key at the start of
+	# a line returned FIVE -- because diplomacy_lifestyle is on line 1 and the file carries a BOM, so the
+	# byte-order mark sits between the line start and the `d`. Same class of bug as buildcache.py's, found
+	# again in a different tool, which is the argument for the line-count sanity check that caught it.
+	#
+	# wanderer is the one that matters most here in practice: Thomas is playing a landless adventurer, and
+	# that is the tree his own screenshots are spending points in. It is is_valid-gated on the
+	# wandering_nobles DLC feature, so for a player without Roads to Power the points bank harmlessly
+	# against a tree they cannot open -- no error, nothing to guard.
+	add_diplomacy_lifestyle_perk_points = 5
+	add_martial_lifestyle_perk_points = 5
+	add_stewardship_lifestyle_perk_points = 5
+	add_intrigue_lifestyle_perk_points = 5
+	add_learning_lifestyle_perk_points = 5
+	add_wanderer_lifestyle_perk_points = 5
+}
+
+# ── THE SHIP ─────────────────────────────────────────────────────────────────────────────────────────
+# Root = the head of that house. Thomas: "the third decision that I was referring to would be Game of
+# Thrones specific... something like a ship returning from Valyria... give two hundred gold... a
+# Valyrian steel sword, perhaps... and I would like it to provide one dragon egg."
+#
+# EVERY PIECE BELOW IS AGOT'S OWN CODE, called the way AGOT calls it. None of it is reimplemented here,
+# which is the whole reason this is safe to hand a live save: the artifacts come out identical to the
+# ones the base mod's own Valyria expedition produces.
+#
+# THE CALL SHAPE, verified at the site rather than inferred: AGOT's treasure_trove_artifacts
+# (00_agot_sailing_effects.txt:196) invokes these as `= { OWNER = ROOT }` from a character scope, inside
+# a 5% roll on an Essos landing. That is the pattern copied here. The sword effects take OWNER and
+# nothing else; the egg wrapper chain takes OWNER and derives COLOR itself.
+ln_household_valyria_effect = {
+	add_gold = 200
+
+	# 1.0.12b -- THE TOOLTIP IS THREE SENTENCES, NOT THE INVENTORY OF VALYRIA. Thomas's live run: "the effect
+	# window is too small, and there's like a one percent chance to get fifty different dragon eggs, and it
+	# just spams the entire list." The spam was CK3 rendering the machinery -- the four-way sword random_list
+	# and AGOT's twenty-odd-way egg colour list, TWICE. So the machinery below now sits in one hidden_effect
+	# (skipped by the tooltip walk, runs on the click, same as the charter's fix) and the player reads three
+	# custom_tooltip lines that say what actually happens. Nothing about the effects themselves changed.
+	custom_tooltip = ln_valyria_sword_tt
+	custom_tooltip = ln_valyria_eggs_tt
+	custom_tooltip = ln_valyria_dragon_tt
+	hidden_effect = {
+
+	# ── 1.0.10 (Thomas): THE DRAGON, IF THERE IS ONE ────────────────────────────────────────────────
+	# If a dragon already answers to him it is no ordinary animal. dragon_destined is AGOT's own
+	# fast-maturing special -- their aging effect exempts it by name (00_agot_dragon_effects.txt:8)
+	# because the story cycle matures a destined dragon itself; dragon_swift is their speed trait
+	# (00_agot_dragon_traits.txt:1014); and the size bump goes through their change_dragon_size
+	# macro, VALUE-form, exactly as their own aging code calls it. Idempotent: traits are checked
+	# first, and the size gift latches behind its own variable so re-taking the decision can never
+	# inflate the dragon twice. No dragon, no effect -- ?= fails quietly.
+	var:current_dragon ?= {
+		# Hardened (Thomas's review): only a LIVING, BONDED dragon. current_dragon is only ever set by
+		# AGOT's taming path, but a stale var pointing at a dead dragon must not buff a corpse, and only
+		# a real dragon takes dragon traits. Opposites cleared first: add_trait silently REFUSES while an
+		# opposite is present (engine rule; dragon_swift lists dragon_slow), so a slow dragon would have
+		# stayed slow forever without the remove. dragon_destined has no opposite to clear.
+		if = {
+			limit = {
+				is_alive = yes
+				has_trait = dragon
+			}
+			if = { limit = { has_trait = dragon_slow }  remove_trait = dragon_slow }
+			if = { limit = { NOT = { has_trait = dragon_destined } }  add_trait = dragon_destined }
+			if = { limit = { NOT = { has_trait = dragon_swift } }     add_trait = dragon_swift }
+			if = {
+				limit = { NOT = { has_variable = ln_valyria_size_gift } }
+				set_variable = ln_valyria_size_gift
+				change_dragon_size = { VALUE = 3 }
+			}
+			# 1.0.12b (Thomas): "I thought the one decision we had would give it the physique level one --
+			# dragon_physique_good_1 -- and every time I click it, it'll cycle up." One rung per taking,
+			# bad rungs cleared first (add_trait silently refuses while an opposite is present -- the same
+			# engine rule dragon_swift needed above), good_3 is the ceiling and clicking past it does
+			# nothing. All eight trait ids verified against AGOT's 00_agot_dragon_traits.txt:812-914.
+			if = { limit = { has_trait = dragon_physique_bad_3 }  remove_trait = dragon_physique_bad_3 }
+			else_if = { limit = { has_trait = dragon_physique_bad_2 }  remove_trait = dragon_physique_bad_2 }
+			else_if = { limit = { has_trait = dragon_physique_bad_1 }  remove_trait = dragon_physique_bad_1 }
+			else_if = { limit = { has_trait = dragon_physique_good_2 }
+				remove_trait = dragon_physique_good_2
+				add_trait = dragon_physique_good_3
+			}
+			else_if = { limit = { has_trait = dragon_physique_good_1 }
+				remove_trait = dragon_physique_good_1
+				add_trait = dragon_physique_good_2
+			}
+			else_if = { limit = { NOT = { has_trait = dragon_physique_good_3 } }
+				add_trait = dragon_physique_good_1
+			}
+		}
+	}
+
+	# ── THE BLADE ────────────────────────────────────────────────────────────────────────────────────
+	# ONE SWORD, AND NOTHING BUT AGOT'S OWN SWORD. Thomas: "I know they technically have a Valyrian steel
+	# spear, but I guess that would make it dependent on the Valyrian steel mod... make it just the
+	# Valyrian steel sword. That way there's no bugs." Worth recording that the dependency he was guarding
+	# against does not exist here: the `vs_` prefix on these is AGOT'S OWN abbreviation for valyrian steel,
+	# and all seventy-nine of them are defined in the base mod's own
+	# common/scripted_effects/00_agot_artifact_vs_sword_effects.txt. Nothing below reaches outside AGOT.
+	#
+	# The four Valyrian-styled blades, evenly weighted. AGOT also ships Andal and First Man variants of
+	# the same swords -- those are deliberately not in the pool, because a hold out of the Smoking Sea
+	# carrying an Andal arming sword is the wrong story.
+
+	# STEP ONE: remember what is in his hand, because AGOT is about to take the slot.
+	# Thomas: "Does it have to auto equip or can it just be added? Because majority of artifacts that get
+	# created do not get automatically equipped."
+	#
+	# He is right about vanilla and wrong about AGOT, and the difference is the whole reason these four
+	# lines exist. AGOT's valyrian steel creation ALWAYS draws the blade: 76 of the 79 create effects in
+	# that file end in equip_artifact_to_owner_replace, and _replace is a native engine effect (it appears
+	# nowhere as a scripted effect in either vanilla or AGOT) whose entire job is to kick out whatever
+	# already occupies the slot. AGOT uses it 235 times against 8 uses of the plain form. So left alone,
+	# this decision would unequip Lightbringer every time it was taken -- not destroy it, but quietly put
+	# it away, which on a repeatable decision is worse because it happens again every time.
+	#
+	# Unequipping the new sword afterwards is not enough on its own: the old blade has already been kicked
+	# out by then and would just stay out. It has to be remembered first and handed back at the end.
+	# random_equipped_character_artifact + artifact_slot_type = primary_armament is AGOT's own shape for
+	# this, at 00_personal_details_effects.txt:368. No match saves no scope, and step four is guarded on
+	# exists -- so a character with an empty hand runs all four steps and nothing happens.
+	random_equipped_character_artifact = {
+		limit = { artifact_slot_type = primary_armament }
+		save_scope_as = ln_blade_in_hand
+	}
+
+	# STEP TWO: AGOT makes the sword, exactly the way AGOT makes it.
+	random_list = {
+		1 = { agot_create_artifact_vs_valyrian_longsword_gold_historical_effect = { OWNER = ROOT } }
+		1 = { agot_create_artifact_vs_valyrian_longsword_silver_historical_effect = { OWNER = ROOT } }
+		1 = { agot_create_artifact_vs_valyrian_armingsword_gold_historical_effect = { OWNER = ROOT } }
+		1 = { agot_create_artifact_vs_valyrian_armingsword_silver_historical_effect = { OWNER = ROOT } }
+	}
+
+	# STEP THREE: into the trunk, not the hand. unequip_artifact_from_owner is an ARTIFACT-scope effect --
+	# AGOT calls it that way at 00_agot_citadel_effects.txt:3390, inside every_equipped_character_artifact.
+	scope:newly_created_artifact ?= { unequip_artifact_from_owner = yes }
+
+	# STEP FOUR: give the old blade its slot back. The slot is empty by now, so _replace has nothing to
+	# replace and behaves as the plain equip would.
+	if = {
+		limit = { exists = scope:ln_blade_in_hand }
+		scope:ln_blade_in_hand = { equip_artifact_to_owner_replace = yes }
+	}
+
+	# ── THE EGGS ─────────────────────────────────────────────────────────────────────────────────────
+	# TWO, at Thomas's request: "can we do two eggs at a time? Two eggs, one sword." The reason is that
+	# eggs are the genuinely scarce thing -- "the biggest issue sometimes is getting said eggs, which is
+	# why I wanted to have it added as a little cheaty event."
+	#
+	# TWO SEPARATE CALLS, NOT A LOOP. CK3's every_ iterators take no count, and there is nothing here to
+	# iterate over in any case -- each call rolls its own colour independently from AGOT's twenty-odd-way
+	# list, so two calls is also two rolls rather than the same egg twice.
+	#
+	# THESE MUST COME AFTER THE SWORD IS DEALT WITH, and the ordering is load-bearing rather than tidy:
+	# both the sword chain and the egg chain save scope:newly_created_artifact, so the first egg overwrites
+	# whatever the sword left there. Step three has to have already run by the time this line does.
+	#
+	# Eggs never touch the primary_armament slot -- no create effect in AGOT's egg chain calls any equip
+	# effect at all -- so the blade juggling above cannot be disturbed by what happens here.
+	agot_create_random_dragon_egg_artifact = { OWNER = ROOT }
+	agot_create_random_dragon_egg_artifact = { OWNER = ROOT }
+
+	# ── THE BLOOD, AND WHY IT IS ONE FLAG AND NOT A TRAIT ─────────────────────────────────────────────
+	# Thomas: "the hard part would be getting dragon blood... I don't know if we have to add the
+	# Dragonrider trait for, like, a day, and then have a dummy event fire to remove it immediately
+	# after. Obviously, that would be very dangerous to do if I already had a dragon."
+	#
+	# It is not needed, and the trait-then-remove dance he was worried about would indeed have been
+	# dangerous -- dragonrider is load-bearing for bonds, and adding and stripping it around a live dragon
+	# is asking for a broken relation. The clean answer was already in AGOT:
+	#
+	#   agot_is_dragonblood_character (00_agot_dragon_triggers.txt:471) lists has_character_flag =
+	#   historical_dragonseed as one of its OR branches, alongside the dragonrider traits.
+	#   dragonblood_percent (00_agot_dragon_values.txt:567) opens with `if = { limit = {
+	#   agot_is_dragonblood_character = yes } add = 100 }`.
+	#
+	# So this one flag reads as FULL dragon blood -- a hundred percent, not a fraction -- everywhere the
+	# base mod asks, and it touches no trait, no bond and no relation. AGOT sets it on its own historical
+	# dragonseeds (00_historical_characters_scripted_effects.txt:6067 and :6089), so this is the base
+	# mod's intended handle for exactly this, not a side door.
+	#
+	# Children inherit the ordinary way: real_father as a dragonblood character is worth 50 in
+	# dragonblood_percent, so his line carries it without any of this having to run again.
+	#
+	# The one thing it cannot survive is dragon_by_horn, which sits above the OR as a hard NOT. Nothing
+	# in this mod sets that flag and Thomas is not going to have it; noted so a future session does not
+	# spend an hour wondering why the blood stopped reading.
+	if = {
+		limit = { NOT = { has_character_flag = historical_dragonseed } }
+		add_character_flag = historical_dragonseed
+	}
+	}
+}

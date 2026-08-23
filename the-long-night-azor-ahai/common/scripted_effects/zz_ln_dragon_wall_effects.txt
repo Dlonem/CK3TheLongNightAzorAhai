@@ -1,0 +1,92 @@
+﻿# AGOT: The Long Night & Azor Ahai -- Silverwing at the Wall.
+#
+# THE LORE, and it is real book lore rather than show lore: Queen Alysanne flew Silverwing north on her visit to
+# the Wall and the dragon refused to cross it. Three separate attempts. Hissed, veered off, would not go. She
+# never managed it, and Alysanne never wrote down why she thought that was.
+#
+# The reading this mod takes -- and it is the one the fandom takes, because it is the only one that explains the
+# behaviour of an animal that will otherwise fly into a battle line -- is that the Wall is warded, that the ward
+# separates ice magic from fire magic, and that a Valyrian dragon is fire magic. It is not fear of the Others.
+# It is a door that will not open for her.
+#
+# WHY THIS IS WORTH BUILDING. It costs one event and it does three things at once: it is a genuine piece of
+# book lore most players have never heard, it is a KNOWLEDGE GATE that feeds the dragonglass decision from a
+# completely different direction than the Citadel or a lost ranging, and it quietly tells a Targaryen player
+# that the dragons are not going to solve this for them -- which is the single most important thing the mod
+# needs them to understand before the dark arrives.
+
+# YOU HAVE TO ACTUALLY BE UP THERE. Thomas: "wouldn't that be based on your current location? What if I'm
+# trying to go to a feast beyond the wall? I'm not allowed to bring my dragon." Exactly right -- a Targaryen
+# sitting in King's Landing has no business discovering this, and the version that fired for every dragonrider
+# in the world regardless of where they were standing was lazy. `location` is the province the character is
+# physically in, so this now requires you to have travelled north far enough for the Wall to be a real
+# proposition: the North, the Wall itself, or past it.
+#
+# The consequence is that most dragonriders never see this event, which is correct -- and it is why ln_omen.11
+# exists. The story is worth more than the sighting.
+ln_dragon_refusal_effect = {
+	if = {
+		limit = {
+			exists = struggle:ln_long_night_struggle
+			struggle:ln_long_night_struggle = {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+
+		# ── THE SIGHTING. You are there, on the dragon, and she will not go on.
+		if = {
+			limit = {
+				NOT = { has_character_flag = ln_dragon_refused_the_wall }
+				ln_rides_a_living_dragon_trigger = yes
+				location ?= {
+					OR = {
+						geographical_region = world_westeros_the_wall
+						geographical_region = world_westeros_beyond_the_wall
+						geographical_region = world_westeros_the_north
+					}
+				}
+			}
+			add_character_flag = ln_dragon_refused_the_wall
+			var:current_dragon = { save_scope_as = ln_dragon }
+			trigger_event = { id = ln_omen.10  days = { 5 30 } }
+		}
+
+		# ── THE TALE. Thomas's Aegon the Unlikely case: "what if I'm nowhere close to being in line to inherit
+		# the throne? That would be really cool if there's that opportunity to prepare my house and the kingdom
+		# from learning information I know." A fifth son with no dragon and no prospects should be able to hear
+		# this and act on it, and he is in many ways the best person in the world to hear it -- nobody is
+		# watching what he does next.
+		#
+		# It travels the way this kind of thing actually travels: to people who read, people who keep maesters,
+		# and people who are near enough to the North for it to be gossip rather than a foreign curiosity.
+		else_if = {
+			limit = {
+				NOT = { has_character_flag = ln_heard_the_dragon_tale }
+				NOT = { has_character_flag = ln_dragon_refused_the_wall }
+				is_adult = yes
+				OR = {
+					learning >= 12
+					has_trait = education_learning_3
+					has_trait = education_learning_4
+					ln_has_deed_greensight_trigger = yes
+					ln_has_deed_dragon_dreams_trigger = yes
+					capital_province ?= {
+						OR = {
+							geographical_region = world_westeros_the_north
+							geographical_region = world_westeros_the_wall
+							geographical_region = world_westeros_beyond_the_wall
+						}
+					}
+				}
+			}
+			random = {
+				chance = 15
+				add_character_flag = ln_heard_the_dragon_tale
+				trigger_event = { id = ln_omen.11  days = { 10 200 } }
+			}
+		}
+	}
+}

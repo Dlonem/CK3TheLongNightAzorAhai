@@ -1,0 +1,247 @@
+﻿# AGOT: The Long Night & Azor Ahai -- Door Two: convert, never clone.
+#
+# THIS FILE OVERRIDES ONE AGOT SCRIPTED EFFECT BY KEY: `dragon_combat_result_grab`, from
+# common/scripted_effects/00_agot_dragon_combat_effects.txt (line 1930 as of AGOT 2026-08). Scripted
+# effects are keyed singletons and the LAST loaded definition wins -- the same mechanism Thomas's own
+# Supernatural+AGOT compat patch uses for the secret effects (zzz_spn_agot_secret_effects.txt states
+# it plainly: "AGOT loads first, so AGOT's versions were being discarded entirely"). This mod loads
+# after AGOT, so this definition replaces theirs. database_conflicts.log will log the duplicate key
+# on every boot: that line is EXPECTED and is this file working.
+#
+# WHY THIS EFFECT. The funnel check (13 Aug, 1.0.7): every dragon death that actually EXECUTES in
+# dragon-vs-dragon combat lives inside this one effect. The four `death = { }` sites in
+# dragon_combat_move_chomp_effect are wrapped in show_as_tooltip -- display only, never run; the real
+# chomp kill is this effect's flag:chomp branch. dragon_combat_result_grab has exactly one caller
+# (finalise_dragon_combat_results_effect), and there is no competing-entry slot in dragon combat the
+# way there is in the knight lottery: the deaths are direct weighted random_list branches. So the
+# smallest possible intervention is this: one effect, re-stated, with six dragon-death sites wrapped.
+#
+# WHAT CHANGED, EXACTLY -- and nothing else changed, byte for byte:
+#   Six scope:dsc_loser_dragon death sites (sudden_strike 95, dragonfire 95, driven_to_ground,
+#   disemboweled, eviscerated, chomp) now ask ln_the_dead_claim_this_trigger first. If the dead can
+#   claim this kill (Long Night active, victim a living dragon and not already theirs, victor one of
+#   them or the ground theirs, and the game rule not set to deny it), the death is REPLACED by
+#   ln_the_dead_claim_dragon_effect -- the dragon survives as itself, converted. Otherwise the
+#   original death runs untouched. RIDER deaths in the same branches are untouched either way.
+#
+# ON EVERY AGOT UPDATE: diff their dragon_combat_result_grab against the body below (minus the six
+# wraps) and fold in any change. The wraps themselves are mechanical; the anchors are the six
+# death_reason lines.
+
+dragon_combat_result_grab = {
+	scope:dsc_loser = {
+		if = {
+			limit = {
+				scope:dragon_death_rattle = flag:sudden_strike
+			}
+			random_list = {
+				5 = {
+					scope:dsc_loser_dragon = {
+						wound_dragon = yes
+						agot_remove_from_combat = yes
+					}
+				}
+				95 = {
+					scope:dsc_loser_dragon = {
+						if = {
+							limit = { ln_the_dead_claim_this_trigger = yes }
+							ln_the_dead_claim_dragon_effect = yes
+						}
+						else = {
+							death = {
+								killer = scope:dsc_victor
+								death_reason = death_dragon_duel
+							}
+						}
+					}
+				}
+			}
+			death = {
+				killer = scope:dsc_victor
+				death_reason = death_dragon_duel_ate
+			}
+		}
+		else_if = {
+			limit = {
+				scope:dragon_death_rattle = flag:dragonfire
+			}
+			random_list = {
+				5 = {
+					scope:dsc_loser_dragon = {
+						agot_remove_from_combat = yes
+						add_trait = dragon_burned
+					}
+				}
+				95 = {
+					scope:dsc_loser_dragon = {
+						add_trait = dragon_burned
+						if = {
+							limit = { ln_the_dead_claim_this_trigger = yes }
+							ln_the_dead_claim_dragon_effect = yes
+						}
+						else = {
+							death = {
+								killer = scope:dsc_victor
+								death_reason = death_dragon_duel_fire
+							}
+						}
+					}
+				}
+			}
+			random_list = {
+				5 = {
+					add_trait = burned
+					add_trait_xp = {
+						trait = burned
+						value = { 50 200 }
+					}
+					agot_remove_from_combat = yes
+				}
+				95 = {
+					add_trait = burned
+					add_trait_xp = {
+						trait = burned
+						value = { 50 200 }
+					}
+					death = {
+						killer = scope:dsc_victor
+						death_reason = death_dragon_duel_fire
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				scope:dragon_death_rattle = flag:driven_to_ground
+			}
+			random_list = {
+				1 = {
+					agot_remove_from_combat = yes
+				}
+				1 = {
+					add_trait = wounded_1
+					agot_remove_from_combat = yes
+				}
+				2 = {
+					add_trait = wounded_2
+					agot_remove_from_combat = yes
+				}
+				3 = {
+					add_trait = wounded_3
+					agot_remove_from_combat = yes
+				}
+				90 = {
+					modifier = {
+						add = {
+							value = prowess
+							multiply = -1
+						}
+						always = yes
+					}
+					death = {
+						killer = scope:dsc_victor
+						death_reason = death_dragon_duel
+					}
+				}
+			}
+			scope:dsc_loser_dragon = {
+				if = {
+					limit = { ln_the_dead_claim_this_trigger = yes }
+					ln_the_dead_claim_dragon_effect = yes
+				}
+				else = {
+					death = {
+						killer = scope:dsc_victor
+						death_reason = death_dragon_duel
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				scope:dragon_death_rattle = flag:disemboweled
+			}
+			scope:dsc_loser_dragon = {
+				if = {
+					limit = { ln_the_dead_claim_this_trigger = yes }
+					ln_the_dead_claim_dragon_effect = yes
+				}
+				else = {
+					death = {
+						killer = scope:dsc_victor
+						death_reason = death_dragon_duel
+					}
+				}
+			}
+			random_list = {
+				94 = {
+					death = {
+						killer = scope:dsc_victor
+						death_reason = death_dragon_duel
+					}
+				}
+				3 = {
+					add_trait = wounded_3
+					add_trait = maimed
+					agot_remove_from_combat = yes
+				}
+				2 = {
+					add_trait = wounded_3
+					agot_remove_from_combat = yes
+				}
+				1 = {
+					add_trait = wounded_3
+					add_trait = incapable
+					agot_remove_from_combat = yes
+				}
+			}
+
+		}
+		else_if = {
+			limit = {
+				scope:dragon_death_rattle = flag:eviscerated
+			}
+			scope:dsc_loser_dragon = {
+				if = {
+					limit = { ln_the_dead_claim_this_trigger = yes }
+					ln_the_dead_claim_dragon_effect = yes
+				}
+				else = {
+					death = {
+						killer = scope:dsc_victor
+						death_reason = death_dragon_duel
+					}
+				}
+			}
+			death = {
+				killer = scope:dsc_victor
+				death_reason = death_dragon_duel
+			}
+		}
+		else_if = {
+			limit = {
+				scope:dragon_death_rattle = flag:chomp
+			}
+			scope:dsc_loser_dragon = {
+				if = {
+					limit = { ln_the_dead_claim_this_trigger = yes }
+					ln_the_dead_claim_dragon_effect = yes
+				}
+				else = {
+					death = {
+						killer = scope:dsc_victor
+						death_reason = death_dragon_duel_ate
+					}
+				}
+			}
+			death = {
+				killer = scope:dsc_victor
+				death_reason = death_dragon_duel_ate
+			}
+		}
+	}
+	scope:dsc_victor = {
+		add_kinslayer_trait_or_nothing_effect = { VICTIM = scope:dsc_loser }
+	}
+}
+

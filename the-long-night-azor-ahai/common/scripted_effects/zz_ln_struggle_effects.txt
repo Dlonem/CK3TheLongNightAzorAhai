@@ -1,0 +1,685 @@
+﻿# AGOT: The Long Night & Azor Ahai -- struggle plumbing.
+#
+# WHY THE PHASE HOOKS LIVE IN on_monthly AND NOT IN A PHASE'S on_start.
+# CK3's own schema (game/common/struggle/struggles/_struggles.info) documents a phase-level `on_start` on the
+# ENDING phase ONLY -- "Ending phase should not have either ending decisions or modifiers or next phases", and its
+# on_start "is called as soon a struggle moves into ending phase." Ordinary phases have no on_start at all, and
+# neither the Iberian nor the Persian struggle uses one. A hook written there is silently dead code.
+#
+# The struggle-level hooks that DO exist: on_start / on_end / on_change_phase / on_join / on_monthly.
+# on_change_phase looks like the answer but it is ambiguous about which side of the transition it reads -- the
+# vanilla Persian comments read it as the phase being LEFT -- and it cannot distinguish a natural transition from
+# a forced change_struggle_phase. So we latch on on_monthly instead: look at what phase we are in, fire once,
+# remember. That is correct no matter HOW the phase was entered (drip, catalyst, sync, decision, or console) and
+# it re-arms itself when the wheel comes back round to the Long Summer.
+
+# NOTE: there is no ln_struggle_started_effect. It used to set a global 'ln_struggle_running' that nothing ever
+# read, which CK3 reports as "Variable is set but is never used". The struggle's own existence is the flag --
+# check `exists = struggle:ln_long_night_struggle`. The struggle's on_start now calls ln_struggle_monthly_effect
+# directly so a mid-game start is consistent from its first day.
+
+# Root = struggle. Runs monthly while the struggle exists. Everything is latched, so the steady-state cost is a
+# phase check and a variable read.
+ln_struggle_monthly_effect = {
+	# ── RECONCILE ──────────────────────────────────────────────────────────────────────────────────────────
+	# The invasion is running by a route that did not come through this struggle: the legacy schedule, the
+	# invasion decision, or an ordering race at game start where others.1 fired before the struggle existed and
+	# ln_sync_struggle_to_invasion_effect had nothing to talk to. Drag the struggle into line.
+	# Safe under the recurrence rule: ln_long_night_recurrence_effect removes others_invasion_has_arrived when the
+	# wheel turns, so this can never pull a rebuilt world back into the dark.
+	if = {
+		limit = {
+			has_global_variable = others_invasion_has_arrived
+			NOR = {
+				is_struggle_phase = ln_phase_the_long_night
+				is_struggle_phase = ln_phase_the_dawn
+			}
+		}
+		change_struggle_phase = ln_phase_the_long_night
+	}
+
+	# ── THE COLD WINDS RISE: the warning ───────────────────────────────────────────────────────────────────
+	if = {
+		limit = {
+			is_struggle_phase = ln_phase_cold_winds
+			NOT = { has_global_variable = ln_latch_cold_winds }
+		}
+		set_global_variable = { name = ln_latch_cold_winds value = yes }
+		ln_struggle_cold_winds_reached_effect = yes
+	}
+
+	# ── AND THE HIDDEN CLOCK ON IT ─────────────────────────────────────────────────────────────────────────
+	# The phase's own sixty-year duration is a backstop; the real length is twelve to forty-five years, rolled
+	# when the winds rise and ended here. See common/scripted_effects/zz_ln_winter_clock_effects.txt.
+	if = {
+		limit = { is_struggle_phase = ln_phase_cold_winds }
+		ln_winter_clock_effect = yes
+	}
+
+	# ── THE LONG NIGHT: the invasion ───────────────────────────────────────────────────────────────────────
+	if = {
+		limit = {
+			is_struggle_phase = ln_phase_the_long_night
+			NOT = { has_global_variable = ln_latch_long_night }
+		}
+		set_global_variable = { name = ln_latch_long_night value = yes }
+		ln_struggle_reached_long_night_effect = yes
+	}
+
+	# ── THE DAWN: end it, or turn the wheel ────────────────────────────────────────────────────────────────
+	if = {
+		limit = {
+			is_struggle_phase = ln_phase_the_dawn
+			NOT = { has_global_variable = ln_latch_dawn }
+		}
+		set_global_variable = { name = ln_latch_dawn value = yes }
+		ln_struggle_dawn_reached_effect = yes
+	}
+
+	# ── BACK TO THE LONG SUMMER: re-arm for the next wave ──────────────────────────────────────────────────
+	if = {
+		limit = { is_struggle_phase = ln_phase_long_summer }
+
+		# THE LEDGER AND THE SCHEDULE ARE PER-SUMMER. Under `long_night_recurs` the wheel turns and a second
+		# Long Summer begins; if the point ledger, the year count and the rolled target survived the winter,
+		# wave two would start already finished and the dark would land again immediately. Only cleared when
+		# the dawn latch is still standing -- that is the proof we have been all the way round rather than
+		# merely started -- so a fresh game does not wipe the numbers it just set.
+		if = {
+			limit = { has_global_variable = ln_latch_dawn }
+			if = { limit = { has_global_variable = ln_summer_points } remove_global_variable = ln_summer_points }
+			if = { limit = { has_global_variable = ln_summer_years }  remove_global_variable = ln_summer_years }
+			if = { limit = { has_global_variable = ln_summer_target } remove_global_variable = ln_summer_target }
+			if = { limit = { has_global_variable = ln_winter_target } remove_global_variable = ln_winter_target }
+			if = { limit = { has_global_variable = ln_winter_started } remove_global_variable = ln_winter_started }
+			if = { limit = { has_global_variable = ln_winter_floor } remove_global_variable = ln_winter_floor }
+			# 1.0.9: the roll and the dragon credit are per-summer too. A second summer that inherited wave
+			# one's banked credit would start already paid for, and an inherited roll would cap wave two's
+			# restore against wave one's number. ln_dragon_credit_total is deliberately NOT cleared -- forty
+			# points is a per-GAME budget, not a per-wave one, or the recurrence would hand dragons a fresh
+			# forty every time the wheel turned.
+			if = { limit = { has_global_variable = ln_winter_roll } remove_global_variable = ln_winter_roll }
+			if = { limit = { has_global_variable = ln_dragon_credit } remove_global_variable = ln_dragon_credit }
+
+			# RE-ARM THE REVEAL -- QA find, 8 Aug evening. ln_dawn_revealed is the reveal chain's one-shot
+			# guard, and nothing ever cleared it: under "The Cycle" the SECOND Night King died to silence --
+			# no slayer, no trait, no nickname, no chronicle, forever. The stale sword-answer went with it,
+			# or wave two's chronicle would have reported wave one's blow. The ln_last_dawn_* globals are
+			# deliberately NOT cleared: they are the permanent record of the previous dawn, and being still
+			# set when the next dark rises is their entire purpose.
+			if = { limit = { has_global_variable = ln_dawn_revealed } remove_global_variable = ln_dawn_revealed }
+			# The Scattered Watch scatters again when the dark comes again (Session 10).
+			if = { limit = { has_global_variable = ln_brothers_scattered } remove_global_variable = ln_brothers_scattered }
+			# The next Long Night is timed from its own arrival, not the last one's.
+			if = { limit = { has_global_variable = ln_long_night_started } remove_global_variable = ln_long_night_started }
+			# And the killing blow is offered again to whoever beats him next time.
+			if = { limit = { has_global_variable = ln_dawn_offered } remove_global_variable = ln_dawn_offered }
+			if = { limit = { has_global_variable = ln_slain_with_lightbringer } remove_global_variable = ln_slain_with_lightbringer }
+			# 13 Aug (1.0.6): the wave-one War for the Dawn victory must not end wave two. See others.1.
+			if = { limit = { has_global_variable = war_for_dawn_victory } remove_global_variable = war_for_dawn_victory }
+
+			# THE WALL IS RAISED AGAIN -- Thomas, 9 Aug: "does the wall recollapse?" It could not: nothing
+			# outside AGOT's debug menu repairs the breach, so wave two of The Cycle arrived at a Wall
+			# already down -- no fall, no cinematic, no card, and the dead simply walked in. The new
+			# summer is decades long; eight thousand years ago men raised it from nothing, and a realm
+			# that just survived the dark has every reason to raise it again. Exact mirror of AGOT's own
+			# repair (agot_debug_events.txt, agot_debug.1005), per breach section, guarded like theirs.
+			title:b_castle_black.title_province = {
+				if = {
+					limit = { has_variable = agot_wall_has_fallen_left }
+					set_variable = agot_wall_is_normal
+					remove_variable = agot_wall_has_fallen_left
+					remove_building = special_the_wall_damaged
+					add_building = special_the_wall
+				}
+				if = {
+					limit = { has_variable = agot_wall_has_fallen_middle }
+					set_variable = agot_wall_is_normal
+					remove_variable = agot_wall_has_fallen_middle
+					remove_building = special_the_wall_damaged
+					add_building = special_the_wall
+				}
+				if = {
+					limit = { has_variable = agot_wall_has_fallen_right }
+					set_variable = agot_wall_is_normal
+					remove_variable = agot_wall_has_fallen_right
+					remove_building = special_the_wall_damaged
+					add_building = special_the_wall
+				}
+			}
+			# ...and Castle Black can fall again next time (the ruin pulse's one-shot guard).
+			if = { limit = { has_global_variable = ln_castle_black_fell } remove_global_variable = ln_castle_black_fell }
+			# 1.0.10a -- ...AND THE NORTH LADDER RE-ARMS. ln_north_done is a permanent latch by design: it
+			# stops a world-wide county walk running every pulse forever once the North is theirs, because
+			# the dead do not give the North back. But the WHEEL does -- the living retake and recolonise
+			# between waves -- so a latch left standing here would silently disable stage three of the
+			# region ladder for every Long Night after the first, and wave two would wander south again
+			# exactly the way 1.0.10 was written to stop. Found in the 1.0.10a quality pass; it could not
+			# have shown up in a first-wave test, which is the only kind of test this mod has ever had.
+			if = { limit = { has_global_variable = ln_north_done } remove_global_variable = ln_north_done }
+			if = { limit = { has_global_variable = ln_north_unfinished } remove_global_variable = ln_north_unfinished }
+			# ...and the broken-Wall mark comes off with the repair (1.0.6).
+			title:c_castle_black = {
+				remove_county_modifier = ln_wall_broken_modifier
+			}
+		}
+
+		if = {
+			limit = { has_global_variable = ln_latch_cold_winds }
+			remove_global_variable = ln_latch_cold_winds
+			# ...and the per-character second lock on the warning card (1.0.6a), or nobody alive when the
+			# wheel turns would ever be warned again.
+			every_player = {
+				limit = { has_character_flag = ln_saw_the_cold_winds }
+				remove_character_flag = ln_saw_the_cold_winds
+			}
+		}
+		if = {
+			limit = { has_global_variable = ln_latch_long_night }
+			remove_global_variable = ln_latch_long_night
+		}
+		if = {
+			limit = { has_global_variable = ln_latch_dawn }
+			remove_global_variable = ln_latch_dawn
+		}
+	}
+}
+
+# Root = struggle. Roughly a decade of knowing before the dark -- the card that did not exist before, when the
+# realm went from "fine" to "the dead are here" with nothing in between.
+ln_struggle_cold_winds_reached_effect = {
+	ln_winter_clock_start_effect = yes
+	every_player = { trigger_event = ln_opening.6 }
+}
+
+# Root = struggle. Fired once when the struggle reaches its Dawn phase, by whatever route.
+# Under "Once" the struggle concludes here and stays in the ledger as history. Under "The Cycle" the wave counter
+# ticks over, the one-shot invasion gates are re-armed, and the phase flows back to the Long Summer on its own
+# timer -- so the struggle and ln_wave_count are a SINGLE clock rather than two that drift apart.
+#
+# THE WAVE COUNTER MOVES HERE AND NOWHERE ELSE. ln_long_night_recurrence_effect used to bump it too, which meant
+# every cycle counted as two waves and the escalation tiers ran away.
+ln_struggle_dawn_reached_effect = {
+	if = {
+		limit = { has_game_rule = long_night_recurs }
+		if = {
+			limit = { NOT = { has_global_variable = ln_wave_count } }
+			set_global_variable = { name = ln_wave_count value = 2 }
+		}
+		else = {
+			change_global_variable = { name = ln_wave_count add = 1 }
+		}
+
+		# Re-arm the one-shot gates others.1 checks. LOAD-BEARING: the reconcile above pulls the struggle straight
+		# back to the Long Night for as long as others_invasion_has_arrived is set, so if these are not cleared the
+		# wheel jams and the world never gets another Long Summer.
+		if = {
+			limit = { has_global_variable = others_invasion_triggered }
+			remove_global_variable = others_invasion_triggered
+		}
+		if = {
+			limit = { has_global_variable = others_invasion_has_arrived }
+			remove_global_variable = others_invasion_has_arrived
+		}
+		if = {
+			limit = { has_global_variable = others_invasion_will_happen }
+			remove_global_variable = others_invasion_will_happen
+		}
+	}
+	else = {
+		# end_struggle takes `yes`, NOT a decision key -- confirmed against vanilla
+		# (common/on_action/game_start.txt: `struggle:iberian_struggle ?= { end_struggle = yes }`).
+		# The ending decision is listed on the phase for the player's benefit; it is not an argument.
+		end_struggle = yes
+	}
+}
+
+# ── THE BASELINE DRIP ─────────────────────────────────────────────────────────────────────
+# The drip is no longer a fixed rate. It is a SCHEDULE KEEPER. Read the header of
+# common/script_values/zz_ln_pacing_values.txt for the live-save evidence that made this necessary; the short
+# version is that Thomas was two-thirds of the way through a century of Long Summer twenty years into the Fire
+# & Blood bookmark, with the Dance of the Dragons still ahead of him.
+#
+# Each year, in the Long Summer only, it asks where the world SHOULD be by now and where it actually is:
+#
+#     behind by more than six points   -> tick twice, make the time back
+#     behind, on pace, or ahead by <8  -> tick once
+#     ahead by eight or more           -> stay silent, and let the catalysts' lead stand
+#
+# So a quiet century still ends when the rule promised. A century of dead dragons and lost rangings ends
+# sooner, but only by so much. And it stays true for any catalyst added later, which per-catalyst tuning never
+# would have.
+#
+# THE MANUAL RULE still stops the points dead -- `others_manual_invasion` means the Long Night comes when a
+# player calls it and not before. Time still passes: ln_summer_year_tick_effect runs outside that gate, which
+# is what makes ln_summer_years an honest liveness check on the whole yearly clock. If it is missing from the
+# next save, the clock is dead, and no rule can hide it.
+ln_struggle_yearly_drip_effect = {
+	# Thomas's cross-struggle link: unrest beyond the Wall feeds the Long Summer.
+	ln_btw_restlessness_catalyst_effect = yes
+
+	if = {
+		limit = { exists = struggle:ln_long_night_struggle }
+		struggle:ln_long_night_struggle = {
+			if = {
+				limit = { is_struggle_phase = ln_phase_long_summer }
+
+				# Rolls the schedule the first time a summer runs, and does nothing on every year after.
+				ln_struggle_set_pace_effect = yes
+
+				# TIME PASSES UNDER EVERY RULE.
+				ln_summer_year_tick_effect = yes
+
+				# POINTS DO NOT. And the invasion-CHANCE rule is finally honoured here too: a world that
+				# rolled "no invasion" at game start (others_invasion_will_happen = no) accrues nothing,
+				# same as manual -- see ln_the_dark_may_come_trigger (9 Aug pacing audit).
+				if = {
+					limit = {
+						NOT = { has_game_rule = others_manual_invasion }
+						ln_the_dark_may_come_trigger = yes
+						any_involved_ruler = { is_alive = yes }
+					}
+					# activate_struggle_catalyst runs in STRUGGLE scope and takes a character for attribution.
+					# NOTE: every_character_struggle iterates a CHARACTER's struggles, not a struggle's
+					# characters -- using it here would have been backwards. random_involved_ruler is the
+					# struggle-scope list.
+					random_involved_ruler = {
+						limit = { is_alive = yes }
+						save_scope_as = ln_drip_witness
+					}
+
+					if = {
+						# "Immediately" means immediately. No schedule, no ladder, five a year until it lands.
+						limit = { has_game_rule = others_immediate_invasion }
+						ln_struggle_fire_year_catalyst_effect = yes
+						ln_struggle_fire_year_catalyst_effect = yes
+						ln_struggle_fire_year_catalyst_effect = yes
+						ln_struggle_fire_year_catalyst_effect = yes
+						ln_struggle_fire_year_catalyst_effect = yes
+					}
+					else_if = {
+						# ln_summer_drip_ticks_value is zero whenever the world is on or ahead of schedule, so
+						# this whole branch is skipped in a century where enough has gone wrong to carry it.
+						# `while = { count = <script value> }` is vanilla's own pattern -- ten uses, e.g.
+						# minister_recruit_courtier_value in 10_dlc_tgp_scripted_effects.txt.
+						limit = { ln_summer_drip_ticks_value >= 1 }
+						while = {
+							count = ln_summer_drip_ticks_value
+							ln_struggle_fire_year_catalyst_effect = yes
+						}
+					}
+					# else: the world is running ahead of its own schedule on the strength of what has actually
+					# happened in it. Nothing to add.
+				}
+			}
+		}
+	}
+}
+
+# ── HOW LONG THIS SUMMER IS SUPPOSED TO LAST ────────────────────────────────────────────────────
+# Rolled ONCE per summer, the first year the drip runs after the phase begins, and cleared when the wheel comes
+# back round under the recurrence rule so wave two gets its own number.
+#
+# EVERY FIGURE HERE IS "YEARS OF LONG SUMMER", NOT "YEARS UNTIL THE LONG NIGHT" -- ln_phase_cold_winds sits
+# between them and is a flat twenty-five years. That is the recalibration this needed: Cold Winds went from ten
+# years to twenty-five when Thomas asked for a real warning window, and every one of these numbers was still
+# written for a ten-year gap, so "In Fifty Years" was quietly promising sixty-five.
+ln_struggle_set_pace_effect = {
+	if = {
+		limit = { NOT = { has_global_variable = ln_summer_target } }
+
+		if = {
+			limit = { has_game_rule = others_invasion_in_50_years }
+			set_global_variable = { name = ln_summer_target  value = 25 }
+		}
+		else_if = {
+			limit = { has_game_rule = others_invasion_in_100_years }
+			set_global_variable = { name = ln_summer_target  value = 75 }
+		}
+		else_if = {
+			limit = { has_game_rule = others_invasion_in_150_years }
+			set_global_variable = { name = ln_summer_target  value = 125 }
+		}
+		else_if = {
+			limit = { has_game_rule = others_immediate_invasion }
+			set_global_variable = { name = ln_summer_target  value = 1 }
+		}
+		else_if = {
+			# The points are gated off entirely under manual, so this is only here to keep the ledger maths
+			# from dividing by an absent number. It is never reached.
+			limit = { has_game_rule = others_manual_invasion }
+			set_global_variable = { name = ln_summer_target  value = 999 }
+		}
+		else_if = {
+			# ONLY the FIRST wave has a canonical date to hit. 13 Aug (1.0.6): after the first Dawn,
+			# current_year is past 8300, so ln_historical_summer_target_value computed a NEGATIVE summer
+			# and floored to 10 -- wave two of "historical" arrived 32-65 years after the first against
+			# the recurrence's stated 90-130. Once the date has been kept (or missed), "historical" has
+			# nothing left to say about timing: later waves fall through to the default ladder below,
+			# which is the 90-130-centred window the recurrence promises.
+			limit = {
+				has_game_rule = others_historical_invasion
+				NOT = { has_global_variable = ln_wave_count }
+				current_year < 8290
+			}
+			set_global_variable = { name = ln_summer_target  value = ln_historical_summer_target_value }
+		}
+		else_if = {
+			# FULLY RANDOM. Anything from a single reign to three centuries.
+			limit = { has_game_rule = others_full_random_invasion }
+			random_list = {
+				15 = { set_global_variable = { name = ln_summer_target  value = 15 } }
+				25 = { set_global_variable = { name = ln_summer_target  value = 45 } }
+				25 = { set_global_variable = { name = ln_summer_target  value = 90 } }
+				20 = { set_global_variable = { name = ln_summer_target  value = 150 } }
+				15 = { set_global_variable = { name = ln_summer_target  value = 240 } }
+			}
+		}
+		else = {
+			# THE DEFAULT: others_random_window_invasion. Its own description promises "never sooner than
+			# twenty-five years, usually between ninety and a hundred and thirty, sometimes far later" -- and
+			# that promise is about the LONG NIGHT, so add the Cold Winds on top of each of these to read it
+			# back. That is no longer a flat twenty-five -- it rolls 12/20/28/36/45 -- so the real spread is
+			# 57 to 175 years, centred where the description says: 45+25 -> ~70, 70+25 -> ~95, 95+25 -> ~120,
+			# 130+25 -> ~155. Seventy per cent of games still land inside the ninety-to-a-hundred-and-thirty
+			# band the player was told about; the tails are wider than they read, deliberately.
+			random_list = {
+				# RECALIBRATED 10 Aug, from a live run. Thomas, 8158: "that was literally, like, fifty years. I am
+				# telling you, this stuff is way too quick." He was right and the arithmetic backs him: the old short
+				# arm rolled a 45-year summer, the Cold Winds then got chewed to their five-year floor by sightings,
+				# and the Long Night landed 52 years into a Fire and Blood start -- barely past the Dance. Two things
+				# changed. The erosion is now capped (see zz_ln_winter_clock_effects.txt) so the warning can be pulled
+				# in but not deleted, and the whole ladder moves late:
+				#
+				#     summer 60 -> the Long Night in  84-105     summer 110 -> 134-155
+				#     summer 85 -> the Long Night in 109-130     summer 145 -> 169-190
+				#
+				# The weights lean late as well: the short arm is now a tenth of games rather than a sixth, and the
+				# long arm a quarter rather than a sixth. A default game should let the bookmark's own story finish and
+				# a couple of generations live and die before the dark is anyone's problem.
+				10 = { set_global_variable = { name = ln_summer_target  value = 60 } }
+				30 = { set_global_variable = { name = ln_summer_target  value = 85 } }
+				35 = { set_global_variable = { name = ln_summer_target  value = 110 } }
+				25 = { set_global_variable = { name = ln_summer_target  value = 145 } }
+			}
+		}
+	}
+}
+
+# Struggle scope. Counts the years the Long Summer has actually run, which is the only honest measure of how
+# far along the world is -- and doubles as a liveness check on the drip itself.
+ln_summer_year_tick_effect = {
+	if = {
+		limit = { NOT = { has_global_variable = ln_summer_years } }
+		set_global_variable = { name = ln_summer_years  value = 1 }
+	}
+	else = {
+		change_global_variable = { name = ln_summer_years  add = 1 }
+	}
+
+	# THE INTRODUCTION CARD, roughly a third of the way in rather than at game start -- the world has settled,
+	# the player has a realm he cares about, and the card reads as the first cold draught rather than a lore
+	# dump on day thirty.
+	#
+	# WAS `ln_summer_years >= 40`, WHICH ONLY WORKED ON ONE RULE. A twenty-five-year summer ("In Fifty Years")
+	# ends before year forty, so that player never saw the card at all. Reading the LEDGER instead makes it
+	# land a third of the way through whatever summer this game is running. The years clause is the fallback
+	# for `others_manual_invasion`, where no points ever accrue and the card would otherwise never fire.
+	if = {
+		limit = {
+			OR = {
+				AND = {
+					exists = global_var:ln_summer_points
+					global_var:ln_summer_points >= 35
+				}
+				AND = {
+					exists = global_var:ln_summer_years
+					global_var:ln_summer_years >= 30
+				}
+			}
+			NOT = { has_global_variable = ln_intro_shown }
+		}
+		set_global_variable = { name = ln_intro_shown  value = yes }
+		every_player = { trigger_event = { id = ln_intro.1  days = { 5 90 } } }
+	}
+}
+
+# Struggle scope. One point of the Long Summer, spent -- and written into the ledger, so the schedule keeper
+# above can see its own contribution alongside the catalysts'.
+ln_struggle_fire_year_catalyst_effect = {
+	# ── 1.0.9: A YEAR WITH A DRAGON IN IT DOES NOT COUNT ────────────────────────────────────────────────
+	# This is the whole mechanism of the hatch counter-catalyst, and it lives here rather than in the
+	# counter because this is the single choke every drip point passes through -- the five-a-year
+	# immediate branch and the scheduled `while` branch both call it, so one guard covers both and neither
+	# can drift from the other later.
+	#
+	# The engine cannot un-progress a struggle (see the block comment on ln_dragon_hatched_counter_effect
+	# in zz_ln_catalyst_effects.txt -- the game exposes four struggle effects and none of them subtract),
+	# so credit is spent BEFORE the point is ever added rather than clawed back after. That is also why
+	# there is no floor to write: an unspent point is not a negative one.
+	#
+	# ONLY the baseline drip is absorbable. A dead dragon, a lost ranging, an extinguished house and a
+	# sighting all go straight to ln_ledger_the_points_effect and are untouched by this, so a world where
+	# things are genuinely going wrong still burns its summer down on the strength of what happened.
+	if = {
+		limit = {
+			exists = global_var:ln_dragon_credit
+			global_var:ln_dragon_credit >= 1
+		}
+		change_global_variable = { name = ln_dragon_credit  subtract = 1 }
+		debug_log = "LN_TRACE: drip point absorbed by dragon credit"
+	}
+	else = {
+		activate_struggle_catalyst = {
+			catalyst = ln_catalyst_year_passed
+			character = scope:ln_drip_witness
+		}
+		ln_ledger_the_points_effect = { POINTS = 1 }
+	}
+}
+
+# Start it once, if it is not already running.
+#
+# 9 Aug: THIS IS NOW ON THE YEARLY HEARTBEAT AS WELL AS GAME START, which is what makes the mod safe to add to
+# a save in progress. Two of the first four workshop comments asked exactly that ("Save Game safe?", "can you
+# start this mid playthrough") and the honest answer used to be no: `on_game_start_after_lobby` does not fire
+# when you load an existing save, so ln_struggle.1 never ran, the struggle was never created, and the entire
+# mod sat there doing nothing at all -- silently, with no error, which is the worst failure this project has.
+# The yearly work effect DOES run on a loaded save (yearly_playable_pulse is an engine pulse), so calling this
+# from there bootstraps a mid-save add within one in-game year.
+#
+# THE LATCH IS LOAD-BEARING, AND IT IS WHY THIS IS NOT A ONE-LINE CHANGE. Under the "Once" rule the struggle
+# ENDS at the Dawn -- and an ended struggle no longer exists, so `NOT = { exists = ... }` becomes true again.
+# Without ln_struggle_ever_started, putting this on a yearly tick would RESTART THE LONG NIGHT a year after the
+# world had won it, forever. The latch is also backfilled below for saves made before it existed, so a v1.0.x
+# game that reaches its Dawn after updating is protected too.
+ln_struggle_start_if_absent_effect = {
+	# change_global_variable on a variable that has never been set is an error, and ln_realm_fed_the_watch is
+	# incremented from a decision that can fire in the first year of a game. Seed it here, where the struggle
+	# is seeded, so there is one place that owns "the globals this mod assumes exist".
+	if = {
+		limit = { NOT = { has_global_variable = ln_realm_fed_the_watch } }
+		set_global_variable = { name = ln_realm_fed_the_watch  value = 0 }
+	}
+
+	# BACKFILL for pre-1.0.2 saves: the struggle is already running but predates the latch. Stamp it now, while
+	# we can still see the struggle, so that when this world reaches its Dawn the bootstrap stays shut.
+	if = {
+		limit = {
+			exists = struggle:ln_long_night_struggle
+			NOT = { has_global_variable = ln_struggle_ever_started }
+		}
+		set_global_variable = { name = ln_struggle_ever_started  value = yes }
+	}
+
+	if = {
+		limit = {
+			NOT = { exists = struggle:ln_long_night_struggle }
+			NOT = { has_global_variable = ln_struggle_ever_started }
+		}
+		set_global_variable = { name = ln_struggle_ever_started  value = yes }
+
+		# ── THE OVERDUE HISTORICAL START ────────────────────────────────────────────────────────────────
+		# On the historical rule the canonical Long Night is 8300, and the summer is supposed to end about
+		# twenty-five years before it. From a bookmark at 8255 or later there is no longer room for a summer
+		# the drip can actually deliver -- it caps at 5 points a year, so 100 points is twenty years minimum
+		# however short the target claims to be. A 300 AC start was therefore getting twenty years of summer
+		# plus a 12-45 year winter and landing the "historical" Long Night in 332-365 AC, which is the exact
+		# complaint that came back from the workshop on day one.
+		#
+		# So we stop pretending there is a century of warning left, and open in the warning itself: the
+		# struggle starts in The Cold Winds Rise with the clock set to expire on 8300 (floored at five years,
+		# so a bookmark AFTER the canonical date still gets a run at it rather than the dark on turn one).
+		# Players get ln_opening.6 in the first month from the phase-entry latch, which is the right card for
+		# a world that is already too late to prepare quietly.
+		if = {
+			limit = {
+				has_game_rule = others_historical_invasion
+				current_year >= 8255
+			}
+			set_global_variable = { name = ln_winter_target  value = ln_historical_overdue_winter_value }
+			start_struggle = {
+				struggle_type = ln_long_night_struggle
+				start_phase = ln_phase_cold_winds
+			}
+		}
+		else = {
+			start_struggle = {
+				struggle_type = ln_long_night_struggle
+				start_phase = ln_phase_long_summer
+			}
+		}
+	}
+}
+
+
+# ════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE CLOCKS, AND WHY THERE ARE TWO OF EACH
+# ════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# The whole mod hangs off two heartbeats: a yearly one (the drip, the Watch, the ruins, the horde, the
+# aftermath) and a monthly one (phase-entry latches and the invasion reconcile). If either stops, large parts of
+# the mod go quiet WITHOUT LOGGING ANYTHING, which is the failure mode that has cost the most time on this
+# project. So each heartbeat has two independent drivers, and the work itself is written so that running it
+# twice in the same period does nothing the second time.
+#
+# YEARLY. Driver 1 is ln_struggle.2, a self-perpetuating hidden event -- vanilla's own pattern, verified:
+# game_rule.1012 re-fires itself with `days = 365` and fp3_struggle.0001 with `years = { 3 5 }`, both from
+# scope = none. Driver 2 is yearly_playable_pulse, an engine pulse that cannot be lost. Whichever arrives first
+# in a given year does the work and stamps the year number; the other finds the year already stamped and
+# returns. An event chain can be broken by a save made before the event existed. An engine pulse cannot.
+# Between them the yearly work cannot stop -- and, since Thomas's 121 AC save, cannot run twice either.
+#
+# MONTHLY. Driven by the struggle's own on_monthly, with yearly_playable_pulse as a backstop.
+#
+# THIS WAS AN OPEN QUESTION AND IS NOW ANSWERED. on_monthly is documented in CK3's _struggles.info and used by
+# NEITHER vanilla struggle, which on this project is a warning rather than a reassurance -- phase-level
+# on_start is documented in the same file and is silently dead, and that cost a whole batch of phase wiring.
+# So the hook ran alongside a self-perpetuating twin (ln_struggle.3) and left a dated stamp behind.
+# ln_proof_on_monthly turned up in the 253 AC save. **on_monthly is real.** The twin and the stamp are gone.
+
+# Root = anything. The yearly work, gated so it happens exactly once a year no matter how many callers arrive.
+ln_struggle_yearly_work_effect = {
+	# THE GATE IS THE CALENDAR. It used to be an auto-expiring global (`ln_yearly_done`, years = 1) and Thomas's
+	# 121 AC save came back with 39 x ln_catalyst_year_passed in about twenty years -- nearly double the rate
+	# the default rule is supposed to tick at. Two independent drivers race for this gate (a self-perpetuating
+	# event and an engine pulse) and one of them was getting through more often than it should.
+	#
+	# Rather than reason about which one and why, the gate now records the LAST YEAR THE WORK RAN and compares
+	# it to current_year. That is exact, it cannot expire early or drift, and it does not care how many drivers
+	# call it, in what order, or how a save reload lands. Two callers in the same year: the second one finds
+	# its own year already stamped and returns.
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_global_variable = ln_last_yearly_year }
+				global_var:ln_last_yearly_year < current_year
+			}
+		}
+		set_global_variable = { name = ln_last_yearly_year  value = current_year }
+
+		# FIRST, because every line below this one assumes the struggle exists. On a normal game this is a
+		# single cheap `exists` check; on a save the mod was just added to, it is the whole mod starting.
+		ln_struggle_start_if_absent_effect = yes
+
+		# Can the living still win? Checked once a year, behind the same calendar stamp as everything else
+		# here, so exactly one pass per year however many characters reach this line.
+		ln_the_long_defeat_effect = yes
+
+		ln_struggle_yearly_drip_effect = yes
+		ln_watch_strength_catalyst_effect = yes
+		ln_dragon_census_effect = yes
+		ln_ruins_decay_effect = yes
+		# 1.0.10: stamps pre-conversion culture+faith onto dead-held counties any other route missed.
+		ln_stamp_swept_counties_effect = yes
+		# 1.0.12: repaints travel danger onto every road the dead hold, one county out, and everything past
+		# the Wall. Same every_county walk and the same invasion-window fence as the line above it, so the
+		# two share a cost that was already being paid. See zz_ln_travel_danger_effects.txt.
+		ln_paint_the_dead_roads_effect = yes
+		ln_horde_reinforce_effect = yes
+		ln_realm_rename_effect = yes
+		# The great keeps hold while the country around them does not -- see zz_ln_bastion_effects.txt.
+		ln_bastion_upkeep_effect = yes
+		ln_aftermath_yearly_effect = yes
+		ln_dragonpit_sweep_effect = yes
+		# 1.0.7: undead-dragon self-heals -- the shading repair (now yearly, not only at load) and the
+		# clone-era Past Riders migration. See zz_ln_ice_dragon_effects.txt.
+		ln_undead_dragon_upkeep_effect = yes
+		# 1.0.12b: strips wight_trait off any LIVING dragon a county sweep wrongly converted -- the one-time
+		# undo for saves from before dragons were barred at mutate_into_other_effect's door.
+		ln_dewight_dragons_effect = yes
+		# 1.0.12a HOTFIX: puts back the curated appearances that 1.0.12's own storage sweep deleted. Runs in
+		# the same place the harmful effect used to, deliberately -- a save that took the damage takes the
+		# repair on the identical schedule. See zz_ln_historical_dragon_restore.txt.
+		ln_restore_historical_dragon_looks_effect = yes
+		# 1.0.10b: THE RENOWN CRATER SELF-HEAL, for saves that took the House Charter before the fix.
+		# Thomas's 16 Aug save is sitting at -42,249 and cannot climb out in-game; there is no in-game
+		# door back and no console command a player should have to be told about. Negative dynasty
+		# renown is not a state vanilla can produce, so treating it as damage is safe universally --
+		# and the floor is self-limiting: once at zero the limit is false and it never runs again.
+		# every_player, not every_ruler: the charter is ai_will_do = { base = 0 } with
+		# ai_check_interval = 0, so no AI house can be in this hole, and this stays one pass a year
+		# over a handful of characters.
+		every_player = {
+			limit = { exists = dynasty }
+			dynasty = { ln_charter_renown_floor_effect = yes }
+		}
+		ln_watch_recruits_rangers_effect = yes
+		# 1.0.6a: puts stray ranging companies back under the Lord Commander (self-heal for old saves).
+		ln_reanchor_the_companies_effect = yes
+		# 1.0.6a: and no lord of the dead keeps a county once the Dawn has come.
+		ln_no_dead_landlords_effect = yes
+		# ...and once a captain exists, he needs men. See zz_ln_brother_allocation_effects.txt -- every road
+		# into the Watch ends in the Lord Commander's court and nothing has ever emptied it outward.
+		ln_allocate_brothers_effect = yes
+		# 1.0.8: death did us part -- retro-severs any living spouse still married to a wight on saves
+		# made before 1.0.8. Silent by design; see zz_ln_wight_notice_effects.txt.
+		ln_wight_marriage_sweep_effect = yes
+		# 1.0.9: restamps a pre-1.0.7 Lightbringer to illustrious so it stops rendering grey. Costs one
+		# failed has_global_variable check in any game where nobody has forged one. brindatm's report.
+		ln_lightbringer_restamp_effect = yes
+	}
+}
+
+# Root = anything. The monthly work. ln_struggle_monthly_effect wants struggle scope and is latched internally,
+# so this is safe to call from a character pulse, from a rootless event, or from the struggle itself.
+ln_struggle_monthly_work_effect = {
+	struggle:ln_long_night_struggle ?= { ln_struggle_monthly_effect = yes }
+}
+
+# Root = a playable character, from yearly_playable_pulse. The engine-driven half of both clocks.
+# It does the work directly rather than restarting the events: a pulse that fires the work is one mechanism, a
+# pulse that fires an event that fires the work is two, and the second one is the one that has already failed
+# once. The monthly latch running only yearly from this side is fine -- it is a backstop, not the primary, and
+# every latch it guards is a one-shot that has no deadline.
+ln_struggle_clock_backstop_effect = {
+	ln_struggle_yearly_work_effect = yes
+	ln_struggle_monthly_work_effect = yes
+
+	# PER-CHARACTER, not global -- this runs for every playable character, and the orientation card is owed to
+	# whichever of them is holding a champion trait he was never told about. Latched on its own flag, so the
+	# steady-state cost is one flag check a year.
+	ln_check_entry_effect = yes
+
+	# 1.0.7: the red god's slow argument -- see zz_ln_red_conversion_effects.txt.
+	ln_red_temptation_pulse_effect = yes
+}

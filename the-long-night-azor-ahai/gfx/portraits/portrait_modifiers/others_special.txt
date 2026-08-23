@@ -1,0 +1,104 @@
+﻿others_special = {
+
+	usage = game
+	selection_behavior = weighted_random
+	priority = 10
+
+	others_eyes_1 = {
+		dna_modifiers = {
+			accessory = {
+				mode = modify
+				gene = eye_accessory
+				template = no_eyes
+				value = 0.5
+			}
+			accessory = {
+				# 1.0.11 -- WAS `mode = modify`, AND THAT IS WHY THE OTHERS HAD EMPTY SOCKETS.
+				# CK3: "modes modify, modify_multiply and replace only work for regular genes."
+				# others_eye_accessory is declared under special_genes, so it is a SPECIAL gene and modify
+				# is rejected -- error at dnamodifier.cpp:50, three hits, one per entry below.
+				# The eye_accessory/no_eyes block above does NOT error, because vanilla's eye_accessory is a
+				# regular gene. So the removal was applying and the replacement was not: eyes deleted, glow
+				# never added, and every Other and wight rendered with black holes.
+				# `add` is the accessory mode -- 2,131 uses in vanilla, 2,686 in AGOT, against 9 and 11 for
+				# modify. Leave the no_eyes block alone; it is doing its job.
+				mode = add
+				gene = others_eye_accessory
+				template = others_eyes
+				range = { 1 1 }
+			}
+		}
+		weight = {
+			base = 0
+			modifier = {
+				add = 1500
+				has_trait = nightking
+			}
+		}
+	}
+	others_eyes_2 = {
+		dna_modifiers = {
+			accessory = {
+				mode = modify
+				gene = eye_accessory
+				template = no_eyes
+				value = 0.5
+			}
+			accessory = {
+				# 1.0.11 -- WAS `mode = modify`, AND THAT IS WHY THE OTHERS HAD EMPTY SOCKETS.
+				# CK3: "modes modify, modify_multiply and replace only work for regular genes."
+				# others_eye_accessory is declared under special_genes, so it is a SPECIAL gene and modify
+				# is rejected -- error at dnamodifier.cpp:50, three hits, one per entry below.
+				# The eye_accessory/no_eyes block above does NOT error, because vanilla's eye_accessory is a
+				# regular gene. So the removal was applying and the replacement was not: eyes deleted, glow
+				# never added, and every Other and wight rendered with black holes.
+				# `add` is the accessory mode -- 2,131 uses in vanilla, 2,686 in AGOT, against 9 and 11 for
+				# modify. Leave the no_eyes block alone; it is doing its job.
+				mode = add
+				gene = others_eye_accessory
+				template = others_eyes
+				range = { 1 1 }
+			}
+		}
+		weight = {
+			base = 0
+			modifier = {
+				add = 1500
+				has_trait = other_trait
+			}
+		}
+	}
+	# The Long Night+: wights get the same cold blue glowing eyes as the Others.
+	others_eyes_wight = {
+		dna_modifiers = {
+			accessory = {
+				mode = modify
+				gene = eye_accessory
+				template = no_eyes
+				value = 0.5
+			}
+			accessory = {
+				# 1.0.11 -- WAS `mode = modify`, AND THAT IS WHY THE OTHERS HAD EMPTY SOCKETS.
+				# CK3: "modes modify, modify_multiply and replace only work for regular genes."
+				# others_eye_accessory is declared under special_genes, so it is a SPECIAL gene and modify
+				# is rejected -- error at dnamodifier.cpp:50, three hits, one per entry below.
+				# The eye_accessory/no_eyes block above does NOT error, because vanilla's eye_accessory is a
+				# regular gene. So the removal was applying and the replacement was not: eyes deleted, glow
+				# never added, and every Other and wight rendered with black holes.
+				# `add` is the accessory mode -- 2,131 uses in vanilla, 2,686 in AGOT, against 9 and 11 for
+				# modify. Leave the no_eyes block alone; it is doing its job.
+				mode = add
+				gene = others_eye_accessory
+				template = others_eyes
+				range = { 1 1 }
+			}
+		}
+		weight = {
+			base = 0
+			modifier = {
+				add = 1500
+				has_trait = wight_trait
+			}
+		}
+	}
+}

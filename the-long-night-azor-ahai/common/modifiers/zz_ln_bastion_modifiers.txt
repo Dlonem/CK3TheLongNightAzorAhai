@@ -1,0 +1,33 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the great keeps hold.
+#
+# WHY THIS EXISTS. Thomas, watching a live run: "Winterfell falls a little too quickly. I feel like it should be
+# one of the last bastions of the north -- in the show a lot of the other holds fell first and Winterfell was
+# last." He is right, and the reason it does not happen is structural rather than a tuning problem.
+#
+# The Others declare on a NEIGHBOURING TOP LIEGE (random_neighboring_top_liege_realm_owner), so in Robert's era
+# the war is against the Iron Throne and House Stark is simply a vassal inside it. Winterfell is never a target;
+# it is just another northern county in a realm at war, and nothing anywhere makes a great seat harder to take
+# than a fishing village.
+#
+# The fix is mechanical, not scripted ordering. Give the great seats real walls for the duration and let the
+# result emerge: the dead take the open land quickly and then grind for years on Winterfell, Riverrun, the Eyrie.
+# That is the shape of the story in both the books and the parts of the show that worked, and it makes "move to
+# Winterfell when the warnings start" a genuinely correct decision instead of flavour.
+#
+# MAGNITUDES ARE INSIDE VANILLA'S RANGE, checked rather than picked: additional_fort_level runs 1-4 across the
+# base game (4 is rare, used 3 times), defender_holding_advantage runs 1-10. This sits near the top of both
+# because it is the end of the world, not a border dispute -- but it is not off the scale.
+ln_last_bastion_modifier = {
+	# county_modifier_wealth_positive DOES NOT EXIST -- caught by the reachability check before shipping.
+	# The county icon set is development / opinion / control, positive-negative-mixed. Control is the honest
+	# one here: the walls hold, which is a control story, not a wealth one.
+	icon = county_modifier_control_positive
+
+	additional_fort_level = 3
+	garrison_size = 0.5
+	defender_holding_advantage = 8
+
+	# The keep holds; the country around it does not. Control still bleeds -- this buys the walls time, it does
+	# not make the region safe, and it should never read as "the North is fine."
+	hostile_raid_time = 0.5
+}

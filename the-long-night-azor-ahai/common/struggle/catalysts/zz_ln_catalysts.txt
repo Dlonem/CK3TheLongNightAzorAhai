@@ -1,0 +1,21 @@
+﻿# AGOT: The Long Night & Azor Ahai -- struggle catalysts.
+# Catalysts are bare database entries; the name is the whole definition (cf. game/common/struggle/catalysts/
+# _catalysts.info). All of ours are fired from script, so pacing is entirely under our control -- which is what
+# lets the invasion-timing game rule tune how long each phase lasts without touching the phase thresholds.
+
+# The Long Summer -> The Cold Winds Rise
+ln_catalyst_year_passed = {}          # the baseline drip. Guarantees the summer always ends.
+ln_catalyst_dragon_died = {}          # the world's magic thins
+ln_catalyst_dragon_born = {}          # ...and thickens. Worth less, and the only catalyst that fires on good news.          # the world's magic thins
+ln_catalyst_house_extinguished = {}   # a great name ends
+ln_catalyst_minor_house_ended = {}    # a small name ends. Thomas: "a minor house hasn't lost its last
+                                      # member, which I don't think you've coded yet." He was right.
+ln_catalyst_watch_undermanned = {}    # the Wall is held by fewer men every year
+ln_catalyst_ranging_lost = {}         # rangers go north and do not come back
+ln_catalyst_warning_dismissed = {}    # a maester is laughed out of the hall
+
+# The Cold Winds Rise -> The Long Night
+ln_catalyst_other_sighted = {}        # someone saw one, and was believed
+
+# The Long Night -> The Dawn
+ln_catalyst_night_king_slain = {}

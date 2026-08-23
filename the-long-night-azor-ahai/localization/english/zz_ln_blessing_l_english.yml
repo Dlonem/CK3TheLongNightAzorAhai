@@ -1,0 +1,25 @@
+﻿l_english:
+
+ # ── THE INTERACTION ─────────────────────────────────────────────────────────────────────────────────────────
+ ln_lords_blessing_interaction:0 "Offer the Lord's Blessing"
+ ln_lords_blessing_interaction_desc:0 "Stand before [recipient.GetTitledFirstName] and say the words: that the Lord of Light has a use for [recipient.GetHerHim], that you will be there when it matters, and that when [recipient.GetSheHe] falls you intend to argue about it.\n\n[recipient.GetSheHe|U] may of course tell you to get out."
+ LN_LORDS_BLESSING_NOTIFICATION:0 "[actor.GetTitledFirstName] offers [recipient.GetTitledFirstName] the blessing of R'hllor"
+ ln_blessing_must_be_present_tt:0 "You must be in the same court as them — a blessing is given in person or not at all"
+ ln_fervor_gain_blessing:0 "A lord took the Lord's blessing"
+ ln_fervor_gain_resurrection:0 "A man was called back out of the fire"
+
+ # ── THE BLESSING LANDS ──────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.40.t:0 "The Words Are Said"
+ ln_prophecy.40.desc:0 "[ln_blessing_sponsor.GetTitledFirstName] does not make a ceremony of it, which is somehow worse.\n\nThere is no incense and no chanting and nobody is invited. [ln_blessing_sponsor.GetSheHe|U] finds you where you happen to be standing, puts a hand flat on your breastbone, says a short thing in a language you do not have — and then, in the Common Tongue, so there can be no confusion: 'When you fall, do not let them bury you quickly. Send for me. Whatever is left of you, send for me.'\n\nThen [ln_blessing_sponsor.GetSheHe] takes [ln_blessing_sponsor.GetHerHis] hand back and asks whether you have eaten.\n\nYou notice, later that night, that you have not stopped thinking about the word 'whatever'."
+ ln_prophecy.40.a:0 "Then I will send for you. R'hllor keep us both."
+ ln_prophecy.40.b:0 "I have agreed to something and I am not certain what."
+
+ # ── THE KILLING BLOW ────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.21.t:0 "Send For Me, Whatever Is Left"
+ ln_prophecy.21.desc:0 "They kept their word. It took two days and a horse that died doing it, but they sent for you — and now you are in a tent with [ln_the_fallen.GetTitledFirstName] on a trestle table and somebody's cloak over [ln_the_fallen.GetHerHis] face.\n\nThe men who carried [ln_the_fallen.GetHerHim] here have not left. Word has got round about what you said in that courtyard, and half the camp has decided it was a promise and the other half a boast, and both are waiting to find out which.\n\nYou have one of these. You have always had exactly one.\n\nThe fire in the brazier is doing what fire does when you are about to ask it for something. It is leaning."
+ ln_prophecy.21.a:0 "Take it out of me, then. Not [ln_the_fallen.GetHerHim]."
+ ln_prophecy.21.b:0 "Not this one. R'hllor forgive me — not this one."
+
+ # ── THE MODIFIER ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_fell_in_the_dark_modifier:0 "Fell in the Dark"
+ ln_fell_in_the_dark_modifier_desc:0 "Went down under a blow that should have finished it, and has not properly got up since."

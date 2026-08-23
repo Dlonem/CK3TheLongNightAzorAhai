@@ -1,0 +1,48 @@
+﻿namespace = ln_prophecy
+
+# The mirror. One triggered line per deed you carry, plus where you stand against the naming thresholds.
+# Deliberately has no options beyond closing it and grants nothing.
+ln_prophecy.10 = {
+	type = character_event
+	title = ln_prophecy.10.t
+	desc = {
+		desc = ln_prophecy.10.desc.intro
+		first_valid = {
+			triggered_desc = { trigger = { has_trait = chosen_by_rhllor }   desc = ln_prophecy.10.desc.is_chosen }
+			triggered_desc = { trigger = { has_trait = favored_by_rhllor }  desc = ln_prophecy.10.desc.is_favored }
+			triggered_desc = { trigger = { has_character_flag = ln_refused_the_name } desc = ln_prophecy.10.desc.refused }
+			desc = ln_prophecy.10.desc.unnamed
+		}
+		triggered_desc = { trigger = { ln_has_deed_dragon_dreams_trigger = yes }  desc = ln_prophecy.10.deed.dreams }
+		triggered_desc = { trigger = { ln_has_deed_greensight_trigger = yes }     desc = ln_prophecy.10.deed.green }
+		triggered_desc = { trigger = { ln_has_deed_salt_and_smoke_trigger = yes } desc = ln_prophecy.10.deed.salt }
+		triggered_desc = { trigger = { ln_has_deed_bleeding_star_trigger = yes }  desc = ln_prophecy.10.deed.star }
+		triggered_desc = { trigger = { ln_has_deed_survived_trigger = yes }       desc = ln_prophecy.10.deed.survived }
+		triggered_desc = { trigger = { ln_has_deed_valyrian_steel_trigger = yes } desc = ln_prophecy.10.deed.steel }
+		triggered_desc = { trigger = { ln_has_deed_woke_dragons_trigger = yes }   desc = ln_prophecy.10.deed.dragons }
+		triggered_desc = { trigger = { ln_has_deed_returned_trigger = yes }       desc = ln_prophecy.10.deed.returned }
+		triggered_desc = { trigger = { ln_has_deed_hidden_blood_trigger = yes }   desc = ln_prophecy.10.deed.blood }
+		# ── WHAT YOU DID ABOUT IT ───────────────────────────────────────────────────────────────────────────
+		# These five were write-only. Every one of them was set by an event option and read by nothing, which
+		# CK3 reports as "Variable is set but is never used" -- five warnings a launch for five choices the
+		# game had quietly forgotten. The mirror is where they belong: it is already the place the mod tells
+		# you who you have been, and a prophecy that remembers your choices is the entire point of it.
+		triggered_desc = { trigger = { has_character_flag = ln_named_quietly }          desc = ln_prophecy.10.did.quiet }
+		triggered_desc = { trigger = { has_character_flag = ln_kept_the_name_anyway }   desc = ln_prophecy.10.did.kept }
+		triggered_desc = { trigger = { has_character_flag = ln_mined_the_glass }        desc = ln_prophecy.10.did.glass }
+		triggered_desc = { trigger = { has_character_flag = ln_sworn_to_the_dawn }      desc = ln_prophecy.10.did.sworn }
+		triggered_desc = { trigger = { has_character_flag = ln_burned_the_red_priest }  desc = ln_prophecy.10.did.burned }
+		triggered_desc = { trigger = { has_character_flag = ln_wishes_it_had_not_worked } desc = ln_prophecy.10.did.wishes }
+		triggered_desc = { trigger = { has_character_flag = ln_ended_the_long_night }   desc = ln_prophecy.10.did.ended }
+
+		# and whether anyone is in a position to say it out loud
+		first_valid = {
+			triggered_desc = { trigger = { ln_has_red_priest_trigger = yes } desc = ln_prophecy.10.desc.has_priest }
+			triggered_desc = { trigger = { ln_has_a_seer_trigger = yes }     desc = ln_prophecy.10.desc.has_seer }
+			desc = ln_prophecy.10.desc.no_seer
+		}
+	}
+	theme = faith
+
+	option = { name = ln_prophecy.10.a }
+}

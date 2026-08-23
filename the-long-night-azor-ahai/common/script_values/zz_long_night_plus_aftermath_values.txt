@@ -1,0 +1,12 @@
+﻿# The Long Night+ — AFTERMATH (resettling) values.
+
+# Coin granted to a freshly generated colonist lord (or a returning refugee) so founding the settlement never
+# starts them in debt — ai_colonization_effect strips colonize_cost_val (50 base + 25..100 by tier) from the
+# new holder with no balance check.
+ln_colonist_grant_value = 150
+
+# Gold the Crown pockets for each county sold to an Essosi charter. Devastated land goes cheap — the real
+# price is political (northern vassals resent the sale, cf. ln_sold_the_north_opinion).
+ln_essos_sale_price_value = 150
+
+# ln_refugee_settler_size_value removed 10 Aug -- defined by Long Night+, referenced by nothing in the mod.

@@ -1,0 +1,27 @@
+[h1]Hotfix 1.0.13[/h1]
+
+A Game of Thrones updated to 0.5.1 and moved several things this mod was reading. If you have that update, you want this one.
+
+[h2]Bug Fixes[/h2]
+[list]
+[*][b]Fixed the issue with river travel along the Rhoyne being unavailable.[/b] The base mod added a Rhoynar Sailing innovation to gate it; this mod was carrying an older copy of that rule and quietly switching it off for everyone.
+[*][b]Fixed the issue with Lorath, Rhoynish and several royal titles rendering incorrectly.[/b] Princes' scions, royal spouses and the Dragonstone heir were all affected. The mod's title override was one base-mod version behind and was swallowing eight of their title names.
+[*][b]Fixed the issue with dragons raised by the Night King no longer resembling the dragon that died.[/b] 0.5.1 moved where a dragon's appearance is stored, and the undead-dragon code was still reading the old place — so a raised Vhagar came back with a stranger's face.
+[*][b]Fixed the issue with the restoration pass repainting named dragons in their old colours.[/b] 0.5.1 retuned all 72 named dragons and added thirteen new colour channels. The reference table has been rebuilt from their current values.
+[*][b]Fixed the issue with the yearly sweep re-rolling the face of an existing undead dragon.[/b] The check it used to decide whether a dragon needed repairing became true for every dragon under 0.5.1.
+[*][b]Fixed the issue with the Others' dragons losing their pale colouring.[/b] The base mod's own migration fills in the new colour channels after thirty days and would have decided how they look. They now carry their own.
+[*][b]Fixed the issue with the Great Other's portrait missing ten of the new dragon genes.[/b]
+[*][b]Fixed the issue with a player raised as a wight continuing to play as one.[/b] They are now handed off to an heir, as intended. That rule had been in the mod for months and had never actually run.
+[/list]
+
+[h2]Also in this update[/h2]
+[list]
+[*][b]The mod no longer ships its own copy of the base mod's rules file.[/b] It was carrying 62 of their rules in order to change 7, which meant every change they made to the other 55 silently never reached you — the Rhoyne travel bug above is exactly that. Only the rules this mod actually changes ship now. Everything else follows the base mod directly, from here on.
+[/list]
+
+[h2]Note[/h2]
+[list]
+[*]Safe to drop onto a running save. No action needed from the player.
+[*]If your error log is larger after this update, that is the base mod's new dragon genes meeting older portrait data across the whole mod stack. It is cosmetic and it is not this mod.
+[*]The dead can still open a front in a new region before finishing the one they are in. Known, and being worked on for the next release.
+[/list]

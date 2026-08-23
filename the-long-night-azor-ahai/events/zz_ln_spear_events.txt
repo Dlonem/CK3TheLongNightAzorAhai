@@ -1,0 +1,271 @@
+﻿namespace = ln_spear
+
+# AGOT: The Long Night & Azor Ahai -- THE SPEAR.
+# Design and the balance argument are in common/scripted_effects/zz_ln_spear_effects.txt.
+#
+# ONE EVENT, TWO ENDINGS, AND THE ROLL IS ALREADY OVER BY THE TIME YOU READ IT. Thomas: "make it a sixty
+# percent chance you live and forty percent chance you die ... I want that calculated in the back end, so
+# don't let people know that hey, it's gonna be that percent chance."
+#
+# So immediate does everything -- the dragon dies, the fall is rolled, the answer is banked in a scope value --
+# and the card simply tells you which of the two things happened to you. The options are gated on that value,
+# so exactly one is ever available and the AI has nothing to weigh.
+
+ln_spear.1 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_spear.1.t
+	desc = {
+		first_valid = {
+			# A champion of R'hllor who walks away from this does not get the same paragraph as a lucky man.
+			# Thomas: "make it so it makes sense that you survived."
+			triggered_desc = {
+				trigger = {
+					scope:ln_spear_lived = 1
+					ln_is_a_champion_of_rhllor_trigger = yes
+				}
+				desc = ln_spear.1.desc.lived_champion
+			}
+			triggered_desc = {
+				trigger = { scope:ln_spear_lived = 1 }
+				desc = ln_spear.1.desc.lived
+			}
+			desc = ln_spear.1.desc.died
+		}
+	}
+	# 1.0.12b (Thomas, from the live run): "you should have had it in the same event window that base AGOT
+	# does the whole dragon fighting conflict in -- my dragon in one part, the Night King in the other."
+	# AGOT's own dragon-combat window is theme = dragon with animation = dragon_main on the animal
+	# (agot_dragon_combat_events.txt:84-87); this is that window. The dragon can hold the left panel
+	# BECAUSE of the switcheroo below -- it is still alive to render.
+	theme = dragon
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = scope:ln_spear_dragon  animation = dragon_main }
+	right_portrait = { character = scope:ln_night_king  animation = marshal }
+	lower_left_portrait = { character = root }
+
+	# STILL TRUE? A day passes between the field and this card, and in that day the dragon can already have
+	# died some other way, the rider can have died, or the war can have ended.
+	trigger = {
+		is_alive = yes
+		exists = scope:ln_spear_dragon
+		scope:ln_spear_dragon = { is_alive = yes }
+		exists = title:h_the_others.holder
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		title:h_the_others.holder = { save_scope_as = ln_night_king }
+
+		# The size and the region were banked by ln_find_a_dragonrider_effect, before the roll that sent this
+		# card and before the death below -- see the note there. Nothing in this event reads the corpse.
+
+		# 1.0.12b -- THE SWITCHEROO, NOT A DEATH. The first build killed the dragon here, and Thomas's live run
+		# showed everything wrong with that at once: AGOT's whole death theatre fired (a skull artifact, the
+		# "Death of a Dragon" grief card, a world notice that the dragon "passes on", and a death record reading
+		# "killed by the DRAGON Hegemon Other" off death_dragon's loc) -- and the raise came back later as a
+		# CLONE, aged 0, with no parents and no past. His instruction: "when I say one thing, we have to make
+		# CK3 do it another way so it translates better. When the Night King kills my dragon, wink wink, it gets
+		# transferred over to him. The recorded death date will occur when the Night King actually dies, or when
+		# the dragon dies in combat."
+		#
+		# ln_the_dead_claim_dragon_effect is Door Two (zz_ln_ice_dragon_effects.txt), built for exactly this in
+		# 1.0.7 and already proven: it cuts the bond AGOT's own way (agot_untame_dragon, which pushes the rider
+		# onto past_riders -- the history survives), leaves the rider correctly dragonless, marks the animal
+		# (ln_undead_dragon + ln_one_of_them + 'the Undead'), recolours it in both the places a portrait reads,
+		# and tames it to the Night King. Same name, same age, same body, same memories. None of AGOT's death
+		# machinery fires because nothing died -- and the dawn sweep (the_long_night.txt:206) already claims
+		# every ln_undead_dragon carrier when the Long Night ends, which is the real death date Thomas asked for.
+		scope:ln_spear_dragon = {
+			ln_the_dead_claim_dragon_effect = yes
+			# The dated record on the animal itself, mirroring wight_raised_memory: the engine timestamps it,
+			# so the dragon's page carries "taken and raised" with the date, while its native death date stays
+			# open until the dawn or a battle actually closes it. "That part's memory, that part's flavor."
+			create_character_memory = { type = ln_dragon_taken_memory }
+		}
+
+		# THE FALL. 60/40 in Thomas's favour before anything else, then the things that plausibly change a man's
+		# odds of walking away from four hundred feet of dying dragon: how strong he is, how fast he thinks, and
+		# whether he has ever come off one before. Not `brave` -- courage does not help you hit the ground, and
+		# rewarding it here would be the kind of trait-soup that makes an outcome feel arbitrary.
+		random_list = {
+			60 = {
+				modifier = { add = 10  prowess >= 12 }
+				modifier = { add = 10  prowess >= 16 }
+				modifier = { add = 5   has_trait = physique_good_1 }
+				modifier = { add = 10  has_trait = physique_good_2 }
+				modifier = { add = 15  has_trait = physique_good_3 }
+				modifier = { add = 5   has_trait = shrewd }
+				modifier = { add = 10  has_trait = dragonrider }
+
+				# ── THE NAMED DO NOT DIE EASILY ──────────────────────────────────────────────────────────
+				# Thomas: "Are you able to make those who are considered favored or chosen or resurrected less
+				# likely to die during that altercation?" Yes, and it is the right instinct -- the whole
+				# argument of the prophecy layer is that being named is supposed to MEAN something in the
+				# moments that decide a story, and a man the red god has already pulled back out of the dark
+				# once is exactly who should be walking away from four hundred feet of dying dragon.
+				#
+				# The ladder is deliberate and it is not flat: Favored is a rumour, Chosen is a claim the world
+				# has agreed with, Azor Ahai Reborn is the thing itself -- and Resurrected outranks all three
+				# here and nowhere else, because he is the only one of the four for whom dying has already been
+				# tried. These stack; a resurrected Azor Ahai is not coming down.
+				#
+				# THE ORDER IS THOMAS'S AND MY FIRST VERSION HAD IT BACKWARDS. I ranked Resurrected top on the
+				# reasoning that dying has already been tried on him. His correction, and it is the better read:
+				# "if you're chosen, maybe there's a higher chance you're gonna kill the Night King -- meaning you
+				# have to have some universe RNG going into your favour. If the Night King kills your dragon and
+				# doesn't take you down with it, okay, sick, you still have a chance to defeat him."
+				#
+				# That is the point. This weight is not a measure of how hard the man is to kill, it is the
+				# story refusing to end here -- so it belongs to the man the world has named as the one who ends
+				# it. Chosen is the claim the world has agreed with, and Chosen tops the list. Resurrected is
+				# luck that has already been spent, and it comes last.
+				modifier = { add = 30  has_trait = chosen_by_rhllor }
+				modifier = { add = 25  has_trait = azor_ahai_reborn }
+				modifier = { add = 15  has_trait = favored_by_rhllor }
+				modifier = { add = 10  has_trait = resurrected_by_rhllor }
+
+				# And a bigger animal is a longer, slower fall with more of it left underneath you when it
+				# stops. Same measure the throw itself uses -- see common/script_values/zz_ln_spear_values.txt.
+				modifier = { add = 5   scope:ln_spear_dragon_size >= medium_dragon_size_value }
+				modifier = { add = 5   scope:ln_spear_dragon_size >= large_dragon_size_value }
+				modifier = { add = -10  has_trait = physique_bad_1 }
+				modifier = { add = -15  has_trait = physique_bad_2 }
+				modifier = { add = -20  has_trait = physique_bad_3 }
+				modifier = { add = -10  age >= 50 }
+				modifier = { add = -10  age >= 60 }
+				save_scope_value_as = { name = ln_spear_lived  value = 1 }
+			}
+			40 = {
+				modifier = { add = 10  has_trait = craven }
+				save_scope_value_as = { name = ln_spear_lived  value = 0 }
+			}
+		}
+
+		# The world hears it. A dragon falling out of the sky is not a private matter.
+		every_player = {
+			limit = { NOT = { this = root } }
+			add_character_flag = ln_heard_the_warning
+		}
+	}
+
+	# ── HE WALKED AWAY ──────────────────────────────────────────────────────────────────────────────────────
+	# 1.0.12b -- wounded_2, not wounded_1. Thomas: "you have to write it so it makes sense that you survived
+	# with, like, wounded_2." He is right -- a man comes off a dying dragon at height and lives; he does not
+	# walk away with a scratch, and the copy says as much in both survival variants.
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { ln_is_a_champion_of_rhllor_trigger = yes }
+						desc = ln_spear.1.a.champion
+					}
+					desc = ln_spear.1.a
+				}
+			}
+		}
+		trigger = { scope:ln_spear_lived = 1 }
+		add_character_flag = ln_survived_the_spear
+		add_trait = wounded_2
+		add_prestige = 200
+		stress_impact = { base = major_stress_impact_gain }
+		# 1.0.12b (Thomas): "do you have an event pop up for the character who loses their dragon? It's such
+		# a unique experience, I just wanna make sure it's covered." The moment is this card; the AFTERMATH
+		# was AGOT's grief event, and the switcheroo correctly killed that with the death it rode on. This is
+		# its replacement, a few days later, when the wound has let him think: the bond, the empty sky, and
+		# the shape he knows flying the wrong way. Saved scopes survive trigger_event, so ln_spear_dragon and
+		# ln_night_king are still live in it.
+		trigger_event = { id = ln_spear.2  days = { 5 10 } }
+	}
+
+	# ── HE DID NOT ──────────────────────────────────────────────────────────────────────────────────────────
+	# The death is applied on the click rather than in immediate, because a dead root cannot be shown an event
+	# and the player has earned the right to read the thing before it happens to him.
+	option = {
+		name = ln_spear.1.b
+		trigger = { scope:ln_spear_lived = 0 }
+		death = {
+			killer = scope:ln_night_king
+			death_reason = death_battle
+		}
+	}
+}
+
+# ── THE EMPTY SKY ───────────────────────────────────────────────────────────────────────────────────────────
+# Root = the rider, five to ten days after the fall, still wearing the splints. The grief card the switcheroo
+# owed him: AGOT's own "Death of a Dragon" cannot fire (nothing died), and its text would be WRONG here anyway
+# -- his dragon is not gone, which is worse. Thomas asked for exactly this coverage, and asked separately for
+# trait-gated options that show their reason -- option c is that pattern's first shipped use in this mod: the
+# champion traits sit in a visible `trigger`, so the game itself shows WHY the option is his.
+ln_spear.2 = {
+	type = character_event
+	title = ln_spear.2.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					exists = scope:ln_spear_dragon
+					scope:ln_spear_dragon ?= { is_alive = yes }
+				}
+				desc = ln_spear.2.desc
+			}
+			# The edge nobody plans for: the taken dragon has ALREADY been destroyed again by the time this
+			# card lands. Rarer and shorter, and the only branch where the word is actually "dead".
+			desc = ln_spear.2.desc.gone
+		}
+	}
+	theme = dragon
+	left_portrait = { character = root  animation = grief }
+	right_portrait = { character = scope:ln_spear_dragon  animation = dragon_main }
+
+	trigger = {
+		is_alive = yes
+		is_imprisoned = no
+	}
+
+	option = { # Swear it back
+		name = ln_spear.2.a
+		add_prestige = minor_prestige_gain
+		stress_impact = {
+			vengeful = medium_stress_impact_loss
+			brave = minor_stress_impact_loss
+			content = minor_stress_impact_gain
+		}
+		ai_chance = {
+			base = 50
+			ai_value_modifier = { ai_vengefulness = 0.5  ai_boldness = 0.3 }
+		}
+	}
+
+	option = { # Grieve it
+		name = ln_spear.2.b
+		stress_impact = {
+			base = minor_stress_impact_loss
+			compassionate = medium_stress_impact_loss
+			callous = minor_stress_impact_gain
+		}
+		ai_chance = {
+			base = 50
+			ai_value_modifier = { ai_compassion = 0.5 }
+		}
+	}
+
+	option = { # The fire is not done with me -- champions only, and the trait icon says so
+		name = ln_spear.2.c
+		trigger = {
+			OR = {
+				has_trait = chosen_by_rhllor
+				has_trait = azor_ahai_reborn
+			}
+		}
+		add_piety = 100
+		add_prestige = minor_prestige_gain
+		stress_impact = {
+			base = medium_stress_impact_loss
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+}

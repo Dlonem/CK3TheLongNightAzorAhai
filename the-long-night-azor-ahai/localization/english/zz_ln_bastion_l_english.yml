@@ -1,0 +1,12 @@
+﻿l_english:
+
+ ln_last_bastion_modifier:0 "The Last Bastion"
+ ln_last_bastion_modifier_desc:0 "The seat of a great house, and the country around it is emptying into these walls. Every hedge knight, every smallholder, every man who could carry a spear and find the gate. The dead take the open land in a season. They will be a long time taking this."
+
+ # THE MEN-AT-ARMS TYPE LABEL. Both our undead regiments carry `type = Other_infantry`, a custom category
+ # so that nothing in the ordinary rock-paper-scissors counters them and they counter nothing -- the dead
+ # are not skirmishers. But a MAA type's loc key IS the type string (AGOT does the same for anti_dragon in
+ # agot_regiment_l_english.yml), and nobody had written one, so the tooltip read "Type: Other_infantry".
+ Other_infantry:0 "[ln_others_infantry|E]"
+ game_concept_ln_others_infantry:0 "The Dead"
+ game_concept_ln_others_infantry_desc:0 "Regiments of the risen. They are raised from what the Long Night has already killed, and they are not soldiers in any sense the rest of the world would recognise: no drill, no wage, no morale to break, and no interest in the ground they are standing on.\n\nMechanically they sit #EMP outside the ordinary counter system#!. Nothing in the levies of Westeros is built to answer them, and they are built to answer nothing back; pikes do not blunt them and they do not blunt cavalry. What they have instead is number. A single knight can cut down twenty and be no safer for it, because there were never only twenty.\n\n#weak The wights the Others raise, and the colder things that come south with them, all fight in this category.#!"

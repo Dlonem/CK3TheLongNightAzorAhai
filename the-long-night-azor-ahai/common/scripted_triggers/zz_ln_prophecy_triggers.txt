@@ -1,0 +1,322 @@
+﻿# AGOT: The Long Night & Azor Ahai -- reading the prophecy.
+
+# ── THE DEEDS ───────────────────────────────────────────────────────────────────────────────────────────────
+# A deed is a character flag, never a title, never a currency. That was Thomas's constraint from the first brief
+# and it has held up: flags cost nothing, survive succession correctly by simply not surviving it, and can be
+# read by anything.
+#
+# Two of the eight are FREE, and finding that out was the single best discovery in this whole system. AGOT
+# assigns `dragon_dreams` and `greensight` as character FLAGS at birth (00_agot_birth_effects.txt), weighted by
+# culture and faith doctrine -- and then never promotes them to traits, because the only event that does the
+# promotion (agot_greensight.0001 / agot_dragon_dreams.0001) has ZERO call sites in AGOT as shipped. There is a
+# generation of quietly marked children in every AGOT game already, and nothing has ever looked at them.
+# We look at them.
+
+ln_has_deed_dragon_dreams_trigger = {
+	OR = {
+		has_character_flag = dragon_dreams
+		has_trait = dragon_dreams
+	}
+}
+
+ln_has_deed_greensight_trigger = {
+	OR = {
+		has_character_flag = greensight
+		has_trait = greensight
+	}
+}
+
+# Born amid salt and smoke. Salt is literal -- a coastal birth. Smoke is the world still having dragons in it
+# when you were born, which is the only reading of "smoke" that a script can honestly check and the only one
+# that makes the deed rare in the late game and common in the early one. That asymmetry is correct: Aegon's
+# century should produce more claimants than the century after the dragons died.
+ln_has_deed_salt_and_smoke_trigger = {
+	has_character_flag = ln_deed_salt_and_smoke
+}
+
+# Born under a bleeding star -- i.e. born after the world started going wrong. Awarded at birth during the Cold
+# Winds or the Long Night itself. A child born into the dark is a different kind of claimant to one born in the
+# summer and told about it later.
+ln_has_deed_bleeding_star_trigger = {
+	has_character_flag = ln_deed_bleeding_star
+}
+
+# Walked out of a fight with the dead. Seeded by the wandering dead chain.
+ln_has_deed_survived_trigger = {
+	has_character_flag = ln_deed_survived_the_others
+}
+
+# Carries Valyrian steel. Checked live rather than flagged, so losing the sword loses the deed -- which is the
+# correct behaviour and produces a genuinely nasty moment if it happens after you have been named.
+# EQUIPPED, not owned. Thomas asked the right question -- has_variable = valyrian_steel is a marker on the
+# ARTIFACT, and any_character_artifact walks everything you own, vault included. So a lord who collected six
+# blades got the deed for the pile. any_equipped_character_artifact (18 uses in vanilla) means you have to
+# actually be carrying it, which is also the only reading under which the deed means anything: the prophecy is
+# about a man with a sword, not a man with a sword collection.
+ln_has_deed_valyrian_steel_trigger = {
+	any_equipped_character_artifact = {
+		OR = {
+			has_variable = valyrian_steel
+
+			# LIGHTBRINGER IS NOT VALYRIAN STEEL and this mod is not going to pretend otherwise -- every
+			# version of the tale puts it thousands of years before the Freehold existed. It is marked with
+			# its own variable and counted through its own clause rather than by lying about what it is made
+			# of, which would also have handed it every other valyrian_steel interaction in AGOT for free.
+			has_variable = ln_is_lightbringer
+		}
+	}
+}
+
+# Woke dragons out of stone. Live check, same reasoning.
+ln_has_deed_woke_dragons_trigger = {
+	# AGOT models dragon ownership as a RELATION, not a story or a variable
+	# (common/scripted_triggers/00_agot_dragon_triggers.txt: any_relation = { type = agot_dragon }).
+	any_relation = {
+		type = agot_dragon
+	}
+}
+
+# Died and came back. AGOT ships resurrected_by_rhllor and never grants it either; the Long Night+ death chain
+# is the first thing in this lineage that can.
+ln_has_deed_returned_trigger = {
+	has_trait = resurrected_by_rhllor
+}
+
+# ── ELIGIBILITY ─────────────────────────────────────────────────────────────────────────────────────────────
+# Who can be named at all. Deliberately wide -- a claimant does not have to be a lord, and some of the best
+# stories in this system are about a hedge knight or a courtier being named over the head of the man who feeds
+# him. But they must be an adult, alive, and not already a wight.
+ln_can_be_named_trigger = {
+	is_alive = yes
+	is_adult = yes
+	NOT = { has_trait = dragon }   # no, a dragon may not be Azor Ahai
+	NOT = { has_trait = wight_trait }
+	NOT = { has_trait = other_trait }
+	NOT = { has_trait = nightking }
+}
+
+# Is there a red priest who could do the naming? Uses AGOT's own pattern from the "Look Into the Flames"
+# decision (00_agot_religious_decisions.txt:336) -- court chaplain first, camp priest for the landless.
+ln_has_red_priest_trigger = {
+	# AGOT's own split (00_agot_religious_decisions.txt:336, trigger_if is_landed / trigger_else):
+	# cp: for the landed, court_position: for the LANDLESS ONLY -- the camp-officer link evaluated
+	# on a landed character logs a scope error per call (~11,000 in one live session once the AI
+	# Lightbringer checks started running this trigger across every champion's court).
+	# 13 Aug (1.0.6): was OR = { AND = {...} AND = {...} }. Tooltip building walks EVERY branch of an
+	# OR regardless of short-circuit, so the court_position: link still got evaluated on landed
+	# characters and logged "returned an unset scope" -- 8,688 times in Thomas's 13 Aug session, our
+	# biggest log signature. trigger_if/trigger_else is AGOT's own shape for this exact split
+	# (00_agot_religious_decisions.txt:336) and the else branch is not rendered when the if applies.
+	trigger_if = {
+		limit = { is_landed = yes }
+		cp:councillor_court_chaplain ?= {
+			is_available_adult = yes
+			# 1.0.11 -- WAS `has_trait = red_priest` ALONE, and that is why a council reading
+			# "Red Priestess" still failed this check. The council TITLE is derived from faith
+			# (councillor_court_chaplain_rhllor_fots_f_county, AGOT's own council loc), while
+			# red_priest is a separate fame trait most appointed chaplains never carry. The game
+			# told the player they had a red priest and the mod disagreed. Either now counts.
+			OR = {
+				has_trait = red_priest
+				faith = { religion = religion:the_rhllor_religion }
+			}
+		}
+	}
+	trigger_else = {
+		court_position:camp_priest_camp_officer ?= {
+			is_available_adult = yes
+			# 1.0.11 -- WAS `has_trait = red_priest` ALONE, and that is why a council reading
+			# "Red Priestess" still failed this check. The council TITLE is derived from faith
+			# (councillor_court_chaplain_rhllor_fots_f_county, AGOT's own council loc), while
+			# red_priest is a separate fame trait most appointed chaplains never carry. The game
+			# told the player they had a red priest and the mod disagreed. Either now counts.
+			OR = {
+				has_trait = red_priest
+				faith = { religion = religion:the_rhllor_religion }
+			}
+		}
+	}
+}
+
+# A woods witch or a greenseer will do just as well, and should -- the North does not have red priests and the
+# free folk certainly do not. Any of the three can name you; the flavour differs, the mechanic does not.
+ln_has_a_seer_trigger = {
+	OR = {
+		ln_has_red_priest_trigger = yes
+		any_courtier_or_guest = {
+			OR = {
+				has_trait = witch
+				has_trait = greensight
+			}
+			is_available_adult = yes
+		}
+		# your own greensight counts. Nobody has to tell a greenseer what he is.
+		ln_has_deed_greensight_trigger = yes
+	}
+}
+
+# ── THRESHOLDS ──────────────────────────────────────────────────────────────────────────────────────────────
+ln_meets_favored_threshold_trigger = {
+	ln_can_be_named_trigger = yes
+	NOT = { has_game_rule = ln_naming_off }
+	AND = {
+		trigger_if = {
+			limit = { has_game_rule = ln_claimants_players_only }
+			is_ai = no
+		}
+		trigger_else = { always = yes }
+	}
+	trigger_if = {
+		limit = { has_game_rule = ln_naming_generous }
+		ln_deed_count_value >= 1
+	}
+	trigger_else_if = {
+		limit = { has_game_rule = ln_naming_strict }
+		ln_deed_count_value >= 3
+	}
+	trigger_else = {
+		ln_deed_count_value >= 2
+	}
+}
+
+ln_meets_chosen_threshold_trigger = {
+	ln_can_be_named_trigger = yes
+	has_trait = favored_by_rhllor
+	NOT = { has_game_rule = ln_naming_off }
+	# WHO CAN BE NAMED AT ALL -- the multiplayer question. See ln_prophecy_claimants in the game rules.
+	# NOTE: a second trigger_if chain in the same block fails PostValidate (error.log), so this one is wrapped
+	# in its own AND to keep the two chains from colliding.
+	AND = {
+		trigger_if = {
+			limit = { has_game_rule = ln_claimants_players_only }
+			is_ai = no
+		}
+		trigger_else_if = {
+			limit = { has_game_rule = ln_claimants_one_at_a_time }
+			# Nobody else is currently carrying it. Reads the live list rather than a global flag, so the seat
+			# genuinely re-opens when a Chosen dies instead of locking the world out forever.
+			NOT = {
+				any_in_global_list = {
+					variable = ln_chosen_list
+					is_alive = yes
+					has_trait = chosen_by_rhllor
+					NOT = { this = root }
+				}
+			}
+		}
+		trigger_else = { always = yes }
+	}
+
+	trigger_if = {
+		limit = { has_game_rule = ln_naming_generous }
+		ln_deed_count_value >= 3
+	}
+	trigger_else_if = {
+		limit = { has_game_rule = ln_naming_strict }
+		ln_deed_count_value >= 6
+	}
+	trigger_else = {
+		ln_deed_count_value >= 4
+	}
+}
+
+# ── WHAT COUNTS AS A GREAT HOUSE ────────────────────────────────────────────────────────────────────────────
+# Thomas caught the catalyst paying the full +5 for minor houses. AGOT has NO great-house trigger -- checked --
+# so this is ours, built only from things that can be verified at the moment of death.
+#
+# Root = the character who just died. A great house, for our purposes:
+#   * they held a KINGDOM or better, or
+#   * they held a duchy AND their house had real reach -- five living members before this death, which is what
+#     separates a name with cadet branches and cousins from a lord and two sons.
+# Everything else is a minor house and pays nothing. That is the difference between "a name that has held land
+# for centuries stops existing" and "a man died without an heir", which happens constantly.
+ln_was_great_house_trigger = {
+	is_lowborn = no
+	OR = {
+		highest_held_title_tier >= tier_kingdom
+		AND = {
+			highest_held_title_tier >= tier_duchy
+			house ?= {
+				any_house_member = {
+					count >= 5
+				}
+			}
+		}
+	}
+}
+
+# ── THE NINTH DEED: BLOOD NOBODY KNEW ABOUT ─────────────────────────────────────────────────────────────────
+# Thomas's point: rather than bending an existing condition until Jon Snow fits through it, give him his own.
+# He was born at the Tower of Joy, in Dorne, in summer -- salt and smoke misses him, the bleeding star misses
+# him, and forcing either to cover him would have made both meaningless.
+#
+# What actually marks him is the thing nobody in the world knows: a bastard carrying Valyrian blood. That is
+# computable, it is rare, and it is the single most load-bearing fact about the character.
+#
+# Both halves verified: `bastard` is a real trait (AGOT 00_traits.txt) and agot_has_dragonblood_heritage is
+# AGOT's own trigger (00_agot_dragon_triggers.txt:485), which covers Valyrian descent and dragonseed potential.
+# TIGHTENED. Thomas: "you basically just described many people during the Dance of Dragons -- Ulf, Hugh the
+# Hammer." Exactly right, and the reason is in AGOT's own trigger: agot_has_dragonblood_heritage explicitly
+# includes has_character_flag = dragonseed_potential_low / _medium, which IS the dragonseed mechanic. So the
+# first draft fired for every smallfolk dragonseed in the Dance -- the opposite of a rare mark.
+#
+# What separates Jon from Ulf is not the blood, it is that the blood was hidden inside a great house. He was
+# raised at Winterfell by a Lord Paramount; Ulf was a pig farmer with a claim. So: a bastard, of Valyrian
+# descent, whose father held a duchy or better -- and explicitly NOT a dragonseed, because a dragonseed's blood
+# is the one thing about them that everybody already knows.
+ln_has_deed_hidden_blood_trigger = {
+	has_trait = bastard
+	agot_has_dragonblood_heritage = yes
+	NOT = { has_character_flag = dragonseed_potential_low }
+	NOT = { has_character_flag = dragonseed_potential_medium }
+	father ?= { highest_held_title_tier >= tier_duchy }
+}
+
+# ── CAN HE SIT DOWN AND THINK? ──────────────────────────────────────────────────────────────────────────────
+# Read the Signs used vanilla's is_available, which refuses a man who is travelling or leading an army. That
+# is the right gate for a rite and the wrong one for a mirror -- the decision costs nothing, changes nothing,
+# and opens a card telling him which of the nine marks are on him. A man can count those on the road.
+#
+# It also dragged in two broken requirement lines (ALREADY_IN_ACTIVITY has no plain key in vanilla, and
+# ALREADY_PLANNING_ACTIVITY's [activity|E] tooltip is failing in this playset). Both are repaired in our own
+# localization for the whole playset -- see zz_ln_vanilla_loc_repair_l_english.yml -- but this decision has no
+# business asking either question in the first place.
+ln_can_sit_and_think_trigger = {
+	is_alive = yes
+	is_incapable = no
+	is_imprisoned = no
+}
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# 1.0.9 -- CAN THIS NAMED PRIEST ACTUALLY COME? $PRIEST$ is a history character id.
+#
+# Thomas, 14 Aug: "make sure it's gated so that it can't create bugs if they don't exist or can't be stolen
+# from another player's court. Basically, if there's a guaranteed chance that me or the boys could do it, and
+# I roll it first, well, then heck yeah."
+#
+# So the rule is: an AI's court can be raided, a player's cannot, and first to roll wins.
+#
+# ONLY IF: the character exists at all (a 143 AC game has never heard of Melisandre -- she is born centuries
+# later, and `exists` on an unborn history id is the difference between a fun easter egg and a hard error),
+# is alive, is an adult, is not the asker, is AI, holds no land of their own, and -- if they are sitting in
+# somebody's hall already -- that somebody is AI.
+# NEVER IF: any of those fail. The caller falls through to a priest of no particular fame, which is the
+# overwhelmingly common outcome and reads perfectly well on its own.
+ln_named_priest_is_free_trigger = {
+	exists = character:$PRIEST$
+	character:$PRIEST$ = {
+		is_alive = yes
+		is_adult = yes
+		is_ai = yes
+		is_landed = no
+		NOT = { this = root }
+		# A player's court is off limits. An AI's is fair game, and so is a priest wandering with no
+		# employer at all. trigger_if rather than a bare check because an unemployed priest has no
+		# employer scope to test and evaluating one would log against every tooltip build.
+		trigger_if = {
+			limit = { exists = employer }
+			employer = { is_ai = yes }
+		}
+	}
+}

@@ -1,0 +1,8 @@
+﻿# AGOT: The Long Night & Azor Ahai -- was this character ever publicly named?
+# Reads the record rather than the current traits, because add_trait = azor_ahai_reborn removes the lower rung
+# (all three share group = rhllor_champion) -- so by the time the reveal fires, a man who WAS Chosen no longer
+# has the trait to prove it. ln_was_named is set by ln_name_favored_effect / ln_name_chosen_effect and is the
+# only thing that survives the promotion.
+ln_was_acclaimed_trigger = {
+	has_character_flag = ln_was_named
+}

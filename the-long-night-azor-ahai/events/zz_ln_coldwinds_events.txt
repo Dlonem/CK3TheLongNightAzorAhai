@@ -1,0 +1,160 @@
+﻿namespace = ln_coldwinds
+
+# AGOT: The Long Night & Azor Ahai -- five small cards about the wind changing.
+#
+# Strictly flavour, by design ruling (see zz_ln_coldwinds_effects.txt): no catalysts, no clock,
+# no knowledge flags. Stress and small dignity costs only. Cards 1-3 are for the Wall and beyond;
+# 4-5 for the North. Card 1 is Thomas's own: "I found a ranging party, a bunch of their bodies.
+# But when I came back, nobody was there."
+
+# ── 1. NOBODY WAS THERE ─────────────────────────────────────────────────────────────────────────────────────
+ln_coldwinds.1 = {
+	type = character_event
+	title = ln_coldwinds.1.t
+	desc = ln_coldwinds.1.desc
+	theme = dread
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = paranoia }
+
+	immediate = {
+		add_character_flag = ln_cw_saw_nobody
+	}
+
+	option = {
+		name = ln_coldwinds.1.a          # dead men do not stand up and leave. search again.
+		ai_chance = { base = 50 }
+		stress_impact = {
+			base = minor_stress_impact_gain
+			brave = minor_stress_impact_loss
+		}
+	}
+	option = {
+		name = ln_coldwinds.1.b          # bar the gate at dusk. every dusk.
+		ai_chance = { base = 50 }
+		stress_impact = {
+			base = medium_stress_impact_gain
+			paranoid = minor_stress_impact_loss
+			craven = minor_stress_impact_loss
+		}
+	}
+}
+
+# ── 2. THE QUIET ────────────────────────────────────────────────────────────────────────────────────────────
+ln_coldwinds.2 = {
+	type = character_event
+	title = ln_coldwinds.2.t
+	desc = ln_coldwinds.2.desc
+	theme = dread
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = worry }
+
+	immediate = {
+		add_character_flag = ln_cw_saw_quiet
+	}
+
+	option = {
+		name = ln_coldwinds.2.a          # a forest goes quiet when something hunts in it.
+		ai_chance = { base = 50 }
+		stress_impact = {
+			base = minor_stress_impact_gain
+		}
+	}
+	option = {
+		name = ln_coldwinds.2.b          # winter. it is only winter.
+		ai_chance = { base = 50 }
+		stress_impact = {
+			cynical = minor_stress_impact_loss
+			paranoid = minor_stress_impact_gain
+		}
+	}
+}
+
+# ── 3. THE FIRES WANT TENDING ───────────────────────────────────────────────────────────────────────────────
+ln_coldwinds.3 = {
+	type = character_event
+	title = ln_coldwinds.3.t
+	desc = ln_coldwinds.3.desc
+	theme = dread
+	left_portrait = { character = root  animation = thinking }
+
+	immediate = {
+		add_character_flag = ln_cw_saw_fires
+	}
+
+	option = {
+		name = ln_coldwinds.3.a          # double the wood ration. say nothing.
+		ai_chance = { base = 60 }
+		stress_impact = {
+			base = minor_stress_impact_gain
+		}
+	}
+	option = {
+		name = ln_coldwinds.3.b          # sit with the old men. hear them out.
+		ai_chance = { base = 40 }
+		add_prestige = 25
+		stress_impact = {
+			base = minor_stress_impact_gain
+			humble = minor_stress_impact_loss
+		}
+	}
+}
+
+# ── 4. THE WOLVES COME SOUTH ────────────────────────────────────────────────────────────────────────────────
+ln_coldwinds.4 = {
+	type = character_event
+	title = ln_coldwinds.4.t
+	desc = ln_coldwinds.4.desc
+	theme = realm
+	left_portrait = { character = root  animation = thinking }
+
+	immediate = {
+		add_character_flag = ln_cw_saw_wolves
+	}
+
+	option = {
+		name = ln_coldwinds.4.a          # good hunting, then.
+		ai_chance = { base = 50 }
+		add_prestige = 25
+		stress_impact = {
+			cynical = minor_stress_impact_loss
+		}
+	}
+	option = {
+		name = ln_coldwinds.4.b          # ask what they are running from.
+		ai_chance = { base = 50 }
+		stress_impact = {
+			base = minor_stress_impact_gain
+			paranoid = minor_stress_impact_gain
+		}
+	}
+}
+
+# ── 5. SHE HAS NEVER BEEN WRONG ─────────────────────────────────────────────────────────────────────────────
+ln_coldwinds.5 = {
+	type = character_event
+	title = ln_coldwinds.5.t
+	desc = ln_coldwinds.5.desc
+	theme = realm
+	left_portrait = { character = root  animation = disbelief }
+
+	immediate = {
+		add_character_flag = ln_cw_saw_grandmother
+	}
+
+	option = {
+		name = ln_coldwinds.5.a          # give her a place by the big fire.
+		ai_chance = { base = 50 }
+		add_prestige = 25
+		stress_impact = {
+			compassionate = minor_stress_impact_loss
+		}
+	}
+	option = {
+		name = ln_coldwinds.5.b          # old women say old things.
+		ai_chance = { base = 50 }
+		stress_impact = {
+			cynical = minor_stress_impact_loss
+			zealous = minor_stress_impact_gain
+		}
+	}
+}

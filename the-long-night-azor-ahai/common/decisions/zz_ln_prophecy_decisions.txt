@@ -1,0 +1,75 @@
+﻿# AGOT: The Long Night & Azor Ahai -- seeing your own marks.
+#
+# WHY THIS EXISTS. Deeds are character flags, which is the right implementation and a terrible interface: without
+# this the player accumulates eight invisible booleans and is one day told he has been named, with no way to work
+# out why or what he is still missing. A mechanic the player cannot inspect is a mechanic the player experiences
+# as randomness.
+#
+# It costs nothing and does nothing. It is a mirror.
+
+ln_read_the_signs_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds" }
+
+	desc = ln_read_the_signs_decision_desc
+	selection_tooltip = ln_read_the_signs_decision_tt
+	confirm_text = ln_read_the_signs_decision_confirm
+
+	decision_group_type = realm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		# ONLY IF: naming is on, this character could still be named, and there is at least one mark to read.
+		NOT = { has_game_rule = ln_naming_off }
+		ln_can_be_named_trigger = yes
+		ln_deed_count_value >= 1
+		# NEVER IF: the question has already been answered. Once the reveal has run, the prophecy is
+		# history and there are no signs left to read -- Jorahm, 12 Aug, on 1.0.5. The re-arm in
+		# ln_struggle_monthly_effect clears ln_dawn_revealed under The Cycle, so under the recurrence
+		# rule the mirror opens again when a NEW dark starts building toward a NEW naming.
+		NOT = { has_global_variable = ln_dawn_revealed }
+	}
+
+	# ONE YEAR. Thomas: "there is no cooldown on the read the signs decision." It costs nothing and changes
+	# nothing, so spamming it breaks no balance -- but a mirror you can open twice a day is not a mirror,
+	# and deeds do not arrive faster than this. 365 days is vanilla's own shortest decision cooldown.
+	cooldown = { days = 365 }
+
+	is_valid = {
+		ln_can_sit_and_think_trigger = yes
+	}
+
+	effect = {
+		# THOMAS, LOOKING AT THE DECISION IN A LIVE GAME: "I feel like it doesn't show what can happen. If
+		# anything, you just put in some text so that it looks like it shows up... so it can give you some
+		# idea of what can happen from reading the signs. What signs am I reading?"
+		#
+		# Fair, and the answer was that the decision had no Effects block at all -- trigger_event on its own
+		# renders as nothing, so CK3 drew an empty panel. A decision whose entire purpose is to make an
+		# invisible mechanic visible was itself invisible.
+		#
+		# The nine marks are named here rather than described, because naming them is the whole point: a
+		# player who reads this knows what he is looking for before he opens the card. if/else inside an
+		# effect block is evaluated for the tooltip too, so the count line below tells him where he stands
+		# without needing a loc promote that could fail.
+		custom_tooltip = ln_read_the_signs_effect_marks
+
+		if = {
+			limit = { ln_deed_count_value >= 5 }
+			custom_tooltip = ln_read_the_signs_effect_many
+		}
+		else_if = {
+			limit = { ln_deed_count_value >= 3 }
+			custom_tooltip = ln_read_the_signs_effect_some
+		}
+		else = {
+			custom_tooltip = ln_read_the_signs_effect_few
+		}
+
+		custom_tooltip = ln_read_the_signs_effect_costs
+
+		trigger_event = ln_prophecy.10
+	}
+
+	ai_will_do = { base = 0 }
+}

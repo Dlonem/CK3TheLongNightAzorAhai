@@ -1,0 +1,29 @@
+﻿l_english:
+
+ ln_omen.1.t:0 "The Ranging Has Not Returned"
+ ln_omen.1.desc:0 "Six men went north of [wall|E] before the last thaw. Experienced men — one of them had made the crossing eleven times and could find the Milkwater in fog.\n\n They are eight weeks overdue. That is not, by itself, remarkable. Rangings run long, men break legs, the [free_folk|E] take prisoners and sometimes ransom them back.\n\n What is remarkable is that the party sent to find them turned around at the Haunted Forest and came home, and none of the four will say why.\n\n The Lord Commander has recorded it as six lost. The clerk who wrote the entry did not look up while he was doing it."
+ ln_omen.1.a:0 "Send men. I want to know what turned that party around."
+ ln_omen.1.b:0 "Six men. The Watch loses six men most years."
+
+ ln_omen.2.t:0 "The Man Who Came Back"
+ ln_omen.2.desc:0 "He is a ranger, or he was. He walked into your hall unannounced and did not ask for food or a fire.\n\n He says he saw one. Standing in a treeline, taller than a man and thinner, and the cold came off it the way heat comes off a forge. It looked at him and did not hurry. He says the four men with him are still up there, and they are still walking.\n\n Every part of him you can see is shaking except his hands, which are perfectly still — which your maester tells you privately is the part that worries him.\n\n He is waiting for you to say something. So is everyone else in the hall."
+ ln_omen.2.a:0 "I believe him. Say it aloud, so the hall hears me say it."
+ ln_omen.2.b:0 "Feed him. Keep him. Tell no one — a lord who cries wraiths musters alone."
+ ln_omen.2.c:0 "He is drunk, or mad, or paid. Put him out."
+
+ # ── SILVERWING'S REFUSAL ────────────────────────────────────────────────────────────────────────────────────
+ ln_omen.10.t:0 "[ln_dragon.GetTitledFirstName] Will Not Cross"
+ ln_omen.10.desc.open:0 "[ln_dragon.GetTitledFirstName] has flown into a shield wall. [ln_dragon.GetSheHe|U] has flown through the smoke of [ln_dragon.GetHerHis] own fire with arrows in [ln_dragon.GetHerHis] wing and not turned.\n\nAnd a mile out from the ice [ln_dragon.GetSheHe] stops. Not slows — stops, the way a horse stops at a snake, and then hisses, and then banks so hard you nearly go off [ln_dragon.GetHerHis] back into the trees.\n\nYou take [ln_dragon.GetHerHim] up again and try further east, where the Wall is lower. The same. You try a third time in the afternoon, coming in high with the sun behind you so that [ln_dragon.GetSheHe] cannot see it until you are almost over it, and [ln_dragon.GetSheHe] sees it anyway, and this time [ln_dragon.GetSheHe] screams.\n\n"
+ ln_omen.10.desc.will:0 "It is not fear. You have felt [ln_dragon.GetHerHis] afraid — once, badly, in a storm off Tarth — and it is nothing like this. There is no shudder in [ln_dragon.GetHerHim], no wildness. [ln_dragon.GetSheHe|U] simply will not, the way a man will not put his hand in a fire, and when you press [ln_dragon.GetHerHim] the third time [ln_dragon.GetSheHe] turns [ln_dragon.GetHerHis] head all the way round on that long neck and looks at you until you stop asking.\n\n"
+ ln_omen.10.desc.fear:0 "And [ln_dragon.GetSheHe] is frightened. That is the part nobody will believe when you tell it, because everyone knows what a dragon is — but you have sat on [ln_dragon.GetHerHis] back for years and you know exactly what [ln_dragon.GetSheHe] feels like when [ln_dragon.GetSheHe] is frightened, and [ln_dragon.GetSheHe] is frightened now, of a line of ice with nothing standing on it.\n\n"
+ ln_omen.10.desc.ward:0 "And you cannot tell why. There is no smell of anything, no sound, nothing on the ice and nothing behind it but white ground going on forever. Whatever [ln_dragon.GetSheHe] has hit is not in the world you can see. It is in the Wall, or it IS the Wall, and it was put there by people who have been dead for eight thousand years and did not leave a note.\n\n"
+ ln_omen.10.desc.close:0 "The Watch on the parapet have stopped pretending to work. One of the older men is not watching the dragon at all. He is watching you, to see what you will do about it, and there is something almost like pity in it.\n\nSeven thousand years of ice, and nobody has ever written down what was put into it."
+ ln_omen.10.a:0 "Again. Take [ln_dragon.GetHerHim] up again."
+ ln_omen.10.b:0 "Enough. [ln_dragon.GetSheHe|U] knows something I do not."
+ ln_omen.10.c:0 "Write to the Citadel. There will be a sensible reason."
+
+ # ── THE TALE, for those who will never sit on a dragon ──────────────────────────────────────────────────────
+ ln_omen.11.t:0 "A Note in the Margin"
+ ln_omen.11.desc:0 "It is not even the subject of the book. It is a line in a chapter about royal progresses, recording as a curiosity that on Queen Alysanne's visit to the Wall her dragon Silverwing would not fly over it, and that Her Grace attempted the crossing three times before giving it up.\n\nThree times. Somebody wrote three times and then went on to describe the feast.\n\nDragons do not decline. That is the entire point of them.\n\nSo either a maester lied about a queen, in a chronicle, for no reason — or there is something in that ice, it is older than Valyria, and it was put there to keep something out."
+ ln_omen.11.a:0 "Then it was put there to keep something out. I want to know what."
+ ln_omen.11.b:0 "An old woman's dragon had an off day. Nothing more."

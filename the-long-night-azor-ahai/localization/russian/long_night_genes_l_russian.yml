@@ -1,0 +1,21 @@
+﻿l_russian:
+ # Skin Color
+ skin_color_hue_long_night: "Оттенок кожи (Долгая Ночь)"
+ vanilla_skin_color_hue_long_night: "Оттенок кожи, базовый (Долгая Ночь)"
+ 
+ skin_color_saturation_long_night: "Насыщенность кожи (Долгая Ночь)"
+ vanilla_skin_color_saturation_long_night: "Насыщенность кожи, базовая (Долгая Ночь)"
+ 
+ skin_color_value_long_night: "Яркость кожи (Долгая Ночь)"
+ vanilla_skin_color_value_long_night: "Яркость кожи, базовая (Долгая Ночь)"
+
+ 
+ # Hair Color
+ hair_color_hue_long_night: "Оттенок волос (Долгая Ночь)"
+ vanilla_hair_color_hue_long_night: "Оттенок волос, базовый (Долгая Ночь)"
+ 
+ hair_color_saturation_long_night: "Насыщенность волос (Долгая Ночь)"
+ vanilla_hair_color_saturation_long_night: "Насыщенность волос, базовая (Долгая Ночь)"
+ 
+ hair_color_value_long_night: "Яркость волос (Долгая Ночь)"
+ vanilla_hair_color_value_long_night: "Яркость волос, базовая (Долгая Ночь)"

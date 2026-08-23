@@ -1,0 +1,26 @@
+﻿l_english:
+
+ ln_mine_dragonglass_decision_desc:0 "Send men to dig, and pay what it costs.\n\nThere is a great deal of [dragonglass|E] under Dragonstone and more in a dozen places nobody has bothered to survey, because until quite recently there was no reason on earth to want any."
+ ln_mine_dragonglass_decision_tt:0 "Lay in stores of [dragonglass|E]."
+ ln_mine_dragonglass_decision_confirm:0 "Dig."
+
+ ln_prophecy.31.t:0 "Frozen Fire"
+ ln_prophecy.31.desc:0 "The first carts come in and your master-at-arms is openly unimpressed.\n\nIt is glass. It chips if you look at it wrong, it will not hold an edge against a decent sword, and arming men with it means arming them with something that shatters. He is entirely correct.\n\nHe is also, you notice, wearing one at his belt.\n\nThe children of the forest called it frozen fire and used it for eight thousand years against something the Citadel is confident never existed. You are taking the children's word over the Citadel's, which is not a sentence you expected to be able to say about yourself."
+ ln_prophecy.31.a:0 "Arm them anyway. Every man who can carry one."
+ ln_prophecy.31.b:0 "Quietly. There is no need to tell the realm why."
+
+ # Station branches, added Session 10.
+ ln_prophecy.31.desc.watch:0 "The first carts come in and nobody at Castle Black laughs.\n\nThe glass chips if you look at it wrong. It will not hold an edge against a decent sword. Every brother on the Wall knows both of those things, and every brother takes one anyway, because the Watch is the one place in the world where the old accounts were never entirely filed under stories.\n\nI am the shield that guards the realms of men. Eight thousand years of men said the words without knowing what the shield was supposed to be made of.\n\nNow you know."
+ ln_prophecy.31.desc.seen:0 "The first carts come in and your master-at-arms is openly unimpressed. It is glass, he says. It shatters, he says.\n\nYou let him finish. It is a reasonable speech and he is right about all of it.\n\nBut he was not there. He has not seen the thing you have seen — the cold that arrives before it does, the eyes like a winter sky with nothing behind it. The Citadel can argue with the children of the forest. It cannot argue with your memory, and neither can you.\n\nFrozen fire, the children called it. You are no longer taking anyone's word."
+
+ # ── PREPARATION MODIFIERS ───────────────────────────────────────────────────────────────────────────────────
+ ln_valyrian_armed_modifier:0 "Spell-Forged Steel"
+ ln_valyrian_armed_modifier_desc:0 "A blade from a freehold four hundred years dead, carried by someone with a reason to use it.\n\nIt does not care how cold the thing in front of it is."
+ ln_dragonglass_stores_modifier:0 "Dragonglass Stores"
+ ln_dragonglass_stores_modifier_desc:0 "Crates of chipped black glass, distributed to men who think you have lost your mind.\n\nThey will stop thinking that."
+
+ # ── THE DRAGONGLASS, SPLIT IN TWO ───────────────────────────────────────────────────────────────────────────
+ ln_dragonglass_armed_modifier:0 "Armed with Dragonglass"
+ ln_dragonglass_armed_modifier_desc:0 "Every spear in the muster has been retipped in black glass, and every man has been told what it is for. This lasts as long as the dark does."
+ ln_dragonglass_knight_modifier:0 "Dragonglass-Armed"
+ ln_dragonglass_knight_modifier_desc:0 "Carries a blade of black volcanic glass. It shatters against mail and it kills what steel will not touch."

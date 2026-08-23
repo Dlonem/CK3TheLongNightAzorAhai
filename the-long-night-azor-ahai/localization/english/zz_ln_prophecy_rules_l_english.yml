@@ -1,0 +1,43 @@
+﻿l_english:
+
+ # ── PROPHECY GAME RULES ─────────────────────────────────────────────────────────────────────────────────────
+ rule_ln_prophecy_truth:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Was There Ever a Prince?"
+ rule_ln_prophecy_truth_desc:0 "Whether the prophecy is actually true. Decided at game start, and #EMP the game never tells you#!. You find out at the end, or not at all."
+ setting_ln_prophecy_random:0 "Let the Flames Decide #EMP (Default)#!"
+ setting_ln_prophecy_random_desc:0 "A coin, flipped at game start, hidden forever."
+ setting_ln_prophecy_is_true:0 "There Is a Prince"
+ setting_ln_prophecy_is_true_desc:0 "The prophecy is true and the marks mean what they appear to mean. You know; nobody in the world does."
+ setting_ln_prophecy_is_a_lie:0 "There Is No Prince"
+ setting_ln_prophecy_is_a_lie_desc:0 "There is no promised prince and there never was. The Long Night can still be survived — it just will not have been prophecy that did it."
+ rule_ln_prophecy_naming:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Naming Claimants"
+ rule_ln_prophecy_naming_desc:0 "How many marks a life needs before someone says the words out loud. Nine marks exist. Four is already an extraordinary life."
+ setting_ln_naming_normal:0 "As the Books Have It #EMP (Default)#!"
+ setting_ln_naming_normal_desc:0 "Two marks to be #EMP Favored#!, four to be #EMP Chosen#!."
+ setting_ln_naming_generous:0 "The Flames Are Loud"
+ setting_ln_naming_generous_desc:0 "One and three. Claimants everywhere, rival temples, several alive at once."
+ setting_ln_naming_strict:0 "The Citadel's Reading"
+ setting_ln_naming_strict_desc:0 "Three and six. Six effectively needs a dragon, so most worlds never see a #EMP Chosen#!."
+ setting_ln_naming_off:0 "Nobody Is Ever Named"
+ setting_ln_naming_off_desc:0 "The prophecy chain is off. The champion traits stay unobtainable."
+
+ # ── DEED FLAG DESCRIPTIONS ──────────────────────────────────────────────────────────────────────────────────
+ # Used by tooltips that list what marks a character carries.
+ ln_deed_salt_and_smoke:0 "Born amid salt and smoke"
+ ln_deed_bleeding_star:0 "Born beneath a bleeding star"
+ ln_deed_survived_the_others:0 "Walked away from the dead"
+ ln_deed_dragon_dreams:0 "Dreams that arrive as memory"
+ ln_deed_greensight:0 "Sees through the weirwoods"
+ ln_deed_valyrian_steel:0 "Carries spell-forged steel"
+ ln_deed_woke_dragons:0 "Woke dragons out of stone"
+ ln_deed_returned:0 "Died, and did not stay dead"
+
+ # ── WHO MAY BE NAMED ────────────────────────────────────────────────────────────────────────────────────────
+ rule_ln_prophecy_claimants:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Who May Be Named"
+ rule_ln_prophecy_claimants_desc:0 "#EMP Chosen#! is a claim, not a fact — several can hold it at once. #EMP Azor Ahai Reborn#! is the exception: it goes to whoever kills the Night King, once."
+ setting_ln_claimants_anyone:0 "Anyone at All #EMP (Default)#!"
+ setting_ln_claimants_anyone_desc:0 "As many claimants as qualify, AI and player alike. No way to tell from inside the world which is the mistake."
+ setting_ln_claimants_players_only:0 "Players Only"
+ setting_ln_claimants_players_only_desc:0 "Only players are ever named. In multiplayer the prophecy becomes a thing between the people at the table."
+ setting_ln_claimants_one_at_a_time:0 "One at a Time"
+ setting_ln_claimants_one_at_a_time_desc:0 "At most one living #EMP Chosen#!. Nobody can be raised while they breathe — and the seat reopens the moment they stop.\n\nWhich does rather incentivise a certain kind of solution."
+

@@ -1,0 +1,18 @@
+﻿l_russian:
+
+ # Past tense, lower-case, no-perspective default first -- vanilla's own design standard for memories,
+ # straight out of _character_memories.info.
+ ln_forged_lightbringer_memory:0 "выковал Светозарный"
+ ln_forged_lightbringer_memory_desc:0 "Я выковал Светозарный и заплатил ту цену, о которой говорит предание."
+ ln_forged_lightbringer_memory_desc_second_perspective:0 "вы выковали Светозарный и заплатили ту цену, о которой говорит предание."
+ ln_forged_lightbringer_memory_desc_third_perspective:0 "[owner.GetName] выковал Светозарный и заплатил ту цену, о которой говорит предание."
+
+ ln_slew_the_night_king_memory:0 "положил конец Долгой Ночи"
+ ln_slew_the_night_king_memory_desc:0 "Я был тем, кто стоял там, когда это решалось. Король Ночи пал, и взошло солнце."
+ ln_slew_the_night_king_memory_desc_second_perspective:0 "вы были тем, кто стоял там, когда это решалось. Король Ночи пал, и взошло солнце."
+ ln_slew_the_night_king_memory_desc_third_perspective:0 "[owner.GetName] стоял там, когда это решалось. Король Ночи пал, и взошло солнце."
+
+ # The memory type own name key. Its three perspective descriptions have always lived in
+ # zz_ln_reveal_l_english.yml; this line was not anywhere, and the live log said so:
+ # "Character memory name 'ln_stood_at_the_dawn_memory' is not localized".
+ ln_stood_at_the_dawn_memory:0 "встретил рассвет"

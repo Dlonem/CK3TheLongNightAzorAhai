@@ -1,0 +1,86 @@
+﻿# AGOT: The Long Night & Azor Ahai -- prophecy hooks.
+# on_actions = { } sub-lists, which merge. Never an `effect` block on a shared on_action.
+
+ln_prophecy_game_start = {
+	effect = {
+		ln_set_prophecy_truth_effect = yes
+		ln_grant_historical_resurrections_effect = yes
+	}
+}
+
+# Root = the newborn.
+ln_prophecy_birth = {
+	effect = {
+		ln_birth_deeds_effect = yes
+	}
+}
+
+# Root = a playable character. yearly_playable_pulse rather than the struggle pulse: a claimant can be marked
+# long before the struggle involves anybody, and a Braavosi with dragon dreams should still be seen by his
+# priest.
+ln_prophecy_yearly = {
+	trigger = {
+		NOT = { has_game_rule = ln_naming_off }
+		is_alive = yes
+		is_adult = yes
+	}
+	effect = {
+		ln_prophecy_yearly_effect = yes
+		ln_preparation_upkeep_effect = yes
+	}
+}
+
+# Root = a playable character. The Resurrected chain -- see common/scripted_effects/zz_ln_risen_effects.txt.
+# No trigger block: the gate is inside the effect, and putting `has_trait = resurrected_by_rhllor` here as well
+# would only re-evaluate the same answer for every playable character every year.
+ln_risen_yearly = {
+	effect = {
+		ln_risen_pulse_effect = yes
+	}
+}
+
+# Root = a playable character. The Favored/Chosen chain -- see common/scripted_effects/zz_ln_favored_effects.txt.
+ln_favored_yearly = {
+	effect = {
+		ln_favored_pulse_effect = yes
+	}
+}
+
+# Root = a playable character. The Chosen chain -- see common/scripted_effects/zz_ln_chosen_effects.txt.
+ln_chosen_yearly = {
+	effect = {
+		ln_chosen_pulse_effect = yes
+	}
+}
+
+# Root = a playable character. Life on the Wall -- see common/scripted_effects/zz_ln_watch_effects.txt.
+ln_watch_yearly = {
+	effect = {
+		ln_watch_pulse_effect = yes
+
+		# THE WATCH COLLECTS ITS STRAYS. Root here is any playable character (yearly_playable_pulse). A
+		# ranging captain with no liege should not exist -- but one DID: the 8 Aug fealty bug left Thomas's
+		# live campaign with an independent captain, and a save carries its state forward no matter what the
+		# ceremony now does correctly. One oath a year, only for a man of ours standing outside the chain of
+		# command, and only while a Lord Commander lives to take it.
+		if = {
+			limit = {
+				has_government = ln_ranger_government
+				is_ruler = yes
+				NOT = { exists = liege }
+				exists = title:k_the_wall.holder
+				NOT = { this = title:k_the_wall.holder }
+			}
+			create_title_and_vassal_change = {
+				type = swear_fealty
+				save_scope_as = ln_stray_fealty
+				add_claim_on_loss = no
+			}
+			change_liege = {
+				liege = title:k_the_wall.holder
+				change = scope:ln_stray_fealty
+			}
+			resolve_title_and_vassal_change = scope:ln_stray_fealty
+		}
+	}
+}

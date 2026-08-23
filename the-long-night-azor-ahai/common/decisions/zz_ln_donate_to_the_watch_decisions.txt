@@ -1,0 +1,73 @@
+﻿# AGOT: The Long Night & Azor Ahai -- paying for a wall you will never see.
+#
+# AGOT ships donate_land_to_nw_decision, which gives the Watch a county. That is a large, permanent, political
+# act. There was nothing between that and doing nothing at all, which is most of what the relationship between
+# the realm and the Wall actually consists of: a cart of grain, once, from a lord who felt vaguely guilty.
+
+ln_send_men_and_grain_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_social.dds" }
+
+	desc = ln_send_men_and_grain_decision_desc
+	selection_tooltip = ln_send_men_and_grain_decision_tt
+	confirm_text = ln_send_men_and_grain_decision_confirm
+
+	decision_group_type = realm
+	cooldown = { years = 5 }
+	ai_check_interval = 120
+
+	is_shown = {
+		is_landed = yes
+		NOT = { has_government = nights_watch_government }
+		exists = title:k_the_wall.holder
+		title:k_the_wall.holder = { has_government = nights_watch_government }
+		# Somebody who has never heard of the Wall does not send it grain. Northern, or on the Wall's doorstep,
+		# or a king who has to think about the whole realm, or anyone who has actually seen the signs.
+		OR = {
+			culture = culture:northman
+			culture = culture:frostborn
+			highest_held_title_tier >= tier_kingdom
+			has_character_flag = ln_heard_the_warning
+			has_character_flag = ln_looked_north
+			ln_is_a_champion_of_rhllor_trigger = yes
+		}
+	}
+
+	is_valid = {
+		is_available = yes
+		custom_description = {
+			text = ln_donate_needs_the_coin
+			gold >= 100
+		}
+	}
+
+	effect = {
+		# 10 Aug: WAS A FLAT 200. Thomas: "what if I'm the ancestors, I completely believe in the Long Night, and
+		# I want to dump a thousand gold into the Night's Watch?" A fixed gift makes the same statement from a
+		# landless-poor count and from the richest king in Westeros, which is the wrong shape for the one decision
+		# in the mod that is purely about how much you believe.
+		#
+		# The amount is now the player's, asked in ln_watch.10. The decision only gates on being able to send the
+		# smallest gift worth sending; the event refuses the larger ones if the coin is not there.
+		title:k_the_wall.holder ?= { save_scope_as = ln_lord_commander }
+		trigger_event = ln_watch.10
+	}
+
+	ai_will_do = {
+		base = 25
+		modifier = { factor = 0  gold < 600 }
+		# Personality (v0.2.1 pass): who actually answers the Watch's letter.
+		modifier = { add = 20  has_trait = generous }
+		modifier = { add = 15  has_trait = zealous }
+		modifier = { add = 10  has_trait = just }
+		modifier = { add = -20  has_trait = greedy }
+		modifier = {
+			factor = 3
+			struggle:ln_long_night_struggle ?= {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+	}
+}

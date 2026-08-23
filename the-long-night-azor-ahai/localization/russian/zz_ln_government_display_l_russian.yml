@@ -1,0 +1,34 @@
+﻿l_russian:
+
+ # AGOT: The Long Night & Azor Ahai -- government display keys the engine derives and looks up on its
+ # own (<government>_adjective and friends; the raw key was showing in the realm panel, live-run
+ # report 305 AC), plus the names for zz_ln_government_title_holders.txt. wight_government and
+ # wight_government_desc already live in long_night_plus_memories_l_english.yml -- NOT restated here,
+ # one definition per key.
+ #
+ # RU: gendered forms are split where Russian requires it even though the English pair is identical.
+
+ wight_government_with_icon:0 "$wight_government$"
+ wight_government_adjective:0 "Восставший"
+ wight_government_realm:0 "Воинство восставших"
+ wight_government_filter_option:0 "Восставший невольник"
+ wight_government_filter_option_desc:0 "Показывать только персонажей, поднятых на службу мёртвым"
+
+ baron_wight_male:0 "Восставший невольник"
+ baron_wight_female:0 "Восставшая невольница"
+ count_wight_male:0 "Лорд-упырь"
+ count_wight_female:0 "Леди-упырь"
+ duke_wight_male:0 "Холодный лорд"
+ duke_wight_female:0 "Холодная леди"
+ king_wight_male:0 "Король Зимы"
+ king_wight_female:0 "Королева Зимы"
+ emperor_wight_male:0 "Император Зимы"
+ emperor_wight_female:0 "Императрица Зимы"
+
+ ln_ranger_government_with_icon:0 "$ln_ranger_government$"
+ ln_ranger_government_realm:0 "Походный отряд"
+ ln_ranger_government_filter_option:0 "Походный отряд"
+ ln_ranger_government_filter_option_desc:0 "Показывать только присягнувших братьев в походе за Стеной"
+
+ duke_ln_ranger_male:0 "Капитан разведчиков"
+ duke_ln_ranger_female:0 "Капитан разведчиков"

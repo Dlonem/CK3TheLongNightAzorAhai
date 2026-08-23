@@ -1,0 +1,243 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the ranging companies' history.
+# The shape is AGOT's own First Ranger entry, per company: liege, government, and a captain per era.
+# THIS is what makes the engine build eight ranger camps at game start. See zz_ln_ranger_captains.txt.
+
+d_ln_ranger_01 = {
+	8075.1.1 = {
+		# THE CHAIN OF COMMAND. Live-run titlehistory.cpp:60 refused duchy-under-duchy here eight
+		# times ("incompatible tiers") -- the Dorne shape does NOT hold for landless duchies, so the
+		# companies answer to the Lord Commander's kingdom directly. The First Ranger layer is script's
+		# job at runtime (succession + competition in zz_ln_catalyst_on_actions.txt), not history's.
+		liege = k_the_wall
+		government = ln_ranger_government
+		holder = ln_captain_g1_c1
+	}
+	8109.1.1 = {
+		holder = ln_captain_g2_c1
+	}
+	8139.1.1 = {
+		holder = ln_captain_g3_c1
+	}
+	8179.1.1 = {
+		holder = ln_captain_g4_c1
+	}
+	8214.1.1 = {
+		holder = ln_captain_g5_c1
+	}
+	8244.1.1 = {
+		holder = ln_captain_g6_c1
+	}
+	8279.1.1 = {
+		holder = ln_captain_g7_c1
+	}
+}
+
+d_ln_ranger_02 = {
+	8075.1.1 = {
+		# THE CHAIN OF COMMAND. Live-run titlehistory.cpp:60 refused duchy-under-duchy here eight
+		# times ("incompatible tiers") -- the Dorne shape does NOT hold for landless duchies, so the
+		# companies answer to the Lord Commander's kingdom directly. The First Ranger layer is script's
+		# job at runtime (succession + competition in zz_ln_catalyst_on_actions.txt), not history's.
+		liege = k_the_wall
+		government = ln_ranger_government
+		holder = ln_captain_g1_c2
+	}
+	8109.1.1 = {
+		holder = ln_captain_g2_c2
+	}
+	8139.1.1 = {
+		holder = ln_captain_g3_c2
+	}
+	8179.1.1 = {
+		holder = ln_captain_g4_c2
+	}
+	8214.1.1 = {
+		holder = ln_captain_g5_c2
+	}
+	8244.1.1 = {
+		holder = ln_captain_g6_c2
+	}
+	8279.1.1 = {
+		holder = ln_captain_g7_c2
+	}
+}
+
+d_ln_ranger_03 = {
+	8075.1.1 = {
+		# THE CHAIN OF COMMAND. Live-run titlehistory.cpp:60 refused duchy-under-duchy here eight
+		# times ("incompatible tiers") -- the Dorne shape does NOT hold for landless duchies, so the
+		# companies answer to the Lord Commander's kingdom directly. The First Ranger layer is script's
+		# job at runtime (succession + competition in zz_ln_catalyst_on_actions.txt), not history's.
+		liege = k_the_wall
+		government = ln_ranger_government
+		holder = ln_captain_g1_c3
+	}
+	8109.1.1 = {
+		holder = ln_captain_g2_c3
+	}
+	8139.1.1 = {
+		holder = ln_captain_g3_c3
+	}
+	8179.1.1 = {
+		holder = ln_captain_g4_c3
+	}
+	8214.1.1 = {
+		holder = ln_captain_g5_c3
+	}
+	8244.1.1 = {
+		holder = ln_captain_g6_c3
+	}
+	8279.1.1 = {
+		holder = ln_captain_g7_c3
+	}
+}
+
+d_ln_ranger_04 = {
+	8075.1.1 = {
+		# THE CHAIN OF COMMAND. Live-run titlehistory.cpp:60 refused duchy-under-duchy here eight
+		# times ("incompatible tiers") -- the Dorne shape does NOT hold for landless duchies, so the
+		# companies answer to the Lord Commander's kingdom directly. The First Ranger layer is script's
+		# job at runtime (succession + competition in zz_ln_catalyst_on_actions.txt), not history's.
+		liege = k_the_wall
+		government = ln_ranger_government
+		holder = ln_captain_g1_c4
+	}
+	8109.1.1 = {
+		holder = ln_captain_g2_c4
+	}
+	8139.1.1 = {
+		holder = ln_captain_g3_c4
+	}
+	8179.1.1 = {
+		holder = ln_captain_g4_c4
+	}
+	8214.1.1 = {
+		holder = ln_captain_g5_c4
+	}
+	8244.1.1 = {
+		holder = ln_captain_g6_c4
+	}
+	8279.1.1 = {
+		holder = ln_captain_g7_c4
+	}
+}
+
+d_ln_ranger_05 = {
+	8075.1.1 = {
+		# THE CHAIN OF COMMAND. Live-run titlehistory.cpp:60 refused duchy-under-duchy here eight
+		# times ("incompatible tiers") -- the Dorne shape does NOT hold for landless duchies, so the
+		# companies answer to the Lord Commander's kingdom directly. The First Ranger layer is script's
+		# job at runtime (succession + competition in zz_ln_catalyst_on_actions.txt), not history's.
+		liege = k_the_wall
+		government = ln_ranger_government
+		holder = ln_captain_g1_c5
+	}
+	8109.1.1 = {
+		holder = ln_captain_g2_c5
+	}
+	8139.1.1 = {
+		holder = ln_captain_g3_c5
+	}
+	8179.1.1 = {
+		holder = ln_captain_g4_c5
+	}
+	8214.1.1 = {
+		holder = ln_captain_g5_c5
+	}
+	8244.1.1 = {
+		holder = ln_captain_g6_c5
+	}
+	8279.1.1 = {
+		holder = ln_captain_g7_c5
+	}
+}
+
+d_ln_ranger_06 = {
+	8075.1.1 = {
+		# THE CHAIN OF COMMAND. Live-run titlehistory.cpp:60 refused duchy-under-duchy here eight
+		# times ("incompatible tiers") -- the Dorne shape does NOT hold for landless duchies, so the
+		# companies answer to the Lord Commander's kingdom directly. The First Ranger layer is script's
+		# job at runtime (succession + competition in zz_ln_catalyst_on_actions.txt), not history's.
+		liege = k_the_wall
+		government = ln_ranger_government
+		holder = ln_captain_g1_c6
+	}
+	8109.1.1 = {
+		holder = ln_captain_g2_c6
+	}
+	8139.1.1 = {
+		holder = ln_captain_g3_c6
+	}
+	8179.1.1 = {
+		holder = ln_captain_g4_c6
+	}
+	8214.1.1 = {
+		holder = ln_captain_g5_c6
+	}
+	8244.1.1 = {
+		holder = ln_captain_g6_c6
+	}
+	8279.1.1 = {
+		holder = ln_captain_g7_c6
+	}
+}
+
+d_ln_ranger_07 = {
+	8075.1.1 = {
+		# THE CHAIN OF COMMAND. Live-run titlehistory.cpp:60 refused duchy-under-duchy here eight
+		# times ("incompatible tiers") -- the Dorne shape does NOT hold for landless duchies, so the
+		# companies answer to the Lord Commander's kingdom directly. The First Ranger layer is script's
+		# job at runtime (succession + competition in zz_ln_catalyst_on_actions.txt), not history's.
+		liege = k_the_wall
+		government = ln_ranger_government
+		holder = ln_captain_g1_c7
+	}
+	8109.1.1 = {
+		holder = ln_captain_g2_c7
+	}
+	8139.1.1 = {
+		holder = ln_captain_g3_c7
+	}
+	8179.1.1 = {
+		holder = ln_captain_g4_c7
+	}
+	8214.1.1 = {
+		holder = ln_captain_g5_c7
+	}
+	8244.1.1 = {
+		holder = ln_captain_g6_c7
+	}
+	8279.1.1 = {
+		holder = ln_captain_g7_c7
+	}
+}
+
+d_ln_ranger_08 = {
+	8075.1.1 = {
+		# THE CHAIN OF COMMAND. Live-run titlehistory.cpp:60 refused duchy-under-duchy here eight
+		# times ("incompatible tiers") -- the Dorne shape does NOT hold for landless duchies, so the
+		# companies answer to the Lord Commander's kingdom directly. The First Ranger layer is script's
+		# job at runtime (succession + competition in zz_ln_catalyst_on_actions.txt), not history's.
+		liege = k_the_wall
+		government = ln_ranger_government
+		holder = ln_captain_g1_c8
+	}
+	8109.1.1 = {
+		holder = ln_captain_g2_c8
+	}
+	8139.1.1 = {
+		holder = ln_captain_g3_c8
+	}
+	8179.1.1 = {
+		holder = ln_captain_g4_c8
+	}
+	8214.1.1 = {
+		holder = ln_captain_g5_c8
+	}
+	8244.1.1 = {
+		holder = ln_captain_g6_c8
+	}
+	8279.1.1 = {
+		holder = ln_captain_g7_c8
+	}
+}

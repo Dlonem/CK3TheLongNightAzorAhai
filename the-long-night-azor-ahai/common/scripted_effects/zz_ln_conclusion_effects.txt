@@ -1,0 +1,79 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what the world calls him afterwards.
+# See the chronicle note in zz_ln_reveal_effects.txt for why this exists.
+
+# Root = the man who landed the blow. Three names for three genuinely different stories.
+# give_nickname is the real key (set_nickname does not exist), and an empty nickname body -- nick_x = {}
+# -- is how the base game defines most of its own. Both checked in 00_nicknames.txt.
+# add_legitimacy goes through the base game's guarded wrapper, NOT raw: see the note at the call.
+ln_name_the_dawn_effect = {
+	if = {
+		# He forged the sword and he finished the job with it. The whole prophecy, start to end, in one man.
+		limit = {
+			has_global_variable = ln_slain_with_lightbringer
+			has_character_flag = ln_forged_lightbringer
+		}
+		give_nickname = nick_the_dawnbringer
+	}
+	else_if = {
+		# Named beforehand, and the naming turned out to be right. The priests get their century back.
+		#
+		# 1.0.9 -- AND DRAGON BLOOD COUNTS TOO. Thomas, from the 14 Aug run: Rhaenyra Targaryen killed the
+		# Night King on dragonback and the world called her "the Dawn", which is the name for a nobody who
+		# did it anyway. The prophecy has always been Valyrian: the prince that was promised is *of the
+		# blood*, and a Targaryen ending the Long Night is the version of the story the priests were
+		# actually waiting for. She should be named for it whether or not a red priest ever pointed at her.
+		#
+		# agot_is_dragonblood_character is AGOT's own trigger (00_agot_dragon_triggers.txt:461), not one
+		# invented here: house dragonrider modifier, the dragonrider/dragonless/dragonwidowed traits, a
+		# historical dragonseed, or a living agot_dragon relation -- and explicitly NOT someone who got a
+		# dragon by blowing a horn. That last exclusion is theirs and it is the right one for a prophecy.
+		#
+		# The nickname is genderless in the loc, so a princess reads correctly with no second key.
+		# Order matters and is deliberate: forging Lightbringer AND landing the blow still wins the
+		# dawnbringer name above this, because doing the whole prophecy yourself outranks being born to it.
+		limit = {
+			OR = {
+				has_trait = chosen_by_rhllor
+				has_trait = favored_by_rhllor
+				agot_is_dragonblood_character = yes
+			}
+		}
+		give_nickname = nick_the_prince_that_was_promised
+	}
+	else = {
+		# Nobody said his name. He did it anyway. Statistically the most likely ending, and the best one.
+		give_nickname = nick_the_dawn
+	}
+
+	# The house that produced him does not go back to being ordinary.
+	#
+	# 1.0.9 -- THIS NEVER PAID OUT, AND NOBODY COULD HAVE NOTICED. add_dynasty_prestige is a DYNASTY-scope
+	# effect and this whole block runs in CHARACTER scope, so every kill since this effect was written
+	# threw `Wrong scope for effect: character, expected dynasty` into the error log and awarded nothing.
+	# Found in Thomas's 14 Aug run: two occurrences, both on the Night King's death, both silent in game.
+	# The prestige and piety below are character-scope and were paying correctly the whole time, which is
+	# exactly why it looked like it worked.
+	#
+	# Guarded on having a dynasty at all: the note further down explains that the killer in this mod is very
+	# often a sworn brother of the Night's Watch, and a sworn brother has no dynasty to enrich.
+	# Thomas, 14 Aug: "I think ten thousand should go to the person who does it. And I think five thousand
+	# should go to the three people that are included in it." The three are the roll-call knights, and they
+	# are paid in ln_night_king_slain_reveal_effect where they are actually in scope -- this effect runs
+	# BEFORE they are chosen.
+	#
+	# The guard stays even though Thomas notes the killer is usually a Targaryen rather than a sworn
+	# brother: add_dynasty_prestige on a character with no dynasty is the same silent failure this whole
+	# block was just fixed for, and the Night's Watch road is still open even if it is not the common one.
+	if = {
+		limit = { exists = dynasty }
+		dynasty = { add_dynasty_prestige = 10000 }
+	}
+	add_prestige = 2000
+	add_piety = 1000
+	# THROUGH THE WRAPPER, NOT RAW. add_legitimacy_effect tests is_valid_for_legitimacy_change, which
+	# wants seven things -- has_legitimacy above all. This effect fires on whoever killed the Night King,
+	# and in this mod that is very often a sworn brother: landed, holding a county, no dynasty, NW
+	# government. Guarding on is_landed alone would have called it on exactly the character it is not
+	# legal for. monumental_legitimacy_gain is 500, so the number is unchanged.
+	add_legitimacy_effect = { LEGITIMACY = monumental_legitimacy_gain }
+}

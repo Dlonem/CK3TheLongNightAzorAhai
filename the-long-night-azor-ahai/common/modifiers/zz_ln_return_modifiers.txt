@@ -1,0 +1,18 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what a dragon leaves behind.
+# A COUNTY modifier. Keys checked against the base game's own county modifier file: county_opinion_add (32
+# uses), development_growth_factor (19), monthly_county_control_growth_add (8), tax_mult (3).
+ln_dragonfire_scar_modifier = {
+	icon = county_modifier_opinion_negative
+	county_opinion_add = -40
+	development_growth_factor = -0.4
+	monthly_county_control_growth_add = -0.3
+	tax_mult = -0.5
+}
+
+# You came back and they took you back and it is not the same. Fifteen years, and it wears off on its own -- a
+# generation grows up who did not watch the banners go south.
+ln_the_lord_who_left_modifier = {
+	icon = county_modifier_opinion_negative
+	county_opinion_add = -20
+	monthly_county_control_growth_add = -0.15
+}

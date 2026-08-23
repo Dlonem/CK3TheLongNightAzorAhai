@@ -1,0 +1,40 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Others' leader template.
+#
+# RESTORED. This file shipped in AGOT: The Long Night+ containing nothing but the line
+# "# Temporarily empty for isolation testing", and the fork inherited the stub. A same-named file in
+# common/ replaces rather than merges, so the empty version was the one the game saw and
+# other_template did not exist -- referenced by longnight_create_other_for_scouring, which is
+# itself currently uncalled, which is why nobody noticed.
+#
+# Verbatim from the upstream mod it forks (workshop 3355437474). Every reference inside it was
+# checked against the playset before restoring: all nine traits exist, and
+# min_template_decent_skill / max_template_decent_skill / give_random_commander_trait_effect are
+# all real.
+#
+# The 6000-8000 age range is the upstream author's and is deliberate -- an Other is older than the
+# Wall, and CK3 will happily carry the number.
+
+other_template = {
+	age = { 6000 8000 }
+	random_traits_list = {
+		count = 1
+		education_martial_2 = {}
+		education_martial_3 = {}
+		education_martial_4 = {}
+	}
+	trait = brave
+	trait = logistician
+	trait = wrathful
+	trait = impatient
+	trait = other_trait
+	trait = spindly
+	random_traits = no
+	martial = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+
+	after_creation = {
+		give_random_commander_trait_effect = yes
+	}
+}

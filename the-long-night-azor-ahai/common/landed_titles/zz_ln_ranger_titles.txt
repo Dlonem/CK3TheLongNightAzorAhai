@@ -1,0 +1,144 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the ranging companies.
+#
+# Eight landless titular duchies, one per sworn brother who rides out instead of holding a castle. Modelled
+# line for line on AGOT's own d_nw_landless_first_ranger ($A/common/landed_titles/05_agot_laamps.txt:802).
+#
+# LANDLESS. They never appear on the map, hold no territory, and cannot be inherited -- CK3 needs a title to
+# treat a man as a ruler, and this is that peg and nothing more. AGOT ships seventeen of these for its own
+# landless adventurers.
+#
+# THIS IS THE ONE PLACE THE MOD ADDS TITLES, and it crosses a rule Thomas set in session one: "no new
+# currencies, no new landed titles, no new court positions." Landless titular duchies are not landed titles in
+# the sense that rule was protecting against -- nothing appears on the map, no de jure drift, no succession
+# mess -- but the exception is worth naming rather than burying.
+#
+# ln_is_a_ranger_title is stamped on each at game start by ln_mark_ranger_titles_effect, so the government and
+# the camp can both ask "is this one of ours" without either carrying a list of eight keys that would need
+# editing in three places whenever the number changes.
+#
+# @ CONSTANTS ARE FILE-SCOPED. This is AGOT's own value, from the top of their 05_agot_laamps.txt -- the file
+# these eight titles are modelled on. Copying their ai_primary_priority line without copying this declaration
+# is what produced eight "Failed to find a valid event target link" errors at load, one per company. A ranging
+# company must never become a man's primary title: he is a brother of the Watch who happens to lead a company,
+# not a duke.
+@never_primary_score = -1000
+
+d_ln_ranger_01 = {
+	color = { 36 36 36 }
+	capital = c_castle_black
+
+	definite_form = yes
+	landless = yes
+	ruler_uses_title_name = no
+	no_automatic_claims = yes
+	# destroy_if_invalid_heir REMOVED 8 Aug: the camp lives on the TITLE, and a title that destroys
+	# itself the day its captain dies heirless takes the camp with it forever -- runtime script cannot
+	# build a new one. Succession is script's job now: see ln_company_changes_hands_effect.
+
+	ai_primary_priority = { add = @never_primary_score }
+}
+
+d_ln_ranger_02 = {
+	color = { 36 36 36 }
+	capital = c_castle_black
+
+	definite_form = yes
+	landless = yes
+	ruler_uses_title_name = no
+	no_automatic_claims = yes
+	# destroy_if_invalid_heir REMOVED 8 Aug: the camp lives on the TITLE, and a title that destroys
+	# itself the day its captain dies heirless takes the camp with it forever -- runtime script cannot
+	# build a new one. Succession is script's job now: see ln_company_changes_hands_effect.
+
+	ai_primary_priority = { add = @never_primary_score }
+}
+
+d_ln_ranger_03 = {
+	color = { 36 36 36 }
+	capital = c_castle_black
+
+	definite_form = yes
+	landless = yes
+	ruler_uses_title_name = no
+	no_automatic_claims = yes
+	# destroy_if_invalid_heir REMOVED 8 Aug: the camp lives on the TITLE, and a title that destroys
+	# itself the day its captain dies heirless takes the camp with it forever -- runtime script cannot
+	# build a new one. Succession is script's job now: see ln_company_changes_hands_effect.
+
+	ai_primary_priority = { add = @never_primary_score }
+}
+
+d_ln_ranger_04 = {
+	color = { 36 36 36 }
+	capital = c_castle_black
+
+	definite_form = yes
+	landless = yes
+	ruler_uses_title_name = no
+	no_automatic_claims = yes
+	# destroy_if_invalid_heir REMOVED 8 Aug: the camp lives on the TITLE, and a title that destroys
+	# itself the day its captain dies heirless takes the camp with it forever -- runtime script cannot
+	# build a new one. Succession is script's job now: see ln_company_changes_hands_effect.
+
+	ai_primary_priority = { add = @never_primary_score }
+}
+
+d_ln_ranger_05 = {
+	color = { 36 36 36 }
+	capital = c_castle_black
+
+	definite_form = yes
+	landless = yes
+	ruler_uses_title_name = no
+	no_automatic_claims = yes
+	# destroy_if_invalid_heir REMOVED 8 Aug: the camp lives on the TITLE, and a title that destroys
+	# itself the day its captain dies heirless takes the camp with it forever -- runtime script cannot
+	# build a new one. Succession is script's job now: see ln_company_changes_hands_effect.
+
+	ai_primary_priority = { add = @never_primary_score }
+}
+
+d_ln_ranger_06 = {
+	color = { 36 36 36 }
+	capital = c_castle_black
+
+	definite_form = yes
+	landless = yes
+	ruler_uses_title_name = no
+	no_automatic_claims = yes
+	# destroy_if_invalid_heir REMOVED 8 Aug: the camp lives on the TITLE, and a title that destroys
+	# itself the day its captain dies heirless takes the camp with it forever -- runtime script cannot
+	# build a new one. Succession is script's job now: see ln_company_changes_hands_effect.
+
+	ai_primary_priority = { add = @never_primary_score }
+}
+
+d_ln_ranger_07 = {
+	color = { 36 36 36 }
+	capital = c_castle_black
+
+	definite_form = yes
+	landless = yes
+	ruler_uses_title_name = no
+	no_automatic_claims = yes
+	# destroy_if_invalid_heir REMOVED 8 Aug: the camp lives on the TITLE, and a title that destroys
+	# itself the day its captain dies heirless takes the camp with it forever -- runtime script cannot
+	# build a new one. Succession is script's job now: see ln_company_changes_hands_effect.
+
+	ai_primary_priority = { add = @never_primary_score }
+}
+
+d_ln_ranger_08 = {
+	color = { 36 36 36 }
+	capital = c_castle_black
+
+	definite_form = yes
+	landless = yes
+	ruler_uses_title_name = no
+	no_automatic_claims = yes
+	# destroy_if_invalid_heir REMOVED 8 Aug: the camp lives on the TITLE, and a title that destroys
+	# itself the day its captain dies heirless takes the camp with it forever -- runtime script cannot
+	# build a new one. Succession is script's job now: see ln_company_changes_hands_effect.
+
+	ai_primary_priority = { add = @never_primary_score }
+}

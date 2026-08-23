@@ -1,0 +1,18 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the red sword of heroes.
+#
+# BOTH REFERENCES ARE TO ART AGOT ALREADY SHIPS, and both were checked on disk rather than assumed:
+#
+#   vs_red_rain.dds                exists in $A/gfx/interface/icons/artifact/ (one of 391 there). AGOT's own
+#                                  vs_red_rain_visuals is commented "#Not made yet" -- Red Rain is not placed
+#                                  anywhere in their game -- so nothing else in the playset is wearing it. A
+#                                  red blade for the red sword, and no collision.
+#   portrait_prop_blood_moon_entity is the 3D prop for Blood Moon, which IS placed in AGOT and therefore
+#                                  demonstrably renders. Red Rain's own entity carries the "not made yet"
+#                                  warning, so it was the wrong one to borrow even though the name matched.
+#
+# This is the same pattern this mod already uses for others_sword_visuals -- reference the dependency's art
+# rather than redistribute it.
+ln_lightbringer_visuals = {
+	icon = "vs_red_rain.dds"
+	asset = portrait_prop_blood_moon_entity
+}

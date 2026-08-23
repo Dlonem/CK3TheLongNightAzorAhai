@@ -1,0 +1,44 @@
+﻿# The Long Night+ — override of AGOT's ai_can_valid_to_create_laamp_trigger.
+# The Others and their wights must NEVER become independent landless adventurers: they remain
+# bound to the Night King. We copy AGOT's definition verbatim (00_laamp_triggers.txt) and append
+# an exclusion for other_trait / wight_trait. Our mod loads after AGOT, so this definition wins.
+# NOTE: if AGOT changes the base trigger, re-sync this copy.
+ai_can_valid_to_create_laamp_trigger = {
+	save_temporary_scope_as = char_temp
+	OR = {
+		# General checking.
+		NOT = { has_global_variable_list = laamps_tally }
+		global_variable_list_size = {
+			name = laamps_tally
+			value < max_desired_laamps_value
+		}
+		# Player-relevant.
+		any_player = {
+			OR = {
+				is_close_or_extended_family_of = scope:char_temp
+				is_consort_of = scope:char_temp
+				has_important_relationship_with_character_trigger = { CHARACTER = scope:char_temp }
+				is_allied_in_war = scope:char_temp
+				is_allied_to = scope:char_temp
+				is_at_war_with = scope:char_temp
+			}
+		}
+		# Encourage legitimists.
+		AND = {
+			any_claim = { tier >= tier_kingdom }
+			global_variable_list_size = {
+				name = laamps_tally
+				value < {
+					value = max_desired_laamps_value
+					multiply = 1.25
+				}
+			}
+		}
+	}
+	agot_can_be_ruler = yes
+	# The Long Night+: dead men and Others do not go wandering — they serve the Night King.
+	NOR = {
+		has_trait = other_trait
+		has_trait = wight_trait
+	}
+}

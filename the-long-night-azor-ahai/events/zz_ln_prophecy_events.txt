@@ -1,0 +1,326 @@
+﻿namespace = ln_prophecy
+
+# AGOT: The Long Night & Azor Ahai -- being named.
+#
+# THE DESIGN RULE FOR THIS WHOLE FILE: nobody in it knows whether they are right. Not the priest, not the witch,
+# not the greenseer, and not the player. The hidden truth (global ln_prophecy_is_true) is never read here. A red
+# priest names a man because the flames showed him something and because he wants it to be true, and those two
+# reasons are not separable from inside his own head.
+#
+# Refusing is always available and is never the worse option. A man who says "I am not your prince" in front of
+# his own hall is doing something braver than accepting, and the mod should not punish it -- it should simply
+# leave him unmarked, and let somebody else be marked instead.
+
+# ══ ln_prophecy.1 -- FAVORED ═══════════════════════════════════════════════════════════════════════════════
+ln_prophecy.1 = {
+	type = character_event
+	title = ln_prophecy.1.t
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { ln_has_red_priest_trigger = yes }
+				desc = ln_prophecy.1.desc.priest
+			}
+			# 1.0.11 -- THIS WAS GATED ON THE WRONG DEED. .desc.self reads "The dreams do not come as
+			# prophecy. They come as memory" -- that is DRAGON DREAMS, the same phrasing
+			# ln_prophecy.10.deed.dreams uses. Greensight's own mirror text is "You see through the
+			# weirwoods." So a dragon-dreamer, who by the fiction knew it himself, was falling through to
+			# the priest/greenseer/witch variants where somebody else has to come and tell him.
+			# Dragon dreams added rather than swapped: the greensight case is unchanged from what shipped,
+			# and .desc.greenseer cannot cover a self-greenseer -- it is written as someone ARRIVING
+			# ("The one who sees came to you"). A dedicated weirwood variant is the better fix and wants
+			# new English and Russian copy; this is the strict improvement that costs none.
+			triggered_desc = {
+				trigger = {
+					OR = {
+						ln_has_deed_dragon_dreams_trigger = yes
+						ln_has_deed_greensight_trigger = yes
+					}
+				}
+				desc = ln_prophecy.1.desc.self
+			}
+			triggered_desc = {
+				trigger = {
+					any_courtier_or_guest = { has_trait = greensight }
+				}
+				desc = ln_prophecy.1.desc.greenseer
+			}
+			desc = ln_prophecy.1.desc.witch
+		}
+	}
+	theme = faith
+	override_background = { reference = temple }
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { character = scope:ln_speaker  animation = personality_zealous }
+
+	# 11 Aug -- azor_ahai_reborn added for the same reason as ln_prophecy.2: it is level 3 of the same
+	# trait group, so a man who slew the Night King without ever being named could be offered the LOWEST
+	# rung every year for the rest of his life, and add_trait could never close it. Reads absurdly, too.
+	trigger = {
+		ln_meets_favored_threshold_trigger = yes
+		NOT = { has_trait = favored_by_rhllor }
+		NOT = { has_trait = chosen_by_rhllor }
+		NOT = { has_trait = azor_ahai_reborn }
+		NOT = { has_character_flag = ln_refused_the_name }
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+
+		# 1.0.11 -- SCOPES, AND A FACE.
+		# The rewritten loc names the speaker rather than saying "your priest". AGOT averages 28.7 named
+		# character references per 1,000 words of event text; this file had none, which is what players
+		# meant by "vague". These must be saved here or the named variants render blank.
+		ln_save_priest_scope_effect = yes
+		ln_save_greenseer_scope_effect = yes
+
+		# And somebody has to be IN the event. This event declared no portrait of any kind, which is why
+		# the frame was empty whichever variant won. scope:ln_speaker is ALWAYS set: the priest, else a
+		# greenseer of the court, else the woods witch of .desc.witch, created so the fallback has a face
+		# instead of an empty chair.
+		if = {
+			limit = { exists = scope:ln_priest }
+			scope:ln_priest = { save_scope_as = ln_speaker }
+		}
+		else_if = {
+			limit = { exists = scope:ln_greenseer }
+			scope:ln_greenseer = { save_scope_as = ln_speaker }
+		}
+		else = {
+			# A woods witch, not a courtier. Culture and faith must NOT be inherited from root -- the first
+			# build did that and produced a High Valyrian woods witch of the Faith of the Seven, which is
+			# nonsense.
+			#
+			# 1.0.12 -- BUT "LEAVE THEM UNSET AND THE ENGINE READS THE SURROUNDING WORLD" WAS WRONG, and the
+			# engine had been saying so every time this fired. From the 18 Aug run, on this exact line:
+			#     Error: create_character effect [ Invalid/missing location or employer ]
+			#     PostValidate of effect 'create_character' returned false
+			# With no location and no employer there is no surrounding world to read FROM, so the call did not
+			# half-work -- it did not run at all. The cost was never a plain face: scope:ln_speaker never
+			# existed, so the set_variable = { name = ln_namer } below never landed either, and ln_prophecy.2
+			# and .3 could not bring the same person back. That arc is the entire point of the 1.0.11a rewrite,
+			# and for every character with neither a red priest nor a greenseer it has been quietly broken.
+			#
+			# The world is named now rather than guessed at. root.location is the province the character is
+			# standing in and exists for landed and landless alike -- vanilla's own idiom, e.g.
+			# events/activities/chariot_race_activity/chariot_race_ongoing_events.txt:2797 -- and its culture and
+			# faith are the LOCAL ones, which is what "from the surrounding world" was always meant to be.
+			# dynasty = none because a woods witch with a house is a different character entirely.
+			# STILL WORTH EYEBALLING IN GAME ONCE: confirm the witch who turns up in the North reads as a
+			# northerner, and not as whatever the province data made strange.
+			create_character = {
+				location = root.location
+				culture = root.location.culture
+				faith = root.location.faith
+				dynasty = none
+				gender = female
+				age = { 55 75 }
+				save_scope_as = ln_speaker
+			}
+		}
+
+		# ── THE SAME FACE COMES BACK ──────────────────────────────────────────────────────────────────
+		# Whoever names the claimant here is remembered ON the claimant, so ln_prophecy.2 and .3 can
+		# bring the SAME person back rather than introducing a fresh stranger each time. That is what
+		# turns three standalone events into one arc: this names you, .2 is the realm agreeing with
+		# them, .3 is this same person losing their nerve about it.
+		# A variable, not a scope -- scopes do not survive past the event that saved them.
+		set_variable = { name = ln_namer  value = scope:ln_speaker }
+	}
+
+	# Let it be said.
+	option = {
+		name = ln_prophecy.1.a
+		ai_chance = {
+			base = 30
+			modifier = { add = 25  has_trait = ambitious }
+			modifier = { add = 20  has_trait = zealous }
+			modifier = { add = 15  has_trait = arrogant }
+			modifier = { add = 10  has_trait = brave }
+		}
+		ln_name_favored_effect = yes
+		add_piety = medium_piety_gain
+	}
+
+	# Say nothing either way. The most honest answer available and the one that keeps the most doors open.
+	option = {
+		name = ln_prophecy.1.b
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = calm }
+			modifier = { add = 15  has_trait = patient }
+			modifier = { add = 10  has_trait = paranoid }
+			modifier = { add = 10  has_trait = humble }
+		}
+		ln_name_favored_effect = yes
+		add_character_flag = ln_named_quietly
+	}
+
+	# Refuse it, out loud. Sets a flag that stops the naming being re-offered for a generation -- a man who has
+	# publicly denied it does not get asked again next spring.
+	option = {
+		name = ln_prophecy.1.c
+		ai_chance = {
+			base = 25
+			modifier = { add = 25  has_trait = humble }
+			modifier = { add = 20  has_trait = cynical }
+			modifier = { add = 10  has_trait = craven }
+		}
+		add_character_flag = { flag = ln_refused_the_name  years = 25 }
+		add_prestige = minor_prestige_gain
+	}
+}
+
+# ══ ln_prophecy.2 -- CHOSEN ════════════════════════════════════════════════════════════════════════════════
+ln_prophecy.2 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_prophecy.2.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_global_variable = ln_a_chosen_exists }
+				desc = ln_prophecy.2.desc.rival
+			}
+			desc = ln_prophecy.2.desc.first
+		}
+	}
+	theme = faith
+	override_background = { reference = agot_frozen_forest }
+
+	# 10 Aug -- WORKSHOP REPORT FROM FAITHLESS: "Is the 'The Prince That Was Promised' event supposed to happen
+	# repeatedly? I've had it crop up several times and it's quite laggy when it does."
+	#
+	# It was not, and this missing line is why. Option b below sets ln_refused_the_name for twenty-five years,
+	# and NOTHING READ IT. The sibling rung has the check -- ln_prophecy.1's trigger carries
+	# `NOT = { has_character_flag = ln_refused_the_name }` -- and this one was written without it. So refusing
+	# the Chosen name set a flag into the void, the threshold trigger was still true on the next pulse, and the
+	# card came straight back. Forever, as a FULLSCREEN event, which is the lag he is describing: it is not the
+	# script being slow, it is a fullscreen card being built over and over.
+	#
+	# Refusing is supposed to cost you the offer for a generation. Now it does.
+	#
+	# 11 Aug -- AND THE 1.0.4a FIX ONLY CLOSED THE REFUSE PATH. Faithless again, on 1.0.4a: "I'm selecting
+	# the FIRST option, and it still pops up again later on. My character's got the Favored trait, if that
+	# matters." It mattered, and it was the whole answer. immastar23, same day: "Im also still getting the
+	# event yearly."
+	#
+	# ACCEPTING is supposed to close this card by granting chosen_by_rhllor -- which is level 2 of trait
+	# group rhllor_champion, while favored_by_rhllor is level 1. A bare add_trait does not promote a man
+	# who already holds another rung of the same group, so he kept Favored, never gained Chosen, went on
+	# passing this trigger, and the yearly pulse rebuilt the fullscreen card every year forever. Faithless
+	# still having the Favored trait after accepting IS the proof; see ln_name_chosen_effect for the fix
+	# to the promotion itself.
+	#
+	# THE TRAIT IS NO LONGER THE GUARD. The flag is -- set the moment the name is accepted, whether or not
+	# the trait landed. Every path into this event passes through here, so this closes all of them.
+	trigger = {
+		ln_meets_chosen_threshold_trigger = yes
+		NOT = { has_trait = chosen_by_rhllor }
+		NOT = { has_trait = azor_ahai_reborn }
+		NOT = { has_character_flag = ln_refused_the_name }
+		NOT = { has_character_flag = ln_accepted_the_chosen_name }
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+
+		# 1.0.11 -- bring back whoever named this claimant in ln_prophecy.1, so the arc has one face.
+		# Guarded on exists: a namer can die, and a variable pointing at a pruned character resolves to
+		# nothing, which would blank both the portrait and every [ln_speaker.*] reference in the text.
+		if = {
+			limit = { exists = var:ln_namer }
+			var:ln_namer = { save_scope_as = ln_speaker }
+		}
+	}
+
+	option = {
+		name = ln_prophecy.2.a
+		ai_chance = {
+			base = 55
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = 15  has_trait = brave }
+			modifier = { add = 15  has_trait = zealous }
+		}
+		ln_name_chosen_effect = yes
+		add_piety = major_piety_gain
+	}
+
+	# Refusing at THIS rung is a different act to refusing at the first. You are not declining a compliment any
+	# more; you are telling a faith that has organised itself around you that it has the wrong man.
+	option = {
+		name = ln_prophecy.2.b
+		ai_chance = {
+			base = 45
+			modifier = { add = 30  has_trait = humble }
+			modifier = { add = 20  has_trait = honest }
+			modifier = { add = 10  has_trait = craven }
+		}
+		add_character_flag = { flag = ln_refused_the_name  years = 25 }
+		add_prestige = major_prestige_gain
+		add_piety = medium_piety_loss
+	}
+}
+
+# ══ ln_prophecy.3 -- THE DOUBT ═════════════════════════════════════════════════════════════════════════════
+# Fires when a named man's deed count has fallen back below the threshold -- he sold the sword, the dragon died,
+# the artifact was taken off his corpse and given back to him wrong. The priest who named him has noticed.
+ln_prophecy.3 = {
+	type = character_event
+	title = ln_prophecy.3.t
+
+	# 1.0.11 -- scopes for the rewritten loc. Without these the named variants render blank.
+	immediate = {
+		ln_save_priest_scope_effect = yes
+
+		# The doubting voice is the priest if there still is one, otherwise whoever first named you.
+		if = {
+			limit = { exists = scope:ln_priest }
+			scope:ln_priest = { save_scope_as = ln_speaker }
+		}
+		else_if = {
+			limit = { exists = var:ln_namer }
+			var:ln_namer = { save_scope_as = ln_speaker }
+		}
+	}
+	desc = ln_prophecy.3.desc
+	theme = faith
+	left_portrait = { character = root  animation = skeptical }
+	right_portrait = { character = scope:ln_speaker  animation = worry }
+
+	trigger = {
+		has_trait = favored_by_rhllor
+		NOT = { has_trait = chosen_by_rhllor }
+		NOT = { ln_meets_favored_threshold_trigger = yes }
+	}
+
+	# Accept the correction. Losing it costs nothing but the thing itself, which is quite enough.
+	option = {
+		name = ln_prophecy.3.a
+		ai_chance = {
+			base = 45
+			modifier = { add = 25  has_trait = honest }
+			modifier = { add = 20  has_trait = humble }
+			modifier = { add = 10  has_trait = forgiving }
+		}
+		remove_trait = favored_by_rhllor
+		ln_the_world_forms_a_view_effect = yes   # 1.0.10b: un-named, so the opinion modifier comes off
+		remove_character_flag = ln_was_named
+		add_piety = minor_piety_gain
+	}
+
+	# Keep the name and dare anyone to take it. The trait stays; the piety does not.
+	option = {
+		name = ln_prophecy.3.b
+		ai_chance = {
+			base = 55
+			modifier = { add = 25  has_trait = ambitious }
+			modifier = { add = 20  has_trait = arrogant }
+			modifier = { add = 15  has_trait = wrathful }
+		}
+		add_piety = major_piety_loss
+		add_character_flag = ln_kept_the_name_anyway
+		add_dread = 10
+	}
+}

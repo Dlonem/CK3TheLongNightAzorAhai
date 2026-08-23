@@ -1,0 +1,38 @@
+﻿# AGOT: The Long Night & Azor Ahai -- how weak is "weak" for the Night's Watch?
+#
+# THE ABSOLUTE NUMBERS WERE A GUESS AND THOMAS ASKED THE RIGHT QUESTION: "does that transition actually happen
+# reasonably?" The honest answer was no idea. The old thresholds were 2,500 to fall and 4,000 to re-arm, invented
+# with no reference, and AGOT gives none -- it never checks Night's Watch strength anywhere, at any number.
+#
+# Two ways that guess fails, both silent:
+#   * if the Watch always musters more than 2,500, the catalyst never fires in any game, ever
+#   * if it starts BELOW 2,500, the catalyst fires once in year one and never again, because re-arming needs
+#     4,000 and it will never see 4,000. A one-off +3 at game start dressed up as a decline.
+#
+# So the bar is now the Watch's own history. ln_watch_peak records the strongest it has ever been in this world;
+# the catalyst fires when it falls to a fraction of that. Self-calibrating, correct at any scale AGOT ships or
+# any submod changes it to, and "dwindles" finally means dwindling rather than "is smaller than a number I made
+# up". Relative strength comparison is also AGOT's own idiom -- see eighty_percent_of_max_military_strength in
+# 00_diarchy_scripted_triggers.txt.
+
+# It has lost two fifths of its best strength. The Watch is visibly failing.
+ln_watch_weak_floor_value = {
+	value = global_var:ln_watch_peak
+	multiply = 0.6
+}
+
+# A Watch deliberately rebuilt after a previous Long Night has to fall much further before anyone worries --
+# the realm chose to restore it, and undoing that takes real neglect. This is the only place
+# ln_nights_watch_restored is read, and it is why the Question of the North still matters a century later
+# under the recurrence rule.
+ln_watch_collapse_floor_value = {
+	value = global_var:ln_watch_peak
+	multiply = 0.4
+}
+
+# Back near its best. Re-arms the trap; awards nothing. The gap between this and the floor is the hysteresis
+# band -- a Watch oscillating inside it hands out no points at all, which is the entire point of the design.
+ln_watch_recovered_value = {
+	value = global_var:ln_watch_peak
+	multiply = 0.85
+}

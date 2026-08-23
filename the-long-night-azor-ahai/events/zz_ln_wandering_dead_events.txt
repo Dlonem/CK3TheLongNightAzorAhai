@@ -1,0 +1,146 @@
+﻿namespace = ln_wandering_dead
+
+# AGOT: The Long Night & Azor Ahai -- a band of the dead wanders into your land.
+#
+# Mid-invasion pacing. Fires while the front is within three county-rings, on a cooldown, for landed rulers only.
+# Deliberately BRANCHED WIDE rather than deep: what you can do about it depends on what you are -- a fighter, a
+# commander, a coward, or a man with a red priest in his hall -- and each road has its own consequence.
+#
+# This is also where the first prophecy deed is seeded. Facing the dead in person and living is one of the four
+# deeds that can mark a man as Azor Ahai reborn (ln_deed_survived_the_others). The flag is hidden, as all deeds are.
+
+ln_wandering_dead.1 = {
+	type = character_event
+	title = ln_wandering_dead.1.t
+	desc = ln_wandering_dead.1.desc
+	theme = death
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		ln_wandering_dead_target_trigger = yes
+	}
+
+	immediate = {
+		add_character_flag = { flag = ln_wandering_dead_cooldown  years = 8 }
+		play_music_cue = "mood_the_others"
+	}
+
+	# Ride out yourself. The only road that can mark you.
+	option = {
+		name = ln_wandering_dead.1.a
+		ai_chance = {
+			base = 25
+			modifier = { add = 35  has_trait = brave }
+			modifier = { add = 10  has_trait = arrogant }
+			modifier = { add = -30  has_trait = craven }
+		}
+		trigger = {
+			prowess >= 8
+			is_available_healthy_adult = yes
+		}
+		random_list = {
+			# you cut them down and the story travels
+			70 = {
+				modifier = { add = 20  prowess >= 14 }
+				modifier = { add = 15  has_trait = brave }
+				modifier = { add = 10  any_character_artifact = { has_variable = valyrian_steel } }
+				add_prestige = major_prestige_gain
+				add_character_flag = ln_deed_survived_the_others
+				add_character_modifier = { modifier = ln_faced_the_dead_modifier  years = 10 }
+			}
+			# you win, but it costs you
+			25 = {
+				modifier = { add = 15  prowess < 12 }
+				modifier = { add = 10  has_trait = craven }
+				add_prestige = minor_prestige_gain
+				add_character_flag = ln_deed_survived_the_others
+				# NOTE: the obvious-sounding wound helper does not exist in CK3. increase_wounds_no_death_effect is vanilla's
+				# (game/common/scripted_effects/20_health_effects.txt) and can never kill outright.
+				increase_wounds_no_death_effect = { REASON = battle }
+			}
+			# it goes badly
+			10 = {
+				modifier = { add = 15  prowess < 10 }
+				modifier = { add = -8  has_trait = brave }
+				add_stress = medium_stress_impact_gain
+				# the full vanilla effect: kills ONLY if already at wound rank 3 -- a man who should not have gone.
+				increase_wounds_effect = { REASON = battle }
+			}
+		}
+	}
+
+	# Send the household. Safer for you, worse for them.
+	option = {
+		name = ln_wandering_dead.1.b
+		ai_chance = {
+			base = 40
+			modifier = { add = 15  has_trait = calm }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		random_list = {
+			60 = {
+				modifier = { add = 20  martial >= 14 }
+				add_prestige = minor_prestige_gain
+			}
+			40 = {
+				modifier = { add = 20  martial < 10 }
+				# somebody does not come back
+				random_courtier = {
+					limit = {
+						is_alive = yes
+						NOT = { this = root }
+						NOT = { has_trait = wight_trait }
+						is_landed = no
+					}
+					death = { death_reason = death_claimed_by_cold }
+				}
+			}
+		}
+	}
+
+	# Bar the gates and let them pass. Nobody dies. Everybody hears you did it.
+	option = {
+		name = ln_wandering_dead.1.c
+		ai_chance = {
+			base = 20
+			modifier = { add = 30  has_trait = craven }
+			modifier = { add = 20  has_trait = callous }
+			modifier = { add = 10  has_trait = cynical }
+		}
+		add_prestige = minor_prestige_loss
+		capital_county = {
+			change_development_level = -1
+		}
+		if = {
+			limit = { has_trait = craven }
+			add_stress = -10
+		}
+		else = {
+			add_stress = minor_stress_impact_gain
+		}
+	}
+
+	# Let your red priest meet them with fire. Only if you keep one.
+	option = {
+		name = ln_wandering_dead.1.d
+		ai_chance = {
+			base = 15
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = 10  has_trait = trusting }
+		}
+		trigger = {
+			exists = cp:councillor_court_chaplain
+			cp:councillor_court_chaplain = { has_trait = red_priest }
+		}
+		add_piety = major_piety_gain
+		cp:councillor_court_chaplain = {
+			add_prestige = minor_prestige_gain
+		}
+		add_character_flag = ln_deed_survived_the_others
+	}
+}

@@ -1,0 +1,65 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the hidden clock on the Cold Winds.
+# Deliberately never shown to the player. See zz_ln_winter_clock_effects.txt.
+
+# How many years the Cold Winds have been blowing.
+ln_winter_elapsed_value = {
+	value = 0
+	if = {
+		limit = { exists = global_var:ln_winter_started }
+		add = current_year
+		subtract = global_var:ln_winter_started
+	}
+}
+
+# How many are left on the rolled clock. Used only to floor the sighting effect so the dark can never be pulled
+# closer than five years out.
+ln_winter_remaining_value = {
+	value = 0
+	if = {
+		limit = { exists = global_var:ln_winter_target }
+		add = global_var:ln_winter_target
+	}
+	subtract = ln_winter_elapsed_value
+}
+
+# The target that puts the clock at exactly five remaining years. ln_the_dark_comes_sooner_effect resets the
+# target to this when a bite would have carried the clock under its floor -- the old code checked the floor
+# BEFORE subtracting and so could sail straight through it (remaining 6, bite 6, warning gone).
+ln_winter_floor_target_value = {
+	value = ln_winter_elapsed_value
+	add = 5
+}
+
+# SIXTY PER CENT OF THE ROLL. Stamped into global_var:ln_winter_floor the month the Cold Winds begin, while
+# ln_winter_target is still the number that was rolled -- the bites mutate the target itself, so the original
+# is gone a decade later unless it is written down.
+#
+# WHY A CAP AT ALL. ln_the_dark_comes_sooner_effect is rate-limited to one bite every four years, which sounded
+# sufficient and is not: a 45-year warning takes eleven bites, and a busy world has eleven bad years in it
+# easily. Thomas's 10 Aug run reached the Long Night with the warning ground down to its five-year floor, which
+# means the Cold Winds phase -- the entire point of which is "you have time, and you do not know how much" --
+# delivered no time at all. Sightings should be able to pull the dark in by a third. They should not be able to
+# delete a generation.
+ln_winter_erosion_floor_value = {
+	value = 0
+	if = {
+		limit = { exists = global_var:ln_winter_target }
+		add = { value = global_var:ln_winter_target  multiply = 0.6 }
+	}
+}
+
+# HOW MUCH EROSION IS LEFT IN THE BUDGET. Positive = the sightings may still take years off; zero or below =
+# the warning has been pulled in as far as it goes. Expressed as a value rather than comparing the two globals
+# directly in the trigger, because global-against-global comparison has no precedent anywhere in this mod or in
+# AGOT, and a comparison the engine declines to make is a gate that silently stops gating.
+ln_winter_erosion_headroom_value = {
+	value = 0
+	if = {
+		limit = { exists = global_var:ln_winter_target }
+		add = global_var:ln_winter_target
+	}
+	if = {
+		limit = { exists = global_var:ln_winter_floor }
+		subtract = global_var:ln_winter_floor
+	}
+}

@@ -1,0 +1,15 @@
+﻿# AGOT: The Long Night & Azor Ahai -- turning a ruin back into a castle.
+# Province scope. Split out of ln_rebuild_the_castle_decision because that decision now reaches a ruin by two
+# different routes (a county keeper's holdings, or a baron keeper's single barony) and the work is identical.
+#
+# The ruin BUILDINGS have to come off before the holding can be anything else -- otherwise the province keeps
+# rendering as rubble on a castle that works. Guarded individually because remove_building for a building that
+# is not there is an error, and this runs on any of the nineteen.
+ln_raise_the_walls_effect = {
+	if = { limit = { has_building = ruin_renowned_01 }  remove_building = ruin_renowned_01 }
+	if = { limit = { has_building = large_ruin_01 }     remove_building = large_ruin_01 }
+	if = { limit = { has_building = medium_ruin_01 }    remove_building = medium_ruin_01 }
+	if = { limit = { has_building = small_ruin_01 }     remove_building = small_ruin_01 }
+
+	set_holding_type = castle_holding
+}

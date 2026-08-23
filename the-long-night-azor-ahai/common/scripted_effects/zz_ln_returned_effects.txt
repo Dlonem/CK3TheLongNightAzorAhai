@@ -1,0 +1,85 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what the fire keeps.
+#
+# See the block comment above resurrected_by_rhllor in common/traits/invasions_traits.txt for the design. The
+# short version: Beric Dondarrion came back six times and each time he was a little less, and this is that.
+
+# Root = the man who has just been brought back. Called from ln_last_kiss_effect and from the blessing chain,
+# so both routes escalate the same way and neither has to know the count.
+#
+# THE ORDER MATTERS. The physical price is decided from the track value BEFORE the XP is added, so the first
+# return reads 0 and takes the scar, the second reads 25 and takes the eye, and so on. Reading it after would
+# skip a rung every time.
+#
+# Every wound is guarded on not already having it -- add_trait for a trait a character already carries is an
+# error, and a man can perfectly well have lost an eye before he ever met a red priest.
+ln_the_fire_takes_something_effect = {
+	if = {
+		# THE FIRST TIME. The wound that killed you closes, and does not close properly.
+		limit = { NOT = { has_trait = resurrected_by_rhllor } }
+		add_trait = resurrected_by_rhllor
+		if = {
+			limit = { NOT = { has_trait = scarred } }
+			add_trait = scarred
+		}
+	}
+	else_if = {
+		# THE SECOND. An eye. It is always an eye, in every version of the story anyone tells.
+		limit = { has_trait_xp = { trait = resurrected_by_rhllor  track = returned  value < 50 } }
+		if = {
+			limit = { NOT = { has_trait = one_eyed } }
+			add_trait = one_eyed
+		}
+		else_if = {
+			limit = { NOT = { has_trait = disfigured } }
+			add_trait = disfigured
+		}
+	}
+	else_if = {
+		# THE THIRD. Something that changes how you walk into a room.
+		limit = { has_trait_xp = { trait = resurrected_by_rhllor  track = returned  value < 75 } }
+		random_list = {
+			50 = {
+				trigger = { NOT = { has_trait = one_legged } }
+				add_trait = one_legged
+			}
+			50 = {
+				trigger = { NOT = { has_trait = disfigured } }
+				add_trait = disfigured
+			}
+			25 = {
+				trigger = { NOT = { has_trait = maimed } }
+				add_trait = maimed
+			}
+		}
+	}
+	else = {
+		# THE FOURTH AND EVERY ONE AFTER. There is not much left to take.
+		if = {
+			limit = { NOT = { has_trait = maimed } }
+			add_trait = maimed
+		}
+	}
+
+	add_trait_xp = {
+		trait = resurrected_by_rhllor
+		track = returned
+		value = 25
+	}
+
+	# COMING BACK IS ITSELF A DEED, and Thomas is right that the second one should start turning heads:
+	# "if it gets to level two, they get named or something." ln_check_naming_effect reads the deed count,
+	# which ln_has_deed_returned_trigger already contributes to -- so the naming check simply runs again here,
+	# at the one moment in a man's life when a red priest is guaranteed to be standing over him.
+	ln_check_naming_effect = yes
+
+	# AND SOMETIMES THE FIRE LEAVES SOMETHING BEHIND -- Thomas, 9 Aug: "maybe there's a little bit
+	# more magic in their body... they feel stronger, but become callous... not guaranteed." One roll
+	# per return, never promised, never announced in advance. The event does the rest.
+	random_list = {
+		35 = {
+			trigger = { NOT = { has_character_modifier = ln_fire_in_the_blood_modifier } }
+			trigger_event = { id = ln_risen.12  days = { 30 120 } }
+		}
+		65 = { }
+	}
+}

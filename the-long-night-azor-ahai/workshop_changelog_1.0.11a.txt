@@ -1,0 +1,18 @@
+[h1]Update 1.0.11a[/h1]
+
+A localization sweep across the three cards that mark the turn of the age, plus the prophecy events that name you.
+
+[h2]The three cards now know who you are[/h2]
+[list]
+[*][b]All three fullscreen cards are written for your place in the world.[/b] The card in the long summer, the one when Winter Is Coming, and the one when the Long Night begins each now have separate text for the Night's Watch, the free folk, the North, Targaryen blood, followers of R'hllor, landed lords, and landless adventurers. Most of these events previously had two or three variants, and everyone else shared one generic version.
+[*][b]The long summer card and the Winter Is Coming card change their backdrop to match[/b] — the Wall, the lands beyond it, a heart tree, the Dragonpit, a night fire, a council chamber, or open farmland. The Long Night cards keep one image throughout; by then the answer is the same everywhere.
+[*][b]Landless adventurers are no longer told what "my maester" said.[/b] An adventurer can carry a titular title, which was quietly handing them a landed lord's text.
+[/list]
+
+[h2]Being named[/h2]
+[list]
+[*][b]The priest who names you is a person now, with a name and a portrait.[/b] The same one comes back when the realm starts agreeing with them, and again when they begin to have doubts. These events previously had no portraits at all.
+[*][b]A Red Priestess on your council counts as your red priest.[/b] The check required a specific trait most appointed chaplains never carry, so the game could show you a Red Priestess on your council while the mod insisted you had none. This affects the whole naming ladder, the pledge and conversion events, and the Lightbringer checks.
+[*][b]The naming events say plainly what is being claimed[/b], and which of the nine marks were counted to get there.
+[*]A prophecy event was showing the wrong text to characters with dragon dreams.
+[/list]

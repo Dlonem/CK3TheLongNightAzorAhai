@@ -1,0 +1,35 @@
+﻿# AGOT: The Long Night & Azor Ahai -- being told what you are, when nobody told you.
+#
+# THOMAS, ON HIS FIRST CHOSEN EVENT: "It's ln_chosen.5 because I have the Chosen trait. I just added it to
+# myself in the ruler designer. This is the first event that I received. I have no idea who it's talking about,
+# what this event's necessarily about... this seems like a part two of an event that I'm receiving for the
+# first time."
+#
+# He is exactly right and the cause is structural rather than a bug in any one card. The three chains assume
+# you arrived through the naming -- ln_prophecy.1 or ln_prophecy.2, which explain what has happened to you and
+# set the scene the rest of the chain builds on. There are three ways to hold a champion trait WITHOUT ever
+# having seen those:
+#
+#   * the ruler designer, which is how Thomas got it and how most people will try the mod
+#   * ln_grant_historical_resurrections_effect, which hands it to Beric and Lady Stoneheart at game start
+#   * inheriting into a character who was named before you started playing him
+#
+# In all three the player walks into the middle of a story he was never told the beginning of. So: one card,
+# once, that says what the trait is and what is going to start happening. Not a lore dump -- an orientation.
+#
+# ln_was_named is set by ln_name_favored_effect and ln_name_chosen_effect, so a player who came in the front
+# door never sees this.
+
+ln_check_entry_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			is_adult = yes
+			ln_is_a_champion_of_rhllor_trigger = yes
+			NOT = { has_character_flag = ln_was_named }
+			NOT = { has_character_flag = ln_knows_what_he_is }
+		}
+		add_character_flag = ln_knows_what_he_is
+		trigger_event = { id = ln_prophecy.30  days = { 3 30 } }
+	}
+}

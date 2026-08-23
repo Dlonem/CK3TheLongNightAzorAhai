@@ -1,0 +1,98 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- lore concepts and struggle phase parameters.
+ # Concept loc keys are game_concept_<key> and game_concept_<key>_desc. Aliases do NOT need their own keys.
+
+ # ── LORE CONCEPTS ───────────────────────────────────────────────────────────────────────────────────────────
+ game_concept_wall:0 "the Wall"
+ game_concept_wall_desc:0 "Seven hundred feet of ice running a hundred leagues from the Bay of Seals to the Gorge, raised eight thousand years ago against something the histories have stopped being specific about.\n\nIt is held by the [nights_watch|E], and it has been held by fewer of them every century. Nineteen castles were built along it. Most have stood empty since before anyone now living was born."
+
+ game_concept_the_others:0 "the Others"
+ game_concept_the_others_desc:0 "Pale things that walk out of the cold, kill with blades that shatter iron, and raise what they kill.\n\nThe maesters of the Citadel have spent centuries establishing that they are a story told to frighten children. The [free_folk|E], who live where they are, do not appear to have been consulted."
+
+ game_concept_wight:0 "wight"
+ game_concept_wight_desc:0 "A corpse raised by [the_others|E] and set walking.\n\nA $game_concept_wight$ feels nothing, tires never, and fights badly — its danger is entirely in the arithmetic. Every man who falls against them stands up on the other side, so a battle you lose costs you twice and a battle you win still costs you once.\n\nFire stops them. Very little else does."
+
+ game_concept_nights_watch:0 "the Night's Watch"
+ game_concept_nights_watch_desc:0 "The order sworn to hold [wall|E]. Its brothers take no wife, hold no land, father no children, and wear no crown — and serve until they die.\n\nIt was twenty thousand strong once. It is not now. The realm sends it thieves and rapers and younger sons, and then stops thinking about it, which has been the arrangement for a very long time and has never yet been tested."
+
+ game_concept_free_folk:0 "the free folk"
+ game_concept_free_folk_desc:0 "The peoples living north of [wall|E] — Thenns and clansmen, cave dwellers, river folk, the hundred names the maps do not bother with. South of the Wall they are called wildlings, which is not what they call themselves.\n\nThey kneel to no one, which the Seven Kingdoms find offensive, and they have been running south in increasing numbers, which the Seven Kingdoms find inconvenient. Nobody in the south has yet asked what they are running from."
+
+ game_concept_dragonglass:0 "dragonglass"
+ game_concept_dragonglass_desc:0 "Volcanic glass. Obsidian, to a maester. The children of the forest called it frozen fire.\n\nIt is brittle, it is impractical, it will not hold an edge against steel — and it kills [the_others|E], which nothing else common does. There is a great deal of it under Dragonstone, and almost nobody has ever had a reason to dig it up."
+
+ game_concept_valyrian_steel:0 "Valyrian steel"
+ game_concept_valyrian_steel_desc:0 "Spell-forged blades from a freehold four hundred years dead. Lighter than steel, sharper than steel, and impossible to make now that the men who knew how are ash.\n\nThere are perhaps two hundred such blades left in the world, most of them heirlooms of great [houses|E] who use them for ceremony. They also, as it turns out, kill [the_others|E]."
+
+ # ── STRUGGLE PHASE PARAMETERS ───────────────────────────────────────────────────────────────────────────────
+ # These are the bullet lines in each phase's effects tooltip. Struggle parameters are script-read only -- they
+ # have no engine behaviour of their own -- so these describe what the phase's MODIFIERS do, plus the few that
+ # our own code branches on. Nothing here promises an effect that is not actually applied somewhere.
+
+ # The Long Summer
+ ln_the_dark_is_distant:0 "The dark is a long way off, and getting closer"
+ ln_the_dark_is_a_story:0 "Beyond the Narrow Sea it is a story told to children, and not a very good one"
+ ln_summer_peace:0 "Long years of quiet: the North picks fewer fights and raiders move slowly"
+ ln_insular_in_good_times:0 "Comfortable people close ranks — warmth for your own, coldness for everyone else"
+ ln_the_gods_are_quiet:0 "Nobody prays hard when the harvest is good"
+
+ # The Cold Winds Rise
+ ln_the_dark_is_coming:0 "The dark is coming, and everyone north of the Neck knows it"
+ ln_the_muster_begins:0 "Every man who can hold a spear is being counted, and the walls are being manned"
+ ln_southern_disbelief:0 "The southern realms go on squabbling, and will have cause to regret it"
+ ln_old_enemies_talk:0 "Kneelers and [free_folk|E] have started speaking to each other"
+ ln_prayers_multiply:0 "Every sept, grove and temple is full, and the faithful come armed"
+
+ # The Long Night
+ ln_the_dark_is_here:0 "The dark is here"
+ ln_wars_of_the_living:0 "Every war fought now is fought in the cold, and the dead take the leavings"
+ ln_every_spear_counts:0 "Those who live with the cold have got very good at one thing and worse at all the rest"
+ ln_the_living_stand_together:0 "Old grievances stop mattering when the enemy does not care who you were"
+ ln_the_red_god_rises:0 "The night is dark and full of terrors, and the man saying so is no longer laughed at"
+ ln_essos_profits:0 "Somewhere across the water, someone is selling grain and steel to the desperate"
+
+ # The Dawn
+ ln_the_dark_has_passed:0 "The dark has passed"
+ ln_no_stomach_for_war:0 "Nobody who was there wants another war"
+ ln_bled_together:0 "They bled beside each other, and for a while that is worth more than any treaty"
+ ln_reckoning_of_faiths:0 "Every faith is arguing about which of them was right, and all of them are recruiting"
+
+# Alias loc keys. In CK3 every alias on a game concept needs its OWN game_concept_<alias>
+# name key - the parent concept's key does not cover them, and a bare [alias|E] renders the
+# raw key instead. Descriptions point back at the parent so there is one source of truth.
+ game_concept_the_wall:0 "the Wall"
+ game_concept_the_wall_desc:0 "$game_concept_wall_desc$"
+ game_concept_walls:0 "Walls"
+ game_concept_walls_desc:0 "$game_concept_wall_desc$"
+ game_concept_others:0 "Others"
+ game_concept_others_desc:0 "$game_concept_the_others_desc$"
+ game_concept_white_walker:0 "White Walker"
+ game_concept_white_walker_desc:0 "$game_concept_the_others_desc$"
+ game_concept_white_walkers:0 "White Walkers"
+ game_concept_white_walkers_desc:0 "$game_concept_the_others_desc$"
+ game_concept_wights:0 "wights"
+ game_concept_wights_desc:0 "$game_concept_wight_desc$"
+ game_concept_the_nights_watch:0 "the Night's Watch"
+ game_concept_the_nights_watch_desc:0 "$game_concept_nights_watch_desc$"
+ game_concept_black_brothers:0 "black brothers"
+ game_concept_black_brothers_desc:0 "$game_concept_nights_watch_desc$"
+ game_concept_wildlings:0 "wildlings"
+ game_concept_wildlings_desc:0 "$game_concept_free_folk_desc$"
+ game_concept_beyond_the_wall:0 "beyond the Wall"
+ game_concept_beyond_the_wall_desc:0 "$game_concept_free_folk_desc$"
+ game_concept_obsidian:0 "obsidian"
+ game_concept_obsidian_desc:0 "$game_concept_dragonglass_desc$"
+ game_concept_the_dead:0 "the dead"
+ game_concept_the_dead_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_risen_dead:0 "risen dead"
+ game_concept_risen_dead_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_undead_infantry:0 "undead infantry"
+ game_concept_undead_infantry_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_long_night:0 "Long Night"
+ game_concept_long_night_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$"
+ game_concept_the_long_night:0 "the Long Night"
+ game_concept_the_long_night_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$"
+
+# Trait GROUP name, asked for whenever anything references the group rather than a rung.
+ trait_rhllor_champion:0 "Champion of R'hllor"

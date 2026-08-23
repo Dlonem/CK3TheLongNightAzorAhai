@@ -1,0 +1,35 @@
+﻿# AGOT: The Long Night & Azor Ahai -- struggle pulses.
+# on_actions = { } sub-lists, which merge. Never an `effect` block on a shared on_action.
+
+# WHY THE ONE-DAY DELAY. AGOT's btw_struggle has an on_join that fires fp2_struggle.004, and that event (both in
+# vanilla and in AGOT's edit of it) tests `any_character_struggle = { is_struggle_phase = struggle_btw_phase_X }`
+# WITHOUT filtering by struggle type. any_character_struggle walks EVERY struggle a character is in, so once our
+# struggle also exists it gets asked whether it is in a phase it has never heard of, and CK3 logs an error for
+# each miss -- 42 of them at game start. The check still returns the right answer; the log line is pure noise.
+# We cannot fix it at the source (AGOT files are reference-only, and copying their 200-line event into this mod
+# to add one filter would rot the moment they update it). So we simply arrive after their game-start join wave
+# has finished. Characters who join btw_struggle LATER can still trip it, but that is a handful over a campaign
+# instead of 42 in the first tick.
+ln_struggle_game_start = {
+	effect = {
+		# Stamps ln_is_a_ranger_title on the eight ranging companies. Has to happen before anybody can take
+		# the black as a ranger, and game start is the only moment that is guaranteed to be before everything.
+		ln_mark_ranger_titles_effect = yes
+
+		trigger_event = { id = ln_struggle.1  days = 1 }
+	}
+}
+
+# WAS ln_struggle_yearly_pulse, AND IT WAS ORPHANED. It was defined here, it looked like the yearly drip's
+# home, and no on_action anywhere in the mod listed it -- so it had never run once. A sub-list that nothing
+# references produces no error, no warning and no behaviour, which is exactly the failure this file was created
+# to prevent. Anything defined here must appear in zz_ln_00_hooks.txt or it does not exist.
+
+# Root = a playable character. The engine-driven half of both heartbeats -- see the block comment above
+# ln_struggle_yearly_work_effect. No `trigger` block: the gate is inside the work effect, because the trigger
+# would be re-evaluated for every playable character every year to reach the same answer.
+ln_struggle_clock_backstop = {
+	effect = {
+		ln_struggle_clock_backstop_effect = yes
+	}
+}

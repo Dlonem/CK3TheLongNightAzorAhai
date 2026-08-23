@@ -1,0 +1,53 @@
+﻿namespace = ln_struggle
+
+# AGOT: The Long Night & Azor Ahai -- struggle bootstrap.
+# Fired one day after game start from ln_struggle_game_start. See that on_action for why the delay exists.
+ln_struggle.1 = {
+	# No `type` field: vanilla's pattern for a rootless hidden event is scope = none + hidden = yes and
+	# nothing else (game/events/, 10 instances). `type = empty` is REJECTED by the parser -- Long Night+
+	# used it and it has been erroring since before the fork. character_event is also wrong here: these
+	# fire from struggle and story scopes with no character root.
+	scope = none
+	hidden = yes
+
+	immediate = {
+		ln_struggle_start_if_absent_effect = yes
+
+		# Start the yearly heartbeat. The monthly work is driven by the struggle's own on_monthly, which the
+		# 253 AC save proved is a real hook -- see the note on it in the struggle definition.
+		trigger_event = { id = ln_struggle.2  years = 1 }
+
+		# THE INTRODUCTION CARD IS NOT FIRED HERE, deliberately. At game start it read as a lore dump and
+		# implied the dark was imminent when it is a century out. It fires from ln_summer_year_tick_effect at
+		# the Long Summer's fortieth year -- the midpoint -- so it lands as the first cold draught rather than
+		# an announcement. Which is also why that year counter had to stop being gated behind the point drip:
+		# on the manual-invasion rule it never ticked, so the card could never come.
+	}
+}
+
+# ── THE HEARTBEATS ──────────────────────────────────────────────────────────────────────────────────────────
+# ONE self-perpetuating hidden event, yearly. It carries no logic of its own: it calls a gated work effect in
+# zz_ln_struggle_effects.txt, which is also called from yearly_playable_pulse.
+#
+# There used to be a monthly twin, ln_struggle.3, because it was not known whether a struggle's on_monthly hook
+# actually fires. It does -- ln_proof_on_monthly turned up in the 253 AC save -- so the twin is gone. Read the block comment above ln_struggle_yearly_work_effect for why every
+# heartbeat in this mod has two independent drivers -- the short version is that a clock that stops does not log
+# anything, and this project has lost more time to silence than to errors.
+#
+# The pattern itself is vanilla's, verified rather than assumed: game_rule.1012 re-fires itself with
+# `days = 365` from scope = none, and fp3_struggle.0001 with `years = { 3 5 }`. Sixteen rootless self-scheduling
+# events ship in the base game.
+#
+# NO `trigger` BLOCK ON EITHER. It is tempting to write `trigger = { exists = struggle:ln_long_night_struggle }`
+# and let the chain die when the struggle ends -- but a failed trigger kills the event, and the event is what
+# schedules the next one, so the chain would never come back. The ruins keep decaying and the aftermath keeps
+# running long after the Dawn ends the struggle under the "Once" rule. The work effects check for themselves.
+ln_struggle.2 = {
+	scope = none
+	hidden = yes
+
+	immediate = {
+		ln_struggle_yearly_work_effect = yes
+		trigger_event = { id = ln_struggle.2  years = 1 }
+	}
+}

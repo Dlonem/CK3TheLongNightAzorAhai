@@ -1,0 +1,106 @@
+﻿# AGOT: The Long Night & Azor Ahai -- CONSECRATION.
+# The second road to Lightbringer, and the one that does not need a forge. Design, the no-rename constraint
+# and the Dawn case are all written out in common/scripted_triggers/zz_ln_consecration_triggers.txt.
+#
+# WHY IT SITS BESIDE ln_forge_lightbringer_decision RATHER THAN INSIDE IT. Both close the same global and only
+# one of them can ever run in a world, so they could have been one decision with a branch. They are two because
+# they answer different questions: the forge asks "will you make the sword", this asks "will you make THIS
+# sword the sword". A player carrying Longclaw should see a decision about Longclaw, not a smithing decision
+# that happens to notice what he is holding.
+
+ln_consecrate_blade_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds" }
+
+	desc = ln_consecrate_blade_decision_desc
+	selection_tooltip = ln_consecrate_blade_decision_tt
+	confirm_text = ln_consecrate_blade_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 24
+
+	# 1.0.12b (Thomas, from the live run): "there's no gold cost." There is now. The rite is cheaper than the
+	# forge's 300 because no smith is hired and no steel is worked -- what is bought is the pyre, the offerings
+	# and the feast around it -- but it is not free, because nothing that matters is.
+	cost = { gold = 150 }
+
+	is_shown = {
+		ln_can_consecrate_trigger = yes
+		ln_carries_a_blade_to_consecrate_trigger = yes
+
+		# ONLY WHEN IT IS NEEDED, exactly as the forge is gated. Consecrating the red sword of heroes in a warm
+		# century is a man having an expensive dream, and this one is not even expensive.
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = {
+			OR = {
+				is_struggle_phase = ln_phase_cold_winds
+				is_struggle_phase = ln_phase_the_long_night
+			}
+		}
+	}
+
+	is_valid = {
+		is_available = yes
+		is_imprisoned = no
+
+		custom_description = {
+			text = ln_consecrate_needs_a_voice
+			ln_can_consecrate_trigger = yes
+		}
+
+		# THE PRICE, AND THERE ARE EXACTLY TWO. Either the star has already been paid -- Dawn, in the hands of
+		# the one it fell for -- or somebody the champion actually loves walks to the fire.
+		custom_description = {
+			text = ln_consecrate_needs_a_price
+			OR = {
+				AND = {
+					ln_carries_dawn_trigger = yes
+					has_character_flag = ln_deed_bleeding_star
+				}
+				AND = {
+					ln_has_a_beloved_to_give_trigger = yes
+					any_equipped_character_artifact = {
+						ln_blade_can_be_consecrated_trigger = yes
+						NOT = { ln_blade_is_dawn_trigger = yes }
+					}
+				}
+			}
+		}
+
+		custom_description = {
+			text = ln_consecrate_rite_is_spent
+			NOT = { has_character_modifier = ln_the_rite_is_spent_modifier }
+		}
+	}
+
+	effect = {
+		custom_tooltip = ln_consecrate_blade_decision_effect_tt
+		add_character_modifier = { modifier = ln_the_rite_is_spent_modifier  days = 30 }
+		trigger_event = { id = ln_consecrate.1  days = 14 }
+	}
+
+	# Same caliber test as the forge: only a named champion ever sees it, and only the right sort ever takes
+	# it. The AI weights below sit slightly ABOVE the forge's because this road costs no gold and needs no
+	# smith -- an AI champion who is holding a Valyrian blade already has most of what it needs.
+	ai_will_do = {
+		base = 0
+		modifier = { add = 20  has_trait = chosen_by_rhllor }
+		modifier = { add = 10  has_trait = azor_ahai_reborn }
+		modifier = { add = 5   has_trait = favored_by_rhllor }
+		modifier = { add = 20  has_trait = zealous }
+		modifier = { add = 5   has_trait = ambitious }
+		modifier = { add = 5   has_trait = brave }
+		# The star route costs nobody anything. An AI that would never kill its wife will still do this one.
+		modifier = {
+			add = 40
+			ln_carries_dawn_trigger = yes
+			has_character_flag = ln_deed_bleeding_star
+		}
+		modifier = {
+			add = 25
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+		}
+		modifier = { add = -15  has_trait = craven }
+		modifier = { add = -10  has_trait = content }
+		modifier = { add = -10  has_trait = cynical }
+	}
+}

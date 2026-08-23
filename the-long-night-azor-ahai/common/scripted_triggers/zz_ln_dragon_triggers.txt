@@ -1,0 +1,49 @@
+﻿# AGOT: The Long Night & Azor Ahai -- hooking into AGOT's dragon system rather than inventing one.
+#
+# THE LINK, verified in AGOT's own script and not guessed at:
+#     rider  -> dragon : var:current_dragon   (734 uses across AGOT)
+#     dragon -> rider  : var:current_rider    (336 uses)
+# Both are ordinary character variables on ordinary characters -- AGOT's dragons ARE characters, with
+# has_trait = dragon as the load-bearing marker. So we can read the bond without touching a single AGOT file.
+#
+# THE EXEMPTION THOMAS ASKED FOR. He is right that the Wall's refusal cannot apply to the Night King's mount:
+# agot_spawn_adult_ice_dragon_effect creates dragon_skroth with `dynasty_house = house:house_theothers` and
+# trait = immortal. That house is the marker. A dead thing riding a dead thing has no trouble with a ward built
+# to keep fire out, and having it balk at the Wall would be the single most immersion-breaking line in the mod.
+
+ln_rides_a_living_dragon_trigger = {
+	exists = var:current_dragon
+	var:current_dragon = {
+		is_alive = yes
+		has_trait = dragon
+		# Not one of theirs. See the note above.
+		NOT = { house ?= house:house_theothers }
+	}
+
+	# And the rider is still among the living too.
+	NOT = { has_trait = nightking }
+	NOT = { has_trait = other_trait }
+	NOT = { has_trait = wight_trait }
+}
+
+# ── IS THIS THING A DRAGON ──────────────────────────────────────────────────────────────────────────────────
+# 1.0.12, from a Workshop report by Keir Starmer: "Minor bug with the dragonglass decision, it gives your
+# dragon the modifier too."
+#
+# He is right, and the cause is structural rather than careless. AGOT's dragons ARE characters -- they sit in
+# your court, they can be knights, and every_courtier and every_knight find them like anyone else. So any
+# effect that arms, equips, blesses or curses "everyone in the hall" arms the dragon too unless it says
+# otherwise. There is no engine-level "is this a person" we can lean on: is_human is used all over AGOT but
+# nothing proves it excludes a dragon, and a guess that is wrong here fails silently.
+#
+# has_trait = dragon is the marker AGOT actually loads its whole dragon system on, and this mod already
+# treats it that way (see the note in zz_ln_catalyst_effects.txt: "a dragon without it is pruned as an
+# ordinary courtier"). One trigger so there is one place to widen it.
+#
+# THE WIDER PRINCIPLE, for whoever picks up the Supernatural compatibility patch: dragons are magic, so magic
+# does not land on them. Werewolf and vampire conversions, blood offerings, ritual targets -- all of it wants
+# this trigger, and all of it currently has the same hole.
+ln_is_a_dragon_trigger = {
+	has_trait = dragon
+}
+

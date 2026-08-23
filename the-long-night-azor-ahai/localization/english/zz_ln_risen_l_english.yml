@@ -1,0 +1,97 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- the Resurrected chain.
+
+ ln_risen.1.t:0 "What You Remember"
+ ln_risen.1.desc:0 "It is the septon's boy who asks, because he is nine and no one thought to tell him not to.\n\n\"What was it like?\"\n\nThe hall goes so quiet I can hear the fire crackle. Everyone in this room has wanted to ask me that for months, and none of them had the nerve. Now a child has done it.\n\nThe honest problem is that I do not know which answer is true. Some mornings there is absolutely nothing—a door closing, then a door opening, and no corridor in between. Other mornings I wake with my jaw aching and the cold, terrifying certainty that there was something on the other side. And that it was aware of me. And that it was not remotely interested."
+ ln_risen.1.a:0 "Nothing, lad. There was nothing at all."
+ ln_risen.1.b:0 "There was something. And I will not speak of it."
+
+ ln_risen.2.t:0 "The Taste of Things"
+ ln_risen.2.desc:0 "My cook has been trying for a month, and I can tell he has started to take it personally.\n\nHe has made me the exact lamprey pie I asked for at my own wedding. This morning he came out of the kitchens to watch me eat, hands wrapped nervously in his apron. I chewed, swallowed, and told him it was very good.\n\nIt was like eating warm cloth. Everything is. Bread, wine, honey, the smoke off the fire—I can tell they are there the way a man can tell a room is cold, but the joy of it is entirely gone. Whatever the priest poured back into me, it does not hunger."
+ ln_risen.2.a:0 "I eat only to keep the body moving."
+ ln_risen.2.b:0 "Send my compliments to the kitchens anyway."
+
+ ln_risen.3.t:0 "The Ghost in the Room"
+ ln_risen.3.desc:0 "[ln_close.GetTitledFirstName] has not looked at me directly since the day it happened.\n\n[ln_close.GetSheHe|U] speaks to me, yes. [ln_close.GetSheHe|U] will answer questions, take meals at my table, and go through the motions of our shared life. But [ln_close.GetHerHis] eyes always settle somewhere just over my shoulder, or down at my hands. \n\nI asked [ln_close.GetHerHim] about it once, pushing for an answer. [ln_close.GetSheHe|U] went completely pale, gripped the edge of the table, and whispered, \"You look like you, but you do not look alive. And I do not know who I am talking to anymore.\""
+ ln_risen.3.a:0 "I am exactly who I was."
+ ln_risen.3.b:0 "I do not know who you are talking to either."
+ ln_risen.3.c:0 "Send [ln_close.GetHerHim] to [ln_close.GetHerHis] own kin. [ln_close.GetSheHe|U] never agreed to this."
+
+ ln_risen.4.t:0 "What the Fire Cost"
+ ln_risen.4.desc:0 "[ln_close.GetTitledFirstName] finally comes to me to ask a favor. I have waited a long time for this.\n\nWhen the red priest pulled me back, I thought the realm would revolt. Instead, the terrified silence has begun to breed devotion. [ln_close.GetSheHe|U] asks for a temple to be built in the courtyard. Not a sept. A red temple.\n\n\"The Seven stood by while you went cold,\" [ln_close.GetSheHe] says, [ln_close.GetHerHis] voice trembling but resolute. \"The Lord of Light gave you back. I will not pretend otherwise just to please a fat septon in Oldtown.\""
+ ln_risen.4.a:0 "Build the temple. We owe Him everything."
+ ln_risen.4.b:0 "No. I will not push this heresy on my people."
+
+ ln_risen.5.t:0 "The Woman at the Gate"
+ ln_risen.5.desc:0 "She has been standing at the gate since before dawn, and she has brought the child with her.\n\nHe looks to be about four, and by the smell of him, he has been dead for at least four days. She forces her way to the front of the courtyard as I walk out, drops to her knees in the mud, and holds the small, stiff body up toward me.\n\n\"The priest did it for you!\" she screams, tears cutting lines through the dirt on her face. \"Do it for him! I know you can do it, my lord! Breathe the fire into him!\"\n\nThe guards step forward, looking to me for the order."
+ ln_risen.5.a:0 "I cannot give back what I was given."
+ ln_risen.5.b:0 "Get her out of my sight."
+ ln_risen.5.c:0 "Do not go out to her. Let the steward handle it."
+
+ ln_risen.6.t:0 "It Does Not Close"
+ ln_risen.6.desc:0 "I caught my forearm on a rusted nail in the stables three weeks ago. It was a shallow, careless tear.\n\nThis morning, I pull the bandage back. The wound is exactly as open as it was the day it happened. It has not festered, it has not bruised, and it does not bleed. The flesh is simply parted, cold and white.\n\nKnitting back together is a thing a living body does. A dead man's flesh only stays where it is put. I carefully re-wrap the linen and decide I will start wearing my leather bracers indoors."
+ ln_risen.6.a:0 "A minor inconvenience for a second life."
+ ln_risen.6.b:0 "How long until I simply rot?"
+
+ ln_risen.7.t:0 "Abomination"
+ ln_risen.7.desc:0 "It hurts far worse because it is not a stranger saying it. It is [ln_close.GetTitledFirstName].\n\nWe are alone in the solar when the anger finally boils over. \"The Father judges,\" [ln_close.GetSheHe] spits, pointing a shaking finger at my chest. \"He judged you. You died. Your time was done. And then a foreign priest reached into that holy judgement, stole you back out of the dark, and nobody asked what the price would be!\"\n\n[ln_close.GetSheHe|U] is terrified of me, and [ln_close.GetSheHe] is saying it anyway. \"You are an abomination. You are walking in the sun when you belong in the earth.\""
+ ln_risen.7.a:0 "I am here because there is work left to do."
+ ln_risen.7.b:0 "If you truly believe that, leave my hall."
+ ln_risen.7.c:0 "Sit down. Tell me exactly what you think I am."
+
+ ln_risen.8.t:0 "Something Missing"
+ ln_risen.8.desc:0 "I tried to recall the name of the roan destrier I rode when I was twelve. The memory is entirely gone, leaving only a clean, empty edge where it used to be.\n\nOver the last month, I have started to notice exactly what else is missing. Not the important things—the warm ones. I remember every sword thrust, every tax ledger, and every betrayal perfectly. But the smell of summer rain? The sound of my mother's laugh? Erased.\n\nWhatever came back out of that fire kept the fighting, the arithmetic, and the grudges. It has been quietly burning away everything else ever since."
+ ln_risen.8.a:0 "I will not need warm memories for what is coming."
+ ln_risen.8.b:0 "Tell no one what I am losing."
+
+ ln_risen.9.t:0 "The Test"
+ ln_risen.9.desc:0 "He is a hedge knight from the riverlands, and he is not even drunk.\n\nHe waits until the evening feast is at its peak, casually walks the length of the hall, and drives a dagger cleanly into my side, just under the ribs. The room erupts in sheer panic. My guards immediately smash him to the floor, drawing steel to take his head.\n\nI do not fall. I look down at the hilt protruding from my tunic. It does not particularly hurt.\n\n\"I had to know!\" the knight screams from the floor, bloodied and laughing wildly as the guards hold him down. \"They all say it, but nobody had seen it! Now they've seen it!\""
+ ln_risen.9.a:0 "Pull the knife out and let him go."
+ ln_risen.9.b:0 "Take his head. No one tests me."
+
+ ln_risen.10.t:0 "The Other Side"
+ # 1.0.12 -- SUPERSEDED, KEPT AS THE SOURCE TEXT. ln_risen.10 no longer uses a single desc: it is
+ # open + one of four branches + close (see events/zz_ln_risen_events.txt). The branch keys below were
+ # written and never landed in English, so every one of them rendered as its own raw key name in the
+ # 18 Aug run. Do not re-point the event at this line.
+ ln_risen.10.desc:0 "My maester has waited a long time to ask, and he does it with the infuriating calm of a scholar who has asked rude questions his entire life and never once flinched at the answer.\n\n\"What did you see?\" he asks over a parchment. \"When you passed. I am not asking for the septons' sake. I am asking for mine.\"\n\nI look at him. I could tell him about the cold, or the terrifying indifference of the dark. But the brutal truth is the same one I have kept from everyone: there was nothing there. Nothing to fear, and nothing to hope for.\n\nWhatever I was saved from, I was not saved from anything. And I notice, with a cold detachment, that I am evaluating this lack of an afterlife purely as a practical matter—cost, benefit, what is owed—rather than the enormous, world-breaking revelation it is."
+
+ ln_risen.10.desc.open:0 "The question comes from the last quarter I expected it: my own maester, over a game he is losing badly.\n\n\"If it were offered again,\" he says, pushing a piece somewhere it has no business going, \"knowing what you know now. Would you take it?\"\n\n"
+ ln_risen.10.desc.less:0 "And I find I cannot answer quickly, because answering it requires wanting something, and wanting is one of the parts I set down and never picked back up."
+ ln_risen.10.desc.pages:0 "In my solar there are forty pages in my own hand, written so that a man quietly emptying out might hold the present version of himself against the record. I have not opened them in a long while. I am no longer certain I would recognise the man in them."
+ ln_risen.10.desc.nothing:0 "And the honest difficulty is the one it has always been: there was nothing there. Nothing to fear, and nothing to hope for. Whatever I was saved from, I was not saved from anything."
+ ln_risen.10.desc.plain:0 "And I notice that I am weighing it like a household matter—cost, benefit, what is owed to whom—rather than as the enormous thing it plainly is."
+ ln_risen.10.desc.close:0 "\n\nThe maester waits. He is very old, he has put a great many rude questions to a great many people across that board, and he has never once looked away from the answer."
+ ln_risen.10.a:0 "There is only the dark, Maester."
+ ln_risen.10.b:0 "I saw precisely what the Lord of Light wanted me to see."
+
+ ln_risen.11.t:0 "They Will Follow You Anywhere"
+ # 1.0.12 -- SUPERSEDED, KEPT AS THE SOURCE TEXT. Same story as ln_risen.10 above: open + one of four
+ # branches + close. The branches below never landed in English and rendered as raw keys.
+ ln_risen.11.desc:0 "My marshal asks to speak with me privately in the armory.\n\n\"The men have stopped being frightened of you,\" he says, leaning against a weapons rack. \"They were terrified at first. Now? They watch you take a blow in the yard that would crack a man's skull, and you do not even blink. There is not a man on this ground who would not go north with you into the absolute mouth of hell.\"\n\nHe looks at me, and there is a dark, unquestioning fanaticism in his eyes now. \"Because they think death cannot touch you. And they think you know the way back.\""
+
+ ln_risen.11.desc.open:0 "My marshal comes to say something and makes a poor job of beginning it.\n\nHe gets there in the end. It is this: somewhere in the last year the men stopped being frightened of me, and nobody decided that they should. What arrived in its place is not peace. It is something a good deal more useful.\n\n"
+ ln_risen.11.desc.spared:0 "\"It is the hedge knight, my lord,\" he says. \"The one who put a knife in you and walked out of this hall alive. Half of them were certain you would hang him. The other half were certain you would do something a good deal worse. You did neither, and they have not stopped turning it over since.\""
+ ln_risen.11.desc.truth:0 "\"It is the woman at the gate,\" he says. \"You went down there yourself. You told her no to her face, with the child still in her arms, and you did not send the steward down to say it for you. Every soul in this castle knew it before supper.\""
+ ln_risen.11.desc.pages:0 "\"The lads have got it into their heads that you keep a record,\" he says, a little awkwardly. \"That you write it all down because you are afraid of losing it. And they find that—I have not got the word for it, my lord. It settles them. That there is something you are afraid of.\""
+ ln_risen.11.desc.plain:0 "\"They worked out that the worst thing that can happen to a man has already happened to you,\" he says. \"And that you got back up. So they have decided that if you are walking somewhere, it is probably a thing a man can live through.\""
+ ln_risen.11.desc.close:0 "\n\nThen he says the thing he actually came to say, and he says it to the floor:\n\n\"There is not a man on this ground who would not go north with you. Not because they are brave. Because you have already been, and you came back, and they think you know the way.\""
+ ln_risen.11.a:0 "Then I had better be worth following."
+ ln_risen.11.b:0 "They should follow a living man. I will find them one."
+
+ ln_risen.12.t:0 "The Fire That Stayed"
+ ln_risen.12.desc:0 "I noticed it first in the training yard, when a greatsword I have swung ten thousand times came up feeling as light as a willow switch.\n\nThen came the other things. The winter cold does not find me. Wounds that should ache in the damp mornings do not report at all. There is a heat somewhere behind my ribs that no fever ever produced, banked and patient, like a forge at night. When the priest said the words, the vessel came back holding far more than it originally did.\n\nAnd something else came with it. Or rather, something did not. Yesterday, a stable boy was crushed under a heavy wagon in the yard. Everyone around me screamed and flinched at the sickening sound.\n\nI just watched. It was interesting."
+ ln_risen.12.a:0 "Then let the fire burn."
+ ln_risen.12.b:0 "I must hide this coldness from them."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_death_holds_no_terror_modifier:0 "Death Holds No Terror"
+ ln_death_holds_no_terror_modifier_desc:0 "The worst thing that can happen to a man has already happened to this one, in front of witnesses, and he got back up. It is remarkably difficult to threaten him, and his household guard have noticed."
+ ln_fire_in_the_blood_modifier:0 "Fire in the Blood"
+ ln_fire_in_the_blood_modifier_desc:0 "Whatever came back out of the dark brought a supernatural strength and a terrifying lack of human empathy with it."
+
+ # ── 1.0.13: THE SIGHTED OPTION ─────────────────────────────────────────────────
+ ln_risen.1.d:0 "There was a corridor, boy. I have walked it since I was your age."
+ ln_risen.10.desc.corridor:0 "I told a nine-year-old the truth because he was the only one who asked, and I have never taken it back.\n\nThere was a corridor. I have walked it since I was a boy myself, in the way the sighted walk — sideways, and out of order, and never when you want to. Dying only meant walking it while awake.\n\nThe septon's boy tells the story to the other children now, and gets it slightly wrong, and I let him. His version has an ending."
+

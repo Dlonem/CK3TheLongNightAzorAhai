@@ -1,0 +1,9 @@
+﻿# AGOT: The Long Night & Azor Ahai -- yearly pulses for the horde and the realm rename.
+# on_actions = { } sub-list, which merges. An on_action holds only one effect block, so this is the only safe way
+# to extend a shared on_action like yearly_global_pulse.
+
+# ln_horde_yearly_pulse DELETED 10 Aug -- an on_action sub-list defined here and listed in NO hook, so it never ran.
+# Everything it called is already done once a year by ln_struggle_yearly_work_effect (ln_horde_reinforce_effect + ln_realm_rename_effect),
+# behind the calendar stamp that guarantees one pass per year. This is the same failure class as
+# ln_watch_strength_pulse (deleted earlier today): the hooks file exists precisely to make a sub-list
+# that nothing lists visible, and a hook that does not run produces silence rather than a log line.

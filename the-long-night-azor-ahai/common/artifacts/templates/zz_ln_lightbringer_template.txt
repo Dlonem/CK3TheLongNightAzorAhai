@@ -1,0 +1,23 @@
+﻿# AGOT: The Long Night & Azor Ahai -- Lightbringer.
+#
+# unique = yes. There is one of these in the world, ever. The forging decision is gated on a global so a second
+# player cannot make a second one, but the template says it too because the template is what the engine reads
+# when it is deciding whether to hand one out through any other route.
+#
+# NO can_equip RESTRICTION, deliberately. Lightbringer can be taken, inherited, looted, and carried by a man
+# who did not pay for it and does not deserve it -- which is most of what makes it interesting. The sword does
+# not check whether you are Azor Ahai. Nothing does. That is the whole argument of the prophecy layer.
+ln_lightbringer_template = {
+	can_equip = {
+		is_adult = yes
+	}
+	can_benefit = {
+		is_adult = yes
+	}
+	fallback = {
+	}
+	unique = yes
+	ai_score = {
+		value = 200
+	}
+}

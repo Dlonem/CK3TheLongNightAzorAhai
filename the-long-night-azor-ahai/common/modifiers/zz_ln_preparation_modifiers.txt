@@ -1,0 +1,87 @@
+﻿# AGOT: The Long Night & Azor Ahai -- preparing for the dark.
+#
+# The whole point of moving the warning card to the Long Summer's midpoint is that the player then has decades
+# to DO something. These are the somethings. Both are deliberately modest on their own and meaningful together:
+# the mod should reward a lord who spent the warning years arming, without making the Long Night winnable by
+# shopping.
+#
+# Every field below was checked against the empirical modifier list built from vanilla's own common/modifiers/.
+
+# Numbers are Thomas's call. First draft was +3 advantage / 15% / 15% and he read it as too strong for
+# something you get by owning an heirloom you probably inherited. A flat 10% across the board is the right
+# shape: noticeable, not decisive, and it stacks with dragonglass rather than replacing the need for it.
+ln_valyrian_armed_modifier = {
+	icon = martial_positive
+	advantage = 1
+	enemy_hard_casualty_modifier = 0.1
+	knight_effectiveness_mult = 0.1
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE DRAGONGLASS, IN TWO HALVES -- and why it had to be split.
+#
+# Thomas caught the problem: "we want it to be mostly effective against the others and wights... it offers
+# unintended benefits against the living." He was exactly right, and it was worse than he thought. The old
+# single modifier carried +2 advantage and +15% enemy casualties for a FLAT THIRTY YEARS from the moment you
+# mined it. The Long Night is a phase; thirty years outlasts it comfortably. So a lord could mine glass in the
+# Cold Winds, survive the dark, and then spend two decades of a rebuilt world beating the Iron Throne with a
+# war bonus he earned fighting the dead. Nothing in the script stopped him.
+#
+# The fix is the shape Thomas proposed himself -- let the phase handle it:
+#
+#   STORES  = you own the glass. A marker. No combat statistics whatsoever, so it cannot be aimed at anything.
+#             Survives the Dawn, because you do still have a cellar full of black glass.
+#   ARMED   = the glass is in hands. All the combat statistics live here, and ln_preparation_upkeep_effect
+#             grants it ONLY while the struggle is in the Long Night and strips it the moment the Dawn comes.
+#
+# The armed half is therefore unusable against the living in any practical sense: it exists only during the
+# phase where the dead are physically in the world, and a lord who spends that phase invading his neighbour has
+# chosen his own punishment.
+#
+# NO, IT DOES NOT STACK -- but only because every add is guarded. CK3 will happily apply the same character
+# modifier twice and add the effects together; there is no automatic uniqueness. Every add_character_modifier
+# below is wrapped in NOT = { has_character_modifier = ... } and that guard is load-bearing, not decorative.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# HALF ONE: you have it. Deliberately no advantage, no casualty modifier, no levy bonus -- nothing that can be
+# pointed at another army. What it buys is the knowledge that you prepared, and the fact that word gets around.
+# Thomas: "does it have to just be prestige? Or can it be like a plus one... rewarding those who decided to
+# vaccinate?" Right -- preparing should feel like something even before it pays off. What it cannot be is
+# anything that can be pointed at another army, so: your own people trust you, and you sleep better. Both are
+# real rewards for having prepared and neither of them wins a war against the living.
+ln_dragonglass_stores_modifier = {
+	icon = economy_positive
+	monthly_prestige = 0.25
+	courtier_and_guest_opinion = 5     # the hall watched you spend a fortune on black rocks. They noticed.
+	stress_loss_mult = 0.15            # you have done what could be done
+}
+
+# HALF TWO: it is in hands, and there is something in the dark to use it on. Granted and revoked by
+# ln_preparation_upkeep_effect against the struggle phase -- see that effect, not this file, for the gate.
+ln_dragonglass_armed_modifier = {
+	icon = martial_positive
+	advantage = 2
+	enemy_hard_casualty_modifier = 0.15
+	levy_reinforcement_rate = 0.1
+}
+
+# THE WHOLE HALL. Thomas's idea, his number, and -- after he pushed back -- his scope: "I give everybody else a
+# modifier of, like, armed with dragonglass. Even, you know, the women and the children."
+#
+# I argued for knights only on performance grounds and he was right and I was wrong. The image IS the point.
+# A dragonglass dagger in the hand of every person in the castle, down to the cupbearer and the eight-year-old
+# ward, is the single strongest picture the Long Night has, and narrowing it to the men with lances throws that
+# away to save a few thousand rows in a save file that already holds four thousand DNA entries.
+#
+# So: every courtier and every knight. Children included, deliberately. +5 prowess does nothing mechanical for
+# a child -- prowess is read for knights, commanders and duels -- but the modifier showing up on them is the
+# whole story, and the day they come of age it is already there.
+#
+# A MODIFIER AND NOT A TRAIT, which was Thomas's open question. A trait says what a person IS; this is
+# equipment. Equipment gets handed out, taken back, and lost when the man dies, and it should not sit in the
+# trait row next to Brave and Ambitious forever. The fifteen-year duration is a backstop: people leave courts,
+# and a modifier we lose track of expires on its own rather than becoming permanent by accident.
+ln_dragonglass_knight_modifier = {
+	icon = prowess_positive
+	prowess = 5
+}

@@ -1,0 +1,210 @@
+﻿namespace = ln_defeat
+
+# AGOT: The Long Night & Azor Ahai -- THE LONG DEFEAT, and meeting your own dead.
+#
+# Two things nobody has shipped in a Long Night mod, from design-backlog.md's "additions worth considering":
+#   #3  let the Long Night end badly
+#   #4  the dead remember -- "fighting a wight who was once your bannerman, your brother, your friend"
+#
+# ln_defeat.1 is the ending. ln_defeat.2 is the recognition, and it is deliberately rare: Thomas asked for it
+# to be done tactfully, and the way to do that is to make it almost never happen and cost nothing when it does.
+
+# ── 1. THE WORLD ENDS, AND THE GAME DOES NOT ────────────────────────────────────────────────────────────────
+ln_defeat.1 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_defeat.1.t
+	desc = {
+		first_valid = {
+			# Told differently to the men who had a name for this and to everyone else.
+			triggered_desc = {
+				trigger = { has_government = nights_watch_government }
+				desc = ln_defeat.1.desc.watch
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_trait = chosen_by_rhllor
+						has_trait = azor_ahai_reborn
+						has_trait = favored_by_rhllor
+					}
+				}
+				desc = ln_defeat.1.desc.named
+			}
+			desc = ln_defeat.1.desc
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+
+	immediate = { play_music_cue = "mood_the_others" }
+
+	option = { name = ln_defeat.1.a }
+}
+
+# ── 2. YOU KNEW HIM ─────────────────────────────────────────────────────────────────────────────────────────
+# Root = a commander who has just won a battle against the dead. scope:ln_known_dead is one of his own,
+# walking on the other side.
+#
+# TACT, WHICH IS THE WHOLE DESIGN CONSTRAINT HERE:
+#   * it fires only after a battle you WON, so it never reads as piling on
+#   * once per character per five years (ln_saw_my_dead_cooldown), so a long war does not turn grief into
+#     wallpaper
+#   * NO STRESS and no modifier. The same rule ln_wight.1 already follows: a notification that quietly kills
+#     the player through accumulated stress is a bug, not drama. The weight is in the text.
+#   * the option is a choice about memory, not mechanics -- burn him, or leave him and carry it.
+ln_defeat.2 = {
+	type = character_event
+	title = ln_defeat.2.t
+	desc = {
+		first_valid = {
+			# -- HIM AGAIN ----------------------------------------------------------------------------
+			# Above the blood relations on purpose. That it is the SAME MAN is a more surprising sentence
+			# than that he is your brother, and ln_defeat.3 hands him back deliberately -- see the note
+			# there. This branch is the entire reason option b has a cost.
+			triggered_desc = {
+				# scope:ln_it_is_him is set by ln_defeat.3 at the instant it CHOOSES him, and scopes cross
+				# trigger_event. Deliberately NOT `var:ln_the_one_i_left = scope:ln_known_dead`: comparing a
+				# variable straight to a scope has no precedent anywhere in AGOT or vanilla, and a comparison
+				# the engine quietly refuses to make is a branch that never fires and never logs.
+				trigger = { exists = scope:ln_it_is_him }
+				desc = ln_defeat.2.desc.again
+			}
+			# -- AND HOW LONG IT HAS BEEN GOING ON ----------------------------------------------------
+			# Only reachable after the Long Defeat: the struggle is over, the world lost, and this event
+			# keeps firing anyway because the dead keep walking. Fifty years in it is not grief any more.
+			# ln_the_dark_won_year has been stamped since the Long Defeat shipped and nothing read it.
+			triggered_desc = {
+				trigger = {
+					has_global_variable = ln_the_dark_won_year
+					ln_years_since_the_dark_won_value >= 50
+				}
+				desc = ln_defeat.2.desc.long_after
+			}
+			triggered_desc = { trigger = { scope:ln_known_dead = { is_child_of = root } }   desc = ln_defeat.2.desc.child }
+			triggered_desc = { trigger = { scope:ln_known_dead = { is_parent_of = root } }  desc = ln_defeat.2.desc.parent }
+			triggered_desc = { trigger = { scope:ln_known_dead = { is_sibling_of = root } } desc = ln_defeat.2.desc.sibling }
+			triggered_desc = { trigger = { scope:ln_known_dead = { is_spouse_of = root } }  desc = ln_defeat.2.desc.spouse }
+			triggered_desc = { trigger = { has_relation_best_friend = scope:ln_known_dead } desc = ln_defeat.2.desc.friend }
+			triggered_desc = { trigger = { has_relation_lover = scope:ln_known_dead }       desc = ln_defeat.2.desc.lover }
+			# -- THE SWORN MAN, BUT NOT THE FIRST TIME ------------------------------------------------
+			# Same trick as the dawn card: leave the relationship branches alone, enrich the fallback.
+			# Both flags were set by this event own options and read by nothing at all.
+			triggered_desc = { trigger = { has_character_flag = ln_burned_my_own }     desc = ln_defeat.2.desc.sworn_burned }
+			triggered_desc = { trigger = { has_character_flag = ln_left_him_standing } desc = ln_defeat.2.desc.sworn_left }
+			desc = ln_defeat.2.desc.sworn
+		}
+	}
+	theme = death
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = grief }
+	right_portrait = { character = scope:ln_known_dead }
+
+	trigger = {
+		is_alive = yes
+		exists = scope:ln_known_dead
+	}
+
+	immediate = {
+		add_character_flag = { flag = ln_saw_my_dead_cooldown  years = 5 }
+		play_music_cue = "mood_the_others"
+	}
+
+	# Burn him. It is the only thing anyone can do for the dead in this war, and it is not nothing.
+	option = {
+		name = ln_defeat.2.a
+		add_character_flag = ln_burned_my_own
+		# If this was the one he left standing the first time, that account is closed and the
+		# recognition goes back to picking whoever it finds.
+		if = {
+			limit = { exists = scope:ln_it_is_him }
+			remove_variable = ln_the_one_i_left
+		}
+	}
+
+	# Leave him where he lies. You will be back this way.
+	option = {
+		name = ln_defeat.2.b
+		add_character_flag = ln_left_him_standing
+		# AND THE MOD REMEMBERS WHICH ONE. Overwrites on purpose: the man left MOST RECENTLY is the
+		# one still out there, and carrying a queue of them would be bookkeeping, not a story.
+		# Unpruneable because the whole point is that he comes back decades later, and a variable
+		# holding a character does not by itself stop the engine collecting him.
+		set_variable = { name = ln_the_one_i_left  value = scope:ln_known_dead }
+		scope:ln_known_dead = { agot_make_unpruneable = yes }
+	}
+}
+
+
+# ── 3. THE DIRECTOR FOR THE RECOGNITION ─────────────────────────────────────────────────────────────────────
+# Root = the winning combat_side. Finds one of the winner's OWN people among the enemy dead and hands the
+# scene to him.
+#
+# WHY RELATIONS AND NOT THE BATTLE ROSTER. CK3 exposes no list of who was in a combat -- the same wall the
+# roll-call and the killing blow both hit. But a wight is a living character who KEPT his relations when he
+# was raised (mutate_into_other_effect changes government and traits; it does not sever family), so
+# every_close_family_member and every_relation still reach him. That is a truer answer anyway: the man does
+# not have to have been in this particular battle for the story to be "your brother is out there".
+ln_defeat.3 = {
+	hidden = yes
+	scope = combat_side
+
+	immediate = {
+		side_commander = {
+			save_scope_as = ln_dead_finder
+
+			# Closest bonds first, and stop at the first one found -- so a man with a risen brother AND a
+			# risen friend is told about his brother.
+			# -- THE ONE HE LEFT ------------------------------------------------------------
+			# Before family, before friends, before anyone. If this man once chose to leave one of his
+			# own dead where it lay, and that dead thing is still walking, it is the one he meets --
+			# and ln_defeat.2.desc.again says out loud that this is not a coincidence, because it is
+			# not one. is_alive lives inside ln_is_one_of_my_dead_trigger, so a wight that has since
+			# been put down falls straight through to the ordinary search below.
+			if = {
+				limit = {
+					exists = var:ln_the_one_i_left
+					var:ln_the_one_i_left = { ln_is_one_of_my_dead_trigger = yes }
+				}
+				var:ln_the_one_i_left = { save_scope_as = ln_known_dead }
+				save_scope_value_as = { name = ln_it_is_him  value = yes }
+			}
+
+			if = {
+				limit = { NOT = { exists = scope:ln_known_dead } }
+				random_close_family_member = {
+					limit = { ln_is_one_of_my_dead_trigger = yes }
+					save_scope_as = ln_known_dead
+				}
+			}
+			if = {
+				limit = { NOT = { exists = scope:ln_known_dead } }
+				random_relation = {
+					type = best_friend
+					limit = { ln_is_one_of_my_dead_trigger = yes }
+					save_scope_as = ln_known_dead
+				}
+			}
+			if = {
+				limit = { NOT = { exists = scope:ln_known_dead } }
+				random_relation = {
+					type = lover
+					limit = { ln_is_one_of_my_dead_trigger = yes }
+					save_scope_as = ln_known_dead
+				}
+			}
+			if = {
+				limit = { NOT = { exists = scope:ln_known_dead } }
+				random_vassal = {
+					limit = { ln_is_one_of_my_dead_trigger = yes }
+					save_scope_as = ln_known_dead
+				}
+			}
+
+			if = {
+				limit = { exists = scope:ln_known_dead }
+				trigger_event = { id = ln_defeat.2  days = { 2 12 } }
+			}
+		}
+	}
+}

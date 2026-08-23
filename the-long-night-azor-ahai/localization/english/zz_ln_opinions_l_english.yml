@@ -1,0 +1,21 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- opinion modifiers.
+ # Written to be read in a tooltip at a glance: what you did, from their side, in their words.
+
+ ln_gave_me_everything_opinion:0 "Gave Me Everything and Left"
+ ln_took_the_black_opinion:0 "Took the Black"
+ ln_took_my_command_opinion:0 "Took My Command From Me"
+ ln_let_me_keep_my_dignity_opinion:0 "Let Me Keep My Dignity"
+ ln_saw_what_you_did_to_him_opinion:0 "I Saw What You Did to Him"
+ ln_killed_her_for_a_sword_opinion:0 "Killed Her for a Sword"
+ ln_paid_the_price_opinion:0 "Paid the Price the Tale Asked For"
+ ln_took_one_of_ours_opinion:0 "Took One of Ours for the Steel"
+ ln_asks_the_north_for_help_opinion:0 "Keeps Writing to Us About the Wall"
+ ln_fed_the_wall_opinion:0 "Fed the Wall When Nobody Else Would"
+ ln_the_priests_say_it_of_him_opinion:0 "The Priests Say It of Him"
+ ln_believes_his_own_legend_opinion:0 "Believes His Own Legend"
+ ln_named_favored_modifier:0 "Named as Favored"
+ ln_named_favored_modifier_desc:0 "A priest said it out loud, and the word travels. Those who share the faith look twice; those who do not find the whole business embarrassing."
+ ln_named_chosen_modifier:0 "Named the Prince That Was Promised"
+ ln_named_chosen_modifier_desc:0 "Temples from Asshai to Oldtown are using the older and more dangerous name. This does not make you a hero. It makes you an argument, and men will take sides on it."

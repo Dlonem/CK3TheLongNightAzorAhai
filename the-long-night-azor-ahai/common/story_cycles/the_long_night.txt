@@ -1,0 +1,1972 @@
+﻿long_night_story = {
+
+	on_setup = {
+
+			
+
+	story_owner = {
+
+		trigger_event = { id = others_heartbeat.1 days = 1 }
+	if = { limit = { game_start_date >= 8300.1.1 }
+
+	add_character_flag = { flag = long_night_cooldown years = 2 }
+	# 1.0.8: a distinct marker for the SAME window -- see the pulse trigger below.
+	add_character_flag = { flag = ln_setup_grace years = 2 }	 
+
+	}
+
+	add_character_flag = { flag = war_for_dawn_cooldown years = 10 }
+
+	add_character_flag = mw_init_event_blocker
+
+	add_character_flag = agot_immersion_bannermen_blocker
+
+	save_scope_as = thegreatother
+
+	set_house = house:house_theothers
+
+	every_courtier = { 
+
+	if = { limit = { has_trait = dwarf } remove_trait = dwarf }
+
+	if = { limit = { has_trait = gluttonous } remove_trait = gluttonous }
+
+	set_culture = culture:frostborn
+
+	set_character_faith = faith:cold_gods
+
+	#set_father = scope:thegreatother
+
+	set_house = house:house_theothers
+
+	add_trait = other_trait
+
+	add_character_flag = ln_one_of_them   # 1.0.7: stamped at conversion -- see ln_is_one_of_them_trigger
+
+	add_trait = spindly
+
+	make_trait_inactive = cool_silver_hair
+
+	make_trait_inactive = blue_eyes
+
+	change_age = 7000
+
+	change_first_name = other_name
+
+	 add_character_flag = agot_immersion_bannermen_blocker
+
+	 ### Sword
+
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+
+		name = others_sword
+
+		visuals = others_sword_visuals
+
+		description = other_sword_description  # WAS others_sword_description -- see the note in agot_long_night_scripted_effects.txt
+
+		type = sword
+
+		wealth = scope:wealth
+
+		quality = scope:quality
+
+		template = others_sword_template
+
+		history = {
+
+			type = created_before_history
+
+			date = 50.1.1
+
+		}
+
+		modifier = others_sword_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = yes
+
+	}
+
+	scope:newly_created_artifact = {
+
+		set_variable = { name = historical_unique_artifact value = yes }
+
+		equip_artifact_to_owner = yes
+
+	}
+
+	}
+
+	every_character_artifact = { limit = {  has_variable = crown_of_true_winter_artifact } equip_artifact_to_owner = yes }
+
+	
+
+	
+
+	}
+
+	
+
+	}
+
+	on_end = {
+
+	
+
+	### Reform Nightswatch
+
+	if = { limit = { NOT = { title:c_castle_black.holder ?= { has_government = nights_watch_government } }
+
+	title:c_castle_black.holder ?= { is_ai = yes }
+
+	}
+
+		 # The Long Night+: NW reformation is no longer automatic — it is now the reform_nights_watch_decision,
+		 # which only the King on the Iron Throne or an independent King of the North may take.
+
+		 }
+
+		 
+
+	
+
+	# ── 1.0.9a ── `?=` HERE IS THE SECOND HALF OF AXEL'S REPORT, AND THE MORE LIKELY HALF. ──────────────
+	# on_end fires from on_owner_death -- i.e. at the exact instant the Night King has just died and his
+	# succession has not necessarily resolved. A bare `=` on a link that is momentarily unset does not
+	# quietly skip: it is a logged scope error and THE WHOLE BLOCK BELOW DOES NOT RUN. That block is
+	# save_scope_as = lastother, destroy_others_kingdom_titles, the Night's Queen flag, and the culture
+	# rewrite. Lose it and the wights still die (line ~195), the lands are still scoured (~189) and the
+	# house is still swept (~214) -- "everything else returned to normal" -- but the Night King's own
+	# above-county titles are never destroyed. The Others' REALM survives the Dawn intact, which is exactly
+	# what Axel described and what Jorahm called "the surviving Other" before him.
+	# Worse: with no Night's Queen flagged, the sweep at ~214 has no exception and takes the whole house,
+	# including the seed the recurrence is supposed to grow wave two from.
+	title:h_the_others.holder ?= { 
+
+	save_scope_as = lastother
+
+		destroy_others_kingdom_titles = yes
+
+		random_courtier = { limit = { has_trait = other_trait
+
+										is_female = yes}
+
+							add_character_flag = nightsqueen
+
+							save_scope_as = nightsqueen
+
+							add_trait = disinherited
+
+							}
+
+		culture = {
+
+			clear_culture_traditions = yes
+
+			add_culture_tradition = tradition_agot_wildling
+
+			add_culture_tradition = tradition_mountain_homes
+
+			add_culture_tradition = tradition_winter_warriors
+
+			add_culture_tradition = tradition_tribe_unity
+
+		set_culture_name = {
+
+noun = frostborn_culture_name
+
+collective_noun = frostborn_culture_name
+
+prefix = frostborn_culture_name
+
+}
+
+		}
+
+		
+
+		
+
+		#destroy_title = title:h_the_others
+
+		}
+
+		# The Long Night+: before the dead crumble, scour the lands the Night King held — ordinary holdings
+		# return to wilderness, the great seats are left in ruins. Runs while the wights/Others still hold them.
+		agot_long_night_scour_others_lands_effect = yes
+
+		# The Long Night+: with the Others defeated, the power animating the dead fails — every wight is claimed by the cold.
+		# 1.0.7, DOOR TWO: and every undead dragon with them. A CONVERTED dragon keeps its own house, so
+		# neither the wight sweep nor the house_theothers sweep below would catch it -- the trait is the
+		# only handle. Clone-era dragons die by whichever sweep reaches them first; both are idempotent.
+		every_living_character = {
+			limit = {
+				OR = {
+					has_trait = wight_trait
+					has_trait = ln_undead_dragon
+				}
+			}
+			death = { death_reason = death_claimed_by_cold }
+		}
+
+		# The Long Night+ AFTERMATH: the Question of the North — within ~6 months the Crown MUST choose between
+		# restoring the Night's Watch and welcoming the free folk (ln_aftermath.1; replaces the old
+		# reform_nights_watch_decision, now retired). No Crown anywhere (no Iron Throne, no independent King of
+		# the North) → nobody holds the authority to keep the Wall: the free folk pour through unbidden. A yearly
+		# safety pulse reposes the question if the chosen crown dies before the event lands
+		# (zz_long_night_plus_aftermath_on_actions.txt). Runs AFTER the scouring so the wilderness exists.
+		set_global_variable = { name = ln_aftermath_started value = yes }
+		ln_pose_question_of_the_north_effect = yes
+
+		house:house_theothers = {  every_house_member = { limit = { NOT = { has_character_flag = nightsqueen } } death = {
+
+						
+
+						death_reason = death_vanished
+
+					} } }
+
+					
+
+		
+
+	if = { limit = { has_game_rule = longnight_iron_throne_reformation_on }	 
+
+	if = { limit = { exists = title:h_the_iron_throne.holder} 
+
+	title:h_the_iron_throne.holder ?= { trigger_event = {
+
+						id = others_maintenance.2
+
+						days = 1
+
+					}
+
+					}
+
+					
+
+	}
+
+	}
+
+		
+
+		
+
+		
+
+	
+
+		
+
+		
+
+		# v0.2.0: if the recurrence game rule is on, the dead are not finished -- they are merely early.
+
+		
+
+		
+
+		
+
+	
+
+		
+
+		
+
+		ln_long_night_recurrence_effect = yes
+
+
+		
+
+		
+
+		
+
+	
+
+		
+
+		
+
+		every_player = {
+
+					trigger_event = {
+
+						id = others.3
+
+						days = 1
+
+					}
+
+				}
+
+		
+
+
+
+	
+
+	}
+
+	
+
+	on_owner_death = { 
+
+	# ── 1.1.0 ── THIS TEST USED TO SIT AT THE BOTTOM OF on_owner_death, AND MOVING IT HERE IS THE FIX. ──
+	# Reported by Axel on the Workshop, and independently by Jorahm before him as "post-WFTD incoherence"
+	# and "the surviving Other". Axel: "Went beyond the wall and won the war... after this, the Others
+	# simply remained within their territory and stopped expanding. Everything else returned to normal."
+	#
+	# He was describing the branch order exactly. war_for_the_dawn_cb's on_victory sets
+	# war_for_dawn_victory and THEN kills the Night King, so on_owner_death fires with the war already won.
+	# With this test last, the heir branch (or, since 1.0.9, the successor search) crowned a NEW Night King
+	# first -- nightking trait, invasion modifiers, the lot -- and only then did end_story run. The result
+	# is a destroyed story, so nothing drives the invasion any more ("everything else returned to normal"),
+	# and a freshly crowned Other sitting on the conquered territory doing nothing ("remained within their
+	# territory and stopped expanding"). Both halves of his report, from one ordering mistake.
+	#
+	# AND 1.0.9 WIDENED IT, WHICH IS ON US. Before 1.0.9 the no-heir path under war resolution went straight
+	# to end_story. The 1.0.9 fix -- correct for the bug it targeted, a war ending inconclusively when the
+	# Night King was merely decapitated -- made that path search for a successor and crown one. So the
+	# surviving-Other case, which previously needed the Night King to have an heir, started happening when
+	# he had none as well. Both paths now ran through a coronation before this line was ever reached.
+	#
+	# Asked FIRST and as an if/else_if chain, so a won war ends the story and crowns nobody. The ordering is
+	# the entire change: every branch below is untouched, and the death-resolution case is unaffected because
+	# both this test and the old one require others_war_resolution.
+	if = { limit = { AND = { has_game_rule = others_war_resolution
+
+							 has_global_variable = war_for_dawn_victory
+
+							}
+
+							}
+
+							debug_log = "LN_TRACE: long_night_story ending - war_for_dawn_victory stood at owner death; no successor crowned"
+
+							end_story = yes
+
+	}
+
+
+	
+
+	else_if = { limit = { has_game_rule = others_death_resolution }
+
+	
+
+	debug_log = "LN_TRACE: long_night_story ending - night king died under others_death_resolution"
+
+	end_story = yes
+
+	}
+
+	# 13 Aug (1.0.6): promotion is now guarded. make_story_owner with a nonexistent heir leaves the story
+	# with a dead owner and the engine destroys it silently -- which reads as "the Long Night ended for no
+	# reason". If there is nobody to promote, end it DELIBERATELY and say so in the log.
+	else_if = {
+
+	limit = { exists = story_owner.primary_heir }
+
+	make_story_owner = story_owner.primary_heir
+
+	 story_owner = { add_trait = nightking 
+
+	 if = { limit = { has_game_rule = others_weak_invasion } add_character_modifier = others_weak_modifier }
+
+								if = { limit = { has_game_rule = others_standard_invasion } add_character_modifier = others_standard_modifier }
+
+								if = { limit = { has_game_rule = others_strong_invasion } add_character_modifier = others_strong_modifier }
+
+								if = { limit = { has_game_rule = others_insane_invasion } add_character_modifier = others_insane_modifier }
+
+	 
+
+	 
+
+	 }
+
+	}
+
+	else = {
+
+	# ══ 1.0.9 -- THE WAR RESOLUTION MUST NOT END ON A MISSING HEIR ═══════════════════════════════════════
+	# nordpilled and Ea-Nasir: "kill the Night King and the war ends inconclusively." THIS is the branch that
+	# does it, and the game-rule audit is what found it.
+	#
+	# Under `others_death_resolution` (the default) ending here is correct and intended: that rule promises
+	# the dark dies with him, and the branch above already ends the story on his death outright. This else is
+	# only reached under the OTHER rule -- and `others_war_resolution` promises the exact opposite, that the
+	# War for the Dawn has to be WON rather than decapitated. Ending it because the Night King happened to
+	# have no primary_heir breaks that promise silently. An Other with no children is the NORMAL case, not
+	# the edge one, so this fired far more often than "no heir" makes it sound.
+	#
+	# The successor search is not invented here -- it is the same one this file already runs a thousand lines
+	# below in the h_the_others reconciler: the holder of the Land of Always Winter if he is an Other, else
+	# any Other ruler in the world. That reconciler could never save this case, because end_story destroys
+	# the story before any pulse can reach it.
+	#
+	# ONLY IF: war resolution, and an Other exists to carry the crown.
+	# NEVER IF: death resolution -- untouched, and the branch above already returned by then.
+	# If there is genuinely no Other left alive, the story still ends, which is the honest reading of the
+	# living having won.
+	if = {
+		limit = { has_game_rule = others_war_resolution }
+
+		story_owner ?= { save_scope_as = ln_dead_nightking }
+
+		if = {
+			limit = {
+				exists = title:h_the_others.holder
+				title:h_the_others.holder = { has_trait = other_trait }
+				NOT = { title:h_the_others.holder ?= scope:ln_dead_nightking }
+			}
+			title:h_the_others.holder = { save_scope_as = ln_next_nightking }
+		}
+		else = {
+			random_ruler = {
+				limit = {
+					has_trait = other_trait
+					NOT = { this ?= scope:ln_dead_nightking }
+				}
+				save_scope_as = ln_next_nightking
+			}
+		}
+
+		if = {
+			limit = { exists = scope:ln_next_nightking }
+			debug_log = "LN_TRACE: night king died with no heir under war resolution - another Other takes the crown"
+			make_story_owner = scope:ln_next_nightking
+			scope:ln_next_nightking = {
+				if = {
+					limit = { NOT = { has_trait = nightking } }
+					add_trait = nightking
+				}
+				# GUARDED, unlike the heir branch above. An heir promoted from nothing cannot already carry an
+				# invasion-strength modifier; a sitting Other ruler picked up by random_ruler might, and
+				# add_character_modifier stacks rather than replaces.
+				if = {
+					limit = { has_game_rule = others_weak_invasion  NOT = { has_character_modifier = others_weak_modifier } }
+					add_character_modifier = others_weak_modifier
+				}
+				if = {
+					limit = { has_game_rule = others_standard_invasion  NOT = { has_character_modifier = others_standard_modifier } }
+					add_character_modifier = others_standard_modifier
+				}
+				if = {
+					limit = { has_game_rule = others_strong_invasion  NOT = { has_character_modifier = others_strong_modifier } }
+					add_character_modifier = others_strong_modifier
+				}
+				if = {
+					limit = { has_game_rule = others_insane_invasion  NOT = { has_character_modifier = others_insane_modifier } }
+					add_character_modifier = others_insane_modifier
+				}
+			}
+		}
+		else = {
+			debug_log = "LN_TRACE: long_night_story ending - war resolution, no heir and no Other left alive"
+			end_story = yes
+		}
+	}
+	else = {
+
+	debug_log = "LN_TRACE: long_night_story ending - night king died with no heir to promote"
+
+	end_story = yes
+
+	}
+
+	}
+
+
+	
+
+	}
+
+	
+
+	# The Long Night+ — #12 the Wall comes down. When the dead make war on the Night's Watch (holder of Castle Black),
+	# the Wall is breached at a RANDOM spot (left/middle/right). One-shot via the agot_wall_has_fallen_* guard. The
+	# cinematic (sound/anim/camera, layer B) is layered on later once agot_debug.1000 confirms the falling animation.
+	effect_group = {
+		days = 7
+		triggered_effect = {
+			trigger = {
+				exists = title:h_the_others.holder
+				exists = title:c_castle_black.holder   # FIX (v0.1.0): was unguarded; threw when the seat was vacant
+				# FIX (v0.1.0): the original only fired while the WATCH still held Castle Black AND was at war with
+				# the dead. The moment the dead took it the new holder is converted to wight_government
+				# (mutate_into_other_effect), so has_government = nights_watch_government became false FOREVER and
+				# the Wall could never fall afterwards. On a 7-day pulse the war window was easy to miss entirely.
+				# That is the "Wall doesn't collapse after the Night's Watch loses" report.
+				OR = {
+					# a) the dead have TAKEN Castle Black in the field -- the county is occupied by the
+					#    Others' host while the Watch still holds the title. Live-run report (Thomas,
+					#    290 AC): the old check was war-declared + at-war, so the "Wall has fallen" card
+					#    arrived the week the war STARTED, with the Watch untouched on its battlements.
+					#    Occupation is the moment the wall is actually stormed.
+					AND = {
+						title:c_castle_black.holder = {
+							has_government = nights_watch_government
+							is_at_war_with = title:h_the_others.holder
+						}
+						title:c_castle_black = { county_controller = title:h_the_others.holder }
+					}
+					# b) failsafe: the dead already HOLD Castle Black, so the Wall is breached by definition.
+					#    13 Aug (1.0.6), Lyon's report: this card fired while he was CAPTURING the Wall BACK
+					#    from the Others -- the dead still held the title, so (b) passed, and "the Wall is
+					#    falling" arrived as the living retook it. The NEVER-IF half was missing: the county
+					#    controller must ALSO still be of the dead. When the living are storming Castle Black
+					#    the controller is the living army, and this stays shut.
+					AND = {
+						title:c_castle_black.holder = {
+							OR = {
+								this = title:h_the_others.holder
+								has_trait = other_trait
+								has_trait = wight_trait
+								has_government = wight_government
+							}
+						}
+						title:c_castle_black = {
+							county_controller ?= {
+								OR = {
+									this = title:h_the_others.holder
+									has_trait = other_trait
+									has_trait = wight_trait
+									has_government = wight_government
+								}
+							}
+						}
+					}
+				}
+				title:b_castle_black.title_province = {
+					NOT = { has_variable = agot_wall_has_fallen_left }
+					NOT = { has_variable = agot_wall_has_fallen_middle }
+					NOT = { has_variable = agot_wall_has_fallen_right }
+				}
+			}
+			effect = {
+				agot_long_night_wall_collapse_effect = yes
+			}
+		}
+	}
+
+	# The Long Night & Azor Ahai, 9 Aug: CASTLE BLACK DOES NOT SURVIVE THE WALL. A workshop suggestion on the
+	# ancestor mod (Diomedian_Swap, Jul 20: "Since Castle Black's section of the Wall is what collapses,
+	# Castle Black should become a ruin once the Wall collapses") that Thomas called brilliant, and it is.
+	# The breach is always at Castle Black -- the middle collapse is the only animated entity AGOT ships --
+	# so the castle under it cannot still be standing garrison-neat afterwards.
+	#
+	# DELIBERATELY NOT WIRED INTO THE COLLAPSE EFFECT ITSELF: that effect's own comments forbid touching its
+	# state (the cinematic GUI breaks the Wall and sets the variable; a second writer caused the broken
+	# renders once already). This waits on its own pulse until the Wall is marked fallen AND the dead
+	# actually hold the castle -- ruining the LIVING Watch's capital mid-defence would decapitate the realm
+	# every player in it depends on. If the Watch holds the gate, the castle stands scarred but standing,
+	# which is also the better story. Uses the mod's own scour machinery: AGOT's ruin conversion plus the
+	# ln_scoured marker, so the wild can reclaim it decades later like every other scoured seat.
+	effect_group = {
+		days = 30
+		triggered_effect = {
+			trigger = {
+				title:b_castle_black.title_province ?= {
+					OR = {
+						has_variable = agot_wall_has_fallen_left
+						has_variable = agot_wall_has_fallen_middle
+						has_variable = agot_wall_has_fallen_right
+					}
+				}
+				NOT = { has_global_variable = ln_castle_black_fell }
+				exists = title:c_castle_black.holder
+				title:c_castle_black.holder = {
+					OR = {
+						has_trait = other_trait
+						has_trait = wight_trait
+						has_government = wight_government
+					}
+				}
+			}
+			effect = {
+				set_global_variable = { name = ln_castle_black_fell  value = yes }
+				title:c_castle_black = {
+					agot_ruin_county_effect = yes
+					ln_mark_scoured_ruin_effect = yes
+				}
+			}
+		}
+	}
+
+	effect_group = {
+
+        days = 30
+
+
+
+	
+
+	triggered_effect = {
+
+			trigger = {
+
+
+
+			# 11 Aug -- THE WAR GATE MOVED DOWN INTO THE VICTIM SELECTOR. It used to sit here, on the whole
+
+			# pulse, which meant one long war stopped even the free fealty absorptions. Axel's report. The
+
+			# reasoning is written out at the new site, in the limit of the neighbour search below.
+
+			
+
+			# 1.0.12 -- REMOVED, AND IT WAS ALWAYS TRUE. The clause here read:
+
+			#     NOR = { story_owner = { has_character_flag = long_night_peace }
+
+			#             story_owner = { has_character_flag = long_night_over } }
+
+			# Neither flag is set by anything in the whole playset. Not by this mod, not by AGOT, not by
+
+			# vanilla -- the engine is the authority on that and it says so on every boot:
+
+			#     [jomini_effect.cpp:1161]: Variable 'long_night_over' is used but is never set
+
+			#     [jomini_effect.cpp:1161]: Variable 'long_night_peace' is used but is never set
+
+			# Both are inherited from the ancestor Long Night mod, where presumably something once set them.
+
+			# A NOR over two conditions that can never be true is always true, so deleting it is exactly
+
+			# behaviour-neutral and costs two fewer error lines per boot. It is NOT a silent behaviour change.
+
+			#
+
+			# DELIBERATELY NOT REPLACED WITH ln_long_night_over_trigger. That would be the obvious wiring, and
+
+			# it would stop this pulse once the Long Night ends -- which may well be right, but it is a design
+
+			# decision about the recurrence and the aftermath, not a repair, and it is not safe to make one
+
+			# blind. "Don't break the long night just to fix the second long night."
+
+			#
+
+			# 20 AUG, THOMAS'S CALL, AND HE IS RIGHT: "if you removed something that was arguably being used,
+
+			# you need to ensure there's a replacement." So the guard is back, wired to a condition that is
+
+			# actually set. ln_long_night_over_trigger is `NOT = { exists = title:h_the_others.holder }` -- the
+
+			# Others' hegemony sitting empty, which is what the end of a Long Night IS in this mod, and what the
+
+			# aftermath decisions and ln_aftermath_events already gate on. No Night King, no advance.
+
+			#
+
+			# THIS ALSO HOLDS BEFORE THE FIRST INVASION, when the hegemony has no holder either -- and that is
+
+			# correct, not a side effect: a pulse that moves the dead has nothing to move until there are dead
+
+			# to move. The story cycle's own start conditions are what let it run at all.
+
+			ln_long_night_over_trigger = no
+
+			# 1.0.8 -- THE SAG, AND WHY THE COOLDOWN CLAUSE MOVED OUT OF THAT NOR.
+
+			# The 11 Aug note above says the war gate was moved off the pulse precisely so one long siege
+
+			# could not stop the free fealty absorptions. long_night_cooldown then sat here doing exactly
+
+			# that same thing, and nobody noticed because the flag reads like a war throttle. It is not:
+
+			# tested HERE it freezes the entire pulse, both branches, for five months after every duchy
+
+			# victory and five years after any defeat.
+
+			#
+
+			# That is the measured sag. Beyond the Wall NO victim holds a kingdom title (k_first_forest,
+
+			# k_thenn, k_the_frostfangs, k_the_ice_lakes are all holder = 0), so every war up there routes
+
+			# through other_cb_duchy -- the ONLY one of the three invasion CBs that arms a post-victory
+
+			# cooldown. South of the Wall the same code takes other_cb, which arms nothing. Same pulse,
+
+			# same script, one region throttled and the other not: 2.6 counties/yr beyond the Wall against
+
+			# 6.3/yr once it fell, straight out of the 134-147 save.
+
+			#
+
+			# So: once the Wall has fallen the cooldown gates the pulse exactly as it always did, and the
+
+			# south is untouched by construction. While the Wall still stands the pulse keeps running --
+
+			# but the candidate limit below then admits ONLY realms small enough for the fealty branch, so
+
+			# no second war can start. The cooldown keeps its real job and loses the one it never had.
+
+			# REGRESSION GUARD (adversarial review): long_night_cooldown has FOUR writers, not one. Besides
+
+			# the 5-month post-victory pause this change is aimed at, the three CBs' on_defeat set it for 5
+
+			# YEARS, and story setup sets it for 2 years as a deliberate opening grace in games starting at
+
+			# or after 8300.1.1 -- so the invasion does not explode on turn one before the player has
+
+			# oriented. Exempting the pulse on the flag alone silently deleted that grace. It is preserved
+
+			# here by its own marker, set beside it at both setup sites.
+
+			# The 5-year defeat freeze IS deliberately relaxed beyond the Wall: the candidate clamp below
+
+			# still forbids a new war for its whole duration, so what a defeat now costs is the wars, not
+
+			# five years of the wild going untouched. That was the 'sits idle for years' bug in another hat.
+
+			trigger_if = {
+
+				limit = {
+
+					OR = {
+
+						has_global_variable = ln_castle_black_fell
+
+						story_owner = { has_character_flag = ln_setup_grace }
+
+					}
+
+				}
+
+				story_owner = { NOT = { has_character_flag = long_night_cooldown } }
+
+			}
+
+			}	# otherwise, check for this trigger
+
+			effect = {
+
+		story_owner = {	save_scope_as = ln_pulse_night_king
+
+			# 1.0.8 -- recompute the beyond-the-Wall completeness latch ONCE, here, before the candidate
+
+			# search reads it. It walks every county in the world, so it must never run per candidate.
+
+			ln_refresh_beyond_the_wall_latch_effect = yes
+
+			# 1.0.8 -- and take one county of the frozen waste. See zz_ln_invasion_target_effects.txt:
+
+			# ten counties beyond the Wall are held by AGOT's wilderness/ruins placeholders and are barred
+
+			# from BOTH branches by the government test in the candidate limit below. Without this the
+
+			# latch above could never clear and the Wall would never fall.
+
+			ln_absorb_the_frozen_waste_effect = yes
+
+			random_neighboring_top_liege_realm_owner = {
+
+			limit = {
+
+				NOR = {
+
+					culture = {
+
+						has_cultural_parameter = other_parameter
+
+					}
+
+					faith = faith:cold_gods
+
+					has_trait = other_trait
+
+				}
+
+				is_independent_ruler = yes
+
+				# NOT THE EMPTY LAND -- 10 Aug, read out of the crash save rather than guessed.
+				#
+				# Eighty start_war failures in ten minutes, seventy-nine of them from this selection. The invasion
+				# kept picking character 325, "of_the_Wilderness" -- AGOT's placeholder ruler for unclaimed land
+				# beyond the Wall, holding SEVENTEEN counties of it. Seventeen clears the `count >= 4` test below,
+				# so he took the war branch every single time, and other_cb cannot be used against a man whose
+				# realm is a bookkeeping fiction: "No valid titles found for start_war effect", every few seconds,
+				# for seven straight years, while the Others declared no war at all. Confirmed in the save:
+				# other_cb appears zero times, last_offensive_war_finish_date=8160.1.1 against a save date of 8167.
+				#
+				# A FIRST DRAFT OF THIS FIX REQUIRED KINGDOM TIER, to match other_cb's target_title_tier. It was
+				# reverted before shipping, on evidence: beyond the Wall there is essentially nothing of kingdom
+				# tier at all -- k_the_ice_lakes, k_first_forest, k_the_frostfangs and k_thenn all sit with NO
+				# HOLDER -- so that gate would have matched nobody and stalled the invasion completely and
+				# silently. A fix that trades eighty visible errors for one invisible one is not a fix.
+				# 10 Aug -- WILDERNESS IS BARRED FROM WAR, NOT FROM BEING SWALLOWED.
+				#
+				# Thomas: "why did they not fully take out all of the wildlings in the north? That's just
+				# easily there for the picking." He is right and this clause is why. It was added to stop
+				# eighty start_war failures a run against AGOT's placeholder ruler of the empty land -- and
+				# it worked -- but it barred those realms from the ENTIRE selector, including the branch a
+				# few lines down that absorbs a small neighbour by fealty instead of fighting it. No war is
+				# attempted there, so nothing about the original bug applies.
+				#
+				# Now: a wilderness or ruins realm can be selected, but only when it is small enough to take
+				# the fealty branch (under four counties, not empire tier, not a player). The war branch
+				# still never sees one, because a realm that size never reaches it.
+				# 11 Aug -- AND THAT RE-ADMISSION WAS A MISTAKE, reported by brindatm: "The ruins character
+				# ruin 'the sleeping warden' can get conquered and turned into a wight, this is very very
+				# not good."
+				#
+				# It let exactly the wrong thing back in. AGOT's Ruin_Empress holds c_ruins and d_ruins --
+				# ONE county -- so it sailed through `count < 4`, took the fealty branch, swore to the Night
+				# King, and on_vassal_gained wighted the scenery. The other half of the clause was dead code
+				# in the same breath: the wilderness placeholder holds every wilderness county on the map at
+				# once, so it never sees `count < 4` and never could.
+				#
+				# The thing that fix was reaching for was never blocked by this clause anyway. Thomas asked
+				# why the free folk were being skipped, and the free folk are TRIBAL realms, not these two
+				# placeholders -- what was actually skipping them is the `count >= 4` war/fealty fork below,
+				# which is Axel's report and is addressed there. So: barred outright, both branches, as
+				# before, and nothing real loses a thing.
+				NOR = {
+					has_government = wilderness_government
+					has_government = ruins_government
+				}
+
+				# 11 Aug -- ONE WAR AT A TIME, NOT ONE ANYTHING AT A TIME. Axel on the Workshop: "once the
+				# actual Long Night starts, the Others tend to have trouble spreading through any province
+				# Beyond the Wall that's part of a Duchy or higher realm... the Long Night can start and
+				# years will pass without the Others continuing to grow."
+				#
+				# The at-peace test used to sit on this whole effect_group's trigger, so it gated the free
+				# fealty absorption as well as the war branch. One grinding beyond-the-Wall siege therefore
+				# stopped EVERYTHING for its whole duration -- and beyond the Wall those sieges are long,
+				# because AGOT's generator puts most of the far north into four-to-seven county tribes that
+				# fall on the war side of the fork. That is precisely the years-without-growth he describes.
+				#
+				# It now lives here instead, on the candidate rather than the pulse. While the dead are
+				# already fighting, only a neighbour small enough for the fealty branch is eligible -- so the
+				# war branch below is unreachable and a second war still cannot start -- but the wild keeps
+				# going quiet around the siege instead of the whole invasion holding its breath.
+				trigger_if = {
+					limit = { scope:ln_pulse_night_king = { is_at_war = yes } }
+					is_ai = yes
+					any_sub_realm_county = { count < 4 }
+					NOT = { highest_held_title_tier = tier_empire }
+				}
+
+				# 1.0.8 -- THE SAME CLAMP, FOR THE COOLDOWN. Paired with the pulse-trigger change above: while
+				# the Wall stands the pulse now runs during a cooldown, so the cooldown's actual job -- no new
+				# wars -- has to be done here instead. Only a neighbour small enough for the fealty branch is
+				# eligible, which makes the war branch below unreachable exactly as the at-war clamp does.
+				# The wild keeps going quiet between wars instead of the whole invasion holding its breath.
+				# ONLY IF: the dead are cooldowned. NEVER IF: they are not -- then every candidate is fair game.
+				trigger_if = {
+					limit = { scope:ln_pulse_night_king = { has_character_flag = long_night_cooldown } }
+					is_ai = yes
+					any_sub_realm_county = { count < 4 }
+					NOT = { highest_held_title_tier = tier_empire }
+				}
+
+				# ── 1.0.12: ALL THREE STAGE GATES NOW ASK "IS ANY OF IT YOURS", NOT "IS YOUR SEAT THERE" ────────
+				# Workshop, dewi1994 and Grantma: "AI stops attacking once it takes the Wall" / "It resolved on its
+				# own, the Others eventually started their wars ... It just took about a decade for them to start."
+				# A decade is the shape of a lapsing window, not of a decision, and that is exactly what was
+				# happening.
+				#
+				# The candidate search is random_neighboring_top_liege_realm_owner -- TOP LIEGES ONLY. Every stage
+				# gate below then tested that top liege's own CAPITAL PROVINCE. In most AGOT starts the northern
+				# lords are vassals of a king seated in the south, so once the Wall fell the only neighbour on offer
+				# was the Iron Throne holder, whose capital is King's Landing, which is not in the North -- gate
+				# fails, candidate list empties, invasion holds still until the twenty-year window lapses and the
+				# gate fails open. Ten years of nothing, then it starts again on its own. Grantma's report is the
+				# escape clock doing its job, and the escape clock was never meant to be load-bearing.
+				#
+				# This file already knew. The stage-one note above lists "a beyond-Wall county held by a VASSAL
+				# (never selectable: the search returns top lieges only) whose own liege is seated south of the Wall
+				# and so fails the test below" as a reachable stranding path -- and then routed around it with a
+				# clock instead of fixing the test. The test was the bug.
+				#
+				# So each gate now passes if the candidate's seat is in the region OR any county in his realm is.
+				# That is what the gate always meant: the dead finish a region before turning, and a region is
+				# finished when nobody holds land in it, not when nobody is SEATED in it. any_sub_realm_county is
+				# already used in this same candidate limit (the count < 4 fork above), so the scope is proven here.
+				# The escape clocks stay, untouched -- they are a safety net and they should go on being one.
+				# 1.0.8 -- THE WALL IS THE CLIMAX. Thomas, from the 299 AC run quoted below: "they took the Wall
+				# before taking most of beyond the wall, that's lame." The second-pass WEIGHTS below make the far
+				# north likelier; they cannot make it certain, and a x1000 weight still loses sometimes. This is
+				# the hard version of the same want: while one inch of beyond-the-Wall is not theirs, a candidate
+				# whose seat lies south of it is not a candidate at all. The dead finish the north, THEN turn.
+				#
+				# ONLY IF: ln_btw_unfinished is up -- recomputed once per pulse in the effect below, never per
+				# candidate, because the test behind it walks every county in the world.
+				# NEVER IF: the north is finished. The latch clears, this clause stops applying, and the invasion
+				# targets normally in every direction for the rest of the game.
+				#
+				# ?= on capital_province is deliberate: a bare capital_province on a landless character logs an
+				# error per character per pulse (the lesson written up in zz_ln_omen_effects.txt).
+				# SAFETY VALVE (added on regression review): the Wall must be standing for this to bind.
+				# Without it there is a stranding path -- if ln_castle_black_fell is ever set while the north
+				# is unfinished (the retired ln_opening.1 set it on day 0 and is still defined for old saves
+				# mid-queue; AGOT content can also take Castle Black), the dead would be forbidden every
+				# southern target while already standing south of the Wall, and the invasion would stop dead.
+				# Fenced on the same global as every other 1.0.8 pacing change, so all of them fail open.
+				# ESCAPE CLOCK (adversarial review). This file's own comments twice lay down the rule that a
+				# targeting PREFERENCE must never be able to stall the invasion -- which is why the second
+				# pass below is weights and not a gate. This IS a gate, so it needs a way out, and the
+				# obvious one does not work: while the gate binds, the Watch is not a candidate, so the dead
+				# can never take Castle Black, so ln_castle_black_fell can never trip. The latch is the only
+				# other release, and there are reachable mid-game states where it cannot clear -- a beyond-
+				# Wall county held by a VASSAL (never selectable: the search returns top lieges only) whose
+				# own liege is seated south of the Wall and so fails the test below; a dawn_refugee holder,
+				# whom mutate_into_other_effect permanently refuses to wight. None of these exist at the
+				# 8298/8300 starts -- every beyond-Wall county there is free-folk-under-Rayder or one of the
+				# placeholders the absorb effect covers -- but they are all reachable by ordinary play.
+				#
+				# So the gate runs on a clock: eight years from the first pulse of this Long Night, which is
+				# comfortably past the 3-5 year target and therefore never fires in a healthy run. If it does
+				# fire, the dead stop waiting for a county they cannot reach and turn south. A phase that
+				# ends slightly wrong beats an invasion that stops forever.
+				# ONLY IF: north unfinished AND Wall standing AND the clock has not run out.
+				# NEVER IF: any one of those is false -- all three fail open.
+				trigger_if = {
+					limit = {
+						has_global_variable = ln_btw_unfinished
+						NOT = { has_global_variable = ln_castle_black_fell }
+						scope:ln_pulse_night_king = { has_character_flag = ln_btw_gate_window }
+					}
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
+						any_sub_realm_county = { title_province = { geographical_region = world_westeros_beyond_the_wall } }
+					}
+				}
+				# 1.0.9b -- STAGE TWO: THE WALL IS THE CLIMAX, ENFORCED. Session 26, from the 8258-8291 run: the
+				# dead reached the Umber marches years before the Watch fell. Once stage one above stops binding
+				# (beyond-Wall finished, or its eight-year clock lapsed), the only candidate is one seated on the
+				# Wall itself -- until Castle Black falls, or this stage's own four-year clock (set beside the
+				# other one in ln_refresh_beyond_the_wall_latch_effect) runs out. trigger_else_if on purpose:
+				# this applies exactly when stage one's limit fails, never on top of it.
+				# ONLY IF: the Wall stands AND the stage-two window is live.
+				# NEVER IF: Castle Black has fallen, the window lapsed, or the save predates these flags --
+				# every one of those fails OPEN, per the standing mid-save rule.
+				trigger_else_if = {
+					limit = {
+						NOT = { has_global_variable = ln_castle_black_fell }
+						scope:ln_pulse_night_king = { has_character_flag = ln_wall_gate_window }
+					}
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_the_wall }
+						any_sub_realm_county = { title_province = { geographical_region = world_westeros_the_wall } }
+					}
+				}
+				# 1.0.10 -- STAGE THREE: THE NORTH IS ONE PANE OF GLASS. Thomas: "if there's four panes on a
+				# window... my intent is to have the Long Night wipe all four panes on the first window before
+				# going to the second window -- all of the north should be taken before they try taking the
+				# riverlands or the vale. Once they get to the Twins, the crossing, if they wanna go into the
+				# vale they can, if they wanna go into the riverlands they can. At that point they can go
+				# either way, and I think that helps with the organicness of it." That is exactly this clause:
+				# while one northern lord still stands, only the North is a target; the moment the North is
+				# theirs the latch clears and every direction opens at once, which is the Neck.
+				#
+				# world_westeros_the_north is AGOT's own region (00_agot_geographical_region.txt:503) and it
+				# already contains the Neck and the north mainland plus Bear Island and Skagos -- so the
+				# release point is the Neck by construction, without naming a county.
+				# ONLY IF: the North is unfinished AND this Night King's twenty-year window is still open.
+				# NEVER IF: either is false -- both fail OPEN, and an old save carrying neither is unaffected.
+				trigger_else_if = {
+					limit = {
+						has_global_variable = ln_north_unfinished
+						scope:ln_pulse_night_king = { has_character_flag = ln_north_gate_window }
+					}
+					OR = {
+						capital_province ?= { geographical_region = world_westeros_the_north }
+						any_sub_realm_county = { title_province = { geographical_region = world_westeros_the_north } }
+					}
+				}
+				# The engine REQUIRES the chain to end in trigger_else (PostValidate error caught live,
+				# session 26b: 'trigger_else_if with no trigger_else' -- without this block the whole
+				# stage chain fails validation and both gates go dead). always = yes IS the fail-open:
+				# neither stage binding means no regional restriction on this candidate.
+				trigger_else = {
+					always = yes
+				}
+
+				highest_held_title_tier >= tier_county
+
+				is_landed = yes
+
+			}
+
+			# ── 11 Aug, SECOND PASS: FINISH THE GROUND BEHIND YOU ─────────────────────────────────────
+			# Thomas, from a live 299 AC run: "the long night jumped into the Vale out of nowhere and the
+			# North is still free... also they took the Wall before taking most of beyond the wall, that's
+			# lame. The wildlings at this point should be all conquered and the north should have less
+			# territory meanwhile the vale is getting involved too early in terms of land loss."
+			#
+			# All three are ONE bug and it is here. Every test above and every pass in both target pickers
+			# asks only `is_neighbor_to_realm`. Nothing anywhere asks whether the region behind them is
+			# finished. So the instant their border touched a Vale lord, that lord was exactly as likely to
+			# be picked as a Karstark -- and this is a uniform random pick over every eligible neighbour.
+			#
+			# WEIGHTS, NOT A GATE, and that is deliberate. A hard "beyond the Wall first" rule stalls the
+			# invasion the moment the only thing left up there is unreachable -- and ~17% of the land beyond
+			# the Wall is held by AGOT's wilderness placeholder, which nothing can take. Every comment in
+			# these two files says the same thing for the same reason: a targeting PREFERENCE must never be
+			# able to stall the invasion. Weights reorder probability and can never empty the candidate
+			# list, so the safety net below stays intact.
+			#
+			# THE WALL SORTS ITSELF OUT. c_castle_black sits under e_the_wall -- its own de jure empire,
+			# neither beyond the Wall nor the North -- so the Watch scores base until the dead actually
+			# have business there. It stops being picked ahead of the free folk without a clause of its own.
+			weight = {
+				base = 1
+
+				# THE FREE FOLK FIRST. Overwhelming rather than absolute: while any takeable realm remains
+				# beyond the Wall it wins roughly nine times in ten, and when there are none left this
+				# modifier simply stops matching anybody.
+				modifier = {
+					factor = 1000
+					capital_county ?= { empire ?= { this = title:e_beyond_the_wall } }
+				}
+
+				# THEN THE REGION THEY ARE ALREADY STANDING IN, and the deeper they are the harder it
+				# pulls. Three rungs, and they compound: a North they hold twelve counties of scores 27, a
+				# Vale they hold one county of scores 3, and a Vale they hold NOTHING of scores 1. Factors
+				# rather than addition because that is the form vanilla uses on this exact list builder --
+				# see hold_court_events_general.txt, random_neighboring_top_liege_realm_owner with base 1
+				# and factor modifiers.
+				modifier = {
+					factor = 3
+					capital_county ?= { empire ?= { any_in_de_jure_hierarchy = {
+						tier = tier_county
+						count >= 1
+						holder ?= { ln_is_one_of_them_trigger = yes }
+					} } }
+				}
+				modifier = {
+					factor = 3
+					capital_county ?= { empire ?= { any_in_de_jure_hierarchy = {
+						tier = tier_county
+						count >= 6
+						holder ?= { ln_is_one_of_them_trigger = yes }
+					} } }
+				}
+				modifier = {
+					factor = 3
+					capital_county ?= { empire ?= { any_in_de_jure_hierarchy = {
+						tier = tier_county
+						count >= 12
+						holder ?= { ln_is_one_of_them_trigger = yes }
+					} } }
+				}
+			}
+
+			save_scope_as = othervictim_character
+
+		}
+
+		if = {
+
+			limit = { exists = scope:othervictim_character }
+
+			if = { limit = { OR = { 	
+
+	scope:othervictim_character = { any_sub_realm_county = { count >= 4 } }
+
+	scope:othervictim_character = { highest_held_title_tier = tier_empire }
+
+	scope:othervictim_character = { is_ai = no }
+
+	}				}
+
+			# 10 Aug: the else used to catch EVERYTHING that was not empire, so a duchy-tier game rule would
+			# still have started a kingdom-tier war and other_cb_duchy would never have fired once. Reachability
+			# rule: a new CB is dead code until the thing that starts wars knows it exists.
+			if = { limit = { has_game_rule = others_cb_empire }
+				start_war = {
+					casus_belli = other_cb_empire
+					target = scope:othervictim_character
+				}
+			}
+			else_if = { limit = { has_game_rule = others_cb_kingdom }
+				# 10 Aug -- ENCIRCLEMENT AT KINGDOM TIER, and this is the DEFAULT now. AGOT's northern Marches ARE
+				# kingdom titles, so this is the tier the map is actually drawn in. Naming the target ourselves is
+				# what stops the dead beelining for Winterfell -- bannermen's Marches first, the crown's own seat
+				# last. Full reasoning in common/scripted_effects/zz_ln_invasion_target_effects.txt. The else is the
+				# safety net: a targeting PREFERENCE must never be able to stall the invasion.
+				# 11 Aug -- A KINGDOM GOAL NEEDS A KINGDOM VICTIM. Axel's report: beyond the Wall nobody holds
+				# the de jure kingdoms, so a kingdom-tier goal against a four-county tribe is a war for 44
+				# counties fought against a man who owns nine percent of them, and it never ends. A victim who
+				# holds nothing of kingdom tier gets a duchy-sized goal instead -- winnable in months, and it
+				# reads as the dead taking the far north tribe by tribe rather than sitting outside one hold
+				# for a decade. Reasoning in full at other_cb_duchy in common/casus_belli_types.
+				#
+				# Nothing south of the Wall is affected: the Northern Marches ARE kingdom titles and their
+				# holders hold them, so those victims take the branch below exactly as before.
+				if = {
+					limit = {
+						scope:othervictim_character = {
+							NOT = { highest_held_title_tier >= tier_kingdom }
+						}
+					}
+					ln_pick_invasion_duchy_effect = yes
+					if = {
+						limit = { exists = scope:ln_invasion_target }
+						start_war = {
+							casus_belli = other_cb_duchy
+							target = scope:othervictim_character
+							target_title = scope:ln_invasion_target
+						}
+					}
+					else = {
+						debug_log = "LN_TRACE: untargeted start_war fallback 1 (other_cb_duchy)"
+						start_war = {
+							casus_belli = other_cb_duchy
+							target = scope:othervictim_character
+						}
+					}
+				}
+				else = {
+					ln_pick_invasion_kingdom_effect = yes
+
+					if = {
+						limit = { exists = scope:ln_invasion_target }
+						start_war = {
+							casus_belli = other_cb
+							target = scope:othervictim_character
+							target_title = scope:ln_invasion_target
+						}
+					}
+					else = {
+						debug_log = "LN_TRACE: untargeted start_war fallback 2 (other_cb)"
+						start_war = {
+							casus_belli = other_cb
+							target = scope:othervictim_character
+						}
+					}
+				}
+			}
+			else = {
+				# 10 Aug -- ENCIRCLEMENT. Name the duchy ourselves instead of letting the engine's ai_score pick it,
+				# so the weak ground goes first and the great seats go last. Full reasoning in
+				# common/scripted_effects/zz_ln_invasion_target_effects.txt. The else below is the safety net: a
+				# targeting PREFERENCE must never be able to stall the invasion, so if the picker comes back empty
+				# for any reason we fall straight back to the engine's own choice.
+				ln_pick_invasion_duchy_effect = yes
+
+				if = {
+					limit = { exists = scope:ln_invasion_target }
+					start_war = {
+						casus_belli = other_cb_duchy
+						target = scope:othervictim_character
+						target_title = scope:ln_invasion_target
+					}
+				}
+				else = {
+					debug_log = "LN_TRACE: untargeted start_war fallback 3 (other_cb_duchy)"
+					start_war = {
+						casus_belli = other_cb_duchy
+						target = scope:othervictim_character
+					}
+				}
+			}
+
+			}
+
+			else = {
+
+				create_title_and_vassal_change = {
+
+			type = swear_fealty
+
+			save_scope_as = change
+
+						}
+
+		scope:othervictim_character = {
+
+			change_liege = {
+
+				liege = title:h_the_others.holder
+
+				change = scope:change
+
+			}
+
+		}
+
+		resolve_title_and_vassal_change = scope:change
+
+			
+
+			
+
+				}
+
+		}
+
+
+
+			}
+
+
+
+			
+
+
+
+			}
+
+		}
+
+		
+
+	
+
+	
+
+
+
+		
+
+			}
+
+			
+
+			
+
+			effect_group = {
+
+        days = 10
+
+
+
+	
+
+			triggered_effect = {
+
+		trigger = { 
+
+					story_owner = { has_culture = culture:frostborn }
+
+					}
+
+		effect = {
+
+		story_owner = {
+
+		add_stress = -300
+
+		if = { limit = { gold >= 250 }
+
+		remove_reserved_gold = 250
+
+		}
+
+		if = { limit = { gold < 1 }
+
+		add_gold = 100
+
+		}
+
+			
+
+			# 10 Aug -- 272 ERROR LINES A SESSION:
+			#   "equip_artifact_to_owner_replace effect [ Only an independent ruler, their spouse, or heirs may
+			#    wear this crown. ]"
+			# The Crown of True Winter carries vanilla's crown restriction, and this fires on the story owner every
+			# time the heartbeat comes round -- including the stretches where he is not an independent ruler
+			# (mid-ceremony, mid-government-change, or simply before the invasion has made him one). The effect is
+			# refused every time and logs every time.
+			#
+			# Guarded on the condition the engine is actually testing. He puts the crown on when he is a king in
+			# his own right, which is the only state the artifact was ever meant to be worn in anyway.
+			if = {
+				limit = { is_independent_ruler = yes }
+				every_character_artifact = { limit = { has_variable = crown_of_true_winter_artifact } equip_artifact_to_owner_replace = yes }
+			}
+
+		save_scope_as = thegreatother
+
+		every_courtier = { 
+
+								if =  { limit = { AND = { has_culture = culture:frostborn
+
+											has_faith = faith:cold_gods 
+
+											NOT = { has_trait = other_trait}  NOT = { has_trait = wight_trait } } # LN+ Option B: never promote wights to Others
+
+											
+
+
+
+														}
+
+											if = { limit = { has_trait = dwarf } remove_trait = dwarf }
+
+											add_trait = other_trait
+											add_character_flag = ln_one_of_them   # 1.0.7: stamped at promotion -- see ln_is_one_of_them_trigger
+
+											add_trait = spindly
+
+											make_trait_inactive = cool_silver_hair
+
+											make_trait_inactive = blue_eyes
+
+										 change_age = 7000
+
+										 change_first_name = other_name
+
+										 add_character_flag = agot_immersion_bannermen_blocker
+
+										 #set_father = scope:thegreatother
+
+										 set_house = scope:thegreatother.house
+
+											}
+
+										 
+
+							if = { limit = { NOT = { has_faith = faith:cold_gods }
+
+											NOT = { has_trait = dragon }
+
+								    }
+
+							 
+
+							 random_list = {
+
+			50 = {
+
+				death = {
+
+					killer = scope:thegreatother
+
+					death_reason = death_sacrificed_to_gods
+
+				}
+
+			}
+
+			50 = {
+
+				death = {
+
+					killer = scope:thegreatother
+
+					death_reason = death_ripped_apart_limb_by_limb
+
+				}
+
+			}
+
+		}
+
+		}
+
+		}
+
+			every_prisoner = {
+
+		random_list = {
+
+				50 = {
+
+					death = {
+
+						killer = scope:thegreatother
+
+						death_reason = death_sacrificed_to_gods
+
+					}
+
+				}
+
+				50 = {
+
+					death = {
+
+						killer = scope:thegreatother
+
+						death_reason = death_ripped_apart_limb_by_limb
+
+					}
+
+				}
+
+			}
+
+		
+
+		}
+
+			
+
+	
+
+								
+
+		}								
+
+		
+
+		
+
+		}
+
+		
+
+	}
+
+		
+
+	
+
+	
+
+
+
+		
+
+			}
+
+			
+
+			
+
+#		effect_group = {
+
+#        days = 180
+
+#
+
+#	
+
+#			triggered_effect = {
+
+#		trigger = { 
+
+#					story_owner = { has_culture = culture:frostborn
+
+#									completely_controls = title:c_castle_black
+
+#									NOT = { has_character_flag = war_for_dawn_cooldown }
+
+#									 has_character_flag = long_night_cooldown 
+
+#
+
+#					}
+
+#					}
+
+#		effect = {
+
+#		story_owner = {
+
+#		save_scope_as = thegreatother
+
+#		ordered_vassal = {
+
+#		limit = { NOT = { has_faith = faith:cold_gods } }
+
+#		order_by = {
+
+#					value = 0
+
+#					add = max_military_strength
+
+#				}
+
+#		save_scope_as = uprising_vassal
+
+#			title:h_the_others.holder = { if = { limit = { any_character_war = {
+
+#								is_defender = title:h_the_others.holder
+
+#								using_cb = war_for_the_dawn_cb	}
+
+#										   }
+
+#								random_character_war = {
+
+#								limit = {
+
+#								is_defender = title:h_the_others.holder
+
+#								using_cb = war_for_the_dawn_cb
+
+#							}
+
+#
+
+#							add_attacker = scope:uprising_vassal
+
+#						}
+
+#							}
+
+#							else = {
+
+#						scope:uprising_vassal = {
+
+#							start_war = {
+
+#								cb = war_for_the_dawn_cb
+
+#								target = title:h_the_others.holder
+
+#							
+
+#							}
+
+#						}
+
+#					}
+
+#									
+
+#	}
+
+#		
+
+#		
+
+#		
+
+#		}
+
+#	
+
+#	
+
+#	}
+
+#	}
+
+#	
+
+#		
+
+#	}
+
+#	
+
+#
+
+#		
+
+#			}
+
+			
+
+			effect_group = {
+
+        days = 365
+
+
+
+	
+
+			triggered_effect = {
+
+		trigger = { 
+
+					story_owner = { has_culture = culture:frostborn
+
+									
+
+
+
+					}
+
+					}
+
+		effect = {
+
+		story_owner = {
+
+		save_scope_as = thegreatother
+
+		every_vassal_or_below = {
+
+			limit = { NOT = { has_character_flag = others_sacrifice_event }
+
+					NOT = { is_at_war_with_liege = yes }
+
+					highest_held_title_tier >= tier_county
+
+			}
+
+			add_character_flag = { flag = others_sacrifice_event years = 5 }
+
+			# trigger_event = others_occupation.1   # LN+ retired: wights are mindless and never negotiate/refuse/submit. Scouring wars to be rebuilt decoupled (see task).
+
+		
+
+		
+
+		
+
+		}
+
+	
+
+	
+
+	}
+
+	}
+
+	
+
+		
+
+	}
+
+	
+
+
+
+		
+
+			}
+
+			
+
+			
+
+			effect_group = {
+
+        days = 180
+
+
+
+	
+
+			triggered_effect = {
+
+		trigger = { 
+
+					story_owner = { has_culture = culture:frostborn
+
+									
+
+
+
+					}
+
+					}
+
+		effect = {
+
+		story_owner = {
+
+		save_scope_as = thegreatother
+
+		every_vassal_or_below = { 
+
+								if =  { limit = { AND = { has_culture = culture:frostborn
+
+											has_faith = faith:cold_gods 
+
+											NOT = { has_trait = other_trait}  NOT = { has_trait = wight_trait } } # LN+ Option B: never promote wights to Others
+
+
+
+														}
+
+														change_first_name = other_name
+
+														 add_character_flag = agot_immersion_bannermen_blocker
+
+											if = { limit = { has_trait = dwarf } remove_trait = dwarf }
+
+											if = { limit = { has_trait = gluttonous } remove_trait = gluttonous }
+
+											add_trait = other_trait
+											add_character_flag = ln_one_of_them   # 1.0.7: stamped at promotion -- see ln_is_one_of_them_trigger
+
+											add_trait = spindly
+
+											change_age = 7000
+
+											set_house = scope:thegreatother.house
+
+											#set_father = scope:thegreatother
+
+											}
+
+										 
+
+							
+
+		}
+
+		every_vassal = { limit = { AND = {  is_ai = yes
+
+											NOT = { has_faith = faith:cold_gods }
+
+											NOT = { has_character_flag = cannot_be_knight_and_commander  }
+
+											NOT = { is_at_war = yes }
+
+												}
+
+												}
+
+									add_character_flag = { flag = cannot_be_knight_and_commander years = 1 }
+
+									}
+
+	
+
+	
+
+	}
+
+	}
+
+	
+
+		
+
+	}
+
+	
+
+
+
+		
+
+			}
+
+			
+
+			
+
+			
+
+			
+
+			#### Take HArrenhal
+
+			
+
+			effect_group = {
+
+        years = 2
+
+
+
+	
+
+			triggered_effect = {
+
+		trigger = { 
+
+					story_owner = { has_culture = culture:frostborn
+
+					completely_controls = title:c_harrenhal
+
+					NOT = { has_title = title:c_harrenhal }
+
+					}
+
+					title:c_harrenhal.holder = { is_ai = yes }
+
+					}
+
+		effect = {
+
+		story_owner = {
+
+		save_scope_as = thegreatother
+
+		get_title = title:c_harrenhal
+
+		set_realm_capital = title:c_harrenhal
+
+	
+
+	
+
+	}
+
+	}
+
+	
+
+		
+
+	}
+
+	
+
+
+
+		
+
+			}
+
+	### Ice Dragon	
+
+			effect_group = {
+
+        years = 3
+
+
+
+	
+
+			triggered_effect = {
+
+		trigger = { 
+
+					# WAS: agot_long_night_dragon_on + agot_dragon_population_extinct = no. Both checks moved inside
+
+					# ln_others_take_a_dragon_effect, because the two rule settings need opposite preconditions --
+
+					# "raise" wants a dragon in the ground and does not care what is still flying; "on" wants the reverse.
+
+					NOT = { has_game_rule = agot_long_night_dragon_off }
+
+					story_owner = { 
+
+					has_trait = other_trait
+
+					NOT = { has_trait = dragonrider }
+
+					}
+
+					
+
+					
+
+					}
+
+		effect = {
+
+		story_owner = {
+
+		# dragonless_dragonrider is no longer stripped up here -- it comes off inside the effect, and only on the
+
+		# branch that actually produced a dragon. They can now come away from this empty-handed.
+
+		ln_others_take_a_dragon_effect = yes
+
+		
+
+	
+
+		}
+
+	}
+
+	
+
+		
+
+	}
+
+	
+
+
+
+		
+
+			}
+
+			
+
+			#### Fix the Story Owner
+
+			
+
+			effect_group = {
+
+        years = 1
+
+
+
+	
+
+			triggered_effect = {
+
+		trigger = { 
+
+					story_owner = { NOT = { has_title = title:h_the_others } 
+
+					}
+
+					
+
+					}
+
+		effect = {
+
+		story_owner ?= { save_scope_as = ln_original_nightking }
+
+		if = {
+			limit = { exists = title:h_the_others.holder }
+
+			title:h_the_others.holder = { save_scope_as = ln_others_holder }
+
+			if = {
+				# The man holding the Land of Always Winter is himself an Other. Hand him the story.
+				limit = { scope:ln_others_holder = { has_trait = other_trait } }
+				make_story_owner = scope:ln_others_holder
+				scope:ln_others_holder = {
+					if = {
+						limit = { NOT = { has_trait = nightking } }
+						add_trait = nightking
+					}
+				}
+			}
+			else = {
+				# He is not. Find another Other anywhere in the world and put him on the throne.
+				random_ruler = {
+					limit = {
+						has_trait = other_trait
+						NOT = { this = scope:ln_original_nightking }
+						NOT = { this = scope:ln_others_holder }
+					}
+					save_scope_as = ln_the_great_other
+					if = {
+						limit = { NOT = { has_trait = nightking } }
+						add_trait = nightking
+					}
+				}
+
+				# NOTHING HAPPENS IF THERE IS NO ONE. Better a story cycle that waits than a deposed emperor
+				# and a story handed to a scope that does not exist.
+				if = {
+					limit = { exists = scope:ln_the_great_other }
+					make_story_owner = scope:ln_the_great_other
+					scope:ln_others_holder = {
+						set_designated_heir = scope:ln_the_great_other
+						depose = yes
+					}
+				}
+			}
+		}
+
+}								
+
+								 
+
+	}
+
+	
+
+		
+
+	}
+
+}
+

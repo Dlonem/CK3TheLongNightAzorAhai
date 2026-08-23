@@ -1,0 +1,35 @@
+﻿# AGOT: The Long Night & Azor Ahai -- whose walls are worth the name.
+#
+# Root = a living landed character. This is the LIVING counterpart of ln_was_great_house_trigger
+# (common/scripted_triggers/zz_ln_prophecy_triggers.txt), which is written for the moment of death and cannot be
+# reused here. Deliberately identical in its terms so that "a great house" means one thing in this mod:
+#   * a kingdom or better, or
+#   * a duchy AND a house with real reach -- five members, which separates a name with cadet branches and
+#     cousins from a lord and two sons.
+#
+# AGOT ships no great-house trigger of its own; this was checked when the death version was written.
+ln_is_a_great_house_trigger = {
+	is_lowborn = no
+	OR = {
+		highest_held_title_tier >= tier_kingdom
+		AND = {
+			highest_held_title_tier >= tier_duchy
+			house ?= {
+				any_house_member = {
+					count >= 5
+				}
+			}
+		}
+	}
+}
+
+# Root = a living landed character. Does this ruler hold a seat that should stand when the country around it
+# does not? A great house, landed, alive, and not one of the dead -- the Others do not fortify their own halls
+# against themselves.
+ln_holds_a_last_bastion_trigger = {
+	is_alive = yes
+	is_landed = yes
+	ln_is_a_great_house_trigger = yes
+	ln_is_one_of_them_trigger = no
+	exists = capital_county
+}

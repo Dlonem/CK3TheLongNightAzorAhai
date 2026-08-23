@@ -1,0 +1,35 @@
+﻿namespace = ln_prophecy
+
+# The last kiss. Fires the day after a death that did not take.
+# resurrected_by_rhllor carries fertility -0.35 -- coming back costs you something, and the card says so.
+ln_prophecy.20 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_prophecy.20.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { exists = scope:ln_the_priest }
+				desc = ln_prophecy.20.desc.named
+			}
+			desc = ln_prophecy.20.desc.plain
+		}
+	}
+	theme = faith
+	override_background = { reference = temple }
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+	}
+
+	option = {
+		name = ln_prophecy.20.a
+		add_piety = major_piety_gain
+	}
+
+	option = {
+		name = ln_prophecy.20.b
+		add_character_flag = ln_wishes_it_had_not_worked
+		add_piety = minor_piety_loss
+	}
+}

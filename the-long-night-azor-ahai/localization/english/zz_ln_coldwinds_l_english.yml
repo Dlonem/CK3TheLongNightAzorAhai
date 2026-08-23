@@ -1,0 +1,23 @@
+﻿l_english:
+
+ # The Cold Winds flavour cards -- Wall and North only, strictly atmosphere.
+ ln_coldwinds.1.t:0 "Nobody Was There"
+ ln_coldwinds.1.desc:0 "The ranger who tells it has said harder things without blinking, and [ROOT.Char.GetSheHe] is not blinking now either. That is what makes it bad.\n\n"Found the ranging three days out. All of them. Laid out in the snow with their eyes open, cold as stone -- I counted the bodies twice, my [ROOT.Char.Custom('FormOfAddressForLiege')]. Rode back for a cart and more hands. We were gone half a day."\n\nHe looks at the fire, not at [ROOT.Char.GetHerHim].\n\n"When we came back, nobody was there. Not dragged off. No tracks going out. Just the snow, pressed flat where they had lain, and eight sets of footprints walking north.""
+ ln_coldwinds.1.a:0 "Dead men do not stand up and leave. Search again."
+ ln_coldwinds.1.b:0 "Bar the gate at dusk. Every dusk."
+ ln_coldwinds.2.t:0 "The Quiet"
+ ln_coldwinds.2.desc:0 "The haunted forest has always had a voice -- wolves at dusk, ravens quarrelling in the white trees, the small scuffle and crack of things living their lives under the snow.\n\nThe men who walk the top of the ice have started remarking on it, which for such men means two words and a jerk of the chin: nothing moving. No wolves this month. No birds this week. The last patrol came back and the only sound they could report from three days in the trees was their own horses breathing.\n\nA forest is never silent. Unless everything in it has somewhere better to be."
+ ln_coldwinds.2.a:0 "A forest goes quiet when something hunts in it."
+ ln_coldwinds.2.b:0 "Winter. It is only winter."
+ ln_coldwinds.3.t:0 "The Fires Want Tending"
+ ln_coldwinds.3.desc:0 "It is the oldest men who noticed, the ones who have fed nightfires for forty years and know their moods the way a shepherd knows weather. The fires want tending, they say. Wood that should burn until morning is grey ash by the middle watch. Flames stand up strange in still air, leaning, as if there were a wind that nobody standing beside them can feel.\n\nAnd without any order being given, the old men have stopped sitting with their backs to the north."
+ ln_coldwinds.3.a:0 "Double the wood ration. Say nothing."
+ ln_coldwinds.3.b:0 "Sit with the old men. Hear them out."
+ ln_coldwinds.4.t:0 "The Wolves Come South"
+ ln_coldwinds.4.desc:0 "The game is moving. Elk on the kingsroad in numbers the oldest huntsman has never seen, deer swimming rivers they have never crossed, and behind them the wolves -- whole packs of them, passing [ROOT.Char.GetHerHis] holdfast in the night, and not stopping to trouble the folds.\n\nThat is the detail the smallfolk keep repeating, in the way they do when a thing frightens them sideways: the wolves are not hunting. They are travelling. Everything that lives north of here has somewhere it would rather be, and all of it is south."
+ ln_coldwinds.4.a:0 "Good hunting, then."
+ ln_coldwinds.4.b:0 "Ask what they are running from."
+ ln_coldwinds.5.t:0 "She Has Never Been Wrong"
+ ln_coldwinds.5.desc:0 "There is an old woman in the kitchens who has outlived three lords of this hall, and every winter of her long life she has called the weather before it came -- the men who plan the slaughtering and the seed corn quietly check with her first, and have for years.\n\nThis year she will not give a date for the thaw. She sits closer to the fire than she used to, works her needles, and says the same thing to anyone who asks, in the flat voice of a woman reporting what she can see through a window:\n\n"The cold winds are rising. This one does not end.""
+ ln_coldwinds.5.a:0 "Give her a place by the big fire."
+ ln_coldwinds.5.b:0 "Old women say old things."

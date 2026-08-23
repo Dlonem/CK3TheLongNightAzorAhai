@@ -1,0 +1,33 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who gets out.
+#
+# The shipped chance was a flat 3, and only for unlanded, non-brave, adult nobles of a prestige-3+ dynasty. A house
+# of ten lost everyone. The target is one to three out of ten getting south, and a landed lord having a road at all.
+
+# Landless nobles and courtiers of standing. Base 15, pushed by temperament and by having something to run for.
+ln_noble_flee_chance_value = {
+	value = 15
+	if = { limit = { has_trait = craven }   add = 12 }
+	if = { limit = { has_trait = brave }    add = -10 }   # was a hard exclusion; the brave can still be dragged out
+	if = { limit = { any_child = { count >= 1 } } add = 8 }
+	if = { limit = { age < 30 }             add = 8 }
+	if = { limit = { age > 60 }             add = -8 }    # the old do not run
+	if = { limit = { has_trait = wounded_1 } add = -6 }
+	if = { limit = { dynasty ?= { dynasty_prestige_level >= 5 } } add = 6 }   # great houses have friends in the south
+	min = 2
+	max = 45
+}
+
+# Landed lords abandoning their seat. Deliberately much lower, and lower again the greater the house -- a Stark does
+# not walk away from Winterfell, a lord granted a keep last year might. This is the "great houses are less likely to
+# abandon their place" balance Thomas asked for.
+ln_lord_flee_chance_value = {
+	value = 10
+	if = { limit = { has_trait = craven }   add = 15 }
+	if = { limit = { has_trait = brave }    add = -8 }
+	if = { limit = { any_child = { count >= 1 } } add = 8 }
+	if = { limit = { highest_held_title_tier >= tier_kingdom } add = -8 }
+	if = { limit = { highest_held_title_tier >= tier_empire }  add = -6 }
+	if = { limit = { age < 30 }             add = 5 }
+	min = 1
+	max = 35
+}

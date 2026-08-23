@@ -1,0 +1,10 @@
+﻿l_english:
+
+ ln_prophecy.20.t:0 "The Last Kiss"
+
+ ln_prophecy.20.desc.named:0 "#e I do not remember dying, and I do not remember coming back. There was the day before, and then there is this—and nothing in between that I can find, no matter how carefully I search my own mind.\n\n[scope:ln_the_priest.GetTitledFirstName] refuses to tell me exactly what [scope:ln_the_priest.GetSheHe] did. [scope:ln_the_priest.GetSheHe|U] only says that the Lord of Light was not finished with me, which sounds like humility but absolutely is not.\n\nSomething is deeply wrong. Food tastes like ash. The biting winter cold does not reach my skin. My maester, who does not believe in magic and has said so loudly for years, examined me twice and left the room twice without speaking a single word.\n\n#bold I will not have children now. Whatever came back out of that fire is not entirely what went into it.#!#!"
+
+ ln_prophecy.20.desc.plain:0 "#e I do not remember dying, and I do not remember coming back.\n\nSomeone prayed over me—there were people in the room, a roaring fire, and frantic words in a tongue I only half-know. And then there is a gap I cannot locate, no matter how carefully I feel for the edges of it.\n\nSomething is fundamentally broken, and I cannot name it. Wine has no taste. The cold does not make me shiver. I have caught myself, twice now, simply forgetting to be frightened of things that ought to terrify a living man.\n\n#bold I will not have children now. Whatever came back out of that fire is not entirely what went into it.#!#!"
+
+ ln_prophecy.20.a:0 "Then there is work left for me to do. I will find out what."
+ ln_prophecy.20.b:0 "I am alive. For now, that has to be enough."

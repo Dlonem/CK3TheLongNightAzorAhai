@@ -1,0 +1,150 @@
+﻿# AGOT: The Long Night & Azor Ahai -- how long the warning lasts.
+#
+# Thomas: "We want them to know they have some time. But we want it to sneak up on people... It could be
+# fifteen years from now. It could be seventy-five years from now."
+#
+# The Cold Winds phase carries a sixty-year duration in the struggle definition purely as a backstop. The real
+# length is rolled here, once, the month the phase begins, and this effect ends the phase itself.
+#
+# WHAT THE PLAYER KNOWS: the winds have risen, and the dark is coming. That is all, and it is deliberately all.
+# There is no counter anywhere in the interface and no way to work it out, which is the whole point -- a
+# countdown you can read is a schedule, and a schedule is something you can leave until the last decade.
+
+# Root = struggle. Called from ln_struggle_cold_winds_reached_effect, once.
+ln_winter_clock_start_effect = {
+	# ROLL ONLY IF NOBODY HAS ALREADY DECIDED. An overdue historical start sets ln_winter_target at game start
+	# so the clock expires exactly on 8300; this effect then runs on phase entry and would have thrown that
+	# away for a random 12-45. Guarding it also makes the effect idempotent, which it always should have been.
+	if = {
+		limit = { NOT = { has_global_variable = ln_winter_target } }
+		random_list = {
+		# THE SHORT ONE. Barely a reign. A player who was not already preparing does not get to start now.
+			15 = { set_global_variable = { name = ln_winter_target  value = 12 } }
+			25 = { set_global_variable = { name = ln_winter_target  value = 20 } }
+			30 = { set_global_variable = { name = ln_winter_target  value = 28 } }
+			20 = { set_global_variable = { name = ln_winter_target  value = 36 } }
+		# THE LONG ONE. Long enough that the men who saw the winds rise are dead before it lands, and their
+		# grandsons have started treating the whole thing as a story their grandfathers told.
+			10 = { set_global_variable = { name = ln_winter_target  value = 45 } }
+		}
+	}
+	# THE EROSION FLOOR, stamped while the target is still the number that was rolled. Guarded on itself so
+	# it is idempotent and so a save that entered this phase before the cap existed picks one up on the next
+	# monthly tick rather than never. See ln_winter_erosion_floor_value.
+	if = {
+		limit = {
+			exists = global_var:ln_winter_target
+			NOT = { has_global_variable = ln_winter_floor }
+		}
+		set_global_variable = { name = ln_winter_floor  value = ln_winter_erosion_floor_value }
+	}
+
+	# 1.0.9 -- THE ROLL ITSELF, written down at the one moment it is still the roll. ln_winter_target is
+	# mutated downward by every sighting, so ten years later the original is gone unless it is recorded
+	# here. ln_dragon_hatched_counter_effect restores toward this and never past it: dragons can undo what
+	# the sightings took and can never hand a world a longer winter than the one it was dealt.
+	#
+	# Deliberately NOT backfilled in ln_winter_clock_effect the way ln_winter_floor is. On a save that
+	# entered this phase before 1.0.9 the target has already been eroded, so stamping it now would record a
+	# reduced number as the "original" and the restore would be capped below where it should be -- or, if
+	# erosion had run far, would look like no erosion at all. Better to have no roll on file and let that
+	# half of the counter stay shut. The Long Summer half works on every save regardless.
+	if = {
+		limit = {
+			exists = global_var:ln_winter_target
+			NOT = { has_global_variable = ln_winter_roll }
+		}
+		set_global_variable = { name = ln_winter_roll  value = global_var:ln_winter_target }
+	}
+
+	set_global_variable = { name = ln_winter_started  value = current_year }
+}
+
+# Root = struggle. Called every month from ln_struggle_monthly_effect while the Cold Winds are running.
+ln_winter_clock_effect = {
+	# The roll can be missing on a save that entered this phase before this file existed. Start the clock now
+	# rather than never -- a missing clock would leave the phase sitting on its sixty-year backstop.
+	if = {
+		limit = { NOT = { has_global_variable = ln_winter_target } }
+		ln_winter_clock_start_effect = yes
+	}
+
+	# A clock that predates the erosion cap gets a floor now. Stamped DIRECTLY and not by calling
+	# ln_winter_clock_start_effect, which also rewrites ln_winter_started -- that would shove an
+	# in-progress warning back to today and hand the save a fresh full-length winter.
+	if = {
+		limit = {
+			exists = global_var:ln_winter_target
+			NOT = { has_global_variable = ln_winter_floor }
+		}
+		set_global_variable = { name = ln_winter_floor  value = ln_winter_erosion_floor_value }
+	}
+
+	if = {
+		limit = {
+			exists = global_var:ln_winter_started
+			exists = global_var:ln_winter_target
+			ln_winter_elapsed_value >= global_var:ln_winter_target
+		}
+		change_struggle_phase = ln_phase_the_long_night
+	}
+}
+
+# Root = anything. Somebody saw one, and was believed, while the winds were already blowing.
+#
+# THIS IS WHAT A SIGHTING DOES DURING THE COLD WINDS, and it is why the phase is no longer a flat number. A
+# struggle catalyst cannot shorten a time-based phase; our own clock can be shortened by anything we like. So
+# the years come straight off the calendar, and the player feels it as the winter arriving early rather than as
+# a number moving on a panel he cannot see.
+#
+# FLOORED AT FIVE REMAINING YEARS. However bad it gets, a ruler who has just taken the seat is not handed the
+# Long Night in his first winter with no chance to do anything about it.
+#
+# RATE-LIMITED -- 9 Aug pacing audit. The design intent was a RARE bite: "a believed sighting takes 4-6 years
+# straight off." But the call sites are wired to COMMON events -- the btw struggle sitting in its hostility
+# phase calls this EVERY YEAR (-2), and every lost ranging, snowstorm death and dragon death bites too, with a
+# cooldown on the catalyst points but NONE on this. In a busy world the whole 12-45 year warning was being
+# chewed down to its 5-year floor within a decade, which un-does the entire "warning of unknown length" design.
+# So the calendar now pays at most once every four years, whoever comes asking -- the same shape as the Wall's
+# own five-year rule on ln_catalyst_watch_undermanned, and for the same reason: a signal you can spam is not a
+# signal. The individual bites keep their sizes, so a sighting still lands harder than a lost ranging.
+#
+# AND THE FLOOR IS NOW A FLOOR. The old guard checked remaining > 5 and then subtracted the full $YEARS$, so a
+# 6-year clock hit for 6 went to zero -- the Long Night in the player's lap with no warning left at all. The
+# clamp after the subtraction puts the clock back at exactly five remaining if the bite carried it under.
+ln_the_dark_comes_sooner_effect = {
+	if = {
+		limit = {
+			exists = global_var:ln_winter_target
+			exists = global_var:ln_winter_started
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds }
+			ln_winter_remaining_value > 5
+			# ...AND THE CAP. Sixty per cent of the rolled warning is the most a world can keep; the other forty
+			# is what sightings, lost rangings and dead dragons are allowed to take. trigger_if rather than a
+			# bare check so a save from before the floor existed still bites normally on the tick before the
+			# monthly effect stamps one.
+			trigger_if = {
+				limit = { exists = global_var:ln_winter_floor }
+				ln_winter_erosion_headroom_value > 0
+			}
+			NOT = { has_global_variable = ln_cd_dark_sooner }
+		}
+		set_global_variable = { name = ln_cd_dark_sooner  value = yes  years = 4 }
+		change_global_variable = {
+			name = ln_winter_target
+			subtract = $YEARS$
+		}
+		# The cap first: a single big bite can jump the floor, so it is clamped rather than merely gated.
+		if = {
+			limit = {
+				exists = global_var:ln_winter_floor
+				ln_winter_erosion_headroom_value < 0
+			}
+			set_global_variable = { name = ln_winter_target  value = global_var:ln_winter_floor }
+		}
+		if = {
+			limit = { ln_winter_remaining_value < 5 }
+			set_global_variable = { name = ln_winter_target  value = ln_winter_floor_target_value }
+		}
+	}
+}

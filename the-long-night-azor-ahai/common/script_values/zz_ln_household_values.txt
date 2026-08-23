@@ -1,0 +1,5 @@
+﻿# ── WHAT THE NEXT LEGACY PERK COSTS, RIGHT NOW ───────────────────────────────────────────────────────
+# ln_charter_next_perk_cost_value removed 1.0.12b -- it priced perk grants for a pre-pay that turned out to
+# be compensating a charge the engine never makes (add_dynasty_perk is free; see the headstone comment in
+# ln_household_charter_effect). Referenced by nothing.
+

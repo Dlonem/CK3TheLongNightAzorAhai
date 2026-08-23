@@ -1,0 +1,33 @@
+﻿# AGOT: The Long Night & Azor Ahai -- meeting your own dead on the field.
+# Rides on_combat_end_winner, which zz_ln_00_hooks.txt already declares for the killing blow. A second
+# sub-list rather than more logic inside ln_dawn_combat, because these two want different gates: the killing
+# blow needs the Long Night phase, this one only needs the dead to be walking.
+
+ln_known_dead_combat = {
+	trigger = {
+		exists = side_commander
+		side_commander = {
+			is_alive = yes
+			is_ai = no
+			NOT = { has_character_flag = ln_saw_my_dead_cooldown }
+		}
+		# The dead are in the world at all.
+		exists = title:h_the_others.holder
+		# And they were on the other side of this.
+		exists = enemy_side
+		enemy_side = {
+			exists = side_primary_participant
+			side_primary_participant = {
+				OR = {
+					has_trait = wight_trait
+					has_trait = other_trait
+					has_trait = nightking
+					this = title:h_the_others.holder
+				}
+			}
+		}
+	}
+	events = {
+		ln_defeat.3
+	}
+}

@@ -1,0 +1,12 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the ranging arrives.
+#
+# Fired by start_travel_plan's on_arrival_on_action from the march decision and its destination card.
+# THIS IS THE HOOK for all future ranging content: root = the captain, var:ln_ranging_ground = where
+# he now stands (crasters_keep / whitetree / hardhome / castle_black). Losses on the road belong on
+# the travel plan's danger events; what the ground holds belongs here.
+
+ln_ranging_arrival = {
+	effect = {
+		trigger_event = ln_ranging.2
+	}
+}

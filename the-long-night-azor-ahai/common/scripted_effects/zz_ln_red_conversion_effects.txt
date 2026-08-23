@@ -1,0 +1,42 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the road to the red god, walked slowly.
+#
+# Thomas's design, settled for 1.0.7: "any of the three, weighted." Three doors open the same
+# wondering -- a red priest already in your hall (the end of a relationship rather than a menu
+# click); being NAMED Favored or Chosen (a lord told he may be the prince starts wondering about
+# the god who said so); or having seen the dark yourself (the knowledge flags -- which works for
+# any faith, including the North). One one-off seed and a two-part chain, and the AI is weighted
+# HEAVILY against finishing it: the Seven consider R'hllor evil, and a convert pays a real
+# political price (ln_took_the_red_modifier, the same one the pledge charges).
+#
+# DELIBERATELY SEPARATE from the Azor Ahai machinery, which is faithless by design (the prophecy
+# does not check your paperwork). This chain never gates naming, deeds, or the champion traits --
+# it is the believability arc for the god, not the plumbing for the prophecy.
+
+# Root = a playable character; called once a year from ln_struggle_clock_backstop_effect. The seed
+# is once per character, ever (ln_red_seed_planted) -- a man can be tempted once; what he does with
+# it is the chain's business.
+ln_red_temptation_pulse_effect = {
+	if = {
+		limit = {
+			exists = struggle:ln_long_night_struggle
+			is_available_adult = yes
+			NOT = { has_trait = dragon }
+			NOT = { ln_is_one_of_them_trigger = yes }
+			NOT = { faith = { religion = religion:the_rhllor_religion } }
+			NOT = { has_character_flag = ln_red_seed_planted }
+			NOT = { has_character_flag = ln_took_the_red }
+			OR = {
+				ln_has_red_priest_trigger = yes
+				has_trait = favored_by_rhllor
+				has_trait = chosen_by_rhllor
+				has_character_flag = ln_heard_the_warning
+				has_character_flag = ln_looked_north
+			}
+		}
+		random = {
+			chance = 20
+			add_character_flag = ln_red_seed_planted
+			trigger_event = { id = ln_red.1  days = { 10 120 } }
+		}
+	}
+}

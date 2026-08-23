@@ -1,0 +1,79 @@
+﻿# The Long Night+ — "is the Night King's realm closing in?" proximity check for flee_south_decision.
+# The dead spread by conquering adjacent land (their CB is neighbour-based), so we measure the front by COUNTY
+# ADJACENCY, not crow-flies distance: is any county of the Night King's realm within 3 adjacency-rings of you?
+# Player-facing is_shown only, and any_* short-circuits on the first match, so the cost is acceptable.
+
+# A single county that belongs to the dead's realm (the Night King himself, or anyone below him).
+ln_is_others_realm_county_trigger = {
+	holder ?= { top_liege = title:h_the_others.holder }
+}
+
+# Root = a county title (use as capital_county = { ln_others_within_3_county_rings_trigger = yes }).
+# Yes if the dead hold land within 3 county-adjacency-rings.
+ln_others_within_3_county_rings_trigger = {
+	any_neighboring_county = {                          # ring 1
+		OR = {
+			ln_is_others_realm_county_trigger = yes
+			any_neighboring_county = {                 # ring 2
+				OR = {
+					ln_is_others_realm_county_trigger = yes
+					any_neighboring_county = {         # ring 3
+						ln_is_others_realm_county_trigger = yes
+					}
+				}
+			}
+		}
+	}
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# WHEN A LORD IS ALLOWED TO DECIDE HE IS NOT STAYING
+#
+# Thomas, after testing it: "I was able to flee south once the Long Night had its foot in my door. I feel like
+# we should be able to flee south as early as them being on your doorstep -- maybe even earlier if you find
+# there to be more canon logic behind that."
+#
+# THERE IS MORE CANON LOGIC, AND IT POINTS EARLIER. Nobody in the source material waits for the dead to reach
+# their gate before moving. The smallfolk go south on rumour; the mountain clans and the Umbers come down when
+# the NORTH starts falling, not when their own walls are threatened; and the entire purpose of the Watch's
+# warnings is to arrive before the thing they are warning about. A decision that only unlocks once the dead
+# are already inside your realm is a decision that unlocks after the moment it was for.
+#
+# So this is deliberately three tests, loosest last:
+#   (A) they are fighting a war that includes you            -- too late, but always available
+#   (B) they are within three county-rings of your capital   -- at your gate
+#   (C) they hold ANY county in the de jure kingdom your capital sits in, and the Long Night has begun
+#
+# (C) is the new one and it is the lore-true one. In AGOT's map a de jure kingdom is a March, so this reads as
+# "the dead are in your March" -- Last Hearth has fallen and you are in Karhold. That is exactly when a lord
+# with sense starts loading carts, and it is decades before they reach him.
+#
+# STILL GATED ON THE LONG NIGHT ACTUALLY HAVING STARTED, so a Long Summer lord cannot pre-emptively abandon
+# the North on a rumour that has not happened yet. h_the_others having a holder is that gate: the Night King
+# does not exist before others.1.
+ln_the_dark_is_coming_for_you_trigger = {
+	exists = title:h_the_others.holder
+	OR = {
+		# (A) A war waged by the dead already includes you. Any distance.
+		any_character_war = {
+			is_attacker = title:h_the_others.holder
+			OR = {
+				using_cb = other_cb
+				using_cb = other_cb_duchy
+				using_cb = other_cb_empire
+			}
+		}
+		# (B) At your gate.
+		capital_county = { ln_others_within_3_county_rings_trigger = yes }
+		# (C) In your March. The one that gives a lord time to actually leave.
+		capital_county = {
+			exists = kingdom
+			kingdom = {
+				any_in_de_jure_hierarchy = {
+					tier = tier_county
+					ln_is_others_realm_county_trigger = yes
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,60 @@
+﻿# AGOT: The Long Night & Azor Ahai -- ruins are no longer a one-way door.
+#
+# THE PROBLEM. agot_long_night_scour_others_lands_effect sends kingdom and duchy seats down AGOT's
+# agot_ruin_county_effect branch, which hands the county to title:c_ruins.holder under ruins_government. AGOT ships
+# NO way back -- 00_agot_ruins_effects.txt defines three effects and all three are one-directional, and the only
+# things in the whole mod that ever remove a ruin building are a debug interaction and one scenario script.
+# So Winterfell, Storm's End and every other great seat became permanent dead ends. Wilderness counties, by
+# contrast, already have a shipped reclaim path (AGOT's settle_wilderness_county_or_duchy_decision).
+#
+# THE FIX. Let the ruins stand for a generation or two -- they SHOULD look like ruins, that is the whole image --
+# and then let the wild take them. Once a scoured seat becomes wilderness, AGOT's own settlement decision picks it
+# up and the land can be reclaimed. No new UI, no new decision, no fight with AGOT's systems.
+#
+# Only counties this mod scoured are ever touched. Harrenhal, the Valyrian ruins and every other pre-existing AGOT
+# ruin have no ln_scoured marker and are left alone permanently.
+
+ln_mark_scoured_ruin_effect = {
+	# Called on the county title, from the two ruin branches of the scour effect.
+	set_variable = { name = ln_scoured value = yes }
+	# How long the ruin stands before the wild takes it. Randomised for now so the map does not all flip in the
+	# same year. THIS IS THE HOOK for "a county that resisted well recovers faster" -- once resistance is tracked
+	# during the invasion, it sets this timer instead of the roll.
+	random_list = {
+		1 = { set_variable = { name = ln_scour_timer value = yes years = 20 } }
+		1 = { set_variable = { name = ln_scour_timer value = yes years = 30 } }
+		1 = { set_variable = { name = ln_scour_timer value = yes years = 45 } }
+	}
+}
+
+ln_ruins_decay_effect = {
+	# THE CHEAP PRE-FILTER, ported 10 Aug from ln_ruins_decay_pulse before that orphaned sub-list was deleted.
+	# The pulse never ran -- it was listed in no hook -- but its trigger encoded something worth keeping: there
+	# can be no scoured county before the aftermath begins, so walking every county in the world once a year to
+	# find nothing is pure waste. ln_aftermath_started is set once (the_long_night.txt) and never removed, so
+	# this can never stall a decay that should happen.
+	#
+	# Thomas asked the right question about deleting those sub-lists -- "were they there for a reason?" Two of
+	# the three were redundant with guards already inside their own effects. This one was not.
+	if = {
+		limit = { exists = global_var:ln_aftermath_started }
+
+		every_county = {
+			limit = {
+				has_variable = ln_scoured
+				# ln_scour_timer is an auto-expiring variable -- its absence IS the timer having run out.
+				NOT = { has_variable = ln_scour_timer }
+			}
+			if = {
+				# Still an untended ruin: the wild takes it, and AGOT's settle decision can now reach it.
+				limit = { holder ?= { has_government = ruins_government } }
+				remove_variable = ln_scoured
+				make_settlement_county_wilderness = { COUNTY = this }
+			}
+			else = {
+				# Somebody took it back before the timer ran out. Clear the marker so we never touch it again.
+				remove_variable = ln_scoured
+			}
+		}
+	}
+}

@@ -1,0 +1,15 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- the ranging companies rule.
+ # Written the way Thomas asked game rules to be written: obvious unless the vagueness is the point, and the
+ # default marked so you can see it without opening anything.
+
+ rule_ln_ranger_recruitment:0 "The Ranging Companies"
+ rule_ln_ranger_recruitment_desc:0 "There are eight ranging companies on the Wall. This decides whether the Night's Watch fills them itself, or leaves them standing empty for players."
+
+ setting_ln_rangers_watch_fills_ranks:0 "The Watch Recruits #EMP (Default)#!"
+ setting_ln_rangers_watch_fills_ranks_desc:0 "The Watch appoints its own rangers over time, but never more than five. #EMP Three companies are always held open for players.#!"
+ setting_ln_rangers_players_only:0 "Leave Them for Players"
+ setting_ln_rangers_players_only_desc:0 "The eight companies ride from game start under their historical captains — that is what gives them their camps — but when a captain dies or steps down, the Watch appoints nobody. His camp stands and his seat waits for a player.\n\nFor a full group. Nobody's seat gets refilled by a man the game invented."
+ setting_ln_rangers_all_eight_ride:0 "All Eight Ride"
+ setting_ln_rangers_all_eight_ride_desc:0 "When a company loses its captain, the Watch always appoints the next — all eight, no seats held back.\n\nThe most alive version of the Wall. There is still always a way in: the Lord Commander can stand a serving captain down for you."

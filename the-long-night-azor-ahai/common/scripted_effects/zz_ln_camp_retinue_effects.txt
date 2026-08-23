@@ -1,0 +1,27 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the restored lord's retinue.
+#
+# WHY THIS FILE EXISTS. create_maa_regiment's `size` is read as a LITERAL INTEGER at parse time. It is not a
+# script-value field, so `size = scope:ln_camp_level` is a malformed token and CK3 drops the whole regiment --
+# which meant a lord restored to his seat after the Long Night arrived with no men at all, ten times over.
+#
+# Macro parameters ARE text-substituted before parsing, so $SIZE$ is legal where a scope is not. That is the
+# same trick the base game uses (game/common/scripted_effects/07_dlc_ep3_scripted_effects.txt: `size = $SIZE$`).
+# The caller branches on scope:ln_camp_level and passes a literal.
+#
+# Called from ln_restore_lord_to_seat in agot_long_night_scripted_effects.txt.
+
+ln_camp_retinue_effect = {
+	switch = {
+		trigger = scope:ln_maa_region
+		flag:north       = { create_maa_regiment = { type = frog_spears        size = $SIZE$ check_can_recruit = no } }
+		flag:riverlands  = { create_maa_regiment = { type = river_bows          size = $SIZE$ check_can_recruit = no } }
+		flag:vale        = { create_maa_regiment = { type = finger_scouts       size = $SIZE$ check_can_recruit = no } }
+		flag:crownlands  = { create_maa_regiment = { type = royal_crossbowmen   size = $SIZE$ check_can_recruit = no } }
+		flag:westerlands = { create_maa_regiment = { type = rain_bringers       size = $SIZE$ check_can_recruit = no } }
+		flag:reach       = { create_maa_regiment = { type = honeywine_quirrels  size = $SIZE$ check_can_recruit = no } }
+		flag:stormlands  = { create_maa_regiment = { type = marcher_longbowmen  size = $SIZE$ check_can_recruit = no } }
+		flag:dorne       = { create_maa_regiment = { type = sun_spears          size = $SIZE$ check_can_recruit = no } }
+		flag:ironman     = { create_maa_regiment = { type = ironborn_reavers    size = $SIZE$ check_can_recruit = no } }
+		flag:wildling    = { create_maa_regiment = { type = clan_raiders        size = $SIZE$ check_can_recruit = no } }
+	}
+}

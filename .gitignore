@@ -1,0 +1,29 @@
+# ── Operating system clutter ───────────────────────────────────────────────
+# These get created automatically when you open a folder in Explorer or Finder.
+# They are not part of the mod and would only add noise to the release archive.
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# ── Editor and tooling scratch ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*~
+
+# ── Working files that should never ship ───────────────────────────────────
+_to_delete/
+*.bak
+*.orig
+*.rej
+*.tmp
+
+# NOTE: nothing inside the mod folder itself is ignored. .txt, .yml, .gui,
+# .dds, .mesh, .anim and .mod files are all mod content and must be committed.
+
+# Release artifacts built locally — attached to GitHub Releases, never committed.
+*.zip

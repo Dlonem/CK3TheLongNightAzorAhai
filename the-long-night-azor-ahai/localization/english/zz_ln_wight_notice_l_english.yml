@@ -1,0 +1,32 @@
+﻿l_english:
+
+ ln_wight.1.t:0 "A Face I Know"
+
+ ln_wight.1.desc.spouse:0 "A rider comes from the North with news I make him repeat twice.\n\n[scope:ln_risen.GetTitledFirstName] is walking. Not living—walking. The rider stammers that the eyes are the color of a star seen through thick ice, and that the thing wearing [scope:ln_risen.GetHerHis] face does not even know its own name.\n\nWe were married before a god. Looking out at the freezing sky, I find myself wondering which of us that vow still binds."
+
+ ln_wight.1.desc.soulmate:0 "The letter is terrifyingly short, likely because the one who wrote it could not stomach making the words go on.\n\n[scope:ln_risen.GetTitledFirstName] is among the dead that walk. Of everyone in the world, [scope:ln_risen.GetFirstNameNoTooltip] was the one who would have truly understood what I feel reading this. That is the realization that refuses to sit still in my chest."
+
+ ln_wight.1.desc.child:0 "I read the parchment standing up, and then I am forced to sit down.\n\n[scope:ln_risen.GetTitledFirstName] did not stay dead. Something ancient and cold slipped through the door [scope:ln_risen.GetSheHe] was standing behind, and now [scope:ln_risen.GetSheHe] marches with it, away from everything [scope:ln_risen.GetSheHe] was meant to be.\n\nA parent burying a child is an ugly, natural tragedy. This is an abomination."
+
+ ln_wight.1.desc.parent:0 "The rider hands me the report, covered in freezing mud, and looks away as I read it.\n\n[scope:ln_risen.GetTitledFirstName] has been seen walking with the horde. The one who raised me, who taught me how to hold a sword and revere the gods, is now a thrall to the freezing dark. I catch myself wondering if any part of [scope:ln_risen.GetHerHim] is still trapped inside, screaming as [scope:ln_risen.GetSheHe] watches [scope:ln_risen.GetHerHis] own hands move."
+
+ ln_wight.1.desc.sibling:0 "I know the hand the letter is written in. I do not want to know the rest of it.\n\n[scope:ln_risen.GetTitledFirstName] is walking with the dead. We grew up in the same halls, quarrelled over the same inheritance, and I always assumed there would be time enough to settle it.\n\nThere is nothing left to settle now. There is only the question of whether I can be the one to stop it."
+
+ ln_wight.1.desc.best_friend:0 "I have read the letter three times and it has not changed.\n\n[scope:ln_risen.GetTitledFirstName] is among the dead. Not killed by them—one of them, walking north in the freezing dark, wearing a face I would know at a hundred paces.\n\nAnd there is no one left in the world I would rather have standing beside me while I read it than [scope:ln_risen.GetHerHim]."
+
+ ln_wight.1.desc.lover:0 "The rider has been four days in the saddle and it shows on him.\n\n[scope:ln_risen.GetTitledFirstName] is walking with the dead. The Others remade [scope:ln_risen.GetHerHim] from the inside out and did not trouble themselves to take the face. It is the same face.\n\nI find that this makes it worse, not better."
+
+ ln_wight.1.desc.friend:0 "The word travels south hand to hand and reaches me badly worn.\n\n[scope:ln_risen.GetTitledFirstName] has risen. The dead do not muster to banners—they simply accumulate, and [scope:ln_risen.GetFirstNameNoTooltip] is part of that accumulation now: cold, tireless, and entirely indifferent to ever having been my friend."
+
+ ln_wight.1.desc.generic:0 "Word comes south the way bad news always does—late, and terrifyingly certain.\n\n[scope:ln_risen.GetTitledFirstName] is walking with the dead. I knew [scope:ln_risen.GetHerHim]. That used to mean something in the realms of men, but to whatever is wearing [scope:ln_risen.GetHerHis] face now, it means absolutely nothing."
+
+ ln_wight.1.a:0 "That is not [scope:ln_risen.GetHerHim] anymore."
+ ln_wight.1.b:0 "Then I will meet [scope:ln_risen.GetHerHim] on the field, and give [scope:ln_risen.GetHerHim] peace."
+
+ # 1.0.8 -- the marriage card. NOTE THE TOKEN FORM: bare saved-scope names, [ln_lost.GetTitledFirstName],
+ # NOT [scope:ln_lost...]. Vanilla uses the scope: form zero times across its whole localization; the bare
+ # form is the one proven live in this mod (the reveal chain's slayer attribution, 13 Aug run).
+ ln_wight.2.t:0 "Death Did Us Part"
+ ln_wight.2.desc:0 "The rider waits in the yard because he will not say it indoors.\n\n[ln_lost.GetTitledFirstName] fell—and did not stay fallen. What walks now marches south with the rest of them, in the blinding cold, wearing the face I used to wake beside.\n\nMy septon is excessively careful with his words today. The vows were 'until death,' he murmurs, and death has been and gone. There is no divorce to petition for, and no one left to petition. Whatever bound me to [ln_lost.GetHerHim], the Long Night has broken it."
+ ln_wight.2.a:0 "Burn the marriage cloak."
+ ln_wight.2.b:0 "Then I will find [ln_lost.GetHerHim] in the field and end it myself."

@@ -1,0 +1,79 @@
+# The Long Night+ — exact copy of AGOT's agot_particle_wall_collapse, with TWO changes only:
+#   - internal name renamed (avoid colliding with AGOT's own widget of the same name),
+#   - the collapse delay raised from 0.1 to 6s so the Wall falls ON the collapse music's "boom" (~5-10s in) instead of
+#     instantly (the music felt "too late" before). Tune the delay if the boom lands a bit off.
+vbox = {
+	name = "ln_particle_wall_collapse"
+	layoutpolicy_horizontal = expanding
+	margin = { 5 0 }
+	spacing = 10
+
+	fixedgridbox = {
+		name = "option_grid"
+		addcolumn = 490
+		addrow = 42
+		datamodel = "[EventWindow.AccessEventWindowData.GetOptions]"
+
+		item = {
+			button_event_standard = {
+				name = "event_option_button"
+
+				state = {
+					name = widget_show
+					trigger_on_create = yes
+
+					# Prevent it from showing
+					on_start = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.InterruptAnimation('show')]"
+					on_start = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.InterruptAnimation('_hide')]"
+
+					# 13 Aug (1.0.6) -- THE CONSOLE SPAWNS ARE GONE, both of them. Two reports, one cause:
+					#   * Lyon: "destroying the Wall makes the save achievement-incompatible" -- ExecuteConsoleCommand
+					#     IS the console; running it flags the save exactly like typing a cheat.
+					#   * Axel: "the graphic effect plays every time I come in and out of a full-screen menu" --
+					#     spawnentity_at entities persist in the session and replay their one-shot animation on
+					#     every map-scene rebuild. They are debug furniture: AGOT only ever uses this widget in
+					#     their DEBUG menu (agot_debug_events.txt), never in normal play.
+					# The DURABLE fallen state is agot_wall_fall's building swap (below) plus the county modifier
+					# applied in agot_long_night_wall_collapse_effect. The cinematic keeps the camera pan, the
+					# music and the dust of the building swap itself.
+					duration = 1 # Needed for.. Reasons?
+					delay = 0.1 # ISOLATION TEST: back to AGOT's value to check if delay=6 was the breakage
+					on_finish = "[GetScriptedGui('agot_wall_fall').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					next = "widget_continue"
+				}
+				state = {
+					name = widget_continue
+					trigger_on_create = yes
+
+					# Prevent it from showing
+					on_start = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.InterruptAnimation('show')]"
+					on_start = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.InterruptAnimation('_hide')]"
+
+					# (console entity spawn removed -- see the note in the first state)
+					duration = 4 # Needed for.. Reasons?
+					# Close the window
+					on_finish = "[EventOption.Select]"
+					next = "widget_continue_2"
+				}
+				state = {
+					name = widget_continue_2
+					trigger_on_create = yes
+
+					# Prevent it from showing
+					on_start = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.InterruptAnimation('show')]"
+					on_start = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.InterruptAnimation('_hide')]"
+
+					# CUSTOM Spawn spawnentity_at, I COMMAND THEE COMETH FORTH!
+
+					#on_start = "[ExecuteConsoleCommand('spawnentity_at building_special_CastleBlackDestroyed_entity 1628 5282')]"
+					#on_start = "[ExecuteConsoleCommand('spawnentity_at env_WallCollapse 1666 5288')]"
+					# on_start = "[ExecuteConsoleCommand('spawnentity_at env_WallCollapse 1700 5291')]"
+					#duration = 0.1 # Needed for.. Reasons?
+					# Close the window
+					on_finish = "[EventOption.Select]"
+				}
+			}
+		}
+	}
+	expand = {}
+}

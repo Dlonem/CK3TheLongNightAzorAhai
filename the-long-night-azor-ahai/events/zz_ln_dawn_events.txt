@@ -1,0 +1,357 @@
+﻿namespace = ln_dawn
+
+# AGOT: The Long Night & Azor Ahai -- THE KILLING BLOW.
+#
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# WHY THIS IS ON on_combat_end_winner AND NOT IN A COMBAT PHASE EVENT.
+#
+# The store page promises "killing the Night King as a full scene", and design-backlog.md §1 proposed getting it
+# by overriding vanilla's `knight_killed` with an is_valid gate, citing Princes of Darkness as precedent.
+# common/combat_phase_events/zz_ln_knight_phase_events.txt already contains the research that KILLED that plan,
+# and it still holds: AGOT's knight_killed is 993 lines against vanilla's 463, with 587 lines of differences
+# including their own `is_valid = { is_current_dragonrider_warfare = no }`. Shipping our copy silently reverts
+# every one of those the day AGOT edits it -- dragonriders quietly become knight-killable again, and nothing
+# logs it.
+#
+# THIS IS THE THIRD ROUTE, and it needs no file of theirs and no file of vanilla's. AGOT itself hangs
+# agot_others_events.9000 and agot_combat_event.1000 off on_combat_end_winner, which gave us the scope shape for
+# free: root is the WINNING combat_side, with side_commander, enemy_side and combat.location all reachable.
+# So: you beat his army in the field, and then the scene happens.
+#
+# WHAT IT DOES NOT DO. It does not intercept his death, because nothing in CK3 can -- on_death is reactive and
+# on_natural_death_second_chance is natural-death only, both verified previously. It does not need to. He is
+# alive when this fires; whether he stays that way is the point of the card.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# ── 1. THE DIRECTOR ─────────────────────────────────────────────────────────────────────────────────────────
+# Root = the winning combat_side. Hidden, rootless-by-character, fires the scene at the man who won.
+ln_dawn.1 = {
+	hidden = yes
+	scope = combat_side
+
+	trigger = {
+		# Somebody human won it, and lived to stand in the field afterwards.
+		exists = side_commander
+		side_commander = {
+			is_alive = yes
+			is_ai = no
+		}
+
+		# And the thing they beat was HIM. He leads from the front -- the story cycle re-assigns him as army
+		# commander every fifteen days -- but primary_participant is checked too so a stand-in cannot hide him.
+		exists = enemy_side
+		enemy_side = {
+			OR = {
+				AND = {
+					exists = side_commander
+					side_commander = { has_trait = nightking }
+				}
+				AND = {
+					exists = side_primary_participant
+					side_primary_participant = { has_trait = nightking }
+				}
+			}
+		}
+
+		# Once. The wheel can turn under The Cycle, so this is cleared with the other latches at a new summer
+		# rather than being permanent.
+		NOT = { has_global_variable = ln_dawn_offered }
+	}
+
+	immediate = {
+		set_global_variable = { name = ln_dawn_offered  value = yes }
+
+		enemy_side = {
+			if = {
+				limit = {
+					exists = side_commander
+					side_commander = { has_trait = nightking }
+				}
+				side_commander = { save_scope_as = ln_night_king }
+			}
+			else = {
+				side_primary_participant = { save_scope_as = ln_night_king }
+			}
+		}
+
+		side_commander = { trigger_event = { id = ln_dawn.2  days = 1 } }
+	}
+}
+
+# ── 2. THE FIELD AFTERWARDS ─────────────────────────────────────────────────────────────────────────────────
+# Root = the winning commander. scope:ln_night_king survives from the director; scopes do cross trigger_event.
+ln_dawn.2 = {
+	type = character_event
+	title = ln_dawn.2.t
+	desc = {
+		first_valid = {
+			# What you are holding, most decisive first. This is the whole "tier the killing blow by what you
+			# brought" idea from design-backlog.md, and the card says it out loud so the choice is informed.
+			# 1.0.13 -- DAWN IS NOT A FORGED SWORD AND SHOULD NOT BE DESCRIBED AS ONE. Both consecration
+			# routes set ln_forged_lightbringer (zz_ln_consecration_effects.txt:19) so the weighting below
+			# already reached them -- but the Dawn route also sets ln_the_star_paid_for_it, which nothing
+			# read, and a man carrying the Sword of the Morning deserves to be told so on this card.
+			triggered_desc = {
+				trigger = { has_character_flag = ln_the_star_paid_for_it }
+				desc = ln_dawn.2.desc.dawn
+			}
+			triggered_desc = {
+				trigger = { has_character_flag = ln_forged_lightbringer }
+				desc = ln_dawn.2.desc.lightbringer
+			}
+			triggered_desc = {
+				trigger = { ln_rides_a_living_dragon_trigger = yes }
+				desc = ln_dawn.2.desc.dragon
+			}
+			triggered_desc = {
+				trigger = { ln_has_deed_valyrian_steel_trigger = yes }
+				desc = ln_dawn.2.desc.valyrian
+			}
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_character_modifier = ln_dragonglass_armed_modifier
+						has_character_modifier = ln_dragonglass_stores_modifier
+						has_character_flag = ln_mined_the_glass
+					}
+				}
+				desc = ln_dawn.2.desc.glass
+			}
+			triggered_desc = {
+				trigger = { ln_is_a_champion_of_rhllor_trigger = yes }
+				desc = ln_dawn.2.desc.named
+			}
+			# -- AND WHETHER YOU HAVE BEEN HERE BEFORE ------------------------------------------------
+			# Deliberately UNDER every armament branch: a man holding Lightbringer should be told about
+			# Lightbringer, not about his memoirs. These catch the man holding nothing -- who until today
+			# got the same generic card however many times the thing had already looked at him, because
+			# ln_faced_him_and_lived and ln_turned_away_from_him were both set and read by nothing.
+			# 1.0.13 -- HE TOOK SOMETHING OF YOURS. Above the two memory branches because it is the more
+			# specific memory: a man who merely stood in front of him once, and a man whose dragon is
+			# currently flying for the other side, are not carrying the same thing into this.
+			# ln_survived_the_spear was set by ln_spear.1 and read by nothing until now.
+			triggered_desc = {
+				trigger = { has_character_flag = ln_survived_the_spear }
+				desc = ln_dawn.2.desc.spear
+			}
+			triggered_desc = {
+				trigger = { has_character_flag = ln_faced_him_and_lived }
+				desc = ln_dawn.2.desc.again
+			}
+			triggered_desc = {
+				trigger = { has_character_flag = ln_turned_away_from_him }
+				desc = ln_dawn.2.desc.twice
+			}
+			desc = ln_dawn.2.desc.nothing
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = personality_bold }
+	right_portrait = { character = scope:ln_night_king  animation = disbelief }
+
+	trigger = {
+		is_alive = yes
+		exists = scope:ln_night_king
+		scope:ln_night_king = { is_alive = yes }
+	}
+
+	immediate = { play_music_cue = "mood_the_others" }
+
+	# ── END IT. The roll is the tiering: what you brought is the whole of your chance.
+	option = {
+		name = ln_dawn.2.a
+		random_list = {
+			# HE FALLS.
+			10 = {
+				modifier = { add = 60  has_character_flag = ln_forged_lightbringer }
+				modifier = { add = 35  ln_has_deed_valyrian_steel_trigger = yes }
+				modifier = { add = 30  ln_rides_a_living_dragon_trigger = yes }
+				modifier = {
+					add = 20
+					OR = {
+						has_character_modifier = ln_dragonglass_armed_modifier
+						has_character_modifier = ln_dragonglass_stores_modifier
+					}
+				}
+				modifier = { add = 15  ln_is_a_champion_of_rhllor_trigger = yes }
+				modifier = { add = 10  has_trait = brave }
+				modifier = { add = 10  prowess >= 15 }
+				# HE HAS DONE THIS BEFORE. Not courage -- courage is counted on the line above. Knowledge.
+				# A man who has been inside its reach and come back out knows how it moves, and there is
+				# nobody else alive who does.
+				modifier = { add = 10  has_character_flag = ln_faced_him_and_lived }
+				# 1.0.13 -- and the same knowledge, bought the hard way. A rider who watched that arm come
+				# up and lived has seen the one thing he does that nobody survives to describe.
+				modifier = { add = 10  has_character_flag = ln_survived_the_spear }
+				trigger_event = { id = ln_dawn.3  days = 1 }
+			}
+			# HE DOES NOT. Weighted the other way by the same things, so a man with nothing in his hands is
+			# very probably about to find out what that costs.
+			40 = {
+				modifier = { add = -25  has_character_flag = ln_forged_lightbringer }
+				modifier = { add = -15  ln_has_deed_valyrian_steel_trigger = yes }
+				modifier = { add = -10  ln_rides_a_living_dragon_trigger = yes }
+				modifier = { add = 20   has_trait = craven }
+				modifier = { add = -10  has_character_flag = ln_faced_him_and_lived }
+				trigger_event = { id = ln_dawn.4  days = 1 }
+			}
+		}
+	}
+
+	# ── LIVE. Not cowardice by default -- a man who knows he has nothing that can hurt it and pulls his
+	# household out of the field is doing the only sensible thing left. It costs standing, not honour.
+	# ── 1.0.13 -- THE GREENSEER'S OPTION. AGOT ships `greensight` and `dragon_dreams` as real prophetic
+	# traits and this mod had never read either of them. A man who has SEEN this moment before arriving at
+	# it does not fight it blind, and the gate shows its own icon so the player knows exactly why the door
+	# is open to him.
+	#
+	# WHAT IT IS NOT: an instant win. It buys one thing -- the odds of a man carrying dragonglass, granted
+	# to a man carrying nothing -- and it costs stress, because seeing it beforehand is not the same as
+	# being ready for it. Thomas's rule: "I'm not saying to make it so that boom, instant win."
+	option = {
+		name = ln_dawn.2.c
+		trigger = {
+			OR = {
+				has_trait = greensight
+				has_trait = dragon_dreams
+			}
+		}
+		custom_tooltip = ln_dawn.2.c_tt
+		random_list = {
+			10 = {
+				modifier = { add = 20  has_trait = greensight }
+				modifier = { add = 15  has_trait = dragon_dreams }
+				modifier = { add = 60  has_character_flag = ln_forged_lightbringer }
+				modifier = { add = 35  ln_has_deed_valyrian_steel_trigger = yes }
+				modifier = { add = 15  ln_is_a_champion_of_rhllor_trigger = yes }
+				modifier = { add = 10  has_character_flag = ln_survived_the_spear }
+				trigger_event = { id = ln_dawn.3  days = 1 }
+			}
+			40 = {
+				modifier = { add = -20  has_trait = greensight }
+				modifier = { add = -15  has_trait = dragon_dreams }
+				modifier = { add = -25  has_character_flag = ln_forged_lightbringer }
+				modifier = { add = 20   has_trait = craven }
+				trigger_event = { id = ln_dawn.4  days = 1 }
+			}
+		}
+		stress_impact = {
+			base = medium_stress_impact_gain
+		}
+		ai_chance = {
+			base = 60
+			ai_value_modifier = { ai_boldness = 0.5 }
+		}
+	}
+
+	option = {
+		name = ln_dawn.2.b
+		add_prestige = -200
+		stress_impact = {
+			base = minor_stress_impact_gain
+			brave = medium_stress_impact_gain
+			craven = minor_stress_impact_loss
+		}
+		add_character_flag = ln_turned_away_from_him
+	}
+}
+
+# ── 3. HE FALLS ─────────────────────────────────────────────────────────────────────────────────────────────
+# The death itself, and the ONLY new route to it this mod has ever shipped: before this, open battle or a war
+# victory were the only ways, both of which the ancestor mods' own workshop threads complained about.
+# `death` routes through on_death -> ln_death_catalyst_effect -> ln_night_king_slain_reveal_effect, which reads
+# scope:killer -- so `killer = root` here is what names the slayer on the reveal card, in the roll-call, and in
+# the permanent ln_last_dawn_champion record.
+ln_dawn.3 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_dawn.3.t
+	desc = ln_dawn.3.desc
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+
+	trigger = {
+		exists = scope:ln_night_king
+		scope:ln_night_king = { is_alive = yes }
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		scope:ln_night_king = {
+			death = {
+				death_reason = death_the_dawn
+				killer = root
+			}
+		}
+
+		# ── THE DIAGNOSTIC, and it exists because of how this mod debugs ────────────────────────────────
+		# nightking, other_trait and wight_trait are all `immortal = yes` (common/traits/invasions_traits.txt,
+		# life_expectancy 12000). CK3's own trait docs say immortal blocks death from NATURAL CAUSES only and
+		# explicitly not battle or scripted death, so this should simply work -- but it has never been tested
+		# in a live game, and if the engine did refuse it the whole feature would do NOTHING, silently, which
+		# is the exact failure this project has lost the most time to.
+		#
+		# So: if he is somehow still breathing one line later, stamp it. Debug saves are plain text and
+		# grep-able, which is how every pacing question in this project has actually been answered -- one
+		# search for ln_dawn_death_refused tells us instantly whether the death was refused or the event
+		# never fired at all. Costs nothing when everything works, because it never gets set.
+		if = {
+			limit = { scope:ln_night_king = { is_alive = yes } }
+			set_global_variable = { name = ln_dawn_death_refused  value = yes }
+		}
+	}
+
+	option = { name = ln_dawn.3.a }
+}
+
+# ── 4. HE DOES NOT ──────────────────────────────────────────────────────────────────────────────────────────
+# "More ways to lose well" -- the second thing the store page promises. design-backlog.md: *"make failure
+# produce outcomes too... 'You died' is the least interesting branch."* So nobody dies here except somebody who
+# chose to. The knight is picked the same way the roll-call picks its three: ordered_knight by prowess, taken
+# at the moment it matters.
+ln_dawn.4 = {
+	type = character_event
+	title = ln_dawn.4.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { exists = scope:ln_dawn_shield }
+				desc = ln_dawn.4.desc.shield
+			}
+			desc = ln_dawn.4.desc.alone
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = grief }
+
+	immediate = {
+		# Somebody sworn to you gets between you and it.
+		ordered_knight = {
+			order_by = prowess
+			position = 0
+			limit = { is_alive = yes }
+			save_scope_as = ln_dawn_shield
+		}
+		if = {
+			limit = { exists = scope:ln_dawn_shield }
+			scope:ln_dawn_shield = {
+				add_character_flag = ln_stood_at_the_dawn
+				death = { death_reason = death_the_dawn  killer = scope:ln_night_king }
+			}
+		}
+		else = {
+			# Nobody left to do it for you. You walk out of the field carrying it yourself.
+			increase_wounds_no_death_effect = { REASON = death_wounds }
+		}
+		add_character_flag = ln_faced_him_and_lived
+		# THE LOUDEST THING A CK3 CHARACTER CAN SAY ABOUT ITSELF: it goes in the title bar, the family
+		# tree and every other realm diplomacy screen, and it survives into a screenshot. He did not
+		# win -- ln_dawn.3 is where winning lives -- but he is the only man in the world who has stood
+		# inside its reach and walked off the field, and the realm is going to have a word for that.
+		give_nickname = nick_the_undaunted
+	}
+
+	option = { name = ln_dawn.4.a }
+}

@@ -1,0 +1,22 @@
+﻿l_english:
+
+ # ── the horde ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_wight_horde:0 "Risen Dead"
+ ln_wight_horde_flavor:0 "The common dead of every hold the Others have taken, walking because they are told to. Individually they are nothing — slow, brittle, and armed with whatever they died holding. There are simply a great many of them, and they do not stop."
+
+ # ── the realm renames itself ────────────────────────────────────────────────────────────────────────────────
+ ln_realm_the_long_night:0 "The Long Night"
+
+ # ── recurrence game rule ────────────────────────────────────────────────────────────────────────────────────
+ rule_agot_long_night_recurrence:0 "#explanation_link_light_background;bold AGOT:#! #e;bold The Long Night#! Recurrence"
+ setting_long_night_once:0 "Once"
+ setting_long_night_once_desc:0 "The Long Night comes once. If the living survive it, it is over."
+ setting_long_night_recurs:0 "The Cycle"
+ setting_long_night_recurs_desc:0 "The Long Night returns every ninety to a hundred and thirty years, and every winter is worse than the last. It ends when a dynasty breaks the cycle — or the cycle breaks the world."
+ # ── wave escalation modifiers ───────────────────────────────────────────────────────────────────────────────
+ ln_wave_escalation_1_modifier:0 "The Dead Remember"
+ ln_wave_escalation_1_modifier_desc:0 "They have come south before, and they did not forget the road."
+ ln_wave_escalation_2_modifier:0 "Centuries of Winter"
+ ln_wave_escalation_2_modifier_desc:0 "The world has been bled twice over. Every hold the dead ever took is still theirs to raise again."
+ ln_wave_escalation_3_modifier:0 "The Last Long Night"
+ ln_wave_escalation_3_modifier_desc:0 "There is not much left to conquer, and nothing left that remembers a summer."

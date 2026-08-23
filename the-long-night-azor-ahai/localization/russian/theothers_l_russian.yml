@@ -1,0 +1,279 @@
+﻿l_russian:
+
+# Others Dynasty
+# NOTE: dynn_others / dynn_Others / dynn_others_motto used to be defined HERE as "Winter" and AGAIN in
+# dynasties/otherdynasty_names_l_english.yml as "The Others". Duplicate keys make CK3 pick one arbitrarily.
+# Settled on "The Others"; the dedicated dynasty-name file is now the single definition.
+ dynn_the_others:0 "Иные"
+ dynn_the_others_motto:0 "Всё замёрзнет."
+ house_theothers:0 "Иные"
+
+# White Walker Titles
+ h_the_others:0 "Земля Вечной Зимы"
+ d_others:0 "Зима"
+ head_of_faith_the_other:0 "Король Ночи"
+ 
+ other_barony_title:0 "Войско мёртвых"
+ other_county_title:0 "Войско мёртвых"
+ other_duchy_title:0 "Войско мёртвых"
+ other_kingdom_title:0 "Войско мёртвых"
+ other_empire_title:0 "Войско мёртвых"
+ other_leader_name:0 "Иной"
+ # REMOVED: ten placeholder title keys here all read "Other" and were re-defined further
+ # down this same file with the real titles (Chieftain / High Chieftain / King of Winter /
+ # The Great Other). Duplicate keys make CK3 warn and pick one -- the good set was a coin flip.
+ other_name:0 "Иной"
+ # "Skroth" was Long Night+'s invention -- neither book nor show. Under the default rule this name is never
+ # seen: ln_raise_fallen_dragon_effect renames the raised dragon to whatever it was called in life, so it
+ # comes back as Vhagar the Undead. It only shows on the legacy "One Simply Appears" setting, where there is
+ # no dead dragon to take a name from -- so it is now the plain folk name the northerners use.
+ dragon_skroth:0 "Ледяной дракон"
+
+freehold_call_vassal_to_war_interaction_notification_title: "Использован призыв о помощи Фригольда"
+freehold_call_vassal_to_war_interaction_toast: "[actor.GetTitledFirstName] призвал своего вассала [recipient.GetTitledFirstName] на войну"
+
+SCOURING_CB_NAME:0 "Опустошение [TITLE.GetNameNoTier]"
+SCOURING_CB_NAME_BASE:0 "Опустошение"
+scouring_cb:0 "Опустошение"
+
+# Nickname
+ nick_the_great_other:0 "Король Ночи"
+ nick_the_great_other_desc:0 "У простого люда теперь есть имя для [CHARACTER.GetShortUINameNoTooltipNoFormat|U]: Король Ночи, что правит тьмой и мёртвыми."
+
+#White Walker Traits
+ trait_other:0 "Иной"
+ trait_other_desc:0 "Иные высоки и худы, плоть их бледна, как молоко. У них холодные синие глаза, о которых говорят, что они горят, как лёд, или сияют, как синие звёзды. Кровь у Иных бледно-голубая, а кости блестят, точно молочное стекло"
+
+ trait_nightking:0 "Великий Иной"
+ trait_nightking_desc:0 "Первый из Иных и повелитель мёртвых. Где он идёт, там идёт зима, и она не останавливается."
+
+
+# rhllor trait
+ trait_chosen_by_rhllor:0 "Избранный"
+ trait_chosen_by_rhllor_desc:0 "Храмы больше не шепчут — они проповедуют: Азор Ахай вернулся, принц, который был обещан. Правы ли языки пламени, не проверить никому из живых, а где-то всегда есть ещё один человек, которому говорят то же самое."
+# rhllor trait
+ trait_favored_by_rhllor:0 "Отмеченный"
+ trait_favored_by_rhllor_desc:0 "Провидец сосчитал знаки на этой жизни и произнёс слово вслух: отмеченный Рглором. Жрецы говорили так и прежде, о других людях, и почти всех похоронили. Теперь за этим человеком следят огни — и все остальные тоже."
+ # rhllor trait
+ trait_resurrected_by_rhllor:0 "Возвращённый Рглором"
+ trait_resurrected_by_rhllor_desc:0 "Умер при свидетелях и мёртвым не остался. Красный жрец попросил за него огонь, и огонь вернул большую его часть."
+ 
+ 
+#Modifiers
+agot_long_night_smallfolk_outraged_modifier:0 "Простой люд возмущён"
+
+agot_long_night_destruction_modifier:0 "Разорение Долгой Ночи"
+
+#war for the dawn
+
+WAR_FOR_THE_DAWN_WAR_NAME:0 "Война за Рассвет"
+ WAR_FOR_THE_DAWN_WAR_NAME_BASE:0 ""
+ WAR_FOR_THE_DAWN_WAR_CB:0 "Война за Рассвет"
+ war_for_the_dawn_defeat_desc:0 "Час волков и расколотых щитов, когда век людей рушится наземь."
+ war_for_the_dawn_victory_desc:0 "Быть может, придёт день, когда мужество людей иссякнет, когда мы оставим друзей и разорвём все узы братства, — но это не сегодняшний день."
+ 
+ 
+  #Letters on Winter
+ others_sword:0 "Хрустальный меч"
+ other_sword_description:0 "Меч, что несут Иные с дальнего Севера."
+ 
+ dusk_sword:0 "Клинок зимы"
+ dusk_sword_desc:0 "Меч, который носит Великий Иной, выкованный в Земле Вечной Зимы тысячи лет назад."
+ 
+crown_of_the_great_other_name:0 "Корона Иных"
+crown_of_the_great_other_description:0 "Корона изо льда, выкованная в Земле Вечной Зимы."
+ 
+ 
+ #Letters on Winter
+ long_nights_WINTER_IS_COMING:0 "Зима близко"
+ long_nights_WINTER_IS_COMING_DESC:0 "Пишем вам из Цитадели со срочными вестями: зима близко. К сожалению, мы не можем предсказать длительность этого времени года — беспрецедентная аномалия в наших записях. Мы призываем всех готовиться к неопределённо долгому лютому холоду и сохранять бдительность."
+ 
+ long_nights_WINTER_IS_HERE:0 "Лордам государства"
+ long_nights_WINTER_IS_HERE_DESC:0 "Пишу из Чёрного Замка с величайшей срочностью: одичалые в невиданных количествах бегут на юг, гонимые беспощадно крепнущими холодными ветрами. Угроза растёт с каждым днём, а наши ряды удручающе малы перед тем, что надвигается. Заклинаю вас ради безопасности государства: немедленно пришлите людей на подкрепление Стены."
+ 
+ long_nights_WAR_FOR_THE_DAWN:0 "Доблестным"
+ long_nights_WAR_FOR_THE_DAWN_DESC:0 "Я еду на север навстречу величайшей угрозе, какую знал наш мир, — Белым Ходокам, на войну за сам рассвет. Я призываю каждого мужчину и каждую женщину, способных держать оружие, взяться за него и присоединиться ко мне в этой благородной борьбе: если мы дрогнем, наш мир погрузится в вечную тьму. Встаньте со мной, и вместе вернём свету его место."
+ 
+  long_nights_WINTER_IS_OVER:0 "Рассвет наступил"
+ long_nights_WINTER_IS_OVER_DESC:0 "С сердцами, полными радости, мы возвещаем конец Долгой Ночи и приход Рассвета."
+ 
+
+
+
+
+
+
+
+wights:0 "Упыри"
+
+others.2.title:0 "#e Ветра зимы#!"
+others.2.desc:0 "#e С дальнего севера, куда уходят и откуда редко возвращаются, пришли вести, от которых стынет даже самая крепкая воля.\n\n Одичалые в невиданных числах бегут на юг, словно их гонят #bold тени#!, а мейстеры бормочут о зиме, что изгложет плоть и расколет камень и протянется годы без счёта.\n\n Но бояться следует не холода и не голода. Бояться следует того, что ждёт в сердце этой тьмы, в тишине между вдохами.\n\n #bold Иные вернулись, и Долгая Ночь началась.#!#!"
+others.2.a:0 "Зима пришла."
+
+others.3.title:0 "#BER Сон о весне#!"
+others.3.desc:0 "#BER Иные ушли, отброшенные в те тёмные углы мира, что их породили, и государство наконец избавилось от их ледяной тени.\n\n Поля лежали выжженными, а деревни пустыми там, где прошли мёртвые, — но люди могли отстроиться; они всегда отстраивались.\n\n После лютой зимы явился первый намёк на #bold весну#!. Полные надежды голоса говорили о мире, о единстве, скованном общим ужасом. \n\n Но глубоко в костях старых домов и во взглядах высоких лордов таился страх — страх, что союзы, связанные льдом и пламенем, обветшают и лопнут теперь, когда #bold Великая война#! окончена.\n\n Ибо людей уберегли от мёртвых, да, — но злейшим врагом человека всегда был человек.#!"
+
+
+others.3.a:0 "Союзы Великой войны, конечно же, устоят."
+others.2.a.tt:0 "Вы не принесёте жертвы Холодным Богам и примете последствия."
+
+others_occupation.1.t:0 "#e Опустошение [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.1_desc:0 "#e Ночь теперь бесконечна — покрывало инея и смерти ползёт по руинам моих земель. \n\n Иные с их холодной безмолвной злобой обратили государство в пустошь, и мне не остаётся ничего, кроме как встретить это.\n\n Холод смыкается, дыхание обращается в пар, и я стою на краю: принести ли #warning жертву#! #bold [thenightking.GetFaith.GetName]#! и надеяться на милость — или держаться за гаснущий огонь и сопротивляться до конца?#!"
+others_occupation.1_desc_child:0 "\n\n#e Я вижу страх в глазах #bold [child.GetTitledFirstNamePossessive]#!.#!"
+others_occupation.1_desc_faith:0 "#e \n\nПростит ли меня [ROOT.Char.GetFaith.GetName]?#!"
+
+others_occupation.1.a:0 "Я не стану поклоняться этим демонам."
+others_occupation.1.a.tt:0 "Вы не принесёте жертвы Холодным Богам и примете последствия."
+
+others_occupation.1.b:0 "Примут ли они жертву поменьше?"
+others_occupation.1.b.tt:0 "Вы принесёте в жертву Холодным Богам придворных и простолюдинов."
+
+others_occupation.1.c:0 "Прости меня, [child.GetTitledFirstName]."
+others_occupation.1.c.tt:0 "[child.GetFirstName] будет принесён в жертву."
+
+
+others_occupation.2.t:0 "#e Опустошение [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.2.desc:0 "#e #bold Иные пришли.#!\n\n Между нами и мёртвыми не осталось ничего.\n\n Иней висел в воздухе, каждый вдох был безмолвной молитвой, но мёртвые не молятся.\n\n Они шли по снегу, точно призраки, и я чувствовал, как холод вползает в кости.\n\n Мечи наши отяжелели, руки онемели от стужи. Если мы падём сейчас, это будет больше, чем наша смерть, — это конец теплу и самой жизни. \n\n #warning;bold Ночь не кончится никогда.#! #!"
+others_occupation.2.a:0 "#BER За Рассвет!#!"
+others_occupation.2.a.tt:0 "Вы будете сражаться за выживание своего дома и своих земель. Если вы проиграете эту войну, вас и весь ваш двор могут убить. Ваши земли будут #warning разорены.#!"
+
+others_occupation.3.t:0 "#e Спаситель [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.3.desc:0 "#BER Мёртвых отбросили — но едва-едва.\n\n Их ледяное дыхание всё ещё висело на ветру, напоминая, что эта победа — не более чем краткая передышка в бойне.\n\n Дом [ROOT.Char.GetHouse.GetBaseName] стоит, мои земли ещё не поглощены инеем, но я чую нутром: это не спасение. Иные вернутся, страшнее прежнего, и придут они в числах, которых не сосчитать.\n\n Долгая Ночь не окончена. И если мы хотим выжить, нам надо найти те немногие души, что уцелели, и встать вместе в этой тьме — или быть ею пожранными.#!"
+others_occupation.3.a:0 "Мы должны выстоять."
+others_occupation.3.a.tt:0 "Вы временно отбили натиск Иных."
+
+others_occupation.4.t:0 "#e Опустошение [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.4.desc:0 "#e Битва была проиграна, мои знамёна втоптаны в снег, мои люди разметаны, как палая листва на ветру.\n\n Холод пришёл за всеми нами, а следом Иные — они двигались сквозь бурю, точно тени, безмолвные, неостановимые. Теперь мои земли в их ледяной хватке.\n\n То, что осталось от моих людей, жалось в страхе, моля о рассвете, который может и не прийти.#!"
+others_occupation.4.a:0 "Нет!"
+others_occupation.4.a.tt:0 "Вы потерпели поражение."
+
+others_maintenance.2.t:0 "#bold Будущее Семи Королевств#!"
+others_maintenance.2.desc:0 "Иные пали, и Долгая Ночь окончилась. \n \n Но победа принесла свою тяжесть, и вопрос навис, точно тень на рассвете: каким путём пойдёт теперь государство?\n\n Преклонить колено перед Железным Троном — или взять свою судьбу в руки и править самим, не оглядываясь на прихоти далёкого короля?"
+others_maintenance.2.a:0 "Мы принесём присягу Железному Трону."
+others_maintenance.2.a.tt:0 "Вы присягнёте Железному Трону."
+others_maintenance.2.b:0 "Править должен дом [ROOT.Char.GetHouse.GetBaseName]."
+others_maintenance.2.b.tt:0 "Вы останетесь независимы."
+
+others_trigger_title:0 "#e Начать Долгую Ночь#!"
+others_trigger_desc:0 "Долгая Ночь начнётся. Иные немедленно займут земли за Стеной и начнут своё завоевание."
+others_trigger_confirm:0 "Зима близко"
+others_trigger_tooltip:0 "Иные вторгнутся немедленно"
+
+war_for_the_dawn_cb:0 "Война за Рассвет"
+ln_contiguous_transfer_tt:0 "Занятые земли, граничащие с владениями мёртвых, тоже отходят к ним; всё, что дальше, возвращается живым"
+
+war_for_the_dawn_decision_title:0 "Война за Рассвет"
+war_for_the_dawn_decision_desc:0 "Иные вернулись, и всё, что они убивают, идёт вместе с ними: мертвецы на мёртвых конях и твари похуже с дальнего севера. В одиночку против такого не устоит ни одно государство. Только вместе Вестерос может надеяться увидеть рассвет. #warning Войну за Рассвет нельзя объявить, пока Иные упиваются недавней победой.#!"
+war_for_the_dawn_decision_confirm:0 "За рассвет"
+war_for_the_dawn_decision_tt:0 "Занятые земли можно потерять, отдав их Иным"
+
+frostborn_culture_name:0 "Иные"
+
+
+
+ #Game rules
+ rule_agot_others_invasion_chance:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Долгая Ночь#! — вероятность"
+ setting_others_certain_invasion_chance:0 "Неизбежно #EMP (по умолчанию)#!"
+ setting_others_certain_invasion_chance_desc:0 "Долгая Ночь наступит наверняка."
+ setting_others_near_certain_invasion_chance:0 "Почти неизбежно"
+ setting_others_near_certain_invasion_chance_desc:0 "Долгая Ночь, скорее всего, наступит."
+ setting_others_even_odds_invasion_chance:0 "Поровну"
+ setting_others_even_odds_invasion_chance_desc:0 "Долгая Ночь может наступить, а может и нет."
+ setting_others_remote_odds_invasion_chance:0 "Маловероятно"
+ setting_others_remote_odds_invasion_chance_desc:0 "Долгая Ночь, скорее всего, не наступит."
+ setting_others_invasion_wont_happen:0 "Никаких шансов"
+ setting_others_invasion_wont_happen_desc:0 "Долгая Ночь не наступит никогда."
+ 
+ rule_agot_others_invasion_moment:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Долгая Ночь#! — час"
+ setting_others_random_window_invasion:0 "Случайное лето #EMP (по умолчанию)#!"
+ setting_others_random_window_invasion_desc:0 "Она придёт. Никто не знает когда.\n\nНикогда раньше двадцати пяти лет, обычно между девяноста и ста тридцатью, иногда много позже."
+ setting_others_immediate_invasion:0 "Немедленно"
+ setting_others_immediate_invasion_desc:0 "Долгая Ночь начнётся немедленно."
+ setting_others_invasion_in_50_years:0 "Через пятьдесят лет"
+ setting_others_invasion_in_50_years_desc:0 "Примерно через пятьдесят лет от начала."
+ setting_others_invasion_in_100_years:0 "Через сто лет"
+ setting_others_invasion_in_100_years_desc:0 "Примерно через столетие от начала."
+ setting_others_invasion_in_150_years:0 "Через сто пятьдесят лет"
+ setting_others_invasion_in_150_years_desc:0 "Долгая Ночь начнётся примерно через полтора столетия после начала игры, плюс-минус десятилетие."
+ setting_others_full_random_invasion:0 "Полная случайность"
+ setting_others_full_random_invasion_desc:0 "Долгая Ночь может начаться в любой миг. Лето разыгрывается по широкому разбросу — оно может надломиться в первые тридцать лет, а может тянуться далеко за два столетия, — и никакого верхнего предела, привязанного к дате, нет. Выберите это, если хотите кампанию, в которой никто, включая вас, не знает, сколько у вас времени."
+ setting_others_historical_invasion:0 "Исторически"
+ setting_others_historical_invasion_desc:0 "Долгая Ночь начнётся около 300 года от Завоевания.\n\n#EMP При начале в 255 году от Завоевания или позже лета уже не остаётся, поэтому игра открывается сразу внутри фазы «Зима близко» — предупреждения, — и тьма всё равно приходит в срок.#!"
+ setting_others_manual_invasion:0 "Вручную"
+ setting_others_manual_invasion_desc:0 "Долгая Ночь придёт только тогда, когда её запустит игрок особым решением. При этом правиле полоса продвижения вторжения остаётся пустой — так правило и работает, игра не зависла."
+ 
+ rule_agot_others_invasion_strength:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Долгая Ночь#! — сила"
+ setting_others_weak_invasion:0 "Слабое"
+ setting_others_weak_invasion_desc:0 "Долгая Ночь не будет особенно трудной."
+ setting_others_standard_invasion:0 "Обычное"
+ setting_others_standard_invasion_desc:0 "Иные будут достаточно сильны, чтобы бросить вызов Семи Королевствам."
+ setting_others_strong_invasion:0 "Сильное"
+ setting_others_strong_invasion_desc:0 "Иные будут достаточно могущественны, чтобы сокрушить Семь Королевств."
+ setting_others_insane_invasion:0 "Безумное"
+ setting_others_insane_invasion_desc:0 "Долгая Ночь будет жестокой, и обычными средствами её не одолеть!"
+ 
+ 
+ rule_agot_others_resolution:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Долгая Ночь#! — исход"
+ setting_others_death_resolution:0 "Смерть"
+ setting_others_death_resolution_desc:0 "Долгая Ночь кончается в тот миг, когда гибнет предводитель Иных. Убейте его — и тьма отступит, как бы ни шла война."
+ setting_others_war_resolution:0 "#BER Война за Рассвет#!"
+ setting_others_war_resolution_desc:0 "Долгая Ночь кончается лишь с победой в #BER Войне за Рассвет.#!\n\n#EMP Убить Короля Ночи недостаточно. Корону берёт другой из Иных, и тьма продолжается: его наследник, если он есть, а если нет — тот из них, кто ещё стоит. Войну нужно выиграть.#!"
+
+ rule_agot_others_cb_tier:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Долгая Ночь#! — размах войн"
+ setting_others_cb_kingdom:0 "Марка (рекомендуется)"
+ setting_others_cb_duchy:0 "Герцогство (медленный перемол)"
+ setting_others_cb_duchy_desc:0 "Иные берут по одному #bold герцогству#! за раз — нарезка мельче той, в которой нарисована карта, поэтому наступление труднее читать, но линия фронта движется меньшими шагами. Великие престолы всё равно падают последними. Самое медленное вторжение с большим отрывом: много войн, десятилетиями, и вдоволь времени, чтобы живые откликнулись на зов."
+ setting_others_cb_kingdom_desc:0 "Иные берут по одной #bold Марке#! за раз — в той единице, в которой карта и нарисована. На Севере это Последний Очаг, затем Кархолд, затем Дредфорт, и #bold Винтерфелл — лишь когда округа вокруг него затихнет#!. Престол знаменосца всегда падает раньше престола его сюзерена. Значение по умолчанию, и именно под него написана эта история."
+ setting_others_cb_empire:0 "Империя (стремительный натиск)"
+ setting_others_cb_empire_desc:0 "Иные ведут войну на уровне #bold империи#! — меньше войн, но каждая огромна и сметает целые державы разом. Более быстрое и более апокалиптическое вторжение."
+
+ rule_agot_longnight_iron_throne_reformation:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Долгая Ночь#! — восстановление Железного Трона"
+ setting_longnight_iron_throne_reformation_on:0 "Вкл."
+ setting_longnight_iron_throne_reformation_on_desc:0 "Правителям королевского уровня, изначально подчинённым Железному Трону, будет предложено присягнуть ему снова после конца Долгой Ночи."
+ setting_longnight_iron_throne_reformation_off:0 "Выкл."
+ setting_longnight_iron_throne_reformation_off_desc:0 "После конца Долгой Ночи правители останутся независимыми"
+
+ # The Long Night+: Night King command bonus (keeps the dead a credible threat)
+ night_king_command_modifier:0 "Холодная воля"
+ night_king_command_modifier_desc:0 "Воля Великого Иного движет мёртвым воинством: удар крепче, выносливость выше, и ведут его без пощады и страха."
+ 
+ rule_agot_long_night_armor:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Долгая Ночь#! — доспехи Иных"
+ setting_agot_long_night_armor_on:0 "Вкл."
+  setting_agot_long_night_armor_on_desc:0 "Иные будут носить особые доспехи."
+   setting_agot_long_night_armor_off:0 "Выкл."
+  setting_agot_long_night_armor_off_desc:0 "Иные не будут носить особых доспехов. #warning ВЫБЕРИТЕ ЭТО, ЕСЛИ У ВАС СТОИТ ЛЮБОЙ МОД, ДОБАВЛЯЮЩИЙ ОДЕЖДУ, И ВЫ НЕ ХОТИТЕ ВИДЕТЬ ГОЛЫХ ИНЫХ#!"
+  
+   rule_agot_long_night_dragon:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Долгая Ночь#! — ледяной дракон"
+ setting_agot_long_night_dragon_on:0 "Просто появляется"
+  setting_agot_long_night_dragon_on_desc:0 "Иным выдают собственного дракона, пока драконы существуют хоть где-то в мире. #EMP Никто не обязан умирать первым.#!\n\nСтарое поведение, сохранённое для тех, кому нужна гарантия."
+   setting_agot_long_night_dragon_off:0 "Выкл."
+  setting_agot_long_night_dragon_off_desc:0 "Иные никогда не получат дракона."
+ other_unlanded_male:0 "Иной"
+ other_unlanded_female:0 "Иная"
+
+ other_county_male:0 "Вождь"
+ other_county_female:0 "Вождица"
+ other_duchy_male:0 "Верховный вождь"
+ other_duchy_female:0 "Верховная вождица"
+
+ other_barony_male:0 "Вождь"
+ other_barony_female:0 "Вождица"
+ other_kingdom_male:0 "Король Зимы"
+ other_kingdom_female:0 "Королева Зимы"
+ other_empire_male:0 "Великий Иной"
+ other_empire_female:0 "Великая Иная"
+
+ # ── THE OTHERS' DRAGON ──────────────────────────────────────────────────────────────────────────────────────
+ setting_agot_long_night_dragon_raise:0 "Поднимают убитых ими #EMP (по умолчанию)#!"
+ setting_agot_long_night_dragon_raise_desc:0 "#EMP Иным не дают ничего.#! Дракон достаётся им, только если они собьют его сами, — а пока не сумеют, у них его нет.\n\nОн возвращается самим собой: то же имя, то же обличье, неверный цвет. Дракон, который был мёртв уже очень давно, когда его подняли, — один из великих зверей прошлого, — возвращается изменённым, потому что от его обличья не осталось ничего, что можно было бы повторить."
+ # ── THE UNDEAD DRAGON ───────────────────────────────────────────────────────────────────────────────────────
+ nick_the_undead:0 "Немёртвый"
+ trait_ln_undead_dragon:0 "Восставший"
+ trait_ln_undead_dragon_desc:0 "Умер однажды, в войне за рассвет, и был поднят снова. Он подчиняется тому, кто его убил."
+
+ # 1.0.8 -- war_for_the_dawn_cb's on_white_peace_desc and on_invalidated_desc pointed at these two keys and
+ # NOTHING DEFINED THEM, so either outcome printed the raw key to the player. Pre-existing; found by the
+ # loc-key audit. The key NAMES are inherited leftovers from the Great Ranging and are left alone on purpose
+ # -- renaming them means editing the CB file to fix a string, and the CB file is not worth the risk.
+ great_ranging_white_peace_desc:0 "Война кончается, не кончившись. Условий не заключают, потому что заключать их не с кем — воинство просто перестаёт приходить, и те, кто остался, опускают щиты и ждут, значит ли это хоть что-нибудь.\n\nНе значит. Мёртвые не разбиты. Они просто в другом месте."
+ great_ranging_invalidated_desc:0 "Война окончена, потому что исчезла её причина. То, ради чего созвали эти знамёна, больше не стоит, а войне нужно быть о чём-то.\n\nРога трубят отход. Милость это или лишь передышка — здесь никто ответить не может."

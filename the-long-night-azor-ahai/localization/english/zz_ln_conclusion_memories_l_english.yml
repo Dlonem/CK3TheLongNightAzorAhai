@@ -1,0 +1,18 @@
+﻿l_english:
+
+ # Past tense, lower-case, no-perspective default first -- vanilla's own design standard for memories,
+ # straight out of _character_memories.info.
+ ln_forged_lightbringer_memory:0 "forged Lightbringer"
+ ln_forged_lightbringer_memory_desc:0 "I forged Lightbringer, and I paid what the tale says it costs."
+ ln_forged_lightbringer_memory_desc_second_perspective:0 "you forged Lightbringer, and you paid what the tale says it costs."
+ ln_forged_lightbringer_memory_desc_third_perspective:0 "[owner.GetName] forged Lightbringer, and paid what the tale says it costs."
+
+ ln_slew_the_night_king_memory:0 "ended the Long Night"
+ ln_slew_the_night_king_memory_desc:0 "I was the one standing there when it mattered. The Night King fell, and the sun came up."
+ ln_slew_the_night_king_memory_desc_second_perspective:0 "you were the one standing there when it mattered. The Night King fell, and the sun came up."
+ ln_slew_the_night_king_memory_desc_third_perspective:0 "[owner.GetName] was standing there when it mattered. The Night King fell, and the sun came up."
+
+ # The memory type own name key. Its three perspective descriptions have always lived in
+ # zz_ln_reveal_l_english.yml; this line was not anywhere, and the live log said so:
+ # "Character memory name 'ln_stood_at_the_dawn_memory' is not localized".
+ ln_stood_at_the_dawn_memory:0 "stood at the dawn"

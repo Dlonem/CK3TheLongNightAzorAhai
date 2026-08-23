@@ -1,0 +1,13 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Cold Winds flavour pulse.
+#
+# Declared here as a named sub-list and listed in zz_ln_00_hooks.txt, per the rule at the top of
+# that file: a vanilla on_action is declared THERE and nowhere else, and a sub-list that nothing
+# references does not exist.
+ln_coldwinds_pulse = {
+	trigger = {
+		scope:struggle = { is_struggle_type = ln_long_night_struggle }
+	}
+	effect = {
+		ln_coldwinds_pulse_effect = yes
+	}
+}

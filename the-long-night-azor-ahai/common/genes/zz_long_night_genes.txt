@@ -1,0 +1,192 @@
+﻿# AGOT: The Long Night & Azor Ahai
+# HSV colour-shift genes driving the White Walker recolour. Every one is set with mode = add from
+# gfx/portraits/trait_portrait_modifiers/whitewalker_trait_modifiers.txt -- none is ever inherited.
+# (Was `replace` until 10 Aug -- illegal on a special gene, which is what the special_genes wrapper below
+#  silently made these. See that file's header for the vanilla precedent.)
+#
+# FIX (v0.1.0): these were declared under a TOP-LEVEL morph_genes block. In CK3, genes declared at top level are
+# REQUIRED in every persistent DNA entry. Base game says so itself, in game/common/genes/10_genes_special_misc.txt:
+#     "These special genes will not be part of a character's DNA."
+# AGOT ships 4,863 DNA entries, so this mod's 22 top-level genes produced ~98,000 lines of
+#     [E][portraitcontext.cpp:326]: Persistent portrait info missing gene X!
+# on every load. Wrapping them in special_genes removes the requirement and changes nothing about how they work --
+# portrait modifiers address genes by name regardless of category, and vanilla clothes/headgear/legwear are
+# special_genes driven exactly this way in ln_others_portrait_modifiers.txt and zz_wight_nudity.txt.
+#
+# ALSO REMOVED (v0.1.0):
+#   * the 9 *_mhec genes -- byte-identical clones of these six, referenced only by the DNA of history character
+#     others_thenightking, who dies in 6934 and so never exists at any bookmark. ~40,000 log lines for nothing.
+#   * eye_color_hue/saturation/value_long_night -- referenced by no file in any mod in the load order.
+special_genes = {
+	morph_genes = {
+
+			skin_color_hue_long_night = {
+				inheritable = yes
+				group = body
+		
+				vanilla_skin_color_hue_long_night = { 
+					index = 0
+					male = {}
+					female = male
+					boy = male
+					girl = male
+				}
+
+				skin_color_hue_long_night = {
+					index = 1
+					male = {
+						skin_hsv_shift_curve = {
+							curve = {
+								{ 0.0   { 0.0 0.0 0.0 } }
+								{ 1.0   { 1.0 0.0 0.0 } }
+							}
+						}
+					}
+					female = male
+					boy = male
+					girl = male
+				}
+			}
+
+			skin_color_saturation_long_night = {
+				inheritable = yes
+				group = body
+		
+				vanilla_skin_color_saturation_long_night = { 
+					index = 0
+					male = {}
+					female = male
+					boy = male
+					girl = male
+				}
+				
+				skin_color_saturation_long_night = {
+					index = 1
+					male = {
+						skin_hsv_shift_curve = {
+							curve = {
+								{ 0.0   { 0.0 -1.0 0.0 } }
+								{ 1.0   { 0.0 1.0 0.0 } }
+							}
+						}
+					}
+					female = male
+					boy = male
+					girl = male
+				}
+			}
+
+			skin_color_value_long_night = {
+				inheritable = yes
+				group = body
+		
+				vanilla_skin_color_value_long_night = { 
+					index = 0
+					male = {}
+					female = male
+					boy = male
+					girl = male
+				}
+				
+				skin_color_value_long_night = {
+					index = 1
+					male = {
+						skin_hsv_shift_curve = {
+							curve = {
+								{ 0.0   { 0.0 0.0 -1.0 } }
+								{ 1.0   { 0.0 0.0 1.0 } }
+							}
+						}
+					}
+					female = male
+					boy = male
+					girl = male
+				}
+			}
+
+			hair_color_hue_long_night = {
+				inheritable = yes
+				group = hair
+		
+				vanilla_hair_color_hue_long_night = { 
+					index = 0
+					male = {}
+					female = male
+					boy = male
+					girl = male
+				}
+
+				hair_color_hue_long_night = {
+					index = 1
+					male = {
+						hair_hsv_shift_curve = {
+							curve = {
+								{ 0.0   { 0.0 0.0 0.0 } }
+								{ 1.0   { 1.0 0.0 0.0 } }
+							}
+						}
+					}
+					female = male
+					boy = male
+					girl = male
+				}
+			}
+
+			hair_color_saturation_long_night = {
+				inheritable = yes
+				group = hair
+		
+				vanilla_hair_color_saturation_long_night = { 
+					index = 0
+					male = {}
+					female = male
+					boy = male
+					girl = male
+				}
+
+				hair_color_saturation_long_night = {
+					index = 1
+					male = {
+						hair_hsv_shift_curve = {
+							curve = {
+								{ 0.0   { 0.0 -1.0 0.0 } }
+								{ 1.0   { 0.0 1.0 0.0 } }
+							}
+						}
+					}
+					female = male
+					boy = male
+					girl = male
+				}
+			}
+
+			hair_color_value_long_night = {
+				inheritable = yes
+				group = hair
+		
+				vanilla_hair_color_value_long_night = { 
+					index = 0
+					male = {}
+					female = male
+					boy = male
+					girl = male
+				}
+
+				hair_color_value_long_night = {
+					index = 1
+					male = {
+						hair_hsv_shift_curve = {
+							curve = {
+								{ 0.0   { 0.0 0.0 -1.0 } }
+								{ 1.0   { 0.0 0.0 1.0 } }
+							}
+						}
+					}
+					female = male
+					boy = male
+					girl = male
+				}
+			}
+
+	}
+}

@@ -1,0 +1,38 @@
+﻿# AGOT: The Long Night & Azor Ahai -- dated records for the things the dead take.
+#
+# 1.0.12b. Modelled line for line on wight_raised_memory (zz_long_night_plus_memories.txt), because that
+# memory already solves the exact problem Thomas set for the spear: "the date gets saved as like a memory --
+# was killed and raised by the Night King -- and the recorded death date will occur when the Night King
+# actually dies, or when the dragon dies in combat." The engine timestamps the memory natively, so the
+# dragon's page reads: taken on THIS date (memory), still alive (no death date) -- and the real death, at the
+# dawn sweep or in some later battle, closes the record the ordinary way. Two dates, no plumbing.
+
+# Owner: the dragon the Night King's spear took out of the sky. Created in ln_spear.1's immediate, right
+# after ln_the_dead_claim_dragon_effect converts it in place.
+ln_dragon_taken_memory = {
+	categories = { negative death }
+	icon = "death_negative.dds"
+
+	description = {
+		random_valid = {
+			desc = ln_dragon_taken_memory_desc
+		}
+	}
+
+	second_perspective_description = {
+		random_valid = {
+			desc = ln_dragon_taken_memory_desc_second_perspective
+		}
+	}
+
+	third_perspective_description = {
+		random_valid = {
+			desc = ln_dragon_taken_memory_desc_third_perspective
+		}
+	}
+
+	# Effectively permanent -- the dawn sweep or a battle ends the dragon long before this does.
+	duration = {
+		years = 1000
+	}
+}

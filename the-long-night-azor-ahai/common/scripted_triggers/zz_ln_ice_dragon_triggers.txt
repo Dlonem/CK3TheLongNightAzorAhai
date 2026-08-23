@@ -1,0 +1,197 @@
+﻿# AGOT: The Long Night & Azor Ahai -- were the Others actually there when it fell?
+
+# Root = a dragon that has just died.
+#
+# THE FIRST VERSION GOT THIS WRONG and Thomas caught it: it asked WHERE the dragon died -- north of the Neck --
+# which is only a proxy for where the war happens to have started. His objection: "what if the Night King's army
+# is basically there? Don't rule it out based on how it starts. If the last dragons are in King's Landing, in
+# the dragonpits, then they can actually have an opportunity to unleash all hell."
+#
+# Exactly right. The war tier rule is literally called "Kingdom (Creeping Advance)" -- the front MOVES, and by
+# the late game it is in the Crownlands. So the question is not "did it die in the north", it is "had the dead
+# reached this place". Geography now only survives as the beyond-the-Wall clause, because they are always there.
+ln_others_were_here_trigger = {
+	OR = {
+		# 1. THE THING THAT KILLED IT WAS ONE OF THEM. No argument to be had.
+		scope:killer ?= {
+			OR = {
+				has_trait = other_trait
+				has_trait = wight_trait
+				has_trait = nightking
+				house ?= house:house_theothers
+			}
+		}
+
+		# 2-4. THE GROUND ITSELF ANSWERS -- extracted (1.0.7) into its own trigger so Door Two's
+		#      dragon-combat interception can ask the same location question without a scope:killer
+		#      in hand. Content unchanged; see ln_the_ground_is_theirs_trigger below.
+		ln_the_ground_is_theirs_trigger = yes
+	}
+}
+
+# Root = a character. Do the dead hold the ground it is standing on? Clauses 2-4 of
+# ln_others_were_here_trigger, verbatim -- one question, asked from two doors (the death recorder
+# above, and ln_the_dead_claim_this_trigger in Door Two's combat interception).
+ln_the_ground_is_theirs_trigger = {
+	OR = {
+		# 2. THEY HOLD THE GROUND IT FELL ON -- either outright, or it has already been scoured to a ruin.
+		location ?= {
+			county ?= { ln_county_is_theirs_trigger = yes }
+		}
+
+		# 3. THE FRONT IS IN THIS KINGDOM. Thomas's dragonpit case. The dead do not have to hold the exact
+		#    county the dragon fell in -- they have to have taken ground in the same de jure kingdom, which is
+		#    precisely the granularity the war tier rule advances at. A dragon lost over King's Landing counts
+		#    once the Crownlands are falling. A dragon lost in Dorne while the North burns does not.
+		location ?= {
+			county ?= {
+				kingdom ?= {
+					any_in_de_jure_hierarchy = {
+						continue = { tier > tier_county }
+						tier = tier_county
+						ln_county_is_theirs_trigger = yes
+					}
+				}
+			}
+		}
+
+		# 4. BEYOND THE WALL, ALWAYS. They do not have to take it; it is where they live.
+		location ?= {
+			OR = {
+				geographical_region = world_westeros_beyond_the_wall
+				geographical_region = world_westeros_the_wall
+			}
+		}
+	}
+}
+
+# Root = a county title. Has the dark actually had this ground?
+#
+# HOLDER *AND* CONTROLLER. A county under occupation still has its old holder on paper -- the Stark is still
+# Lord of Winterfell right up until he is not -- but county_controller is whoever is actually standing in it.
+# For "were the Others here", standing in it is the question.
+ln_county_is_theirs_trigger = {
+	OR = {
+		has_variable = ln_scoured
+		holder ?= { ln_is_one_of_them_trigger = yes }
+		county_controller ?= { ln_is_one_of_them_trigger = yes }
+	}
+}
+
+# Root = a character. One of the dead, by any of the four markers this mod and AGOT use between them.
+ln_is_one_of_them_trigger = {
+	OR = {
+		# 1.0.7: THE STAMP COMES FIRST. Set at every creation/conversion site (the Night King, both
+		# Other spawners, the wight raise in mutate_into_other_effect, the story cycle's setup and
+		# promotions, and both undead-dragon roads). Identity is authoritative where the stamp exists;
+		# every clause below survives as the fallback for characters from saves older than 1.0.7 --
+		# missing existing saves is fine, per Thomas, and the clauses cover them anyway.
+		has_character_flag = ln_one_of_them
+		has_trait = other_trait
+		has_trait = nightking
+		has_trait = wight_trait
+		house ?= house:house_theothers
+		has_government = ruins_government
+		# 13 Aug (1.0.6a): a lord converted by mutate_into_other_effect carries this and, as Thomas found
+		# after his war, does NOT necessarily carry a trait -- his survivors were dynasty-only.
+		has_government = wight_government
+	}
+}
+
+# ══ DOOR TWO (1.0.7) ══════════════════════════════════════════════════════════════════════════════════════
+
+# Root = a dragon that is ABOUT to die in dragon-vs-dragon combat (scope:dsc_victor = the rider that
+# beat it). Asked by the dragon_combat_result_grab override BEFORE the death lands: may the dead
+# claim this one instead? Both halves written out, per the gate standard.
+ln_the_dead_claim_this_trigger = {
+	# ── ONLY IF ────────────────────────────────────────────────────────────────────────────────────
+	# It is a living dragon, the dark is here, and there is a Night King to claim it.
+	has_trait = dragon
+	exists = struggle:ln_long_night_struggle
+	struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+	exists = title:h_the_others.holder
+
+	# The kill is attributable to the dead: the victor is one of them, or the war has reached the
+	# ground the dragon is falling on (same standard the death recorder applies).
+	OR = {
+		scope:dsc_victor ?= { ln_is_one_of_them_trigger = yes }
+		ln_the_ground_is_theirs_trigger = yes
+	}
+
+	# ── NEVER IF ───────────────────────────────────────────────────────────────────────────────────
+	# Already one of theirs -- living, undead, dead, and dead is the end of it. An undead dragon that
+	# loses a duel DIES, or the infinite revive loop Thomas ruled out comes back through this door.
+	NOT = { has_trait = ln_undead_dragon }
+	NOT = { ln_is_one_of_them_trigger = yes }
+
+	# The rule that denies the Night King a dragon is honoured here too.
+	NOT = { has_game_rule = agot_long_night_dragon_off }
+}
+
+# Root = an Other (never a wight -- the ones with minds). Is he a captain waiting on a mount?
+# The same four clauses ln_arm_the_lieutenants_effect has always used, named so the claim effect
+# and the arming loop cannot drift apart.
+ln_wants_an_undead_mount_trigger = {
+	has_trait = other_trait
+	is_alive = yes
+	NOT = { has_trait = dragonrider }
+	NOT = { exists = var:current_dragon }
+}
+
+# Root = a dragon. A living undead dragon nobody is riding -- the supply side of the arming loop
+# once Door Two exists: conversion can outrun the demand for riders, and a claim with no captain
+# free waits owned (in the Night King's court) until one is.
+ln_unridden_undead_trigger = {
+	is_alive = yes
+	has_trait = ln_undead_dragon
+	NOT = { exists = var:current_rider }
+}
+
+# Root = irrelevant; the dragon is passed. THE BLANK STORAGE ENTRY (1.0.11).
+#
+# WHY THIS EXISTS, AND WHY EVERY CHARACTER-SIDE TEST MISSED IT. AGOT's portrait reads the STORY CYCLE
+# entry, never the character (00_agot_dragon_gene_values.txt:704), and those script values have no `else`
+# and no base -- an entry carrying no gene_dragon_body_shading_value returns 0 on every appearance
+# channel, and zero shading is transparency. It logs nothing by construction: `?=` swallows the failed
+# scope and an every_in_global_list that matches nothing does not run its body.
+#
+# THE POPULATION IT FINDS. story_dragon_variable_storage.on_setup wraps its ENTIRE gene-copy block in
+# `if = { limit = { scope:dragon = { is_historical_dragon = no } } }` -- opens at line 11 of
+# agot_story_cycle_dragon_variables.txt, closes at 297, brace-checked, and there is no else. So for a
+# HISTORICAL dragon on_setup sets dragon_id and nothing else. Historical dragons are meant to get curated
+# values from agot_historical_dragon_transfer_vars_to_story_cycle_effect, which is called ONLY from
+# agot_historical_dragons_setup, which runs ONCE at on_game_start (agot_game_start.txt:2697) with every
+# block guarded on `limit = { exists = character:dragon_X }`. A historical dragon that did not exist at
+# game start therefore never receives an appearance from ANY path, ever.
+#
+# AND IT IS NOT DNA. 00_agot_char_dragons.txt holds 72 dragon entries and ZERO `dna =` lines. The comment
+# in ln_repair_one_dragon_effect asserting that a historical dragon's "look comes from DNA" was wrong, and
+# it was the stated reason this population was deliberately skipped. On a blank entry there is no original
+# appearance to preserve -- there is nothing there at all. A comment asserting precedent is not precedent.
+#
+# SAFE BY CONSTRUCTION. False for every dragon whose entry carries shading, so a curated Balerion or any
+# healthy dragon can never match. It reads; it writes nothing; it creates no story.
+# ── 1.0.13 -- THE GENERAL FORM, AND WHY IT HAD TO EXIST ──────────────────────────────────────────────
+# AGOT 0.5.1's story on_setup strips every gene variable off the dragon CHARACTER once its storage entry
+# is built. So `NOT = { has_variable = gene_dragon_X }` asked of a dragon is now true for every dragon
+# alive, and any gate written that way fires on healthy animals. Ask the ENTRY instead -- that is where
+# the appearance actually lives, in 0.5.1 and before it.
+ln_storage_entry_lacks_gene_trigger = {
+	agot_has_dragon_storage_system_global_list = yes
+	any_in_global_list = {
+		variable = gl_dragon_variable_storage
+		story_type = story_dragon_variable_storage
+		var:dragon_id ?= $DRAGON$
+		NOT = { has_variable = $GENE$ }
+	}
+}
+
+ln_storage_entry_is_blank_trigger = {
+	agot_has_dragon_storage_system_global_list = yes
+	any_in_global_list = {
+		variable = gl_dragon_variable_storage
+		story_type = story_dragon_variable_storage
+		var:dragon_id ?= $DRAGON$
+		NOT = { has_variable = gene_dragon_body_shading_value }
+	}
+}

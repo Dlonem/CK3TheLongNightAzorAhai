@@ -1,0 +1,343 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the reveal.
+#
+# This is the only place in the entire mod that reads global_var:ln_prophecy_is_true. Everything upstream --
+# every deed, every naming, every red priest who was certain -- runs without ever consulting it. That was the
+# design goal from the first brief: a prophecy you can verify is a quest marker.
+#
+# WHO GETS THE TRAIT. Whoever landed the blow, named or not. If the prophecy was real and an unnamed man ends
+# it, then every priest in the world spent a century naming the wrong people -- and that is the most interesting
+# of the four endings, not a failure case. "It could be anyone" was Thomas's phrase and it is load-bearing.
+
+# Root = the Night King, at the moment of death. scope:killer is set by the engine when the killer is known.
+ln_night_king_slain_reveal_effect = {
+	if = {
+		limit = { NOT = { has_global_variable = ln_dawn_revealed } }
+		set_global_variable = { name = ln_dawn_revealed  value = yes }
+
+		# ── WHO ACTUALLY KILLED HIM ─────────────────────────────────────────────────────────────────
+		# 13 Aug (1.0.6a), Thomas's live run: the Night King was burned by VHAGAR, and the engine's
+		# scope:killer is the dragon. Everything downstream then landed on the animal -- Vhagar took
+		# azor_ahai_reborn, the nickname 'the Dawn' and the memory, and the card read "It was Vhagar."
+		# Funny once; wrong forever. A dragon is a weapon, and the deed belongs to the hand on it.
+		#
+		# So: if the killer is a dragon, the slayer is its rider. AGOT's rider link is the symmetric
+		# agot_dragon relation (00_agot_scripted_relations.txt:27, corresponding = agot_dragon), so the
+		# dragon's own relation list gives the man. A WILD dragon has no rider -- then nobody is named,
+		# which is correct and is its own ending: the Long Night was ended by something nobody owned.
+		# ln_can_be_named_trigger already refuses dragons; this is the door it could not cover, because
+		# the reveal grants the trait directly rather than through the naming.
+		if = {
+			limit = {
+				exists = scope:killer
+				scope:killer = { has_trait = dragon }
+			}
+			scope:killer = {
+				save_scope_as = ln_dawn_dragon
+				random_relation = {
+					type = agot_dragon
+					limit = {
+						is_alive = yes
+						NOT = { has_trait = dragon }
+					}
+					save_scope_as = ln_slayer
+				}
+			}
+		}
+
+		# The ordinary case: a man killed him, and he is the slayer.
+		if = {
+			limit = {
+				exists = scope:killer
+				NOT = { exists = scope:ln_slayer }
+				NOT = { scope:killer = { has_trait = dragon } }
+			}
+			scope:killer = { save_scope_as = ln_slayer }
+		}
+
+		# Record who did it, for the card and for anything later that wants to name them.
+		# Keyed on ln_slayer, NOT scope:killer -- see the dragon redirect above, or a dragon kill would
+		# write the animal into the permanent record the next wave's chroniclers read.
+		if = {
+			limit = { exists = scope:ln_slayer }
+			set_global_variable = { name = ln_the_slayer  value = scope:ln_slayer }
+			# THE PERMANENT RECORD, for the next wave's chroniclers (design-backlog-additions.md). Written
+			# here and never overwritten by cleanup, so a second Long Night under "The Cycle" can open with
+			# what became of the man who ended the first.
+			set_global_variable = { name = ln_last_dawn_champion  value = scope:ln_slayer }
+			set_global_variable = { name = ln_last_dawn_year  value = current_year }
+
+			# ── AND THE DRAGON, IF THERE WAS ONE ────────────────────────────────────────────────────────
+			# The last of the three stamps design-backlog-additions.md asked for, and the one that was
+			# missing. It is the strongest thing the next wave's cards can say, because it names a specific
+			# animal: "the dragon that ended the last one still breathes" -- or, far more often, does not.
+			#
+			# WHICH DRAGON. The slayer's own. AGOT links a rider to his mount with var:current_dragon
+			# (agot_set_as_rider, 00_agot_dragon_effects.txt) and there is no way to enumerate what else was
+			# in that battle -- CK3 exposes no roster at a death event, the same wall the roll-call hit. So
+			# the honest answer is the one dragon we can actually prove was there: the one the man who
+			# landed the blow was sitting on. If he was not a rider, nothing is recorded and the cards fall
+			# through, which is correct -- not every dawn has a dragon in it.
+			#
+			# UNPRUNEABLE ON PURPOSE. A global variable holding a character does not stop the engine
+			# pruning that character, and a century is a long time. AGOT already makes dead dragons
+			# unpruneable via dead_dragons_list, but that is their housekeeping and not a contract with us,
+			# so we take our own lock. This is what lets a card three generations later still print the
+			# dragon's name.
+			# 13 Aug (1.0.6a): if the killing blow WAS a dragon, that is the dragon -- no inference needed.
+			if = {
+				limit = { exists = scope:ln_dawn_dragon }
+				scope:ln_dawn_dragon = { agot_make_unpruneable = yes }
+				set_global_variable = { name = ln_last_dawn_dragon  value = scope:ln_dawn_dragon }
+			}
+			else_if = {
+				limit = { scope:ln_slayer ?= { has_variable = current_dragon } }
+				scope:ln_slayer.var:current_dragon = {
+					save_scope_as = ln_dawn_dragon
+					agot_make_unpruneable = yes
+				}
+				set_global_variable = { name = ln_last_dawn_dragon  value = scope:ln_dawn_dragon }
+			}
+			if = {
+				limit = {
+					scope:ln_slayer = {
+						OR = {
+							has_trait = chosen_by_rhllor
+							has_trait = favored_by_rhllor
+						}
+					}
+				}
+				set_global_variable = { name = ln_last_dawn_was_named  value = yes }
+			}
+		}
+
+		# WAS HE CARRYING THE SWORD? Recorded before anything else touches him, because an artifact can be
+		# lost, looted or unequipped in the seconds after a death and the answer has to be the one that was
+		# true at the moment of the blow.
+		if = {
+			limit = {
+				exists = scope:ln_slayer
+				scope:ln_slayer = { ln_carries_lightbringer_trigger = yes }
+			}
+			set_global_variable = { name = ln_slain_with_lightbringer  value = yes }
+		}
+
+		# The trait goes to the killer whatever the truth turns out to be. It is a record of a fact.
+		#
+		# 11 Aug -- AND IT WAS NOT ACTUALLY LANDING FOR THE MOST LIKELY SLAYER IN THE GAME. azor_ahai_reborn
+		# is level 3 of trait group rhllor_champion; chosen_by_rhllor is level 2 and favored_by_rhllor is
+		# level 1. add_trait does not promote a character who already holds another rung of the same group,
+		# so the one man most likely to end the Long Night -- an acclaimed Chosen with a burning sword -- was
+		# the one man who could not receive the mod's central reward. He got the flag, the memory and the
+		# nickname, and no trait. Same root cause as the repeating Prince That Was Promised card; see
+		# ln_name_chosen_effect in zz_ln_prophecy_effects.txt.
+		if = {
+			limit = {
+				exists = scope:ln_slayer
+				scope:ln_slayer = {
+					is_alive = yes
+					NOT = { has_trait = azor_ahai_reborn }
+				}
+			}
+			scope:ln_slayer = {
+				if = {
+					limit = { has_trait = chosen_by_rhllor }
+					remove_trait = chosen_by_rhllor
+				}
+				if = {
+					limit = { has_trait = favored_by_rhllor }
+					remove_trait = favored_by_rhllor
+				}
+				# 1.0.10b: the rung is gone, so the named-claimant opinion modifier goes with it.
+				ln_the_world_forms_a_view_effect = yes
+				add_trait = azor_ahai_reborn
+				add_character_flag = ln_ended_the_long_night
+				# The dated, visible-forever version of that flag. See zz_ln_conclusion_memories.txt.
+				create_character_memory = { type = ln_slew_the_night_king_memory }
+				ln_name_the_dawn_effect = yes
+			}
+		}
+
+		# THE ROLL-CALL (v0.2.1, Thomas's pick from the backlog): who was actually standing there.
+		# The slayer's three best living knights, captured AT THE MOMENT OF DEATH -- an hour later
+		# they could be dead, dismissed, or scattered, and the record has to be the one that was true
+		# when the blow landed. Each carries a dated memory of it for the rest of his life; the card
+		# (ln_reveal.10) arrives after the theology card, before the chronicle.
+		if = {
+			limit = { exists = scope:ln_slayer }
+			scope:ln_slayer = {
+				ordered_knight = {
+					order_by = prowess
+					position = 0
+					limit = { is_alive = yes }
+					save_scope_as = ln_dawn_knight_1
+				}
+				ordered_knight = {
+					order_by = prowess
+					position = 1
+					limit = { is_alive = yes }
+					save_scope_as = ln_dawn_knight_2
+				}
+				ordered_knight = {
+					order_by = prowess
+					position = 2
+					limit = { is_alive = yes }
+					save_scope_as = ln_dawn_knight_3
+				}
+			}
+			scope:ln_dawn_knight_1 ?= {
+				add_character_flag = ln_stood_at_the_dawn
+				create_character_memory = { type = ln_stood_at_the_dawn_memory }
+				# 1.0.9 -- AND THE HOUSE REMEMBERS IT. Thomas, 14 Aug: five thousand renown apiece for the
+				# three who were there, against ten thousand for the one who landed the blow. A knight who
+				# stood in the snow at the end of the world should found a house's fortune on it.
+				# Guarded: a hedge knight with no dynasty is exactly the man most likely to be here.
+				if = {
+					limit = { exists = dynasty }
+					dynasty = { add_dynasty_prestige = 5000 }
+				}
+				# -- AND HE IS A SER AFTERWARDS ------------------------------------------------------
+				# Thomas, 14 Aug: "all three sub characters should get knighted if they were not already
+				# knights. I'm sure there is some guards in base game of thrones."
+				#
+				# There are, and these are them. Note these three are already knights in the ARMY sense --
+				# ordered_knight above iterates the slayer's knights -- but that is knight STATUS, not the
+				# chivalric trait. Thomas's own screenshot of ln_reveal.10 is the proof: "Lord Enfren, Guy,
+				# Ser Alfred". Guy carried no honorific. He held the line at the end of the world and went
+				# home a commoner.
+				#
+				# ONLY IF: he is not already one by AGOT's reckoning (is_agot_knight_trigger covers the
+				# trait AND a squire with a full knight track, so a squire about to be knighted properly is
+				# not short-circuited), he is an adult, and AGOT's own disqualifier list is clear --
+				# agot_has_traits_preventing_knighthood_trigger is the guard their whole knighthood system
+				# uses, so a maimed, craven or otherwise ineligible man is refused here exactly as he would
+				# be refused anywhere else.
+				# NEVER IF: any of the above fails. Better an unknighted hero than a knight the rest of
+				# AGOT's systems consider illegal.
+				# add_trait = knight is AGOT's own idiom for this, not raw invention --
+				# 00_agot_character_history_effects.txt:198 does the same.
+				if = {
+					limit = {
+						is_adult = yes
+						is_agot_knight_trigger = no
+						agot_has_traits_preventing_knighthood_trigger = no
+					}
+					add_trait = knight
+				}
+			}
+			scope:ln_dawn_knight_2 ?= {
+				add_character_flag = ln_stood_at_the_dawn
+				create_character_memory = { type = ln_stood_at_the_dawn_memory }
+				# 1.0.9 -- AND THE HOUSE REMEMBERS IT. Thomas, 14 Aug: five thousand renown apiece for the
+				# three who were there, against ten thousand for the one who landed the blow. A knight who
+				# stood in the snow at the end of the world should found a house's fortune on it.
+				# Guarded: a hedge knight with no dynasty is exactly the man most likely to be here.
+				if = {
+					limit = { exists = dynasty }
+					dynasty = { add_dynasty_prestige = 5000 }
+				}
+				# -- AND HE IS A SER AFTERWARDS ------------------------------------------------------
+				# Thomas, 14 Aug: "all three sub characters should get knighted if they were not already
+				# knights. I'm sure there is some guards in base game of thrones."
+				#
+				# There are, and these are them. Note these three are already knights in the ARMY sense --
+				# ordered_knight above iterates the slayer's knights -- but that is knight STATUS, not the
+				# chivalric trait. Thomas's own screenshot of ln_reveal.10 is the proof: "Lord Enfren, Guy,
+				# Ser Alfred". Guy carried no honorific. He held the line at the end of the world and went
+				# home a commoner.
+				#
+				# ONLY IF: he is not already one by AGOT's reckoning (is_agot_knight_trigger covers the
+				# trait AND a squire with a full knight track, so a squire about to be knighted properly is
+				# not short-circuited), he is an adult, and AGOT's own disqualifier list is clear --
+				# agot_has_traits_preventing_knighthood_trigger is the guard their whole knighthood system
+				# uses, so a maimed, craven or otherwise ineligible man is refused here exactly as he would
+				# be refused anywhere else.
+				# NEVER IF: any of the above fails. Better an unknighted hero than a knight the rest of
+				# AGOT's systems consider illegal.
+				# add_trait = knight is AGOT's own idiom for this, not raw invention --
+				# 00_agot_character_history_effects.txt:198 does the same.
+				if = {
+					limit = {
+						is_adult = yes
+						is_agot_knight_trigger = no
+						agot_has_traits_preventing_knighthood_trigger = no
+					}
+					add_trait = knight
+				}
+			}
+			scope:ln_dawn_knight_3 ?= {
+				add_character_flag = ln_stood_at_the_dawn
+				create_character_memory = { type = ln_stood_at_the_dawn_memory }
+				# 1.0.9 -- AND THE HOUSE REMEMBERS IT. Thomas, 14 Aug: five thousand renown apiece for the
+				# three who were there, against ten thousand for the one who landed the blow. A knight who
+				# stood in the snow at the end of the world should found a house's fortune on it.
+				# Guarded: a hedge knight with no dynasty is exactly the man most likely to be here.
+				if = {
+					limit = { exists = dynasty }
+					dynasty = { add_dynasty_prestige = 5000 }
+				}
+				# -- AND HE IS A SER AFTERWARDS ------------------------------------------------------
+				# Thomas, 14 Aug: "all three sub characters should get knighted if they were not already
+				# knights. I'm sure there is some guards in base game of thrones."
+				#
+				# There are, and these are them. Note these three are already knights in the ARMY sense --
+				# ordered_knight above iterates the slayer's knights -- but that is knight STATUS, not the
+				# chivalric trait. Thomas's own screenshot of ln_reveal.10 is the proof: "Lord Enfren, Guy,
+				# Ser Alfred". Guy carried no honorific. He held the line at the end of the world and went
+				# home a commoner.
+				#
+				# ONLY IF: he is not already one by AGOT's reckoning (is_agot_knight_trigger covers the
+				# trait AND a squire with a full knight track, so a squire about to be knighted properly is
+				# not short-circuited), he is an adult, and AGOT's own disqualifier list is clear --
+				# agot_has_traits_preventing_knighthood_trigger is the guard their whole knighthood system
+				# uses, so a maimed, craven or otherwise ineligible man is refused here exactly as he would
+				# be refused anywhere else.
+				# NEVER IF: any of the above fails. Better an unknighted hero than a knight the rest of
+				# AGOT's systems consider illegal.
+				# add_trait = knight is AGOT's own idiom for this, not raw invention --
+				# 00_agot_character_history_effects.txt:198 does the same.
+				if = {
+					limit = {
+						is_adult = yes
+						is_agot_knight_trigger = no
+						agot_has_traits_preventing_knighthood_trigger = no
+					}
+					add_trait = knight
+				}
+			}
+
+			# 11 Aug -- THE ROLL-CALL NEEDS A DURABLE RECORD, and this is "Ō"'s bug on the Workshop:
+			# "Some localization bugs occurs when beating the Night King, it was
+			# ERROR[Scope:ln_slayer.GetTitledFirstName] and same for whoever fought with me."
+			#
+			# ln_reveal.10 is queued here and arrives TEN DAYS LATER, and until now it was the only card in
+			# the chain that read scope:ln_slayer and these three knights straight off the queued event.
+			# ln_reveal.1 has never done that -- it re-saves ln_slayer out of global_var:ln_the_slayer in its
+			# own immediate, and carries a comment saying why -- and ln_reveal.1 is not the card being
+			# reported. The slayer already had his global (ln_the_slayer, set above). The knights had nothing.
+			# Now they do, and ln_reveal.10 rebuilds all four scopes for itself.
+			scope:ln_dawn_knight_1 ?= { set_global_variable = { name = ln_dawn_knight_1  value = this } }
+			scope:ln_dawn_knight_2 ?= { set_global_variable = { name = ln_dawn_knight_2  value = this } }
+			scope:ln_dawn_knight_3 ?= { set_global_variable = { name = ln_dawn_knight_3  value = this } }
+
+			every_player = {
+				trigger_event = { id = ln_reveal.10  days = 10 }
+			}
+		}
+
+		# THE CHRONICLE. Thomas: "Do we have an actual conclusion to the Long Night?" There was one
+		# mechanically -- the phase moves, the trait lands, four cards fire -- and nothing the player would
+		# still be looking at in fifty years of game time. This is the rest of it, a season later, separate
+		# from ln_reveal.1 on purpose: that card is about whether the prophecy was real, this one is about
+		# what it cost, and one event carrying both would be the wall of text I have been told twice to stop
+		# writing.
+		every_player = {
+			trigger_event = { id = ln_reveal.9  days = 120 }
+		}
+
+		# Everyone sees a card. Which of the four they read depends on two things the player has had no way to
+		# check for the entire campaign.
+		every_player = {
+			trigger_event = { id = ln_reveal.1  days = 3 }
+		}
+	}
+}

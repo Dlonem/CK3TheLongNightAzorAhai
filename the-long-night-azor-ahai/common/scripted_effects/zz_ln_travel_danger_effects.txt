@@ -1,0 +1,91 @@
+﻿# AGOT: The Long Night & Azor Ahai -- painting the dead's roads.
+# See zz_ln_travel_danger_modifiers.txt for what this is and why it is a province modifier.
+
+# Root = anything. Called once a year from ln_struggle_yearly_work_effect.
+#
+# THE PERFORMANCE GATE IS THE SAME ONE ln_stamp_swept_counties_effect USES, and for the same reason:
+# every_county walks ~1,280 titles to test its limit, so without a fence this runs once a year from game start
+# to the end of time, including every year before the dead come and every year after the Dawn, when it can never
+# match anything. ln_invasion_opening is set the moment they arrive (all three openings), ln_aftermath_started
+# when the Dawn lands (the_long_night.txt:222). Fails CLOSED, which is safe: the worst case is a road that is
+# merely as dangerous as CK3 already thinks it is.
+#
+# NO REMOVAL BOOKKEEPING, BY DESIGN. Every band is added with `years = 2` and re-stamped every year, so ground
+# the living take back stops being lethal on its own within two years without anything having to notice that it
+# changed hands. A removal pass would have to walk every province in the world to find the ones that used to be
+# theirs; the timer walks none.
+#
+# THE REMOVE-THEN-ADD PAIR IS NOT DECORATION. add_province_modifier on a province that already carries that
+# modifier does not reliably refresh the clock, and a stacked duplicate would double the danger every year the
+# front sat still. Removing first makes each pass idempotent -- one band, one value, however many times this runs.
+ln_paint_the_dead_roads_effect = {
+	if = {
+		limit = {
+			has_global_variable = ln_invasion_opening
+			NOT = { has_global_variable = ln_aftermath_started }
+		}
+
+		# -- THE FRONT AND WHAT IS BEHIND IT --------------------------------------------------------------
+		every_county = {
+			limit = {
+				exists = holder
+				holder = { ln_is_one_of_them_trigger = yes }
+			}
+			every_county_province = {
+				remove_province_modifier = ln_the_dead_are_near
+				# 1.0.12a: and the past-the-Wall band, so a county the dead TAKE stops being merely "past
+				# the Wall" the same year it becomes theirs. Without this line it would carry both.
+				remove_province_modifier = ln_past_the_wall
+				remove_province_modifier = ln_the_dead_hold_this_land
+				add_province_modifier = { modifier = ln_the_dead_hold_this_land  years = 2 }
+			}
+
+			# ONE COUNTY OUT, and the limit matters: a neighbour that is ITSELF theirs must not be handed the
+			# weaker band, because whichever of the two lands second is the one that sticks and the ordering of
+			# every_county is not something to depend on. Held counties are excluded here and get the strong
+			# band from their own pass above.
+			every_neighboring_county = {
+				limit = {
+					NOT = { holder ?= { ln_is_one_of_them_trigger = yes } }
+				}
+				every_county_province = {
+					# 1.0.12a -- ALL THREE, so the invariant "exactly one band per province" holds without
+					# exception. Traced on the adversarial pass: a county the living TAKE BACK from the dead
+					# still carried its expiring strong band, and adding the neighbour band on top left it at
+					# 85 danger for up to two years instead of 25. It self-healed, which is exactly why it
+					# would never have been noticed.
+					remove_province_modifier = ln_the_dead_hold_this_land
+					remove_province_modifier = ln_past_the_wall
+					remove_province_modifier = ln_the_dead_are_near
+					add_province_modifier = { modifier = ln_the_dead_are_near  years = 2 }
+				}
+			}
+		}
+
+		# -- AND THE COUNTRY THAT WAS ALWAYS THEIRS --------------------------------------------------------
+		# Beyond the Wall is mostly held by free folk or by nobody at all, so the holder pass above cannot see
+		# it. Once the invasion has opened, the Haunted Forest is the most dangerous ground on the map whether
+		# or not anyone has planted a title in it -- which is exactly the road a player rides to go looking for
+		# the Night King, and exactly the road that has had no teeth until now.
+		# 1.0.12a -- AND IT IS NOT ALL THEIRS. The 1.0.12 version of this pass had no holder test, so every
+		# county beyond the Wall -- Thenn, the Frozen Shore, every free folk hold -- was stamped "The Dead
+		# Hold This Land". Thomas caught it on a travel tooltip over Maulnock Hold while the political map
+		# behind it showed Maulnock in free folk hands. The danger was right; the sentence was a lie.
+		#
+		# Ground the dead actually hold was already painted by the pass above and is excluded here. What is
+		# left is the honest case: the Haunted Forest during the Long Night, dangerous because of what walks
+		# in it and what the cold does to travellers, not because anyone has planted a banner.
+		every_county = {
+			limit = {
+				title_province ?= { geographical_region = world_westeros_beyond_the_wall }
+				NOT = { holder ?= { ln_is_one_of_them_trigger = yes } }
+			}
+			every_county_province = {
+				remove_province_modifier = ln_the_dead_are_near
+				remove_province_modifier = ln_the_dead_hold_this_land
+				remove_province_modifier = ln_past_the_wall
+				add_province_modifier = { modifier = ln_past_the_wall  years = 2 }
+			}
+		}
+	}
+}

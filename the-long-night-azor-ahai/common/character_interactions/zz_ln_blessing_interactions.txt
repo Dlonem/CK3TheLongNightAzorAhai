@@ -1,0 +1,123 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the Lord's blessing, offered and accepted.
+# See common/scripted_triggers/zz_ln_sponsor_triggers.txt for why this is an interaction and not a decision:
+# the whole point is that the other person gets to say no.
+
+ln_lords_blessing_interaction = {
+	category = interaction_category_religion
+	icon = religious
+
+	desc = ln_lords_blessing_interaction_desc
+	notification_text = LN_LORDS_BLESSING_NOTIFICATION
+
+	# A landless red priest wandering between courts is the intended protagonist here, so no landed gate.
+	is_shown = {
+		scope:actor = {
+			has_trait = red_priest
+			is_adult = yes
+			ln_sponsor_can_still_pay_trigger = yes
+
+			# ONE CHARGE AT A TIME. You have one life to give and you have already promised it to somebody --
+			# offering the same promise to a second man is the kind of thing that gets a priest burned. The
+			# promise clears on its own when the charge dies, one way or the other.
+			NAND = {
+				exists = var:ln_blessed_charge
+				var:ln_blessed_charge = { is_alive = yes }
+			}
+		}
+		scope:recipient = {
+			ln_can_be_blessed_trigger = yes
+			NOT = { this = scope:actor }
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			# PROXIMITY, RELAXED. The first version required the same court outright, and Thomas caught why that
+			# was unplayable: "I can't just play his knight. We have our own title situation. That's how players
+			# operate." Exactly right -- a player red priest is a landless adventurer or a count, never a
+			# courtier in the duke's hall, so a strict court check locked the human out of the mechanic entirely
+			# while the AI sailed through it.
+			#
+			# What the check is actually FOR is that you cannot bless a stranger on another continent whom you
+			# have never met. Any of these satisfies that honestly:
+			#   * same court, or a guest in it -- the AI's usual route, and a travelling priest's
+			#   * standing in the same province -- you rode there, which is the adventurer's route
+			#   * an existing bond -- friend, lover, family, or your own liege. You know this person already.
+			custom_tooltip = {
+				text = ln_blessing_must_be_present_tt
+				OR = {
+					is_in_the_same_court_as_or_guest = scope:recipient
+					location ?= scope:recipient.location
+					has_relation_friend = scope:recipient
+					has_relation_best_friend = scope:recipient
+					has_relation_lover = scope:recipient
+					is_close_or_extended_family_of = scope:recipient
+					target_is_liege_or_above = scope:recipient
+					scope:recipient = { target_is_liege_or_above = scope:actor }
+				}
+			}
+			ln_priest_can_give_the_last_kiss_trigger = yes
+		}
+	}
+
+	ai_min_reply_days = 3
+	ai_max_reply_days = 10
+
+	on_accept = {
+		scope:recipient = {
+			set_variable = { name = ln_blessing_sponsor  value = scope:actor }
+			add_character_flag = ln_heard_the_warning
+		}
+		scope:actor = {
+			set_variable = { name = ln_blessed_charge  value = scope:recipient }
+			add_piety = 100
+		}
+		# It matters to the faith that somebody said yes.
+		scope:actor.faith = {
+			change_fervor = {
+				value = 1
+				desc = ln_fervor_gain_blessing
+			}
+		}
+		scope:recipient = { trigger_event = ln_prophecy.40 }
+	}
+
+	on_decline = {
+		scope:actor = { add_piety = -50 }
+	}
+
+	# WHY A MAN SAYS YES TO THIS. Thomas asked about camaraderie and about lovers, and both belong here -- you
+	# do not let a stranger claim your death, you let a friend. The devout say yes on principle; the desperate
+	# say yes because the alternative is worse.
+	ai_accept = {
+		base = -30
+
+		modifier = { add = 60  scope:actor = { is_close_or_extended_family_of = scope:recipient } }
+		modifier = { add = 70  scope:recipient = { has_relation_friend = scope:actor } }
+		modifier = { add = 90  scope:recipient = { has_relation_best_friend = scope:actor } }
+		modifier = { add = 80  scope:recipient = { has_relation_lover = scope:actor } }
+		modifier = { add = 50  scope:recipient = { faith = scope:actor.faith } }
+		modifier = { add = 40  scope:recipient = { has_trait = zealous } }
+		modifier = { add = 35  scope:recipient = { has_trait = brave } }
+		modifier = { add = 30  scope:recipient = { ln_worth_the_fire_trigger = yes } }
+		modifier = {
+			add = 45
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+		}
+		modifier = { add = -40  scope:recipient = { has_trait = cynical } }
+		modifier = {
+			add = -50
+			scope:recipient = { faith = { has_doctrine = unreformed_faith_doctrine } }
+		}
+		# REMOVED: a bare `opinion` in an ai_accept modifier has no target and errors every evaluation
+		# ("opinion trigger [ target: field not set ]"). The relation modifiers above already carry the
+		# "do I like this person" weight, and they carry it more legibly than a divided opinion score.
+		modifier = { add = 25  scope:recipient = { reverse_opinion = { target = scope:actor  value >= 50 } } }
+	}
+
+	ai_will_do = {
+		base = 40
+		modifier = { add = 40  scope:recipient = { ln_worth_the_fire_trigger = yes } }
+		modifier = { add = 30  scope:recipient = { has_relation_friend = scope:actor } }
+	}
+}

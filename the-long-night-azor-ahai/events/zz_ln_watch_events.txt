@@ -1,0 +1,547 @@
+﻿namespace = ln_watch
+
+# AGOT: The Long Night & Azor Ahai -- the Wall, from the inside.
+# Fired by ln_man_an_empty_castle_decision and then by ln_watch_pulse_effect once a man holds one of the
+# nineteen castles under the Lord Commander.
+
+# ── 1. THE CASTLE THEY GAVE YOU ─────────────────────────────────────────────────────────────────────────────
+ln_watch.1 = {
+	type = character_event
+	title = ln_watch.1.t
+	desc = ln_watch.1.desc
+	theme = realm
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { character = scope:ln_lord_commander  animation = personality_honorable }
+
+	trigger = {
+		has_government = nights_watch_government
+		exists = title:k_the_wall.holder
+	}
+
+	# THE PORTRAIT NEEDS THIS AND THE DECISION IS NOT THE ONLY WAY IN. scope:ln_lord_commander is saved right
+	# here rather than inherited (the effect that used to set it, ln_take_the_black_effect, is now
+	# ln_lay_down_the_realm_effect), and scopes do survive trigger_event -- but a save that reloads mid-chain, or any
+	# future caller, would render a portrait pointing at nothing. immediate runs before the window draws, so
+	# re-establishing it here is free and removes a whole class of missing-scope errors.
+	immediate = {
+		title:k_the_wall.holder ?= { save_scope_as = ln_lord_commander }
+	}
+
+	option = {
+		name = ln_watch.1.a          # start with the walls.
+		ai_chance = {
+			base = 45
+			modifier = { add = 15  has_trait = diligent }
+			modifier = { add = 10  has_trait = paranoid }
+		}
+		add_character_flag = ln_watch_walls_first
+		add_martial_lifestyle_xp = 60
+		add_prestige = 25
+	}
+	option = {
+		name = ln_watch.1.b          # start with the kitchens. men who eat, stay.
+		ai_chance = {
+			base = 35
+			modifier = { add = 20  has_trait = gluttonous }
+			modifier = { add = 10  has_trait = generous }
+			modifier = { add = 10  has_trait = gregarious }
+		}
+		add_character_flag = ln_watch_kitchens_first
+		add_stewardship_lifestyle_xp = 60
+		add_gold = 50
+	}
+	option = {
+		name = ln_watch.1.c          # start with the library. somebody wrote this down once.
+		ai_chance = {
+			base = 20
+			modifier = { add = 15  has_trait = patient }
+			modifier = { add = 10  has_trait = shy }
+		}
+		add_character_flag = ln_watch_library_first
+		add_learning_lifestyle_xp = 80
+	}
+}
+
+# ── 2. MOLE'S TOWN ──────────────────────────────────────────────────────────────────────────────────────────
+# Thomas: "maybe we don't have to do a Mole's Town activity, but perhaps a random event can occur where the
+# boys show up in Mole's Town." An activity is a large build; a night out is one card, and it is funnier.
+ln_watch.2 = {
+	type = character_event
+	title = ln_watch.2.t
+	desc = ln_watch.2.desc
+	theme = friendly
+	left_portrait = { character = root  animation = disapproval }
+
+	trigger = {
+		has_government = nights_watch_government
+	}
+
+	option = {
+		name = ln_watch.2.a          # go and get them.
+		ai_chance = {
+			base = 40
+			modifier = { add = 15  has_trait = just }
+			modifier = { add = 15  has_trait = wrathful }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		add_prestige = 25
+		stress_impact = { base = minor_stress_impact_gain }
+		every_courtier = {
+			limit = { has_government = nights_watch_government }
+			add_opinion = { modifier = respect_opinion  target = root  opinion = 10 }
+		}
+	}
+	option = {
+		name = ln_watch.2.b          # go with them.
+		ai_chance = {
+			base = 25
+			modifier = { add = 25  has_trait = gregarious }
+			modifier = { add = 10  has_trait = gluttonous }
+		}
+		add_character_flag = ln_watch_went_to_moles_town
+		stress_impact = { base = medium_stress_impact_loss }
+		add_piety = -50
+		every_courtier = {
+			limit = { has_government = nights_watch_government }
+			add_opinion = { modifier = grateful_opinion  target = root  opinion = 25 }
+		}
+	}
+	option = {
+		name = ln_watch.2.c          # let them go. flog them in the morning.
+		ai_chance = {
+			base = 35
+			modifier = { add = 20  has_trait = sadistic }
+			modifier = { add = 15  has_trait = arbitrary }
+			modifier = { add = 10  has_trait = callous }
+		}
+		add_dread = 12
+		every_courtier = {
+			limit = { has_government = nights_watch_government }
+			add_opinion = { modifier = scared_opinion  target = root  opinion = -15 }
+		}
+	}
+}
+
+# ── 3. THE EXPEDITION TO THE FIST ───────────────────────────────────────────────────────────────────────────
+# The dragonglass route for a Watch player. Thomas: "they would have to lead an expedition towards the Fist of
+# the First Men in order for the Night's Watch to permanently get that upgrade."
+ln_watch.3 = {
+	type = character_event
+	title = ln_watch.3.t
+	desc = ln_watch.3.desc
+	theme = travel_danger
+	left_portrait = { character = root  animation = personality_bold }
+
+	trigger = {
+		has_government = nights_watch_government
+	}
+
+	option = {
+		name = ln_watch.3.a          # take the rangers north and dig.
+		ai_chance = {
+			base = 45
+			modifier = { add = 15  has_trait = brave }
+			modifier = { add = 15  has_trait = diligent }
+			modifier = { add = 10  has_trait = zealous }
+		}
+		trigger = { gold >= 100 }
+		remove_short_term_gold = 100
+		add_character_flag = ln_watch_went_to_the_fist
+		add_character_modifier = ln_dragonglass_stores_modifier
+		add_character_flag = ln_mined_the_glass
+		increase_wounds_no_death_effect = { REASON = death_lost_in_snowstorm }
+		add_prestige = 100
+		stress_impact = { base = medium_stress_impact_gain  brave = medium_stress_impact_loss }
+	}
+	option = {
+		name = ln_watch.3.b          # it is a story about a cache of rocks. we have walls to mend.
+		ai_chance = {
+			base = 55
+			modifier = { add = 25  has_trait = cynical }
+			modifier = { add = 15  has_trait = lazy }
+			modifier = { add = 10  has_trait = content }
+		}
+		add_gold = 50
+		add_character_flag = ln_watch_refused_the_fist
+	}
+}
+
+# ── 4. THE DESERTER ─────────────────────────────────────────────────────────────────────────────────────────
+ln_watch.4 = {
+	type = character_event
+	title = ln_watch.4.t
+	desc = ln_watch.4.desc
+	theme = dungeon
+	left_portrait = { character = root  animation = anger }
+
+	trigger = {
+		has_government = nights_watch_government
+	}
+
+	option = {
+		name = ln_watch.4.a          # the man who passes the sentence should swing the sword.
+		ai_chance = {
+			base = 45
+			modifier = { add = 30  has_trait = just }
+			modifier = { add = 15  has_trait = brave }
+			modifier = { add = 10  has_trait = honest }
+		}
+		add_dread = 20
+		add_prestige = 75
+		add_martial_lifestyle_xp = 40
+		stress_impact = { base = medium_stress_impact_gain  just = minor_stress_impact_loss  callous = medium_stress_impact_loss }
+	}
+	option = {
+		name = ln_watch.4.b          # hear him out first. he saw something.
+		ai_chance = {
+			base = 35
+			modifier = { add = 20  has_trait = patient }
+			modifier = { add = 15  has_trait = compassionate }
+			modifier = { add = 10  has_trait = paranoid }
+		}
+		add_character_flag = ln_watch_heard_the_deserter
+		add_character_flag = ln_looked_north
+		add_learning_lifestyle_xp = 50
+		add_prestige = -25
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+	option = {
+		name = ln_watch.4.c          # send him to the Lord Commander. it is his rope.
+		ai_chance = {
+			base = 20
+			modifier = { add = 15  has_trait = craven }
+			modifier = { add = 15  has_trait = lazy }
+			modifier = { add = 10  has_trait = humble }
+		}
+		add_prestige = -50
+		# NOT THE LORD COMMANDER HIMSELF. This event fires for every character with nights_watch_government,
+		# he is one of them, and passing the buck to yourself is neither possible nor punishable.
+		if = {
+			limit = {
+				exists = title:k_the_wall.holder
+				NOT = { title:k_the_wall.holder = root }
+			}
+			title:k_the_wall.holder = { add_opinion = { modifier = disappointed_opinion  target = root  opinion = -15 } }
+		}
+	}
+}
+
+# ── 5. THE CASTLE STANDS AGAIN ──────────────────────────────────────────────────────────────────────────────
+ln_watch.5 = {
+	type = character_event
+
+	# STILL QUALIFIES? Thomas renounced the name in ln_favored.3 and then a queued event landed on him
+	# anyway, because the pulse checks the trait when it SCHEDULES and these fire up to 250 days later.
+	# An event that assumes a trait must re-check it at the moment it opens, or a man who put the name
+	# down keeps getting asked about it for a year.
+	trigger = {
+		has_government = nights_watch_government
+	}
+	title = ln_watch.5.t
+	desc = ln_watch.5.desc
+	theme = realm
+	left_portrait = { character = root  animation = personality_content }
+
+	option = {
+		name = ln_watch.5.a          # send word to Castle Black.
+		ai_chance = {
+			base = 60
+			modifier = { add = 15  has_trait = humble }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		add_prestige = 100
+		if = {
+			limit = { exists = title:k_the_wall.holder }
+			title:k_the_wall.holder = { add_opinion = { modifier = admiration_opinion  target = root  opinion = 30 } }
+		}
+	}
+	option = {
+		name = ln_watch.5.b          # send word south, to the family that has one fewer son.
+		ai_chance = {
+			base = 40
+			modifier = { add = 20  has_trait = arrogant }
+			modifier = { add = 15  has_trait = ambitious }
+			modifier = { add = 10  has_trait = gregarious }
+		}
+		add_character_flag = ln_watch_wrote_home
+		add_prestige = 50
+		stress_impact = { base = medium_stress_impact_loss }
+	}
+}
+
+# ── 6. WHAT THE NORTH SENDS BACK ────────────────────────────────────────────────────────────────────────────
+ln_watch.6 = {
+	type = character_event
+	title = ln_watch.6.t
+	desc = ln_watch.6.desc
+	theme = diplomacy
+	left_portrait = { character = root  animation = personality_honorable }
+
+	trigger = {
+		has_government = nights_watch_government
+		is_landed = yes
+	}
+
+	immediate = {
+		ln_petition_yield_effect = yes
+	}
+
+	option = {
+		name = ln_watch.6.a          # take it, thank them, ask again in three years.
+		ai_chance = {
+			base = 55
+			modifier = { add = 15  has_trait = patient }
+			modifier = { add = 15  has_trait = content }
+			modifier = { add = 10  has_trait = humble }
+		}
+		add_prestige = 25
+	}
+	option = {
+		name = ln_watch.6.b          # write down who sent nothing.
+		ai_chance = {
+			base = 45
+			modifier = { add = 30  has_trait = vengeful }
+			modifier = { add = 15  has_trait = paranoid }
+		}
+		add_character_flag = ln_watch_keeps_a_list
+		add_dread = 5
+	}
+}
+
+# ── 7. YOUR WATCH ENDS. HIS BEGINS. ─────────────────────────────────────────────────────────────────────────
+# Fires at the brother play has just passed to -- see
+# common/scripted_effects/zz_ln_watch_succession_effects.txt for why the Night's Watch is the one faction in
+# the game that continues through the institution rather than through the blood.
+ln_watch.7 = {
+	type = character_event
+	title = ln_watch.7.t
+	desc = ln_watch.7.desc
+	theme = realm
+	left_portrait = { character = root  animation = personality_honorable }
+
+	trigger = {
+		is_alive = yes
+		government_has_flag = government_is_nw
+	}
+
+	option = {
+		name = ln_watch.7.a          # the words are the same words.
+		add_prestige = 50
+	}
+}
+
+# ── 8. THE MAN WHO SENT IT ──────────────────────────────────────────────────────────────────────────────────
+# Fires at the DONOR, not the Watch. A southern lord spending real gold on a threat he does not believe in is
+# a more interesting card than the Lord Commander counting turnips.
+ln_watch.8 = {
+	type = character_event
+	title = ln_watch.8.t
+	desc = ln_watch.8.desc
+	theme = diplomacy
+	left_portrait = { character = root  animation = personality_compassionate }
+	right_portrait = { character = scope:ln_lord_commander  animation = personality_honorable }
+
+	trigger = {
+		is_alive = yes
+		exists = title:k_the_wall.holder
+	}
+
+	# 1.0.12 -- THE SCOPE IS RE-SAVED HERE BECAUSE THIS CARD ARRIVES LATE. ln_watch_thanks_effect fires it with
+	# `days = { 20 60 }`, and a Lord Commander can die inside two months -- at which point the portrait either
+	# draws a dead man or draws nothing, and the thanks come from a man who is no longer the one being thanked.
+	# Saving it again in immediate costs one link and makes the card always show whoever actually holds the Wall
+	# on the day it lands. `?=` per AGOT's own habit: no holder should read as "not there", not as an error.
+	immediate = {
+		title:k_the_wall.holder ?= { save_scope_as = ln_lord_commander }
+	}
+
+	option = {
+		name = ln_watch.8.a          # somebody has to.
+		ai_chance = {
+			base = 55
+			modifier = { add = 10  has_trait = humble }
+			modifier = { add = 10  has_trait = diligent }
+		}
+		add_piety = 50
+	}
+	option = {
+		name = ln_watch.8.b          # and make sure the story travels.
+		ai_chance = {
+			base = 45
+			modifier = { add = 20  has_trait = gregarious }
+			modifier = { add = 10  has_trait = ambitious }
+			modifier = { add = 5  has_trait = deceitful }
+		}
+		add_prestige = 75
+		add_character_flag = ln_told_everyone_he_gave
+	}
+}
+
+# ── 9. THE RIDER CAME BACK ──────────────────────────────────────────────────────────────────────────────────
+# Fires a week after ln_take_the_black_and_wait_decision, by which time AGOT's own revoked handler has returned
+# the castle to the Lord Commander and ln_grant_a_keepership_effect can find it.
+ln_watch.9 = {
+	type = character_event
+	title = ln_watch.9.t
+	desc = ln_watch.9.desc
+	theme = realm
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { character = scope:ln_relieved_brother  animation = grief }
+
+	trigger = {
+		is_alive = yes
+		has_trait = nightswatch
+		exists = title:k_the_wall.holder
+	}
+
+	immediate = {
+		# THE WEEK MAY NOT HAVE BEEN ENOUGH -- a revoke can be refused, the man can die, AGOT's handler can
+		# take a different route. If no castle came free, say so honestly rather than handing him one out of
+		# nowhere; ln_watch.10 is the version of this card where nothing happened.
+		if = {
+			limit = { ln_wall_has_a_free_keepership_trigger = yes }
+			ln_grant_a_keepership_effect = yes
+			add_character_flag = ln_took_a_castle_from_a_brother
+		}
+	}
+
+	option = {
+		name = ln_watch.9.a          # he is not to be shamed for it.
+		ai_chance = {
+			base = 45
+			modifier = { add = 30  has_trait = compassionate }
+			modifier = { add = 15  has_trait = generous }
+			modifier = { add = 10  has_trait = just }
+		}
+		trigger = { ln_carries_a_keepership_trigger = yes }
+		add_prestige = 50
+		# He asked for one thing. You gave it to him, and the Wall noticed that too.
+		if = {
+			limit = { exists = scope:ln_relieved_brother  scope:ln_relieved_brother = { is_alive = yes } }
+			scope:ln_relieved_brother = {
+				add_opinion = { modifier = ln_let_me_keep_my_dignity_opinion  target = root  opinion = 40 }
+			}
+			title:k_the_wall.holder = {
+				every_vassal_or_below = {
+					limit = {
+						is_alive = yes
+						government_has_flag = government_is_nw
+						NOT = { this = root }
+					}
+					# Half the damage from ln_relieve_a_brother_effect comes back. The Wall is small and word
+					# travels; they were always going to hear how you did it, not just that you did it.
+					add_opinion = { modifier = ln_saw_what_you_did_to_him_opinion  target = root  opinion = 6 }
+				}
+			}
+		}
+	}
+	option = {
+		name = ln_watch.9.b          # he had four years to send a report.
+		ai_chance = {
+			base = 25
+			modifier = { add = 15  has_trait = sadistic }
+			modifier = { add = 15  has_trait = callous }
+			modifier = { add = 10  has_trait = arbitrary }
+		}
+		trigger = { ln_carries_a_keepership_trigger = yes }
+		add_dread = 10
+		add_prestige = 25
+		if = {
+			limit = { exists = scope:ln_relieved_brother  scope:ln_relieved_brother = { is_alive = yes } }
+			scope:ln_relieved_brother = {
+				add_opinion = { modifier = ln_took_my_command_opinion  target = root  opinion = -50 }
+			}
+		}
+	}
+	option = {
+		name = ln_watch.9.c          # nothing came free. I wait.
+		ai_chance = {
+			base = 30
+			modifier = { add = 25  has_trait = patient }
+			modifier = { add = 15  has_trait = humble }
+			modifier = { add = 10  has_trait = content }
+		}
+		trigger = { NOT = { ln_carries_a_keepership_trigger = yes } }
+		add_character_flag = ln_still_waiting_for_a_castle
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+}
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# HOW MUCH. The one decision in this mod that is purely a statement of belief, so the player says how loudly.
+#
+# THREE TIERS, and they are not linear: the Watch remembers a cart of grain, it remembers a season's stores
+# differently, and it never forgets a man who emptied his vaults for a wall he will never stand on. The ledger
+# (ln_realm_fed_the_watch, read by ln_petition_yield_effect at >= 3 and >= 8) moves by 1, 2 and 3 -- so a
+# believer reaches the Watch's gratitude in one gesture where a cautious realm takes a century of carts.
+#
+# THE AI IS DELIBERATELY STINGY. Thomas: "there should be some level of preventing AI from being able to spam
+# that to the detriment of their own realm." The big tiers are weighted to zero unless the AI is genuinely rich
+# -- 2,000 spare for the middle gift, 6,000 for the vaults -- so an AI king with money to burn can make the
+# grand gesture and nobody else beggars themselves doing it.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+ln_watch.10 = {
+	type = character_event
+	title = ln_watch.10.t
+	desc = ln_watch.10.desc
+	theme = diplomacy
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { character = scope:ln_lord_commander  animation = personality_honorable }
+
+	# 1.0.12 -- SAME REPAIR AS ln_watch.8, FOR THE OPPOSITE REASON. This card has exactly one door today
+	# (zz_ln_donate_to_the_watch_decisions.txt:51 saves the scope on the line before it fires this), so it works
+	# -- and it works only because of that one line, in a file that is not this one. Any second caller renders a
+	# portrait pointing at nothing. Two lines here and the card is correct on its own terms.
+	immediate = {
+		title:k_the_wall.holder ?= { save_scope_as = ln_lord_commander }
+	}
+
+	# A CART OF GRAIN
+	option = {
+		name = ln_watch.10.a
+		trigger = { gold >= 100 }
+		remove_short_term_gold = 100
+		ln_feed_the_wall_effect = { AMOUNT = 100  LEDGER = 1  OPINION = 25  PIETY = 50  PRESTIGE = 25 }
+		ai_chance = {
+			base = 60
+			modifier = { add = 15  has_trait = humble }
+			modifier = { add = 10  has_trait = diligent }
+		}
+	}
+
+	# A SEASON'S STORES
+	option = {
+		name = ln_watch.10.b
+		trigger = { gold >= 500 }
+		remove_short_term_gold = 500
+		ln_feed_the_wall_effect = { AMOUNT = 500  LEDGER = 2  OPINION = 50  PIETY = 120  PRESTIGE = 60 }
+		ai_chance = {
+			base = 0
+			modifier = { add = 40  gold >= 2000 }
+			modifier = { add = 20  has_trait = generous }
+			modifier = { add = 15  has_character_flag = ln_looked_north }
+		}
+	}
+
+	# EMPTY THE VAULTS
+	option = {
+		name = ln_watch.10.c
+		trigger = { gold >= 1500 }
+		remove_short_term_gold = 1500
+		ln_feed_the_wall_effect = { AMOUNT = 1500  LEDGER = 3  OPINION = 75  PIETY = 250  PRESTIGE = 120 }
+		add_character_flag = ln_emptied_the_vaults
+		ai_chance = {
+			base = 0
+			modifier = { add = 30  gold >= 6000 }
+			modifier = { add = 25  has_trait = zealous }
+			modifier = { add = 20  ln_is_a_champion_of_rhllor_trigger = yes }
+		}
+	}
+
+	# NOT THIS YEAR
+	option = {
+		name = ln_watch.10.d
+		ai_chance = { base = 20 }
+	}
+}

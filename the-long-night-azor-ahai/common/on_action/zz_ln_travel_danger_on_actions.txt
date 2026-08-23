@@ -1,0 +1,55 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the dead on the road.
+#
+# HOW THIS HOOKS IN, AND WHY IT IS NOT VANILLA'S DANGER TOMBOLA. The obvious home for a danger event is
+# travel_danger_events_on_action, whose `random_events` list is where all seventeen of vanilla's live
+# (travel_on_actions.txt:614). That list IS a sub-list and sub-lists merge -- but that on_action ALSO carries a
+# raw `effect = { }` block, and a second declaration of a raw effect is the collision this mod spent a whole
+# session proving: last file parsed wins, the other is silently discarded, and the discarded one here would be
+# CK3's entire accolade-inspiration pass. Not worth it for a hook we do not need.
+#
+# on_travel_plan_movement is vanilla's own per-leg travel hook (travel_on_actions.txt:2), it is registered as a
+# sub-list in zz_ln_00_hooks.txt so it MERGES with vanilla's entries rather than competing, and collisioncheck
+# confirms it merge-safe. We own the roll, which means we also own the pacing.
+#
+# THE CHANCE. 8 per leg entering dead ground, doubled in the Long Night proper. A ten-province run through their
+# country is then near-certain to be interrupted at least once, and the six-month cooldown on the events
+# themselves means it is once per journey rather than once per province. Vanilla's own accolade roll on this
+# same hook uses chance = 0.05 scaled by current_danger_value, so the shape is theirs; the numbers are ours,
+# because Thomas asked for this to bite.
+ln_travel_the_dead_roads = {
+	trigger = {
+		exists = current_travel_plan
+		is_available_travelling_adult = yes
+		is_location_valid_for_travel_event_on_land = yes
+		has_global_variable = ln_invasion_opening
+		NOT = { has_global_variable = ln_aftermath_started }
+		# The dead do not ambush their own.
+		ln_is_one_of_them_trigger = no
+		ln_on_a_dead_road_trigger = yes
+	}
+	effect = {
+		random = {
+			chance = 8
+			modifier = {
+				factor = 2
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+			}
+
+			# WHICH ONE. A plain if/else rather than a random_list carrying a per-entry trigger: `trigger`
+			# inside random_list is legal, but this mod has already been bitten once by assuming a block was
+			# evaluated where it was only parsed, and an if/else here is both provably right and readable.
+			# Both events re-test their own conditions in their own `trigger` blocks anyway, so a bad roll is
+			# a no-op rather than a wrong event.
+			if = {
+				limit = { ln_a_walker_could_be_here_trigger = yes }
+				random_list = {
+					70 = { trigger_event = ln_travel.1 }
+					30 = { trigger_event = ln_travel.2 }
+				}
+			}
+			else = {
+				trigger_event = ln_travel.1
+			}
+		}
+	}
+}

@@ -1,0 +1,99 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who can put a hammer to it.
+#
+# WHY THIS EXISTS AT ALL. AGOT ships lightbringer_modifier COMMENTED OUT --
+# $A/common/modifiers/00_agot_artifact_modifiers.txt:614 --
+#
+#     # lightbringer_modifier = {
+#     # 	prowess_no_portrait = 5
+#     # 	rhllor_fots_opinion = 10
+#     # }
+#
+# -- alongside needle_modifier, lions_tooth_modifier and a dozen other stubs. It is a thing they planned and
+# never built, and it is the single most recognisable object in the entire Azor Ahai story. A mod called
+# "The Long Night & Azor Ahai" that does not have the sword in it is missing its centrepiece.
+#
+# THIS IS ALSO THE INTERWEAVING THOMAS ASKED FOR: "Is there anything else you can add to the Azor Ahai system
+# to help interconnect it with the Long Night, with base Game of Thrones, with dragon ownership, with getting a
+# dragon." All FOUR rungs of rhllor_champion open this door, and the Resurrected rung opens a door none of the
+# others can -- see ln_can_temper_in_own_heart_trigger below. Until now the three chains ran in parallel and
+# never touched. This is where they meet.
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# WATCH THIS WHEN AGOT UPDATES
+#
+# Thomas: "you would just need to make a note in your code to verify in the future that if there's an update
+# that's getting broken by the Game of Thrones update, that we should probably check into that to see if they
+# started adding any code to it. And then we would just build around it until it gets to the point that they
+# implement it, and we can remove or delete our mod respectively."
+#
+# This is the only system in the mod built on an AGOT STUB rather than an AGOT SYSTEM. Everything else either
+# uses their working code or stands entirely alone. Here they left a hole shaped exactly like Lightbringer and
+# we filled it.
+#
+# CHECK ON EVERY AGOT UPDATE:
+#   $A/common/modifiers/00_agot_artifact_modifiers.txt  -- is lightbringer_modifier still commented out?
+#   $A/common/artifacts/                                -- has a lightbringer template or visual appeared?
+#   $A/common/decisions/  $A/events/                    -- grep for "lightbringer"
+#
+# IF THEY BUILD IT:
+#   * Two Lightbringers in one game is the worst outcome and it will not announce itself -- a `unique` template
+#     enforces uniqueness against ITSELF, not against a differently-keyed artifact.
+#   * The graceful move is to keep the FORGING -- the three temperings and the choice at the end are this mod's
+#     content and no part of it is theirs -- and switch what it produces over to their artifact. That is one
+#     edit inside ln_create_lightbringer_effect, then delete our template, visual and modifiers.
+#   * If their version ships its own acquisition path, retire this decision behind a game rule rather than
+#     deleting it. Somebody will be mid-chain in a save.
+#
+# Every key this system owns is prefixed ln_ so that "what is ours" is answerable with one grep on the day it
+# matters.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# The four rungs. resurrected_by_rhllor is not part of the rhllor_champion group (it is its own trait), so the
+# list is written out rather than checked by group.
+ln_is_a_champion_of_rhllor_trigger = {
+	OR = {
+		has_trait = favored_by_rhllor
+		has_trait = chosen_by_rhllor
+		has_trait = azor_ahai_reborn
+		has_trait = resurrected_by_rhllor
+	}
+}
+
+# THE ONLY MAN WHO CAN PAY WITH HIMSELF.
+#
+# Thomas, on the Resurrected chain: "I don't want shit to just keep going downhill... The way Jon Snow was
+# resurrected, that shit actually worked out for him really well."
+#
+# A man who has already died once, and come back, can drive the sword through his own heart and survive it.
+# Nobody else can -- the tale is explicit that the third tempering kills whoever the blade goes into, and the
+# only way around that is to be someone death has already had a turn at. It costs him: the wound never closes.
+# But he does not have to kill his wife, and he gets the full sword.
+#
+# This is the payoff the Resurrected chain did not have, and it is only reachable by having died.
+ln_can_temper_in_own_heart_trigger = {
+	has_trait = resurrected_by_rhllor
+}
+
+# Somebody has to be standing at the anvil who knows what he is doing. A court smith is AGOT's and vanilla's
+# own position (court_smith_court_position) -- no new one is created here, per the standing rule.
+ln_has_a_forge_trigger = {
+	is_landed = yes
+	OR = {
+		cp:councillor_court_chaplain ?= { has_trait = red_priest }
+		court_position:court_smith_court_position ?= { is_available_adult = yes }
+		ln_has_red_priest_trigger = yes
+	}
+}
+
+# Is the sword already in the world? A global rather than an artifact search, because the artifact can be
+# looted, vaulted, inherited or buried with a man, and none of that means it can be forged again.
+ln_lightbringer_exists_trigger = {
+	has_global_variable = ln_lightbringer_forged
+}
+
+# Carrying it. Used by the reveal, by the deed count and by the Night King's death.
+ln_carries_lightbringer_trigger = {
+	any_equipped_character_artifact = {
+		has_variable = ln_is_lightbringer
+	}
+}

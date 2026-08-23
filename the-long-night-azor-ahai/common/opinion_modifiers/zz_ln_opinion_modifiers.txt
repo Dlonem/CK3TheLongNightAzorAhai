@@ -1,0 +1,102 @@
+﻿# AGOT: The Long Night & Azor Ahai -- opinion modifiers.
+#
+# FOURTEEN OF THESE WERE REFERENCED AND NEVER DEFINED, which the 10 Aug run finally proved: fourteen distinct
+# "Unknown opinion modifier ln_*" errors in error.log, one per call site that had actually fired. The
+# localization existed (zz_ln_opinions_l_english.yml, written to be read in a tooltip at a glance), the call
+# sites existed and passed real numbers -- and the definitions did not. So EVERY social consequence in this mod
+# silently did nothing: taking the black, forging Lightbringer over a wife's body, deposing a Lord Commander,
+# being named by the red priests. All of it logged one error and moved no opinion at all.
+#
+# The VALUE comes from the call site -- `add_opinion = { ... opinion = N }` overrides the definition -- so what
+# these blocks actually own is HOW LONG the world remembers. That is the only interesting decision here, and it
+# is chosen per-modifier below rather than copied. `opinion` is still given a sensible default in each, for any
+# future call that forgets to pass one.
+
+# -- THE WATCH AND THE REALM ---------------------------------------------------------------------------------
+# The Watch remembers who fed it.
+ln_fed_the_watch_opinion = {
+	opinion = 15
+	years = 20
+}
+ln_turned_the_crow_away_opinion = {
+	opinion = -10
+	years = 10
+}
+# Sent men AND grain, not one or the other. Called with +50 -- the largest positive in the mod, and it should
+# be, because it costs a lord real levies in a century when nobody believes the Wall matters.
+ln_fed_the_wall_opinion = {
+	opinion = 50
+	years = 20
+}
+# The Lord Commander's standing letter to the northern lords. Small, NEGATIVE and short on purpose: it stacks
+# once per petition, so a Lord Commander who writes every year makes himself a nuisance rather than a cause.
+ln_asks_the_north_for_help_opinion = {
+	opinion = -5
+	years = 10
+}
+
+# -- TAKING THE BLACK ----------------------------------------------------------------------------------------
+# The heir who was handed a realm because his father walked north. He does not forget, and neither would
+# anyone -- the longest memory in the file.
+ln_gave_me_everything_opinion = {
+	opinion = 40
+	years = 60
+}
+# What everyone else makes of a man who laid down his lands and went to the Wall. A generation.
+ln_took_the_black_opinion = {
+	opinion = 15
+	years = 30
+}
+
+# -- COMMAND OF THE WATCH ------------------------------------------------------------------------------------
+# Deposed. He was Lord Commander and now he is not, and you did that. Thirty years is effectively the rest of
+# his life at the age most Lord Commanders are.
+ln_took_my_command_opinion = {
+	opinion = -50
+	years = 30
+}
+# Allowed to stand down instead. The same event, the other choice, and worth nearly as much as the deposing
+# costs -- which is the entire point of offering it.
+ln_let_me_keep_my_dignity_opinion = {
+	opinion = 40
+	years = 30
+}
+# The brothers who watched. Fired from the relief effect (negative -- they saw you break him) AND from the
+# dignity branch (positive -- they saw you spare him), so the sign lives at the call site, not here.
+ln_saw_what_you_did_to_him_opinion = {
+	opinion = -12
+	years = 20
+}
+
+# -- LIGHTBRINGER --------------------------------------------------------------------------------------------
+# Nissa Nissa. You drove the sword through your wife's heart and the realm knows it. -60 at the call site is
+# the harshest number in the mod and is still arguably light; thirty years means the people who loved her die
+# still hating you, and their children inherit a story instead of a grudge.
+ln_killed_her_for_a_sword_opinion = {
+	opinion = -60
+	years = 30
+}
+# The other half of the same act, from people who believe the tale is real: he did the thing the prophecy asked
+# and he did not flinch.
+ln_paid_the_price_opinion = {
+	opinion = 30
+	years = 30
+}
+# Her family. They are not interested in the prophecy.
+ln_took_one_of_ours_opinion = {
+	opinion = -35
+	years = 30
+}
+
+# -- BEING NAMED ---------------------------------------------------------------------------------------------
+# Both are driven by ln_named_opinion_up_value / _down_value, which read the claimant's rung live -- so these
+# carry duration only. Twenty years: a naming should fade if nothing comes of it, which is what happens to
+# most claimants.
+ln_the_priests_say_it_of_him_opinion = {
+	opinion = 10
+	years = 20
+}
+ln_believes_his_own_legend_opinion = {
+	opinion = -10
+	years = 20
+}

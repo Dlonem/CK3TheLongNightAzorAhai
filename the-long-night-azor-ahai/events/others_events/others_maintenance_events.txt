@@ -1,0 +1,208 @@
+﻿
+namespace = others_maintenance
+
+others_maintenance.1 = { 
+
+	# No `type` field: vanilla's pattern for a rootless hidden event is scope = none + hidden = yes and
+	# nothing else (game/events/, 10 instances). `type = empty` is REJECTED by the parser -- Long Night+
+	# used it and it has been erroring since before the fork. character_event is also wrong here: these
+	# fire from struggle and story scopes with no character root.
+	scope = none
+	hidden = yes
+	
+	immediate = {
+		others_decide_if_invasion_will_happen_effect = yes
+
+		# ── THE RACE IS OVER: THE STRUGGLE IS THE ONLY CLOCK ── 9 Aug 2026, from a live observer run.
+		#
+		# This event used to schedule others.1 on its own weighted window (25-175 years under the default
+		# rule) AT THE SAME TIME as the struggle paced its Long Summer + Cold Winds toward the same
+		# invasion. Two independent clocks racing for one event, and the world got whichever fired FIRST --
+		# which shortens every timeline (the minimum of two draws), and worse: when this side wins,
+		# others.1 -> ln_sync_struggle_to_invasion_effect yanks the struggle from mid-Long-Summer straight
+		# to the Long Night. No Cold Winds. No warning card. No dragonglass window. The whole middle act
+		# of the mod, skipped.
+		#
+		# PROVEN IN A SAVE, not deduced. autosave_exit from the 9 Aug observer run (start 8284.6.2,
+		# default rules) reads: others_invasion_year=8309 -- this event's 10% "it comes early" branch
+		# rolled its 25-year minimum -- while the struggle's own ledger sat at ln_summer_target=70,
+		# ln_summer_years=25, ln_summer_points=40 of 100, and ln_winter_target / ln_latch_cold_winds
+		# were never set at all. The struggle was pacing a ~90-year arc, correctly, and this schedule
+		# cut it off at 25 years with no Winter Is Coming whatsoever.
+		#
+		# So every timing rule the struggle understands is paced by the struggle ALONE, from
+		# ln_struggle_set_pace_effect (the summer target, per rule) plus ln_winter_clock_start_effect
+		# (the 12-45 year warning on top). The retired branches map onto it like this:
+		#   others_random_window_invasion  -> summer 45/70/95/130 + Cold Winds 12-45  (57-175 total)
+		#   others_invasion_in_50_years    -> summer 25  + Cold Winds
+		#   others_invasion_in_100_years   -> summer 75  + Cold Winds
+		#   others_invasion_in_150_years   -> summer 125 + Cold Winds
+		#   others_historical_invasion     -> summer ends near 8275 (8300 minus the mean Cold Winds)
+		#   others_full_random_invasion    -> summer 15/45/90/150/240
+		#   others_manual_invasion         -> no points ever; the decision is the door
+		#
+		# The ONLY rule still scheduled from here is others_immediate_invasion, because "immediately"
+		# means days, and the drip's fastest honest pace is five points a year.
+		#
+		# The invasion-CHANCE rule still matters: others_decide_if_invasion_will_happen_effect above
+		# rolls it into others_invasion_will_happen, and the struggle's point sources now read that
+		# global through ln_the_dark_may_come_trigger -- a world that rolled "no invasion" stays in its
+		# Long Summer forever, which is what that rule always promised and the struggle used to ignore.
+		if = {
+			limit = {
+				exists = global_var:others_invasion_will_happen
+				global_var:others_invasion_will_happen = yes
+				NOT = { has_global_variable = others_invasion_triggered }
+				has_game_rule = others_immediate_invasion
+			}
+			trigger_event = {
+				id = others.1 #Immediately
+				days = { 7 14 }
+			}
+			set_global_variable = {
+				name = others_invasion_triggered
+				value = yes
+			}
+		}
+	}
+}
+
+others_maintenance.2 = { #HIDDEN: start the invader story
+	# No `type` field: vanilla's pattern for a rootless hidden event is scope = none + hidden = yes and
+	# nothing else (game/events/, 10 instances). `type = empty` is REJECTED by the parser -- Long Night+
+	# used it and it has been erroring since before the fork. character_event is also wrong here: these
+	# fire from struggle and story scopes with no character root.
+	scope = none
+	hidden = yes
+	
+
+	trigger = { exists = title:h_the_iron_throne.holder }
+	immediate = {
+		agot_long_night_iron_throne_reformation_effect = yes
+		
+		
+	}
+}
+
+
+
+
+####Reform the 7 Kingdoms
+others_maintenance.3 = { 
+
+	type = character_event
+	title = others_maintenance.2.t
+	desc = others_maintenance.2.desc
+	theme = crown
+	override_background = {
+		reference = agot_iron_throne
+	}
+	left_portrait = {
+		character = root
+		animation = marshal
+	}
+	right_portrait = {
+		character = scope:iron_throne_holder
+		animation = chancellor
+	}
+	
+	immediate = {
+		if = {
+			limit = { exists = title:h_the_iron_throne.holder }
+			title:h_the_iron_throne.holder = { save_scope_as = iron_throne_holder }
+		}
+		if = { limit = { has_culture = culture:frostborn  NOT = { has_trait = wight_trait } }
+			set_character_faith = faith:old_gods_btw_fnf
+		}
+	}
+	
+	option = {
+		name =  others_maintenance.2.a
+		#custom_tooltip = others_maintenance.2.a.tt
+		trigger = { exists = scope:iron_throne_holder }
+		ai_chance = {
+		base = 25 # What are the chances of selecting this option over others? (Does not need to be 0 to 100, it can be anything)
+		modifier = {
+			add = 50 # To remove something you just add a negative number (5 + -10 = -5)
+		OR = {
+			ai_boldness <= 50
+			ai_honor >= 50
+			ai_greed <= 0
+			ai_rationality >= 50
+			
+		}
+		
+		
+		}
+			modifier = {
+			add = 50 # To remove something you just add a negative number (5 + -10 = -5)
+			opinion = { 
+			target = scope:iron_throne_holder
+			value > 75
+			}
+			}
+		
+		
+		}
+		
+		if = {
+			limit = { exists = scope:iron_throne_holder }
+			create_title_and_vassal_change = {
+				type = swear_fealty
+				save_scope_as = change
+			}
+			root = {
+				change_liege = {
+					liege = scope:iron_throne_holder
+					change = scope:change
+				}
+			}
+			resolve_title_and_vassal_change = scope:change
+		}
+
+	
+		
+		}
+		
+			option = {
+		name =  others_maintenance.2.b
+		custom_tooltip = others_maintenance.2.b.tt
+		
+		ai_chance = {
+		base = 5 # What are the chances of selecting this option over others? (Does not need to be 0 to 100, it can be anything)
+		
+		
+				modifier = {
+			add = 25 # To remove something you just add a negative number (5 + -10 = -5)
+		OR = {
+			ai_boldness >= 100
+			ai_honor <= 0
+			ai_greed >= 75
+			ai_rationality <= -75
+			
+		}
+			
+		}
+		modifier = {
+			add = 50 # To remove something you just add a negative number (5 + -10 = -5)
+			opinion = { 
+			target = scope:iron_throne_holder
+			value < 0
+			}
+			}
+			modifier = {
+			add = 300 # To remove something you just add a negative number (5 + -10 = -5)
+			has_culture = culture:frostborn
+			}
+		
+		
+		
+	
+		
+		}
+	
+		
+	
+	}
+}
+

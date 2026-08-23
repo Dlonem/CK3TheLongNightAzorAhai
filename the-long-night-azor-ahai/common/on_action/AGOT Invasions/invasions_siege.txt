@@ -1,0 +1,9 @@
+﻿on_siege_completion = {
+    events = {
+        others_siege.0001
+    }
+    on_actions = {
+      
+    }
+}
+

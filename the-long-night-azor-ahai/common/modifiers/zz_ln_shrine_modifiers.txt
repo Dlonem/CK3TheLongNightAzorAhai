@@ -1,0 +1,12 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the shrine the smallfolk built without asking.
+#
+# A COUNTY modifier, not a character one, and the distinction matters: it is the place that changed, not the
+# lord. Every key below was checked against the base game's own county modifier file -- county_opinion_add (32
+# uses), development_growth_factor (19), monthly_county_control_growth_add (8). Putting a character-only key in
+# here would make the whole modifier unusable by add_county_modifier and, worse, would fail silently.
+ln_shrine_county_modifier = {
+	icon = county_modifier_opinion_positive
+	county_opinion_add = 15
+	monthly_county_control_growth_add = 0.2
+	development_growth_factor = -0.1     # they are praying instead of working
+}

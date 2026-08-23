@@ -1,0 +1,50 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the prophecy rules.
+#
+# THE ONE THAT MATTERS is ln_prophecy_truth. It decides, ONCE, at game start, whether there is actually a prince
+# that was promised -- and then never tells the player. Every event in the chain reads it; none of them reveal it.
+# You find out at the end, or you do not find out at all.
+#
+# This is the whole point of the fork. A prophecy you can verify is a quest marker. A prophecy you cannot verify
+# is a thing people do politics with.
+
+ln_prophecy_truth = {
+	categories = { agot }
+
+	# Random is the default and should stay the default. The other two exist for players who want to replay the
+	# same world knowing the answer, which is a legitimate second playthrough and a terrible first one.
+	default = ln_prophecy_random
+
+	ln_prophecy_random = { }        # coin weighted 50/50, decided at game start, hidden forever
+	ln_prophecy_is_true = { }       # there is a prince. The deeds mean what they appear to mean.
+	ln_prophecy_is_a_lie = { }      # there is no prince. Every naming is a red priest reading his own hopes.
+}
+
+# How readily red priests hand out the title. This is the difficulty dial for the whole chain.
+ln_prophecy_naming = {
+	categories = { agot }
+	default = ln_naming_normal
+
+	ln_naming_normal = { }          # 2 deeds to be Favored, 4 to be Chosen
+	ln_naming_generous = { }        # 1 and 3 -- more claimants, more rivalry, more mess
+	ln_naming_strict = { }          # 3 and 6 -- most games will never see a Chosen at all
+	ln_naming_off = { }             # nobody is ever named. The traits stay unobtainable, as they were before.
+}
+
+# Thomas's multiplayer question, made explicit: "can Andy and Joe and I all be Azor Ahai?"
+#
+# The default answer is YES, and it is the book-accurate one. Being Chosen is a CLAIM -- nothing in the world
+# enforces uniqueness, several people can carry it at once, and the faith is perfectly capable of funding all of
+# them because a faith that has waited eight thousand years has learned to hedge.
+#
+# What is unique is azor_ahai_reborn, which is not a claim but a FACT: it goes to whoever actually kills the
+# Night King, exactly once, and cannot be contested. So in a three-player game all three can be acclaimed, all
+# three can go north, and exactly one comes back as the answer -- which is, near enough, what Thomas described.
+ln_prophecy_claimants = {
+	categories = { agot }
+	default = ln_claimants_anyone
+
+	ln_claimants_anyone = { }          # as many claimants as qualify, AI and player alike
+	ln_claimants_players_only = { }    # only players are ever named; the AI never competes for it
+	ln_claimants_one_at_a_time = { }   # at most one living Chosen in the world; the seat reopens when they die
+}
+

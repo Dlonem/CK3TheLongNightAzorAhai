@@ -1,0 +1,14 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what a forging costs.
+#
+# Scaled the same way ln_dragonglass_cost_value is, and for the same reason Thomas gave about the glass: "in
+# some of my playthroughs I can get seventy five gold a month... but also there's times I'm a lower lord and
+# three hundred's really pricey." A count pays 300 a forging; an emperor pays 900. Three forgings is the whole
+# story, so the full price of the sword is roughly three years of a great lord's income and most of a small
+# one's reign.
+ln_lightbringer_forging_cost_value = {
+	value = 300
+	if = { limit = { highest_held_title_tier >= tier_duchy }   add = 200 }
+	if = { limit = { highest_held_title_tier >= tier_kingdom } add = 200 }
+	if = { limit = { highest_held_title_tier >= tier_empire }  add = 200 }
+	min = 300
+}

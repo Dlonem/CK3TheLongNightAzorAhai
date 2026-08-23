@@ -1,0 +1,56 @@
+﻿# AGOT: The Long Night & Azor Ahai -- household administration.
+#
+# WHAT THIS ACTUALLY IS, written down plainly because a future session will need to know and because
+# misleading comments are worse than a findable secret: this is Thomas's own maintenance decision set.
+# He asked for a door only he would use, in a mod everybody has.
+#
+# THE HONEST LIMIT, agreed with him before it was built: a public mod ships its own gates as readable
+# text. Anyone who unzips the mod and reads this file can satisfy the combination below. This is
+# obscurity, not security, and Thomas chose it with that stated. The protection is that nobody stumbles
+# into it by accident and nobody has a reason to go looking.
+#
+# THE COMBINATION: Thomas's own saved character. Two personality traits he always takes, plus a martial
+# of exactly fifteen, on a player who heads his own dynasty. It costs him nothing -- this IS his build.
+#
+# ── BASE SKILL vs DISPLAYED SKILL, which was his question and it has a sharp answer ─────────────────
+# CK3 has NO base-skill trigger. There is no base_martial, no base_skill, nothing -- checked across the
+# whole of common/. A skill trigger reads the EFFECTIVE value, base plus every trait modifier. So a gate
+# written against a base number would simply be wrong.
+#
+# That would have made this fragile, except for a piece of luck worth writing down: AGOT's own diligent
+# gives diplomacy +2, stewardship +3, learning +3, and AGOT's own lustful gives intrigue +2 and fertility.
+# NEITHER TOUCHES MARTIAL OR PROWESS. So for this character, martial base == martial displayed == 15, and
+# there is no ambiguity left to get wrong. That is why the code is on martial and not on one of the four
+# skills his own traits inflate.
+#
+# ── WHY EXACTNESS TAKES TWO LINES ───────────────────────────────────────────────────────────────────
+# In CK3 a bare `=` on a numeric trigger means AT LEAST, not EXACTLY. `martial = 15` matches a martial of
+# 30. Checked rather than assumed: across 78 skill comparisons in vanilla's own scripted_triggers and
+# decisions, SEVENTY-SIX use >=, one uses >, one uses <, and not one uses bare `=`. Vanilla never relies
+# on numeric equality because there is none. So it is sandwiched -- at least 15, and not at least 16.
+#
+# ── CHECKED AT GAME START ONLY ──────────────────────────────────────────────────────────────────────
+# Thomas, on the yearly pass: "I wouldn't be creating a brand new character in the middle of the game, so
+# we don't have to worry about going down that rabbit hole." Right, and dropping it also removes a real
+# hazard: martial drifts with lifestyle and events, so a yearly check would not merely fail later, it
+# could match a DIFFERENT player years in whose martial happened to pass through 15 with the same two
+# traits. One check, at the only moment the number means what it is supposed to mean.
+ln_household_key_trigger = {
+	is_ai = no
+	is_dynast = yes
+	has_trait = lustful
+	has_trait = diligent
+	martial >= 15
+	NOT = { martial >= 16 }
+}
+
+# THE DOOR, once opened, belongs to the HOUSE rather than the man. The combination is a founder's act;
+# requiring it of every heir would mean re-rolling the same three traits forever, and heirs are not
+# built to order. So the yearly check stamps the dynasty once (see zz_ln_household_effects.txt) and this
+# trigger asks only whether you are that dynasty's head from then on.
+ln_household_has_the_ledger_trigger = {
+	is_ai = no
+	is_dynast = yes
+	exists = global_var:ln_household_dynasty
+	dynasty ?= global_var:ln_household_dynasty
+}

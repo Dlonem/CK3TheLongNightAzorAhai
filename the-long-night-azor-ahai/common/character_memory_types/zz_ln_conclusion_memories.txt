@@ -1,0 +1,63 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what the men who ended it remember.
+#
+# Thomas: "Are there character flags that get added that, like, hey -- this person did this thing?" There
+# were flags. Flags are for script. These are for the PLAYER: dated entries in the character's own memories
+# list, visible every time anyone opens him, for the rest of his life and in his descendants' second- and
+# third-person retellings. Shape copied from wight_raised_memory above (this mod's own, proven in play);
+# categories are arbitrary grouping strings per vanilla's _character_memories.info.
+
+# Created once, in ln_create_lightbringer_effect. The forger keeps this whatever else happens -- a man who
+# paid that price and then watched somebody else end the dark with a borrowed axe REMEMBERS the price.
+ln_forged_lightbringer_memory = {
+	categories = { major martial }
+	icon = "martial.dds"
+
+	description = {
+		random_valid = { desc = ln_forged_lightbringer_memory_desc }
+	}
+	second_perspective_description = {
+		random_valid = { desc = ln_forged_lightbringer_memory_desc_second_perspective }
+	}
+	third_perspective_description = {
+		random_valid = { desc = ln_forged_lightbringer_memory_desc_third_perspective }
+	}
+
+	duration = { years = 1000 }
+}
+
+# Created once, in ln_night_king_slain_reveal_effect, on the slayer.
+ln_slew_the_night_king_memory = {
+	categories = { major martial }
+	icon = "martial.dds"
+
+	description = {
+		random_valid = { desc = ln_slew_the_night_king_memory_desc }
+	}
+	second_perspective_description = {
+		random_valid = { desc = ln_slew_the_night_king_memory_desc_second_perspective }
+	}
+	third_perspective_description = {
+		random_valid = { desc = ln_slew_the_night_king_memory_desc_third_perspective }
+	}
+
+	duration = { years = 1000 }
+}
+
+# Created in ln_night_king_slain_reveal_effect on up to three of the slayer's living knights --
+# the roll-call. Not the man who swung; the men who were beside him when he did.
+ln_stood_at_the_dawn_memory = {
+	categories = { major martial }
+	icon = "martial.dds"
+
+	description = {
+		random_valid = { desc = ln_stood_at_the_dawn_memory_desc }
+	}
+	second_perspective_description = {
+		random_valid = { desc = ln_stood_at_the_dawn_memory_desc_second_perspective }
+	}
+	third_perspective_description = {
+		random_valid = { desc = ln_stood_at_the_dawn_memory_desc_third_perspective }
+	}
+
+	duration = { years = 1000 }
+}

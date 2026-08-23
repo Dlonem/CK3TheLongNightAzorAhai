@@ -1,0 +1,81 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who the fire will actually bother with.
+#
+# THE PROBLEM THOMAS PUT HIS FINGER ON. The old gate was: you died of natural causes, your faith can heal by
+# flame, and there is a red priest in your court. That is not a gate, it is a formality. AGOT hands out the
+# red_priest trait AUTOMATICALLY to any R'hllor courtier you appoint as court chaplain
+# (00_agot_councillor_effects.txt:350), so the entire cost of cheating death was one council appointment. Every
+# R'hllor player would have had it, always, for free.
+#
+# ON MELISANDRE, because the assumption needs correcting before anything is built on it. She exists --
+# Melisandre_1, in 00_agot_char_stormlands.txt, born 8273.1.1, faith rhllor_asshai, learning 13, zealous,
+# callous, infertile. She does NOT have the immortal trait; no character in AGOT's history files does. She does
+# not have red_priest either, because nobody does until they are appointed clergy.
+#
+# So she is not hardcoded here, and hardcoding her would have been the wrong instinct anyway. Instead the bar is
+# set at learning 13 -- which she clears exactly, and which a hedge priest scraped off the docks at Myr does
+# not. Appoint Melisandre your court chaplain and she qualifies on her own merits, the way she should.
+
+# Priest scope. Is this person actually capable of the last kiss, or are they just a man in red robes?
+ln_priest_can_give_the_last_kiss_trigger = {
+	has_trait = red_priest
+	is_available_adult = yes
+
+	# Standing in the faith, or genuine learning in it. Thoros of Myr was a drunk who had forgotten most of his
+	# catechism and it worked anyway -- but Thoros had been a priest of R'hllor for thirty years.
+	OR = {
+		piety_level >= 2
+		learning >= 13
+	}
+
+	# A priest who has already burned himself out doing this cannot do it again. See
+	# ln_gave_the_last_kiss_modifier -- the cost lands on the priest, which is what rate-limits a court from
+	# turning resurrection into a routine.
+	NOT = { has_character_modifier = ln_gave_the_last_kiss_modifier }
+}
+
+# Root = the dying character. Is there such a priest to hand?
+ln_has_last_kiss_priest_trigger = {
+	OR = {
+		cp:councillor_court_chaplain ?= { ln_priest_can_give_the_last_kiss_trigger = yes }
+		court_position:camp_priest_camp_officer ?= { ln_priest_can_give_the_last_kiss_trigger = yes }
+	}
+}
+
+# Root = the dying character. WHY WOULD THE FIRE CARE. This is the gate that does the real work, and it is the
+# one that answers Thomas's question -- "is there opportunity for somebody who's favored to become resurrected?"
+# Yes, and it is the first clause: standing on the prophecy ladder is itself a reason for a priest to fight for
+# you. Favored -> Resurrected is a real path, and Resurrected is itself a deed, so it can push you further up.
+ln_worth_the_fire_trigger = {
+	OR = {
+		# The priests already believe you might be him.
+		has_trait = favored_by_rhllor
+		has_trait = chosen_by_rhllor
+		has_trait = azor_ahai_reborn
+
+		# Or the signs are on you even if nobody has said it out loud yet.
+		ln_deed_count_value >= 1
+
+		# Or the war is actually happening and you are in it. A priest will spend himself on a commander in the
+		# Long Night who would not cross the street for a lord in a peaceful summer.
+		AND = {
+			ln_participates_in_the_dawn_trigger = yes
+			struggle:ln_long_night_struggle ?= {
+				OR = {
+					is_struggle_phase = ln_phase_cold_winds
+					is_struggle_phase = ln_phase_the_long_night
+				}
+			}
+		}
+	}
+}
+
+# Root = the dying character. THE FIRE DOES NOT REFILL AN EMPTY CUP.
+# Everyone the books bring back was killed with life left in them -- Beric with a mace through the helm, Catelyn
+# with her throat opened, Jon with knives. Nobody has ever been raised from dying of being eighty. Age is used
+# rather than death_reason because death_reason is not reliably readable at the moment
+# has_natural_death_second_chance is evaluated, and a gate that MIGHT read as false is worse than a blunt one
+# that always reads correctly.
+ln_died_with_life_left_trigger = {
+	age < 65
+	NOT = { has_trait = infirm }
+}

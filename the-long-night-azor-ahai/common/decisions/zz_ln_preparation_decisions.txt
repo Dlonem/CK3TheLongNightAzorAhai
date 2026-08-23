@@ -1,0 +1,106 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the dragonglass.
+#
+# The single most important thing a player can do with the warning years, and the reason the intro card moved to
+# the Long Summer's midpoint. It is expensive, it is available only once the cold has started, and it expires --
+# so a lord who mines too early has wasted the gold, and one who waits too long does not finish in time.
+#
+# Available to anyone in the struggle region. You do not have to be a northerner to see sense.
+
+ln_mine_dragonglass_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_oily_black_stone.dds" }
+
+	desc = ln_mine_dragonglass_decision_desc
+	selection_tooltip = ln_mine_dragonglass_decision_tt
+	confirm_text = ln_mine_dragonglass_decision_confirm
+
+	decision_group_type = realm
+	ai_check_interval = 60
+
+	is_shown = {
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = {
+			OR = {
+				is_struggle_phase = ln_phase_cold_winds
+				is_struggle_phase = ln_phase_the_long_night
+			}
+		}
+		is_landed = yes
+		NOT = { has_character_modifier = ln_dragonglass_stores_modifier }
+
+		# THE KNOWLEDGE GATE, and it is the best hook in the mod because it costs nothing to build.
+		# You cannot mine dragonglass if nobody in your hall has ever heard it does anything. The intro card
+		# offers exactly that choice -- "Send to the Citadel. Ask what the records actually say" sets
+		# ln_heard_the_warning; "The world is full of old stories" does not. So the decision you made forty
+		# years into the Long Summer, which looked like pure flavour at the time, is what determines whether
+		# you can arm against the dead when it arrives.
+		OR = {
+			has_character_flag = ln_heard_the_warning
+			government_has_flag = government_is_nw        # a sworn brother's founding purpose IS the warning
+			has_character_flag = ln_looked_north          # you sent men after the lost ranging
+			has_character_flag = ln_named_it_first        # you believed the man who saw one
+			ln_has_deed_greensight_trigger = yes          # you did not need telling
+			ln_participates_in_the_dawn_trigger = yes     # or you swore yourself to this war and meant it
+			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }  # or it is here
+		}
+	}
+
+	is_valid = {
+		is_available = yes
+		gold >= ln_dragonglass_cost_value
+	}
+
+	effect = {
+		remove_short_term_gold = ln_dragonglass_cost_value
+		add_character_modifier = {
+			modifier = ln_dragonglass_stores_modifier
+			years = 30
+		}
+		add_character_flag = ln_mined_the_glass
+		trigger_event = ln_prophecy.31
+	}
+
+	# The AI needs a reason not to bankrupt itself on black glass, and a reason to do it anyway when the dead
+	# are actually coming. Thomas's note: "make sure you have a lot of modifiers that impact an AI's decision
+	# to now spend that kind of money."
+	ai_will_do = {
+		base = 25
+
+		# It is here. Buy the glass.
+		modifier = {
+			add = 75
+			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+		}
+		# The North believes it first and always has.
+		modifier = {
+			add = 30
+			OR = {
+				culture = culture:northman
+				culture = culture:frostborn
+			}
+		}
+		# So does anyone who has actually seen something.
+		modifier = {
+			add = 40
+			OR = {
+				has_character_flag = ln_named_it_first
+				has_character_flag = ln_looked_north
+			}
+		}
+		# A cautious ruler prepares; a rash one spends it on a war.
+		modifier = {
+			add = 20
+			ai_boldness <= -20
+		}
+		# Do not do this while broke.
+		modifier = {
+			factor = 0
+			gold < ln_dragonglass_cost_value
+		}
+		# NOTE: `yearly_income` could not be verified as a trigger anywhere in vanilla, so this uses gold
+		# reserves instead -- an AI that cannot comfortably absorb the cost twice over should not be buying.
+		modifier = {
+			factor = 0.15
+			gold < ln_dragonglass_comfortable_value
+		}
+	}
+}

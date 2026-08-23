@@ -1,0 +1,48 @@
+﻿# AGOT: The Long Night & Azor Ahai -- THE SPEAR, hung off the combat hook.
+# Declared as a named sub-list and listed in zz_ln_00_hooks.txt, per the rule at the top of that file.
+# Root of on_combat_end_winner is the WINNING combat side.
+#
+# WHY THE END OF THE BATTLE AND NOT THE START. on_combat_start's root is the Combat rather than a side, which
+# does not expose side_commander or enemy_side -- the two handles this whole search is built on. End-of-combat
+# also reads better: the field is decided, the host is coming apart or standing in the wreck of the dead, and
+# THEN the sky opens. Losing a dragon on the way to a victory is a more interesting memory than losing one on
+# the way to a defeat.
+ln_others_spear = {
+	trigger = {
+		# Cheap gates first -- this hook fires after every battle in the game.
+		exists = struggle:ln_long_night_struggle
+		struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+		ln_night_king_is_in_this_battle_trigger = yes
+
+		# HE HAS TO WANT ONE. The whole point is the dead taking a dragon because they have none; a Night King
+		# already flying one has no reason to put this one down instead of adding it.
+		title:h_the_others.holder = {
+			NOT = { exists = var:current_dragon }
+			NOT = { has_character_flag = ln_spear_thrown }
+		}
+		ln_a_dragon_is_on_this_field_trigger = yes
+	}
+	effect = {
+		# THE TARGET IS DRAWN FIRST, THEN THE THROW IS ROLLED, and that order matters: the hit chance is a
+		# property of the dragon (ln_spear_hit_chance_value reads scope:ln_spear_dragon.dragon_size), so there
+		# has to be a dragon in scope before the odds even exist.
+		ln_find_a_dragonrider_effect = yes
+		if = {
+			limit = {
+				exists = scope:ln_spear_rider
+				exists = scope:ln_spear_dragon
+			}
+			# He threw. Arm the three-year cooldown here, on the ATTEMPT, whether or not it lands -- see the
+			# note on ln_arm_the_spear_effect for why a cooldown that only armed on kills would have made the
+			# size protection decorative.
+			title:h_the_others.holder = { ln_arm_the_spear_effect = yes }
+
+			# 40% down to 5% by the dragon's own size, and hidden -- Thomas was explicit: "I want that
+			# calculated in the back end, so don't let people know that hey, it's gonna be that percent chance."
+			random = {
+				chance = ln_spear_hit_chance_value
+				scope:ln_spear_rider = { trigger_event = { id = ln_spear.1  days = 1 } }
+			}
+		}
+	}
+}

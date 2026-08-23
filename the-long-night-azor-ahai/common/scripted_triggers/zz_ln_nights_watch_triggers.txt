@@ -1,0 +1,242 @@
+﻿# AGOT: The Long Night & Azor Ahai -- is there a castle standing empty?
+#
+# WHY THIS FILE EXISTS AT ALL, AND WHY THE FIRST VERSION WAS WRONG.
+#
+# Thomas took the black in a live 111 AC run and got this: "I've got the Fief of the Night Fort. However, I'm
+# not considered a member of the Night's Watch... I do not have a liege. My liege should be the Lord Commander.
+# Whoever coded this seems to have forgotten every other thing that would happen in regard to joining the
+# Night's Watch when they make that decision."
+#
+# He was right on every count, and the cause was that I had hand-rolled a title grant instead of looking for
+# what AGOT already had. The engine log said `change_government effect [ Trying to set illegal government ]`
+# and the reason is sitting in AGOT's own government file:
+#
+#     nights_watch_government = {
+#         can_get_government = {
+#             OR = { has_title = title:k_the_wall   any_liege_or_above = { has_title = title:k_the_wall } }
+#             OR = { has_trait = nightswatch  has_trait = nightswatch_temp  has_trait = nightswatch_historical }
+#         }
+#     }
+#
+# BOTH clauses. A man who is handed a Wall county out of nowhere has neither: no nightswatch trait, and no
+# liege, because a title granted by script does not make you anybody's vassal on its own. So the government
+# change was refused, and what he was left with was an independent feudal count sitting on the Wall.
+#
+# WHAT AGOT ALREADY HAD -- and this is the part I should have found first.
+#
+#   common/court_positions/types/01_agot_nights_watch_positions.txt
+#
+# Eighteen court positions, one per castle on the Wall: b_the_nightfort_keeper, b_deep_lake_keeper,
+# b_greyguard_keeper, and so on. Every single one of them ends with exactly the flow that was missing:
+#
+#     on_court_position_received = {
+#         create_title_and_vassal_change = { type = granted  save_scope_as = title_change  add_claim_on_loss = no }
+#         title:c_the_nightfort = { change_title_holder_include_vassals = { holder = scope:employee_saved  change = scope:title_change } }
+#         resolve_title_and_vassal_change = scope:title_change
+#         scope:employee = { change_government = nights_watch_government }
+#     }
+#
+# The employee is a courtier of the Lord Commander, so the grant makes him the Lord Commander's VASSAL, which
+# is what satisfies `any_liege_or_above = { has_title = title:k_the_wall }`, which is what lets the government
+# change succeed. AGOT built the whole road. I built a second one next to it that went off a cliff.
+#
+# So this mod no longer grants anything itself. It puts a man through AGOT's own joining effect
+# (agot_add_to_nightswatch_effect -- which unbonds his dragon, ends his betrothal, hands on his house, strips
+# his claims and gives him the nightswatch trait), moves him into the Lord Commander's court, and then appoints
+# him to one of AGOT's keeperships. Everything after that is their code.
+#
+# THOMAS: "what if my homies want to also join the Night's Watch with me?" -- Eighteen keeperships, one man
+# each, handed out in a fixed order and released back to the Lord Commander by AGOT's own
+# on_court_position_revoked when a man deserts or dies. Eighteen players can take the black in one game, each
+# with his own castle, without a line of rotation logic in this mod.
+#
+# THOMAS: "Isn't there like a Restore the Nightfort decision or something? I wanna make sure that we're
+# exhausting all interwoven possibilities before creating a new backdoor." -- This is that check, and the
+# answer turned out to be yes. There was no new backdoor to build; there was a door I had walked past.
+
+# WHICH CHARACTER DOES THE APPOINTING, AND WHY IT IS ALWAYS THE LORD COMMANDER HERE.
+#
+# AGOT's keeperships form a hierarchy. The employer for each one is the holder of the county the castle sits
+# in, so once a player takes the Nightfort HE becomes the employer for Stonedoor and Hoarfrost Hill, and the
+# Lord Commander is no longer involved. Their own reconciler in
+# common/on_action/agot_on_actions/agot_wall_on_actions.txt appoints across five different employers.
+#
+# This decision does not try to model that. It offers a keepership ONLY when the Lord Commander still holds
+# the title that keepership grants, which makes all three engine requirements true at once:
+#
+#   * the employer holds the title, so on_court_position_received grants it out of his own demesne instead of
+#     taking it off somebody else;
+#   * the recruit is his courtier, which appoint_court_position requires outright ("If employee doesn't have
+#     employer as liege" is a documented error case);
+#   * the recruit becomes HIS vassal, which is what satisfies can_get_government.
+#
+# The list shrinks on its own as the Wall fills up. A player who takes the Nightfort takes its baronies with
+# it via change_title_holder_include_vassals, so Stonedoor and Hoarfrost Hill drop off this list at the same
+# moment -- and if he wants them manned, he appoints his own keepers through AGOT's normal court interface,
+# which is exactly the Lord Commander fantasy Thomas described: "essentially he should be the king of the
+# Wall, and will command those taking care of those things."
+
+# Is a given keepership open? The Lord Commander must still hold the title it grants -- otherwise
+# appointing to it would take that castle off whoever holds it now -- and nobody may be sitting in it.
+# any_court_position_holder is the engine's own list (vanilla reads it with `type = X` in
+# common/court_positions/types/00_camp_officers.txt among others); max_available_positions = 1 on every
+# keeper means one holder is the whole set.
+ln_keepership_is_free_trigger = {
+	exists = title:k_the_wall.holder
+	title:k_the_wall.holder = {
+		has_government = nights_watch_government
+		has_title = title:$TITLE$
+		NOT = { any_court_position_holder = { type = $KEEPER$ } }
+	}
+}
+
+# Is ANY of the eighteen open? Gates the decision, so the effect below can never run off the end of the
+# list and leave a man with the black and no castle.
+ln_wall_has_a_free_keepership_trigger = {
+	OR = {
+		ln_keepership_is_free_trigger = { KEEPER = b_deep_lake_keeper  TITLE = b_deep_lake }
+		ln_keepership_is_free_trigger = { KEEPER = b_icemark_keeper  TITLE = b_icemark }
+		ln_keepership_is_free_trigger = { KEEPER = b_greyguard_keeper  TITLE = b_greyguard }
+		ln_keepership_is_free_trigger = { KEEPER = b_stonedoor_keeper  TITLE = b_stonedoor }
+		ln_keepership_is_free_trigger = { KEEPER = b_hoarfrost_hill_keeper  TITLE = b_hoarfrost_hill }
+		ln_keepership_is_free_trigger = { KEEPER = b_queensgate_keeper  TITLE = b_queensgate }
+		ln_keepership_is_free_trigger = { KEEPER = b_oakenshield_keeper  TITLE = b_oakenshield }
+		ln_keepership_is_free_trigger = { KEEPER = b_woodswatch_by_the_pool_keeper  TITLE = b_woodswatch_by_the_pool }
+		ln_keepership_is_free_trigger = { KEEPER = b_sable_hall_keeper  TITLE = b_sable_hall }
+		ln_keepership_is_free_trigger = { KEEPER = b_rimegate_keeper  TITLE = b_rimegate }
+		ln_keepership_is_free_trigger = { KEEPER = b_westwatch_by_the_bridge_keeper  TITLE = b_westwatch_by_the_bridge }
+		ln_keepership_is_free_trigger = { KEEPER = b_sentinel_stand_keeper  TITLE = b_sentinel_stand }
+		ln_keepership_is_free_trigger = { KEEPER = b_long_barrow_keeper  TITLE = b_long_barrow }
+		ln_keepership_is_free_trigger = { KEEPER = b_the_torches_keeper  TITLE = b_the_torches }
+		ln_keepership_is_free_trigger = { KEEPER = b_greenguard_keeper  TITLE = b_greenguard }
+		# 1.0.12 -- the three COUNTY grants, kept together and kept last. See the block comment above
+		# ln_grant_a_keepership_effect for why the Nightfort moved down here: granting the county takes the
+		# four ruins inside it as well, which silently consumed four of the eighteen keeperships on the very
+		# first grant. This OR does not care about order, but it is kept in step with the effect's chain so
+		# the two can be read side by side.
+		ln_keepership_is_free_trigger = { KEEPER = b_the_nightfort_keeper  TITLE = c_the_nightfort }
+		ln_keepership_is_free_trigger = { KEEPER = b_the_shadow_tower_keeper  TITLE = c_the_shadow_tower }
+		ln_keepership_is_free_trigger = { KEEPER = b_eastwatch_by_the_sea_keeper  TITLE = c_eastwatch }
+	}
+}
+
+# Could this man take the black at all? Mirrors AGOT's own valid_character on every keeper -- male, adult, not
+# a maester or a septon, not already sworn, not the landless First Ranger -- so the decision never offers a
+# door that appoint_court_position would then refuse at the threshold.
+ln_can_take_the_black_trigger = {
+	is_male = yes
+	is_adult = yes
+	is_alive = yes
+	NOR = {
+		has_trait = nightswatch
+		has_trait = nightswatch_temp
+		has_trait = nightswatch_historical
+		has_trait = maester
+		has_trait = septon
+		has_trait = wight_trait
+		has_trait = other_trait
+		has_trait = nightking
+		has_government = nights_watch_government
+	}
+	# AGOT's own valid_character excludes the landless First Ranger from every keepership, so a man holding
+	# that title must not be offered this decision either. Guarded on existence because this runs in is_shown
+	# -- AGOT can compare against an empty title holder inside valid_character, which is evaluated once on a
+	# candidate list; is_shown is evaluated constantly.
+	trigger_if = {
+		limit = { exists = title:d_nw_landless_first_ranger.holder }
+		NOT = { this = title:d_nw_landless_first_ranger.holder }
+	}
+}
+
+# ── IS THIS MAN WORTH A CASTLE? ─────────────────────────────────────────────────────────────────────────────
+# Thomas, looking at the decision in game: "I feel like some of that description needs to have, like, a reason.
+# Why am I able to man an empty castle? I'm basically a nobody."
+#
+# THE WATCH TAKES ANYONE. That is not negotiable -- it is the entire character of the institution, and AGOT's
+# own joining routes stay open to every man in Westeros regardless of what this trigger says. What this gates
+# is being handed one of nineteen CASTLES on arrival, which is a completely different proposition.
+#
+# Four doors, any one of which is enough, because four different kinds of man should be able to walk through:
+#
+#   A NAME -- 500 prestige. A hedge knight with a reputation, a tourney winner, a second son who has been
+#   somewhere. Not a great lord; a man the Lord Commander has heard of.
+#
+#   A SEAT TO LAY DOWN -- any landed ruler at any tier. A lord who gives up a county to take the black is the
+#   most valuable recruit the Watch has ever had and no commander alive would put him in the kitchens.
+#
+#   A SWORD PEOPLE KNOW -- an anointed knight. The Watch has always taken knights gladly and given them
+#   command, because a knight arrives already knowing how to hold a wall.
+#
+#   MEN AT HIS BACK -- an adventurer with a real company. The Watch has nineteen castles and no men; a man who
+#   turns up with his own is solving the exact problem.
+#
+# is_knight and max_military_strength both checked against the base game first (75 and 78 uses). The obvious
+# `any_army = { army_size >= N }` was the first thing I wrote and it has ZERO uses in the entire base game --
+# it would have been a silent no-op.
+ln_worth_a_castle_trigger = {
+	OR = {
+		prestige >= 500
+		is_landed = yes
+		is_knight = yes
+		max_military_strength >= 200
+	}
+}
+
+# Did the handover actually land? Used by ln_watch.9, whose options have to differ depending on whether a
+# castle came free in the week the rider was away -- a revoke can be refused, and the man can die on the road.
+ln_carries_a_keepership_trigger = {
+	is_landed = yes
+	has_government = nights_watch_government
+}
+
+# ── ALREADY SWORN, AND NOT YET GIVEN ANYTHING ───────────────────────────────────────────────────────────────
+# THOMAS RESTRUCTURED THIS AND HE WAS RIGHT: "That decision should be locked behind somebody who is already a
+# Night's Watch, because the other decision, Take the Black, should kinda be your way into the Night's Watch.
+# I shouldn't just be able to get a castle with the Night's Watch."
+#
+# So there is now ONE ENTRANCE and TWO PROMOTIONS, and the entrance is the only thing an outsider can see:
+#
+#   Take the Black          -- anyone. You come out the other side a ranger with a camp.
+#   Man an Empty Castle     -- a sworn brother who holds nothing, when a castle stands empty.
+#   Ask for a Castle        -- a ranger trading his company for a roof.
+#   Ask for a Command       -- either of the above, when nothing stands empty and somebody must be relieved.
+#
+# The old shape let a stranger walk up to the Wall and be handed a county the same afternoon, which is exactly
+# what Thomas kept flagging from two different directions.
+ln_is_a_sworn_brother_trigger = {
+	is_alive = yes
+	is_adult = yes
+	OR = {
+		has_trait = nightswatch
+		has_trait = nightswatch_temp
+		has_trait = nightswatch_historical
+	}
+	exists = title:k_the_wall.holder
+	OR = {
+		this = title:k_the_wall.holder
+		any_liege_or_above = { has_title = title:k_the_wall }
+	}
+}
+
+# A sworn brother who holds no castle and no ranging company -- the man in the Lord Commander's hall waiting
+# to be given something. This is who Man an Empty Castle is for.
+ln_is_an_unplaced_brother_trigger = {
+	ln_is_a_sworn_brother_trigger = yes
+	is_landed = no
+	NOT = { has_government = ln_ranger_government }
+	NOT = { this = title:k_the_wall.holder }
+}
+
+# 1.0.12a -- DID THE WATCH SURVIVE THE LONG NIGHT? Daysniper, Discord: "I managed to stop the Others before
+# they destroyed the Wall as the Night's Watch. But I got the event for the Free Folk coming south and that
+# the Watch is gone." He is right and the card was lying to him -- ln_aftermath.1 assumed the Wall always
+# falls, because in every playtest it had.
+#
+# THREE CONDITIONS, and the third is the one that matters. A k_the_wall that exists with a holder is not
+# enough: the Others take the title rather than destroying it, so a Wall held by the dead satisfies the first
+# two and is the exact case the dilemma IS for.
+ln_the_watch_survived_trigger = {
+	exists = title:k_the_wall
+	exists = title:k_the_wall.holder
+	title:k_the_wall.holder = { ln_is_one_of_them_trigger = no }
+}

@@ -1,0 +1,4 @@
+﻿l_english:
+ # 1.0.8 -- see common/modifiers/zz_ln_siege_modifiers.txt
+ ln_the_dead_do_not_tire_modifier:0 "The Dead Do Not Tire"
+ ln_the_dead_do_not_tire_modifier_desc:0 "They do not sleep, they do not eat, and they do not rotate off the line. There is no sallying against a host that does not need to rest, and no waiting one out. The men on the walls watch them stand there through the night, and through the next, and something in the watching gives way long before the gate does."
