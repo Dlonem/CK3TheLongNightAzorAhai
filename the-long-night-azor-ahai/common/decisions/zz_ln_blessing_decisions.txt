@@ -1,0 +1,116 @@
+﻿# AGOT: The Long Night & Azor Ahai -- asking, instead of waiting to be asked.
+#
+# WHY THIS EXISTS. ln_lords_blessing_interaction is shown only to a red priest, aimed at somebody else. A
+# player who is not a priest could never see it and could never ask for it, so the ONLY route to a blessing
+# was an AI priest choosing to offer one -- and the AI was almost certainly never evaluating the interaction
+# at all (no ai_targets; fixed in 1.0.14). Between the two, the battlefield resurrection this mod advertises
+# had no reachable path for a player.
+#
+# IT IS DELIBERATELY VISIBLE WHEN IT CANNOT BE USED. is_shown asks only whether such a priest is within
+# reach; every other condition sits in is_valid behind a custom_tooltip, so a player who is already blessed
+# reads "you already have this" instead of wondering what he is doing wrong. Thomas's instruction exactly.
+#
+# NO FAITH GATE, and that is the point. A priest may spend himself on a man who does not believe a word of
+# it -- Melisandre and Jon Snow. The natural-death route is faith-gated; this one never was and must not be.
+ln_ask_for_the_blessing_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds" }
+	decision_group_type = religion
+	sort_order = 120
+	title = ln_ask_for_the_blessing_decision_title
+	desc = ln_ask_for_the_blessing_decision_desc
+	selection_tooltip = ln_ask_for_the_blessing_decision_tt
+	confirm_text = ln_ask_for_the_blessing_decision_confirm
+
+	ai_check_interval = 60
+
+	is_shown = {
+		is_alive = yes
+		is_adult = yes
+		NOT = { has_trait = nightking }
+		NOT = { has_trait = other_trait }
+		NOT = { has_trait = wight_trait }
+		NOT = { has_trait = dragon }
+		ln_blessing_priest_in_reach_trigger = yes
+	}
+
+	# is_valid_showing_failures_only, NOT is_valid -- both are real fields (vanilla uses the bare form 328
+	# times and this one 233), and the difference is the whole point here: this one PRINTS the failing
+	# clause in the tooltip. "A priest has already said the words over you" instead of a dead grey button.
+	is_valid_showing_failures_only = {
+		custom_tooltip = {
+			text = ln_ask_blessing_already_blessed_tt
+			NOT = { exists = var:ln_blessing_sponsor }
+		}
+		custom_tooltip = {
+			text = ln_ask_blessing_already_returned_tt
+			NOT = { has_trait = resurrected_by_rhllor }
+		}
+		is_imprisoned = no
+	}
+
+	effect = {
+		ln_find_blessing_priest_effect = yes
+		# Guarded even though is_shown ran the same three candidates: a priest can die, take a charge or be
+		# dismissed between the decision being drawn and being clicked.
+		if = {
+			limit = { exists = scope:ln_the_priest }
+			ln_grant_the_blessing_effect = yes
+		}
+	}
+
+	# The AI may ask too, but only where it means something -- base 0, so a lord with no claim on the fire's
+	# attention never bothers his chaplain about it. This is what puts a handful of blessed champions in the
+	# world rather than none, without every count in Westeros queueing up.
+	ai_potential = { is_ai = yes }
+	# Same worth model as the priest's own, read from the asker's side (root is the lord doing the asking).
+	# Base 0: a lord with no claim on the fire's attention never bothers his chaplain, so the world ends up
+	# with a handful of blessed champions rather than every count in Westeros queueing at the brazier.
+	ai_will_do = {
+		base = 0
+
+		modifier = { add = 100  has_trait = azor_ahai_reborn }
+		modifier = { add = 80   has_trait = chosen_by_rhllor }
+		modifier = { add = 60   has_trait = favored_by_rhllor }
+
+		modifier = { add = 25  ln_deed_count_value >= 1 }
+		modifier = { add = 25  ln_deed_count_value >= 2 }
+		modifier = { add = 25  ln_deed_count_value >= 3 }
+
+		modifier = { add = 20  highest_held_title_tier >= tier_duchy }
+		modifier = { add = 30  highest_held_title_tier >= tier_kingdom }
+		modifier = { add = 15  is_independent_ruler = yes }
+
+		modifier = { add = 20  prowess >= 12 }
+		modifier = { add = 20  prowess >= 16 }
+		modifier = { add = 15  martial >= 12 }
+		modifier = { add = 15  has_trait = brave }
+
+		# R'hllor's own virtues and sins, off the religion definition.
+		modifier = { add = 15  has_trait = ambitious }
+		modifier = { add = 10  has_trait = vengeful }
+		modifier = { add = 10  has_trait = humble }
+
+		modifier = { add = 20  has_trait = zealous }
+		modifier = { add = 15  faith = { religion = religion:the_rhllor_religion } }
+
+		modifier = { add = 25  struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds } }
+		modifier = { add = 40  struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night } }
+
+		# NOTE: this side used cynical -20 where the priest's side used -15. Both now read the
+		# same capped value, so asking for the blessing and being offered it agree on the man.
+		# ── DESTINY AND SIN, BOTH CAPPED ───────────────────────────────────────────────────────────────────
+		# Everything above is a flat sum, which is why the sins used to be able to bury a man: craven + content
+		# came to -40 and no amount of prophecy climbed out of it. These two are script values with min/max --
+		# the only way to cap a SUBSET of a sum -- and they do opposite jobs.
+		#
+		#   ln_blessing_sin_value      floored at -30 : a destined man may be badly flawed. That is the point.
+		#   ln_blessing_destiny_value  floored at   0 : destiny is never subtracted, only ignored.
+		#
+		# The destiny half is what makes this feature reach the people it is about -- Daenerys with no seat,
+		# Jon with no name, Dunk who is lowborn on purpose. It also lets the fire choose a monster: see
+		# ln_is_the_weapon_trigger. R'hllor does not pick the good. He picks the necessary.
+		modifier = { add = ln_blessing_sin_value }
+		modifier = { add = ln_blessing_destiny_value }
+
+	}
+}

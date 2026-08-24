@@ -227,11 +227,11 @@ others.3 = { #ANY PLAYER: the Long Night ends
 				desc = ln_others.3.desc.inside
 			}
 			triggered_desc = {
-				trigger = { global_var:ln_invasion_opening = flag:the_exodus }
+				trigger = { exists = global_var:ln_invasion_opening  global_var:ln_invasion_opening = flag:the_exodus }
 				desc = ln_others.3.desc.exodus
 			}
 			triggered_desc = {
-				trigger = { global_var:ln_invasion_opening = flag:last_ranging }
+				trigger = { exists = global_var:ln_invasion_opening  global_var:ln_invasion_opening = flag:last_ranging }
 				desc = ln_others.3.desc.ranging
 			}
 			desc = others.3.desc

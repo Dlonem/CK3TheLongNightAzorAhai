@@ -79,8 +79,8 @@ ln_chosen.1 = {
 	}
 
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_chosen_king  animation = personality_bold }
-	lower_right_portrait = { character = scope:ln_chosen_envoy  animation = personality_dishonorable }
+	right_portrait = { trigger = { exists = scope:ln_chosen_king }   character = scope:ln_chosen_king  animation = personality_bold }
+	lower_right_portrait = { trigger = { exists = scope:ln_chosen_envoy }   character = scope:ln_chosen_envoy  animation = personality_dishonorable }
 
 	option = {
 		name = ln_chosen.1.a          # swear. a banner is a banner.
@@ -377,7 +377,7 @@ ln_chosen.5 = {
 	desc = ln_chosen.5.desc
 	theme = murder_scheme
 	left_portrait = { character = root  animation = paranoia }
-	right_portrait = { character = scope:ln_knifeman  animation = shame }
+	right_portrait = { trigger = { exists = scope:ln_knifeman }   character = scope:ln_knifeman  animation = shame }
 
 	# The servant with the broken arm and the very strange calm. Local culture and faith -- he got four months
 	# into the household on forged references, so he had to pass for one of yours.
@@ -656,7 +656,7 @@ ln_chosen.9 = {
 	desc = ln_chosen.9.desc
 	theme = vassal
 	left_portrait = { character = root  animation = disapproval }
-	right_portrait = { character = scope:ln_holdout  animation = personality_honorable }
+	right_portrait = { trigger = { exists = scope:ln_holdout }   character = scope:ln_holdout  animation = personality_honorable }
 
 	trigger = {
 		any_vassal = { is_alive = yes }

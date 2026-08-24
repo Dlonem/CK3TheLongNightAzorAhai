@@ -98,7 +98,7 @@ ln_defeat.2 = {
 	theme = death
 	override_background = { reference = agot_frozen_forest }
 	left_portrait = { character = root  animation = grief }
-	right_portrait = { character = scope:ln_known_dead }
+	right_portrait = { trigger = { exists = scope:ln_known_dead }   character = scope:ln_known_dead }
 
 	trigger = {
 		is_alive = yes

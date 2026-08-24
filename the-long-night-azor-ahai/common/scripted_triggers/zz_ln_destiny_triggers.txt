@@ -1,0 +1,63 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who the fire is already looking at.
+#
+# THE PROBLEM THESE SOLVE. The blessing's scoring model rated a man by his TITLE. That is right for Stannis
+# and wrong for everyone else who matters: Daenerys is a landless adventurer, Jon Snow is a bastard with no
+# seat, Beric Dondarrion is a knight with a warrant out for him, and Ser Duncan the Tall is lowborn on
+# purpose (`set_to_lowborn = yes`, history/characters/00_agot_char_dragonstone_ancestors.txt:16056).
+# Station cannot be the only axis of importance or the Lord of Light never looks at any of them.
+#
+# EVERY SIGNAL BELOW IS AGOT'S OR VANILLA'S, VERIFIED, NOT INVENTED. In particular there is NO
+# has_valyrian_steel_sword trigger anywhere in AGOT -- it has to be built, and it has to check the type,
+# because the valyrian_steel variable is set on ARMOUR too (00_agot_artifact_armor_effects.txt:231).
+# A man in a good breastplate is not Azor Ahai.
+
+# Does he own Valyrian steel with an edge on it?
+# agot_is_valyrian_steel_artifact -- 00_agot_artifact_triggers.txt:44, body is `has_variable = valyrian_steel`.
+# artifact_type = sword -- VANILLA, common/artifacts/types/00_types.txt:163.
+# Ownership rather than equipped: the sword finding the man is the omen. Whether he has it strapped on
+# this afternoon is not. This is the same list AGOT's own reforge_valyrian_steel_decision reads.
+ln_carries_valyrian_steel_trigger = {
+	any_character_artifact = {
+		agot_is_valyrian_steel_artifact = yes
+		artifact_type = sword
+	}
+}
+
+# THE CANON CLAUSE, and it is the best thing in this file. AGOT flags its book characters with
+# canon_status_canon -- tested at 00_agot_character_triggers.txt:156. It is NOT a static history stamp:
+# the canon-children system adds it AT BIRTH (00_agot_canon_children_character_birth_effects.txt:4), so an
+# Aegon born to Viserys and Alicent in year 40 of a campaign carries it from the day he is born, with the
+# same stable historical ID he would have had at a later bookmark.
+#
+# So this reads "the story has a use for this person" WITHOUT hardcoding a single name, and it keeps
+# working for people who did not exist when the game started. Thomas: "a character might not be created at
+# game start, but will identifiably get created later."
+ln_bears_a_destiny_trigger = {
+	OR = {
+		has_character_flag = canon_status_canon
+		has_character_flag = canon_status_semicanon
+		ln_carries_lightbringer_trigger = yes
+		ln_carries_valyrian_steel_trigger = yes
+		agot_is_dragonblood_character = yes
+		agot_has_dragonblood_heritage = yes
+		has_trait = dragon_dreams
+		has_trait = greensight
+		has_trait = azor_ahai_reborn
+		has_trait = chosen_by_rhllor
+		has_trait = favored_by_rhllor
+	}
+}
+
+# THE WEAPON, NOT THE SAINT. Thomas: "this really terrible person might be exactly what the realm needs
+# right now, whether nobody knows it at the time or not."
+#
+# R'hllor does not pick the good. He picks the NECESSARY -- Melisandre burns people. In the Long Night
+# itself the priesthood stops auditing character and starts looking for something that kills. A cruel,
+# capable, driven man in that hour is exactly what a fire god reaches for, and nobody alive understands why.
+# Gated on the phase deliberately: this is not how the faith behaves in the Long Summer.
+ln_is_the_weapon_trigger = {
+	struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+	prowess >= 14
+	OR = { has_trait = ambitious  has_trait = brave  has_trait = vengeful }
+	OR = { has_trait = sadistic  has_trait = callous  has_trait = arrogant  has_trait = vengeful }
+}

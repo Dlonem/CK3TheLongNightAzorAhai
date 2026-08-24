@@ -126,7 +126,7 @@ ln_risen.3 = {
 	desc = ln_risen.3.desc
 	theme = love
 	left_portrait = { character = root  animation = sadness }
-	right_portrait = { character = scope:ln_close  animation = worry }
+	right_portrait = { trigger = { exists = scope:ln_close }   character = scope:ln_close  animation = worry }
 
 	trigger = {
 		exists = primary_spouse
@@ -178,7 +178,7 @@ ln_risen.4 = {
 	desc = ln_risen.4.desc
 	theme = faith
 	left_portrait = { character = root  animation = worry }
-	right_portrait = { character = scope:ln_close  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_close }   character = scope:ln_close  animation = personality_zealous }
 
 	trigger = {
 		ln_has_red_priest_trigger = yes
@@ -333,7 +333,7 @@ ln_risen.7 = {
 	desc = ln_risen.7.desc
 	theme = faith
 	left_portrait = { character = root  animation = anger }
-	right_portrait = { character = scope:ln_close  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_close }   character = scope:ln_close  animation = personality_zealous }
 
 	immediate = {
 		if = {

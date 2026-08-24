@@ -26,10 +26,11 @@ others_occupation.1 = {
 		animation = sick
 	}
 	right_portrait = {
+		trigger = { exists = title:h_the_others.holder }  # 1.0.14: unheld once the Night King is killed
 		character = title:h_the_others.holder
 		animation = marshal
 	}
-	lower_left_portrait = {
+	lower_left_portrait = { trigger = { exists = scope:child }  
 		character = scope:child
 	}
 	#lower_center_portrait = {
@@ -47,7 +48,7 @@ others_occupation.1 = {
 	immediate = {                                 
 	play_music_cue = "mood_the_others"
 	save_scope_as = others_tributary
-	title:h_the_others.holder = { save_scope_as = thenightking }
+	title:h_the_others.holder ?= { save_scope_as = thenightking }
 	
 	random_courtier = { 
 	limit = { NOT = { is_close_or_extended_family_of = root }
@@ -310,7 +311,7 @@ others_occupation.2  = {
 		character = title:h_the_others.holder
 		animation = throne_room_one_handed_passive_1
 	}
-	lower_left_portrait = {
+	lower_left_portrait = { trigger = { exists = scope:child }  
 		character = scope:child
 	}
 	#lower_center_portrait = {
@@ -361,7 +362,7 @@ others_occupation.3  = {
 		character = root
 		animation = celebrate_sword
 	}
-	right_portrait = {
+	right_portrait = { trigger = { exists = scope:attacker }  
 		character = scope:attacker
 		animation = loss_1
 	}

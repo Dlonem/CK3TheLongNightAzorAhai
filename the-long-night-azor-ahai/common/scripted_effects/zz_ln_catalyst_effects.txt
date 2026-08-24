@@ -574,6 +574,10 @@ ln_watch_strength_catalyst_effect = {
 				else_if = {
 					limit = {
 						has_global_variable = ln_watch_is_weak
+						# 1.0.14: ln_watch_recovered_value reads global_var:ln_watch_peak. A save carrying ln_watch_is_weak
+						# from the older absolute-threshold version never had ln_watch_peak written, so this threw once a
+						# year and the recovery branch could never resolve. The falling branch above always checked it.
+						has_global_variable = ln_watch_peak
 						max_military_strength > ln_watch_recovered_value
 					}
 					remove_global_variable = ln_watch_is_weak

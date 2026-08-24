@@ -13,7 +13,7 @@
 # returns the castle to the Lord Commander. We do not touch the title ourselves -- doing it by hand alongside
 # their handler is how you end up with two pieces of script both convinced they own the same county.
 ln_relieve_a_brother_effect = {
-	title:k_the_wall.holder = {
+	title:k_the_wall.holder ?= {
 		random_vassal_or_below = {
 			limit = { ln_brother_should_be_relieved_trigger = yes }
 			# Weakest first: a man who cannot get out of bed before a man who is merely old.
@@ -31,7 +31,7 @@ ln_relieve_a_brother_effect = {
 	# moment another human notices you are the sort of man who does this.
 	if = {
 		limit = { exists = scope:ln_relieved_brother }
-		title:k_the_wall.holder = {
+		title:k_the_wall.holder ?= {
 			every_vassal_or_below = {
 				limit = {
 					is_alive = yes

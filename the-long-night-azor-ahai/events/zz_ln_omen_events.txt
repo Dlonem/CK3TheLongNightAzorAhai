@@ -131,7 +131,7 @@ ln_omen.2 = {
 	}
 
 	left_portrait = { character = root  animation = worry }
-	right_portrait = { character = scope:ln_came_back  animation = fear }
+	right_portrait = { trigger = { exists = scope:ln_came_back }   character = scope:ln_came_back  animation = fear }
 
 	# Believe him. Say so publicly.
 	option = {

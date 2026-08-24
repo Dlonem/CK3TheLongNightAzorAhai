@@ -101,7 +101,7 @@ others_maintenance.3 = {
 		character = root
 		animation = marshal
 	}
-	right_portrait = {
+	right_portrait = { trigger = { exists = scope:iron_throne_holder }  
 		character = scope:iron_throne_holder
 		animation = chancellor
 	}

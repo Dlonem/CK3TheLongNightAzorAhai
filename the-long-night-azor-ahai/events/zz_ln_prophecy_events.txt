@@ -52,7 +52,7 @@ ln_prophecy.1 = {
 	theme = faith
 	override_background = { reference = temple }
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_speaker  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_speaker }   character = scope:ln_speaker  animation = personality_zealous }
 
 	# 11 Aug -- azor_ahai_reborn added for the same reason as ln_prophecy.2: it is level 3 of the same
 	# trait group, so a man who slew the Night King without ever being named could be offered the LOWEST
@@ -287,7 +287,7 @@ ln_prophecy.3 = {
 	desc = ln_prophecy.3.desc
 	theme = faith
 	left_portrait = { character = root  animation = skeptical }
-	right_portrait = { character = scope:ln_speaker  animation = worry }
+	right_portrait = { trigger = { exists = scope:ln_speaker }   character = scope:ln_speaker  animation = worry }
 
 	trigger = {
 		has_trait = favored_by_rhllor

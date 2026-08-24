@@ -40,8 +40,8 @@ ln_spear.1 = {
 	# BECAUSE of the switcheroo below -- it is still alive to render.
 	theme = dragon
 	override_background = { reference = agot_frozen_forest }
-	left_portrait = { character = scope:ln_spear_dragon  animation = dragon_main }
-	right_portrait = { character = scope:ln_night_king  animation = marshal }
+	left_portrait = { trigger = { exists = scope:ln_spear_dragon }   character = scope:ln_spear_dragon  animation = dragon_main }
+	right_portrait = { trigger = { exists = scope:ln_night_king }   character = scope:ln_night_king  animation = marshal }
 	lower_left_portrait = { character = root }
 
 	# STILL TRUE? A day passes between the field and this card, and in that day the dragon can already have
@@ -217,7 +217,7 @@ ln_spear.2 = {
 	}
 	theme = dragon
 	left_portrait = { character = root  animation = grief }
-	right_portrait = { character = scope:ln_spear_dragon  animation = dragon_main }
+	right_portrait = { trigger = { exists = scope:ln_spear_dragon }   character = scope:ln_spear_dragon  animation = dragon_main }
 
 	trigger = {
 		is_alive = yes

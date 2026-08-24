@@ -22,7 +22,7 @@ ln_man_an_empty_castle_decision = {
 		# YOU HAVE TO ALREADY BE ONE OF THEM. See ln_is_an_unplaced_brother_trigger for why this changed --
 		# the Wall is not a place you walk up to and are handed a county.
 		ln_is_an_unplaced_brother_trigger = yes
-		title:k_the_wall.holder = { has_government = nights_watch_government }
+		title:k_the_wall.holder ?= { has_government = nights_watch_government }
 	}
 
 	is_valid = {
@@ -108,7 +108,7 @@ ln_take_the_black_and_wait_decision = {
 			ln_is_an_unplaced_brother_trigger = yes
 			has_government = ln_ranger_government
 		}
-		title:k_the_wall.holder = { has_government = nights_watch_government }
+		title:k_the_wall.holder ?= { has_government = nights_watch_government }
 		# Only when the simple door is genuinely shut. Two decisions offering the same thing is worse than one
 		# decision that sometimes cannot be taken.
 		NOT = { ln_wall_has_a_free_keepership_trigger = yes }

@@ -130,7 +130,7 @@ ln_lightbringer.3 = {
 	desc = ln_lightbringer.3.desc
 	theme = death
 	left_portrait = { character = root  animation = grief }
-	right_portrait = {
+	right_portrait = { trigger = { exists = scope:ln_beloved }  
 		character = scope:ln_beloved
 		animation = sadness
 	}
@@ -321,7 +321,7 @@ ln_lightbringer.5 = {
 	desc = ln_lightbringer.5.desc
 	theme = death
 	left_portrait = { character = root  animation = disbelief }
-	right_portrait = { character = scope:ln_volunteer  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_volunteer }   character = scope:ln_volunteer  animation = personality_zealous }
 
 	trigger = {
 		is_alive = yes

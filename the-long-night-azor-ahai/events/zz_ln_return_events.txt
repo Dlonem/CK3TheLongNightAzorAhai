@@ -10,9 +10,27 @@ ln_return.1 = {
 	desc = ln_return.1.desc
 	theme = dread
 	left_portrait = { character = root  animation = personality_bold }
-	right_portrait = { character = scope:ln_squatter  animation = fear }
+	right_portrait = { trigger = { exists = scope:ln_squatter }   character = scope:ln_squatter  animation = fear }
 
-	trigger = { exists = scope:ln_old_seat  exists = scope:ln_squatter }
+	# 1.0.14 DEFENSIVE REBUILD. Rebuilt from a variable rather than relying on the scope saved at the
+	# send site. NOTE, corrected 24 Aug: saved scopes DO survive a delayed trigger_event -- verified
+	# against vanilla, where court.4751 (90-day delay, one sender, no exists guard) and
+	# stewardship_duty.1063 (re-sends itself at 1820 days, never re-saves) would both be dead
+	# content otherwise. The boundary scopes do NOT cross is an on_action, not a delay.
+	# This pattern is kept anyway because it is strictly more robust: it also survives a sender
+	# that never saved the scope on the branch it took, which is the failure that actually bit us.
+	# This one is FULLSCREEN. It failing silently means the whole ultimatum never happens.
+	trigger = {
+		has_variable = ln_lost_seat
+		var:ln_lost_seat ?= { exists = holder }
+	}
+
+	immediate = {
+		debug_log = "LN_TRACE RETURN: the lord who left is at his own gate"
+		var:ln_lost_seat ?= { save_scope_as = ln_old_seat }
+		var:ln_lost_seat.holder ?= { save_scope_as = ln_squatter }
+		var:current_dragon ?= { save_scope_as = ln_dragon }
+	}
 
 	# ── CROWN ME, OR I BURN IT ──────────────────────────────────────────────────────────────────────────────
 	# The bluff. Whether it works is decided by what he can see: how much of you he already fears, and how much
@@ -75,6 +93,8 @@ ln_return.1 = {
 					}
 				}
 				scope:ln_squatter = { add_opinion = { modifier = hate_opinion  target = root  opinion = -60 } }
+				# Stash him -- ln_return.2 is five days out and the scope will not survive that.
+				set_variable = { name = ln_yielded_squatter  value = scope:ln_squatter }
 				trigger_event = { id = ln_return.2  days = 5 }
 			}
 			25 = {
@@ -256,9 +276,22 @@ ln_return.2 = {
 	desc = ln_return.2.desc
 	theme = realm
 	left_portrait = { character = root  animation = personality_content }
-	right_portrait = { character = scope:ln_squatter  animation = shame }
+	right_portrait = { trigger = { exists = scope:ln_squatter }   character = scope:ln_squatter  animation = shame }
 
-	trigger = { exists = scope:ln_squatter }
+	# 1.0.14 DEFENSIVE REBUILD. Rebuilt from a variable rather than relying on the scope saved at the
+	# send site. NOTE, corrected 24 Aug: saved scopes DO survive a delayed trigger_event -- verified
+	# against vanilla, where court.4751 (90-day delay, one sender, no exists guard) and
+	# stewardship_duty.1063 (re-sends itself at 1820 days, never re-saves) would both be dead
+	# content otherwise. The boundary scopes do NOT cross is an on_action, not a delay.
+	# This pattern is kept anyway because it is strictly more robust: it also survives a sender
+	# that never saved the scope on the branch it took, which is the failure that actually bit us.
+	trigger = { exists = var:ln_yielded_squatter }
+
+	immediate = {
+		debug_log = "LN_TRACE RETURN: the squatter yielded"
+		var:ln_yielded_squatter ?= { save_scope_as = ln_squatter }
+		remove_variable = ln_yielded_squatter
+	}
 
 	option = {
 		name = ln_return.2.a          # let him keep a holding. he kept the roof on.

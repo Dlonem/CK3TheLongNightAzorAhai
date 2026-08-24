@@ -119,8 +119,8 @@ ln_aftermath.4 = {
 		global_var:ln_watch_restorer ?= { save_scope_as = ln_watch_restorer }
 		title:k_the_wall.holder ?= { save_scope_as = ln_new_lord_commander }
 	}
-	left_portrait = { character = scope:ln_watch_restorer  animation = personality_honorable }
-	right_portrait = { character = scope:ln_new_lord_commander  animation = personality_bold }
+	left_portrait = { trigger = { exists = scope:ln_watch_restorer }   character = scope:ln_watch_restorer  animation = personality_honorable }
+	right_portrait = { trigger = { exists = scope:ln_new_lord_commander }   character = scope:ln_new_lord_commander  animation = personality_bold }
 
 	option = {
 		name = ln_aftermath.4.a

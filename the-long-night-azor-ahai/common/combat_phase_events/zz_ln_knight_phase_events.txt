@@ -53,30 +53,58 @@ ln_knight_fell_for_the_dawn = {
 
 		# A priest is standing behind this man, and he has not already spent himself on somebody else.
 		ln_has_living_sponsor_trigger = yes
-		var:ln_blessing_sponsor = { ln_sponsor_can_still_pay_trigger = yes }
+		var:ln_blessing_sponsor ?= { ln_sponsor_can_still_pay_trigger = yes }
 
-		# And the war this is all about is actually happening.
-		exists = struggle:ln_long_night_struggle
-		struggle:ln_long_night_struggle = {
-			OR = {
-				is_struggle_phase = ln_phase_cold_winds
-				is_struggle_phase = ln_phase_the_long_night
-			}
-		}
+		# 1.0.14 -- THE PHASE GATE CAME OUT OF HERE AND BECAME A WEIGHT. It used to demand Cold Winds or the
+		# Long Night, and most of a campaign is neither, so a blessed man who fell in 120 AC was not unlucky --
+		# this entry could not enter the pool at all. A priest's promise does not have a calendar on it.
+		# How closely the fire is listening is now a TIER in `chance` below, not a door.
 	}
 
 	# knight_killed opens at base 30 and is then scaled down hard by prowess and by outnumbering. 40 here means
 	# a blessed champion is meaningfully harder to lose outright without being untouchable -- he can still be
 	# maimed, still be wounded, still be killed on any roll this entry does not win.
+	# knight_killed opens at base 30 and is then scaled down HARD by prowess -- factor = (30 - prowess) / 30,
+	# floored at 0.1 with vanilla's own comment, "Everyone dies." THIS ENTRY HAS NO PROWESS SCALING, so the
+	# ratio between the two moves in the champion's favour the better a fighter he is. At Cold Winds weight 40
+	# against a prowess-15 knight's effective 15, the fire takes roughly three falls out of four.
+	#
+	# ── THE TIERS, AND WHY THEY ARE WEIGHTS AND NOT GATES ────────────────────────────────────────────────
+	# Thomas: "it's still possible during the Long Summer, but less likely; pretty standard during Winter is
+	# Coming, because we want a champion alive and well when we know the Night King is coming; and our
+	# champions get at least an extra chance during the Long Night itself."
+	#
+	#   Long Summer, the Dawn, or no struggle at all   x0.5   ->  20     the fire is listening, not closely
+	#   Cold Winds                                     x1.0   ->  40     standard. Keep the man alive.
+	#   The Long Night                                 x1.5   ->  60     it is watching now
+	#   and x1.5 again on anyone already named         ->  30 / 60 / 90
+	#
+	# Every `struggle:` read below is `?=`. That is load-bearing now rather than tidy: is_valid no longer
+	# guarantees the struggle exists, and a bare `=` on a missing struggle throws.
 	chance = {
 		base = 40
 
-		# The dark itself. When the dead are in the world the fire is paying closer attention.
+		# THE QUIET YEARS. Not Cold Winds and not the Long Night -- so the Long Summer, the Dawn after the
+		# dead are beaten, or a game where the struggle has not begun or was ruled off entirely. Halved, not
+		# closed: a red priest who has said the words means them in a peaceful summer too.
+		modifier = {
+			factor = 0.5
+			NOR = {
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds }
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+			}
+		}
+
+		# COLD WINDS carries no modifier on purpose. It is the baseline the other two are measured against --
+		# the years when everyone can feel it coming and a champion is worth keeping on his feet.
+
+		# THE LONG NIGHT. The dark itself; the fire is paying closer attention.
 		modifier = {
 			factor = 1.5
-			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
 		}
-		# It is watching the ones it has already marked most closely of all.
+
+		# And it watches the ones it has already marked most closely of all.
 		modifier = {
 			factor = 1.5
 			OR = {
@@ -88,6 +116,8 @@ ln_knight_fell_for_the_dawn = {
 	}
 
 	effect = {
+		debug_log = "LN_TRACE FELL FOR THE DAWN: the fire took the roll instead of knight_killed"
+		debug_log_scopes = yes
 		add_character_flag = ln_fell_for_the_dawn
 		save_scope_as = ln_the_fallen
 
@@ -100,9 +130,24 @@ ln_knight_fell_for_the_dawn = {
 			years = 3
 		}
 
-		var:ln_blessing_sponsor = {
+		# ── THE HANDSHAKE ──────────────────────────────────────────────────────────────────────────────
+		# Thomas: "I don't have it on five speed. Boom, next thing you know, I'm dead. I'm like, what on
+		# earth just happened?" So the man who FELL hears about it first, and his priest's answer reaches
+		# him afterwards as its own card. Day 1 he goes down, day 3 the priest decides, day 4 he is told.
+		#
+		# AND BOTH SCOPES ARE STASHED -- defensively, not because the delay eats them. Saved scopes DO
+		# survive a delayed trigger_event (see the corrected note in zz_ln_wight_notice_effects.txt).
+		# Stashing still buys something real: it survives the referent dying in the three days before
+		# the priest answers, and it makes the path debuggable, which it was not before.
+		var:ln_blessing_sponsor ?= {
 			save_scope_as = ln_the_priest
-			trigger_event = { id = ln_prophecy.21  days = 1 }
+			set_variable = { name = ln_the_fallen_champion  value = scope:ln_the_fallen }
+			trigger_event = { id = ln_prophecy.21  days = 3 }
+		}
+		if = {
+			limit = { exists = scope:ln_the_priest }
+			set_variable = { name = ln_the_kneeling_priest  value = scope:ln_the_priest }
+			trigger_event = { id = ln_prophecy.22  days = 1 }
 		}
 	}
 }

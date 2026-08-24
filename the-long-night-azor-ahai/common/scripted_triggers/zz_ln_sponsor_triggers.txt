@@ -44,3 +44,52 @@ ln_can_be_blessed_trigger = {
 	NOT = { has_trait = resurrected_by_rhllor }
 	NOT = { exists = var:ln_blessing_sponsor }
 }
+
+# ── 1.0.14 -- THE DEAD-SPONSOR TRAP, AND WHY THIS TRIGGER HAD TO EXIST ────────────────────────────────────
+# Nothing in the mod ever cleared var:ln_blessing_sponsor. Not on the priest's death, not after he spent
+# himself, not ever -- one set_variable site and zero removals. The two triggers above then disagreed in a
+# way that trapped the character for good:
+#
+#   priest dies -> ln_has_living_sponsor_trigger goes FALSE, so ln_knight_fell_for_the_dawn's is_valid
+#                  fails and the man can never be saved in battle again;
+#               -> ln_can_be_blessed_trigger is ALSO false, because `exists = var:ln_blessing_sponsor` is
+#                  still true. A dead character stays resolvable in CK3 until the save prunes him, so the
+#                  variable still points at somebody. He cannot be protected and cannot be re-blessed.
+#
+# Same trap by a second road: ln_gave_the_last_kiss_modifier is applied with a bare add_character_modifier
+# and its definition carries no duration, so it is PERMANENT. A sponsor who spends himself on somebody else
+# leaves his charge holding a blessing that can never pay out and can never be replaced.
+#
+# Thomas's rule, and this is what makes it expressible: "it should be a one time thing so long as your Red
+# Priest still lives -- Red Priest A's blessing can't apply if you have Red Priest B, you need to re-ask."
+ln_sponsor_is_stale_trigger = {
+	exists = var:ln_blessing_sponsor
+	NOT = {
+		var:ln_blessing_sponsor = {
+			is_alive = yes
+			has_trait = red_priest
+			ln_sponsor_can_still_pay_trigger = yes
+		}
+	}
+}
+
+# Root = a priest. Exactly the two conditions ln_lords_blessing_interaction's is_shown puts on the actor,
+# named once so the interaction, the decision and the nudge can never drift apart.
+ln_priest_can_bless_trigger = {
+	ln_priest_can_give_the_last_kiss_trigger = yes
+	NAND = {
+		exists = var:ln_blessed_charge
+		var:ln_blessed_charge = { is_alive = yes }
+	}
+}
+
+# Root = the one who wants blessing. Is there such a priest close enough to put a hand on him? The chaplain
+# first because that is who a lord actually has, then a ranging company's camp priest, then anyone else in
+# the hall -- a guest, a ward, a wandering red priest who has not been given a seat.
+ln_blessing_priest_in_reach_trigger = {
+	OR = {
+		cp:councillor_court_chaplain ?= { ln_priest_can_bless_trigger = yes }
+		court_position:camp_priest_camp_officer ?= { ln_priest_can_bless_trigger = yes }
+		any_courtier_or_guest = { ln_priest_can_bless_trigger = yes }
+	}
+}

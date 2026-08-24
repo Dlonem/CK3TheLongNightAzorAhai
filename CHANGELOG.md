@@ -8,6 +8,41 @@ Newest first.
 
 ---
 
+## Hotfix 1.0.14
+
+Being brought back from the dead by a red priest has never worked for a player. There were four separate reasons for that, and all four are fixed. This release also compatibility-patches AGOT 5.0/5.1, makes the dead take the North in order, and repairs several things that were quietly broken on older saves.
+
+### Bug Fixes
+
+- **Fixed dozens of empty character portraits across the mod's events.** Fifty-eight portrait slots could render blank — most visibly the dragon that turns back at the Wall, which never had a dragon in it. Every one is now either filled correctly or left out, instead of showing an empty frame.
+- **Fixed the issue with red priests never offering the Lord's Blessing.** The interaction was missing the block that tells the AI which characters to consider, so it was almost certainly never evaluated once in anybody's game. Priests now weigh their liege, their court and their own kin, once a year.
+- **Fixed the issue with the blessing becoming permanently useless when the priest died.** Nothing ever released the bond, so a lord whose priest died could neither be saved nor be blessed again by anyone else — silently, forever. It is now released the day the priest dies, and also if he spends himself on somebody else.
+- **Fixed the issue with players having no way to ask for the blessing at all.** The interaction only ever appeared for red priests, aimed at other people. If you were not a priest yourself you could not see it and could not request it.
+- **Fixed the issue with the battlefield resurrection being unavailable for most of a campaign.** It required the struggle to already be in Winter Is Coming or the Long Night, and most of a game is neither — so a blessed man who fell in a normal year was not unlucky, it simply could not happen to him. A priest's promise does not have a calendar on it.
+- **Fixed the issue with two AGOT governments losing all of their modifiers.** AGOT 5.0 added the Lorathi Principality and Norvos, and this mod's government list had not followed — which quietly stripped the opinion and contribution modifiers off both of them and put 24 errors in the log. Spotted and reported by **AlbionPCJ**. The list is now generated from AGOT's own, so it cannot fall behind again.
+- **Fixed the issue with the dead skipping the North.** They could cross into the Riverlands with Winterfell and half the northern holds still standing, because the only rule was "attack something next to you" and the choice was random. They now clear the North before going south, and Winterfell falls last.
+- **Fixed several things that only failed on saves started before they were added.** Most of the prophecy's payoff, Beric's and Lady Stoneheart's resurrections, and a handful of others were set up once at game start and never on a load — so an older save simply never got them, with nothing in the log to say so. They are now repaired on the next yearly tick.
+
+### Also in this update
+
+- **New decision: Ask for the Lord's Blessing.** Available whenever a red priest who can give it is within reach — your court chaplain, a ranging company's camp priest, or anyone else in your hall. It stays visible after you have one and tells you why it is closed, rather than quietly disappearing.
+- **New event: What the Red Priest Is For.** Fires once, the first year a priest who could do it is standing close enough. Nothing previously told a player the blessing existed.
+- **The fire pays closer attention as the dark gets nearer.** A blessed champion can be caught in any year, but the odds tier: half weight in the Long Summer, standard once the cold winds start, and half again on top during the Long Night.
+- **No faith requirement, and there never was one.** A red priest can spend himself on a man who does not believe a word of it.
+- **You are now told what is happening to you, in three parts.** A card when you go down, your priest's decision two days later, then a second card telling you what they chose — and coming back is your button to press, not something that happens off-screen at five speed. A refusal arrives the same way, and the death is on that card rather than on nothing at all.
+- **A red priestess may want something for it.** Where she is willing, an extra option lets her spend herself on a man and make sure he knows what it cost her. It never replaces the plain choice.
+- **Red priests no longer need to be prominent to do this.** Lowered to piety level 1, or a learning of 10, from a threshold tuned for a landed ruler rather than the landless holy woman who is usually the one standing there.
+- **A red priest now looks for the person the story needs, not the person with the biggest title.** He weighs deeds, courage, skill at arms and the Lord of Light's own virtues, but also the marks of someone the world is already pointing at: a Valyrian steel sword, the blood of the dragon, dragon dreams, greensight. A landless wanderer carrying any of that is worth more to him than a comfortable duke. He will never settle for a random courtier — if nobody in reach is worth his one life, he waits another year.
+
+### Note
+
+- Works with AGOT 5.0 and 5.1, and still works on an older AGOT.
+- Safe to drop onto a running save. If your priest died at some point and you have been quietly unblessable ever since, the next yearly tick releases you.
+- If the battlefield resurrection still does not complete, please open an issue. The four causes above are fixed and every branch of that path now writes a trace to the debug log, but it has not yet been observed end to end in a live game.
+- What the blessing does: if you fall in battle, your priest gets the chance to argue about it. It is not a shield — you can still be wounded or maimed on any roll it does not win, it can only happen to you once, and the priest still has to choose to spend himself.
+
+---
+
 ## Hotfix 1.0.13
 
 A Game of Thrones updated to 0.5.1 and moved several things this mod was reading. If you have that update, you want this one.

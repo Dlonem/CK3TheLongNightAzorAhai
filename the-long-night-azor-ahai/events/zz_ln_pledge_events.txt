@@ -16,14 +16,14 @@ ln_pledge.1 = {
 			# The dark is already here. He did not come to convince you of anything.
 			triggered_desc = {
 				trigger = {
-					struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+					struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
 				}
 				desc = ln_pledge.1.desc.night
 			}
 			# The cold has started. He came because you asked, and he is not surprised that you did.
 			triggered_desc = {
 				trigger = {
-					struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_cold_winds }
+					struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds }
 				}
 				desc = ln_pledge.1.desc.cold
 			}
@@ -100,7 +100,7 @@ ln_pledge.1 = {
 			base = 20
 			modifier = {
 				add = 40
-				struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
 			}
 			modifier = { add = 25  has_trait = cynical }
 			modifier = { factor = 0.1  has_trait = zealous }
@@ -149,7 +149,7 @@ ln_pledge.1 = {
 			modifier = { add = 25  faith = { has_doctrine = doctrine_pluralism_fundamentalist } }
 			modifier = {
 				factor = 0.2
-				struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
 			}
 		}
 	}
@@ -163,7 +163,7 @@ ln_pledge.2 = {
 	desc = ln_pledge.2.desc
 	theme = faith
 	left_portrait = { character = root  animation = disapproval }
-	right_portrait = { character = scope:ln_objector  animation = anger }
+	right_portrait = { trigger = { exists = scope:ln_objector }   character = scope:ln_objector  animation = anger }
 
 	trigger = { has_character_flag = ln_took_the_red }
 

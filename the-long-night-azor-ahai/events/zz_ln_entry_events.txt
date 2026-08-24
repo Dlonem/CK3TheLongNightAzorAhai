@@ -27,7 +27,7 @@ ln_prophecy.30 = {
 	}
 	theme = faith
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_the_seer  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_the_seer }   character = scope:ln_the_seer  animation = personality_zealous }
 
 	trigger = {
 		is_alive = yes

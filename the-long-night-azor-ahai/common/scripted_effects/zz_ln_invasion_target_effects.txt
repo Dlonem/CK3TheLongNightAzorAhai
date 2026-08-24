@@ -56,6 +56,9 @@ ln_pick_invasion_duchy_effect = {
 				exists = duchy
 				duchy = {
 					is_neighbor_to_realm = scope:ln_night_king
+					# 1.0.14: the North falls in order. See zz_ln_invasion_order_triggers.txt -- this is
+					# what stopped them taking the Twins with Winterfell and Cerwyn still standing.
+					ln_target_duchy_is_legal_trigger = yes
 					NOT = { holder ?= scope:ln_night_king }
 					NOT = {
 						any_in_de_jure_hierarchy = {
@@ -98,6 +101,9 @@ ln_pick_invasion_duchy_effect = {
 					exists = duchy
 					duchy = {
 						is_neighbor_to_realm = scope:ln_night_king
+						# 1.0.14: the North falls in order. See zz_ln_invasion_order_triggers.txt -- this is
+						# what stopped them taking the Twins with Winterfell and Cerwyn still standing.
+						ln_target_duchy_is_legal_trigger = yes
 						NOT = { holder ?= scope:ln_night_king }
 						any_in_de_jure_hierarchy = {
 							tier = tier_county
@@ -142,6 +148,9 @@ ln_pick_invasion_duchy_effect = {
 					exists = duchy
 					duchy = {
 						is_neighbor_to_realm = scope:ln_night_king
+						# 1.0.14: the North falls in order. See zz_ln_invasion_order_triggers.txt -- this is
+						# what stopped them taking the Twins with Winterfell and Cerwyn still standing.
+						ln_target_duchy_is_legal_trigger = yes
 						NOT = { holder ?= scope:ln_night_king }
 					}
 				}
@@ -385,6 +394,9 @@ ln_pick_invasion_kingdom_effect = {
 				exists = kingdom
 				kingdom = {
 					is_neighbor_to_realm = scope:ln_night_king
+					# 1.0.14: the North falls in order. See zz_ln_invasion_order_triggers.txt -- this is
+					# what stopped them taking the Twins with Winterfell and Cerwyn still standing.
+					ln_target_kingdom_is_legal_trigger = yes
 					NOT = { holder ?= scope:ln_night_king }
 					NOT = {
 						any_in_de_jure_hierarchy = {
@@ -410,6 +422,9 @@ ln_pick_invasion_kingdom_effect = {
 					exists = kingdom
 					kingdom = {
 						is_neighbor_to_realm = scope:ln_night_king
+						# 1.0.14: the North falls in order. See zz_ln_invasion_order_triggers.txt -- this is
+						# what stopped them taking the Twins with Winterfell and Cerwyn still standing.
+						ln_target_kingdom_is_legal_trigger = yes
 						NOT = { holder ?= scope:ln_night_king }
 						NOT = {
 							any_in_de_jure_hierarchy = {
@@ -451,6 +466,9 @@ ln_pick_invasion_kingdom_effect = {
 					exists = kingdom
 					kingdom = {
 						is_neighbor_to_realm = scope:ln_night_king
+						# 1.0.14: the North falls in order. See zz_ln_invasion_order_triggers.txt -- this is
+						# what stopped them taking the Twins with Winterfell and Cerwyn still standing.
+						ln_target_kingdom_is_legal_trigger = yes
 						NOT = { holder ?= scope:ln_night_king }
 						empire ?= {
 							OR = {
@@ -490,6 +508,9 @@ ln_pick_invasion_kingdom_effect = {
 					exists = kingdom
 					kingdom = {
 						is_neighbor_to_realm = scope:ln_night_king
+						# 1.0.14: the North falls in order. See zz_ln_invasion_order_triggers.txt -- this is
+						# what stopped them taking the Twins with Winterfell and Cerwyn still standing.
+						ln_target_kingdom_is_legal_trigger = yes
 						NOT = { holder ?= scope:ln_night_king }
 					}
 				}

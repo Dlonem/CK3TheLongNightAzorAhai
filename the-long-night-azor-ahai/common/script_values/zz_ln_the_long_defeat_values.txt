@@ -3,8 +3,15 @@
 # YEARS THE LONG NIGHT HAS RUN. ln_long_night_started is stamped once, on entry to the phase, by
 # ln_struggle_reached_long_night_effect. Written the same way ln_winter_elapsed_value is.
 ln_long_night_elapsed_value = {
-	value = current_year
-	subtract = global_var:ln_long_night_started
+	# 1.0.14: `subtract = global_var:X` on an unset global is the "Failed to fetch variable" line -- the rule
+	# is written out further down this same file and was never applied to the first value in it. Safe until
+	# now only because its one caller happens to short-circuit on `exists` two lines earlier.
+	if = {
+		limit = { has_global_variable = ln_long_night_started }
+		value = current_year
+		subtract = global_var:ln_long_night_started
+	}
+	else = { value = 0 }
 }
 
 # A HUNDRED YEARS. Was fifty; raised on 10 Aug at Thomas's call -- "I feel like a hundred years minimum for

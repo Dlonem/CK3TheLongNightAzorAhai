@@ -77,7 +77,7 @@ ln_send_for_a_red_priest_decision = {
 			has_character_flag = ln_looked_north
 			has_character_flag = ln_named_it_first
 			ln_has_deed_greensight_trigger = yes
-			struggle:ln_long_night_struggle = {
+			struggle:ln_long_night_struggle ?= {
 				OR = {
 					is_struggle_phase = ln_phase_cold_winds
 					is_struggle_phase = ln_phase_the_long_night
@@ -114,11 +114,11 @@ ln_send_for_a_red_priest_decision = {
 		# The dead are at the Neck. Strangeness stops mattering.
 		modifier = {
 			add = 45
-			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
 		}
 		modifier = {
 			add = 15
-			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_cold_winds }
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds }
 		}
 		# A man who has already seen something does not need convincing twice.
 		modifier = {

@@ -1,0 +1,22 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the blessing's two housekeeping hooks.
+
+# Root = a character who has just died. If he was somebody's priest, his charge is released the same day
+# rather than a year later -- and this reaches AI characters too, because the on_action fires for everyone.
+ln_blessing_sponsor_died = {
+	trigger = {
+		has_trait = red_priest
+		exists = var:ln_blessed_charge
+	}
+	effect = {
+		ln_sponsor_death_release_effect = yes
+	}
+}
+
+# Root = a playable character, yearly. Two cheap reads: let go of a sponsor who can no longer pay, and tell
+# a player once that the blessing exists at all.
+ln_blessing_yearly = {
+	effect = {
+		ln_release_stale_sponsor_effect = yes
+		ln_blessing_nudge_effect = yes
+	}
+}

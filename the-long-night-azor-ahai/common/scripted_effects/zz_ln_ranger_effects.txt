@@ -621,7 +621,7 @@ ln_company_changes_hands_effect = {
 		}
 		if = {
 			limit = { NOT = { exists = scope:ln_next_captain } }
-			title:k_the_wall.holder = { save_scope_as = ln_next_captain }
+			title:k_the_wall.holder ?= { save_scope_as = ln_next_captain }
 		}
 		if = {
 			limit = { exists = scope:ln_next_captain }

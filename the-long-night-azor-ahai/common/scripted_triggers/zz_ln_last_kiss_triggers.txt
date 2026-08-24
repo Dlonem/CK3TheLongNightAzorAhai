@@ -23,8 +23,12 @@ ln_priest_can_give_the_last_kiss_trigger = {
 	# Standing in the faith, or genuine learning in it. Thoros of Myr was a drunk who had forgotten most of his
 	# catechism and it worked anyway -- but Thoros had been a priest of R'hllor for thirty years.
 	OR = {
-		piety_level >= 2
-		learning >= 13
+		# LOWERED 24 Aug at Thomas's call -- "one of her piety isn't that high. Make it piety level one
+		# maybe or maybe learning ten." He is right, and the old numbers were guarding nothing useful:
+		# a court's red priest is usually a landless courtier, and piety level 2 is a landed ruler's
+		# number. The gate was never meant to be selective -- only to keep an unlettered zealot out.
+		piety_level >= 1
+		learning >= 10
 	}
 
 	# A priest who has already burned himself out doing this cannot do it again. See
@@ -78,4 +82,23 @@ ln_worth_the_fire_trigger = {
 ln_died_with_life_left_trigger = {
 	age < 65
 	NOT = { has_trait = infirm }
+}
+
+# ── AND IT MIGHT MEAN SOMETHING ─────────────────────────────────────────────────────────────────────────
+# Root = the priest. Thomas: "perhaps they have motives of making you a lover, by the way. Only females to
+# male, by the way. Like Melisandre would be kinda fun."
+#
+# Scoped exactly as asked and no wider. Adults only, not kin, not already lovers. This gates an EXTRA
+# option on ln_prophecy.21 -- it never replaces the plain one, so a priestess who simply saves a man
+# without wanting anything from him remains the default and the AI weights it far higher.
+ln_last_kiss_could_mean_something_trigger = {
+	is_female = yes
+	is_adult = yes
+	exists = scope:ln_the_fallen
+	scope:ln_the_fallen = {
+		is_male = yes
+		is_adult = yes
+	}
+	NOT = { has_relation_lover = scope:ln_the_fallen }
+	NOT = { is_close_or_extended_family_of = scope:ln_the_fallen }
 }

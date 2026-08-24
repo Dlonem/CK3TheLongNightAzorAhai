@@ -1,0 +1,84 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the dead take the North in order, or they do not move south.
+#
+# THE BUG, REPORTED TWICE. Cerwyn Hold and Winterfell still in living hands while the dead were attacking
+# the Twins. Thomas: "that's very odd, especially since they haven't taken all of the north yet."
+#
+# WHY IT HAPPENED. Both pickers used `is_neighbor_to_realm` as their ONLY locality constraint and then
+# chose at random among everything that passed. The moment the dead held one northern March that touched
+# the Neck, the whole Riverlands became legal -- and a uniform random pick took it about as often as it
+# took the North. Nothing in the model expressed SEQUENCE. A rule that says "you may go here" without
+# saying "finish there first" produces sprawl; this is the same lesson PASS 3 of the kingdom picker
+# already learned the hard way in August.
+#
+# THE SPEC, in his words: "you want them to systematically take the wall, take the north, saving Winterfell
+# for last, but they can't get into the riverlands until Winterfell falls. So if you need to gate
+# something, do what you gotta do. As long as you do it correctly and so that it can't be broken."
+#
+# ── WHY THIS CANNOT DEADLOCK, WHICH IS THE PART THAT MATTERS ────────────────────────────────────────────
+# The gate is NOT "the North must be 100% conquered". That phrasing deadlocks the instant one northern
+# county ends up in a state the dead can never take -- unheld, wilderness, ruined, cut off. This gate is
+# "IF A LEGAL NORTHERN TARGET EXISTS, TAKE THAT ONE." When no northern March qualifies -- because they are
+# all dead-held, or unheld, or unreachable -- the trigger goes false and the constraint evaporates on its
+# own. There is no state in which the invasion has nowhere to go but is forbidden from going there.
+#
+# ── AND WHY IT IS SAFE ON AN OLDER AGOT ─────────────────────────────────────────────────────────────────
+# Every read of e_the_north is `?=`. If a parent version does not have that title, the triggers are simply
+# false, the gate lifts, and the picker behaves exactly as it did before this file existed. Forwards and
+# backwards.
+
+# Is there a living northern March the dead can actually reach?
+# Kingdom tier deliberately: the Marches -- Last Hearth, Karhold, the Dreadfort, the Neck, Skagos and the
+# rest -- are KINGDOM titles under e_the_north (eight of them; see long_night_game_rules.txt:91).
+# `exists = holder` is load-bearing: without it an unheld March reads as "standing" forever.
+ln_a_northern_march_stands_trigger = {
+	title:e_the_north ?= {
+		any_in_de_jure_hierarchy = {
+			tier = tier_kingdom
+			exists = holder
+			NOT = { holder ?= { ln_is_one_of_them_trigger = yes } }
+			is_neighbor_to_realm = scope:ln_night_king
+		}
+	}
+}
+
+# The same question, ignoring Winterfell. This is what makes Winterfell LAST rather than merely late:
+# while any other March still stands, Winterfell is not a legal target; when nothing else is left, it is.
+ln_a_march_other_than_winterfell_stands_trigger = {
+	title:e_the_north ?= {
+		any_in_de_jure_hierarchy = {
+			tier = tier_kingdom
+			NOT = { this = title:k_winterfell }
+			exists = holder
+			NOT = { holder ?= { ln_is_one_of_them_trigger = yes } }
+			is_neighbor_to_realm = scope:ln_night_king
+		}
+	}
+}
+
+# ── THE GATE, KINGDOM SCOPE ─────────────────────────────────────────────────────────────────────────────
+ln_target_kingdom_is_legal_trigger = {
+	# GATE A -- THE REGION. Nothing outside the North while a northern March still stands.
+	# k_the_wall is exempt: it is not de jure North, and the dead come through it. Blocking it here would
+	# be the one way to genuinely wedge the invasion at its own starting line.
+	OR = {
+		this = title:k_the_wall
+		empire ?= title:e_the_north
+		NOT = { ln_a_northern_march_stands_trigger = yes }
+	}
+
+	# GATE B -- WINTERFELL LAST. The seat of the North falls when there is nothing else in the North left
+	# to fall. This supersedes the softer "not first or second" footprint test in PASS 3 of the kingdom
+	# picker -- that clause stays, and is now simply never the binding constraint inside the North.
+	OR = {
+		NOT = { this = title:k_winterfell }
+		NOT = { ln_a_march_other_than_winterfell_stands_trigger = yes }
+	}
+}
+
+# ── THE GATE, DUCHY SCOPE ───────────────────────────────────────────────────────────────────────────────
+# The duchy picker is the one that took the Twins, so it needs the same gate. Asked through the duchy's
+# kingdom rather than re-deriving it, so there is exactly one copy of the rule. `kingdom ?=` because a
+# duchy with no de jure kingdom would otherwise throw.
+ln_target_duchy_is_legal_trigger = {
+	kingdom ?= { ln_target_kingdom_is_legal_trigger = yes }
+}

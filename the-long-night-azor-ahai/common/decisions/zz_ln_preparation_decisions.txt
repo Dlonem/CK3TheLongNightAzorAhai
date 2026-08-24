@@ -40,7 +40,7 @@ ln_mine_dragonglass_decision = {
 			has_character_flag = ln_named_it_first        # you believed the man who saw one
 			ln_has_deed_greensight_trigger = yes          # you did not need telling
 			ln_participates_in_the_dawn_trigger = yes     # or you swore yourself to this war and meant it
-			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }  # or it is here
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }  # or it is here
 		}
 	}
 
@@ -68,7 +68,7 @@ ln_mine_dragonglass_decision = {
 		# It is here. Buy the glass.
 		modifier = {
 			add = 75
-			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
 		}
 		# The North believes it first and always has.
 		modifier = {

@@ -145,6 +145,11 @@ ln_lc.3 = {
 	immediate = {
 		# Men lost beyond the Wall feed the same clock every lost ranging feeds. Both calls
 		# self-gate: the catalyst only counts in the Long Summer, the accelerant only in Cold Winds.
+		# 1.0.14: ln_fire_catalyst_blaming_effect reads scope:ln_catalyst_culprit unguarded. All EIGHT other
+		# call sites save it immediately beforehand; this one did not, so the catalyst fired at a dangling
+		# reference and the struggle points were likely dropped. Root here is the Lord Commander -- the man
+		# who lost the ranging is the man the realm blames.
+		save_scope_as = ln_catalyst_culprit
 		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_ranging_lost  PHASE = ln_phase_long_summer  POINTS = 4  COOLDOWN = 4 }
 		ln_the_dark_comes_sooner_effect = { YEARS = 1 }
 	}
@@ -220,7 +225,7 @@ ln_lc.10 = {
 	desc = ln_lc.10.desc
 	theme = realm
 	left_portrait = { character = root  animation = interested }
-	right_portrait = { character = scope:ln_wandering_crow  animation = personality_content }
+	right_portrait = { trigger = { exists = scope:ln_wandering_crow }   character = scope:ln_wandering_crow  animation = personality_content }
 
 	trigger = {
 		exists = scope:ln_wandering_crow

@@ -52,7 +52,7 @@ ln_red.1 = {
 	}
 	theme = faith
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_red_priest  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_red_priest }   character = scope:ln_red_priest  animation = personality_zealous }
 
 	option = {
 		name = ln_red.1.a          # let the thought stay
@@ -113,7 +113,7 @@ ln_red.2 = {
 	desc = ln_red.2.desc
 	theme = faith
 	left_portrait = { character = root  animation = worry }
-	right_portrait = { character = scope:ln_red_priest  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_red_priest }   character = scope:ln_red_priest  animation = personality_zealous }
 
 	option = {
 		name = ln_red.2.a          # watch the fires with him tonight
@@ -174,7 +174,7 @@ ln_red.3 = {
 	desc = ln_red.3.desc
 	theme = faith
 	left_portrait = { character = root  animation = personality_bold }
-	right_portrait = { character = scope:ln_red_priest  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_red_priest }   character = scope:ln_red_priest  animation = personality_zealous }
 
 	# ── TAKE THE RED. Same engine transition, same price, same flags as the pledge road
 	# (ln_pledge.1.a) -- one mechanic, two doors into it, and the tooltip says the quiet part.

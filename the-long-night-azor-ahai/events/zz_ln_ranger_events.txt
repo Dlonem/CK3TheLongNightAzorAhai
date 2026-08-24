@@ -9,7 +9,7 @@ ln_ranger.1 = {
 	desc = ln_ranger.1.desc
 	theme = travel
 	left_portrait = { character = root  animation = personality_bold }
-	right_portrait = { character = scope:ln_lord_commander  animation = personality_honorable }
+	right_portrait = { trigger = { exists = scope:ln_lord_commander }   character = scope:ln_lord_commander  animation = personality_honorable }
 
 	trigger = {
 		is_alive = yes

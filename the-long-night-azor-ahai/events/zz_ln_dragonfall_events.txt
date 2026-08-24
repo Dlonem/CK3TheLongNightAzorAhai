@@ -29,7 +29,7 @@ ln_dragonfall.1 = {
 	desc = ln_dragonfall.1.desc
 	theme = dread
 	left_portrait = { character = root  animation = grief }
-	right_portrait = { character = scope:ln_cold_dragon  animation = anger }
+	right_portrait = { trigger = { exists = scope:ln_cold_dragon }   character = scope:ln_cold_dragon  animation = anger }
 
 	option = {
 		name = ln_dragonfall.1.a          # she will know me. even now.

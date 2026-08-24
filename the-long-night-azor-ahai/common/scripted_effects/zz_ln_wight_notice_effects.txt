@@ -17,16 +17,25 @@ ln_wight_raised_notify_effect = {
 	# ---- inner ring: always told ----
 	every_close_family_member = {
 		limit = { ln_wight_notice_recipient_trigger = yes }
+		# 1.0.14: a saved scope does NOT survive a queued event -- the standing rule already written
+		# against ln_wight.2 further down this file. ln_wight.1 never got it. Stash, then rebuild.
+		set_variable = { name = ln_wight_notice_subject  value = scope:ln_risen }
 		trigger_event = { id = ln_wight.1  days = { 3 30 } }
 	}
 	every_relation = {
 		type = best_friend
 		limit = { ln_wight_notice_recipient_trigger = yes }
+		# 1.0.14: a saved scope does NOT survive a queued event -- the standing rule already written
+		# against ln_wight.2 further down this file. ln_wight.1 never got it. Stash, then rebuild.
+		set_variable = { name = ln_wight_notice_subject  value = scope:ln_risen }
 		trigger_event = { id = ln_wight.1  days = { 3 30 } }
 	}
 	every_relation = {
 		type = soulmate
 		limit = { ln_wight_notice_recipient_trigger = yes }
+		# 1.0.14: a saved scope does NOT survive a queued event -- the standing rule already written
+		# against ln_wight.2 further down this file. ln_wight.1 never got it. Stash, then rebuild.
+		set_variable = { name = ln_wight_notice_subject  value = scope:ln_risen }
 		trigger_event = { id = ln_wight.1  days = { 3 30 } }
 	}
 
@@ -37,6 +46,9 @@ ln_wight_raised_notify_effect = {
 			ln_wight_notice_recipient_trigger = yes
 			NOT = { has_character_flag = ln_wight_notice_cooldown }
 		}
+		# 1.0.14: a saved scope does NOT survive a queued event -- the standing rule already written
+		# against ln_wight.2 further down this file. ln_wight.1 never got it. Stash, then rebuild.
+		set_variable = { name = ln_wight_notice_subject  value = scope:ln_risen }
 		trigger_event = { id = ln_wight.1  days = { 3 30 } }
 	}
 	every_relation = {
@@ -45,6 +57,9 @@ ln_wight_raised_notify_effect = {
 			ln_wight_notice_recipient_trigger = yes
 			NOT = { has_character_flag = ln_wight_notice_cooldown }
 		}
+		# 1.0.14: a saved scope does NOT survive a queued event -- the standing rule already written
+		# against ln_wight.2 further down this file. ln_wight.1 never got it. Stash, then rebuild.
+		set_variable = { name = ln_wight_notice_subject  value = scope:ln_risen }
 		trigger_event = { id = ln_wight.1  days = { 3 30 } }
 	}
 }
@@ -130,8 +145,18 @@ ln_wight_marriage_card_effect = {
 	save_scope_as = ln_risen
 	every_spouse = {
 		limit = { ln_wight_marriage_card_recipient_trigger = yes }
-		# A saved scope does NOT survive a queued event. Stash the wight in a variable and rebuild the
-		# scope in ln_wight.2's immediate. Standing rule, paid for once already.
+		# CORRECTED 24 Aug 2026 -- THE RULE THAT USED TO BE WRITTEN HERE WAS WRONG, and it propagated.
+		# It said "a saved scope does NOT survive a queued event". That is false: verified against vanilla,
+		# where court.4751 is 540 lines of shipped content with ONE sender, delayed 90 days, dereferencing
+		# scope:poet in its trigger with no exists guard; and stewardship_duty.1063 re-sends ITSELF at 1820
+		# days, twice, and never re-saves scope:client. 98 vanilla events do this unguarded.
+		#
+		# The boundary a scope does NOT cross is an ON_ACTION, which supplies its own root and scope set --
+		# that is why vanilla's variable-rebuild idiom exists (marriage_effect.0001, birth.1001).
+		#
+		# Stash-and-rebuild is still the right pattern HERE, and stays, for a better reason: it survives a
+		# sender that never saved the scope on the branch it actually took, and it survives the referent
+		# dying during the delay. Keep the pattern; do not repeat the reasoning.
 		set_variable = { name = ln_lost_to_the_dead  value = scope:ln_risen }
 		trigger_event = { id = ln_wight.2  days = { 3 10 } }
 	}

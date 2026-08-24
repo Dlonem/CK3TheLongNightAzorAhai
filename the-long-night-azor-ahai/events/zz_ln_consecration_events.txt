@@ -29,7 +29,7 @@ ln_consecrate.1 = {
 	theme = faith
 	override_background = { reference = agot_frozen_forest }
 	left_portrait = { character = root  animation = personality_zealous }
-	right_portrait = { character = scope:ln_beloved  animation = sadness }
+	right_portrait = { trigger = { exists = scope:ln_beloved }   character = scope:ln_beloved  animation = sadness }
 
 	# STILL QUALIFIES? The same re-check every queued event in this mod carries: fourteen days pass between the
 	# click and this card, and in that time the blade can be stolen, the champion can renounce the name, or

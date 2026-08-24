@@ -60,26 +60,56 @@ ln_lords_blessing_interaction = {
 		}
 	}
 
+	# ── 1.0.14 -- WHY THE AI HAS NEVER OFFERED THIS ─────────────────────────────────────────────────────
+	# This shipped with ai_will_do and ai_accept and NEITHER ai_targets NOR ai_potential, so the AI had no
+	# candidate list to score and almost certainly never evaluated it once. Measured across both codebases
+	# before touching anything: of vanilla's 297 interactions carrying ai_will_do, 268 (90%) also carry
+	# ai_targets; AGOT's ratio is 309 of 346 (89%). And the 27 vanilla exceptions are every one of them an
+	# interaction whose TARGET IS FIXED BY THE SITUATION -- call_ally, expose_secret, grant_independence,
+	# select_ghw_beneficiary, migration, the tribute missions. Not one is "pick somebody out of a pool and
+	# offer them something", which is exactly what this is.
+	#
+	# ai_potential is the cheap actor-side pre-filter -- the same two conditions is_shown already applies to
+	# the priest, so a priest who is spent or already has a living charge is never even considered.
+	ai_potential = {
+		has_trait = red_priest
+		is_adult = yes
+		ln_sponsor_can_still_pay_trigger = yes
+		NAND = {
+			exists = var:ln_blessed_charge
+			var:ln_blessed_charge = { is_alive = yes }
+		}
+	}
+
+	# WHO A COURT PRIEST CAN REACH, in the order the story would go. His liege first -- that is the man he
+	# actually serves and the one a player is most often standing in -- then the court around him, then his
+	# own kin. Multiple ai_targets blocks are vanilla's own idiom (transfer_county_interaction carries 24).
+	ai_targets = {
+		ai_recipients = liege
+		chance = 0.5
+	}
+	ai_targets = {
+		ai_recipients = courtiers
+		chance = 0.2
+	}
+	ai_targets = {
+		ai_recipients = family
+		chance = 0.2
+	}
+
+	# Once a year. A priest choosing who he will spend himself on is not a monthly errand, and the mod's
+	# other prophecy cadence is yearly too.
+	ai_frequency = 12
+
 	ai_min_reply_days = 3
 	ai_max_reply_days = 10
 
+	# 1.0.14: the body moved to ln_grant_the_blessing_effect, so the offer a priest makes and the decision a
+	# lord takes grant exactly the same thing -- same piety, same fervor, same card, one definition. It also
+	# stamps ln_knows_of_the_blessing, which stops the discovery nudge arriving at a man already blessed.
 	on_accept = {
-		scope:recipient = {
-			set_variable = { name = ln_blessing_sponsor  value = scope:actor }
-			add_character_flag = ln_heard_the_warning
-		}
-		scope:actor = {
-			set_variable = { name = ln_blessed_charge  value = scope:recipient }
-			add_piety = 100
-		}
-		# It matters to the faith that somebody said yes.
-		scope:actor.faith = {
-			change_fervor = {
-				value = 1
-				desc = ln_fervor_gain_blessing
-			}
-		}
-		scope:recipient = { trigger_event = ln_prophecy.40 }
+		scope:actor = { save_scope_as = ln_the_priest }
+		scope:recipient = { ln_grant_the_blessing_effect = yes }
 	}
 
 	on_decline = {
@@ -115,9 +145,82 @@ ln_lords_blessing_interaction = {
 		modifier = { add = 25  scope:recipient = { reverse_opinion = { target = scope:actor  value >= 50 } } }
 	}
 
+	# ── WHO A PRIEST SPENDS HIMSELF ON ────────────────────────────────────────────────────────────────────
+	# Thomas: "the last thing you want is the red priest casually in your court choosing some random knight
+	# instead of you, when you're obviously more qualified."
+	#
+	# BASE 0, WHICH IS THE WHOLE DESIGN. Vanilla's most common base for this field (118 of its interactions),
+	# and here it means an unremarkable courtier scores nothing and is never chosen. Every point below has to
+	# be earned. A priest has exactly ONE of these to give in his whole life -- ln_gave_the_last_kiss_modifier
+	# is permanent -- so he should behave like a man spending the only thing he has.
 	ai_will_do = {
-		base = 40
-		modifier = { add = 40  scope:recipient = { ln_worth_the_fire_trigger = yes } }
-		modifier = { add = 30  scope:recipient = { has_relation_friend = scope:actor } }
+		base = 0
+
+		# THE MARKED. Everything else on this list is a priest guessing. This is the fire having already said
+		# so, and it is meant to drown out every other consideration in the block.
+		modifier = { add = 100  scope:recipient = { has_trait = azor_ahai_reborn } }
+		modifier = { add = 80   scope:recipient = { has_trait = chosen_by_rhllor } }
+		modifier = { add = 60   scope:recipient = { has_trait = favored_by_rhllor } }
+
+		# THE SIGNS, before anyone has said it out loud. Cumulative, so three deeds is worth 75.
+		modifier = { add = 25  scope:recipient = { ln_deed_count_value >= 1 } }
+		modifier = { add = 25  scope:recipient = { ln_deed_count_value >= 2 } }
+		modifier = { add = 25  scope:recipient = { ln_deed_count_value >= 3 } }
+
+		# INFLUENCE, AND IT IS DELIBERATELY WEIGHTED HEAVILY. Thomas: "that's technically how a religion gets
+		# you -- they get the most influential people even if they are nonbelievers at the time." Melisandre
+		# did not go to a hedge knight. She went to Stannis.
+		modifier = { add = 10  scope:recipient = { is_ruler = yes } }
+		modifier = { add = 20  scope:recipient = { highest_held_title_tier >= tier_duchy } }
+		modifier = { add = 30  scope:recipient = { highest_held_title_tier >= tier_kingdom } }
+		modifier = { add = 15  scope:recipient = { is_independent_ruler = yes } }
+		modifier = { add = 10  scope:recipient = { prestige_level >= 3 } }
+
+		# THE CHAMPION. This is a battlefield mechanic; it should find people who go to battlefields.
+		modifier = { add = 20  scope:recipient = { prowess >= 12 } }
+		modifier = { add = 20  scope:recipient = { prowess >= 16 } }
+		modifier = { add = 15  scope:recipient = { martial >= 12 } }
+		modifier = { add = 15  scope:recipient = { has_trait = brave } }
+
+		# R'HLLOR'S OWN VIRTUES AND SINS, read off the religion rather than invented -- the_rhllor_religion
+		# lists virtues = { ambitious vengeful humble } and sins = { content forgiving arrogant }. A red
+		# priest does not admire meekness. He admires a man who wants something and remembers who wronged him.
+		modifier = { add = 15  scope:recipient = { has_trait = ambitious } }
+		modifier = { add = 10  scope:recipient = { has_trait = vengeful } }
+		modifier = { add = 10  scope:recipient = { has_trait = humble } }
+
+		# AND THE PLAINER VIRTUES -- a man worth the fire, in the way anyone would recognise.
+		modifier = { add = 10  scope:recipient = { has_trait = just } }
+		modifier = { add = 10  scope:recipient = { has_trait = honest } }
+		modifier = { add = 10  scope:recipient = { has_trait = zealous } }
+
+		# FAITH IS A BONUS AND NEVER A REQUIREMENT, and that is the point of the whole feature. Jon Snow did
+		# not believe. Stannis barely did. A religion attaches itself to the useful, not to the convinced.
+		modifier = { add = 15  scope:recipient = { faith = scope:actor.faith } }
+
+		# THE MAN HIMSELF. A priest is likelier to spend his one life on somebody he actually knows.
+		modifier = { add = 20  scope:recipient = { has_relation_friend = scope:actor } }
+		modifier = { add = 30  scope:recipient = { has_relation_best_friend = scope:actor } }
+		modifier = { add = 25  scope:actor = { is_close_or_extended_family_of = scope:recipient } }
+		modifier = { add = 20  scope:recipient = { reverse_opinion = { target = scope:actor  value >= 50 } } }
+
+		# AND THE HOUR. The nearer the dark, the less a priest holds back.
+		modifier = { add = 25  struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds } }
+		modifier = { add = 40  struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night } }
+
+		# ── DESTINY AND SIN, BOTH CAPPED ───────────────────────────────────────────────────────────────────
+		# Everything above is a flat sum, which is why the sins used to be able to bury a man: craven + content
+		# came to -40 and no amount of prophecy climbed out of it. These two are script values with min/max --
+		# the only way to cap a SUBSET of a sum -- and they do opposite jobs.
+		#
+		#   ln_blessing_sin_value      floored at -30 : a destined man may be badly flawed. That is the point.
+		#   ln_blessing_destiny_value  floored at   0 : destiny is never subtracted, only ignored.
+		#
+		# The destiny half is what makes this feature reach the people it is about -- Daenerys with no seat,
+		# Jon with no name, Dunk who is lowborn on purpose. It also lets the fire choose a monster: see
+		# ln_is_the_weapon_trigger. R'hllor does not pick the good. He picks the necessary.
+		modifier = { add = scope:recipient.ln_blessing_sin_value }
+		modifier = { add = scope:recipient.ln_blessing_destiny_value }
+
 	}
 }

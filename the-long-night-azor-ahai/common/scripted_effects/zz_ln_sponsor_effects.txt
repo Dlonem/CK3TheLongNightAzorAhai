@@ -1,0 +1,163 @@
+﻿# AGOT: The Long Night & Azor Ahai -- letting go of a priest who cannot keep the promise.
+#
+# The blessing is a bond between two named people, so it has to be able to END. Before 1.0.14 it could only
+# ever be created: see the block comment on ln_sponsor_is_stale_trigger for the trap that made.
+#
+# TWO CALLERS, ON PURPOSE.
+#   * on_death, through ln_blessing_sponsor_died -- immediate, and it reaches AI characters as well as
+#     players, because the priest is the one who died and he knows who his charge was.
+#   * the yearly playable pulse -- the backstop. It catches the priest who is still alive but has SPENT
+#     himself on somebody else (a permanent modifier, so he never recovers), and it catches every save made
+#     before this existed. Costs one variable read a year.
+#
+# NEVER clears anything else. A charge who was actually resurrected keeps resurrected_by_rhllor, and
+# ln_can_be_blessed_trigger still refuses him a second blessing -- releasing the variable is tidy, not a
+# second life.
+
+# Root = the blessed character.
+ln_release_stale_sponsor_effect = {
+	if = {
+		limit = { ln_sponsor_is_stale_trigger = yes }
+		debug_log = "LN_TRACE BLESSING RELEASED: sponsor dead or spent, charge freed to ask again"
+		remove_variable = ln_blessing_sponsor
+	}
+}
+
+# Root = the priest who just died. Reaches across the bond in the direction the on_action gives us.
+ln_sponsor_death_release_effect = {
+	if = {
+		limit = {
+			exists = var:ln_blessed_charge
+			var:ln_blessed_charge = { exists = var:ln_blessing_sponsor }
+		}
+		var:ln_blessed_charge = { ln_release_stale_sponsor_effect = yes }
+	}
+	if = {
+		limit = { exists = var:ln_blessed_charge }
+		remove_variable = ln_blessed_charge
+	}
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# Root = the one being blessed. scope:ln_the_priest = the priest doing it.
+#
+# ONE BODY, TWO DOORS. The interaction (a priest offers) and the decision (a lord asks) now both end here,
+# so the two can never grant subtly different blessings. Everything in it was already in the interaction's
+# on_accept; the only addition is ln_knows_of_the_blessing, which stops the discovery nudge firing at a man
+# who has just been blessed.
+ln_grant_the_blessing_effect = {
+	# INSTRUMENTED 1.0.14. Neither door logs anything by itself, so "did the AI ever offer it?" could only
+	# be answered by reading a save. One line, debug-mode only, greppable: LN_TRACE BLESSING.
+	debug_log = "LN_TRACE BLESSING: a priest has blessed somebody"
+	debug_log_scopes = yes
+	save_scope_as = ln_the_blessed
+	set_variable = { name = ln_blessing_sponsor  value = scope:ln_the_priest }
+	add_character_flag = ln_heard_the_warning
+	add_character_flag = ln_knows_of_the_blessing
+	scope:ln_the_priest = {
+		set_variable = { name = ln_blessed_charge  value = scope:ln_the_blessed }
+		add_piety = 100
+		faith = {
+			change_fervor = {
+				value = 1
+				desc = ln_fervor_gain_blessing
+			}
+		}
+	}
+	trigger_event = ln_prophecy.40
+}
+
+# Root = a playable character, from the yearly pulse.
+#
+# NOBODY WAS EVER TOLD THIS EXISTED. ln_prophecy.40 only fires AFTER you are blessed, so a player with a red
+# priest standing in his own hall had no way to learn that the man could promise to argue with death for him.
+# One card, once, the first year a qualifying priest is within reach -- and it is latched on its own flag
+# rather than on being blessed, so a player who hears it and ignores it is not told twice.
+ln_blessing_nudge_effect = {
+	if = {
+		limit = {
+			is_ai = no
+			NOT = { has_character_flag = ln_knows_of_the_blessing }
+			ln_can_be_blessed_trigger = yes
+			ln_blessing_priest_in_reach_trigger = yes
+		}
+		add_character_flag = ln_knows_of_the_blessing
+		trigger_event = { id = ln_prophecy.41  days = { 3 20 } }
+	}
+}
+
+# Root = the one who wants it. Saves scope:ln_the_priest, or saves nothing at all -- callers must guard on
+# ln_blessing_priest_in_reach_trigger, which is the same three candidates in the same order.
+# Chaplain first because that is the man a lord actually has; then a ranging company's camp priest; then
+# whoever else is in the hall.
+ln_find_blessing_priest_effect = {
+	if = {
+		limit = { cp:councillor_court_chaplain ?= { ln_priest_can_bless_trigger = yes } }
+		cp:councillor_court_chaplain = { save_scope_as = ln_the_priest }
+	}
+	else_if = {
+		limit = { court_position:camp_priest_camp_officer ?= { ln_priest_can_bless_trigger = yes } }
+		court_position:camp_priest_camp_officer = { save_scope_as = ln_the_priest }
+	}
+	else = {
+		random_courtier_or_guest = {
+			limit = { ln_priest_can_bless_trigger = yes }
+			save_scope_as = ln_the_priest
+		}
+	}
+}
+
+# ── THE PRIEST PAYS ─────────────────────────────────────────────────────────────────────────────────────
+# Root = the priest. Requires scope:ln_the_priest and scope:ln_the_fallen, both set in ln_prophecy.21's
+# immediate. Factored out of that event because TWO options now call it -- give it, and give it and let
+# him know who he owes -- and the priest-side price must be identical either way.
+#
+# NOTE WHAT IS *NOT* HERE. The resurrection itself is not in this effect. It lives on the fallen man's own
+# card, ln_prophecy.23, so that he presses the button that stands him up. Thomas asked for the two-way
+# handshake explicitly and he is right: a man should not be quietly un-killed by a dialog he never saw.
+ln_pay_the_last_kiss_effect = {
+	debug_log = "LN_TRACE LAST KISS PAID: the priest is spending himself"
+
+	# The price, identical to the last kiss given at a bedside -- because it is the same act.
+	add_character_modifier = ln_gave_the_last_kiss_modifier
+	add_piety = 300
+
+	if = {
+		# ALIVE-GUARDED: four days pass between the fall and this, and a man can die of something else
+		# in four days. Resurrecting a corpse would stack traits on a dead character and hand him a card
+		# he can never answer.
+		limit = {
+			exists = scope:ln_the_fallen
+			scope:ln_the_fallen = { is_alive = yes }
+		}
+
+		# YOU DO NOT WALK AWAY FROM THIS THE SAME. A man who gave up part of himself for you, and a man
+		# who owes his existence to you, are not acquaintances afterwards.
+		if = {
+			limit = {
+				scope:ln_the_fallen = { has_relation_friend = scope:ln_the_priest }
+				NOT = { scope:ln_the_fallen = { has_relation_best_friend = scope:ln_the_priest } }
+			}
+			set_relation_best_friend = scope:ln_the_fallen
+		}
+		else_if = {
+			limit = { NOT = { scope:ln_the_fallen = { has_relation_friend = scope:ln_the_priest } } }
+			set_relation_friend = scope:ln_the_fallen
+		}
+
+		# Hand the fallen man the news, and the button. Stamped in a variable because a saved scope does
+		# not survive the queue -- the exact failure this whole pass exists to fix.
+		scope:ln_the_fallen = {
+			set_variable = { name = ln_the_kneeling_priest  value = scope:ln_the_priest }
+			trigger_event = { id = ln_prophecy.23  days = 1 }
+		}
+	}
+
+	# It moves the faith, publicly, in front of an army.
+	faith = {
+		change_fervor = {
+			value = 2
+			desc = ln_fervor_gain_resurrection
+		}
+	}
+}

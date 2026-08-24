@@ -85,7 +85,7 @@ ln_scatter.2 = {
 	theme = war
 	override_background = { reference = agot_frozen_forest }
 	left_portrait = { character = root  animation = worry }
-	right_portrait = { character = scope:ln_scattered_brother  animation = beg }
+	right_portrait = { trigger = { exists = scope:ln_scattered_brother }   character = scope:ln_scattered_brother  animation = beg }
 
 	trigger = {
 		is_alive = yes
@@ -296,7 +296,7 @@ ln_scatter.3 = {
 	override_background = { reference = courtyard }
 
 	left_portrait = { character = root  animation = personality_content }
-	right_portrait = { character = scope:ln_scattered_brother  animation = personality_bold }
+	right_portrait = { trigger = { exists = scope:ln_scattered_brother }   character = scope:ln_scattered_brother  animation = personality_bold }
 
 	# ONLY IF: the man is alive and still in this court. NEVER IF: he died, left, or was never taken in --
 	# a card about a man who is not there is worse than no card.

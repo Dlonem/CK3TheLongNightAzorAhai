@@ -12,7 +12,7 @@ ln_prophecy.40 = {
 	desc = ln_prophecy.40.desc
 	theme = faith
 	left_portrait = { character = root  animation = personality_zealous }
-	right_portrait = { character = scope:ln_blessing_sponsor  animation = personality_honorable }
+	right_portrait = { trigger = { exists = scope:ln_blessing_sponsor }   character = scope:ln_blessing_sponsor  animation = personality_honorable }
 
 	trigger = { exists = var:ln_blessing_sponsor }
 
@@ -44,80 +44,219 @@ ln_prophecy.21 = {
 	desc = ln_prophecy.21.desc
 	theme = death
 	left_portrait = { character = root  animation = grief }
-	right_portrait = { character = scope:ln_the_fallen  animation = dead }
+	right_portrait = { trigger = { exists = scope:ln_the_fallen }  character = scope:ln_the_fallen  animation = dead }
 
-	trigger = { exists = scope:ln_the_fallen }
+	# THE TRIGGER ASKS ABOUT THE VARIABLE, NOT THE SCOPE.
+	#
+	# HONEST NOTE, 24 Aug: this was first written believing a saved scope cannot survive a queued event.
+	# That belief was WRONG -- see the corrected note in zz_ln_wight_notice_effects.txt. So the original
+	# `exists = scope:ln_the_fallen` was probably not what stopped 118 blessings from ever producing a
+	# resurrection, and THE ROOT CAUSE OF THAT IS STILL UNCONFIRMED. What is certain is that this path had
+	# no logging at all, so it could not be diagnosed from a log; that is fixed below and the next run
+	# will say plainly whether this event fires. The variable form is kept because it is strictly more
+	# robust, not because it is known to be the fix.
+	trigger = { exists = var:ln_the_fallen_champion }
+
+	immediate = {
+		debug_log = "LN_TRACE LAST KISS OFFERED: a priest is deciding whether to spend himself"
+		debug_log_scopes = yes
+		save_scope_as = ln_the_priest
+		var:ln_the_fallen_champion ?= { save_scope_as = ln_the_fallen }
+		remove_variable = ln_the_fallen_champion
+	}
 
 	# ── GIVE IT. The one life this priest has to give.
 	option = {
 		name = ln_prophecy.21.a
 		trigger = { ln_sponsor_can_still_pay_trigger = yes }
-
-		# The price, identical to the last kiss given at a bedside -- because it is the same act.
-		add_character_modifier = ln_gave_the_last_kiss_modifier
-		add_piety = 300
-
-		scope:ln_the_fallen = {
-			add_character_flag = ln_had_the_last_kiss
-			# Same escalation as the last kiss -- one route, one price. See zz_ln_returned_effects.txt.
-			ln_the_fire_takes_something_effect = yes
-			if = {
-				limit = { has_character_modifier = ln_fell_in_the_dark_modifier }
-				remove_character_modifier = ln_fell_in_the_dark_modifier
-			}
-			# Coming back is itself a deed, so the naming may be in reach now. A man who just stood up off a
-			# battlefield is exactly when a priest starts saying things out loud.
-			ln_check_naming_effect = yes
-			trigger_event = { id = ln_prophecy.20  days = 2 }
-		}
-
-		# YOU DO NOT WALK AWAY FROM THIS THE SAME. Thomas: "if I resurrect him, shouldn't that red priest, if
-		# they're not already friends or best friends, shouldn't that kinda happen?" It should, and it is the
-		# cheapest possible way to make the act stick -- a man who gave up part of himself for you, and a man
-		# who owes his existence to you, are not acquaintances afterwards.
-		if = {
-			limit = {
-				scope:ln_the_fallen = { has_relation_friend = root }
-				NOT = { scope:ln_the_fallen = { has_relation_best_friend = root } }
-			}
-			set_relation_best_friend = scope:ln_the_fallen
-		}
-		else_if = {
-			limit = { NOT = { scope:ln_the_fallen = { has_relation_friend = root } } }
-			set_relation_friend = scope:ln_the_fallen
-		}
-
-		# Thomas asked whether this moves the faith. It does -- publicly, in front of an army.
-		faith = {
-			change_fervor = {
-				value = 2
-				desc = ln_fervor_gain_resurrection
-			}
-		}
+		ln_pay_the_last_kiss_effect = yes
 
 		ai_chance = {
 			base = 70
-			modifier = { add = 40  scope:ln_the_fallen = { has_relation_friend = root } }
-			modifier = { add = 50  scope:ln_the_fallen = { ln_worth_the_fire_trigger = yes } }
+			modifier = { add = 40  scope:ln_the_fallen ?= { has_relation_friend = root } }
+			modifier = { add = 50  scope:ln_the_fallen ?= { ln_worth_the_fire_trigger = yes } }
 		}
 	}
 
-	# ── LET HIM GO. Not a punishment and not a trap -- the priest has exactly one of these, ever, and spending
-	# it on the wrong man is the mistake he will actually have to live with.
+	# ── GIVE IT, AND LET HIM KNOW WHO HE OWES. Thomas: "perhaps they have motives of making you a lover
+	# ... only females to male, by the way. Like Melisandre would be kinda fun."
+	# Gated exactly that way, and on adulthood and non-kinship. A priestess who burns part of herself out
+	# for a man and then tells him what it cost is the single most in-character thing in this feature.
+	option = {
+		name = ln_prophecy.21.c
+		trigger = {
+			ln_sponsor_can_still_pay_trigger = yes
+			ln_last_kiss_could_mean_something_trigger = yes
+		}
+		ln_pay_the_last_kiss_effect = yes
+		set_relation_lover = scope:ln_the_fallen
+
+		ai_chance = {
+			base = 15
+			modifier = { add = 30  scope:ln_the_fallen ?= { reverse_opinion = { target = root  value >= 40 } } }
+			modifier = { factor = 0  scope:ln_the_fallen ?= { is_married = yes } }
+		}
+	}
+
+	# ── LET HIM GO. Not a punishment and not a trap -- the priest has exactly one of these, ever, and
+	# spending it on the wrong man is the mistake he will actually have to live with.
+	#
+	# THE DEATH NO LONGER HAPPENS HERE. It happens when the fallen man reads his own card, in
+	# ln_prophecy.24, so a player is never killed by a decision taken off-screen at five speed.
 	option = {
 		name = ln_prophecy.21.b
 
 		add_piety = 100
 		stress_impact = { base = medium_stress_impact_gain }
 
-		scope:ln_the_fallen = {
-			death = { death_reason = death_wounds }
+		scope:ln_the_fallen ?= {
+			set_variable = { name = ln_the_kneeling_priest  value = scope:ln_the_priest }
+			trigger_event = { id = ln_prophecy.24  days = 1 }
 		}
 
 		ai_chance = {
 			base = 30
-			modifier = { add = 60  scope:ln_the_fallen = { NOT = { ln_worth_the_fire_trigger = yes } } }
-			modifier = { factor = 0.2  scope:ln_the_fallen = { has_relation_friend = root } }
+			modifier = { add = 60  scope:ln_the_fallen ?= { NOT = { ln_worth_the_fire_trigger = yes } } }
+			modifier = { factor = 0.2  scope:ln_the_fallen ?= { has_relation_friend = root } }
 		}
+	}
+}
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE FALLEN MAN'S SIDE OF THE HANDSHAKE (1.0.14)
+#
+# Thomas: "I don't have it on five speed. Boom, next thing you know, I'm dead. I'm like, what on earth
+# just happened? Instead, as a developer, I'll know the red priest got an event, and then I get a pop-up
+# saying what they did for me."
+#
+# So the man who fell now gets told twice: once when he goes down, once when his priest answers. The
+# resurrection PAYLOAD lives on his card, not the priest's -- he presses the button that stands him up.
+# AI characters auto-resolve events, so this works identically when the fallen man is not a player.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# ── HE WENT DOWN. Fires day 1, two days before the priest is asked, so there is time to read it.
+ln_prophecy.22 = {
+	type = character_event
+	title = ln_prophecy.22.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:ln_the_priest ?= { ln_sponsor_can_still_pay_trigger = yes } }
+				desc = ln_prophecy.22.desc.hope
+			}
+			desc = ln_prophecy.22.desc.spent
+		}
+	}
+	theme = death
+	left_portrait = { character = root  animation = pain }
+	right_portrait = { trigger = { exists = scope:ln_the_priest }  character = scope:ln_the_priest  animation = personality_zealous }
+
+	trigger = { exists = var:ln_the_kneeling_priest }
+
+	immediate = {
+		debug_log = "LN_TRACE FELL: the man who fell is being told, before his priest decides"
+		var:ln_the_kneeling_priest ?= { save_scope_as = ln_the_priest }
+		# The variable is deliberately NOT removed here -- ln_prophecy.23 and .24 rebuild from it, and
+		# both are re-stamped by the priest's option anyway. Belt and braces.
+	}
+
+	option = { name = ln_prophecy.22.a }
+}
+
+# ── HE PAID. The payload lives here. This is the button that stands you back up.
+ln_prophecy.23 = {
+	type = character_event
+	title = ln_prophecy.23.t
+	desc = ln_prophecy.23.desc
+	theme = faith
+	left_portrait = { character = root  animation = pain }
+	right_portrait = { trigger = { exists = scope:ln_the_priest }  character = scope:ln_the_priest  animation = personality_zealous }
+
+	trigger = {
+		is_alive = yes
+		exists = var:ln_the_kneeling_priest
+	}
+
+	immediate = {
+		debug_log = "LN_TRACE RETURNED: the fire gave him back"
+		debug_log_scopes = yes
+		var:ln_the_kneeling_priest ?= { save_scope_as = ln_the_priest }
+		remove_variable = ln_the_kneeling_priest
+	}
+
+	option = {
+		name = ln_prophecy.23.a
+
+		add_character_flag = ln_had_the_last_kiss
+		# Same escalation as the last kiss given at a bedside -- one route, one price.
+		ln_the_fire_takes_something_effect = yes
+		if = {
+			limit = { has_character_modifier = ln_fell_in_the_dark_modifier }
+			remove_character_modifier = ln_fell_in_the_dark_modifier
+		}
+		# A man who just stood up off a battlefield is exactly when a priest starts saying things aloud.
+		ln_check_naming_effect = yes
+		trigger_event = { id = ln_prophecy.20  days = 2 }
+	}
+}
+
+# ── HE DID NOT. The death happens on THIS button, so nobody dies off-screen.
+#
+# HONEST NOTE ON THE FAILURE MODE: if this event never fires, the man LIVES instead of dying. That is the
+# safe direction to fail in and it is chosen deliberately -- a missed card that spares someone is a
+# curiosity; a missed card that kills a player with no explanation is the bug we are fixing.
+ln_prophecy.24 = {
+	type = character_event
+	title = ln_prophecy.24.t
+	desc = ln_prophecy.24.desc
+	theme = death
+	left_portrait = { character = root  animation = pain }
+	right_portrait = { trigger = { exists = scope:ln_the_priest }  character = scope:ln_the_priest  animation = disapproval }
+
+	trigger = {
+		is_alive = yes
+		exists = var:ln_the_kneeling_priest
+	}
+
+	immediate = {
+		debug_log = "LN_TRACE NOT RETURNED: the priest kept what he had"
+		var:ln_the_kneeling_priest ?= { save_scope_as = ln_the_priest }
+		remove_variable = ln_the_kneeling_priest
+	}
+
+	option = {
+		name = ln_prophecy.24.a
+		death = { death_reason = death_wounds }
+	}
+}
+
+# ── 1.0.14 -- SOMEBODY HAS TO SAY IT OUT LOUD ────────────────────────────────────────────────────────────
+# Fired once, from the yearly playable pulse, the first year a priest who could actually do it is standing
+# within reach. Before this, ln_prophecy.40 was the only card that mentioned the blessing and it only fires
+# AFTER you already have one -- so a player with a red priest in his own hall had no way to learn that the
+# man would argue with death on his behalf.
+#
+# Latched on ln_knows_of_the_blessing, not on being blessed: a player who hears this and does nothing is
+# not told again.
+ln_prophecy.41 = {
+	type = character_event
+	title = ln_prophecy.41.t
+	desc = ln_prophecy.41.desc
+	theme = faith
+	left_portrait = { character = root  animation = thinking }
+	right_portrait = { trigger = { exists = scope:ln_the_priest }  character = scope:ln_the_priest  animation = personality_zealous }
+
+	trigger = { ln_blessing_priest_in_reach_trigger = yes }
+
+	immediate = {
+		ln_find_blessing_priest_effect = yes
+	}
+
+	option = {
+		name = ln_prophecy.41.a
+	}
+	option = {
+		name = ln_prophecy.41.b
+		add_piety = minor_piety_gain
 	}
 }

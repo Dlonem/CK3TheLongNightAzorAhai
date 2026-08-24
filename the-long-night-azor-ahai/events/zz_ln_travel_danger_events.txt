@@ -32,7 +32,7 @@ ln_travel.1 = {
 		character = root
 		animation = shock
 	}
-	lower_center_portrait = {
+	lower_center_portrait = { trigger = { exists = scope:ln_travel_guard }  
 		character = scope:ln_travel_guard
 	}
 
@@ -242,7 +242,7 @@ ln_travel.2 = {
 		character = root
 		animation = fear
 	}
-	lower_center_portrait = {
+	lower_center_portrait = { trigger = { exists = scope:ln_travel_guard }  
 		character = scope:ln_travel_guard
 	}
 

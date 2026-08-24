@@ -148,7 +148,7 @@ ln_dawn.2 = {
 	theme = murder_scheme
 	override_background = { reference = agot_frozen_forest }
 	left_portrait = { character = root  animation = personality_bold }
-	right_portrait = { character = scope:ln_night_king  animation = disbelief }
+	right_portrait = { trigger = { exists = scope:ln_night_king }   character = scope:ln_night_king  animation = disbelief }
 
 	trigger = {
 		is_alive = yes

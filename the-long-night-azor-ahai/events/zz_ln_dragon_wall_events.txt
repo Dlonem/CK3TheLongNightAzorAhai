@@ -48,9 +48,21 @@ ln_omen.10 = {
 
 	theme = dread
 	left_portrait = { character = root  animation = shock }
-	right_portrait = { character = scope:ln_dragon  animation = anger }
+	right_portrait = { trigger = { exists = scope:ln_dragon }   character = scope:ln_dragon  animation = anger }
 
-	trigger = { exists = scope:ln_dragon }
+	# 1.0.14 DEFENSIVE REBUILD. Rebuilt from a variable rather than relying on the scope saved at the
+	# send site. NOTE, corrected 24 Aug: saved scopes DO survive a delayed trigger_event -- verified
+	# against vanilla, where court.4751 (90-day delay, one sender, no exists guard) and
+	# stewardship_duty.1063 (re-sends itself at 1820 days, never re-saves) would both be dead
+	# content otherwise. The boundary scopes do NOT cross is an on_action, not a delay.
+	# This pattern is kept anyway because it is strictly more robust: it also survives a sender
+	# that never saved the scope on the branch it took, which is the failure that actually bit us.
+	trigger = { exists = var:current_dragon }
+
+	immediate = {
+		debug_log = "LN_TRACE OMEN: the dragon would not cross the Wall"
+		var:current_dragon ?= { save_scope_as = ln_dragon }
+	}
 
 	# ── FORCE HER. Alysanne tried three times. So can you, and you will get the same answer.
 	option = {

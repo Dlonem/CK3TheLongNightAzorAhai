@@ -1,0 +1,74 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the two halves of the blessing score that must not cancel out.
+#
+# WHY THESE ARE SCRIPT VALUES AND NOT JUST MORE `modifier` LINES. An ai_will_do block is a flat sum, so a
+# man with four flaws simply goes further and further negative and there is no way to say "enough". Script
+# values take `min` and `max` (see zz_ln_flee_values.txt:16), which is the only way to CAP a subset of the
+# sum. Two caps, doing opposite jobs:
+#
+#   ln_blessing_sin_value      min = -30   no pile of flaws can bury a man the fire has marked
+#   ln_blessing_destiny_value  min = 0     destiny can never be subtracted, only ignored
+#
+# Both are read in the CANDIDATE's scope, via `add = scope:recipient.<value>` -- real vanilla syntax, e.g.
+# `add = scope:actor.diarchy_regent_succession_score_value`.
+
+# ── THE SINS, CAPPED ───────────────────────────────────────────────────────────────────────────────────
+# R'hllor's own sins are content / forgiving / arrogant, read off the_rhllor_religion in
+# common/religion/religion_types/00_agot_the_rhllor.txt. cynical and craven are ours: a man who believes in
+# nothing is no use to a god, and a coward is not Azor Ahai in any telling.
+#
+# THE CAP IS THE POINT. Thomas: "a destined man may be badly flawed. That's literally the whole point."
+# Before it, craven + content came to -40 and no amount of prophecy could climb back out. Now the worst
+# possible character costs 30, which is real -- it beats a duchy -- but survivable by anyone the fire wants.
+ln_blessing_sin_value = {
+	value = 0
+	if = { limit = { has_trait = content }    add = -15 }
+	if = { limit = { has_trait = forgiving }  add = -10 }
+	if = { limit = { has_trait = arrogant }   add = -15 }
+	if = { limit = { has_trait = cynical }    add = -15 }
+	if = { limit = { has_trait = craven }     add = -25 }
+	min = -30
+}
+
+# ── DESTINY, FLOORED ───────────────────────────────────────────────────────────────────────────────────
+# Everything here is a sign the world is already pointing at somebody, independent of what they hold.
+ln_blessing_destiny_value = {
+	value = 0
+
+	# The story has a use for him. See ln_bears_a_destiny_trigger for why this is not hardcoding a name,
+	# and why it keeps working for people born decades into a campaign.
+	if = { limit = { has_character_flag = canon_status_canon }      add = 35 }
+	else_if = { limit = { has_character_flag = canon_status_semicanon }  add = 15 }
+
+	# The sword that was promised, and the swords that were not.
+	if = { limit = { ln_carries_lightbringer_trigger = yes }   add = 40 }
+	if = { limit = { ln_carries_valyrian_steel_trigger = yes } add = 25 }
+
+	# Blood of the dragon. Deliberately modest -- the dynasty is large and full of the unworthy, and a
+	# priest who weighted this heavily would end up attached to Aemond during the Dance. Twenty points is
+	# an omen, not a coronation; his sins still have to be paid for out of the same sum.
+	if = { limit = { agot_is_dragonblood_character = yes }     add = 20 }
+	else_if = { limit = { agot_has_dragonblood_heritage = yes } add = 10 }
+	if = { limit = { dynasty ?= dynasty:dynn_Targaryen }       add = 10 }
+
+	# Sight. Both traits verified: dragon_dreams 00_agot_traits.txt:1974, greensight :2005.
+	# (The trait is greensight. There is no `greenseer` trait -- that word is only a doctrine parameter.)
+	if = { limit = { has_trait = dragon_dreams } add = 20 }
+	if = { limit = { has_trait = greensight }    add = 15 }
+
+	# ── THE WANDERER CLAUSE ────────────────────────────────────────────────────────────────────────────
+	# The whole reason this file exists. A landless adventurer carrying any sign at all is Daenerys across
+	# the Narrow Sea, or Dunk on the road with a borrowed shield. The station ladder gives them nothing;
+	# this gives them the equivalent of a duchy for being nobody in an interesting way.
+	if = {
+		limit = {
+			is_landless_adventurer = yes
+			ln_bears_a_destiny_trigger = yes
+		}
+		add = 20
+	}
+
+	# The weapon the hour demands. See ln_is_the_weapon_trigger.
+	if = { limit = { ln_is_the_weapon_trigger = yes } add = 30 }
+
+	min = 0
+}

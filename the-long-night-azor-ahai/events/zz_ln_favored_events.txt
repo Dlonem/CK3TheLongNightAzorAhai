@@ -31,7 +31,7 @@ ln_favored.1 = {
 	desc = ln_favored.1.desc
 	theme = faith
 	left_portrait = { character = root  animation = worry }
-	right_portrait = { character = scope:ln_pilgrim  animation = personality_zealous }
+	right_portrait = { trigger = { exists = scope:ln_pilgrim }   character = scope:ln_pilgrim  animation = personality_zealous }
 
 	# HE HAS TO EXIST TO BE LOOKED AT. Volantene by culture and R'hllor by faith because that is where he
 	# walked from and why he came; `dynasty = none` because a man who walked for two years has no house left.
@@ -193,7 +193,7 @@ ln_favored.3 = {
 	desc = ln_favored.3.desc
 	theme = faith
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_asker  animation = beg }
+	right_portrait = { trigger = { exists = scope:ln_asker }   character = scope:ln_asker  animation = beg }
 
 	immediate = {
 		if = {
@@ -297,8 +297,8 @@ ln_favored.4 = {
 		}
 	}
 	left_portrait = { character = root  animation = grief }
-	right_portrait = { character = scope:ln_dying_father  animation = severelywounded }
-	lower_center_portrait = { character = scope:ln_watching_son }
+	right_portrait = { trigger = { exists = scope:ln_dying_father }   character = scope:ln_dying_father  animation = severelywounded }
+	lower_center_portrait = { trigger = { exists = scope:ln_watching_son }   character = scope:ln_watching_son }
 
 	after = {
 		# The night ends the way the text said it would, whatever you chose.
@@ -455,7 +455,7 @@ ln_favored.7 = {
 	desc = ln_favored.7.desc
 	theme = family
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_asker  animation = interested }
+	right_portrait = { trigger = { exists = scope:ln_asker }   character = scope:ln_asker  animation = interested }
 
 	trigger = {
 		exists = primary_heir

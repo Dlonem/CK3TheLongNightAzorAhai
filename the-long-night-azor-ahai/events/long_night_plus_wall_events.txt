@@ -83,7 +83,7 @@ long_night_plus_wall.2 = {
 		title:h_the_others.holder ?= { save_scope_as = ln_wall_card_night_king }
 	}
 
-	left_portrait = {
+	left_portrait = { trigger = { exists = scope:ln_wall_card_night_king }  
 		character = scope:ln_wall_card_night_king
 		animation = personality_bold
 	}

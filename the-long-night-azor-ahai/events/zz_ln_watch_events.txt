@@ -11,7 +11,7 @@ ln_watch.1 = {
 	desc = ln_watch.1.desc
 	theme = realm
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_lord_commander  animation = personality_honorable }
+	right_portrait = { trigger = { exists = scope:ln_lord_commander }   character = scope:ln_lord_commander  animation = personality_honorable }
 
 	trigger = {
 		has_government = nights_watch_government
@@ -339,7 +339,7 @@ ln_watch.8 = {
 	desc = ln_watch.8.desc
 	theme = diplomacy
 	left_portrait = { character = root  animation = personality_compassionate }
-	right_portrait = { character = scope:ln_lord_commander  animation = personality_honorable }
+	right_portrait = { trigger = { exists = scope:ln_lord_commander }   character = scope:ln_lord_commander  animation = personality_honorable }
 
 	trigger = {
 		is_alive = yes
@@ -386,7 +386,7 @@ ln_watch.9 = {
 	desc = ln_watch.9.desc
 	theme = realm
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_relieved_brother  animation = grief }
+	right_portrait = { trigger = { exists = scope:ln_relieved_brother }   character = scope:ln_relieved_brother  animation = grief }
 
 	trigger = {
 		is_alive = yes
@@ -487,7 +487,7 @@ ln_watch.10 = {
 	desc = ln_watch.10.desc
 	theme = diplomacy
 	left_portrait = { character = root  animation = thinking }
-	right_portrait = { character = scope:ln_lord_commander  animation = personality_honorable }
+	right_portrait = { trigger = { exists = scope:ln_lord_commander }   character = scope:ln_lord_commander  animation = personality_honorable }
 
 	# 1.0.12 -- SAME REPAIR AS ln_watch.8, FOR THE OPPOSITE REASON. This card has exactly one door today
 	# (zz_ln_donate_to_the_watch_decisions.txt:51 saves the scope on the line before it fires this), so it works

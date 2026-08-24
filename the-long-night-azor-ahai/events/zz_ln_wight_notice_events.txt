@@ -10,6 +10,7 @@
 
 ln_wight.1 = {
 	type = character_event
+	trigger = { exists = var:ln_wight_notice_subject }
 	title = ln_wight.1.t
 	desc = {
 		first_valid = {
@@ -31,11 +32,14 @@ ln_wight.1 = {
 		character = root
 		animation = shock
 	}
-	right_portrait = {
+	right_portrait = { trigger = { exists = scope:ln_risen }  
 		character = scope:ln_risen
 	}
 
 	immediate = {
+		# 1.0.14: rebuild the scope the queued event lost. Matches ln_wight.2, which has always done this.
+		var:ln_wight_notice_subject ?= { save_scope_as = ln_risen }
+		remove_variable = ln_wight_notice_subject
 		# Suppresses the wider ring for a while. Set here rather than in the effect so an inner-ring notice
 		# quiets the friend/lover notices too.
 		add_character_flag = { flag = ln_wight_notice_cooldown  days = 60 }
@@ -85,7 +89,7 @@ ln_wight.2 = {
 		character = root
 		animation = grief
 	}
-	right_portrait = {
+	right_portrait = { trigger = { exists = scope:ln_lost }  
 		character = scope:ln_lost
 	}
 

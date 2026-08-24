@@ -494,6 +494,24 @@ ln_struggle_fire_year_catalyst_effect = {
 # world had won it, forever. The latch is also backfilled below for saves made before it existed, so a v1.0.x
 # game that reaches its Dawn after updating is protected too.
 ln_struggle_start_if_absent_effect = {
+	# ── BACKFILL, 1.0.14: TWO GLOBALS THAT ONLY EVER GOT SET ON A NEW GAME ─────────────────────────────
+	# Both of these were called ONLY from ln_prophecy_game_start, which hangs off on_game_start_after_lobby --
+	# and that never fires on a load. So on every save made before their feature shipped:
+	#   * global_var:ln_prophecy_is_true was never set, and ln_reveal.1 fell through to desc.wrong_men FOREVER.
+	#     Its readers all guard with `exists`, so it produced NO ERROR LINE AT ALL. The prophecy payoff was
+	#     simply unreachable and nothing said so. That is the worst failure mode this project has.
+	#   * Beric and Lady Stoneheart never received resurrected_by_rhllor, so one of the eight deeds was dead.
+	#
+	# This is the right home: the effect above already owns "the globals this mod assumes exist", and it runs
+	# from the yearly path, which DOES run on a loaded save. Both calls are internally latched --
+	# ln_set_prophecy_truth_effect on NOT has_global_variable, the resurrections on is_alive + NOT has_trait --
+	# so the cost after the first hit is two cheap reads a year, and they stay called from game start too.
+	#
+	# It also fixes a case that was never an old-save problem at all: a bookmark that starts BEFORE Beric is
+	# born got nothing from the game-start call either. The yearly path catches him whenever he shows up.
+	ln_set_prophecy_truth_effect = yes
+	ln_grant_historical_resurrections_effect = yes
+
 	# change_global_variable on a variable that has never been set is an error, and ln_realm_fed_the_watch is
 	# incremented from a decision that can fire in the first year of a game. Seed it here, where the struggle
 	# is seeded, so there is one place that owns "the globals this mod assumes exist".
