@@ -14,6 +14,11 @@ whitewalker_skin = {
 		traits = {
 			other_trait
 		}
+		# 1.0.15 -- the trait alone is no longer trusted: see the drift note at the top of
+		# gfx/portraits/portrait_modifiers/others_special.txt. The walker recolour needs a by-name marker too.
+		trigger = {
+			ln_is_marked_as_theirs_trigger = yes
+		}
 		dna_modifiers = {
 			human = {
 				color = {

@@ -147,9 +147,12 @@ ln_night_king_slain_reveal_effect = {
 					limit = { has_trait = favored_by_rhllor }
 					remove_trait = favored_by_rhllor
 				}
-				# 1.0.10b: the rung is gone, so the named-claimant opinion modifier goes with it.
-				ln_the_world_forms_a_view_effect = yes
 				add_trait = azor_ahai_reborn
+				# 1.0.15 -- MOVED BELOW add_trait, and that ordering is the fix. Called before it, the view
+				# effect saw a man with no rung at all: it stripped the Chosen/Favored aura and added
+				# nothing, so ending the Long Night silently deleted the winner's naming opinion. It now
+				# sees azor_ahai_reborn and applies the permanent top-rung aura (ln_named_azor_ahai_modifier).
+				ln_the_world_forms_a_view_effect = yes
 				add_character_flag = ln_ended_the_long_night
 				# The dated, visible-forever version of that flag. See zz_ln_conclusion_memories.txt.
 				create_character_memory = { type = ln_slew_the_night_king_memory }

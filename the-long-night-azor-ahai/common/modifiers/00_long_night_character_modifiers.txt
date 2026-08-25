@@ -58,3 +58,25 @@ ln_named_chosen_modifier = {
 	clergy_opinion = 15
 	different_faith_opinion = -18
 }
+
+# 1.0.15 -- THE MISSING TOP RUNG. The 1.0.10b rewrite carried Favored and Chosen into static modifiers and
+# never carried Azor Ahai Reborn -- so confirming the prophecy called ln_the_world_forms_a_view_effect, which
+# stripped the Chosen aura and had nothing to put in its place: the man who ended the Long Night LOST all
+# naming opinion the moment he won. The +40 is the old ln_named_opinion_up_value's intended AAR tier
+# ("Nobody calls the man who ended it a fraud" -- zz_ln_prophecy_values.txt's retired table). No
+# different_faith malus on this rung: a claim can be embarrassing, a fact cannot.
+ln_named_azor_ahai_modifier = {
+	icon = piety_positive
+	same_faith_opinion = 40
+	clergy_opinion = 20
+	general_opinion = 10
+}
+
+# 1.0.15 -- A CAPTIVE OTHER, KEPT ON DISPLAY (ln_dawn.20's second option). The realm learns what its lord
+# holds in his cells; the hall never quite warms again. Ten years or until somebody finally uses the sword.
+ln_cold_trophy_modifier = {
+	icon = dread_positive
+	dread_baseline_add = 15
+	monthly_income_mult = -0.05
+	courtier_and_guest_opinion = -10
+}

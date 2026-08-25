@@ -22,15 +22,63 @@ ln_bastion_upkeep_effect = {
 				}
 			}
 		}
+		# 1.0.15e -- THE WALLS NOW RISE *AND FALL* WITH THE COUNTRY AROUND THEM.
+		# This used to add only, never remove, so a great seat stayed fortified all war no matter how much
+		# of its region had gone over -- and after 1.0.15d made the capital the war-score objective, that
+		# was the difference between "the dead have to work for Winterfell" and "the dead can never take
+		# Winterfell". Now the bastion is a live state: raised while under half the seat's own de jure duchy
+		# is in dead hands, and dropped the year that stops being true.
+		# See ln_seat_region_still_stands_trigger for the measurement and for why this rides the existing
+		# bastion system instead of adding a second one.
 		every_ruler = {
-			limit = {
-				ln_holds_a_last_bastion_trigger = yes
+			limit = { ln_holds_a_last_bastion_trigger = yes }
+			if = {
+				limit = {
+					capital_county = {
+						ln_seat_region_still_stands_trigger = yes
+						NOT = { has_county_modifier = ln_last_bastion_modifier }
+					}
+				}
 				capital_county = {
-					NOT = { has_county_modifier = ln_last_bastion_modifier }
+					add_county_modifier = ln_last_bastion_modifier
 				}
 			}
+			else_if = {
+				limit = {
+					capital_county = {
+						ln_seat_region_still_stands_trigger = no
+						has_county_modifier = ln_last_bastion_modifier
+					}
+				}
+				debug_log = "LN_TRACE SEAT: the country around a great seat has fallen - its walls stand alone now"
+				capital_county = {
+					remove_county_modifier = ln_last_bastion_modifier
+				}
+			}
+		}
+
+		# ══ THE DEAD DO NOT INHERIT THE WALLS -- Thomas's catch, and it is a better gate than the one it
+		# joins. ln_seat_title_gain (on_title_gain) strips a stranded bastion when a seat CHANGES HANDS.
+		# But the nastiest road does not change hands at all: mutate_into_other_effect converts a lord IN
+		# PLACE. Same character, same county, same title history -- and he is now one of them, holding a
+		# castle at +3 fort level and +50% garrison against everyone trying to take it back. No title-gain
+		# hook can ever see that, because no title was gained.
+		#
+		# So this asks the question by the HOLDER instead of by the event: is the man sitting in this
+		# fortified seat one of the dead? It catches conversion in place, and it is also a blanket backstop
+		# for every other way a bastion could strand -- title transfers the hook missed, saves made before
+		# either guard existed, and anything a future edit forgets.
+		#
+		# Cheap: every_ruler is already walked twice in this effect, and the county read only happens for
+		# rulers who are actually one of them.
+		every_ruler = {
+			limit = {
+				ln_is_one_of_them_trigger = yes
+				capital_county ?= { has_county_modifier = ln_last_bastion_modifier }
+			}
+			debug_log = "LN_TRACE SEAT: a great seat is held by the dead - the walls do not serve them"
 			capital_county = {
-				add_county_modifier = ln_last_bastion_modifier
+				remove_county_modifier = ln_last_bastion_modifier
 			}
 		}
 	}

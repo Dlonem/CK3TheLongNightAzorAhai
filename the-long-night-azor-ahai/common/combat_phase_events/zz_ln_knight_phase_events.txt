@@ -47,7 +47,13 @@ ln_knight_fell_for_the_dawn = {
 		is_current_dragonrider_warfare = no
 
 		is_alive = yes
-		NOT = { has_trait = resurrected_by_rhllor }
+		# 1.0.15 -- THE TRAIT GATE IS GONE, AND THAT IS THE BERIC TRACK OPENING (Thomas, 24 Aug). The
+		# resurrected_by_rhllor check made the battlefield route once-per-lifetime -- and its twin in
+		# has_natural_death_second_chance did the same to the bedside route, so the trait shipped four
+		# track rungs that NOTHING in the game could reach (the 1.0.15 audit's finding). What limits
+		# repeats now is what always limited Beric: the cooldown flag below (three years), and a NEW sponsor
+		# each time -- the old one spent himself the first time and ln_sponsor_can_still_pay_trigger will
+		# never pass him again.
 		NOT = { has_character_flag = ln_had_the_last_kiss }
 		NOT = { has_character_flag = ln_fell_for_the_dawn }
 
@@ -118,7 +124,11 @@ ln_knight_fell_for_the_dawn = {
 	effect = {
 		debug_log = "LN_TRACE FELL FOR THE DAWN: the fire took the roll instead of knight_killed"
 		debug_log_scopes = yes
-		add_character_flag = ln_fell_for_the_dawn
+		# 1.0.15: three years, matching ln_had_the_last_kiss. When this was permanent, a handshake that
+		# aborted midway (priest killed on the road, event queue lost) burned the man's ONLY interception
+		# forever with nothing paid out. Timed, the worst case is a three-year shadow -- and the flag stays
+		# long enough to stop the same battle rolling him twice.
+		add_character_flag = { flag = ln_fell_for_the_dawn  years = 3 }
 		save_scope_as = ln_the_fallen
 
 		# He is not dead. He is also not getting up on his own.

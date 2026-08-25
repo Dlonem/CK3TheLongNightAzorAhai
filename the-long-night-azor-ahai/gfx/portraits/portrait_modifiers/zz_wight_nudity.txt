@@ -1,4 +1,6 @@
 ﻿# The Long Night+ — wights are stripped naked (rotting flesh on show), unlike the Others who keep their
+# 1.0.15 -- gated on ln_is_marked_as_theirs_trigger alongside every other undead-look applier; see the
+# drift note at the top of gfx/portraits/portrait_modifiers/others_special.txt.
 # ice armor (their armor is gated has_trait = other_trait in ln_others_portrait_modifiers.txt, so wights never
 # get it). Here we clear the HUMAN clothes/headgear that converted corpses would otherwise keep wearing.
 wight_nudity = {
@@ -34,6 +36,14 @@ wight_nudity = {
 			modifier = {
 				add = 99999
 				has_trait = wight_trait
+				# ══ AUDIT FIX -- THE ONE THE DRIFT PASS MISSED, AND THE WORST ONE TO MISS. ═════════
+				# This entry strips clothes, headgear AND legwear at weight 99999. Every other
+				# undead-look applier in the mod got a by-name marker in 1.0.15 so that a LIVING
+				# character who picks up wight_trait through save drift renders as what she is --
+				# this one did not. The reports that started that whole pass were about living women
+				# rendering as corpses; ungated, this file renders them NAKED. Same trigger as the
+				# rest of the surface now.
+				ln_is_marked_as_theirs_trigger = yes
 			}
 		}
 	}

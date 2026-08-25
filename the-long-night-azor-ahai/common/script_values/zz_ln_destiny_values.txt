@@ -72,3 +72,53 @@ ln_blessing_destiny_value = {
 
 	min = 0
 }
+
+# ══ 1.0.15 -- THE WORTHINESS SCORE ══════════════════════════════════════════════════════════════════════════
+# Who does the story hand the blow to, when more than one hand is available? Used by the score-victory
+# cornering (war_for_the_dawn_cb on_victory), the captured-king execution (ln_dawn.11, via ln_nk_captured_effect), and nothing else --
+# the open-battle duel (ln_dawn.2) keeps its own inline weights because there the question is survival, not
+# selection.
+#
+# WHAT THE NUMBER MEANS (checklist #5): this is not "who is the best fighter" -- it is "who is the story
+# pointing at". Prowess is a tie-breaker at the bottom, not a headline. Thomas's calibration from the spear
+# session holds: Chosen +30 over Favored +15, Resurrected +10 ("luck already spent"), and the destiny value
+# on top carries Lightbringer (+40), Valyrian steel (+25), dragon blood, sight and canon weight.
+#
+# INJURIES SUBTRACT (checklist: "weighted based on if you're injured"): a man being carried on a shield does
+# not behead the King of Winter. incapable is an absolute bar, enforced here rather than in every caller.
+ln_dawn_worthiness_value = {
+	value = ln_blessing_destiny_value
+
+	# AUDIT FIX -- AND THE SINS TOO. This file's own header calls these "the two halves of the blessing
+	# score that must not cancel out", and both the interaction and the decision read them together. The
+	# worthiness score inherited the destiny half and silently dropped the other, so a craven arrogant cynic
+	# could be handed the Dawn while every red priest alive was refusing to bless him.
+	# The -30 floor inside ln_blessing_sin_value is what keeps Thomas's rule intact -- "a destined man may
+	# be badly flawed, that's literally the whole point" -- and it cannot swamp the +1000 bane term.
+	add = ln_blessing_sin_value
+
+	if = { limit = { has_trait = chosen_by_rhllor }       add = 30 }
+	else_if = { limit = { has_trait = favored_by_rhllor } add = 15 }
+	# Wave two under The Cycle: the man who ended the last one is the man the world expects to end this one.
+	if = { limit = { has_trait = azor_ahai_reborn }       add = 40 }
+	if = { limit = { has_trait = resurrected_by_rhllor }  add = 10 }
+
+	# The tie-breaker, deliberately small: half of prowess, so 20 prowess is worth 10 points -- a third of
+	# being Chosen. The story picks the named man with a limp over the nameless athlete, but between two
+	# nobodies it picks the one who can swing.
+	add = { value = prowess  divide = 2 }
+
+	# What the field has already taken out of him.
+	if = { limit = { has_trait = wounded_1 } add = -10 }
+	if = { limit = { has_trait = wounded_2 } add = -20 }
+	if = { limit = { has_trait = wounded_3 } add = -35 }
+	if = { limit = { has_trait = maimed }    add = -25 }
+	# An absolute bar, not a weight. Nothing outweighs being unable to stand.
+	if = { limit = { has_trait = incapable } add = -1000 }
+
+	# 1.0.15b -- AND THE ONE THING THAT DECIDES IT. A man holding dragonglass outranks the finest knight in
+	# Westeros holding castle-forged steel, because the knight cannot hurt him and the man can. Deliberately
+	# larger than every other term combined: this is not a preference, it is the difference between a
+	# champion and a spectator. See ln_bears_the_bane_trigger.
+	if = { limit = { ln_bears_the_bane_trigger = yes } add = 1000 }
+}

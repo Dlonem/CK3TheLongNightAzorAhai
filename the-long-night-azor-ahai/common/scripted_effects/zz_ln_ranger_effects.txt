@@ -396,6 +396,17 @@ ln_brothers_flee_south_effect = {
 ln_this_brother_flees_effect = {
 	add_character_flag = ln_fled_the_wall
 	add_to_global_variable_list = { name = ln_wall_survivors  target = this }
+	# 1.0.15d LIVE-RUN FIX -- "Trying to move non-courtier to pool", three times in one run.
+	# move_to_pool_at only accepts a character who is IN a court. A brother who holds a castle (every
+	# ranging captain does, and so does the Lord Commander) is a ruler, not a courtier, and the engine
+	# refuses to pool him. He still flees -- the flag and the survivors list are set above, which is what
+	# the rest of the Scattered Watch content actually reads -- he simply keeps his seat instead of being
+	# teleported into somebody's pool. Landless brothers move exactly as before.
+	if = {
+		limit = { is_landed = yes }
+		debug_log = "LN_TRACE: a landed brother flees the Wall but keeps his seat - not pooled"
+	}
+	else = {
 	random_list = {
 		34 = {
 			trigger = { exists = title:d_winterfell.holder }
@@ -418,7 +429,9 @@ ln_this_brother_flees_effect = {
 					exists = title:c_last_hearth.holder
 				}
 			}
+			# (1.0.15d: this whole random_list now sits inside an is_landed = no branch -- see the header.)
 		}
+	}
 	}
 }
 

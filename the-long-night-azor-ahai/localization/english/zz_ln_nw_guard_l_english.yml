@@ -1,0 +1,7 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- 1.0.15, the sworn-brother inheritance guard.
+
+ ln_nwguard.1.t:0 "The Watch Takes No Part"
+ ln_nwguard.1.desc:0 "The raven came with titles in it.\n\nBy every law of the realm the lands are [ROOT.Char.GetTitledFirstName|E]'s now — a death somewhere south, a line run dry, a name on a page that happens to be a name that took the black. The maester read it out twice, and the hall got very quiet.\n\nBut the words were said at a weirwood, and they do not unsay for an inheritance: #bold hold no lands, wear no crowns, win no glory.#! The lands pass to [ln_nw_receiver.GetTitledFirstName|E], and the Watch endures, poorer and prouder for it.\n\n#bold Night gathers, and the Watch takes no part.#!"
+ ln_nwguard.1.a:0 "My watch has not ended."

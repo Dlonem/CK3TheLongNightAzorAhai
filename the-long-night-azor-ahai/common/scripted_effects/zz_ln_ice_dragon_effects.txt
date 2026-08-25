@@ -786,6 +786,21 @@ ln_apply_the_cold_effect = {
 	set_variable = { name = gene_dragon_tertiary_saturation            value = 1.0 }
 	set_variable = { name = gene_dragon_eye_color_saturation           value = 1.0 }
 	set_variable = { name = gene_dragon_horn_color_saturation          value = 1.0 }
+
+	# ── 1.0.15 -- BLUE FIRE (Thomas: "technically, blue would make it undead. That's really cool."). ───
+	# AGOT's fire pipeline, verified in their own files: template 1 ("automatic") recolours the flame off
+	# the body palette; template 2 ("custom") "turns the flame's hue instead" -- the portrait modifier
+	# (00_agot_dragon_genes.txt:1428) selects gene_dragon_fire_color_custom when
+	# gene_dragon_fire_color_template_svalue reads 2, and feeds it gene_dragon_fire_color_value as the hue
+	# position on dragon_skin_palette.dds. Every stock dragon ships template 1 / value 1.0; nothing in
+	# AGOT ever sets template 2, so the custom slot is exactly the door they left for this.
+	#
+	# 0.58 IS THE KNOB. It is the cold blue-cyan band on the same palette the body hue 0.55-0.65 values
+	# above already draw from (horn 0.55, secondary 0.65 -- the ice palette itself). Judge it on a raised
+	# dragon in game, not from here; smoke is left at the dragon's own values on purpose -- cold fire,
+	# ordinary smoke reads better than a fully blue ghost.
+	set_variable = { name = gene_dragon_fire_color_template            value = 2 }
+	set_variable = { name = gene_dragon_fire_color_value               value = 0.58 }
 }
 
 
@@ -1519,6 +1534,11 @@ ln_chill_the_storage_effect = {
 			set_variable = { name = gene_dragon_eye_color_value      value = 0.0 }
 			set_variable = { name = gene_dragon_horn_color_hue       value = 0.55 }
 			set_variable = { name = gene_dragon_horn_color_value     value = 0.0 }
+			# 1.0.15 -- blue fire, storage side. A LIVING dragon's portrait reads the storage entry, not
+			# the character (see this effect's header), so the flame has to land here too. Same knob as
+			# ln_apply_the_cold_effect: template 2 = AGOT's custom slot, 0.58 = the cold blue band.
+			set_variable = { name = gene_dragon_fire_color_template  value = 2 }
+			set_variable = { name = gene_dragon_fire_color_value     value = 0.58 }
 		}
 	}
 }
@@ -1573,6 +1593,19 @@ ln_undead_dragon_upkeep_effect = {
 	ln_repair_raised_dragons_effect = yes
 	# 1.0.11: the blank-entry sweep, which reaches dragons the two above cannot -- including AGOT's own.
 	ln_repair_blank_storage_dragons_effect = yes
+	# 1.0.15 -- BLUE FIRE, RETROACTIVELY. Undead dragons converted before this update carry the ice palette
+	# but a living flame. One guarded pass: any undead dragon whose fire template is not yet the custom slot
+	# gets the full cold reapplied (both sides -- the constants are fixed, so re-running is a byte-identical
+	# no-op everywhere but the two new fire variables). Runs once per old dragon, then the guard holds.
+	every_living_dragon = {
+		limit = {
+			has_trait = ln_undead_dragon
+			NOT = { var:gene_dragon_fire_color_template ?= 2 }
+		}
+		debug_log = "LN_TRACE: retrofitting blue fire onto an undead dragon from an older save"
+		ln_apply_the_cold_effect = yes
+		ln_chill_the_storage_effect = yes
+	}
 	every_living_dragon = {
 		limit = {
 			has_trait = ln_undead_dragon

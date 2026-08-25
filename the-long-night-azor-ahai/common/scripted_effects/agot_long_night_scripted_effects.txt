@@ -426,7 +426,30 @@ create_character = {
 
 		scope:otherinvader = {
 
-			#copy_inheritable_appearance_from = character:others_thenightking
+			# ══ THE NIGHT KING'S FACE (1.0.15). ═══════════════════════════════════════════════════════════
+			# This line was commented out, which is why every Night King since has worn a randomly generated
+			# face. The DNA it points at is real and already wired -- common/dna_data/agot_dna_a_long_night.txt
+			# -> agot_long_night_great_other, attached to the history character others_thenightking -- and it
+			# now carries a face built by a player of the mod, converted out of save format.
+			#
+			# THE DONOR PATTERN IS AGOT'S OWN, not invented here: 00_agot_canon_children_effects.txt:1011 does
+			# exactly this with copy_inheritable_appearance_from = character:Dummy_$ID$. It is also the ONLY
+			# runtime road to a scripted face -- create_character takes no dna argument, and `dna =` is a
+			# history-character-only field (verified across vanilla and AGOT).
+			#
+			# GUARDED, AND IT REPORTS. others_thenightking dies in 6934, so at a real bookmark he is a
+			# long-dead historical character and MAY be pruned before this runs. If he is gone the copy is
+			# skipped and the Night King keeps the generated face he has today -- current behaviour exactly,
+			# nothing lost. Either way the log says which happened, so one relaunch settles it:
+			#     grep "LN_TRACE FACE" logs/debug.log
+			if = {
+				limit = { exists = character:others_thenightking }
+				debug_log = "LN_TRACE FACE: donor exists - copying the scripted night king face"
+				copy_inheritable_appearance_from = character:others_thenightking
+			}
+			else = {
+				debug_log = "LN_TRACE FACE: donor others_thenightking was pruned - night king keeps a generated face"
+			}
 
 			# The Long Night+: standing command bonus so the dead stay a credible threat despite fewer elite Others.
 
@@ -4961,6 +4984,19 @@ ln_mutate_into_other_unguarded_effect = {
 	# Everything that must run exactly ONCE per wight lives in this NOT-has-wight_trait guard, because
 
 	# others_heartbeat re-runs this whole effect on existing wights.
+
+	# 1.0.15 -- BACKFILL for pre-1.0.7 saves: a wight raised before the identity stamp existed carries the
+	# trait but not ln_one_of_them, and the portrait layer now requires a by-name marker (see the drift note
+	# in others_special.txt). The heartbeat re-runs this effect on existing wights, so the stamp lands here.
+	# Corroborated by context: only genuine targets of this effect ever reach this line.
+	if = {
+
+		limit = {
+			has_trait = wight_trait
+			NOT = { has_character_flag = ln_one_of_them }
+		}
+		add_character_flag = ln_one_of_them
+	}
 
 	if = {
 

@@ -61,3 +61,60 @@ ln_is_the_weapon_trigger = {
 	OR = { has_trait = ambitious  has_trait = brave  has_trait = vengeful }
 	OR = { has_trait = sadistic  has_trait = callous  has_trait = arrogant  has_trait = vengeful }
 }
+
+# ══ 1.0.15b -- WHAT CAN ACTUALLY END HIM ════════════════════════════════════════════════════════════════════
+# Thomas, 24 Aug: "it should arguably be impossible for the Night King to die unless the character fighting
+# them has Dragonglass, aka Obsidian, or a Valyrian steel sword, or happens to occur from a Dragon."
+#
+# That is the book's rule and it is the one thing the mod had never enforced: any lord with a good sword
+# could end the Long Night if the roll went his way. Now the three answers are the ONLY answers, and each
+# clause below reads a marker this mod already sets somewhere else -- nothing here is new state.
+#
+#   DRAGONGLASS -- the two Prepare decisions' modifiers (zz_ln_preparation_effects.txt:41, :85), the stores,
+#                  and the mined-it flag. The children of the forest's answer, and the cheapest to get.
+#   VALYRIAN STEEL -- a sword artifact by AGOT's own agot_is_valyrian_steel_artifact, the prophecy layer's
+#                  deed, the armed modifier, and both consecration routes (Lightbringer is Valyrian steel
+#                  that has been paid for twice; Dawn is not Valyrian steel at all, but it is the Sword of
+#                  the Morning and if it cannot end him nothing can).
+#   DRAGONFIRE  -- a living dragon under you that is not one of theirs.
+#
+# WHERE IT IS ENFORCED: the open-field duel's winning branch (ln_dawn.2), the cornering and the execution
+# (ln_dawn.11), the failsafe (ln_dawn.12), and -- the one that closes the back door -- the death catalyst
+# itself, so a Night King killed by ordinary steel in some anonymous battle is CAST DOWN AND NOT DESTROYED:
+# the dark crowns another and the Long Night goes on. See zz_ln_catalyst_effects.txt.
+ln_bears_the_bane_trigger = {
+	OR = {
+		has_character_modifier = ln_dragonglass_armed_modifier
+		has_character_modifier = ln_dragonglass_stores_modifier
+		# 1.0.15c REVIEW FIND -- AND THE ONE THAT NEARLY BROKE THE WHOLE RULE. The lord gets
+		# ln_dragonglass_armed_modifier; every KNIGHT and courtier in his hall gets
+		# ln_dragonglass_knight_modifier instead (zz_ln_preparation_effects.txt:98-117), whose own
+		# localisation reads "it kills what steel will not touch". Leaving it out meant the candidate pool
+		# the cornering was built for -- "Jon Snow sworn to somebody else's banner is exactly the man this
+		# exists for" -- was baneless to a man, and an armed knight who killed him in the field cast him
+		# down instead of destroying him.
+		has_character_modifier = ln_dragonglass_knight_modifier
+		has_character_flag = ln_mined_the_glass
+
+		ln_carries_valyrian_steel_trigger = yes
+		ln_has_deed_valyrian_steel_trigger = yes
+		has_character_modifier = ln_valyrian_armed_modifier
+		has_character_flag = ln_forged_lightbringer
+		has_character_flag = ln_the_star_paid_for_it
+
+		ln_rides_a_living_dragon_trigger = yes
+	}
+}
+
+# Root = the Night King, at the moment of death. Did the hand that did it carry one of the three?
+# A DRAGON as the killer is dragonfire by definition -- the engine names the animal as scope:killer when a
+# dragon burns somebody, which the reveal already knows about and redirects to the rider.
+ln_slain_by_a_bane_trigger = {
+	exists = scope:killer
+	scope:killer = {
+		OR = {
+			has_trait = dragon
+			ln_bears_the_bane_trigger = yes
+		}
+	}
+}

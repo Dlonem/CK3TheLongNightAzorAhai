@@ -281,6 +281,69 @@ ln_death_catalyst_effect = {
 		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_warning_dismissed  PHASE = ln_phase_long_summer  POINTS = 2  COOLDOWN = 3 }
 	}
 
+	# ══ 1.0.15 -- THE WAR FOR THE DAWN ENDS THE MOMENT HE DIES, AS A VICTORY. ══════════════════════════════
+	# erine120: "is killing the night king supposed to invalidate the war? cause it does." He was right and
+	# it was ours. The sweep below (further down, death_resolution only) ends the wars the dead are
+	# PROSECUTING -- root as primary_attacker. The War for the Dawn has him as primary DEFENDER, so nothing
+	# ever ended it; then the dawn cleanup destroyed h_the_others, should_invalidate read "defender has no
+	# kingdom title", and the engine invalidated a war the living had just won. No victory screen, no
+	# payouts, and under the war-score rule no ending at all.
+	#
+	# Runs for ANY Night King death, BEFORE the gate below -- deliberately, because under
+	# others_war_resolution the gate reads war_for_dawn_victory, and killing him while the War for the Dawn
+	# is live IS winning that war (Thomas, 24 Aug: "the war for the dawn only ends if the night king dies").
+	# The global is banked here rather than trusted to on_victory's own set, so the gate two lines later
+	# reads a value that is already true whatever the engine's resolution order.
+	#
+	# TIMING, verified against vanilla's death sequence: on_death on_actions fire with root still holding
+	# his wars -- title and war inheritance runs after -- so primary_defender = root still finds it.
+	# on_victory itself is guarded on a LIVING defender, so ending the war here cannot re-kill him or
+	# double-run the cornering.
+	# 1.0.15b -- AND ONLY IF THE HAND THAT DID IT COULD ACTUALLY DO IT. See ln_bears_the_bane_trigger:
+	# dragonglass, Valyrian steel, or dragonfire. A Night King "killed" by castle-forged steel in some
+	# anonymous field is CAST DOWN AND NOT DESTROYED -- the war does not end, the dawn does not come, and
+	# the story's own on_owner_death crowns the next of them. That is the book's rule and Thomas's ruling.
+	if = {
+		limit = {
+			has_trait = nightking
+			ln_slain_by_a_bane_trigger = yes
+		}
+		every_character_war = {
+			limit = {
+				using_cb = war_for_the_dawn_cb
+				primary_defender = root
+			}
+			set_global_variable = { name = war_for_dawn_victory  value = yes }
+			debug_log = "LN_TRACE: the night king died with the War for the Dawn live - ending it as attacker victory"
+			end_war = attacker
+		}
+	}
+	else_if = {
+		limit = { has_trait = nightking }
+		debug_log = "LN_TRACE BANE: a night king fell to something that cannot end him - cast down, not destroyed"
+		debug_log_scopes = yes
+		# ── 1.0.15c REVIEW FIND: THE FLAG CARRIES WHO, NOT JUST THAT. ──────────────────────────────────
+		# As a bare yes this was a trap. Three reachable paths set it with no on_owner_death left to
+		# consume it -- a living non-owner still carrying the trait (the h_the_others reconciler crowns a
+		# new king without stripping the old one), the documented double on_death pass on the same king,
+		# and the dark-spent house sweep, which kills house_theothers members with no killer at all. A
+		# stale flag then made the NEXT owner death crown a fresh Night King instead of ending the
+		# story -- which is precisely the "surviving Other" bug the 1.1.0 ordering comment further down
+		# this project exists to prevent. Keyed on the character, and the story branch checks it against
+		# its own owner, all three paths become no-ops.
+		#
+		# ── THE ORDERING, STATED HONESTLY (1.0.15c). ───────────────────────────────────────────────
+		# An earlier draft of this comment claimed that if the engine runs the story's on_owner_death
+		# before this on_action, behaviour is simply "what it was before" -- fail-open. That is true
+		# under others_war_resolution and FALSE under others_death_resolution, which is the default:
+		# there the story's own branch calls end_story on his death, so a late flag has nothing left to
+		# read and the invasion stops without a dawn. Rather than bet on hook order, the yearly
+		# heartbeat carries a backstop that repairs exactly that state -- see
+		# ln_cast_down_backstop_effect in zz_ln_dawn_funnel_effects.txt. Ordering is still on the
+		# owed-test list; the backstop means the answer no longer decides whether the mod works.
+		set_global_variable = { name = ln_nk_cast_down  value = root }
+	}
+
 	# The Night King is slain. Worth the entire Long Night threshold at once, which is the whole point --
 	# nothing should be able to accumulate its way to a dawn.
 	#
@@ -295,6 +358,10 @@ ln_death_catalyst_effect = {
 	if = {
 		limit = {
 			has_trait = nightking
+			# 1.0.15b -- THE BANE RULE, on the gate that matters most: this is the branch that fires the
+			# reveal, grants Azor Ahai Reborn and pulls the struggle to its Dawn. Ordinary steel does not
+			# buy any of it, under either resolution rule.
+			ln_slain_by_a_bane_trigger = yes
 			OR = {
 				has_game_rule = others_death_resolution
 				has_global_variable = war_for_dawn_victory
@@ -603,5 +670,47 @@ ln_btw_restlessness_catalyst_effect = {
 		}
 		ln_fire_catalyst_effect = { CATALYST = ln_catalyst_ranging_lost  PHASE = ln_phase_long_summer  POINTS = 4  COOLDOWN = 4 }
 		ln_the_dark_comes_sooner_effect = { YEARS = 2 }
+	}
+}
+
+# ══ AUDIT FIX (1.0.15) -- ONE CROWNING, NOT SIX. ════════════════════════════════════════════════════════════
+# The mod crowns a new Night King in SIX places: the story cycle's cast-down branch, its no-heir branch, its
+# heir promotion, the h_the_others reconciler (twice), and the cast-down backstop. Every one of them wrote
+# out the same four or five lines by hand, and they had drifted -- only ONE of the six stamped
+# ln_one_of_them, which the portrait layer has required by name since 1.0.15 (see
+# ln_is_marked_as_theirs_trigger). The others survived on coincidence: their successors happened to carry
+# house_theothers or wight_government.
+#
+# The LADDER stays per-site, and correctly so -- an heir, the holder of the Others' realm, and "any Other
+# still breathing" are genuinely different searches for genuinely different situations. What is shared is
+# what it MEANS to be crowned, and that is what lives here.
+#
+# Root = the character taking the crown. Every clause guarded, so calling it on somebody who is already
+# wearing it is a no-op and the invasion modifiers can never stack.
+ln_crown_the_next_nightking_effect = {
+	if = {
+		limit = { NOT = { has_trait = nightking } }
+		add_trait = nightking
+	}
+	# THE STAMP. This is the line five of the six sites were missing.
+	if = {
+		limit = { NOT = { has_character_flag = ln_one_of_them } }
+		add_character_flag = ln_one_of_them
+	}
+	if = {
+		limit = { has_game_rule = others_weak_invasion      NOT = { has_character_modifier = others_weak_modifier } }
+		add_character_modifier = others_weak_modifier
+	}
+	if = {
+		limit = { has_game_rule = others_standard_invasion  NOT = { has_character_modifier = others_standard_modifier } }
+		add_character_modifier = others_standard_modifier
+	}
+	if = {
+		limit = { has_game_rule = others_strong_invasion    NOT = { has_character_modifier = others_strong_modifier } }
+		add_character_modifier = others_strong_modifier
+	}
+	if = {
+		limit = { has_game_rule = others_insane_invasion    NOT = { has_character_modifier = others_insane_modifier } }
+		add_character_modifier = others_insane_modifier
 	}
 }

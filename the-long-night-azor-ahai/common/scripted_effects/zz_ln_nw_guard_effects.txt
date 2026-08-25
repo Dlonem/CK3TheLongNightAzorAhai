@@ -1,0 +1,148 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.0.15, handing back what a sworn brother inherited.
+# See the header of common/on_action/zz_ln_nw_inheritance_on_actions.txt for the report and the AGOT-side
+# verification (nightswatch_temp ships no inheritance_blocker).
+
+# Root = the sworn brother; scope:title = the southern title he has just come into.
+# THE RECIPIENT SEARCH, in order, all fail-open: the title's de jure liege holder, then ONE tier above that.
+# A recipient must be alive, not the brother himself, and not another sworn brother -- handing crownlands
+# from one black cloak to another is the same leak wearing a different face.
+ln_nw_renounce_title_effect = {
+	if = {
+		limit = {
+			scope:title ?= {
+				exists = de_jure_liege.holder
+				de_jure_liege.holder = {
+					is_alive = yes
+					NOT = { this = root }
+					agot_is_member_of_nights_watch = no
+					ln_is_one_of_them_trigger = no
+				}
+			}
+		}
+		scope:title.de_jure_liege.holder = { save_scope_as = ln_nw_receiver }
+	}
+	else_if = {
+		limit = {
+			scope:title ?= {
+				exists = de_jure_liege.de_jure_liege.holder
+				de_jure_liege.de_jure_liege.holder = {
+					is_alive = yes
+					NOT = { this = root }
+					agot_is_member_of_nights_watch = no
+					ln_is_one_of_them_trigger = no
+				}
+			}
+		}
+		scope:title.de_jure_liege.de_jure_liege.holder = { save_scope_as = ln_nw_receiver }
+	}
+
+	# 1.0.15b -- TWO MORE ROADS, because the live run found the fail-open on its first try. In a North the
+	# dead are eating, the de jure liege and his liege are very often dead, Others, or brothers of the Watch
+	# themselves -- so the search now also asks the brother's OWN liege (the man he actually answers to),
+	# and then any independent ruler holding land in the same kingdom. Same three conditions throughout:
+	# alive, not him, not another black cloak.
+	else_if = {
+		limit = {
+			exists = liege
+			liege = {
+				is_alive = yes
+				NOT = { this = root }
+				agot_is_member_of_nights_watch = no
+				ln_is_one_of_them_trigger = no
+			}
+		}
+		liege = { save_scope_as = ln_nw_receiver }
+	}
+	else = {
+		scope:title ?= {
+			kingdom ?= {
+				random_de_jure_county = {
+					limit = {
+						exists = holder
+						holder = {
+							is_alive = yes
+							NOT = { this = root }
+							agot_is_member_of_nights_watch = no
+							# ── 1.0.15c REVIEW FIND: NOT TO THE DEAD. ────────────────────────────
+							# The two de jure-liege branches above inherit whatever sits directly
+							# over the title; this one draws from the WHOLE kingdom, and during the
+							# Long Night most of the North's counties are held by wights, Others, or
+							# the Night King himself. Without this the guard could take a castle off
+							# a sworn brother and hand it to the enemy -- a fix that feeds the thing
+							# it was written to contain. Same by-name markers the portrait layer uses.
+							NOT = { has_trait = other_trait }
+							NOT = { has_trait = wight_trait }
+							NOT = { has_trait = nightking }
+							NOT = { has_character_flag = ln_one_of_them }
+							NOT = { has_government = wight_government }
+							NOT = { has_government = ruins_government }
+						}
+					}
+					holder = { save_scope_as = ln_nw_receiver }
+				}
+			}
+		}
+	}
+
+	if = {
+		limit = { exists = scope:ln_nw_receiver }
+		debug_log = "LN_TRACE NW GUARD: a sworn brother renounces inherited land"
+		debug_log_scopes = yes
+		create_title_and_vassal_change = {
+			type = granted
+			# ══ AUDIT FIX -- A MAN OF THE WATCH HOLDS NO CLAIMS. THAT IS MOST OF THE POINT OF IT. ═══════
+			# Every other Night's Watch transfer in this mod sets this (zz_ln_nights_watch_effects.txt:34,
+			# zz_ln_ranger_effects.txt:157/299/486/644, and three more) -- this was the only one that did
+			# not, and without it the guard handed the county back and left the sworn brother holding a
+			# CLAIM on it. AGOT's nightswatch_temp ships no claim_inheritance_blocker either (the report
+			# this whole guard exists for), so nothing anywhere would have stripped it. The fix was
+			# feeding the leak it was written to close.
+			add_claim_on_loss = no
+			save_scope_as = ln_nw_change
+		}
+		scope:title = {
+			change_title_holder = {
+				holder = scope:ln_nw_receiver
+				change = scope:ln_nw_change
+			}
+		}
+		resolve_title_and_vassal_change = scope:ln_nw_change
+		# The card, to whoever is watching. AI resolves it invisibly on the same tick.
+		trigger_event = { id = ln_nwguard.1  days = 1 }
+	}
+	else = {
+		# FAIL OPEN, and say so where a debug run can find it: no lawful hand in two de jure climbs means
+		# the world is too broken for tidying to help (a shattered realm, a destroyed kingdom). The title
+		# stays -- today's behaviour, minus the silence.
+		debug_log = "LN_TRACE NW GUARD: no lawful recipient found - title stays with the brother (fail-open)"
+	}
+}
+
+# Root = a playable character, from ln_watch_yearly. The self-heal for saves where the leak already
+# happened: a landed sworn brother whose primary title is southern hands the whole stack back, one title a
+# year -- gentle on purpose, so a save with years of accumulated leakage un-knots itself without a single
+# frame spike, and any brother the guard above catches at the moment of inheritance never reaches this.
+ln_nw_holdings_yearly_selfheal_effect = {
+	if = {
+		limit = {
+			agot_is_member_of_nights_watch = yes
+			NOT = { government_has_flag = government_is_nw }
+			any_held_title = {
+				tier >= tier_county
+				NOT = { this = title:k_the_wall }
+				NOT = { target_is_de_jure_liege_or_above = title:k_the_wall }
+				NOT = { has_variable = ln_is_a_ranger_title }
+			}
+		}
+		random_held_title = {
+			limit = {
+				tier >= tier_county
+				NOT = { this = title:k_the_wall }
+				NOT = { target_is_de_jure_liege_or_above = title:k_the_wall }
+				NOT = { has_variable = ln_is_a_ranger_title }
+			}
+			save_scope_as = title
+		}
+		ln_nw_renounce_title_effect = yes
+	}
+}

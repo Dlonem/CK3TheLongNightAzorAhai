@@ -268,9 +268,15 @@ ln_lc.10 = {
 			}
 		}
 		add_piety = 100
-		reverse_add_opinion = {
-			modifier = ln_fed_the_watch_opinion
-			target = title:k_the_wall.holder
+		# 1.0.15d LIVE-RUN FIX: k_the_wall can stand without a holder -- an election mid-collapse, the
+		# Watch fallen, the seat taken. The add_courtier above was already guarded; this was not, and it
+		# threw "Undefined event target 'title'" ten times in one run.
+		if = {
+			limit = { exists = title:k_the_wall.holder }
+			reverse_add_opinion = {
+				modifier = ln_fed_the_watch_opinion
+				target = title:k_the_wall.holder
+			}
 		}
 	}
 	option = {

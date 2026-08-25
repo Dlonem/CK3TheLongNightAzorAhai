@@ -114,208 +114,12 @@
 	}
 
 	on_end = {
-
-	
-
-	### Reform Nightswatch
-
-	if = { limit = { NOT = { title:c_castle_black.holder ?= { has_government = nights_watch_government } }
-
-	title:c_castle_black.holder ?= { is_ai = yes }
-
+	# 1.0.15 -- the body of this block moved, verbatim, to ln_the_dark_is_spent_effect
+	# (common/scripted_effects/zz_ln_dark_spent_effects.txt) so that every ending -- a clean story end, an
+	# engine-destroyed story, a war that resolved oddly -- can run the SAME cleanup exactly once. The yearly
+	# backstop in ln_struggle_yearly_work_effect calls it too. Nothing behavioural changed on this path.
+	ln_the_dark_is_spent_effect = yes
 	}
-
-		 # The Long Night+: NW reformation is no longer automatic — it is now the reform_nights_watch_decision,
-		 # which only the King on the Iron Throne or an independent King of the North may take.
-
-		 }
-
-		 
-
-	
-
-	# ── 1.0.9a ── `?=` HERE IS THE SECOND HALF OF AXEL'S REPORT, AND THE MORE LIKELY HALF. ──────────────
-	# on_end fires from on_owner_death -- i.e. at the exact instant the Night King has just died and his
-	# succession has not necessarily resolved. A bare `=` on a link that is momentarily unset does not
-	# quietly skip: it is a logged scope error and THE WHOLE BLOCK BELOW DOES NOT RUN. That block is
-	# save_scope_as = lastother, destroy_others_kingdom_titles, the Night's Queen flag, and the culture
-	# rewrite. Lose it and the wights still die (line ~195), the lands are still scoured (~189) and the
-	# house is still swept (~214) -- "everything else returned to normal" -- but the Night King's own
-	# above-county titles are never destroyed. The Others' REALM survives the Dawn intact, which is exactly
-	# what Axel described and what Jorahm called "the surviving Other" before him.
-	# Worse: with no Night's Queen flagged, the sweep at ~214 has no exception and takes the whole house,
-	# including the seed the recurrence is supposed to grow wave two from.
-	title:h_the_others.holder ?= { 
-
-	save_scope_as = lastother
-
-		destroy_others_kingdom_titles = yes
-
-		random_courtier = { limit = { has_trait = other_trait
-
-										is_female = yes}
-
-							add_character_flag = nightsqueen
-
-							save_scope_as = nightsqueen
-
-							add_trait = disinherited
-
-							}
-
-		culture = {
-
-			clear_culture_traditions = yes
-
-			add_culture_tradition = tradition_agot_wildling
-
-			add_culture_tradition = tradition_mountain_homes
-
-			add_culture_tradition = tradition_winter_warriors
-
-			add_culture_tradition = tradition_tribe_unity
-
-		set_culture_name = {
-
-noun = frostborn_culture_name
-
-collective_noun = frostborn_culture_name
-
-prefix = frostborn_culture_name
-
-}
-
-		}
-
-		
-
-		
-
-		#destroy_title = title:h_the_others
-
-		}
-
-		# The Long Night+: before the dead crumble, scour the lands the Night King held — ordinary holdings
-		# return to wilderness, the great seats are left in ruins. Runs while the wights/Others still hold them.
-		agot_long_night_scour_others_lands_effect = yes
-
-		# The Long Night+: with the Others defeated, the power animating the dead fails — every wight is claimed by the cold.
-		# 1.0.7, DOOR TWO: and every undead dragon with them. A CONVERTED dragon keeps its own house, so
-		# neither the wight sweep nor the house_theothers sweep below would catch it -- the trait is the
-		# only handle. Clone-era dragons die by whichever sweep reaches them first; both are idempotent.
-		every_living_character = {
-			limit = {
-				OR = {
-					has_trait = wight_trait
-					has_trait = ln_undead_dragon
-				}
-			}
-			death = { death_reason = death_claimed_by_cold }
-		}
-
-		# The Long Night+ AFTERMATH: the Question of the North — within ~6 months the Crown MUST choose between
-		# restoring the Night's Watch and welcoming the free folk (ln_aftermath.1; replaces the old
-		# reform_nights_watch_decision, now retired). No Crown anywhere (no Iron Throne, no independent King of
-		# the North) → nobody holds the authority to keep the Wall: the free folk pour through unbidden. A yearly
-		# safety pulse reposes the question if the chosen crown dies before the event lands
-		# (zz_long_night_plus_aftermath_on_actions.txt). Runs AFTER the scouring so the wilderness exists.
-		set_global_variable = { name = ln_aftermath_started value = yes }
-		ln_pose_question_of_the_north_effect = yes
-
-		house:house_theothers = {  every_house_member = { limit = { NOT = { has_character_flag = nightsqueen } } death = {
-
-						
-
-						death_reason = death_vanished
-
-					} } }
-
-					
-
-		
-
-	if = { limit = { has_game_rule = longnight_iron_throne_reformation_on }	 
-
-	if = { limit = { exists = title:h_the_iron_throne.holder} 
-
-	title:h_the_iron_throne.holder ?= { trigger_event = {
-
-						id = others_maintenance.2
-
-						days = 1
-
-					}
-
-					}
-
-					
-
-	}
-
-	}
-
-		
-
-		
-
-		
-
-	
-
-		
-
-		
-
-		# v0.2.0: if the recurrence game rule is on, the dead are not finished -- they are merely early.
-
-		
-
-		
-
-		
-
-	
-
-		
-
-		
-
-		ln_long_night_recurrence_effect = yes
-
-
-		
-
-		
-
-		
-
-	
-
-		
-
-		
-
-		every_player = {
-
-					trigger_event = {
-
-						id = others.3
-
-						days = 1
-
-					}
-
-				}
-
-		
-
-
-
-	
-
-	}
-
-	
 
 	on_owner_death = { 
 
@@ -341,7 +145,61 @@ prefix = frostborn_culture_name
 	# Asked FIRST and as an if/else_if chain, so a won war ends the story and crowns nobody. The ordering is
 	# the entire change: every branch below is untouched, and the death-resolution case is unaffected because
 	# both this test and the old one require others_war_resolution.
-	if = { limit = { AND = { has_game_rule = others_war_resolution
+	# ── 1.0.15b -- CAST DOWN, NOT DESTROYED. ──────────────────────────────────────────────────────────
+	# Set by ln_death_catalyst_effect when a Night King is killed by something that cannot actually end
+	# him (see ln_bears_the_bane_trigger -- dragonglass, Valyrian steel, dragonfire, nothing else). His
+	# body stops; the thing behind it does not. Asked FIRST, ahead of every ending branch, so the dark
+	# crowns its next king instead of the story quietly closing. The successor search is the same one the
+	# no-heir branch below uses, and if there is genuinely no Other left alive the chain falls through to
+	# the ordinary handling.
+	if = { limit = { has_global_variable = ln_nk_cast_down
+
+					 global_var:ln_nk_cast_down ?= story_owner
+
+					}
+
+		remove_global_variable = ln_nk_cast_down
+
+		story_owner ?= { save_scope_as = ln_dead_nightking }
+
+		if = {
+			limit = {
+				exists = title:h_the_others.holder
+				title:h_the_others.holder = { has_trait = other_trait }
+				NOT = { title:h_the_others.holder ?= scope:ln_dead_nightking }
+			}
+			title:h_the_others.holder = { save_scope_as = ln_next_nightking }
+		}
+		else_if = {
+			limit = { exists = story_owner.primary_heir }
+			story_owner.primary_heir = { save_scope_as = ln_next_nightking }
+		}
+		else = {
+			random_ruler = {
+				limit = {
+					has_trait = other_trait
+					NOT = { this ?= scope:ln_dead_nightking }
+				}
+				save_scope_as = ln_next_nightking
+			}
+		}
+
+		if = {
+			limit = { exists = scope:ln_next_nightking }
+			debug_log = "LN_TRACE BANE: the night king was cast down by ordinary steel - another of them takes the crown"
+			make_story_owner = scope:ln_next_nightking
+			scope:ln_next_nightking = {
+				# AUDIT FIX: one crowning, shared -- and this is where the ln_one_of_them stamp arrives.
+				ln_crown_the_next_nightking_effect = yes
+			}
+		}
+		else = {
+			debug_log = "LN_TRACE BANE: cast down, but there is no Other left alive to take the crown - the story ends"
+			end_story = yes
+		}
+	}
+
+	else_if = { limit = { AND = { has_game_rule = others_war_resolution
 
 							 has_global_variable = war_for_dawn_victory
 
@@ -377,17 +235,12 @@ prefix = frostborn_culture_name
 
 	make_story_owner = story_owner.primary_heir
 
-	 story_owner = { add_trait = nightking 
+	 story_owner = {
 
-	 if = { limit = { has_game_rule = others_weak_invasion } add_character_modifier = others_weak_modifier }
-
-								if = { limit = { has_game_rule = others_standard_invasion } add_character_modifier = others_standard_modifier }
-
-								if = { limit = { has_game_rule = others_strong_invasion } add_character_modifier = others_strong_modifier }
-
-								if = { limit = { has_game_rule = others_insane_invasion } add_character_modifier = others_insane_modifier }
-
-	 
+		# AUDIT FIX: one crowning, shared. This branch also used UNGUARDED add_character_modifier -- an heir
+		# promoted from nothing cannot already carry an invasion modifier, but the shared effect guards it
+		# anyway, and it is the only place the ln_one_of_them stamp was ever going to come from.
+		ln_crown_the_next_nightking_effect = yes
 
 	 
 
@@ -445,29 +298,8 @@ prefix = frostborn_culture_name
 			debug_log = "LN_TRACE: night king died with no heir under war resolution - another Other takes the crown"
 			make_story_owner = scope:ln_next_nightking
 			scope:ln_next_nightking = {
-				if = {
-					limit = { NOT = { has_trait = nightking } }
-					add_trait = nightking
-				}
-				# GUARDED, unlike the heir branch above. An heir promoted from nothing cannot already carry an
-				# invasion-strength modifier; a sitting Other ruler picked up by random_ruler might, and
-				# add_character_modifier stacks rather than replaces.
-				if = {
-					limit = { has_game_rule = others_weak_invasion  NOT = { has_character_modifier = others_weak_modifier } }
-					add_character_modifier = others_weak_modifier
-				}
-				if = {
-					limit = { has_game_rule = others_standard_invasion  NOT = { has_character_modifier = others_standard_modifier } }
-					add_character_modifier = others_standard_modifier
-				}
-				if = {
-					limit = { has_game_rule = others_strong_invasion  NOT = { has_character_modifier = others_strong_modifier } }
-					add_character_modifier = others_strong_modifier
-				}
-				if = {
-					limit = { has_game_rule = others_insane_invasion  NOT = { has_character_modifier = others_insane_modifier } }
-					add_character_modifier = others_insane_modifier
-				}
+				# AUDIT FIX: one crowning, shared -- guards and the ln_one_of_them stamp included.
+				ln_crown_the_next_nightking_effect = yes
 			}
 		}
 		else = {
@@ -1922,10 +1754,8 @@ prefix = frostborn_culture_name
 				limit = { scope:ln_others_holder = { has_trait = other_trait } }
 				make_story_owner = scope:ln_others_holder
 				scope:ln_others_holder = {
-					if = {
-						limit = { NOT = { has_trait = nightking } }
-						add_trait = nightking
-					}
+					# AUDIT FIX: one crowning, shared -- the stamp and the invasion modifiers come with it.
+					ln_crown_the_next_nightking_effect = yes
 				}
 			}
 			else = {
@@ -1937,10 +1767,8 @@ prefix = frostborn_culture_name
 						NOT = { this = scope:ln_others_holder }
 					}
 					save_scope_as = ln_the_great_other
-					if = {
-						limit = { NOT = { has_trait = nightking } }
-						add_trait = nightking
-					}
+					# AUDIT FIX: one crowning, shared.
+					ln_crown_the_next_nightking_effect = yes
 				}
 
 				# NOTHING HAPPENS IF THERE IS NO ONE. Better a story cycle that waits than a deposed emperor

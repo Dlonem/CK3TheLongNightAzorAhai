@@ -38,6 +38,8 @@ on_title_gain = {
 		# its still-living culture on the same day. That conversion route was otherwise uncovered.
 		ln_others_title_gain
 		ln_county_memory_on_title_gain
+		# 1.0.15e -- strip a stranded bastion so a captured seat cannot fortify whoever took it.
+		ln_seat_title_gain
 	}
 }
 
@@ -104,6 +106,26 @@ on_death = {
 		ln_watch_succession
 		ln_nw_vassal_lc_death
 		ln_blessing_sponsor_died   # 1.0.14 -- release a dead priest's charge
+	}
+}
+
+# 1.0.15 -- THE WATCH INHERITS NO THRONES. AGOT's nightswatch_temp trait ships without an
+# inheritance_blocker (verified, 00_agot_traits.txt:817), so recruits inherit southern land and keep it.
+# Sub-list body in common/on_action/zz_ln_nw_inheritance_on_actions.txt; the yearly self-heal for saves
+# where it already happened rides ln_watch_yearly.
+on_title_gain_inheritance = {
+	on_actions = {
+		ln_nw_title_inheritance_guard
+	}
+}
+
+# 1.0.15 -- THE COLD DOES NOT SIT IN A CELL. Root = the prisoner, scope:imprisoner = the captor (vanilla's
+# own header, prison_on_actions.txt:5-6). A captured Night King routes into the execution ending; a captured
+# Other or wight is flagged so AGOT's prison interactions (trial by combat above all) hide for it, and the
+# captor is told what he is holding. Bodies in common/on_action/zz_ln_imprison_on_actions.txt.
+on_imprison = {
+	on_actions = {
+		ln_others_imprisoned
 	}
 }
 

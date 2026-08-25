@@ -1,4 +1,14 @@
 ﻿
+# ══ 1.0.15 -- FORMALLY RETIRED, PENDING A DELIBERATE REVIVAL. ═══════════════════════════════════════════════
+# The 1.0.14 audit knew others_occupation.1 was dead (its only sender is commented out at
+# the_long_night.txt:1608) and .2 dead behind it; the 1.0.15 audit finished the count: .3 and .4 are only
+# reachable from inside this same chain, and the scripted triggers agot_long_night_villain / agot_long_night_craven
+# (00_agot_scripted_triggers_long_night.txt) have no other caller -- the WHOLE four-event chain plus two
+# triggers is dark, and one dangling symbol inside it (agot_stunned_by_pirates_modifier) does not resolve
+# against current AGOT at all.
+# Decision (work order 1.0.15): RETIRED IN PLACE, not deleted -- 465 lines of occupation flavor is worth a
+# revival pass in the feature release, but reviving it means re-verifying every symbol against current AGOT
+# first. Nothing fires it; it costs one orphaned-event log line. DO NOT wire anything to it without that pass.
 namespace = others_occupation
 
 

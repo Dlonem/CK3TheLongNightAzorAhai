@@ -88,10 +88,11 @@ ln_took_one_of_ours_opinion = {
 	years = 30
 }
 
-# -- BEING NAMED ---------------------------------------------------------------------------------------------
-# Both are driven by ln_named_opinion_up_value / _down_value, which read the claimant's rung live -- so these
-# carry duration only. Twenty years: a naming should fade if nothing comes of it, which is what happens to
-# most claimants.
+# -- BEING NAMED -- RETIRED 1.0.10b, KEPT FOR OLD SAVES ------------------------------------------------------
+# 1.0.15 AUDIT CORRECTION: nothing ADDS either of these any more -- the naming aura is a static character
+# modifier now (00_long_night_character_modifiers.txt). The definitions stay because opinion entries already
+# written into pre-1.0.10b saves still reference them by name and would render broken without the keys; both
+# expire off those saves on their own 20-year clocks. Do not wire anything new to them.
 ln_the_priests_say_it_of_him_opinion = {
 	opinion = 10
 	years = 20

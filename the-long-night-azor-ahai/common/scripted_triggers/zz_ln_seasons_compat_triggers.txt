@@ -1,0 +1,18 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.0.15, AGOT: Seasons of Ice and Fire (workshop 3377641022) compat.
+#
+# THE DETECTION CONTRACT, verified against their 24 Aug source: their on_game_start effect
+# (common/on_action/agot_seasons_on_start.txt) sets `AGOT_seasons_is_loaded` as a global variable,
+# UNCONDITIONALLY, before any of their game-rule branches. has_global_variable is silent when the variable
+# does not exist, so this trigger is TRUE with their mod and FALSE without it, and never costs an error line
+# either way -- unlike a has_game_rule probe (61 "Invalid database object" lines a session in the field) or
+# any reference to their situation keys, which are load-time symbols.
+#
+# WHAT THIS RELEASE DOES WITH IT: reads only. Their seasons are a situation (the vanilla steppe framework)
+# with per-sub-region phases driven by their own event chain; PUSHING their phases needs their
+# situation_sub_region keys, which error out of a playset that lacks the mod. If a runtime-safe write path
+# exists it will be through generic situation iterators -- parked for the write-side pass, needs a script_docs
+# dump to verify. Until then: detect, coexist, and never collide (their mod overrides no key of ours and no
+# file of ours; verified via database_conflicts.log 24 Aug).
+ln_seasons_mod_active_trigger = {
+	has_global_variable = AGOT_seasons_is_loaded
+}

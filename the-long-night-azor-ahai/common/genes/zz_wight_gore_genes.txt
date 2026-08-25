@@ -6,6 +6,19 @@
 # stage). Textures are vanilla and gender-neutral (gfx/models/portraits/decals/visual_traits/), so female = male.
 # The variant is chosen per wight by a wight_v* character flag (see wight_trait_modifiers.txt), set once at
 # conversion. NOTE: decal priorities / alpha are a first pass — tune in-game against the draugr skin.
+# ══ 1.0.15b -- THE DEAD ZONE, AND WHY EVERY CURVE BELOW NOW IGNORES ITS OWN MIDDLE ═════════════════════════
+# Reports from Ereska, KngZawd and CinkoSenpai: living characters -- women above all -- rendering with the wound layer.
+# Some of them on NEW games, which rules out the save-drift story on its own.
+#
+# Every applier this mod owns sets these genes to EXACTLY 1.0 (wight_trait_modifiers.txt), so the whole
+# 0.0-0.85 span was never ours to use -- and yet the old curves reached FULL STRENGTH at 0.5, and the skin
+# tint at 0.2. Anything that put a stray mid-range value in this gene's slot -- another mod's gene churn
+# shifting indices, a portrait cache from a different playset, an accessory pack rewriting the pool -- got a
+# fully rendered corpse for it. So the curves are now flat zero until 0.85 and only reach full at 1.0:
+# our own look is bit-identical, and every value we did not deliberately write renders NOTHING.
+# This is the belt to the by-name trigger gate's braces (see wight_trait_modifiers.txt); either one alone
+# should stop it, and neither costs anything when the mod is behaving.
+#
 # FIX (v0.1.0): wrapped in special_genes. Top-level gene categories are required in every persistent DNA entry;
 # special_genes are not. Full reasoning in zz_long_night_genes.txt.
 special_genes = {
@@ -33,7 +46,7 @@ special_genes = {
 							normal = "gfx/models/portraits/decals/visual_traits/decal_wounded_3_normal.dds"
 							properties = "gfx/models/portraits/decals/visual_traits/decal_wounded_3_properties.dds"
 						}
-						alpha_curve = { { 0.0 0.0 } { 0.5 1.0 } }
+						alpha_curve = { { 0.0 0.0 } { 0.85 0.0 } { 1.0 1.0 } }
 						blend_modes = { diffuse = hard_light normal = overlay properties = overlay }
 						priority = 25
 						decal_apply_order = post_skin_color
@@ -44,7 +57,7 @@ special_genes = {
 							diffuse = "gfx/models/portraits/decals/visual_traits/decal_scars_battle_diffuse.dds"
 							normal = "gfx/models/portraits/decals/visual_traits/decal_scars_battle_normal.dds"
 						}
-						alpha_curve = { { 0.0 0.0 } { 0.5 1.0 } }
+						alpha_curve = { { 0.0 0.0 } { 0.85 0.0 } { 1.0 1.0 } }
 						blend_modes = { diffuse = overlay normal = overlay }
 						priority = 20
 						decal_apply_order = post_skin_color
@@ -64,7 +77,7 @@ special_genes = {
 						textures = {
 							normal = "gfx/models/portraits/decals/visual_traits/decal_scars_disease_normal.dds"
 						}
-						alpha_curve = { { 0.0 0.0 } { 0.5 1.0 } }
+						alpha_curve = { { 0.0 0.0 } { 0.85 0.0 } { 1.0 1.0 } }
 						blend_modes = { normal = overlay }
 						priority = 20
 						decal_apply_order = post_skin_color
@@ -76,7 +89,7 @@ special_genes = {
 							normal = "gfx/models/portraits/decals/visual_traits/decal_scars_battle_02_normal.dds"
 							properties = "gfx/models/portraits/decals/visual_traits/decal_scars_battle_02_properties.dds"
 						}
-						alpha_curve = { { 0.0 0.0 } { 0.5 1.0 } }
+						alpha_curve = { { 0.0 0.0 } { 0.85 0.0 } { 1.0 1.0 } }
 						blend_modes = { diffuse = overlay normal = overlay properties = overlay }
 						priority = 22
 						decal_apply_order = post_skin_color
@@ -99,7 +112,7 @@ special_genes = {
 							normal = "gfx/models/portraits/decals/visual_traits/decal_wounded_3_normal.dds"
 							properties = "gfx/models/portraits/decals/visual_traits/decal_wounded_3_properties.dds"
 						}
-						alpha_curve = { { 0.0 0.0 } { 0.5 1.0 } }
+						alpha_curve = { { 0.0 0.0 } { 0.85 0.0 } { 1.0 1.0 } }
 						blend_modes = { diffuse = hard_light normal = overlay properties = overlay }
 						priority = 25
 						decal_apply_order = post_skin_color
@@ -110,7 +123,7 @@ special_genes = {
 							diffuse = "gfx/models/portraits/decals/visual_traits/decal_scars_battle_diffuse.dds"
 							normal = "gfx/models/portraits/decals/visual_traits/decal_scars_battle_normal.dds"
 						}
-						alpha_curve = { { 0.0 0.0 } { 0.5 1.0 } }
+						alpha_curve = { { 0.0 0.0 } { 0.85 0.0 } { 1.0 1.0 } }
 						blend_modes = { diffuse = overlay normal = overlay }
 						priority = 20
 						decal_apply_order = post_skin_color
@@ -122,7 +135,7 @@ special_genes = {
 							normal = "gfx/models/portraits/decals/visual_traits/decal_scars_battle_02_normal.dds"
 							properties = "gfx/models/portraits/decals/visual_traits/decal_scars_battle_02_properties.dds"
 						}
-						alpha_curve = { { 0.0 0.0 } { 0.5 1.0 } }
+						alpha_curve = { { 0.0 0.0 } { 0.85 0.0 } { 1.0 1.0 } }
 						blend_modes = { diffuse = overlay normal = overlay properties = overlay }
 						priority = 22
 						decal_apply_order = post_skin_color

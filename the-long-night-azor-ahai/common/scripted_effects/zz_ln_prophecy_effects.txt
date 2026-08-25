@@ -218,9 +218,10 @@ ln_name_chosen_effect = {
 # exactly the tension the prophecy layer is built on. Both fire from the same act, at different people, and
 # both decay, because a claim that nobody keeps repeating stops mattering.
 #
-# HOW LOUD depends on which rung he is on, read live from the traits by ln_named_opinion_up_value and
-# ln_named_opinion_down_value -- not passed in as a macro parameter, because this effect is also the right
-# place to call from if anything ever promotes a man without going through the naming.
+# HOW LOUD depends on which rung he is on, read live from the traits -- by the branch chain below picking a
+# static modifier per rung (1.0.15 audit correction: the old reference here to ln_named_opinion_up/down_value
+# was stale; those values are retired, see their file). Not a macro parameter, because this effect is also
+# the right place to call from if anything ever promotes a man without going through the naming.
 ln_the_world_forms_a_view_effect = {
 	# 1.0.10b -- REWRITTEN FROM O(EVERY RULER ALIVE) TO O(1). This is a shipped performance bug, reported
 	# on the Workshop as "is there a way to lessen the lag when you are chosen", and Thomas read it right
@@ -263,7 +264,19 @@ ln_the_world_forms_a_view_effect = {
 		limit = { has_character_modifier = ln_named_chosen_modifier }
 		remove_character_modifier = ln_named_chosen_modifier
 	}
+	# 1.0.15 -- and the top rung, which the 1.0.10b rewrite forgot entirely: promotion to Azor Ahai Reborn
+	# called this effect, both lower auras were stripped, and NOTHING replaced them -- winning the Long
+	# Night silently deleted the winner's naming opinion. The reveal now calls this AFTER the trait lands,
+	# and this branch is what it finds. No years: the fact of having ended it does not expire.
 	if = {
+		limit = { has_character_modifier = ln_named_azor_ahai_modifier }
+		remove_character_modifier = ln_named_azor_ahai_modifier
+	}
+	if = {
+		limit = { has_trait = azor_ahai_reborn }
+		add_character_modifier = ln_named_azor_ahai_modifier
+	}
+	else_if = {
 		limit = { has_trait = chosen_by_rhllor }
 		add_character_modifier = { modifier = ln_named_chosen_modifier  years = 20 }
 	}

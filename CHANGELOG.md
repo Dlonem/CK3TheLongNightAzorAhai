@@ -8,6 +8,44 @@ Newest first.
 
 ---
 
+## 1.0.15 — The Repair Release
+
+Mostly about making sure everything the mod already promised actually happens. A lot of what follows was built in earlier versions and then never quite reached the player — a missing block here, a scope that silently did nothing there. Existing saves are fine; the fixes repair themselves as you play.
+
+### The Long Night now ends properly
+
+- **Fixed the issue with killing the Night King invalidating the War for the Dawn instead of winning it.** His death tore down the Others' kingdom title, and the war then looked at a defender who no longer held anything and threw the whole thing out — a won war that vanished with nothing to show for it. Reported by **erine120**.
+- **Fixed the issue with Azor Ahai Reborn going to the wrong person.** The title went to whoever happened to be leading the war rather than to whoever had actually earned it. Reported by **breakfastenjoyer**.
+- **The ending happens on screen now, every time.** Whether you win on war score or take him alive, the worthiest champion is chosen — weighed by deeds, blessings, Lightbringer, Valyrian steel and wounds — and strikes the final blow himself.
+- **He can only be destroyed by dragonglass, Valyrian steel or dragonfire.** Kill him with ordinary steel and he is cast down rather than destroyed: the dark crowns another, and the Long Night goes on.
+- **The confrontation is a real duel now, not a coin flip.** Prowess is a genuine contest, and an outmatched champion always keeps a chance — that is what the songs are about.
+- **Fixed the issue with the dead outliving the Long Night.** Wights, undead dragons and Others are now removed when it ends, however it ends. Existing saves clean themselves up on the next yearly tick.
+
+### Bug Fixes
+
+- **Fixed the issue with captured Others demanding trial by combat or serving as your knights.** The cold gets the sword instead. Suggested by **breakfastenjoyer**.
+- **Fixed the issue with Night's Watch brothers keeping inherited southern lands.** They no longer hold the land or the claims on it, and existing saves self-heal. Reported by **NHNster**.
+- **Fixed the issue with living characters getting corpse skin after a mid-save mod list change.** The undead skin rules were being applied without checking whether the character was actually one of theirs. Reported by **Ereska** and **KngZawd**.
+- **Fixed the issue with the Long Night wars never resolving.** Taking the enemy's seat now wins the war. Previously the dead won every battle and got almost no credit for it, so sieges dragged for years with the war score barely moving.
+- **Fixed the issue with the dead storming great seats out of nowhere.** A seat holds while the country around it does, so they have to take the countryside before they can come for Winterfell.
+- **Fixed the issue with AI realms never arming themselves with dragonglass.** The decision existed and was effectively unreachable — checked too rarely, blocked by a money test that ignored what year it was, and never weighted by whether that lord believes in any of this. All three are fixed.
+
+### Also in this update
+
+- **Resurrection — the Beric track.** Being returned by R'hllor is no longer once per lifetime. Each return needs a fresh priest, takes more out of you, and climbs the trait. Several bugs in the priest's own decision were fixed along the way.
+- **The Night King has a face.** A proper show-inspired model, built by a player of the mod. Until now he was wearing a randomly generated one.
+- **Azor Ahai Reborn carries the standing he was always meant to have.**
+- **Undead dragons breathe blue fire.**
+
+### Compatibility
+
+- **Groundwork for AGOT: Seasons of Ice and Fire.** The two mods detect each other cleanly and nothing collides — handled inside this mod, with no separate patch to install. Deeper integration is planned. Asked for by **ashen03**.
+- **Dawn can be consecrated into Lightbringer**, and is the priority blade if a Dayne carries it. Asked about by several of you; it already worked, and this confirms it.
+
+Thanks to everyone reporting issues in the comments — nearly every fix above started as one of your posts.
+
+---
+
 ## Hotfix 1.0.14
 
 Being brought back from the dead by a red priest has never worked for a player. There were four separate reasons for that, and all four are fixed. This release also compatibility-patches AGOT 5.0/5.1, makes the dead take the North in order, and repairs several things that were quietly broken on older saves.

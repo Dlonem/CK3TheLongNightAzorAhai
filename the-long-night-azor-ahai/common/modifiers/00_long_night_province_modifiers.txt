@@ -10,3 +10,4 @@ agot_long_night_destruction_modifier = {
 	development_decline = -100.0
 	monthly_county_control_decline_add = -10.0
 }
+

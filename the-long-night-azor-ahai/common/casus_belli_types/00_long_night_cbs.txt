@@ -27,6 +27,12 @@ war_for_the_dawn_cb = {
 	}
 
 	should_invalidate = {
+		# 1.0.15 -- A WON WAR CANNOT INVALIDATE. The dawn cleanup destroys h_the_others at the moment the
+		# Night King dies, and before this guard the engine would read "defender lost his kingdom title"
+		# and invalidate a war the attackers had just WON -- no victory screen, no payouts, erine120's
+		# report verbatim. The death-time sweep in zz_ln_catalyst_effects.txt ends the war as an attacker
+		# victory first; this guard is the belt to that sweep's braces.
+		NOT = { has_global_variable = war_for_dawn_victory }
 		scope:defender = {
 			NOT = { primary_title.tier >= tier_kingdom }
 		}
@@ -47,16 +53,28 @@ war_for_the_dawn_cb = {
 	}
 
 	on_victory = {
-	set_global_variable = {
-					name = war_for_dawn_victory
-					value = yes
-				}
-	scope:defender = { death = {
-							death_reason = death_battle
-							killer = scope:attacker
-					}
-					}
-	
+		set_global_variable = {
+			name = war_for_dawn_victory
+			value = yes
+		}
+		# ══ 1.0.15 -- THE WAR ONLY TRULY ENDS WHEN HE DIES, AND ON SCREEN. ══════════════════════════════
+		# Thomas, 24 Aug: "the war for the dawn only ends if the night king dies" + "the destiny scene
+		# picks." The old line here killed him instantly, off screen, with killer = scope:attacker -- so a
+		# score victory handed Azor Ahai Reborn to the Iron Throne holder in his solar (breakfastenjoyer's
+		# report), and no player ever saw the end of the Long Night happen.
+		#
+		# Now: if he is still breathing when the score is settled, the cornering runs -- the worthiest
+		# hand on the attacker side (rulers AND their knights, ln_dawn_worthiness_value) gets the scene,
+		# and the death happens there, killer = that champion, two days later. A day-14 failsafe
+		# (ln_dawn.12) guarantees the death even if the scene is lost, so this branch can never produce a
+		# living Night King after a lost war.
+		#
+		# If he is ALREADY dead -- the death is what won the war, via the catalyst sweep -- there is
+		# nothing left to do here: the reveal, the trait and the cleanup all ran from his death.
+		if = {
+			limit = { scope:defender = { is_alive = yes } }
+			ln_wfd_cornered_effect = yes
+		}
 	}
 
 	on_defeat_desc = {
@@ -551,8 +569,37 @@ other_cb = {
 	attacker_allies_inherit = yes
 	defender_allies_inherit = yes
 	
+	# ══ 1.0.15d -- THE WAR SCORE NOW REWARDS TAKING THE SEAT, NOT JUST WINNING THE FIELD. ══════════════
+	# Thomas, 25 Aug, watching an observer run: "it's taken over three years alone to try and take
+	# Winterfell... I wish the war score objective would specifically only count the capital... you want to
+	# slaughter them and have the countryside kinda reflect some of it."
+	#
+	# WHAT WAS ACTUALLY WRONG. These three invasion CBs declared NO score settings at all, so every one ran
+	# on raw engine defaults. His 130 AC screenshot reads exactly as you would predict: battles "+50% Max!"
+	# -- the dead cap the battle contribution almost immediately, because 719,250 against 58,896 wins every
+	# field there is -- and occupation at MINUS four percent, because occupation score is a ratio against the
+	# whole war goal and the goal was the defender's entire realm. The war stalled at +46% for years and
+	# ended in a truce with Winterfell never taken. The dead were winning every battle and the scoreboard had
+	# stopped listening.
+	#
+	# FOUR KEYS, all lifted from vanilla's own invasion and conquest CBs rather than invented:
+	#   defender_capital_gives_war_score = yes  -- taking the seat is worth something. The literal
+	#                                             implementation of what he asked for, and the engine's own
+	#                                             lever for it; it was explicitly `no` on all three.
+	#   attacker_score_from_occupation_scale    -- 150, vanilla's conquest number (00_conquest.txt:47).
+	#   max_attacker_score_from_occupation      -- 150, vanilla's invasion number (00_invasion_war.txt:449).
+	#   attacker_wargoal_percentage = 0.8       -- vanilla's invasion figure (00_invasion_war.txt:445): you do
+	#                                             not have to hold every last holding to have taken a kingdom.
+	# Battles keep their default cap on purpose. Slaughter alone still tops out at half the bar and cannot win
+	# this war by itself -- that is the half of his sentence it would be easy to miss.
+	#
+	# NOT APPLIED to war_for_the_dawn_cb, which carries its own tuned scales (battles 300 / occupation 10)
+	# and would be broken by a blanket occupation number.
 	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
-	defender_capital_gives_war_score = no 				# No warscore from defender capital
+	defender_capital_gives_war_score = yes				# 1.0.15d: taking the seat IS the win condition
+	attacker_score_from_occupation_scale = 150
+	max_attacker_score_from_occupation = 150
+	attacker_wargoal_percentage = 0.8
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
 	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
 
@@ -1025,8 +1072,37 @@ other_cb_duchy = {
 	attacker_allies_inherit = yes
 	defender_allies_inherit = yes
 	
+	# ══ 1.0.15d -- THE WAR SCORE NOW REWARDS TAKING THE SEAT, NOT JUST WINNING THE FIELD. ══════════════
+	# Thomas, 25 Aug, watching an observer run: "it's taken over three years alone to try and take
+	# Winterfell... I wish the war score objective would specifically only count the capital... you want to
+	# slaughter them and have the countryside kinda reflect some of it."
+	#
+	# WHAT WAS ACTUALLY WRONG. These three invasion CBs declared NO score settings at all, so every one ran
+	# on raw engine defaults. His 130 AC screenshot reads exactly as you would predict: battles "+50% Max!"
+	# -- the dead cap the battle contribution almost immediately, because 719,250 against 58,896 wins every
+	# field there is -- and occupation at MINUS four percent, because occupation score is a ratio against the
+	# whole war goal and the goal was the defender's entire realm. The war stalled at +46% for years and
+	# ended in a truce with Winterfell never taken. The dead were winning every battle and the scoreboard had
+	# stopped listening.
+	#
+	# FOUR KEYS, all lifted from vanilla's own invasion and conquest CBs rather than invented:
+	#   defender_capital_gives_war_score = yes  -- taking the seat is worth something. The literal
+	#                                             implementation of what he asked for, and the engine's own
+	#                                             lever for it; it was explicitly `no` on all three.
+	#   attacker_score_from_occupation_scale    -- 150, vanilla's conquest number (00_conquest.txt:47).
+	#   max_attacker_score_from_occupation      -- 150, vanilla's invasion number (00_invasion_war.txt:449).
+	#   attacker_wargoal_percentage = 0.8       -- vanilla's invasion figure (00_invasion_war.txt:445): you do
+	#                                             not have to hold every last holding to have taken a kingdom.
+	# Battles keep their default cap on purpose. Slaughter alone still tops out at half the bar and cannot win
+	# this war by itself -- that is the half of his sentence it would be easy to miss.
+	#
+	# NOT APPLIED to war_for_the_dawn_cb, which carries its own tuned scales (battles 300 / occupation 10)
+	# and would be broken by a blanket occupation number.
 	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
-	defender_capital_gives_war_score = no 				# No warscore from defender capital
+	defender_capital_gives_war_score = yes				# 1.0.15d: taking the seat IS the win condition
+	attacker_score_from_occupation_scale = 150
+	max_attacker_score_from_occupation = 150
+	attacker_wargoal_percentage = 0.8
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
 	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
 
@@ -1434,8 +1510,37 @@ other_cb_empire = {
 	attacker_allies_inherit = yes
 	defender_allies_inherit = yes
 	
+	# ══ 1.0.15d -- THE WAR SCORE NOW REWARDS TAKING THE SEAT, NOT JUST WINNING THE FIELD. ══════════════
+	# Thomas, 25 Aug, watching an observer run: "it's taken over three years alone to try and take
+	# Winterfell... I wish the war score objective would specifically only count the capital... you want to
+	# slaughter them and have the countryside kinda reflect some of it."
+	#
+	# WHAT WAS ACTUALLY WRONG. These three invasion CBs declared NO score settings at all, so every one ran
+	# on raw engine defaults. His 130 AC screenshot reads exactly as you would predict: battles "+50% Max!"
+	# -- the dead cap the battle contribution almost immediately, because 719,250 against 58,896 wins every
+	# field there is -- and occupation at MINUS four percent, because occupation score is a ratio against the
+	# whole war goal and the goal was the defender's entire realm. The war stalled at +46% for years and
+	# ended in a truce with Winterfell never taken. The dead were winning every battle and the scoreboard had
+	# stopped listening.
+	#
+	# FOUR KEYS, all lifted from vanilla's own invasion and conquest CBs rather than invented:
+	#   defender_capital_gives_war_score = yes  -- taking the seat is worth something. The literal
+	#                                             implementation of what he asked for, and the engine's own
+	#                                             lever for it; it was explicitly `no` on all three.
+	#   attacker_score_from_occupation_scale    -- 150, vanilla's conquest number (00_conquest.txt:47).
+	#   max_attacker_score_from_occupation      -- 150, vanilla's invasion number (00_invasion_war.txt:449).
+	#   attacker_wargoal_percentage = 0.8       -- vanilla's invasion figure (00_invasion_war.txt:445): you do
+	#                                             not have to hold every last holding to have taken a kingdom.
+	# Battles keep their default cap on purpose. Slaughter alone still tops out at half the bar and cannot win
+	# this war by itself -- that is the half of his sentence it would be easy to miss.
+	#
+	# NOT APPLIED to war_for_the_dawn_cb, which carries its own tuned scales (battles 300 / occupation 10)
+	# and would be broken by a blanket occupation number.
 	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
-	defender_capital_gives_war_score = no 				# No warscore from defender capital
+	defender_capital_gives_war_score = yes				# 1.0.15d: taking the seat IS the win condition
+	attacker_score_from_occupation_scale = 150
+	max_attacker_score_from_occupation = 150
+	attacker_wargoal_percentage = 0.8
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
 	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
 

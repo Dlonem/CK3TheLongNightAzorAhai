@@ -2,3 +2,22 @@
 
  dawn_refugee_modifier:0 "Fled South"
  dawn_refugee_modifier_desc:0 "Driven from hearth and hall by the marching dead, they have fled south among the living — a displaced refugee, haunted by what was left behind, quick on the road and hardened by survival."
+
+ # 1.0.15 -- names for the five modifiers that showed as raw keys in tooltips (audit find).
+ others_sword_modifier:0 "Blade of the Long Night"
+ others_sword_modifier_desc:0 "A sword of the Others' ice — it drinks warmth, and the hand that holds it forgets what summer felt like."
+ others_weak_modifier:0 "Winter's Might (Faint)"
+ others_weak_modifier_desc:0 "The cold behind the Night King is thin this age; the dead walk, but slowly."
+ others_standard_modifier:0 "Winter's Might"
+ others_standard_modifier_desc:0 "The full strength of the long dark moves with him."
+ others_strong_modifier:0 "Winter's Might (Deep)"
+ others_strong_modifier_desc:0 "The cold runs deep this age, and the dead with it."
+ others_insane_modifier:0 "Winter's Might (Endless)"
+ others_insane_modifier_desc:0 "The night is dark and full of terrors, and this age it is bottomless."
+
+ # 1.0.15 -- new modifiers.
+ ln_named_azor_ahai_modifier:0 "Azor Ahai Reborn"
+ ln_named_azor_ahai_modifier_desc:0 "The Long Night ended at this hand. That is not a claim the world argues with."
+ ln_cold_trophy_modifier:0 "A Captive Other"
+ ln_cold_trophy_modifier_desc:0 "One of the cold ones stands in the cells below, and everyone in the hall knows it. The realm fears the lord who holds it. The household mostly fears the stair."
+

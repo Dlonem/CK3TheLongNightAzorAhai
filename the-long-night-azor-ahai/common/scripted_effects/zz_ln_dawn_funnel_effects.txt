@@ -1,0 +1,229 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.0.15, THE ENDING FUNNEL.
+#
+# Thomas's design rule, 24 Aug: "the war for the dawn only ends if the night king dies." Before this file,
+# the mod had four ways for the Long Night to end and only ONE of them (the open-battle killing blow) actually
+# ran the ending. The other three -- a war-score victory, killing him mid-war, imprisoning him -- either
+# invalidated the war, crowned a replacement, or stalled forever. Every road now funnels into the same place:
+# the Night King dies, on screen, by a named hand, and the catalyst chain (zz_ln_catalyst_effects.txt) does
+# what it has always done from there. This file adds NO second resolution path -- it only delivers candidates
+# to the death that already knows how to resolve itself.
+#
+# THE ORDERING RULE APPLIES THROUGHOUT: nothing irreversible happens until every value that depends on the
+# pre-change state has been read and banked. The death is always the LAST line of whichever chain runs.
+
+# ── THE CORNERED KING ───────────────────────────────────────────────────────────────────────────────────────
+# Called from war_for_the_dawn_cb's on_victory, and only when the defender is still alive -- i.e. the war was
+# won on score, not by a blow. scope:war, scope:attacker and scope:defender are the CB's own handles (the
+# on_defeat block three inches down the same file already uses scope:war, so the shape is proven).
+#
+# WHO IS IN THE ROOM (checklist #2): not just the war's rulers. Every attacker AND every attacker's knights --
+# Jon Snow sworn to somebody else's banner is exactly the man this exists for.
+ln_wfd_cornered_effect = {
+	scope:defender = { save_scope_as = ln_night_king }
+
+	scope:war ?= {
+		every_war_attacker = {
+			limit = { is_alive = yes  is_adult = yes }
+			add_to_temporary_list = ln_dawn_candidates
+			every_knight = {
+				limit = { is_alive = yes  is_adult = yes }
+				add_to_temporary_list = ln_dawn_candidates
+			}
+		}
+	}
+
+	ordered_in_list = {
+		list = ln_dawn_candidates
+		order_by = ln_dawn_worthiness_value
+		position = 0
+		save_scope_as = ln_dawn_champion
+	}
+	ordered_in_list = {
+		list = ln_dawn_candidates
+		order_by = ln_dawn_worthiness_value
+		position = 1
+		save_scope_as = ln_dawn_second
+	}
+
+	if = {
+		limit = { exists = scope:ln_dawn_champion }
+		debug_log = "LN_TRACE ENDGAME: war won on score - the destiny scene picks the hand"
+		debug_log_scopes = yes
+		# Variables, not just scopes -- the handshake pattern. The event is days away and the variable
+		# survives anything short of the referent dying, which the event's own trigger re-checks.
+		set_global_variable = { name = ln_dawn_cornered_king  value = scope:ln_night_king }
+		set_global_variable = { name = ln_dawn_final_champion  value = scope:ln_dawn_champion }
+		if = {
+			limit = { exists = scope:ln_dawn_second  NOT = { scope:ln_dawn_second = scope:ln_dawn_champion } }
+			set_global_variable = { name = ln_dawn_second_champion  value = scope:ln_dawn_second }
+		}
+		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.11  days = 2 } }
+		# THE FAILSAFE IS PART OF THE PROMISE. If the scene is lost -- the champion dies on the road, an
+		# event queue hiccup, anything -- the king does not get to walk away from a war he lost. Day 14,
+		# hidden, idempotent -- and queued at BOTH the leader and the champion (review find: a leader who
+		# also dies inside the fortnight used to take the failsafe to his grave). Whoever still breathes
+		# finishes it; the second copy no-ops on the guards.
+		scope:attacker = { trigger_event = { id = ln_dawn.12  days = 14 } }
+		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.12  days = 15 } }
+	}
+	else = {
+		# Nobody fit to swing. The old resolution, unchanged: the war leader takes the kill.
+		# (Known and accepted: this death fires the catalyst sweep DURING on_victory, and the sweep may
+		# touch this same concluding war. Every guard on that path is idempotent -- the global is already
+		# set, on_victory's living-defender gate fails -- so the second pass is a no-op. Reviewed 1.0.15.)
+		debug_log = "LN_TRACE ENDGAME: war won on score but no candidate found - war leader resolves it"
+		scope:ln_night_king = {
+			death = {
+				death_reason = death_battle
+				killer = scope:attacker
+			}
+		}
+	}
+}
+
+# ── THE KING IN CHAINS ──────────────────────────────────────────────────────────────────────────────────────
+# Called from the on_imprison hook when the prisoner is the Night King. Root = the Night King (the prisoner),
+# scope:imprisoner = the captor. Candidates: the captor and the swords standing in his hall -- his knights,
+# his courtiers, his guests. The realm that put the King of Winter in a cell gets to decide which of its own
+# ends him; that is the execution chain Thomas picked, with the destiny layer choosing the hand.
+ln_nk_captured_effect = {
+	save_scope_as = ln_night_king
+	# He does not get to ask for trial by combat, ransom himself, or charm a jailer. AGOT's own prison
+	# interactions all hide for a prisoner carrying this flag; we use their door rather than shadowing
+	# five interaction files.
+	add_character_flag = keep_imprisoned
+
+	scope:imprisoner = {
+		save_scope_as = ln_nk_captor
+		add_to_temporary_list = ln_dawn_candidates
+		every_knight = {
+			limit = { is_alive = yes  is_adult = yes }
+			add_to_temporary_list = ln_dawn_candidates
+		}
+		every_courtier_or_guest = {
+			limit = { is_alive = yes  is_adult = yes  is_imprisoned = no }
+			add_to_temporary_list = ln_dawn_candidates
+		}
+	}
+
+	ordered_in_list = {
+		list = ln_dawn_candidates
+		order_by = ln_dawn_worthiness_value
+		position = 0
+		save_scope_as = ln_dawn_champion
+	}
+	ordered_in_list = {
+		list = ln_dawn_candidates
+		order_by = ln_dawn_worthiness_value
+		position = 1
+		save_scope_as = ln_dawn_second
+	}
+
+	debug_log = "LN_TRACE ENDGAME: the night king is in chains - execution chain begins"
+	debug_log_scopes = yes
+	set_global_variable = { name = ln_dawn_cornered_king  value = scope:ln_night_king }
+	set_global_variable = { name = ln_dawn_in_chains  value = yes }
+	if = {
+		limit = { exists = scope:ln_dawn_champion }
+		set_global_variable = { name = ln_dawn_final_champion  value = scope:ln_dawn_champion }
+		if = {
+			limit = { exists = scope:ln_dawn_second  NOT = { scope:ln_dawn_second = scope:ln_dawn_champion } }
+			set_global_variable = { name = ln_dawn_second_champion  value = scope:ln_dawn_second }
+		}
+		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.11  days = 3 } }
+		# Review find: the failsafe rides both men, so one death cannot orphan the chain.
+		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.12  days = 15 } }
+	}
+	else = {
+		# A landless wretch with no knights captured the King of Winter. His cell, his blade.
+		set_global_variable = { name = ln_dawn_final_champion  value = scope:ln_nk_captor }
+		scope:ln_nk_captor = { trigger_event = { id = ln_dawn.11  days = 3 } }
+	}
+	scope:ln_nk_captor = { trigger_event = { id = ln_dawn.12  days = 14 } }
+}
+
+# ── THE COLD THING IN YOUR CELLS ────────────────────────────────────────────────────────────────────────────
+# A captured Other who is NOT the Night King. Root = the prisoner, scope:imprisoner = the captor.
+# breakfastenjoyer's report made the case: "I had a court full of immortal others that served as my knights."
+# The LotR Realms in Exile pattern he pointed at is the right one -- a thing of the cold does not sit in a
+# cell awaiting ransom, and it certainly does not take up a knight's banner afterwards.
+ln_other_captured_effect = {
+	save_scope_as = ln_captured_other
+	add_character_flag = keep_imprisoned
+	debug_log = "LN_TRACE: an Other has been imprisoned - the captor is told what he is holding"
+	scope:imprisoner = { trigger_event = { id = ln_dawn.20  days = 2 } }
+}
+
+# ── THE CAST-DOWN BACKSTOP ──────────────────────────────────────────────────────────────────────────────────
+# 1.0.15c. The bane rule means a Night King killed by ordinary steel is cast down, not destroyed, and the
+# dark is supposed to crown another. Two handlers can do that -- the story cycle's on_owner_death (which
+# reads global_var:ln_nk_cast_down) and this. Which of them gets there first is an ENGINE ORDERING QUESTION
+# WE HAVE NOT TESTED, and under others_death_resolution -- the default rule -- losing that race destroys the
+# story outright and stops the invasion with no dawn to show for it.
+#
+# So this does not care who won the race. Once a year, if a cast-down was recorded and the world no longer
+# has a Night King in it while the struggle still says the Long Night is running, the crown is put back on
+# somebody and the invasion resumes. Root = anything; called from ln_struggle_yearly_work_effect.
+#
+# COST WHEN NOTHING IS WRONG: one global read a year. The character scan behind it only ever runs in the
+# window between a cast-down and a successor existing, which on the healthy path is zero.
+# NEVER RUNS IF: no cast-down was recorded, the struggle is past the Long Night, or a Night King is already
+# standing -- which is the normal case the instant either handler does its job.
+ln_cast_down_backstop_effect = {
+	if = {
+		limit = {
+			has_global_variable = ln_nk_cast_down
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+			NOT = { any_living_character = { has_trait = nightking } }
+		}
+		remove_global_variable = ln_nk_cast_down
+
+		# The same successor ladder the story cycle uses: the holder of the Others' realm, else any Other
+		# alive anywhere. Nothing is invented here.
+		if = {
+			limit = {
+				exists = title:h_the_others.holder
+				title:h_the_others.holder = { has_trait = other_trait }
+			}
+			title:h_the_others.holder = { save_scope_as = ln_next_nightking }
+		}
+		else = {
+			random_living_character = {
+				limit = { has_trait = other_trait }
+				save_scope_as = ln_next_nightking
+			}
+		}
+
+		if = {
+			limit = { exists = scope:ln_next_nightking }
+			debug_log = "LN_TRACE BANE BACKSTOP: cast down and nobody wearing the crown - putting it back on"
+			debug_log_scopes = yes
+			scope:ln_next_nightking = {
+				# AUDIT FIX: one crowning, shared. See ln_crown_the_next_nightking_effect.
+				ln_crown_the_next_nightking_effect = yes
+				# And a story to drive him, if the race was lost and the old one was destroyed. AGOT's own
+				# type name, used exactly as agot_long_night_scripted_effects.txt:777 uses it.
+				if = {
+					# AUDIT FIX -- THE SEARCH HAS TO BE GLOBAL. any_owned_story is correct, but run inside
+					# scope:ln_next_nightking it only asks whether THIS character owns a Long Night story.
+					# A story still owned by anybody else was invisible to it, and the backstop would have
+					# created a SECOND long_night_story alongside the live one -- two invasions driving the
+					# same world. The in-tree form it was modelled on (zz_ln_independence_war_shadow.txt:118)
+					# wraps it in any_ruler for exactly this reason, and that is now copied properly.
+					limit = {
+						NOT = {
+							any_ruler = {
+								any_owned_story = { story_type = long_night_story }
+							}
+						}
+					}
+					debug_log = "LN_TRACE BANE BACKSTOP: the story was destroyed in the race - starting a new one"
+					create_story = { type = long_night_story }
+				}
+			}
+		}
+		else = {
+			debug_log = "LN_TRACE BANE BACKSTOP: cast down, and there is no Other left alive to take the crown"
+		}
+	}
+}

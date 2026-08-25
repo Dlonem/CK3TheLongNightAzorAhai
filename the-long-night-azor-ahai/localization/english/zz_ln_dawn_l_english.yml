@@ -34,3 +34,29 @@
  ln_dawn.2.c:0 "I have already seen how this goes."
  ln_dawn.2.c_tt:0 "You have dreamed this field. You know which way he moves first.\n\n#weak Better odds than the blind version of the same fight — and knowing is not the same as being ready. You will carry it either way.#!"
 
+
+ # ── 1.0.15 -- the ending funnel ─────────────────────────────────────────────────────────────────────────
+
+ ln_dawn.11.t:0 "The Last Hour"
+ ln_dawn.11.desc.field_lb:0 "The war is decided. The hosts of the dead are broken, scattered, burned in windrows along the ice — and their king stands alone in the ruin of them, and looks at nothing but you.\n\nMen have died in numbers no maester will ever count true to bring this hour about, and it comes down, in the end, to a small circle of trampled snow and a sword that has been warm at your hip since the day you finished it.\n\nThe others hang back. Nobody has ordered them to. They can feel it the way cattle feel weather — that whatever happens in the next minute is not for them.\n\n#bold The war is won. This is the part that was never about the war.#!"
+ ln_dawn.11.desc.field_plain:0 "The war is decided. The hosts of the dead are broken, scattered, burned in windrows along the ice — and their king stands alone in the ruin of them, and looks at nothing but you.\n\nOut of every hand that held a sword in this war — the named, the anointed, the ones the priests were so sure about — the hour has picked yours. No song prepared you for it. Perhaps that is what the songs were always for: the man they never mention.\n\nThe others hang back. Nobody ordered them to.\n\n#bold The war is won. This is the part that was never about the war.#!"
+ ln_dawn.11.desc.chains_lb:0 "They brought him in chained in old iron and dragonglass, and the cold came in with him.\n\nThree days he has stood in your cells, and nothing about him has done what a prisoner does. He does not eat. He does not sleep. The guards have stopped drawing lots to bring him water, because the water is ice before it reaches the door.\n\nThere is one thing in this castle that has an answer to him, and it has been warm in its scabbard since the hour they dragged him through your gates.\n\n#bold A cell cannot hold winter. End it while it is yours to end.#!"
+ ln_dawn.11.desc.chains_plain:0 "They brought him in chained in old iron and dragonglass, and the cold came in with him.\n\nThree days he has stood in your cells, and nothing about him has done what a prisoner does. He does not eat. He does not sleep. He watches the door — not the way a man watches for rescue, but the way the sea watches a harbour wall.\n\nEvery hour he stands there the frost climbs another stone, and every man in your keep knows where it is coming from.\n\n#bold A cell cannot hold winter. End it while it is yours to end.#!"
+ ln_dawn.11.a:0 "End the Long Night."
+ ln_dawn.11.b:0 "This hour belongs to another. Send for them."
+
+ ln_dawn.20.t:0 "The Thing in Your Cells"
+ ln_dawn.20.desc.other:0 "Your gaoler has served this keep for thirty years, and this morning he would not go down the stair alone.\n\nThe thing you took alive stands in the middle of its cell — has stood, since they closed the door, in the exact middle, as far from every wall as a thing can be. Frost has climbed the stones around it in patterns that no one has been willing to look at for long. It has not asked for ransom. It has not asked for trial. It has not made a sound.\n\nIt is waiting, and everyone in your keep can feel what for.\n\n#bold The cold does not surrender. It only waits.#!"
+ ln_dawn.20.desc.wight:0 "It has been dead for some time. That is the problem.\n\nThe thing your men dragged in does not stop moving. It worked at the chains until the flesh came off the bone and then it kept working, and the sound of it — patient, tireless, all night — has emptied the cells on either side. The gaoler asks, respectfully, whether my lord intends to keep it, and if so whether my lord would care to listen to it for an hour first.\n\n#bold Meat does not stop. Fire stops it.#!"
+ ln_dawn.20.a:0 "Put it to the sword. Now."
+ ln_dawn.20.b:0 "Keep it below. Let the realm know what I hold."
+
+ # ── 1.0.15b -- the bane rule ────────────────────────────────────────────────────────────────────────────
+ ln_dawn.11.c:0 "We have nothing that can end him. Break off."
+ ln_dawn.11.c_tt:0 "Only #bold dragonglass#!, #bold Valyrian steel#! or #bold dragonfire#! can destroy him. You carry none of the three.\n\nThe war is won either way — but the Long Night does not end until he does."
+
+ # ── 1.0.15 -- the duel, on the engine's own duelling mechanic ───────────────────────────────────────────
+ ln_dawn.2.duel.win:0 "Land the blow"
+ ln_dawn.2.duel.lose:0 "Fall short"
+ ln_dawn.2.d:0 "Go out there anyway. Somebody has to be first."
+ ln_dawn.2.d_tt:0 "You carry nothing that can harm him — not #bold dragonglass#!, not #bold Valyrian steel#!, and no dragon above you.\n\nYou will not kill him today. Men will remember that you walked out there."

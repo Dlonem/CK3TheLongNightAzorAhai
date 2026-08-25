@@ -18,6 +18,24 @@
 #      after a WIN the 30-day pulse re-armed immediately. Nine wars where there used to be one. The pause has
 #      to be deliberate now that the wars are small.
 #
+# ── 1.0.15 UPDATE, READ THIS BEFORE TRUSTING THE PARAGRAPH BELOW ────────────────────────────────────────
+# ln_last_bastion_modifier is no longer a permanent stamp on a great house's capital. It is now a LIVE
+# STATE: raised while under half of the seat's own de jure duchy is in living hands, and DROPPED the moment
+# that stops being true (ln_seat_region_still_stands_trigger, zz_ln_bastion_triggers.txt). That is
+# deliberate -- it is how the dead are made to eat the countryside before they can storm Winterfell -- but
+# it has a consequence for THIS file that is easy to miss:
+#
+#   PASS 1 excludes a duchy that contains a bastion county. Once a great seat's region has fallen, its
+#   bastion drops, and that duchy therefore becomes eligible as PASS 1 "soft flank" ground -- ahead of the
+#   empire-level thresholds PASS 2 applies. The effective rule is now the EARLIER of the two: half a duchy,
+#   or PASS 2's two kingdoms / ten counties.
+#
+# That ordering is intended (the seat should become takeable exactly when its country is gone), but it is
+# no longer what PASS 2's comment alone describes.
+#
+# ALSO: this effect calls ln_bastion_upkeep_effect on the 30-day invasion pulse as well as the yearly one,
+# so the bastion state is re-evaluated monthly, not annually.
+#
 # WHAT MARKS A STRONGHOLD: ln_last_bastion_modifier, already stamped on every living great house's capital
 # county by ln_bastion_upkeep_effect and already maintained yearly. No second definition of "great seat", no
 # hardcoded title list that goes stale the moment somebody's dynasty dies out. If House Stark falls to a

@@ -1,0 +1,38 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.0.15, THE WATCH TAKES NO PART (and inherits no thrones).
+#
+# NHNster, on the Workshop: "characters from the Night Watch inherit lands for the Iron Throne. In one of my
+# saves i saw Jeor Mormont or Alister Thorne inherit lands from the Iron Throne even when they are in the
+# watch." VERIFIED against AGOT 0.5.1's own trait file before anything was built: `nightswatch` and
+# `nightswatch_historical` both carry `inheritance_blocker = all` -- but `nightswatch_temp` carries NEITHER
+# inheritance_blocker NOR claim_inheritance_blocker (00_agot_traits.txt:817). A recruit in his trial period
+# stands in every succession line in Westeros, and nothing anywhere hands back what he inherits.
+#
+# This does not touch AGOT's trait (their file, their fix to make); it catches the RESULT, both ways in:
+#   * ln_nw_title_inheritance_guard -- the moment a sworn brother inherits southern land, he renounces it.
+#   * ln_watch_yearly's sweep (zz_ln_nw_guard_effects.txt) -- the self-heal for every save where a brother
+#     is already sitting on inherited land, including everything NHNster already has.
+#
+# ONLY IF: the gainer is a sworn brother by AGOT's own definition (agot_is_member_of_nights_watch), the title
+# is county-tier or better, and it is OUTSIDE the Watch -- not de jure k_the_wall, not one of our ranger
+# company titles, and the gainer is not himself the Night's Watch government (the Lord Commander's own title
+# flow is AGOT's on_title_gain handler, shadowed in zz_ln_shadows, and this must not fight it).
+# NEVER IF: any of that fails, or no lawful hand can be found to take it -- then it FAILS OPEN and the title
+# simply stays, which is exactly the behaviour every save has today.
+#
+# Root = the character who gained the title; scope:title = the title (vanilla's on_title_gain_inheritance
+# contract, same scopes our ln_others_title_gain hook already relies on for on_title_gain).
+ln_nw_title_inheritance_guard = {
+	trigger = {
+		agot_is_member_of_nights_watch = yes
+		NOT = { government_has_flag = government_is_nw }
+		scope:title ?= {
+			tier >= tier_county
+			NOT = { this = title:k_the_wall }
+			NOT = { target_is_de_jure_liege_or_above = title:k_the_wall }
+			NOT = { has_variable = ln_is_a_ranger_title }
+		}
+	}
+	effect = {
+		ln_nw_renounce_title_effect = yes
+	}
+}

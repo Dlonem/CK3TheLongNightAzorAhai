@@ -33,8 +33,11 @@ has_natural_death_second_chance = {
 		# Beric got six last kisses; a player gets one. The sixth one is the interesting story and no campaign
 		# is going to reach it.
 		AND = {
+			# 1.0.15 -- the trait gate is GONE: the Beric track (Thomas, 24 Aug). resurrected_by_rhllor
+			# ships four track rungs and ln_the_fire_takes_something_effect has always known how to climb
+			# them; this line was what made every route once-per-lifetime anyway. The flag below is a
+			# three-year cooldown, and the real limiter is priests: one life given per priest, ever.
 			NOT = { has_character_flag = ln_had_the_last_kiss }
-			NOT = { has_trait = resurrected_by_rhllor }
 
 			# 1. Your faith can do this at all.
 			faith = { has_doctrine_parameter = can_heal_via_flames }

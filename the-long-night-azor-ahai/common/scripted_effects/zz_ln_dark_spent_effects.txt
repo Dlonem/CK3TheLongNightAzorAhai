@@ -1,0 +1,231 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.0.15, THE DARK IS SPENT.
+#
+# This is the story cycle's old on_end body, MOVED here verbatim and given a latch -- because the cleanup only
+# ever lived in one place, and every road that ended the Long Night without cleanly ending the story left the
+# world full of leftovers: wights still walking, ice dragons still flying, immortal Others taking knighthoods
+# in southern courts (breakfastenjoyer's "court full of immortal others", erine120's "it doesn't get rid of
+# the others and their wights"). The story's on_end now calls this; so can anything else that discovers the
+# dark is over -- the yearly backstop in ln_struggle_yearly_work_effect being the first customer.
+#
+# IDEMPOTENT BY LATCH. ln_dark_spent_done guards the whole body, so the story ending AND the backstop both
+# calling it costs nothing. The Cycle re-arm clears the latch with the other wave-one latches
+# (zz_ln_struggle_effects.txt), so wave two's dawn cleans up wave two.
+#
+# Scope requirements: none. Every read inside is a global lookup (title:, house:, every_living_character,
+# every_player), which is why the extraction is safe -- the story's own scope was never used.
+
+ln_the_dark_is_spent_effect = {
+	if = {
+		limit = { NOT = { has_global_variable = ln_dark_spent_done } }
+		set_global_variable = { name = ln_dark_spent_done  value = yes }
+		debug_log = "LN_TRACE DARK SPENT: the end-of-the-long-night cleanup is running"
+
+		# 1.0.15 -- the trophies go with the war. The wight sweep below kills every captive Other, so any
+		# lord still showing off "A Captive Other" (ln_dawn.20's second option) is showing off an empty
+		# cell. Stripped here rather than left to its ten-year clock.
+		every_living_character = {
+			limit = { has_character_modifier = ln_cold_trophy_modifier }
+			remove_character_modifier = ln_cold_trophy_modifier
+		}
+
+
+	
+
+	### Reform Nightswatch
+
+	if = { limit = { NOT = { title:c_castle_black.holder ?= { has_government = nights_watch_government } }
+
+	title:c_castle_black.holder ?= { is_ai = yes }
+
+	}
+
+		 # The Long Night+: NW reformation is no longer automatic — it is now the reform_nights_watch_decision,
+		 # which only the King on the Iron Throne or an independent King of the North may take.
+
+		 }
+
+		 
+
+	
+
+	# ── 1.0.9a ── `?=` HERE IS THE SECOND HALF OF AXEL'S REPORT, AND THE MORE LIKELY HALF. ──────────────
+	# on_end fires from on_owner_death -- i.e. at the exact instant the Night King has just died and his
+	# succession has not necessarily resolved. A bare `=` on a link that is momentarily unset does not
+	# quietly skip: it is a logged scope error and THE WHOLE BLOCK BELOW DOES NOT RUN. That block is
+	# save_scope_as = lastother, destroy_others_kingdom_titles, the Night's Queen flag, and the culture
+	# rewrite. Lose it and the wights still die (line ~195), the lands are still scoured (~189) and the
+	# house is still swept (~214) -- "everything else returned to normal" -- but the Night King's own
+	# above-county titles are never destroyed. The Others' REALM survives the Dawn intact, which is exactly
+	# what Axel described and what Jorahm called "the surviving Other" before him.
+	# Worse: with no Night's Queen flagged, the sweep at ~214 has no exception and takes the whole house,
+	# including the seed the recurrence is supposed to grow wave two from.
+	title:h_the_others.holder ?= { 
+
+	save_scope_as = lastother
+
+		destroy_others_kingdom_titles = yes
+
+		random_courtier = { limit = { has_trait = other_trait
+
+										is_female = yes}
+
+							add_character_flag = nightsqueen
+
+							save_scope_as = nightsqueen
+
+							add_trait = disinherited
+
+							}
+
+		culture = {
+
+			clear_culture_traditions = yes
+
+			add_culture_tradition = tradition_agot_wildling
+
+			add_culture_tradition = tradition_mountain_homes
+
+			add_culture_tradition = tradition_winter_warriors
+
+			add_culture_tradition = tradition_tribe_unity
+
+		set_culture_name = {
+
+noun = frostborn_culture_name
+
+collective_noun = frostborn_culture_name
+
+prefix = frostborn_culture_name
+
+}
+
+		}
+
+		
+
+		
+
+		#destroy_title = title:h_the_others
+
+		}
+
+		# The Long Night+: before the dead crumble, scour the lands the Night King held — ordinary holdings
+		# return to wilderness, the great seats are left in ruins. Runs while the wights/Others still hold them.
+		agot_long_night_scour_others_lands_effect = yes
+
+		# The Long Night+: with the Others defeated, the power animating the dead fails — every wight is claimed by the cold.
+		# 1.0.7, DOOR TWO: and every undead dragon with them. A CONVERTED dragon keeps its own house, so
+		# neither the wight sweep nor the house_theothers sweep below would catch it -- the trait is the
+		# only handle. Clone-era dragons die by whichever sweep reaches them first; both are idempotent.
+		every_living_character = {
+			limit = {
+				OR = {
+					has_trait = wight_trait
+					has_trait = ln_undead_dragon
+				}
+			}
+			death = { death_reason = death_claimed_by_cold }
+		}
+
+		# The Long Night+ AFTERMATH: the Question of the North — within ~6 months the Crown MUST choose between
+		# restoring the Night's Watch and welcoming the free folk (ln_aftermath.1; replaces the old
+		# reform_nights_watch_decision, now retired). No Crown anywhere (no Iron Throne, no independent King of
+		# the North) → nobody holds the authority to keep the Wall: the free folk pour through unbidden. A yearly
+		# safety pulse reposes the question if the chosen crown dies before the event lands
+		# (zz_long_night_plus_aftermath_on_actions.txt). Runs AFTER the scouring so the wilderness exists.
+		set_global_variable = { name = ln_aftermath_started value = yes }
+		ln_pose_question_of_the_north_effect = yes
+
+		house:house_theothers = {  every_house_member = { limit = { NOT = { has_character_flag = nightsqueen } } death = {
+
+						
+
+						death_reason = death_vanished
+
+					} } }
+
+					
+
+		
+
+	if = { limit = { has_game_rule = longnight_iron_throne_reformation_on }	 
+
+	if = { limit = { exists = title:h_the_iron_throne.holder} 
+
+	title:h_the_iron_throne.holder ?= { trigger_event = {
+
+						id = others_maintenance.2
+
+						days = 1
+
+					}
+
+					}
+
+					
+
+	}
+
+	}
+
+		
+
+		
+
+		
+
+	
+
+		
+
+		
+
+		# v0.2.0: if the recurrence game rule is on, the dead are not finished -- they are merely early.
+
+		
+
+		
+
+		
+
+	
+
+		
+
+		
+
+		ln_long_night_recurrence_effect = yes
+
+
+		
+
+		
+
+		
+
+	
+
+		
+
+		
+
+		every_player = {
+
+					trigger_event = {
+
+						id = others.3
+
+						days = 1
+
+					}
+
+				}
+
+		
+
+
+
+	
+
+	}
+}

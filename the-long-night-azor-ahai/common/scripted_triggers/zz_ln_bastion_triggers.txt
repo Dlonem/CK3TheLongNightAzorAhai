@@ -33,3 +33,37 @@ ln_holds_a_last_bastion_trigger = {
 	ln_is_one_of_them_trigger = no
 	exists = capital_county
 }
+
+# ══ 1.0.15e -- DOES THE COUNTRY AROUND THIS SEAT STILL ANSWER TO THE LIVING? ════════════════════════════════
+# Thomas, 25 Aug: "let's make sure that they don't, like, bum rush the capital as well. For example,
+# Winterfell is a huge place, so they should take all the surrounding territories and then try to take the
+# capital after a little bit."
+#
+# 1.0.15d made the defender's capital carry war score, which is what he asked for -- and which on its own
+# points every undead host straight at Winterfell on day one. This is the counterweight, and it deliberately
+# rides the bastion system that ALREADY EXISTS rather than adding a second definition of "a great seat":
+# zz_ln_invasion_target_effects.txt states that invariant in its own header ("No second definition of 'great
+# seat', no hardcoded title list that goes stale") and its PASS 1 identifies strongholds by
+# ln_last_bastion_modifier alone. A parallel modifier would have made the invasion picker route the dead
+# INTO fortified seats it had classified as soft.
+#
+# Root = a COUNTY title (the seat itself). Measured across its own de jure duchy, which is the unit a player
+# reads as "the lands around Winterfell". Under half in dead hands and the walls hold; half or more and the
+# bastion lapses -- at which point the seat is takeable AND the invasion targeter correctly stops treating
+# that duchy as a stronghold. The sequencing Thomas asked for falls out of one number.
+#
+# FAILS OPEN on a county with no de jure duchy above it (they exist, particularly beyond the Wall): treated
+# as still standing rather than throwing.
+ln_seat_region_still_stands_trigger = {
+	OR = {
+		NOT = { exists = duchy }
+		duchy ?= {
+			NOT = {
+				any_de_jure_county = {
+					percent >= 0.5
+					holder ?= { ln_is_one_of_them_trigger = yes }
+				}
+			}
+		}
+	}
+}

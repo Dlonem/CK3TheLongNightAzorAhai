@@ -10,9 +10,10 @@
 #     himself on somebody else (a permanent modifier, so he never recovers), and it catches every save made
 #     before this existed. Costs one variable read a year.
 #
-# NEVER clears anything else. A charge who was actually resurrected keeps resurrected_by_rhllor, and
-# ln_can_be_blessed_trigger still refuses him a second blessing -- releasing the variable is tidy, not a
-# second life.
+# NEVER clears anything else. A charge who was actually resurrected keeps resurrected_by_rhllor.
+# (1.0.15: under the Beric track a released, returned man CAN now seek a new sponsor once his three-year
+# ln_had_the_last_kiss cooldown clears -- that is the release doing its job, not a loophole. Each new
+# blessing still costs a fresh, unspent priest.)
 
 # Root = the blessed character.
 ln_release_stale_sponsor_effect = {
@@ -78,10 +79,16 @@ ln_blessing_nudge_effect = {
 		limit = {
 			is_ai = no
 			NOT = { has_character_flag = ln_knows_of_the_blessing }
+			# 1.0.15 -- a short re-queue guard, NOT the real latch. The permanent flag used to be set HERE,
+			# at queue time; if the priest left court in the 3-20 day window, ln_prophecy.41's trigger
+			# failed, the card never showed, and the latch said "told" forever -- the player was never told
+			# anything. The permanent flag now lands in .41's immediate, on the card that actually showed;
+			# this one-year flag only stops the yearly pulse stacking queues while one is pending.
+			NOT = { has_character_flag = ln_blessing_nudge_pending }
 			ln_can_be_blessed_trigger = yes
 			ln_blessing_priest_in_reach_trigger = yes
 		}
-		add_character_flag = ln_knows_of_the_blessing
+		add_character_flag = { flag = ln_blessing_nudge_pending  years = 1 }
 		trigger_event = { id = ln_prophecy.41  days = { 3 20 } }
 	}
 }
@@ -121,6 +128,10 @@ ln_pay_the_last_kiss_effect = {
 	# The price, identical to the last kiss given at a bedside -- because it is the same act.
 	add_character_modifier = ln_gave_the_last_kiss_modifier
 	add_piety = 300
+	# 1.0.15 -- and any OTHER charge he was still promised to is freed this instant; see
+	# ln_priest_is_spent_now_effect. (For the sponsored route the fallen man IS the charge, and the
+	# scope guard inside keeps that bond alone untouched.)
+	ln_priest_is_spent_now_effect = yes
 
 	if = {
 		# ALIVE-GUARDED: four days pass between the fall and this, and a man can die of something else
@@ -159,5 +170,35 @@ ln_pay_the_last_kiss_effect = {
 			value = 2
 			desc = ln_fervor_gain_resurrection
 		}
+	}
+}
+
+# ══ 1.0.15 -- THE UNLANDED CHARGE IS NEVER RELEASED (audit find). ═══════════════════════════════════════════
+# The stale-sponsor release runs off the yearly PLAYABLE pulse, and a blessed courtier or knight is not
+# playable -- so when his priest spent himself on somebody else's deathbed, the charge kept a sponsor who
+# could never pay, ln_sponsor_can_still_pay_trigger failed his interception forever, and
+# ln_can_be_blessed_trigger refused him a fresh blessing because a sponsor variable still existed. A blessed
+# hedge knight was strictly worse off than an unblessed one.
+#
+# The fix runs at the SOURCE: the moment a priest takes the spent modifier, his standing charge -- if it is
+# not the man being saved right now -- is released on the spot, playable or not.
+#
+# Root = the priest, at the instant he becomes spent. scope:ln_the_fallen (when set by the caller) is the man
+# the payment is FOR, whose bond is doing its job and must not be cut.
+ln_priest_is_spent_now_effect = {
+	if = {
+		limit = {
+			exists = var:ln_blessed_charge
+			# trigger_if, not a bare NOT: on the bedside route scope:ln_the_fallen is never saved, and a
+			# bare comparison against an unset scope is an error-log line per kiss (review find).
+			trigger_if = {
+				limit = { exists = scope:ln_the_fallen }
+				NOT = { var:ln_blessed_charge ?= scope:ln_the_fallen }
+			}
+			var:ln_blessed_charge ?= { exists = var:ln_blessing_sponsor }
+		}
+		debug_log = "LN_TRACE BLESSING RELEASED: the priest spent himself elsewhere - his charge is freed at once"
+		var:ln_blessed_charge ?= { remove_variable = ln_blessing_sponsor }
+		remove_variable = ln_blessed_charge
 	}
 }

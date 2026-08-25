@@ -1,0 +1,44 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.0.15, what happens when the dead are taken alive.
+#
+# Root = the character who was just imprisoned; scope:imprisoner = the captor. Registered as a sub-list on
+# vanilla's on_imprison from zz_ln_00_hooks.txt, so it merges with vanilla's own effect instead of competing.
+#
+# Design (Thomas, 24 Aug): the execution chain. Capturing the NIGHT KING is an ending -- the destiny layer
+# picks the hand and the war resolves through his death like every other road (see
+# zz_ln_dawn_funnel_effects.txt). Capturing a lesser OTHER is the LotR-Realms-in-Exile pattern
+# breakfastenjoyer pointed at: it does not await ransom, it does not demand trial by combat
+# (keep_imprisoned hides AGOT's whole prisoner-interaction surface), and the captor's card resolves it.
+# A WIGHT in a cell is a thing that will not stop moving, and gets the same card's grimmer face.
+ln_others_imprisoned = {
+	trigger = {
+		OR = {
+			has_trait = nightking
+			has_trait = other_trait
+			has_trait = wight_trait
+		}
+	}
+	effect = {
+		if = {
+			limit = {
+				has_trait = nightking
+				# Review find: under others_war_resolution a battle-capture with NO War for the Dawn live
+				# is decapitation-by-rope -- the rule promises the war must be WON, and executing this king
+				# would crown a successor while the card said "you ended it". The full ending chain runs
+				# when his death would actually end things: under the death rule always, under the war rule
+				# only while a War for the Dawn is live against him. Otherwise he is handled as any captured
+				# Other -- executed without ceremony, and the dark crowns another.
+				OR = {
+					has_game_rule = others_death_resolution
+					any_character_war = {
+						using_cb = war_for_the_dawn_cb
+						primary_defender = root
+					}
+				}
+			}
+			ln_nk_captured_effect = yes
+		}
+		else = {
+			ln_other_captured_effect = yes
+		}
+	}
+}

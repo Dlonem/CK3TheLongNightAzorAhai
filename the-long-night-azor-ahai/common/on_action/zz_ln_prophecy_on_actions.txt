@@ -58,6 +58,10 @@ ln_watch_yearly = {
 	effect = {
 		ln_watch_pulse_effect = yes
 
+		# 1.0.15 -- the sworn-brother inheritance self-heal (one southern title handed back per year).
+		# Report, verification and both halves of the guard: zz_ln_nw_inheritance_on_actions.txt.
+		ln_nw_holdings_yearly_selfheal_effect = yes
+
 		# THE WATCH COLLECTS ITS STRAYS. Root here is any playable character (yearly_playable_pulse). A
 		# ranging captain with no liege should not exist -- but one DID: the 8 Aug fealty bug left Thomas's
 		# live campaign with an independent captain, and a save carries its state forward no matter what the

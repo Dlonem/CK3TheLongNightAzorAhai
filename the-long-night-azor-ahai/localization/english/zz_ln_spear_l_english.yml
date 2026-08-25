@@ -17,6 +17,7 @@
  ln_spear.1.b:0 "So that is how it goes."
 
  # ── THE TAKEN DRAGON'S RECORD (1.0.12b) ─────────────────────────────────────────
+ ln_dragon_taken_memory:0 "taken by the Night King's spear"
  ln_dragon_taken_memory_desc:0 "Struck from the sky by the Night King's spear, and raised before the body was cold. The wings still fly. Nothing behind the eyes is what it was."
  ln_dragon_taken_memory_desc_second_perspective:0 "Your dragon was struck from the sky by the Night King's spear, and raised before the body was cold. It still flies. It is not yours, and it is not it."
  ln_dragon_taken_memory_desc_third_perspective:0 "This dragon was struck from the sky by the Night King's spear, and raised before the body was cold. It flies for the dead now."

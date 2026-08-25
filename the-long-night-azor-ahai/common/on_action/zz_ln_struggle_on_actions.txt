@@ -16,6 +16,30 @@ ln_struggle_game_start = {
 		# the black as a ranger, and game start is the only moment that is guaranteed to be before everything.
 		ln_mark_ranger_titles_effect = yes
 
+		# 1.0.15 -- PIN THE NIGHT KING'S FACE DONOR. others_thenightking is a history character who dies in
+		# 6934; at any real bookmark he is centuries dead, and the engine prunes dead characters nothing is
+		# holding on to. His DNA is the only scripted face the Night King has, and the copy that uses it
+		# (agot_long_night_scripted_effects.txt) runs decades into a campaign -- long after pruning would
+		# have taken him. So he is pinned here, at the earliest moment the mod runs at all.
+		# Same idiom the mod already uses to keep a dawn's dragon quotable a century later.
+		# Guarded on existing: if he was already gone before this fires, the copy's own else branch
+		# reports it and the Night King keeps a generated face, which is today's behaviour.
+		if = {
+			limit = { exists = character:others_thenightking }
+			character:others_thenightking = { agot_make_unpruneable = yes }
+			debug_log = "LN_TRACE FACE: night king face donor pinned unprunable at game start"
+		}
+		else = {
+			debug_log = "LN_TRACE FACE: night king face donor already absent at game start"
+		}
+
+		# 1.0.15 -- one greppable line answering "did the playset have Seasons of Ice and Fire?", which every
+		# compat report so far has had to establish by asking the reporter for their whole mod list.
+		if = {
+			limit = { ln_seasons_mod_active_trigger = yes }
+			debug_log = "LN_TRACE COMPAT: AGOT Seasons of Ice and Fire detected - read-side compat active"
+		}
+
 		trigger_event = { id = ln_struggle.1  days = 1 }
 	}
 }

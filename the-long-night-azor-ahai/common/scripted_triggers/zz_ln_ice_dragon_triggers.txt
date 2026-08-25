@@ -195,3 +195,21 @@ ln_storage_entry_is_blank_trigger = {
 		NOT = { has_variable = gene_dragon_body_shading_value }
 	}
 }
+
+# ══ AUDIT FIX -- THE MARKER LIST, NAMED ONCE. ═══════════════════════════════════════════════════════════════
+# The 1.0.15 portrait pass needed "is this character marked as one of theirs BY NAME" -- deliberately without
+# the trait clauses, because the whole point of that pass was that a drifted trait reference is exactly what
+# cannot be trusted. It got written inline, verbatim, in TEN places across four gfx files. That is a new
+# concept with ten definitions and no name, which is the thing this project keeps paying for.
+#
+# Named here, beside its parent, and called from all ten. Scripted triggers do work inside portrait weight
+# and trigger blocks -- AGOT calls agot_should_be_knight_idle_trigger from portrait_animations at seventeen
+# sites, so this is their own idiom rather than a bet.
+ln_is_marked_as_theirs_trigger = {
+	OR = {
+		has_character_flag = ln_one_of_them
+		house ?= house:house_theothers
+		has_government = wight_government
+		has_government = ruins_government
+	}
+}

@@ -47,9 +47,20 @@ ln_a_walker_could_be_here_trigger = {
 # option in ln_travel.2 that lets a man stand and fight an Other, and it is deliberately the SAME two modifiers
 # the Prepare decisions hand out (zz_ln_preparation_effects.txt:41, :85) -- so the reward for arming a household
 # with dragonglass shows up in a place the player did not expect it to, which is the whole point of arming it.
+# ══ AUDIT FIX (1.0.15) -- THIS IS NOW ONE QUESTION WITH ONE ANSWER. ═════════════════════════════════════════
+# This trigger predates ln_bears_the_bane_trigger, which the bane rule added for the Night King himself --
+# and the bane trigger turned out to be a strict SUPERSET of this one: it has both of these modifiers plus
+# the stores, the knights' glass, the mined flag, Valyrian steel owned or equipped, Lightbringer, Dawn, and
+# a living dragon. Nothing here was missing from it.
+#
+# Left as it was, the mod answered "can this man hurt the dead" two different ways: a knight carrying
+# ln_dragonglass_knight_modifier could kill the KING OF WINTER in ln_dawn.2 and could not fight one ordinary
+# Other on a road. Same for a man holding Lightbringer, and for a dragonrider. The narrower answer had no
+# argument for existing except that it was written first.
+#
+# Kept as a NAME rather than deleted: the travel content reads far better with a trigger that says what it
+# means at the call site, and the two events that use it (zz_ln_travel_danger_events.txt:195, :290) should
+# not have to know about the prophecy layer.
 ln_carries_something_that_can_hurt_them_trigger = {
-	OR = {
-		has_character_modifier = ln_dragonglass_armed_modifier
-		has_character_modifier = ln_valyrian_armed_modifier
-	}
+	ln_bears_the_bane_trigger = yes
 }

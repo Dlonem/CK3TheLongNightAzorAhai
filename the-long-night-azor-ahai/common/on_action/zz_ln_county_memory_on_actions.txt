@@ -15,3 +15,27 @@ ln_county_memory_on_title_gain = {
 		}
 	}
 }
+
+# ══ 1.0.15e -- A CAPTURED SEAT DOES NOT KEEP ITS WALLS. ═════════════════════════════════════════════════════
+# ln_last_bastion_modifier is addressed only through its holder's capital_county, by the yearly upkeep. The
+# moment the county changes hands the old holder's pulse can no longer reach it -- he is dead, landless, or
+# his capital is somewhere else now -- so the modifier STRANDS on the county. Before 1.0.15d that was a slow
+# curiosity; now that the capital is the war-score objective, the county most likely to change hands is
+# exactly the fortified one, and the stranded modifier would hand the dead +3 fort level and +50% garrison
+# to hold Winterfell against every living army trying to take it back.
+#
+# Root = the new holder, scope:title = the gained title -- the same contract ln_county_memory_on_title_gain
+# above relies on. The next yearly upkeep re-adds it if the new holder still qualifies, so a living lord
+# inheriting a seat loses nothing but a few months of walls.
+ln_seat_title_gain = {
+	trigger = {
+		scope:title ?= {
+			tier = tier_county
+			has_county_modifier = ln_last_bastion_modifier
+		}
+	}
+	effect = {
+		debug_log = "LN_TRACE SEAT: a fortified seat changed hands - the walls come down until its new lord earns them"
+		scope:title = { remove_county_modifier = ln_last_bastion_modifier }
+	}
+}

@@ -1,0 +1,17 @@
+﻿namespace = ln_nwguard
+
+# AGOT: The Long Night & Azor Ahai -- 1.0.15. One card: a sworn brother renounces inherited southern land.
+# Root = the brother; scope:title survives from ln_nw_renounce_title_effect (one-day queue), and
+# scope:ln_nw_receiver with it. Fires for players and AI alike; the AI reads it silently.
+ln_nwguard.1 = {
+	type = character_event
+	title = ln_nwguard.1.t
+	desc = ln_nwguard.1.desc
+	theme = realm
+	left_portrait = { character = root  animation = personality_honorable }
+	right_portrait = { trigger = { exists = scope:ln_nw_receiver }  character = scope:ln_nw_receiver  animation = personality_bold }
+
+	trigger = { is_alive = yes }
+
+	option = { name = ln_nwguard.1.a }
+}

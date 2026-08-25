@@ -24,9 +24,13 @@ ln_last_kiss_effect = {
 			ln_died_with_life_left_trigger = yes
 			ln_worth_the_fire_trigger = yes
 		}
-		# TEN YEARS between returns. Without a duration this was the permanent lock; with one it is the
-		# breathing space that stops a single bad decade producing four resurrections and a man with no face.
-		add_character_flag = { flag = ln_had_the_last_kiss  years = 10 }
+		# THREE YEARS between returns (1.0.15, Thomas's Beric-track decision -- was ten). The real limiter has
+		# always been the priests: each return burns one, permanently, and a realm runs out of red priests
+		# long before it runs out of deaths. The cooldown only stops a single bad stretch producing
+		# back-to-back returns; at three years the track's four rungs still take two decades to climb.
+		add_character_flag = { flag = ln_had_the_last_kiss  years = 3 }
+		debug_log = "LN_TRACE LAST KISS (natural death route): the fire is taking the roll"
+		debug_log_scopes = yes
 
 		# Grab the priest who did it -- the one who actually QUALIFIES, not merely the one in red -- so the card
 		# can name them and so the price lands on the right person.
@@ -49,6 +53,11 @@ ln_last_kiss_effect = {
 			scope:ln_the_priest = {
 				add_character_modifier = ln_gave_the_last_kiss_modifier
 				add_piety = 300
+				# 1.0.15 -- the bedside kiss is the classic way a SPONSOR gets spent on somebody who is not
+				# his charge. The charge is released this instant rather than at a yearly pulse he may not
+				# be playable enough to receive. scope:ln_the_fallen is unset on this route, so the guard
+				# inside releases whoever the charge was.
+				ln_priest_is_spent_now_effect = yes
 			}
 		}
 		# And out of you. You do not get to be casual about this.

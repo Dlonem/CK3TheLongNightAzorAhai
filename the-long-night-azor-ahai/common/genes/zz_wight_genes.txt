@@ -1,4 +1,17 @@
 ﻿# The Long Night+ - wight decay skin, ported & renamed from EK2's 'draugr' gene.
+# ══ 1.0.15b -- THE DEAD ZONE, AND WHY EVERY CURVE BELOW NOW IGNORES ITS OWN MIDDLE ═════════════════════════
+# Reports from Ereska, KngZawd and CinkoSenpai: living characters -- women above all -- rendering with corpse skin, the sunken face and the glowing eyes.
+# Some of them on NEW games, which rules out the save-drift story on its own.
+#
+# Every applier this mod owns sets these genes to EXACTLY 1.0 (wight_trait_modifiers.txt), so the whole
+# 0.0-0.85 span was never ours to use -- and yet the old curves reached FULL STRENGTH at 0.5, and the skin
+# tint at 0.2. Anything that put a stray mid-range value in this gene's slot -- another mod's gene churn
+# shifting indices, a portrait cache from a different playset, an accessory pack rewriting the pool -- got a
+# fully rendered corpse for it. So the curves are now flat zero until 0.85 and only reach full at 1.0:
+# our own look is bit-identical, and every value we did not deliberately write renders NOTHING.
+# This is the belt to the by-name trigger gate's braces (see wight_trait_modifiers.txt); either one alone
+# should stop it, and neither costs anything when the mod is behaving.
+#
 # FIX (v0.1.0): wrapped in special_genes. Top-level gene categories are required in every persistent DNA entry;
 # special_genes are not. Full reasoning in zz_long_night_genes.txt.
 special_genes = {
@@ -20,7 +33,7 @@ special_genes = {
 							# value = { min = 1.0 max = -1.5 }	
 							curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.0 }
+								{ 0.85  0.0 }
 								{ 1.0   1.0 }
 							}	
 						} 
@@ -30,7 +43,7 @@ special_genes = {
 							#value = { min = 0.0 max = 1.0 }	
 							curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.0 }
+								{ 0.85  0.0 }
 								{ 1.0   1.0 }
 							}
 						} 
@@ -40,7 +53,7 @@ special_genes = {
 							# value = { min = 1.0 max = -1.5 }	
 							curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.0 }
+								{ 0.85  0.0 }
 								{ 1.0   1.0 }
 							}	
 						} 
@@ -49,7 +62,7 @@ special_genes = {
 						# 	# value = { min = 0.5 max = -0.5 }	
 						# 	curve = {
 						# 		{ 0.0   0.0 }
-						# 		{ 0.5   0.0 }
+						# 		{ 0.85  0.0 }
 						# 		{ 1.0   1.0 }
 						# 	}	
 						# }
@@ -65,14 +78,16 @@ special_genes = {
 						skin_hsv_shift_curve = {
 							curve = {
 								{ 0.0   { 0.0 0.0 0.0 } }
-								{ 0.2   { 0.55 0.3 0.25 } }
+								{ 0.85  { 0.0 0.0 0.0 } }
+								{ 1.0   { 0.55 0.3 0.25 } }
 							}
 						}
 
 						hair_hsv_shift_curve = {
 							curve = {
 								{ 0.0   { 0.0 0.0 0.0 } }
-								{ 0.5   { 0.0 -0.2 0.0 } }
+								{ 0.85  { 0.0 0.0 0.0 } }
+								{ 1.0   { 0.0 -0.2 0.0 } }
 							}
 
 						}
@@ -87,7 +102,8 @@ special_genes = {
 							alpha_curve = {              #controls decal alpha relative to gene strength. Will give a linear interpolation if left unspecified
 								#gene strength%, decal alpha
 								{ 0.0  0.0 }
-								{ 0.5  1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {              #overlay/replace/hard_light/multiply
 								diffuse = replace
@@ -110,7 +126,8 @@ special_genes = {
 							alpha_curve = {              #controls decal alpha relative to gene strength. Will give a linear interpolation if left unspecified
 								#gene strength%, decal alpha
 								{ 0.0  0.0 }
-								{ 0.5  1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {              #overlay/replace/hard_light/multiply
 								diffuse = replace
@@ -136,7 +153,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.5 }
+								{ 0.85  0.0 }
+								{ 1.0   0.5 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								diffuse = replace
@@ -157,7 +175,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								diffuse = multiply
@@ -177,7 +196,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.75 }
+								{ 0.85  0.0 }
+								{ 1.0   0.75 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								diffuse = multiply
@@ -197,7 +217,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								#diffuse = multiply
@@ -217,7 +238,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								diffuse = replace
@@ -236,7 +258,7 @@ special_genes = {
 							# value = { min = 1.0 max = -1.5 }	
 							curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.0 }
+								{ 0.85  0.0 }
 								{ 1.0   0.5 }
 							}	
 						} 
@@ -246,7 +268,7 @@ special_genes = {
 							#value = { min = 0.0 max = 1.0 }	
 							curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.0 }
+								{ 0.85  0.0 }
 								{ 1.0   1.0 }
 							}
 						} 
@@ -256,7 +278,7 @@ special_genes = {
 							# value = { min = 1.0 max = -1.5 }	
 							curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.0 }
+								{ 0.85  0.0 }
 								{ 1.0   1.0 }
 							}	
 						} 
@@ -271,14 +293,16 @@ special_genes = {
 						skin_hsv_shift_curve = {
 							curve = {
 								{ 0.0   { 0.0 0.0 0.0 } }
-								{ 0.2   { 0.55 0.3 0.25 } }
+								{ 0.85  { 0.0 0.0 0.0 } }
+								{ 1.0   { 0.55 0.3 0.25 } }
 							}
 						}
 
 						hair_hsv_shift_curve = {
 							curve = {
 								{ 0.0   { 0.0 0.0 0.0 } }
-								{ 0.5   { 0.0 -0.2 0.0 } }
+								{ 0.85  { 0.0 0.0 0.0 } }
+								{ 1.0   { 0.0 -0.2 0.0 } }
 							}
 
 						}
@@ -293,7 +317,8 @@ special_genes = {
 							alpha_curve = {              #controls decal alpha relative to gene strength. Will give a linear interpolation if left unspecified
 								#gene strength%, decal alpha
 								{ 0.0  0.0 }
-								{ 0.5  0.9 }
+								{ 0.85  0.0 }
+								{ 1.0   0.9 }
 							}
 							blend_modes = {              #overlay/replace/hard_light/multiply
 								diffuse = replace
@@ -316,7 +341,8 @@ special_genes = {
 							alpha_curve = {              #controls decal alpha relative to gene strength. Will give a linear interpolation if left unspecified
 								#gene strength%, decal alpha
 								{ 0.0  0.0 }
-								{ 0.5  1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {              #overlay/replace/hard_light/multiply
 								#diffuse = replace
@@ -339,7 +365,8 @@ special_genes = {
 							alpha_curve = {              #controls decal alpha relative to gene strength. Will give a linear interpolation if left unspecified
 								#gene strength%, decal alpha
 								{ 0.0  0.0 }
-								{ 0.5  0.9 }
+								{ 0.85  0.0 }
+								{ 1.0   0.9 }
 							}
 							blend_modes = {              #overlay/replace/hard_light/multiply
 								diffuse = replace
@@ -362,7 +389,8 @@ special_genes = {
 							alpha_curve = {              #controls decal alpha relative to gene strength. Will give a linear interpolation if left unspecified
 								#gene strength%, decal alpha
 								{ 0.0  0.0 }
-								{ 0.5  1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {              #overlay/replace/hard_light/multiply
 								#diffuse = replace
@@ -386,7 +414,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.5 }
+								{ 0.85  0.0 }
+								{ 1.0   0.5 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								diffuse = replace
@@ -407,7 +436,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								diffuse = multiply
@@ -427,7 +457,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   0.75 }
+								{ 0.85  0.0 }
+								{ 1.0   0.75 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								diffuse = multiply
@@ -447,7 +478,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								#diffuse = multiply
@@ -467,7 +499,8 @@ special_genes = {
 							}
 							alpha_curve = {
 								{ 0.0   0.0 }
-								{ 0.5   1.0 }
+								{ 0.85  0.0 }
+								{ 1.0   1.0 }
 							}
 							blend_modes = {#overlay/replace/hard_light/multiply
 								diffuse = replace

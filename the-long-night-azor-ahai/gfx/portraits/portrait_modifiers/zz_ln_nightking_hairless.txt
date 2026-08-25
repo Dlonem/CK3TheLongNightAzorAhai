@@ -1,4 +1,13 @@
 ﻿# AGOT: The Long Night & Azor Ahai -- the Night King has no hair.
+# ══ 1.0.15 -- THE TRAIT ALONE IS NO LONGER TRUSTED (the "dead skin on living women" reports). ═══════════════
+# Ereska, KngZawd, CinkoSenpai: after AGOT's 0.5.1 update, LIVING characters -- women above all -- rendered
+# with the corpse look. Our appliers were keyed on the trait alone, and trait references in a mid-update save
+# are exactly the thing that drifts when any mod in the playset adds or removes traits. Every undead-look
+# entry now also requires one by-NAME marker that conversion stamps and drift cannot fake:
+# ln_one_of_them (stamped at every creation/conversion site since 1.0.7), the Others' house, or an undead
+# government. A living character who "gains" the trait through save drift now renders as what she is -- a
+# living character. A genuine pre-1.0.7-save wight missing all markers renders alive until the heartbeat
+# re-stamps it (mutate_into_other_effect backfill, 1.0.15) -- the mild failure, chosen deliberately.
 #
 # He shipped with a full head of hair and a beard, which reads as a bearded old king in ice armour rather than
 # as an Other. Templates verified against AGOT's own gene files:
@@ -36,6 +45,7 @@ ln_nightking_hairless = {
 			modifier = {
 				add = 99999
 				has_trait = nightking
+				ln_is_marked_as_theirs_trigger = yes
 			}
 		}
 	}

@@ -117,6 +117,15 @@ ln_struggle_monthly_effect = {
 			if = { limit = { has_global_variable = ln_slain_with_lightbringer } remove_global_variable = ln_slain_with_lightbringer }
 			# 13 Aug (1.0.6): the wave-one War for the Dawn victory must not end wave two. See others.1.
 			if = { limit = { has_global_variable = war_for_dawn_victory } remove_global_variable = war_for_dawn_victory }
+			# 1.0.15: wave one's cleanup latch and endgame handles go with it, or wave two's dawn would
+			# find the cleanup already "done" and its cornering pointed at a dead king.
+			if = { limit = { has_global_variable = ln_dark_spent_done } remove_global_variable = ln_dark_spent_done }
+			if = { limit = { has_global_variable = ln_dawn_cornered_king } remove_global_variable = ln_dawn_cornered_king }
+			if = { limit = { has_global_variable = ln_dawn_final_champion } remove_global_variable = ln_dawn_final_champion }
+			if = { limit = { has_global_variable = ln_dawn_second_champion } remove_global_variable = ln_dawn_second_champion }
+			if = { limit = { has_global_variable = ln_dawn_in_chains } remove_global_variable = ln_dawn_in_chains }
+			if = { limit = { has_global_variable = ln_dawn_deferred } remove_global_variable = ln_dawn_deferred }
+			if = { limit = { has_global_variable = ln_nk_cast_down } remove_global_variable = ln_nk_cast_down }
 
 			# THE WALL IS RAISED AGAIN -- Thomas, 9 Aug: "does the wall recollapse?" It could not: nothing
 			# outside AGOT's debug menu repairs the breach, so wave two of The Cycle arrived at a Wall
@@ -626,6 +635,29 @@ ln_struggle_yearly_work_effect = {
 		ln_struggle_yearly_drip_effect = yes
 		ln_watch_strength_catalyst_effect = yes
 		ln_dragon_census_effect = yes
+
+		# ══ 1.0.15 -- THE BACKSTOP THAT NOTICES A DAWN NOBODY CLEANED UP AFTER. ════════════════════════
+		# Every proper ending calls ln_the_dark_is_spent_effect at the moment the Night King dies. But a
+		# story the engine destroyed silently, a save that rode through the old invalidation bug, or any
+		# path a future edit forgets, leaves the world full of the dead with the latch unset. Two cheap
+		# global reads a year; the expensive body only ever runs once, behind its own latch.
+		#
+		# ONLY IF: the struggle stands in its Dawn -- the fighting is over by definition -- and the
+		# cleanup has not run. NEVER IF: any earlier phase (the dead are supposed to be walking), or the
+		# latch is set (the normal case forever after).
+		if = {
+			limit = {
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_dawn }
+				NOT = { has_global_variable = ln_dark_spent_done }
+			}
+			debug_log = "LN_TRACE DARK SPENT: yearly backstop found a dawn with no cleanup - running it now"
+			ln_the_dark_is_spent_effect = yes
+		}
+
+		# 1.0.15c -- and its twin at the other end: a Long Night whose king was cast down by ordinary
+		# steel and never replaced, because the story handler and the death catalyst raced. See
+		# ln_cast_down_backstop_effect.
+		ln_cast_down_backstop_effect = yes
 		ln_ruins_decay_effect = yes
 		# 1.0.10: stamps pre-conversion culture+faith onto dead-held counties any other route missed.
 		ln_stamp_swept_counties_effect = yes

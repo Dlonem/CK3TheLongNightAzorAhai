@@ -85,6 +85,17 @@ ln_dawn.2 = {
 	title = ln_dawn.2.t
 	desc = {
 		first_valid = {
+			# ── 1.0.15c REVIEW FIND: THIS BRANCH GOES FIRST, ABOVE EVERY ARMAMENT LINE. ──────────────
+			# The bane rule made the winning branch unreachable without obsidian, Valyrian steel or a
+			# dragon -- and the card that explains that ("a good sword that will do nothing at all") was
+			# the LAST entry in this chain, so four earlier descs shadowed it. Worse, the two the rule
+			# itself produces -- ln_faced_him_and_lived, set by both ln_dawn.4 and ln_dawn.11.c -- route
+			# a man straight to desc.again, so the exact population created by the rule never read it.
+			# A man holding nothing is told he is holding nothing, before anything else is said.
+			triggered_desc = {
+				trigger = { ln_bears_the_bane_trigger = no }
+				desc = ln_dawn.2.desc.nothing
+			}
 			# What you are holding, most decisive first. This is the whole "tier the killing blow by what you
 			# brought" idea from design-backlog.md, and the card says it out loud so the choice is informed.
 			# 1.0.13 -- DAWN IS NOT A FORGED SWORD AND SHOULD NOT BE DESCRIBED AS ONE. Both consecration
@@ -161,41 +172,154 @@ ln_dawn.2 = {
 	# ── END IT. The roll is the tiering: what you brought is the whole of your chance.
 	option = {
 		name = ln_dawn.2.a
-		random_list = {
-			# HE FALLS.
+		# THE BANE GATE MOVED UP HERE when the random_list became a duel. It used to sit on the winning
+		# entry of the list; a duel's outcome blocks take weights, not triggers, and faking it with
+		# `factor = 0` would fight the `min` floor below. Option-level is also the better read: the man
+		# who cannot hurt it does not get offered the swing, he gets ln_dawn.2.d.
+		trigger = { ln_bears_the_bane_trigger = yes }
+		# ══ 1.0.15 -- A REAL DUEL, ON THE ENGINE'S OWN DUELLING MECHANIC. ══════════════════════════════════
+		# Thomas asked the right question: "did you build that Night King duel? Was it mirrored off vanilla
+		# duelling? Can somebody with an inferior prowess possibly gain the upper hand? Is it all prowess
+		# based? Is it destiny based?"
+		#
+		# It was NOT, and this is the fix. Until now this was a bare random_list -- a 10-vs-40 coin flip with
+		# flat adds, in which prowess was a single +10 above 15 and nothing else. CK3 has a real duel effect
+		# (game/events/activities/feast_activity/feast_events_ewan.txt:385 is the clean vanilla example) and
+		# this now uses it, so the fight is an actual skill contest between two named men.
+		#
+		# HOW IT ANSWERS HIS THREE QUESTIONS:
+		#   * "Is it all prowess based?" No. `skill = prowess  target = scope:ln_night_king` makes prowess
+		#     the contest, and `compare_modifier` turns the MARGIN between the two men into weight -- so a
+		#     better swordsman is genuinely better, on a curve rather than a threshold.
+		#   * "Can somebody with inferior prowess gain the upper hand?" Yes, and `min = 8` is where that
+		#     lives: the success branch can never be weighted below 8 no matter how badly outclassed the
+		#     man is. The King of Winter has never lost a fight; that is exactly the fight the songs are
+		#     about. `min = -49` on the compare clamps the other direction so the margin cannot erase it.
+		#   * "Isn't that where you could write in that destiny system?" It is, and it is now the largest
+		#     term on the board. Everything below the compare is the destiny layer -- what you carry, what
+		#     you have been named, what the field has already taken out of you, and whether the world is
+		#     still looking at somebody else.
+		#
+		# THE BANE RULE STILL GOVERNS. This option is gated on ln_bears_the_bane_trigger above; the duel
+		# decides whether an ARMED man wins, never whether an unarmed one can.
+		duel = {
+			skill = prowess
+			target = scope:ln_night_king
+
+			# ── HE FALLS ────────────────────────────────────────────────────────────────────────────
 			10 = {
+				desc = ln_dawn.2.duel.win
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 2.5
+					min = -49
+				}
+				min = 8
+
+				# WHAT IS IN YOUR HAND. Lightbringer is the prophecy's own answer and is weighted as such.
 				modifier = { add = 60  has_character_flag = ln_forged_lightbringer }
+				modifier = { add = 55  has_character_flag = ln_the_star_paid_for_it }
 				modifier = { add = 35  ln_has_deed_valyrian_steel_trigger = yes }
-				modifier = { add = 30  ln_rides_a_living_dragon_trigger = yes }
+				# THOMAS'S CORRECTION, 25 Aug: "in a duel, having a dragon isn't relevant." He is right and
+				# the +30 that used to sit here was incoherent -- owning a dragon does not make a man better
+				# with a sword, and a rider who means to use the animal is not in a duel at all, he is
+				# burning the thing from four hundred feet. Dragonfire remains a BANE (it is one of the
+				# three things that can end him, ln_bears_the_bane_trigger) so it still buys the rider the
+				# right to this scene -- it simply stops pretending to be swordsmanship.
+				# THE DRAGON CONFRONTATION WANTS ITS OWN SCENE. Backlogged, not faked here.
 				modifier = {
 					add = 20
 					OR = {
 						has_character_modifier = ln_dragonglass_armed_modifier
 						has_character_modifier = ln_dragonglass_stores_modifier
+						has_character_modifier = ln_dragonglass_knight_modifier
 					}
 				}
-				modifier = { add = 15  ln_is_a_champion_of_rhllor_trigger = yes }
+
+				# WHAT YOU HAVE BEEN NAMED. The spear session's calibration, unchanged: the survival weight
+				# is the story refusing to end here, so it belongs to the man the world has named.
+				modifier = { add = 30  has_trait = chosen_by_rhllor }
+				# AUDIT FIX: the spear table this comment claims to reuse "unchanged" has FOUR rungs, and
+				# azor_ahai_reborn was the one dropped. Under The Cycle that made the man who ended the last
+				# Long Night weigh LESS here than a merely-Favored one -- while ln_dawn_worthiness_value
+				# rates him +40, the largest naming term it has. The funnel picked him and the duel forgot
+				# who he was.
+				modifier = { add = 25  has_trait = azor_ahai_reborn }
+				modifier = { add = 15  has_trait = favored_by_rhllor }
+				modifier = { add = 10  has_trait = resurrected_by_rhllor }
 				modifier = { add = 10  has_trait = brave }
-				modifier = { add = 10  prowess >= 15 }
-				# HE HAS DONE THIS BEFORE. Not courage -- courage is counted on the line above. Knowledge.
-				# A man who has been inside its reach and come back out knows how it moves, and there is
-				# nobody else alive who does.
+
+				# WHAT YOU HAVE ALREADY SURVIVED. Knowledge, not courage -- courage is the line above.
 				modifier = { add = 10  has_character_flag = ln_faced_him_and_lived }
-				# 1.0.13 -- and the same knowledge, bought the hard way. A rider who watched that arm come
-				# up and lived has seen the one thing he does that nobody survives to describe.
 				modifier = { add = 10  has_character_flag = ln_survived_the_spear }
+
+				# WHAT THE WAR HAS TAKEN OUT OF YOU.
+				modifier = { add = -10  has_trait = wounded_1 }
+				modifier = { add = -18  has_trait = wounded_2 }
+				modifier = { add = -30  has_trait = wounded_3 }
+				modifier = { add = -20  has_trait = maimed }
+
+				# AND WHETHER THE WORLD IS LOOKING AT SOMEBODY ELSE.
+				# NOTE FOR ANY FUTURE EDIT: any_living_character is an O(every character alive) scan. It is
+				# safe HERE -- it runs once, on one option of one event that fires at most once per wave,
+				# and it short-circuits behind the NOT above. It must never be moved onto a pulse: this mod
+				# has already shipped and fixed exactly that lag bug once (see the O(1) rewrite note in
+				# ln_the_world_forms_a_view_effect, zz_ln_prophecy_effects.txt).
+				modifier = {
+					add = -10
+					NOT = { has_trait = chosen_by_rhllor }
+					any_living_character = {
+						NOT = { this = root }
+						has_trait = chosen_by_rhllor
+					}
+				}
+
 				trigger_event = { id = ln_dawn.3  days = 1 }
 			}
-			# HE DOES NOT. Weighted the other way by the same things, so a man with nothing in his hands is
-			# very probably about to find out what that costs.
+
+			# ── HE DOES NOT ─────────────────────────────────────────────────────────────────────────
 			40 = {
+				desc = ln_dawn.2.duel.lose
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -2.5
+					min = -49
+				}
+				min = 10
+
 				modifier = { add = -25  has_character_flag = ln_forged_lightbringer }
+				modifier = { add = -20  has_character_flag = ln_the_star_paid_for_it }
 				modifier = { add = -15  ln_has_deed_valyrian_steel_trigger = yes }
-				modifier = { add = -10  ln_rides_a_living_dragon_trigger = yes }
-				modifier = { add = 20   has_trait = craven }
+				modifier = { add = -15  has_trait = chosen_by_rhllor }
+				modifier = { add = -13  has_trait = azor_ahai_reborn }
+				modifier = { add = -8   has_trait = favored_by_rhllor }
 				modifier = { add = -10  has_character_flag = ln_faced_him_and_lived }
+				modifier = { add = 20   has_trait = craven }
+				modifier = { add = 10   has_trait = wounded_1 }
+				modifier = { add = 18   has_trait = wounded_2 }
+				modifier = { add = 30   has_trait = wounded_3 }
+				modifier = { add = 20   has_trait = maimed }
+
 				trigger_event = { id = ln_dawn.4  days = 1 }
 			}
+		}
+	}
+
+	# ── CHARGE HIM ANYWAY. The only swing a baneless man has, and it is not a roll -- it is the answer to
+	# the question the card already asked him. He reaches ln_dawn.4 exactly as a man who fought and lost
+	# does, which is also what re-arms the wave's one scene for the day he comes back armed.
+	option = {
+		name = ln_dawn.2.d
+		trigger = { ln_bears_the_bane_trigger = no }
+		custom_tooltip = ln_dawn.2.d_tt
+
+		trigger_event = { id = ln_dawn.4  days = 1 }
+
+		stress_impact = { base = medium_stress_impact_gain }
+		ai_chance = {
+			base = 30
+			modifier = { add = 40  has_trait = brave }
+			modifier = { factor = 0  has_trait = craven }
 		}
 	}
 
@@ -216,16 +340,32 @@ ln_dawn.2 = {
 				has_trait = greensight
 				has_trait = dragon_dreams
 			}
+			# AUDIT FIX: option-level, matching ln_dawn.2.a. The gate used to sit only on the winning entry
+			# of this option's list, so a baneless greenseer was still offered it and read a tooltip
+			# promising "better odds" on a list that could only lose. Seeing the blow land beforehand does
+			# not put obsidian in your hand.
+			ln_bears_the_bane_trigger = yes
 		}
 		custom_tooltip = ln_dawn.2.c_tt
 		random_list = {
 			10 = {
+				# 1.0.15b -- the bane rule applies to prophecy too. Seeing the blow land beforehand does not
+				# put obsidian in your hand.
+				trigger = { ln_bears_the_bane_trigger = yes }
 				modifier = { add = 20  has_trait = greensight }
 				modifier = { add = 15  has_trait = dragon_dreams }
 				modifier = { add = 60  has_character_flag = ln_forged_lightbringer }
 				modifier = { add = 35  ln_has_deed_valyrian_steel_trigger = yes }
-				modifier = { add = 15  ln_is_a_champion_of_rhllor_trigger = yes }
+				# 1.0.15 -- same calibration as the main duel: the named man, not the flat rung bonus.
+				modifier = { add = 30  has_trait = chosen_by_rhllor }
+				modifier = { add = 25  has_trait = azor_ahai_reborn }
+				modifier = { add = 15  has_trait = favored_by_rhllor }
+				modifier = { add = 10  has_trait = resurrected_by_rhllor }
 				modifier = { add = 10  has_character_flag = ln_survived_the_spear }
+				modifier = { add = -10  has_trait = wounded_1 }
+				modifier = { add = -18  has_trait = wounded_2 }
+				modifier = { add = -30  has_trait = wounded_3 }
+				modifier = { add = -20  has_trait = maimed }
 				trigger_event = { id = ln_dawn.3  days = 1 }
 			}
 			40 = {
@@ -346,6 +486,21 @@ ln_dawn.4 = {
 			increase_wounds_no_death_effect = { REASON = death_wounds }
 		}
 		add_character_flag = ln_faced_him_and_lived
+		# ── 1.0.15c REVIEW FIND: AN UNARMED ATTEMPT MUST NOT SPEND THE WAVE'S ONE SCENE. ────────────
+		# ln_dawn.1 offers this once per wave (ln_dawn_offered, cleared only by the Cycle re-arm). With
+		# the bane rule in place, a man who beats the host while carrying nothing that can hurt the King
+		# of Winter cannot win the roll -- so before this, his first victory burned the mod's flagship
+		# scene on a card he could not have won, for the rest of the wave.
+		# Re-armed ONLY for the baneless. An armed man who simply lost the roll had his chance and does
+		# not get another: that is the gamble, and re-arming it would make the scene farmable.
+		if = {
+			limit = {
+				ln_bears_the_bane_trigger = no
+				has_global_variable = ln_dawn_offered
+			}
+			debug_log = "LN_TRACE BANE: the field scene was spent by a man carrying no bane - re-arming it"
+			remove_global_variable = ln_dawn_offered
+		}
 		# THE LOUDEST THING A CK3 CHARACTER CAN SAY ABOUT ITSELF: it goes in the title bar, the family
 		# tree and every other realm diplomacy screen, and it survives into a screenshot. He did not
 		# win -- ln_dawn.3 is where winning lives -- but he is the only man in the world who has stood
@@ -354,4 +509,275 @@ ln_dawn.4 = {
 	}
 
 	option = { name = ln_dawn.4.a }
+}
+
+# ══ 1.0.15 -- THE ENDING FUNNEL'S THREE NEW CARDS ═══════════════════════════════════════════════════════════
+# ln_dawn.11 : THE LAST HOUR. The destiny-chosen champion ends the Long Night -- fired by the score-victory
+#              cornering (war won, he still breathes) and by the captured-king chain (he is in chains).
+#              The death is the LAST line of the option, after every read that depends on him being alive.
+# ln_dawn.12 : the hidden failsafe. If the scene is lost, the war leader (or captor) finishes it without
+#              ceremony on day 14. A lost war can never again leave a living Night King.
+# ln_dawn.20 : the cold thing in your cells -- a captured lesser Other or wight, resolved by the captor.
+
+# ── THE LAST HOUR ───────────────────────────────────────────────────────────────────────────────────────────
+# Root = the champion the worthiness ordering picked. Rebuilds its scopes from the globals, the handshake
+# pattern -- the card is days away from the effect that queued it.
+ln_dawn.11 = {
+	type = character_event
+	window = fullscreen_event
+	title = ln_dawn.11.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_global_variable = ln_dawn_in_chains
+					ln_carries_lightbringer_trigger = yes
+				}
+				desc = ln_dawn.11.desc.chains_lb
+			}
+			triggered_desc = {
+				trigger = { has_global_variable = ln_dawn_in_chains }
+				desc = ln_dawn.11.desc.chains_plain
+			}
+			triggered_desc = {
+				trigger = { ln_carries_lightbringer_trigger = yes }
+				desc = ln_dawn.11.desc.field_lb
+			}
+			desc = ln_dawn.11.desc.field_plain
+		}
+	}
+	theme = murder_scheme
+	override_background = { reference = agot_frozen_forest }
+	left_portrait = { character = root  animation = personality_bold }
+	right_portrait = { trigger = { exists = scope:ln_night_king }  character = scope:ln_night_king  animation = disbelief }
+
+	trigger = {
+		is_alive = yes
+		exists = global_var:ln_dawn_cornered_king
+		global_var:ln_dawn_cornered_king ?= { is_alive = yes }
+		# Only the designated hand sees this card -- a stale queue from the deferral cannot double-fire it.
+		global_var:ln_dawn_final_champion ?= root
+		# And a king who broke his chains is not executed by a card (review find): the chains variant only
+		# proceeds while he is actually still held. A re-capture starts a fresh chain via on_imprison.
+		trigger_if = {
+			limit = { has_global_variable = ln_dawn_in_chains }
+			global_var:ln_dawn_cornered_king ?= { is_imprisoned = yes }
+		}
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		debug_log = "LN_TRACE ENDGAME: the last hour is on screen"
+		debug_log_scopes = yes
+		global_var:ln_dawn_cornered_king ?= { save_scope_as = ln_night_king }
+	}
+
+	# ── END IT. No roll. The war is over and he has nothing left to bargain with; this card is the
+	# ceremony, and the ceremony is the point -- the death happens HERE, killer = the man the story chose,
+	# and the catalyst chain (reveal, trait, nickname, cleanup) runs off that death exactly as it would for
+	# a killing blow in the field.
+	option = {
+		name = ln_dawn.11.a
+		# 1.0.15b -- THE BANE RULE. Even cornered, even in chains, he cannot be ended by ordinary steel.
+		# The worthiness ordering weights a bane-bearer +1000 so this option is almost always available to
+		# the man the story picked; when nobody in the realm carries one, ln_dawn.11.c below is what is left.
+		trigger = { ln_bears_the_bane_trigger = yes }
+		# Banked before the blow, per the standing ordering rule: nothing after this line reads him alive.
+		scope:ln_night_king = {
+			death = {
+				death_reason = death_the_dawn
+				killer = root
+			}
+		}
+		remove_global_variable = ln_dawn_cornered_king
+		if = { limit = { has_global_variable = ln_dawn_final_champion } remove_global_variable = ln_dawn_final_champion }
+		if = { limit = { has_global_variable = ln_dawn_second_champion } remove_global_variable = ln_dawn_second_champion }
+		if = { limit = { has_global_variable = ln_dawn_in_chains } remove_global_variable = ln_dawn_in_chains }
+		if = { limit = { has_global_variable = ln_dawn_deferred } remove_global_variable = ln_dawn_deferred }
+
+		ai_chance = { base = 100 }
+	}
+
+	# ── LET ANOTHER HAND DO IT. Once, and only if the ordering produced a second name -- a king who
+	# believes the prophecy can hand the moment to the man it names. The story does not wait twice.
+	option = {
+		name = ln_dawn.11.b
+		trigger = {
+			exists = global_var:ln_dawn_second_champion
+			NOT = { has_global_variable = ln_dawn_deferred }
+			NOT = { global_var:ln_dawn_second_champion ?= root }
+		}
+		set_global_variable = { name = ln_dawn_deferred  value = yes }
+		# The this-pattern, same as the reveal's knight stamps: scope in, then write the global off it.
+		global_var:ln_dawn_second_champion ?= {
+			set_global_variable = { name = ln_dawn_final_champion  value = this }
+			trigger_event = { id = ln_dawn.11  days = 1 }
+		}
+		remove_global_variable = ln_dawn_second_champion
+
+		ai_chance = { base = 0 }
+	}
+
+	# ── NOTHING WE CARRY CAN END HIM. The only option a baneless champion has, and the honest one.
+	# The war is still won -- the host is broken either way -- but the Long Night is not over, because the
+	# Long Night is not over until he dies, and he has not. He goes back into the dark, and the realm now
+	# knows exactly what it must find before it can finish this.
+	option = {
+		name = ln_dawn.11.c
+		trigger = { ln_bears_the_bane_trigger = no }
+		custom_tooltip = ln_dawn.11.c_tt
+
+		debug_log = "LN_TRACE ENDGAME: the war was won by a champion who carries no bane - he is cast down, not destroyed"
+		add_character_flag = ln_faced_him_and_lived
+		add_prestige = 500
+		stress_impact = { base = medium_stress_impact_gain }
+
+		# ── 1.0.15c REVIEW FIND (BLOCKER): HE HAS TO GO BACK INTO THE WORLD. ───────────────────────────
+		# The capture chain stamps keep_imprisoned, which hides AGOT's entire prisoner-interaction
+		# surface, and nothing anywhere removes it. Before this, a baneless hall that took him alive left
+		# him in a cell forever: un-releasable, un-recapturable (on_imprison cannot re-fire for a man
+		# already imprisoned), never in the field again -- the Long Night unendable for the rest of the
+		# save. If we cannot destroy him, we do not get to keep him either.
+		if = {
+			limit = { has_global_variable = ln_dawn_in_chains }
+			scope:ln_night_king ?= {
+				remove_character_flag = keep_imprisoned
+				release_from_prison = yes
+			}
+		}
+		# 1.0.15c REVIEW FIND: and the war that produced no ending must not leave its victory global
+		# standing. Left set it permanently disarms should_invalidate for the rest of the wave AND
+		# silently degrades others_war_resolution into death-resolution, because the dawn gate reads it.
+		if = { limit = { has_global_variable = war_for_dawn_victory } remove_global_variable = war_for_dawn_victory }
+
+		# The handles come down; the struggle stays where it is. A fresh cornering can happen the next
+		# time the living beat him in the field or take him alive -- with obsidian, next time.
+		remove_global_variable = ln_dawn_cornered_king
+		if = { limit = { has_global_variable = ln_dawn_final_champion } remove_global_variable = ln_dawn_final_champion }
+		if = { limit = { has_global_variable = ln_dawn_second_champion } remove_global_variable = ln_dawn_second_champion }
+		if = { limit = { has_global_variable = ln_dawn_in_chains } remove_global_variable = ln_dawn_in_chains }
+		if = { limit = { has_global_variable = ln_dawn_deferred } remove_global_variable = ln_dawn_deferred }
+
+		ai_chance = { base = 100 }
+	}
+}
+
+# ── THE FAILSAFE ────────────────────────────────────────────────────────────────────────────────────────────
+# Root = the war's primary attacker, or the captor. Hidden. If the King of Winter is somehow still breathing
+# two weeks after the war was decided, he stops -- without a card, with a log line, by the leader's hand.
+ln_dawn.12 = {
+	hidden = yes
+
+	trigger = {
+		is_alive = yes
+		exists = global_var:ln_dawn_cornered_king
+		global_var:ln_dawn_cornered_king ?= { is_alive = yes }
+		# Same escaped-king guard as ln_dawn.11 (review find): a failsafe must not behead at range a king
+		# who is no longer in anybody's cells. The field route carries no such global and is unaffected.
+		trigger_if = {
+			limit = { has_global_variable = ln_dawn_in_chains }
+			global_var:ln_dawn_cornered_king ?= { is_imprisoned = yes }
+		}
+	}
+
+	immediate = {
+		# 1.0.15b -- THE FAILSAFE OBEYS THE BANE RULE TOO. It exists so a won war cannot leave him standing
+		# through a lost event queue; it does not exist to hand the kill to a man who could not have made
+		# it. No bane, no blow -- the handles come down and the dark keeps its king.
+		if = {
+			limit = { ln_bears_the_bane_trigger = yes }
+			debug_log = "LN_TRACE ENDGAME FAILSAFE: the scene was lost - the leader finishes it"
+			global_var:ln_dawn_cornered_king ?= {
+				death = {
+					death_reason = death_the_dawn
+					killer = root
+				}
+			}
+			# 1.0.15c REVIEW FIND: THE TEARDOWN LIVES INSIDE THE ARMED BRANCH NOW. This failsafe is queued
+			# at TWO men -- the leader on day 14, the champion on day 15. With the teardown outside the
+			# branch, a baneless day-14 holder removed the handles and the day-15 copy failed its own
+			# trigger: the unarmed man disarmed the armed one, in exactly the case the failsafe exists
+			# for. Leaving the handles standing on the baneless path costs nothing -- the next cornering
+			# overwrites them and the Cycle re-arm clears them.
+			remove_global_variable = ln_dawn_cornered_king
+			if = { limit = { has_global_variable = ln_dawn_final_champion } remove_global_variable = ln_dawn_final_champion }
+			if = { limit = { has_global_variable = ln_dawn_second_champion } remove_global_variable = ln_dawn_second_champion }
+			if = { limit = { has_global_variable = ln_dawn_in_chains } remove_global_variable = ln_dawn_in_chains }
+			if = { limit = { has_global_variable = ln_dawn_deferred } remove_global_variable = ln_dawn_deferred }
+		}
+		else = {
+			debug_log = "LN_TRACE ENDGAME FAILSAFE: scene lost and no bane in the leader's hand - he is cast down, not destroyed"
+			# Same blocker as ln_dawn.11.c: a cell we can never open is worse than a king in the field.
+			# Only the day-15 copy (the champion) can still act, so the handles deliberately stay up.
+			if = {
+				limit = { has_global_variable = ln_dawn_in_chains }
+				global_var:ln_dawn_cornered_king ?= {
+					remove_character_flag = keep_imprisoned
+					release_from_prison = yes
+				}
+			}
+			if = { limit = { has_global_variable = war_for_dawn_victory } remove_global_variable = war_for_dawn_victory }
+		}
+	}
+}
+
+# ── THE COLD THING IN YOUR CELLS ────────────────────────────────────────────────────────────────────────────
+# Root = the captor. scope:ln_captured_other was saved by ln_other_captured_effect and stands re-checked
+# here -- prisons leak, wars end, and a card about a prisoner who is no longer there must not fire.
+ln_dawn.20 = {
+	type = character_event
+	title = ln_dawn.20.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:ln_captured_other ?= { has_trait = wight_trait } }
+				desc = ln_dawn.20.desc.wight
+			}
+			desc = ln_dawn.20.desc.other
+		}
+	}
+	theme = dungeon
+	left_portrait = { character = root  animation = worry }
+	right_portrait = { trigger = { exists = scope:ln_captured_other }  character = scope:ln_captured_other  animation = scheme }
+
+	trigger = {
+		is_alive = yes
+		exists = scope:ln_captured_other
+		scope:ln_captured_other = {
+			is_alive = yes
+			is_imprisoned_by = root
+		}
+	}
+
+	immediate = {
+		debug_log = "LN_TRACE: the captor is deciding what to do with a captured Other"
+	}
+
+	# ── PUT IT DOWN. The default, and the AI's choice every time -- the Realms-in-Exile pattern: the cold
+	# does not get kept. Steel first, questions never.
+	option = {
+		name = ln_dawn.20.a
+		scope:ln_captured_other = {
+			death = {
+				death_reason = death_execution
+				killer = root
+			}
+		}
+		add_dread = 10
+
+		ai_chance = { base = 100 }
+	}
+
+	# ── KEEP IT. Only a true Other, only while it lasts -- a wight is meat that will not stop moving and
+	# nobody keeps that. The realm learns what you hold; your hall never quite warms again.
+	option = {
+		name = ln_dawn.20.b
+		trigger = { scope:ln_captured_other ?= { has_trait = other_trait } }
+		add_character_modifier = {
+			modifier = ln_cold_trophy_modifier
+			years = 10
+		}
+
+		ai_chance = { base = 0 }
+	}
 }

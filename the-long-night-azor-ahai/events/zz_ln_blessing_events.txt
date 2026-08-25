@@ -68,7 +68,14 @@ ln_prophecy.21 = {
 	# ── GIVE IT. The one life this priest has to give.
 	option = {
 		name = ln_prophecy.21.a
-		trigger = { ln_sponsor_can_still_pay_trigger = yes }
+		trigger = {
+			ln_sponsor_can_still_pay_trigger = yes
+			# 1.0.15 -- HE MUST STILL BE THERE TO GIVE IT TO. The fallen man has three days to die of his
+			# wounds (increase_wounds can kill through a later hook) before this card arrives, and before
+			# this gate the priest paid his one life for a corpse: permanent modifier, no resurrection,
+			# no anything. Dead fallen -> only "let him go" remains, which is then just grief.
+			scope:ln_the_fallen ?= { is_alive = yes }
+		}
 		ln_pay_the_last_kiss_effect = yes
 
 		ai_chance = {
@@ -87,6 +94,8 @@ ln_prophecy.21 = {
 		trigger = {
 			ln_sponsor_can_still_pay_trigger = yes
 			ln_last_kiss_could_mean_something_trigger = yes
+			# 1.0.15 -- same corpse-guard as option a.
+			scope:ln_the_fallen ?= { is_alive = yes }
 		}
 		ln_pay_the_last_kiss_effect = yes
 		set_relation_lover = scope:ln_the_fallen
@@ -105,6 +114,7 @@ ln_prophecy.21 = {
 	# ln_prophecy.24, so a player is never killed by a decision taken off-screen at five speed.
 	option = {
 		name = ln_prophecy.21.b
+		debug_log = "LN_TRACE LAST KISS REFUSED: the priest kept what he had"
 
 		add_piety = 100
 		stress_impact = { base = medium_stress_impact_gain }
@@ -175,6 +185,11 @@ ln_prophecy.23 = {
 	trigger = {
 		is_alive = yes
 		exists = var:ln_the_kneeling_priest
+		# 1.0.15 -- THE TWO ROUTES MUST NOT STACK. If the man ALSO died of natural causes inside this
+		# four-day window and the bedside route already returned him (it sets this flag), a second payload
+		# here would double the track climb and take two wounds for one death. Silently skipped; the
+		# three-year cooldown carries the answer.
+		NOT = { has_character_flag = ln_had_the_last_kiss }
 	}
 
 	immediate = {
@@ -187,15 +202,29 @@ ln_prophecy.23 = {
 	option = {
 		name = ln_prophecy.23.a
 
-		add_character_flag = ln_had_the_last_kiss
+		# 1.0.15: three years, not forever -- the Beric track. See zz_ln_second_chance_rules.txt.
+		add_character_flag = { flag = ln_had_the_last_kiss  years = 3 }
 		# Same escalation as the last kiss given at a bedside -- one route, one price.
+		# (1.0.15: it calls ln_check_naming_effect ITSELF, at the right moment -- the explicit second call
+		# that used to sit here ran the naming twice per return, and a man one deed short of Favored could
+		# be named off a single resurrection's double count.)
 		ln_the_fire_takes_something_effect = yes
 		if = {
 			limit = { has_character_modifier = ln_fell_in_the_dark_modifier }
 			remove_character_modifier = ln_fell_in_the_dark_modifier
 		}
-		# A man who just stood up off a battlefield is exactly when a priest starts saying things aloud.
-		ln_check_naming_effect = yes
+		# 1.0.15 -- THE BOND IS SPENT AND IT UNTIES HERE, NOT AT A PULSE HE MAY NEVER RECEIVE. The priest
+		# who just paid can never pay again; leaving the variables tied kept an unlanded man from ever
+		# seeking a new sponsor (the yearly release only reaches playable characters). Both sides clear:
+		# his sponsor link, and the priest's charge slot -- freeing the priest's slot is tidiness, freeing
+		# the man is the Beric track working.
+		ln_release_stale_sponsor_effect = yes
+		scope:ln_the_priest ?= {
+			if = {
+				limit = { var:ln_blessed_charge ?= root }
+				remove_variable = ln_blessed_charge
+			}
+		}
 		trigger_event = { id = ln_prophecy.20  days = 2 }
 	}
 }
@@ -216,6 +245,9 @@ ln_prophecy.24 = {
 	trigger = {
 		is_alive = yes
 		exists = var:ln_the_kneeling_priest
+		# 1.0.15 -- if the bedside route already returned him inside the window (flag fresh-set), this card
+		# must not arrive and kill a man the fire just gave back.
+		NOT = { has_character_flag = ln_had_the_last_kiss }
 	}
 
 	immediate = {
@@ -249,6 +281,9 @@ ln_prophecy.41 = {
 	trigger = { ln_blessing_priest_in_reach_trigger = yes }
 
 	immediate = {
+		# 1.0.15 -- the "you have been told" latch lives here now, on the card that actually showed.
+		# See ln_blessing_nudge_effect for the window bug this closes.
+		add_character_flag = ln_knows_of_the_blessing
 		ln_find_blessing_priest_effect = yes
 	}
 

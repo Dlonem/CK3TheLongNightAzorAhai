@@ -12,7 +12,10 @@
 # EVERY EFFECT BELOW IS ONE THE ENGINE ACTUALLY HAS ON AN EXISTING ARTIFACT. The complete list is in
 # common/effect_localization/01_ep1_effects.txt: add/remove_artifact_modifier, add/remove_house_artifact_claim,
 # add/remove_personal_artifact_claim, copy_artifact_modifiers, create_artifact, destroy_artifact,
-# destroy_owned_artifact, equip_artifact_to_owner, unequip_artifact_from_owner, set_artifact_rarity.
+# destroy_owned_artifact, equip_artifact_to_owner, equip_artifact_to_owner_replace,
+# unequip_artifact_from_owner, set_artifact_rarity.
+# (1.0.15e: _replace added to this list -- it is in-tree at zz_ln_household_effects.txt and the_long_night.txt,
+#  and this effect now calls it. A future edit reading this list would otherwise call it invalid.)
 ln_consecrate_blade_effect = {
 	set_global_variable = { name = ln_lightbringer_forged  value = yes }
 	set_global_variable = { name = ln_lightbringer_forger  value = root }
@@ -30,7 +33,19 @@ ln_consecrate_blade_effect = {
 		add_artifact_modifier = ln_lightbringer_consecrated_modifier
 		# Vanilla's own post-creation rarity call, artifact scope -- 05_dlc_bp2_effects.txt:355.
 		set_artifact_rarity = illustrious
-		equip_artifact_to_owner = yes
+		# 1.0.15d LIVE-RUN FIX -- ..._replace, not the plain equip. Thomas's 130 AC run:
+		#   equip_artifact_to_owner [ No available slot which can hold Cloudbreak! ]
+		#
+		# CORRECTED 1.0.15e, because the first version of this comment got the mechanism wrong and it is
+		# worth recording why. It claimed the blade was left unequipped and therefore invisible to
+		# ln_carries_lightbringer_trigger. It cannot have been: ln_pick_the_blade_effect below selects
+		# scope:ln_the_blade with random_EQUIPPED_character_artifact in both of its branches, so the blade
+		# being consecrated is always the sword the man is already wearing. The slot was occupied by the
+		# artifact itself, the call was a no-op, and the error line was the only symptom.
+		# _replace re-equips the same artifact into the same slot, which cannot displace anything -- so
+		# this is a log-noise fix, not a rescued feature. Kept because a silent error every consecration
+		# is exactly how a real one gets missed later.
+		equip_artifact_to_owner_replace = yes
 	}
 
 	# Same world-news card the forge sends. ln_lightbringer.8 reads global_var:ln_lightbringer_forger and asks

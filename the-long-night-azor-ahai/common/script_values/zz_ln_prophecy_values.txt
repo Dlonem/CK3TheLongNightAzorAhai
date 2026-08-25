@@ -38,9 +38,13 @@ ln_dragonglass_comfortable_value = {
 	multiply = 2
 }
 
-# ── HOW LOUDLY THE WORLD REACTS TO A NAMING ─────────────────────────────────────────────────────────────────
-# Read by ln_the_world_forms_a_view_effect. A Chosen man is talked about twice as much as a Favored one, in
-# both directions -- the faithful admire him more and everyone else finds him twice as tiresome.
+# ── HOW LOUDLY THE WORLD REACTS TO A NAMING -- RETIRED, KEPT AS THE DESIGN TABLE ────────────────────────────
+# 1.0.15 AUDIT CORRECTION: nothing reads these any more. The 1.0.10b rewrite moved the naming aura onto
+# static modifiers (ln_named_favored/chosen_modifier and, since 1.0.15, ln_named_azor_ahai_modifier in
+# 00_long_night_character_modifiers.txt), and the old comment here claiming ln_the_world_forms_a_view_effect
+# "reads these live" was three versions stale -- it pointed future edits at dead code. The numbers stay
+# because they are the calibration record the modifiers were carried from (the AAR +40 tier was recovered
+# from exactly this table). Change the MODIFIERS, not these.
 ln_named_opinion_up_value = {
 	value = 10
 	if = {

@@ -41,7 +41,11 @@ ln_can_be_blessed_trigger = {
 	NOT = { has_trait = other_trait }
 	NOT = { has_trait = wight_trait }
 	NOT = { has_trait = dragon }
-	NOT = { has_trait = resurrected_by_rhllor }
+	# 1.0.15 -- the resurrected CAN be blessed again: the Beric track (Thomas, 24 Aug). Beric was under
+	# Thoros's care for all six returns; refusing a returned man a new sponsor was what capped the trait's
+	# four track rungs at one. The three-year ln_had_the_last_kiss cooldown still spaces the returns, and
+	# every new blessing still costs a fresh, unspent priest.
+	NOT = { has_character_flag = ln_had_the_last_kiss }
 	NOT = { exists = var:ln_blessing_sponsor }
 }
 

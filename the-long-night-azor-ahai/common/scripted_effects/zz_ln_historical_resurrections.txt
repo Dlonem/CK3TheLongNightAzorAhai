@@ -32,7 +32,11 @@ ln_grant_historical_resurrections_effect = {
 			}
 			if = { limit = { NOT = { has_trait = one_eyed } }  add_trait = one_eyed }
 			if = { limit = { NOT = { has_trait = scarred } }   add_trait = scarred }
-			add_character_flag = ln_had_the_last_kiss   # he has had his; no second-chance interception on top
+			# AUDIT FIX: was a bare, PERMANENT flag while the other two historical resurrections in this same
+		# effect were converted to three years. The trait gate was removed from four files specifically to
+		# open the Beric track -- and Beric Dondarrion was the one character in the game still locked out
+		# of it. Three years, like everyone else.
+		add_character_flag = { flag = ln_had_the_last_kiss  years = 3 }   # he has had his; no second-chance interception on top
 		}
 	}
 	character:Tully_5 ?= {
@@ -49,7 +53,7 @@ ln_grant_historical_resurrections_effect = {
 				value = 25
 			}
 			if = { limit = { NOT = { has_trait = disfigured } } add_trait = disfigured }
-			add_character_flag = ln_had_the_last_kiss
+			add_character_flag = { flag = ln_had_the_last_kiss  years = 3 }   # 1.0.15c: was a permanent bar
 		}
 	}
 	character:Westford_2 ?= {
@@ -64,7 +68,7 @@ ln_grant_historical_resurrections_effect = {
 				track = returned
 				value = 25
 			}
-			add_character_flag = ln_had_the_last_kiss
+			add_character_flag = { flag = ln_had_the_last_kiss  years = 3 }   # 1.0.15c: was a permanent bar
 		}
 	}
 }
