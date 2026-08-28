@@ -1,0 +1,27 @@
+﻿# AGOT: The Long Night & Azor Ahai -- title-naming helper effect (1.0.15a)
+#
+# Writes scope:get_title for one character, gender-correct. Same mechanism AGOT uses
+# (save_scope_value_as, name = get_title). Verified as the ONLY writer of that scope value in AGOT:
+# grep -o "name = get_title[a-z_]*" over 00_agot_character_data_effects.txt returns get_title x2 (both
+# inside set_title_localization_effect), get_title_regent x8, get_title_dowager x1. Stamping here is
+# the whole job -- nothing downstream re-reads or re-writes it.
+#
+# Called ONLY from our set_title_localization_effect override. Do not call it anywhere else: outside
+# that render path there is no gender or tier context and no string waiting for the answer.
+
+ln_stamp_title_effect = {
+	if = {
+		limit = { $SCOPE$ ?= { is_male = yes } }
+		save_scope_value_as = {
+			name = get_title
+			value = flag:$MALE$
+		}
+	}
+	else_if = {
+		limit = { $SCOPE$ ?= { is_female = yes } }
+		save_scope_value_as = {
+			name = get_title
+			value = flag:$FEMALE$
+		}
+	}
+}

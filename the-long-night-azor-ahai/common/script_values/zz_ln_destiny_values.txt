@@ -114,11 +114,25 @@ ln_dawn_worthiness_value = {
 	if = { limit = { has_trait = wounded_3 } add = -35 }
 	if = { limit = { has_trait = maimed }    add = -25 }
 	# An absolute bar, not a weight. Nothing outweighs being unable to stand.
+	# 1.0.16 NOTE, and read it with the bane term below: -1000 here and +1000 there cancel EXACTLY. An
+	# incapable man carrying dragonglass scored the same as a hale man carrying a butter knife, and every
+	# other term then decided it -- so the healthy baneless knight won the ordering, was handed ln_dawn.11,
+	# and could take only option c, "we have nothing that can end him". The Long Night kept running with
+	# the one weapon in the realm sitting in a sickbed. The bane term is the half that moves (see there);
+	# this one stays at -1000 so it still outranks everything except the bane itself, which is right:
+	# being unable to stand should lose to a healthy man with the same weapon, and beat nobody who has one.
 	if = { limit = { has_trait = incapable } add = -1000 }
 
 	# 1.0.15b -- AND THE ONE THING THAT DECIDES IT. A man holding dragonglass outranks the finest knight in
 	# Westeros holding castle-forged steel, because the knight cannot hurt him and the man can. Deliberately
 	# larger than every other term combined: this is not a preference, it is the difference between a
 	# champion and a spectator. See ln_bears_the_bane_trigger.
-	if = { limit = { ln_bears_the_bane_trigger = yes } add = 1000 }
+	# 1.0.16: 1000 -> 2500. The comment above already said this term is "deliberately larger than every
+	# other term combined" and it was not -- incapable's -1000 matched it to the point, and wounded_3 plus
+	# maimed plus a lost tie-breaker could eat the rest. 2500 makes the sentence true: no combination of
+	# penalties on this board can drag a bane-bearer below a man who has no bane at all, while the ordering
+	# BETWEEN bane-bearers still turns on every one of those terms -- a hale champion still outranks a
+	# wounded one, and both still outrank the incapable. That is the whole intent of the rule Thomas set
+	# on 24 Aug: without dragonglass, Valyrian steel or a dragon, you are a spectator no matter who you are.
+	if = { limit = { ln_bears_the_bane_trigger = yes } add = 2500 }
 }

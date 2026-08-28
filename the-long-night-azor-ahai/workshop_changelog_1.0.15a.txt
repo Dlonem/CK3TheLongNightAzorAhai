@@ -1,0 +1,21 @@
+[h1]Hotfix 1.0.15a[/h1]
+
+Submod compatibility, and two event cards that were showing you raw code instead of names.
+
+[h2]Compatibility[/h2]
+[list]
+[*][b]Fixed "Missing Title Loc" on rulers added by other submods.[/b] This mod used to redefine the effect AGOT uses to name every ruler in the game. Only one copy of that can exist in a playset and ours was the one that won, so any other submod adding titles to it lost them — quietly in most cases, and as a visible error wherever the other mod also added a government of its own. It no longer redefines it. Essos Expanded, Essos Expanded: The Further East, Legacy of Valyria, Nobility of Westeros and anything else that names its own rulers now work alongside this mod with no patch needed from either side, and load order does not matter. Wights, ranger captains and wardens are unaffected. Reported by [b]MAGNUM[/b] and [b]Buggyriot[/b], and diagnosed from the other side by [b]TXMaverick[/b] of Essos Expanded — thank you all three.
+[*][b]Any ruler this mod still cannot name reads "Lord" or "Lady" rather than a warning string.[/b] A safety net for submods nobody has told us about yet. A developer's error message does not belong in a player's UI.
+[/list]
+
+[h2]Bug Fixes[/h2]
+[list]
+[*][b]Fixed names showing as raw code in three event cards.[/b] "A Face I Know", the fallen-friend card after a battle, and the last-kiss card were written with a token form CK3 does not read, so the dead man's name came through as bracketed script instead of a name. 82 of them across English and Russian. (Thanks [b]Ō[/b].)
+[*][b]Fixed "A Sword Drawn From Fire" naming a priest it had not chosen.[/b] The card asked "do you have a red priest?" one way and looked one up another, stricter way — so a chaplain who counted for the question but not for the lookup produced a card full of blank names with a woods witch's portrait next to them. Both now use the same rule. (Thanks [b]Ō[/b].)
+[/list]
+
+[h2]Note[/h2]
+[list]
+[*]Safe to drop onto a running save. Titles and event text are worked out fresh every time they are drawn.
+[*]Nobility of Westeros and Essos Expanded: The Further East replace the same file as each other, so those two conflict independently of this mod. That one is not something we can fix from here.
+[/list]

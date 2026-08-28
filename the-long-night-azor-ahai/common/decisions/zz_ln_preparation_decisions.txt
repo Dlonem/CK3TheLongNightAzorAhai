@@ -31,7 +31,17 @@ ln_mine_dragonglass_decision = {
 				is_struggle_phase = ln_phase_the_long_night
 			}
 		}
-		is_landed = yes
+		# 1.0.16 -- WAS `is_landed = yes`, AND THAT WAS THE BUG. Since 1.0.15b dragonglass is one of only
+		# three things that can end the Night King, so this gate was not "who may mine" -- it was "who may
+		# ever win." It locked out two populations the mod exists to serve:
+		#   * the landless adventurer. Corvo beat the Long Night from a camp, with no dragons, and reported
+		#     it; under the bane rule that run is no longer winnable.
+		#   * THE NIGHT'S WATCH RANGER -- ln_ranger_government carries government_is_custom_landless, so the
+		#     sworn brother who actually rides north was shut out of every dragonglass path in the mod,
+		#     including the Fist of the First Men expedition written for him.
+		# is_ruler is the honest test: it still excludes plain courtiers and knights, who correctly receive
+		# ln_dragonglass_knight_modifier from their lord instead (zz_ln_preparation_effects.txt:98-117).
+		is_ruler = yes
 		NOT = { has_character_modifier = ln_dragonglass_stores_modifier }
 
 		# THE KNOWLEDGE GATE, and it is the best hook in the mod because it costs nothing to build.

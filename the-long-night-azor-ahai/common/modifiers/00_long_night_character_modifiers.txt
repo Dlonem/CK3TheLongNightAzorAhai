@@ -1,24 +1,63 @@
 ﻿
+# ── 1.0.16: THE DIFFICULTY SLIDER STOPS BEING A HEADCOUNT SLIDER ────────────────────────────────────
+# WHAT WAS WRONG. Each tier was ONE field, levy_size, and nothing else. Reported independently from two
+# directions:
+#   Zobertus (Discord): "the Insane strength only adds a levy modifier make them way too easy to deal with
+#     (as levies are useless in battle)." Correct, and provable: LEVY_TOUGHNESS 10, LEVY_ATTACK 10,
+#     LEVY_SIEGE 0 (game/common/defines/00_defines.txt:588-590) against other_maa at 38 / 75 / siege 0.9.
+#     No tier of this rule could make the dead hit harder, survive longer, or take a castle.
+#   KhanSaru (Steam): "I'm king of the seven kingdoms with dragons, and I am not doing anything about the
+#     Others... the Others are being beaten by the Wildlings."
+#
+# THE NUMBERS ARE NOT A "UNITS FIX". levy_size is a fraction in CK3 and 15/25/50/75 read as +1500%/+2500%/
+# +5000%/+7500%, which looks like somebody meant 0.15. But those values have shipped for many versions and
+# produce playable games, so they were functioning as a deliberate headcount dial -- the ONLY dial. Blindly
+# "correcting" them to 0.15-0.75 would have cut the horde by ~100x and deleted the Army of the Dead. This is
+# a considered retune, not a typo repair.
+#
+# WHAT IT IS TUNED AGAINST. Corvo (Discord): "had to play on 'weak' night difficulty because my PC BURNS if
+# they get past 300k." The old multipliers were weak 18x, standard 28x, strong 53x, insane 78x -- so INSANE
+# put roughly 1.3 MILLION men on the map from the same map position where weak put 300,000, and choosing
+# framerate and choosing easy were the same choice. That is the bug behind his report.
+# Insane is now ~14x, i.e. it lands near the 300k Corvo named -- today's WEAK headcount -- while hitting far
+# harder than today's insane. The horde fantasy is intact; the waste is gone.
+#
+# AND THE MEN WE CUT WERE NOT FIGHTING ANYWAY. NCombat.BASE_WIDTH_RATIO = 1 (00_defines.txt:597): combat
+# width is set by the size of the DEFENDER. In this mod's own live record, 429,171 attackers met 32,710
+# defenders -- roughly 92% of the dead stood in reserve, costing simulation and buying nothing.
+#
+# WHERE THE THREAT WENT INSTEAD. advantage is CK3's own difficulty knob and costs zero soldiers:
+# ADVANTAGE_DAMAGE_SCALING_FACTOR = 5 (00_defines.txt:596), so every point is +5% damage -- insane's 16 is
+# +80%. Shape mirrors zz_ln_wave_modifiers.txt, which already had it right.
+# NOTE siege deliberately stays out of these tiers: ln_the_dead_do_not_tire_modifier already carries
+# siege_phase_time and levy_siege, and stacking two sources of it is not reasonable-able from the files.
+
 others_weak_modifier = {
-	levy_size = 15
-	
+	levy_size = 3
+	advantage = 3
 }
 
 
 others_standard_modifier = {
-	levy_size = 25
-	
+	levy_size = 6
+	advantage = 6
+	army_toughness_mult = 0.10
 }
 
 others_strong_modifier = {
-	levy_size = 50
-	
+	levy_size = 10
+	advantage = 10
+	army_toughness_mult = 0.20
+	army_damage_mult = 0.15
 }
 
 
 others_insane_modifier = {
-	levy_size = 75
-
+	levy_size = 14
+	advantage = 16
+	army_toughness_mult = 0.35
+	army_damage_mult = 0.30
+	knight_effectiveness_mult = 0.25
 }
 
 # The Long Night+: with fewer Others promoted (conquered now rise as weak wights), the Night King's host
@@ -30,6 +69,27 @@ night_king_command_modifier = {
 	army_toughness_mult = 0.20
 	knight_effectiveness_mult = 0.50
 	knight_limit = 6
+
+	# ── 1.0.16 ADDITIONS. Both cost zero soldiers, which is the governing constraint this release. ──────
+	# DOMAIN LIMIT. He takes counties personally -- other_cb's on_victory hands occupied land straight to
+	# him via ln_contiguous_conquest_effect -- and then bleeds control and levies for being over the limit
+	# (ABOVE_LIMIT_LEVY_PENALTY = 0.2 per holding, game/common/defines/00_defines.txt:1062). So the more of
+	# the North he took, the less each new county was worth to him. He should be able to HOLD what he takes.
+	# This also compounds correctly with the strength retune above, because his host size keys off county
+	# count rather than off the levy multiplier now.
+	domain_limit = 10
+
+	# DREAD, PINNED AT THE CAP. MAX_DREAD = 100 and BASE_DREAD = 0 (00_defines.txt:120-121), and dread
+	# drifts toward a character's baseline at DREAD_MONTHLY_CHANGE = 0.5/month, so a baseline add of 100
+	# holds him at maximum permanently instead of letting him decay toward ordinary. Thomas: "there needs
+	# to be like a make sure the Night King has like 100% dread. It wouldn't be reflected by percent, by
+	# the way" -- correct, it is a 0-100 scalar, and 100 is the ceiling.
+	# This is also the honest version of what people are asking for when they suggest giving him the
+	# `conqueror` trait: that trait's payload is title-creation cost, legitimacy, monthly income and herd
+	# capacity -- almost none of which he uses -- and it carries ai_war_chance = -100 where every other
+	# value in the traits file sits between -0.9 and +1.0. Dread, advantage and domain do the work without
+	# the baggage.
+	dread_baseline_add = 100
 }
 # ── BEING NAMED, AS A MODIFIER RATHER THAN AS FIVE THOUSAND OPINION ROWS ──────────────────────────────
 # 1.0.10b. These replace the every_ruler + add_opinion sweep in ln_the_world_forms_a_view_effect --

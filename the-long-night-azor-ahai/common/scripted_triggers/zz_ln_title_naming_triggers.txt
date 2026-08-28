@@ -1,0 +1,27 @@
+﻿# AGOT: The Long Night & Azor Ahai -- title-naming helper trigger (1.0.15a)
+#
+# Answers "is the title AGOT is currently naming of tier $TIER$?" from inside CHARACTER scope.
+#
+# WHY IT EXISTS: we used to read AGOT's own $SCOPED_TITLE$ macro, because we owned
+# apply_character_title_data. We do not own it any more (see zz_ln_set_title_loc_override.txt), so the
+# title has to be re-derived. AGOT picks it the same way every time in
+# 00_agot_title_holder_custom_loc.txt: the character's own primary title when they hold one, otherwise
+# the spouse-scope holder's. This mirrors that order and nothing else.
+#
+# trigger_if / trigger_else_if / trigger_else verified in base game 00_activity_triggers.txt and in
+# AGOT 00_agot_gui_naming_triggers.txt. primary_title ?= { tier = ... } verified in AGOT
+# 00_agot_crown_triggers.txt:120.
+
+ln_named_title_tier_trigger = {
+	trigger_if = {
+		limit = { exists = primary_title }
+		primary_title ?= { tier = $TIER$ }
+	}
+	trigger_else_if = {
+		limit = { exists = scope:spouse_scope }
+		scope:spouse_scope ?= { primary_title ?= { tier = $TIER$ } }
+	}
+	trigger_else = {
+		always = no
+	}
+}

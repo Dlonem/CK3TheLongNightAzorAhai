@@ -6,6 +6,32 @@
 # others_title_holders.txt matches their name list at priority 2000, far above these.
 # Priorities mirror AGOT's wilderness entries tier for tier (6/16/26/46/101).
 
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE "FLAG IS SET BUT IS NEVER USED" WARNINGS ARE A FALSE POSITIVE. DO NOT "FIX" THEM. 1.0.16.
+#
+# Every entry below produces one of these on load:
+#     [E][jomini_effect.cpp:1145]: Flag 'baron_wight_female' is set but is never used. Note that use in
+#     localization doesn't count due to technical limitations. Use in unused scripted triggers and effects
+#     also does not count
+#
+# The engine is telling you, in its own error text, that it cannot see the use. The flag IS used:
+# ln_stamp_title_effect (common/scripted_effects/zz_ln_title_naming_effects.txt:12) does
+# `save_scope_value_as = { name = get_title  value = flag:$MALE$ }`, and the localization reads
+# scope:get_title to print "Risen Thrall" / "Cold Lady". That is the whole feature, it works, and it was
+# added off a live-run report (Halys Hornwood, 305 AC -- see the note above).
+#
+# AGOT EATS THE IDENTICAL WARNING, which is the clinching argument. Thomas's 27 Aug log carries 50 of these,
+# and only 12 are ours (10 wight + 2 ranger). The other 38 are AGOT's own flavorization doing the same
+# correct thing -- baron/count/duke/king/emperor_wilderness_male and _female from
+# 1158310/2962333032/common/flavorization/00_agot_title_holders.txt, plus whitetree, hardhome and
+# crasters_keep. This is simply what CK3's flavorization-by-scope-flag pattern costs.
+#
+# SILENCING OURS WOULD MEAN ADDING A LIVE REFERENCE THAT DOES NOTHING -- dead logic in production code, to
+# quiet a warning the engine admits is its own limitation, while AGOT's 38 identical lines stayed in the log
+# anyway. Not worth it. If a future CK3 patch teaches the checker about localization use, they vanish on
+# their own.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+
 baron_wight_male = {
 	type = character
 	gender = male

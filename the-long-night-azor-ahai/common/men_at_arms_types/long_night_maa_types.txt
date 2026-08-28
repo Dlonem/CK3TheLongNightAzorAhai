@@ -49,7 +49,26 @@ other_maa = {
 		}
 	}
 	
+	# 1.0.16 -- WAS EMPTY. MEN_AT_ARMS_MAX_COUNTER = 0.9 (game/common/defines/00_defines.txt:600), so up to
+	# 90% of a damage exchange was being left on the table -- and left on it in BOTH directions, because
+	# `Other_infantry` is a custom type name that no vanilla or AGOT unit counters either. The dead were
+	# fighting the whole war with the counter system switched off.
+	# Ice Spiders are fast, monstrous shock infantry: they break formations and run down what breaks. They do
+	# NOT counter cavalry -- a thing that size is not catching a horse. Types verified against
+	# game/common/men_at_arms_types/.
+	# ONE-WAY, AND DELIBERATELY WATCHED (adversarial review find). Nothing in vanilla, AGOT or this mod
+	# lists `Other_infantry` in its own counters block, so this fix runs in one direction only: the dead
+	# gain against these four and the living gain nothing back. Closing it properly would mean editing
+	# vanilla and AGOT men-at-arms files, which is the file-collision failure mode this project avoids on
+	# principle. peasant_militia was 2 in the first draft and is 1 here to keep the ceiling honest while the
+	# rest of this release's buffs are unmeasured -- advantage, damage/toughness mults, innovations and
+	# traditions all landed in the same version. If the dead feel unstoppable on the boot run, cut this
+	# block first: it is the newest and the least load-bearing of the five.
 	counters = {
+		heavy_infantry = 1
+		pikemen = 1
+		archers = 1
+		peasant_militia = 1
 	}
 
 	winter_bonus = {

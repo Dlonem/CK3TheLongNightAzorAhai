@@ -211,12 +211,28 @@ others_heartbeat.1 = {
 		}
 
 		# Prevent overlapping loops
+		# ── 1.0.16 PERFORMANCE: 15 DAYS -> 30. ─────────────────────────────────────────────────────────────
+		# This event self-perpetuates PER other_trait CHARACTER and contains two full every_vassal_or_below
+		# walks, the first with a nested any_courtier_or_guest inside its limit -- so its cost is
+		# O(vassals x courtiers) per Other, and it SCALES WITH CONQUEST, i.e. with exactly the thing that
+		# grows over a Long Night. At a few hundred counties that is thousands of character visits per
+		# fortnight per Other.
+		# Doubling the interval halves both walks at no functional cost: the only time-sensitive thing this
+		# event does is refresh a command modifier that is itself applied with days = 30 (see :200), so a
+		# 30-day beat matches what the work actually needs. Conversion latency goes from ~a fortnight to
+		# ~a month, which is invisible against a Long Night measured in decades.
+		# Corvo reported his machine burning past 300k men; this is the CPU-side half of that answer, and
+		# unlike the headcount retune it costs nothing at all.
+		#
+		# STILL ON THE TABLE, NOT DONE HERE: the two walks iterate the SAME list and could be merged into
+		# one, halving it again. That means restructuring the conversion engine's limit, which is not a
+		# thing to do in the same release as a balance pass. Flagged in the work order instead.
 		if = {
 			limit = { NOT = { has_character_flag = others_heartbeat_active } }
-			add_character_flag = { flag = others_heartbeat_active days = 14 }
+			add_character_flag = { flag = others_heartbeat_active days = 29 }
 			trigger_event = {
 				id = others_heartbeat.1
-				days = 15
+				days = 30
 			}
 		}
 	}

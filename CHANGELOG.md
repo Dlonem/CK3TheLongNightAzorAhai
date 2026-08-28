@@ -8,6 +8,97 @@ Newest first.
 
 ---
 
+## 1.0.16 — The Dead That Frighten You
+
+1.0.15 made the ending reachable. This one makes it cost something. The Others are a real army now, the invasion moves at the pace the difficulty setting promises, and the Last Hour is a duel you can lose. Underneath all of that, a pile of text that was never showing up finally does.
+
+This release also contains everything from hotfix 1.0.15a, which went out on the Workshop between releases and is listed separately below.
+
+### The Others
+
+- **The Others' culture has traditions and an innovation history.** It had neither — no traditions at all, and not one innovation — which capped the Night King's men-at-arms types at the bottom of the ladder while every realm he invades sits at the top. Reported by **Zobertus**.
+- **Rebuilt the strength game rule.** Weak through Insane were one field each, levy size, and levies cannot take a castle. They now carry advantage, army damage, army toughness and knight effectiveness.
+- **Cut Insane's headcount by roughly 5x and raised its combat power.** Choosing a setting your machine can run should not also mean choosing the easy game. Raised by **Corvo**.
+- **Doubled the dead's per-man siege contribution**, so a smaller host grinds a castle down at the same rate.
+- **Every Night King after the first inherits the standing command bonus and the wave escalation.** Both were applied once, at setup, and never again — so killing him made his heir permanently weaker.
+- **Both undead units have their counter tables.** They shipped empty.
+- **Raised the Night King's domain limit and pinned his dread at maximum.**
+- **The Night King has the trait he was written with.** His history file gives him both Callous and Sadistic, the game treats those as opposites, and Sadistic was silently thrown away every load — costing him the prowess he was meant to bring to the duel. Callous is gone and Sadistic stays.
+- **His name shows up.** It was printing a raw key.
+- **Cut the invasion's trebuchet train from 1,000 men to 100.** Siege strength takes the highest tier in the army and the Ice Spiders already matched them, so the rest were buying nothing.
+
+### The pace of the invasion
+
+- **The strength rule now sets the tempo of the conquest, not only the size of the host.** Measured from a full Strong run: the dead reached year twenty-three of the Long Night holding twelve northern counties — one small war roughly every twenty months — and the North was still standing when the Night King fell.
+- **Won invasion wars take extra neighboring duchies alongside the war goal.** One on Standard during the Long Night; one on Strong during the Cold Winds and two during the Long Night; two on Insane in both phases. Weak keeps the old one-goal march. A duchy holding a living great house's seat is never taken as a bonus, and every extra grab must border land the dead already hold — the front marches faster, it does not jump.
+- **Kingdom-tier invasion wars pay the extra grabs too.** They were only ever wired into duchy wars, and since 1.0.14 nearly every southern war is fought at March tier, so the dial would have missed almost every war the dead actually fight.
+- **Cut the pause between southern wars on Strong and Insane to 1–3 months**, from 2–6.
+- **Cut the freeze after a lost war on Strong and Insane to 6–18 months**, from 1–3 years. The endgame still opens the moment the dead lose once, on every difficulty.
+
+### The Long Night's ending
+
+- **The Last Hour is a duel now, not a button.** It read "End the Long Night" and killed him with no roll. It reads "Go in for the kill" and can go wrong. Raised by **MPREG**.
+- **Dragonglass is no longer as good as Valyrian steel.** Carrying only obsidian makes the duel materially harder.
+- **The man who can actually hurt him is the man who gets sent.** Carrying dragonglass, Valyrian steel or a dragon was worth exactly as much as being crippled was worth against you, so the two cancelled — and a hale knight carrying nothing that can scratch the King of Winter would win the pick over a wounded man holding the one weapon in the realm. He'd reach the confrontation with no way to end it.
+- **Knights sworn to a lord who can't fight are eligible again.** If the lord himself was dead, a child, or a dragon, his entire retinue was skipped along with him — so Jon Snow riding under the wrong banner was never a candidate.
+- **AI champions can reach the confrontation.** It required a human commander, so Jon Snow could never fight him.
+- **Dragons can no longer be chosen as the Dawn's champion.** A dragon that won the ordering could break off and leave the Long Night unendable. The dragon is still named in the record if its rider strikes the blow. This now covers the captor as well, who was the one candidate with no check on him at all.
+- **The field scene can't be lost anymore.** It is offered once per wave, and it was marked as offered a full day before the card actually arrived — so a commander who won the battle and died that night took the mod's flagship scene with him for the rest of the wave, silently. It re-arms now if the card never lands.
+- **Fixed the kill being credited to the war's leader** instead of the champion the story picked, when the champion's scene was lost.
+
+### The War for the Dawn
+
+- **Only independent rulers can declare it.** There was no tier, liege or independence check at all, which is why the Hightowers kept declaring it. Reported by **KhanSaru**.
+- **It cannot be declared until the dead have lost a war.** Beating them in the field is now the thing that opens the endgame.
+- **Reduced its battle war score from 300 to 200.** Upstream's version of that line was misspelled and never did anything, so the number had never actually been played.
+
+### The Last Kiss
+
+- **A returned man can be blessed again.** The player-facing route still refused anyone who had already come back once, so after one return you were locked out of the track. Reported by **Juring**.
+- **Added a commander-side entry to the battlefield interception.** It covered knights only. Reported by **Juring**.
+- **Dragonglass mining is open to landless rulers, including Night's Watch rangers.** It required land, which shut out adventurers and the Watch — the two people most likely to need it. Landless rulers also stop being charged a duke's price.
+
+### Fixes
+
+- **The red priest actually turns up.** Sending to Essos for one has been quietly producing nobody: the priest was created into a court that couldn't hold him, the game refused him, and nothing said so. He's born in your lands now and then walks into the hall — which matters, because seating him as Court Chaplain is the road to being named Chosen.
+- **The Iron Throne is no longer asked to swear fealty to itself.** The reformation card went to every independent Westerosi lord, and the king is one — same face in both portrait slots, and the option did nothing when taken.
+- **Feeding the Watch no longer charges you for nothing.** Two of the three replies to a wandering crow paid out an opinion change to whoever holds the Wall without checking that anyone does. One of them takes 50 gold first.
+- **Living rulers left on a Risen Thrall government are restored to a normal one.** They were being detected as dead every year and having their counties scoured. Reported by **MPREG**.
+- **Death by the Dawn now has text.** It printed raw keys in the kill record. Reported by **MPREG**.
+- **All twenty struggle phase descriptions now appear.** Every phase was printing raw keys.
+- **Restored twelve portrait genes removed in an earlier version.** They still existed in saved characters and ruler designer files, which threw errors on every load.
+- **Stopped overriding three of AGOT's textures.** One replaced the eye map for every male character in the game; another was quietly altering AGOT's greying hair.
+- **Under The Cycle, a second Long Night now starts clean.** The roll call of who stood at the last dawn carried over into the next one — naming men decades dead as having been there — and the new gate on the War for the Dawn stayed unlocked against a Night King who had beaten nobody.
+- **The Cold Winds rumours stop burning their own cooldown.** Once you had seen all the cards in your region, the pulse still spent its two-to-four-year silence on an empty roll.
+- **Halved the Others' background processing.**
+- **Added missing text** for the Scouring war, the undead crime opinion, the Ice Spiders' description, and a faction line missing from the base game.
+- **A pass of guards across the error log.** The Wall's collapse, the wight conversion, the Night's Watch fleeing south, the Others' portraits, the aftermath's settlers, and the atmosphere pulses all had places where they read something that wasn't there. None of it broke play; all of it was noise between you and a real bug.
+
+Reported by **KhanSaru**, **Zobertus**, **Corvo**, **MPREG** and **Juring**. Keep them coming — the Discord is the best place for logs and screenshots.
+
+---
+
+## Hotfix 1.0.15a
+
+Submod compatibility, and two event cards that were showing you raw code instead of names. Workshop players got this one between releases; it is included in 1.0.16 above.
+
+### Compatibility
+
+- **Fixed "Missing Title Loc" on rulers added by other submods.** This mod used to redefine the effect AGOT uses to name every ruler in the game. Only one copy of that can exist in a playset and ours was the one that won, so any other submod adding titles to it lost them — quietly in most cases, and as a visible error wherever the other mod also added a government of its own. It no longer redefines it. Essos Expanded, Essos Expanded: The Further East, Legacy of Valyria, Nobility of Westeros and anything else that names its own rulers now work alongside this mod with no patch needed from either side, and load order does not matter. Wights, ranger captains and wardens are unaffected. Reported by **MAGNUM** and **Buggyriot**, and diagnosed from the other side by **TXMaverick** of Essos Expanded — thank you all three.
+- **Any ruler this mod still cannot name reads "Lord" or "Lady" rather than a warning string.** A safety net for submods nobody has told us about yet. A developer's error message does not belong in a player's UI.
+
+### Bug Fixes
+
+- **Fixed names showing as raw code in three event cards.** "A Face I Know", the fallen-friend card after a battle, and the last-kiss card were written with a token form CK3 does not read, so the dead man's name came through as bracketed script instead of a name. 82 of them across English and Russian. Thanks **Ō**.
+- **Fixed "A Sword Drawn From Fire" naming a priest it had not chosen.** The card asked "do you have a red priest?" one way and looked one up another, stricter way — so a chaplain who counted for the question but not for the lookup produced a card full of blank names with a woods witch's portrait next to them. Both now use the same rule. Thanks **Ō**.
+
+### Note
+
+- Safe to drop onto a running save. Titles and event text are worked out fresh every time they are drawn.
+- Nobility of Westeros and Essos Expanded: The Further East replace the same file as each other, so those two conflict independently of this mod. That one is not something we can fix from here.
+
+---
+
 ## 1.0.15 — The Repair Release
 
 Mostly about making sure everything the mod already promised actually happens. A lot of what follows was built in earlier versions and then never quite reached the player — a missing block here, a scope that silently did nothing there. Existing saves are fine; the fixes repair themselves as you play.

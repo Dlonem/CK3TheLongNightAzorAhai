@@ -30,6 +30,12 @@
  ln_ask_for_the_blessing_decision_tt:0 "Ask the red priest to say the words over you."
  ln_ask_for_the_blessing_decision_confirm:0 "Send for him."
  ln_ask_blessing_already_blessed_tt:0 "A priest has already said the words over you"
+ # 1.0.16 -- DEPRECATED, DELIBERATELY KEPT. Its clause was removed from
+ # common/decisions/zz_ln_blessing_decisions.txt to open the Beric track, so nothing in the mod requests this
+ # string today. It stays because deleting a key on the grounds that "nothing references it" is precisely how
+ # the three eye_color_*_long_night genes were removed in v0.1.0 and started throwing portraitcontext errors
+ # out of saved ruler files (see common/genes/zz_long_night_genes.txt). One parse, no risk. Deprecate, never
+ # delete -- and if the gate ever returns, the string is still here and still right.
  ln_ask_blessing_already_returned_tt:0 "The fire has already given you back once"
 
  # ── THE NUDGE (1.0.14) ──────────────────────────────────────────────────────────────────────────────────────

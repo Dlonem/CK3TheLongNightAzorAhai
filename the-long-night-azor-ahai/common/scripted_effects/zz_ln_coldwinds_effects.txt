@@ -15,7 +15,25 @@
 ln_coldwinds_pulse_effect = {
 	if = {
 		limit = {
-			scope:struggle = { is_struggle_phase = ln_phase_cold_winds }
+			# 1.0.16 -- THE STRUGGLE HANDLE CAN OUTLIVE THE STRUGGLE. 12 errors in the 27 Aug run, all of
+			# this shape:
+			#   Error: scope:struggle trigger [ Failed context switch ]
+			# 4 from zz_ln_omen_effects.txt:17, 4 from :66, 4 from zz_ln_coldwinds_effects.txt:18 -- and every
+			# one of them landed at 17:02:16, immediately after ln_struggle_clock_backstop reported
+			# "Scoped object is not valid. Type: weak (Struggle - 1)!". That is the Long Night ending: the
+			# struggle is destroyed, and the pulse on_actions (zz_ln_omen_on_actions.txt:13,
+			# zz_ln_coldwinds_on_actions.txt:8) hand this effect a handle to a thing that is no longer there.
+			#
+			# Two guards, not one, because they fail differently. `exists` answers whether the handle points
+			# at anything; `?=` makes the context switch itself optional so a handle that exists but cannot
+			# be entered returns false instead of throwing. Either alone leaves a hole; the pair is how this
+			# codebase already writes every other risky switch (capital_county ?= in
+			# agot_long_night_scripted_effects.txt, cp:councillor_court_chaplain ?= in zz_ln_pledge_events.txt).
+			#
+			# COSTS NOTHING: with no struggle there is no phase, so every arm below was going to be false
+			# anyway. This changes a thrown error into the false it was always meant to be.
+			exists = scope:struggle
+			scope:struggle ?= { is_struggle_phase = ln_phase_cold_winds }
 			is_ai = no
 			is_available_adult = yes
 			NOT = { has_character_flag = ln_coldwinds_cooldown }
@@ -32,7 +50,29 @@ ln_coldwinds_pulse_effect = {
 			}
 			random = {
 				chance = 30
-				add_character_flag = { flag = ln_coldwinds_cooldown  years = 2 }
+				# 1.0.16 -- THE COOLDOWN WAS BEING SPENT ON AN EMPTY ROLL. Each card below is once per
+				# character (its own flag), and the shared cooldown was stamped BEFORE the list was rolled.
+				# A player who has already seen all three of this branch's cards therefore paid a two-year
+				# silence for a random_list in which every arm was triggered off -- nothing fired, nothing
+				# was logged, and the OTHER branch's cards were locked out for those years too, because the
+				# cooldown is shared across the whole pulse.
+				# The `if` moves the stamp behind the question "is there anything left to show him". Costs
+				# one extra trigger evaluation on a 1-in-3 roll; buys back atmosphere that was being
+				# silently thrown away in exactly the late-phase games where the phase should feel busiest.
+				if = {
+					# AT LEAST ONE still unseen -- NOT "none seen yet". NOR here would have stamped the
+					# cooldown only on a man's very first card and never again, which would have removed
+					# the pacing this flag exists for. OR-of-NOTs is the complement of "he has seen them
+					# all", which is the actual question.
+					limit = {
+						OR = {
+							NOT = { has_character_flag = ln_cw_saw_nobody }
+							NOT = { has_character_flag = ln_cw_saw_quiet }
+							NOT = { has_character_flag = ln_cw_saw_fires }
+						}
+					}
+					add_character_flag = { flag = ln_coldwinds_cooldown  years = 2 }
+				}
 				random_list = {
 					10 = {
 						trigger = { NOT = { has_character_flag = ln_cw_saw_nobody } }
@@ -59,7 +99,25 @@ ln_coldwinds_pulse_effect = {
 			}
 			random = {
 				chance = 12
-				add_character_flag = { flag = ln_coldwinds_cooldown  years = 4 }
+				# 1.0.16 -- THE COOLDOWN WAS BEING SPENT ON AN EMPTY ROLL. Each card below is once per
+				# character (its own flag), and the shared cooldown was stamped BEFORE the list was rolled.
+				# A player who has already seen all two of this branch's cards therefore paid a four-year
+				# silence for a random_list in which every arm was triggered off -- nothing fired, nothing
+				# was logged, and the OTHER branch's cards were locked out for those years too, because the
+				# cooldown is shared across the whole pulse.
+				# The `if` moves the stamp behind the question "is there anything left to show him". Costs
+				# one extra trigger evaluation on a 1-in-8 roll; buys back atmosphere that was being
+				# silently thrown away in exactly the late-phase games where the phase should feel busiest.
+				if = {
+					# See the note on the branch above: at least one unseen, not none seen.
+					limit = {
+						OR = {
+							NOT = { has_character_flag = ln_cw_saw_wolves }
+							NOT = { has_character_flag = ln_cw_saw_grandmother }
+						}
+					}
+					add_character_flag = { flag = ln_coldwinds_cooldown  years = 4 }
+				}
 				random_list = {
 					10 = {
 						trigger = { NOT = { has_character_flag = ln_cw_saw_wolves } }

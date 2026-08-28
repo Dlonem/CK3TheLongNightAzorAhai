@@ -1,0 +1,84 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.0.16
+#
+# THE OTHERS' CULTURE HAD NO HISTORY FILE AT ALL. Reported from outside the code by Zobertus: "The fact that
+# the Others start with no innovations and that the Insane strength only adds a levy modifier make them way
+# too easy to deal with (as levies are useless in battle)." He was reading the culture screen and it was
+# empty -- grep for discover_innovation / add_innovation / discover_era across the whole mod returned ZERO.
+#
+# ── THEY STAY IN THE BRONZE AGE, ON PURPOSE. NO join_era LINE APPEARS BELOW. ───────────────────────────────
+# Thomas, after seeing the first draft of this file: "I don't wanna be giving the Night King house soldiers.
+# The Night King should not have regular men-at-arms. The Night King should not have crossbowmen or house
+# guards or anything like that... if anything, the Night King and their culture would be more tribal based.
+# Ritual sacrifice or all that other good stuff."
+#
+# He is right, and the first two drafts of this file were both wrong in different ways:
+#   DRAFT 1 hand-picked the four innovations that carry men_at_arms_limit, one per era. The engine rejected
+#     three of them -- "Discover at least 8 of the Innovations of the Bronze Age Era to research innovations
+#     from the next era (Missing: 7)" -- because CK3 enforces an 8-per-era prerequisite chain. frostborn was
+#     the only culture in the entire game throwing culture_history_entry errors.
+#   DRAFT 2 fixed the chain by copying AGOT's First Men ladder wholesale: 38 innovations, three era joins,
+#     straight through to the late medieval. That parses, and it dresses an army of ice demons in horseshoes,
+#     manorialism, chronicle writing and royal prerogative. Mechanically valid, thematically absurd.
+#
+# THIS DRAFT GRANTS THE BRONZE AGE AND STOPS. No era is ever joined, so the 8-per-era rule -- which only
+# governs reaching into the NEXT era -- never applies and cannot error. The Others do not advance because
+# the Others do not learn; they are the same thing that came eight thousand years ago.
+#
+# ── WHAT WAS AND WAS NOT PICKED, AND WHY ──────────────────────────────────────────────────────────────────
+# Nothing here unlocks a unit. Only two tribal innovations do -- innovation_quilted_armor
+# (unlock_maa_armored_footmen) and innovation_war_camels (camel_rider) -- and both are omitted. So are
+# elephantry, longboats and african_canoes, for reasons that should not need writing down.
+# Also omitted: the administrative and economic rungs -- gavelkind, ledger, table_of_princes, city_planning,
+# crop_rotation, currency, plenary_assemblies, wootz_steel. The dead do not farm, mint, legislate or trade.
+#
+# What is left is the muster, the earthworks and the war:
+#   innovation_mustering_grounds  -- the only one carrying men_at_arms_limit (+2). The host that comes.
+#   innovation_motte              -- they hold what they take, in the ruins of what was there.
+#   innovation_barracks           -- somewhere to put an army that never sleeps.
+#   innovation_bannus             -- the summons. Everything north of the Wall answers it.
+#   innovation_casus_belli        -- they declare wars; the mod's invasion CBs are the whole clock.
+#   innovation_development_01     -- the one civic rung with a real effect on a realm this size.
+#
+# ── innovation_catapult IS NOT ON THIS LIST, AND THE REASON IS A TRAP WORTH RECORDING. ────────────────────
+# It LIVES IN 00_tribal_innovations.txt, so every reasonable check says it is tribal -- and it is not.
+# AGOT ships its era line COMMENTED OUT:
+#       # culture_era = culture_era_tribal
+# so it falls back to early medieval. The other six above all carry that line live. Granting it to a culture
+# that never leaves the Bronze Age produced exactly one error in Thomas's 27 Aug run:
+#     [E][culture_history_entry.cpp:85]: culture frostborn on 300.1.1: culture trying to get innovation
+#     innovation_catapult from culture_era_early_medieval era while being in culture_era_tribal era
+# It was the only culture_history error left in the whole game. DO NOT ADD IT BACK -- and if any other
+# innovation is ever added here, check that its culture_era line is actually UNCOMMENTED in AGOT's file,
+# not merely that the innovation sits in the tribal one.
+# Losing it costs nothing real: the dead's siege power comes from ln_the_dead_do_not_tire_modifier
+# (levy_siege and siege_phase_time), not from a Bronze Age catapult.
+#
+# ── A NOTE ON WHAT THIS DOES AND DOES NOT FIX ─────────────────────────────────────────────────────────────
+# An earlier session doc claimed the Night King was "capped at men_at_arms_limit 0". That was overstated.
+# The MAA cap is primarily by TITLE TIER -- REGIMENT_MAA_CAP_BY_TIER = { 0 1 2 3 4 5 6 }
+# (game/common/defines/00_defines.txt:642) -- and men_at_arms_limit modifiers add on top of it. So he was
+# never at zero; he was at his tier's cap with nothing added. mustering_grounds adds 2, which matters for the
+# wight horde specifically, because create_maa_regiment produces OWNED regiments and
+# REGIMENT_MAA_EXTRA_BY_CAP = 0.2 penalises each regiment standing above the cap.
+#
+# BACKLOG, Thomas's steer: "ritual sacrifice or all that other good stuff." The right long-term answer for
+# this culture is its own tribal/blood content rather than borrowed medieval rungs -- the baby ritual in the
+# design backlog is the obvious first piece.
+
+10.1.1 = {
+	discover_innovation = innovation_mustering_grounds
+	discover_innovation = innovation_motte
+}
+
+100.1.1 = {
+	discover_innovation = innovation_bannus
+	discover_innovation = innovation_barracks
+}
+
+300.1.1 = {
+	discover_innovation = innovation_casus_belli
+}
+
+1000.1.1 = {
+	discover_innovation = innovation_development_01
+}

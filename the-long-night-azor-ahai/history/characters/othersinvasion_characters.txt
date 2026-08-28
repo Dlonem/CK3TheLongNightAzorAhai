@@ -19,7 +19,30 @@ others_thenightking = {
 	trait = physique_good_3			
 	trait = intellect_good_3			
 	trait = wrathful			
-	trait = callous			
+	# 1.0.16 -- callous REMOVED, and sadistic is the one that survives. The engine had already made this
+	# choice for us, silently and by line order:
+	#     [characterhistory.cpp:254] History character ID [others_thenightking]: ... Sadistic!! can't be
+	#     added because ... already has the opposite trait ... Callous!!!
+	# vanilla lists them as mutual opposites (callous opposites = { compassionate sadistic }, and the
+	# reverse), traits apply top-down, so callous landed on line 22 and sadistic was refused on line 27.
+	# He has shipped without sadistic for as long as both lines have been in this file.
+	#
+	# MEASURED, not assumed, for THIS character rather than in general:
+	#   sadistic -- intrigue +2, PROWESS +2 (AGOT rebalanced it down from 4, 00_traits.txt:4797),
+	#     dread_baseline_add 35, general_opinion -10, courtly_opinion -10.
+	#   callous  -- DIPLOMACY -2, intrigue +2, courtly_opinion -10, tyranny_gain_mult -0.2,
+	#     dread_gain_mult 0.25, dread_decay_mult -0.25, attraction/close_relative opinion -5.
+	#
+	# Three of those cancel for him specifically:
+	#   * every dread term on both traits is moot -- night_king_command_modifier already carries
+	#     dread_baseline_add = 100 (00_long_night_character_modifiers.txt:92) and MAX_DREAD is 100.
+	#   * callous's winter_movement_speed is gated on the winter_trait_bonuses culture parameter, and
+	#     frostborn does not carry it (othertraditions.txt has no such parameter).
+	#   * sadistic's same_culture_opinion -15 is gated on sadistic_trait_looked_down_upon, which frostborn
+	#     does not carry either -- so its stated drawback does not apply to him.
+	# What is left is +2 prowess versus -2 diplomacy, and prowess is the stat that decides the Last Hour
+	# duel. Nothing in the mod requires him to be callous: ln_is_the_weapon_trigger
+	# (zz_ln_destiny_triggers.txt:62) accepts either, and it is about the player, not him.
 	trait = deceitful			
 	trait = education_intrigue_4			
 	trait = education_martial_4	

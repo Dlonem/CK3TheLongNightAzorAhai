@@ -47,6 +47,27 @@ war_for_the_dawn_decision = {
 				}
 				}
 		NOT = { highest_held_title_tier < tier_county }
+
+		# ── 1.0.16 -- THE GATE THAT WAS NEVER HERE. Reported by KhanSaru: "The Hightowers for whatever
+		# reason keep on declaring 'The War for the Dawn'." He was right, and it was not flavour -- this
+		# decision had NO independence check, NO top-liege check and NO Iron Throne requirement anywhere in
+		# its gating. The only hard floor was county tier, one line above.
+		# is_independent_ruler was available the whole time: it is used 470 lines below in this same file
+		# (reform_nights_watch_decision) and in three other decisions. The pattern existed; nobody applied it.
+		#
+		# WHY INDEPENDENCE RATHER THAN "MUST BE THE IRON THRONE". Thomas was unsure between them and asked
+		# for the hole to be found first. Independence is the better answer: the Iron Throne is still the
+		# usual declarer, but Essos, an independent North, a fractured Westeros and a run where the throne is
+		# vacant or held by the dead all still work. A Hightower sworn to King's Landing is out; a Hightower
+		# who has actually broken away has earned it.
+		#
+		# This also closes the uglier half of the same bug. The effect below (:133-141) reads the Iron Throne
+		# holder and drops through an else on four failure modes -- throne vacant, holder is root, holder
+		# dead or cold_gods, holder already at war -- and in that else a VASSAL becomes primary attacker,
+		# force-declaring the endgame war in a player-king's name with no consent and no notification.
+		# A vassal can no longer reach the decision at all, so that path can no longer fire.
+		is_independent_ruler = yes
+
 		max_military_strength >= 1000
 		dynasty ?= { dynasty_prestige_level >= 3 }   # LN+: only houses of real standing engage in the War for the Dawn
 				
@@ -93,6 +114,27 @@ war_for_the_dawn_decision = {
 
 	is_valid_showing_failures_only = {
 		is_at_war = no
+
+		# ── 1.0.16 -- THOMAS'S GATE: THE DEAD MUST HAVE BEEN BEATEN ONCE. ──────────────────────────────
+		# "If the Night King can suffer a defeat, perhaps that is a flag to indicate that the War for the
+		# Dawn is doable. My logic: if the Night King can lose a battle or a war, perhaps that's the
+		# opportunity for the War for the Dawn."
+		#
+		# It is the best idea in the 27 Aug pass because it solves three things at once: it makes the
+		# endgame a CONSEQUENCE of the war rather than something a timer eventually permits; it fixes the
+		# Hightower absurdity at its root; and it reuses machinery that already existed -- the mod was
+		# already detecting "the dead lost a war" in other_cb's on_defeat and wiring that detection
+		# BACKWARDS, into a cooldown that suppressed this door instead of opening it.
+		#
+		# The global is set in common/casus_belli_types/00_long_night_cbs.txt, in all three invasion CBs'
+		# on_defeat blocks. Shown as a failure rather than hidden: a player who cannot declare it yet
+		# should be told why, because "beat them in the field first" is the mechanic, not an obstacle.
+		# Composes with ln_wfd_no_recent_victory in is_valid above -- he must have been beaten, AND must
+		# not have just won.
+		custom_description = {
+			text = ln_wfd_never_been_beaten
+			has_global_variable = ln_nk_has_been_beaten
+		}
 	}
 
 	effect = {
@@ -204,7 +246,19 @@ war_for_the_dawn_decision = {
 		modifier = {
 			add = 30
 			is_landed = yes
-			root.capital_barony.title_province = { geographical_region = world_westeros_the_north }
+			# 1.0.16, SECOND PASS -- `?=` REPLACES THE exists I ADDED IN THE FIRST ONE, and the reason is
+			# worth writing down because the first attempt was self-refuting. It added
+			# `exists = root.capital_barony` beside the deref and justified it in a comment that said, in
+			# as many words, that an AI weight block does not stop at the first false clause. If that is
+			# true the exists cannot protect the line next to it; if it is false the exists was never
+			# needed. Both cannot hold, and the release depended on both.
+			# `?=` is order-independent by construction: the scope change itself becomes optional, so a
+			# missing capital barony scores false instead of throwing, whatever order the engine picks.
+			# It is also the form this release already uses everywhere else it had this problem
+			# (capital_county ?=, capital_province ?=, title:k_the_wall.holder ?=).
+			# These weights are recomputed on every decision refresh for every AI in range, which is what
+			# makes an unguarded deref here the cheapest way in the mod to fill a log.
+			root.capital_barony ?= { title_province = { geographical_region = world_westeros_the_north } }
 		}
 		modifier = {
 			add = 5
@@ -219,7 +273,13 @@ war_for_the_dawn_decision = {
 		modifier = {
 			add = -150
 			is_landed = yes
-		NOT = {	root.capital_barony.title_province = { geographical_region = world_westeros_seven_kingdoms } }
+			# 1.0.16: same `?=` as the +30 modifier above, and read that note for why the first attempt
+			# was wrong. It matters more here because of the NOT: a landed ruler with no capital barony
+			# would both throw AND score an undefined answer on a -150 penalty, the largest single term in
+			# this weight. With `?=` the inner test is false, so NOT makes it true and he DOES take the
+			# penalty -- which is the honest reading of "his capital is not in the Seven Kingdoms" for a
+			# man whose capital cannot be located anywhere at all.
+		NOT = {	root.capital_barony ?= { title_province = { geographical_region = world_westeros_seven_kingdoms } } }
 		}
 		
 		modifier = {

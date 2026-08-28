@@ -757,9 +757,15 @@ create_character = {
 
 					type = trebuchet
 
-
-
-					stacks = 100
+					# 1.0.16 -- WAS 100 (stack = 10, so 1,000 men and up to 100 combat chunks) FOR NO BENEFIT
+					# WHATSOEVER. Siege weight is "the ACTION_WEIGHT, times the MAX siege tier in the attacking
+					# army" (game/common/defines/00_defines.txt:900) -- and other_maa, standing in the same
+					# army, is already siege_tier = 4, identical to trebuchet. So these added ZERO marginal
+					# siege tier. They also carry damage = 0 and fights_in_main_phase = no, so they added zero
+					# battle damage. Pure simulation overhead, on the exact axis Corvo's machine dies on.
+					# Kept at a token 10 (100 men) rather than deleted outright so the dead still visibly bring
+					# a siege train. If a boot shows no visual or functional loss, this block can go entirely.
+					stacks = 10
 
 
 
@@ -2627,19 +2633,53 @@ agot_long_night_iron_throne_reformation_effect = {
 
 
 
+# 1.0.16 -- THE KING WAS ASKED TO BEND THE KNEE TO HIMSELF.
+# Live 27 Aug run, 17:02:16:
+#   Error: resolve_title_and_vassal_change effect [ Viserys Targaryen of h_the_iron_throne ...
+#          being vassalized by Viserys Targaryen of h_the_iron_throne ... will have the same or higher tier ]
+#   Script location: file: events/others_events/others_maintenance_events.txt line: 159 (others_maintenance.3:option)
+#
+# every_ruler's limit picked out "independent, landed, capital in the Seven Kingdoms" -- and the holder of
+# h_the_iron_throne is the most independent landed Westerosi ruler on the map, so he was always in the set.
+# others_maintenance.3 then saves title:h_the_iron_throne.holder as scope:iron_throne_holder, which for him
+# is himself, and option a runs change_liege with the same character on both sides. He gets a card with his
+# own face in both portrait slots asking him to swear fealty to himself; the engine refuses the resolve and
+# the option does nothing. ai_chance base 25 means an AI monarch takes it routinely too, and the chain is
+# gated on longnight_iron_throne_reformation_on, which is the DEFAULT rule -- so this is the ordinary path.
+#
+# THE SET IS UNCHANGED; ONLY WHAT THE KING IS SENT HAS CHANGED. A first pass put the exclusion in the
+# LOOP'S LIMIT, and a second review pass caught that this quietly took a side effect away from him: the
+# immediate of
+# others_maintenance.3 also corrects a de-wighted frostborn survivor's faith to old_gods_btw_fnf, and he was
+# in the set before. Exotic, but it used to happen and "nothing that worked stops working" is the rule for
+# this release. So the loop still walks every landed independent Westerosi ruler, the faith correction runs
+# for all of them including him, and only the fealty card is withheld from the one man who cannot swear to
+# himself. Setting a faith to the faith already held is a no-op, so the copy still living in the event's
+# immediate is harmless duplication rather than a second behaviour.
+#
+# capital_barony is read with `?=` rather than an `exists` clause beside a bare deref. Same reasoning as
+# 00_agot_long_night_decisions.txt's AI weights: an `exists` sitting in the same limit as the thing it
+# guards only helps if the engine stops at the first false clause, and nothing promises that. `?=` makes
+# the scope change itself optional, so it is correct whatever order the engine picks. It also moved the
+# is_landed test to the front, which is where it belonged anyway. (The first pass wrote
+# `exists = this.capital_barony` beside a bare `this.capital_barony.title_province` deref; that is the
+# self-refuting shape this release corrected everywhere it appeared.)
+#
+# The event is ALSO guarded on its own side, at others_maintenance_events.txt's immediate. This effect is
+# its only sender today, and a guard that lives only at the sender breaks the day somebody adds a second.
 every_ruler = { limit = { 
 
 
 
-	AND = { is_independent_ruler = yes 
+	AND = { is_landed = yes
 
 
 
-	this.capital_barony.title_province = { geographical_region = world_westeros_seven_kingdoms }
+	is_independent_ruler = yes 
 
 
 
-	is_landed = yes
+	capital_barony ?= { title_province = { geographical_region = world_westeros_seven_kingdoms } }
 
 
 
@@ -2652,25 +2692,27 @@ every_ruler = { limit = {
 
 
 	
+	# The faith correction reaches the whole set, the king included -- see the note above.
+	if = {
+		limit = {
+			has_culture = culture:frostborn
+			NOT = { has_trait = wight_trait }
+		}
+		set_character_faith = faith:old_gods_btw_fnf
+	}
 
-
-
-	trigger_event = {
-
-
-
-						id = others_maintenance.3
-
-
-
-						days = 1
-
-
-
-					}
-
-
-
+	# And the card goes to everyone who is not already sitting on the throne it asks them to bend to.
+	# Written NOT{AND{exists, this=}} rather than a bare NOT{this=}: the Iron Throne can stand UNHELD, and
+	# this effect runs in the aftermath of the Long Night, which is exactly when it does. A bare comparison
+	# against a null holder would be an error per ruler per call -- fixing one deref by adding another
+	# would be a poor trade. With no king, nobody matches and everybody is offered the card, which is right.
+	if = {
+		limit = { NOT = { AND = { exists = title:h_the_iron_throne.holder  this = title:h_the_iron_throne.holder } } }
+		trigger_event = {
+			id = others_maintenance.3
+			days = 1
+		}
+	}
 }
 
 
@@ -4271,7 +4313,45 @@ flee_noble_south_effect = {
 
 	if = {
 
-		limit = { is_landed = yes }
+		# ── 1.0.16 -- THE GUARD THAT STOPS US HANDING AGOT A TITLE-LESS VASSAL. ─────────────────────────
+		# AGOT appends this to on_vassal_gained with no existence check of any kind
+		# (1158310/2962333032/common/on_action/title_on_actions.txt:4416-4418):
+		#     #AGOT Added
+		#     scope:vassal.primary_title = { save_scope_as = title }
+		#     dissolve_conquered_bank = yes
+		# Any character who becomes a vassal WITHOUT a primary_title throws a null landed-title scope there,
+		# then three more errors deep inside dissolve_conquered_bank, once per bank.
+		#
+		# IT IS THEIR BUG, NOT OURS, AND THIS ONLY FIXES OUR THIRD OF IT. In Thomas's 27 Aug run the same
+		# AGOT block also fired 10 times from VANILLA's end_war_attacker_victory_interaction and 10 times from
+		# AGOT's own agot_pirate_events.9100. Three separate triggers, 40 lines total, 20 of them ours. Fixing
+		# this removes our 20 and cannot touch the other 20 -- only AGOT can, with a one-line exists check.
+		# Not shadowed: guarding it properly means shipping a copy of their on_vassal_gained, which rots the
+		# day they touch it, and that trade has already been refused once this release for animations.txt.
+		#
+		# WHAT WE CONTROL. resolve_title_and_vassal_change below fires on_vassal_gained for the successor. The
+		# every_held_title loop deliberately skips capital baronies -- the engine refuses change_title_holder
+		# on them and the county transfer carries them anyway -- so a lord whose only holdings ARE capital
+		# baronies hands over nothing, and we create an heir, make him a vassal, and give him an empty realm.
+		# That title-less vassal is exactly the shape AGOT cannot handle.
+		# The second clause requires at least one title this loop can actually move.
+		#
+		# THE DECISION'S PURPOSE IS UNCHANGED (Thomas): "we're about to get absolutely bodied by the Long
+		# Night, we're not gonna stay where we are, we're gonna become landless adventurers and make sure our
+		# house survives even though our ancestral lands will not." A kinsman still takes up the seat so the
+		# dead must conquer it. A lord with nothing to hand on still flees -- everything below this block runs
+		# for him unchanged: refugee flags, the adventurer title, the camp, the retinue.
+		limit = {
+			is_landed = yes
+			any_held_title = {
+				NOT = {
+					AND = {
+						tier = tier_barony
+						is_capital_barony = yes
+					}
+				}
+			}
+		}
 
 		if = {
 
@@ -4822,6 +4902,27 @@ ln_mutate_into_other_unguarded_effect = {
 				government_has_flag = government_is_custom_landless
 			}
 
+			# 1.0.16 -- CAUSE 4, AND IT IS THE ONE STILL FIRING. 14 x "Trying to set illegal government"
+			# in the 27 Aug run, every one of them this line (4892) reached through mutate_into_other_effect
+			# <- ln_others_vassal_gained <- on_vassal_gained <- end_war_attacker_victory_interaction.
+			#
+			# The clause below is written with ?=, which is the whole problem. `capital_county ?= { ... }`
+			# evaluates to FALSE when there is no capital county at all, and this clause wraps it in NOT --
+			# so a ruler with no capital county scores NOT(false) = TRUE and walks straight through the
+			# guard that exists to stop him. He also skipped the holding conversion further up for the same
+			# reason. The guard reads "his capital is clean" and it was silently answering that for a man
+			# who has no capital.
+			#
+			# WHO ARRIVES HERE WITH NO CAPITAL COUNTY, now that the two landless government flags above are
+			# already excluded: a ruler whose only remaining title is titular or landless -- our own
+			# d_ln_ranger_01..08 captains are exactly this shape -- and a ruler caught mid-transition on the
+			# same tick he lost his last holding, which is precisely when on_vassal_gained fires after a
+			# white-peace or surrender hand-over.
+			#
+			# COSTS NOTHING TO SKIP. Same reasoning as cause 2 above: he keeps his own government and still
+			# takes wight_trait further down this effect, and the trait -- not the government -- is what
+			# makes a wight a wight. Nothing that was possible before this line stops being possible.
+			exists = capital_county
 
 			# 3) and the capital county must actually be legal for it NOW. The conversion above should have seen
 
@@ -4846,6 +4947,15 @@ ln_mutate_into_other_unguarded_effect = {
 			}
 		}
 		change_government = wight_government
+
+		# 1.0.16 -- THE LATCH. ln_clear_orphaned_wight_governments_effect (zz_ln_ranger_effects.txt) has to
+		# run an every_living_character sweep to find rulers left holding this government without the trait,
+		# and running that unguarded every year is off-pattern for this codebase -- ln_cast_down_backstop_effect
+		# puts the identical scan behind a global read for exactly this reason. This is the only writer of
+		# wight_government in the mod, so setting the latch here means the sweep costs one global lookup in
+		# every game where nobody was ever converted, and only does real work once somebody has been.
+		# Never cleared: the orphan population can outlive the Long Night, which is the whole bug.
+		set_global_variable = { name = ln_wight_government_issued  value = yes }
 	}
 
 
@@ -4956,6 +5066,15 @@ ln_mutate_into_other_unguarded_effect = {
 	}
 
 	set_culture = culture:frostborn
+
+	# v1.0.16 -- AND THE DEAD DO NOT FIGHT WITH BOWMEN EITHER. Same class of fix as the dragonglass strip
+	# below, from the same kind of report: Thomas found the Night King's realm fielding Wildling Raiders,
+	# Cannibal Bows and Bowmen alongside the Risen Dead. A conquered lord's regiments do not disband when his
+	# culture changes to frostborn on the line above, so his household troops kept standing under a dead man's
+	# banner. Everything that is not Other_infantry is destroyed; see the full account at the effect.
+	# DELIBERATELY OUTSIDE the one-shot guard, exactly like the dragonglass strip: the heartbeat re-runs this
+	# effect on existing wights, so running saves are cleaned on their next tick.
+	ln_strip_living_regiments_effect = yes
 
 
 

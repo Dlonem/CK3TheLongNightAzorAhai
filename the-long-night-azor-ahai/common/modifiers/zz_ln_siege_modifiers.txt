@@ -35,9 +35,25 @@
 # the files -- it swings the result by an order of magnitude. The boot test settles it: launch with
 # -develop, find an undead siege, and read the siege window's daily progress against the fort level.
 # Then set levy_siege from the measurement. Nothing else in the feature needs to move.
+# 1.0.16 -- levy_siege DOUBLED, 0.002 -> 0.004, and this is the single number that answers Thomas's brief
+# verbatim: "if making 300k operate like 600k is do-able we want to have good performance where we can."
+# levy_siege is PER MAN and it is the only place raw headcount buys anything at all, because base
+# LEVY_SIEGE = 0 (game/common/defines/00_defines.txt:590). Doubling it means 300,000 dead grind a castle at
+# exactly the rate 600,000 did before -- same threat, half the simulation.
+#
+# ONE CLAIM CORRECTED (adversarial review, 27 Aug): an earlier draft said this "holds siege throughput
+# roughly constant" across the strength retune. It does not, and the arithmetic is easy: insane went from a
+# 76x levy multiplier to 15x, about a 5x cut in bodies, against a 2x rise here. Net absolute throughput at
+# insane lands near 40% of what the OLD insane produced.
+# That is the intended outcome, not a shortfall -- old insane was ~1.3M men and unplayable, and nobody was
+# ever meant to meet it. The right yardstick is the setting people actually play: Corvo's 300k on weak
+# sieged at 300,000 x 0.002. The new insane is ~300k at 0.004, i.e. TWICE the siege pressure he described
+# from the same headcount. That is the brief -- 300k operating like 600k -- and it is what this delivers.
+# siege_phase_time below is independent of army size entirely, which is why it is the safer of the two knobs
+# and why the strength tiers deliberately do not add a second source of it.
 ln_the_dead_do_not_tire_modifier = {
 	icon = martial_positive
-	levy_siege = 0.002
+	levy_siege = 0.004
 	siege_morale_loss = 0.5
 	siege_phase_time = -0.25
 }

@@ -41,10 +41,17 @@ ln_ask_for_the_blessing_decision = {
 			text = ln_ask_blessing_already_blessed_tt
 			NOT = { exists = var:ln_blessing_sponsor }
 		}
-		custom_tooltip = {
-			text = ln_ask_blessing_already_returned_tt
-			NOT = { has_trait = resurrected_by_rhllor }
-		}
+		# 1.0.16 -- THE `NOT = { has_trait = resurrected_by_rhllor }` CLAUSE IS GONE FROM HERE.
+		# 1.0.15 removed that gate everywhere else to open the Beric track; it survived in this one decision,
+		# and this decision is the ONLY player-reachable route to a sponsor (the priest's own interaction
+		# requires scope:actor = { has_trait = red_priest }). A sponsor is mandatory for Route B. Net effect:
+		# an AI priest could re-bless a returned man and a PLAYER could never ask -- so after one battlefield
+		# return the player was locked out of the exact track 1.0.15 was built to open.
+		# ln_can_be_blessed_trigger (zz_ln_sponsor_triggers.txt:37-50) already omits the gate deliberately;
+		# its comment reads "the resurrected CAN be blessed again: the Beric track". This is now consistent.
+		# Reported by Juring, who named the case exactly: Beric died six times, once as a commander and once
+		# in a duel with the Hound. The real limiter stays one life per priest, ever
+		# (ln_gave_the_last_kiss_modifier, permanent). No lifetime cap, by design.
 		is_imprisoned = no
 	}
 

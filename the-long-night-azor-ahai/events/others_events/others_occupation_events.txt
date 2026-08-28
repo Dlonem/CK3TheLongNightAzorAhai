@@ -318,6 +318,12 @@ others_occupation.2  = {
 		animation = aggressive_sword
 	}
 	right_portrait = {
+		# 1.0.16 -- h_the_others STANDS UNHELD ONCE THE NIGHT KING IS DOWN, and this event can land
+		# after that: others_occupation.4 fires from scouring_cb's on_victory (00_long_night_cbs.txt).
+		# The guard is not a new idea -- the sibling right at the top of this same file (:38) was given
+		# it in 1.0.14 and these two were missed. A portrait pointed at a scope that does not exist is
+		# a log line on every render; this project's own note on that is at zz_ln_pledge_events.txt:42.
+		trigger = { exists = title:h_the_others.holder }
 		character = title:h_the_others.holder
 		animation = throne_room_one_handed_passive_1
 	}
@@ -407,6 +413,12 @@ others_occupation.4  = {
 		animation = severelywounded
 	}
 	right_portrait = {
+		# 1.0.16 -- h_the_others STANDS UNHELD ONCE THE NIGHT KING IS DOWN, and this event can land
+		# after that: others_occupation.4 fires from scouring_cb's on_victory (00_long_night_cbs.txt).
+		# The guard is not a new idea -- the sibling right at the top of this same file (:38) was given
+		# it in 1.0.14 and these two were missed. A portrait pointed at a scope that does not exist is
+		# a log line on every render; this project's own note on that is at zz_ln_pledge_events.txt:42.
+		trigger = { exists = title:h_the_others.holder }
 		character = title:h_the_others.holder
 		animation = celebrate_sword
 	}

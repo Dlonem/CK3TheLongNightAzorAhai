@@ -229,6 +229,23 @@ ln_invasion_cooldown_effect = {
 			15 = { add_character_flag = { flag = long_night_cooldown  months = 3 } }
 		}
 	}
+	else_if = {
+		limit = {
+			OR = {
+				has_game_rule = others_strong_invasion
+				has_game_rule = others_insane_invasion
+			}
+		}
+		# 1.0.16 -- THE TEMPO DIAL, pause leg. South of the Wall on Strong and Insane the dead re-arm in
+		# 1-3 months instead of 2-6. Rolled, not fixed, like every other pause in this file. Tuned against
+		# the 106-131 AC Strong run: the war-to-war cycle averaged ~20 months and the pause is the one term
+		# of that cycle this effect owns; the defeat freeze and the grab size carry the rest of the fix.
+		random_list = {
+			40 = { add_character_flag = { flag = long_night_cooldown  months = 1 } }
+			40 = { add_character_flag = { flag = long_night_cooldown  months = 2 } }
+			20 = { add_character_flag = { flag = long_night_cooldown  months = 3 } }
+		}
+	}
 	else = {
 		# 1.0.10 -- WAS A FLAT FIVE MONTHS, AND CONTIGUITY IS WHY IT MOVED.
 		# Until this release a won war also paid out every occupied county in the loser's realm, wherever
@@ -265,9 +282,10 @@ ln_invasion_cooldown_effect = {
 #   The Long Night   -> 2 extra duchies (3 per war). Now it moves.
 #   anything else    -> nothing extra. Long Summer is not the hour of the dead.
 #
-# ONLY THE NIGHT KING, AND THAT IS FREE. This is called from other_cb_duchy's on_victory, and that CB's
-# allowed_for_character already requires has_trait = nightking. No separate gate needed, and adding one
-# would be a second place to keep in sync.
+# ONLY THE NIGHT KING, AND THAT IS FREE. This is called from other_cb_duchy's AND other_cb's on_victory
+# (1.0.16 -- the southern advance fights at March/kingdom tier through other_cb, so the dial has to ride
+# there too), and both CBs' allowed_for_character already require has_trait = nightking. No separate gate
+# needed, and adding one would be a second place to keep in sync.
 #
 # THE ENCIRCLEMENT RULE STILL HOLDS. Extra duchies are picked with the same ln_last_bastion_modifier test as
 # ln_pick_invasion_duchy_effect -- a stronghold is never taken as a bonus. Great seats fall to a war fought
@@ -279,26 +297,59 @@ ln_invasion_cooldown_effect = {
 # BEFORE resolve_title_and_vassal_change -- it adds to the change already in flight rather than opening a
 # second one. Two changes resolving over the same titles is how you get a county held by nobody.
 ln_expand_the_conquest_effect = {
-	# ONE DUCHY A WAR, DELIBERATELY -- and this effect is now a no-op that exists to be honest about that.
+	# 1.0.16 -- THE TEMPO DIAL. This was a no-op ('one duchy a war, deliberately') from 1.0.10 through
+	# 1.0.15a, on the argument that the shorter pause between wars bought the same pace as bigger grabs.
+	# MEASURED AGAINST THE 106-131 AC RUN (Strong), that argument fails: after the Wall fell (~8115) the
+	# dead took 12 northern counties in 15 YEARS -- one small war roughly every 20 months -- and the Long
+	# Night ended with the North still standing. Cadence alone cannot carry the front; the grab size has
+	# to scale too, and the strength game rule is the right dial for it: Thomas's own call, 27 Aug --
+	# on Strong the dead should hold the North within ten years of the invasion, not still be knocking
+	# at the Dreadfort in year twenty-three.
 	#
-	# It briefly took two or three, which was the wrong lever: it bought speed by making the map jump instead
-	# of march. The speed now comes from ln_invasion_cooldown_effect's five-month gap, which covers the same
-	# ground in the same decades while the front line stays a line. Same total pace, entirely different to
-	# watch, and the great seats still fall last either way.
+	# THE LADDER. Extra grabs per won war, on top of the war goal:
+	#   Weak                        -> none. Exactly the pre-1.0.16 march.
+	#   Standard, the Long Night    -> +1. The 25-50 year completion Thomas named as the design window.
+	#   Strong,   Cold Winds       -> +1;  the Long Night -> +2.
+	#   Insane,   Cold Winds       -> +2;  the Long Night -> +2.
+	# The encirclement rule still holds -- ln_take_one_more_duchy_effect refuses any duchy holding a
+	# ln_last_bastion_modifier county, so the great seats still fall to a war fought for them or not at
+	# all -- and every extra grab is is_neighbor_to_realm, so the front stays a line: it marches faster,
+	# it does not jump.
 	#
-	# KEPT RATHER THAN DELETED because the machinery underneath it is correct and was expensive to get right --
-	# it adds to the change already in flight rather than opening a second one, it excludes the war goal duchy
-	# and any duchy an earlier call took, and it honours the ln_last_bastion_modifier rule so a stronghold is
-	# never a bonus prize. If a future game rule wants a faster or harsher Long Night, this is one uncommented
-	# line away from being it. Deleting working, tested machinery to re-derive it in a month is not thrift.
-	#
-	# always = no rather than commented-out lines, on purpose. Dead script that is never referenced is script
-	# nobody notices has rotted; this way the macro is still parsed, still validated, and still proven to
-	# resolve every symbol it names. Flip this one condition to a phase test and the feature is back.
+	# No struggle running (?= fails) means no extras at all -- later waves keep the conservative pace.
 	if = {
-		limit = { always = no }
+		limit = {
+			OR = {
+				has_game_rule = others_standard_invasion
+				has_game_rule = others_strong_invasion
+				has_game_rule = others_insane_invasion
+			}
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+		}
 		ln_take_one_more_duchy_effect = { N = 1 }
-		ln_take_one_more_duchy_effect = { N = 2 }
+		if = {
+			limit = {
+				OR = {
+					has_game_rule = others_strong_invasion
+					has_game_rule = others_insane_invasion
+				}
+			}
+			ln_take_one_more_duchy_effect = { N = 2 }
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_game_rule = others_strong_invasion
+				has_game_rule = others_insane_invasion
+			}
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds }
+		}
+		ln_take_one_more_duchy_effect = { N = 1 }
+		if = {
+			limit = { has_game_rule = others_insane_invasion }
+			ln_take_one_more_duchy_effect = { N = 2 }
+		}
 	}
 }
 
@@ -309,6 +360,16 @@ ln_take_one_more_duchy_effect = {
 		random_sub_realm_county = {
 			limit = {
 				exists = duchy
+				# 1.0.16 -- the war goal can now be a KINGDOM: other_cb calls this effect too, not just
+				# other_cb_duchy. The goal's counties are already staged into scope:change by
+				# setup_invasion_cb, and picking a duchy inside the goal kingdom again would push a second
+				# transfer of the same titles into the same change. Tier-safe: county.kingdom never equals
+				# a duchy-tier goal, so for duchy wars this clause is inert and the duchy-level test below
+				# keeps doing that job.
+				trigger_if = {
+					limit = { exists = scope:target }
+					NOT = { kingdom ?= scope:target }
+				}
 				duchy = {
 					is_neighbor_to_realm = scope:attacker
 					NOT = { holder ?= scope:attacker }

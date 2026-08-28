@@ -59,9 +59,44 @@ long_night_plus_wall.3 = {
 	}
 	immediate = {
 		title:b_castle_black.title_province = {
+			# THE VARIABLE IS THE WHOLE BREAK. Deliberately NOT guarded on has_variable = agot_wall_is_normal
+			# the way AGOT's agot_wall_fall widget guards its copy (00_agot_scripted_gui.txt:1009-1013).
+			# That variable is set by AGOT's own agot_wall_on_actions.txt:90 and by our Long Summer restore
+			# (zz_ln_struggle_effects.txt:139,146,153); borrowing their guard would mean a game where that
+			# on_action never ran is a game where the Wall can never break -- and this event IS the AI-only
+			# fallback, the path nobody is watching. The trigger above already permits exactly one run: it
+			# refuses if any of the three fallen variables is set, and this sets one.
+			# special_the_wall_broken_middle_graphical (98_special_buildings.txt:109) reads this variable and
+			# nothing else, so the break is recorded and the broken mesh is selected on the next refresh.
 			set_variable = agot_wall_has_fallen_middle
-			remove_building = special_the_wall
-			add_building = special_the_wall_damaged
+
+			# 1.0.16 LIVE-RUN FIX -- BOTH BUILDING CALLS WERE NO-OPS THAT ERRORED. 27 Aug run, 16:58:12:
+			#   Error: remove_building effect [ Province 'Castle Black' does not have building 'building_special_the_wall' ]
+			#   Error: add_building effect [ No building slots available in province 'Castle Black' ]
+			#
+			# AND THEY WERE ALWAYS GOING TO. special_the_wall is DEFINED (98_special_buildings.txt:7) and
+			# PLACED NOWHERE -- it appears in no province history in AGOT at all. Castle Black's one special
+			# slot holds agot_castle_black_01 (AGOT history/provinces/00_k_the_wall_prov.txt:8), which is why
+			# the remove finds nothing and the add has nowhere to go.
+			#
+			# THIS IS AGOT'S, NOT OURS, AND WE ARE NOT FIXING IT HERE. Their own agot_wall_fall widget runs
+			# the identical pair unguarded, so the player-facing path no-ops in exactly the same way. Freeing
+			# the slot would mean evicting agot_castle_black_01 -- destroying their content to make our
+			# cosmetic refresh land. Standing policy: report it upstream, do not repair base AGOT where the
+			# repair costs more than the symptom.
+			#
+			# WHAT IS ACTUALLY LOST, stated plainly rather than glossed: the special_the_wall_damaged
+			# modifiers (defender_holding_advantage -50, fort_level -2, garrison_size -0.25) are not applied,
+			# and the forced graphical refresh -- 98_special_buildings.txt:2, "GRAPHICAL BACKGROUNDS ARE ONLY
+			# REFRESHED WHEN A BUILDING IS CHANGED IN THE HOLDING" -- does not happen, so the broken-Wall
+			# mesh waits for the next building change in that holding. Identical to the player path. The
+			# guards below change nothing except that the log stops carrying two lines that were never going
+			# to be actionable, and they will start working the day AGOT places special_the_wall.
+			if = {
+				limit = { has_building = special_the_wall }
+				remove_building = special_the_wall
+				add_building = special_the_wall_damaged
+			}
 		}
 	}
 }

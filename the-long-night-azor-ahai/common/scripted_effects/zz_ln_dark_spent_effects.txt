@@ -136,7 +136,21 @@ prefix = frostborn_culture_name
 		set_global_variable = { name = ln_aftermath_started value = yes }
 		ln_pose_question_of_the_north_effect = yes
 
-		house:house_theothers = {  every_house_member = { limit = { NOT = { has_character_flag = nightsqueen } } death = {
+		# 1.0.16 -- is_alive ADDED, AND THE COMMENT ABOVE WAS WRONG. It says of the two sweeps "both are
+		# idempotent." They are not, and the 27 Aug run said so:
+		#     Error: death effect [ scope is dead during effect execution ]
+		#     Script location: file: common/scripted_effects/zz_ln_dark_spent_effects.txt line: 139
+		#
+		# The overlap is real and it is one we build ourselves: zz_ln_ice_dragon_effects.txt gives dragon_skroth
+		# BOTH dynasty_house = house:house_theothers (:172) AND add_trait = ln_undead_dragon (:192). The
+		# every_living_character sweep above kills him by the trait; this loop then walks the same house and
+		# kills the corpse again. every_house_member does not filter the dead -- AGOT guards it with
+		# is_alive = yes at every site where it kills or courts members
+		# (00_agot_scenario_defiance_of_duskendale_effects.txt:183, 214, 260, 295, 332).
+		#
+		# Harmless in outcome -- he was already dead and stays dead -- but it is a thrown error at the exact
+		# moment the Long Night ends, which is the moment a player is most likely to be reading the log.
+		house:house_theothers = {  every_house_member = { limit = { is_alive = yes  NOT = { has_character_flag = nightsqueen } } death = {
 
 						
 

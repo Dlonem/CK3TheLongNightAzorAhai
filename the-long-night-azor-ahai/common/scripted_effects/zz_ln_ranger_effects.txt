@@ -397,39 +397,92 @@ ln_this_brother_flees_effect = {
 	add_character_flag = ln_fled_the_wall
 	add_to_global_variable_list = { name = ln_wall_survivors  target = this }
 	# 1.0.15d LIVE-RUN FIX -- "Trying to move non-courtier to pool", three times in one run.
-	# move_to_pool_at only accepts a character who is IN a court. A brother who holds a castle (every
-	# ranging captain does, and so does the Lord Commander) is a ruler, not a courtier, and the engine
-	# refuses to pool him. He still flees -- the flag and the survivors list are set above, which is what
-	# the rest of the Scattered Watch content actually reads -- he simply keeps his seat instead of being
-	# teleported into somebody's pool. Landless brothers move exactly as before.
+	# move_to_pool_at only accepts a character who is IN a court. A brother who holds a castle (the Lord
+	# Commander does) is a ruler, not a courtier, and the engine refuses to pool him. He still flees --
+	# the flag and the survivors list are set above, which is what the rest of the Scattered Watch content
+	# actually reads -- he simply keeps his seat instead of being teleported into somebody's pool.
+	#
+	# 1.0.16 -- THE GUARD WAS THE WRONG WORD. is_landed caught the wrong half of the Watch, and the same
+	# three errors came back in the 27 Aug run at lines 413/417/421 of this file, reached through
+	# ln_brothers_flee_south_effect's every_vassal_or_below on k_the_wall.
+	#
+	#   A ranging captain holds d_ln_ranger_01..08. Those titles are declared `landless = yes`
+	#   (common/landed_titles/zz_ln_ranger_titles.txt:31 and its seven siblings), so the captain is
+	#   is_ruler = yes AND is_landed = NO. He is a vassal of the Wall -- which is how the loop above finds
+	#   him -- and he sits in no court, which is why the engine will not pool him. The is_landed test let
+	#   every one of the eight straight through into the else.
+	#
+	# is_ruler is the word that matches what move_to_pool_at actually refuses: anyone holding a title of
+	# any kind, land or no land. Landed lords and landless captains both keep their seats now; only true
+	# courtiers walk. The is_in_pool_at arm on each destination is this mod's own established guard for
+	# the second failure of the same effect -- "Trying to move courtier to pool they're already in",
+	# caught in the 18 Aug run and fixed the same way at
+	# events/zz_ln_scattered_brothers_events.txt:246-252 and in AGOT's own courtier sweep, shadowed at
+	# common/on_action/zz_ln_shadows/zz_ln_agot_nw_title_gain_shadow.txt:105-107. A brother already
+	# standing in the Winterfell pool when the Wall falls would otherwise throw it.
 	if = {
-		limit = { is_landed = yes }
+		limit = { is_ruler = yes }
 		debug_log = "LN_TRACE: a landed brother flees the Wall but keeps his seat - not pooled"
 	}
 	else = {
 	random_list = {
 		34 = {
-			trigger = { exists = title:d_winterfell.holder }
+			trigger = {
+				exists = title:d_winterfell.holder
+				exists = title:d_winterfell.holder.capital_province
+				NOT = { is_in_pool_at = title:d_winterfell.holder.capital_province }
+			}
 			move_to_pool_at = title:d_winterfell.holder.capital_province
 		}
 		33 = {
-			trigger = { exists = title:c_karhold.holder }
+			trigger = {
+				exists = title:c_karhold.holder
+				exists = title:c_karhold.holder.capital_province
+				NOT = { is_in_pool_at = title:c_karhold.holder.capital_province }
+			}
 			move_to_pool_at = title:c_karhold.holder.capital_province
 		}
 		33 = {
-			trigger = { exists = title:c_last_hearth.holder }
+			trigger = {
+				exists = title:c_last_hearth.holder
+				exists = title:c_last_hearth.holder.capital_province
+				NOT = { is_in_pool_at = title:c_last_hearth.holder.capital_province }
+			}
 			move_to_pool_at = title:c_last_hearth.holder.capital_province
 		}
-		# Every northern seat is gone. He is still out there; he simply has nowhere to be put.
+		# Every northern seat is closed to him. He is still out there; he simply has nowhere to be put.
+		#
+		# 1.0.16 -- THIS ARM IS THE COMPLEMENT OF THE OTHER THREE, AND IT HAS TO STAY THAT WAY.
+		# It used to test only whether the three holders existed. That was the exact complement while the
+		# arms above tested only the same three holders; it stopped being the complement the moment they
+		# grew the capital_province and is_in_pool_at clauses. A random_list with every arm triggered off
+		# fires nothing and logs nothing -- the brother would silently not move, and the run would look
+		# clean. So the trigger is now literally NOT (arm1 OR arm2 OR arm3): if any destination above can
+		# take him this arm is off, and if none can, this one is on. Add a destination above and it must
+		# be added here too.
 		1 = {
 			trigger = {
-				NOR = {
-					exists = title:d_winterfell.holder
-					exists = title:c_karhold.holder
-					exists = title:c_last_hearth.holder
+				NOT = {
+					OR = {
+						AND = {
+							exists = title:d_winterfell.holder
+							exists = title:d_winterfell.holder.capital_province
+							NOT = { is_in_pool_at = title:d_winterfell.holder.capital_province }
+						}
+						AND = {
+							exists = title:c_karhold.holder
+							exists = title:c_karhold.holder.capital_province
+							NOT = { is_in_pool_at = title:c_karhold.holder.capital_province }
+						}
+						AND = {
+							exists = title:c_last_hearth.holder
+							exists = title:c_last_hearth.holder.capital_province
+							NOT = { is_in_pool_at = title:c_last_hearth.holder.capital_province }
+						}
+					}
 				}
 			}
-			# (1.0.15d: this whole random_list now sits inside an is_landed = no branch -- see the header.)
+			# (1.0.15d: this whole random_list now sits inside an is_ruler = no branch -- see the header.)
 		}
 	}
 	}
@@ -444,6 +497,58 @@ ln_this_brother_flees_effect = {
 # ONLY IF: the Long Night is over (the Others' hegemony sits empty) and somebody of the dead still holds a
 # county. NEVER IF: they are already ruins, which is what this turns them into.
 # Idempotent, and a no-op in every normal year -- the limit fails on the first clause and costs one check.
+# ── 1.0.16 -- THE CLEARER THAT NEVER EXISTED. Reported by MPREG: "there are some leftover risen governments
+# for some reason", with a screenshot of a LIVING Winter Queen Wynafa Manderly on a Risen Thrall government.
+#
+# THE HOLE. `change_government = wight_government` has exactly ONE writer in the whole mod
+# (agot_long_night_scripted_effects.txt:4848) and, before this effect, ZERO clearers. The dawn teardown
+# (zz_ln_dark_spent_effects.txt:120-128) kills by wight_trait / ln_undead_dragon and never names the
+# government. That is survivable only while government implies trait -- and it does not, because THREE sites
+# strip the trait while leaving the government standing:
+#     common/scripted_effects/zz_ln_ice_dragon_effects.txt:133
+#     events/00_others_heartbeat_events.txt:94
+#     events/00_others_heartbeat_events.txt:106
+# A character who passes through the writer and then any of those three holds a dead man's government
+# forever, with nothing in the game able to take it off them.
+#
+# AND IT IS NOT COSMETIC. ln_is_one_of_them_trigger's seventh arm is has_government = wight_government
+# (zz_ln_ice_dragon_triggers.txt:97), so ln_no_dead_landlords_effect below finds her EVERY YEAR and scours
+# every county she holds -- ruins for a de jure capital, wilderness for everything else -- in perpetuity.
+#
+# WHY THIS RESTORES RATHER THAN KILLS. She is alive and she is not one of the dead; the government is the
+# only thing saying otherwise. Killing her would be the sweep's answer, and it would be the wrong one.
+# Pattern follows ln_dewight_dragons_effect (zz_ln_ice_dragon_effects.txt:122-143), the yearly active strip
+# this mod already uses -- but deliberately NOT its gate: that one is guarded
+# NOT = { has_global_variable = ln_aftermath_started }, so it stops running at exactly the moment these
+# leftovers appear. This one has no such gate, which is the entire point.
+ln_clear_orphaned_wight_governments_effect = {
+	every_living_character = {
+		limit = {
+			has_government = wight_government
+			NOT = { has_trait = wight_trait }
+			NOT = { has_trait = other_trait }
+			NOT = { has_trait = nightking }
+			is_ruler = yes
+		}
+		debug_log = "LN_TRACE GOVERNMENT: a living ruler was left on wight_government - restoring"
+		# Tribal is the honest restore: wight_government is a clone of tribal_government and declares
+		# required_county_holdings = { tribal_holding }, so a tribal holder is what they already are.
+		# Anyone holding a castle gets feudal, which is what a Manderly queen should have had all along.
+		if = {
+			limit = {
+				any_held_title = {
+					tier = tier_county
+					title_province ?= { has_holding_type = castle_holding }
+				}
+			}
+			change_government = feudal_government
+		}
+		else = {
+			change_government = tribal_government
+		}
+	}
+}
+
 ln_no_dead_landlords_effect = {
 	if = {
 		limit = {

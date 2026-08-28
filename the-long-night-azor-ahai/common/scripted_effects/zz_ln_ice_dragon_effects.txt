@@ -1657,3 +1657,49 @@ ln_undead_dragon_upkeep_effect = {
 # about to remove, all of it, before removing any of it.
 # ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# ln_strip_living_regiments_effect -- 1.0.16. THE DEAD DO NOT FIGHT WITH BOWMEN.
+#
+# Thomas, from a live 27 Aug run, looking at the Night King's realm strength: "the Night King now has bowmen,
+# men-at-arms. That's absolutely unacceptable. Wildling Raiders, absolutely unacceptable. He should only have
+# access to undead stuff." The tooltip read: Risen Dead 3500, Ice Spiders 500 -- and Wildling Raiders 320,
+# Cannibal Bows 240, Bowmen 200.
+#
+# ── WHERE THEY CAME FROM, AND IT IS NOT THE 1.0.16 CULTURE WORK ───────────────────────────────────────────
+# Checked before changing anything, because the traditions and innovations added this release were the
+# obvious suspects. They are not the cause:
+#   * othertraditions.txt contains ZERO unlock_maa and zero maa references.
+#   * none of the seven tribal innovations in history/cultures/frostborn.txt carries unlock_maa.
+#   * wildling_raiders and cannibal_bows gate on valid_for_maa_trigger = { PARAMETER = unlock_maa_* }, which
+#     resolves to `culture = { has_cultural_parameter = X }` (game/common/scripted_triggers/
+#     00_military_triggers.txt:17-26). The parameter is granted by tradition_agot_forestmen
+#     (AGOT 00_agot_unique_traditions.txt:2600-2614), which frostborn does not have and never had.
+# So these are REGIMENTS THE LORDS ALREADY HAD WHEN THEY WERE RAISED. mutate_into_other_effect converts a
+# conquered ruler and sets his culture to frostborn a few lines above this call -- but CK3 does not disband
+# regiments on a culture change, so his crossbowmen keep standing, now under a dead man's banner. Vanilla
+# `bowmen` needs no cultural parameter at all (its can_recruit only excludes nomadic and herder governments),
+# so that one was always available to anybody the dead raised.
+#
+# ── THE PATTERN IS THE ONE NEXT DOOR ──────────────────────────────────────────────────────────────────────
+# This is the same shape as the v0.2.1 dragonglass strip in agot_long_night_scripted_effects.txt -- "the dead
+# do not fight with dragonglass", added off an identical live-run report where raised lords kept the living's
+# anti-wight kit. Same placement, deliberately OUTSIDE the one-shot guard, so the heartbeat re-runs it on
+# existing wights and running saves are cleaned on their next tick rather than needing a new sweep.
+#
+# ── WHY is_unit_type = Other_infantry IS THE RIGHT FILTER ─────────────────────────────────────────────────
+# Both undead units declare `type = Other_infantry` (long_night_maa_types.txt:10, zz_ln_wight_horde.txt:15),
+# and that type name appears in NO men-at-arms file in base CK3 or AGOT -- verified. So it identifies our two
+# units exactly, with no allowlist to maintain as either mod adds units.
+# `is_unit_type` is a real maa_regiment-scope trigger (vanilla uses it in 00_laamp_triggers.txt:11-12) and
+# `destroy_maa_regiment` is the effect this mod already uses twice
+# (agot_long_night_scripted_effects.txt:4480, zz_long_night_plus_aftermath_effects.txt:377).
+#
+# SAFE FOR THE NIGHT KING'S OWN HOST. His wight horde is Other_infantry and is kept. His elite core comes
+# from spawn_army, which is army-attached rather than an owned MAA regiment, so every_maa_regiment does not
+# reach it at all.
+ln_strip_living_regiments_effect = {
+	every_maa_regiment = {
+		limit = { NOT = { is_unit_type = Other_infantry } }
+		destroy_maa_regiment = yes
+	}
+}

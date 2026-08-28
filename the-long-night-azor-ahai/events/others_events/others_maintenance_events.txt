@@ -107,9 +107,26 @@ others_maintenance.3 = {
 	}
 	
 	immediate = {
+		# 1.0.16 -- THE SECOND LOCK ON THE KING-SWEARS-TO-HIMSELF BUG.
+		# The first is at the sender (agot_long_night_scripted_effects.txt, the every_ruler limit inside
+		# agot_long_night_iron_throne_reformation_effect), which now refuses to send this card to the man on
+		# the Iron Throne at all. This is the same guard stated where the damage actually happens, because a
+		# guard that lives only at one sender is one new sender away from being no guard.
+		#
+		# Refusing the SAVE, rather than the option, is deliberate: everything downstream of this scope is
+		# already written to check `exists = scope:iron_throne_holder` -- the right_portrait at :100, option
+		# a's own trigger at :121, and the create_title_and_vassal_change block at :147. Leaving the scope
+		# unsaved turns all three off together and there is nothing left to keep in step. Option b is
+		# untriggered and still there, so the card is never optionless.
+		# NESTED, not two clauses in one limit: a limit does not promise to stop at the first false, and
+		# `this = title:h_the_iron_throne.holder` against an unheld throne is a deref of nothing. The outer
+		# test answers "is there a king", the inner one "is it me", in that order and only in that order.
 		if = {
 			limit = { exists = title:h_the_iron_throne.holder }
-			title:h_the_iron_throne.holder = { save_scope_as = iron_throne_holder }
+			if = {
+				limit = { NOT = { this = title:h_the_iron_throne.holder } }
+				title:h_the_iron_throne.holder = { save_scope_as = iron_throne_holder }
+			}
 		}
 		if = { limit = { has_culture = culture:frostborn  NOT = { has_trait = wight_trait } }
 			set_character_faith = faith:old_gods_btw_fnf

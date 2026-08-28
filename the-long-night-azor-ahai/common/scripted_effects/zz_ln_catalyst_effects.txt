@@ -713,4 +713,36 @@ ln_crown_the_next_nightking_effect = {
 		limit = { has_game_rule = others_insane_invasion    NOT = { has_character_modifier = others_insane_modifier } }
 		add_character_modifier = others_insane_modifier
 	}
+
+	# ── 1.0.16: THE TWO LINES EVERY SUCCESSOR WAS MISSING ────────────────────────────────────────────
+	# night_king_command_modifier had exactly ONE application site in the whole mod --
+	# agot_long_night_scripted_effects.txt:456, inside the_long_night_setup_effect, which runs once from
+	# others.1. Every one of the seven successor-crowning sites calls THIS effect, which applied the trait,
+	# the ln_one_of_them stamp and the strength modifier -- and nothing else. So the FIRST Night King fought
+	# with advantage 12, +20% army damage, +20% toughness, +50% knight effectiveness and +6 knight limit, and
+	# every King who followed him fought without any of it. Kill him once and his heir is permanently weaker,
+	# which is the exact opposite of the arc the recurrence layer exists to tell.
+	# With ADVANTAGE_DAMAGE_SCALING_FACTOR = 5 (game/common/defines/00_defines.txt:596) the lost advantage
+	# alone is +60% damage the successor never got. Reported in substance by KhanSaru: "I'm king of the seven
+	# kingdoms with dragons, and I am not doing anything about the Others."
+	# Guarded like every clause above it, so re-crowning is still a no-op and nothing can stack.
+	if = {
+		limit = { NOT = { has_character_modifier = night_king_command_modifier } }
+		add_character_modifier = night_king_command_modifier
+	}
+
+	# Same single-site problem: ln_apply_wave_escalation_effect was only ever called from
+	# agot_long_night_scripted_effects.txt:368, in that same one-time setup. A second, fourth or sixth wave
+	# led by a NEW King came back no harder than the first. The effect itself picks its own tier off
+	# global_var:ln_wave_count; the guard here stops a re-crowning from stacking a second copy.
+	if = {
+		limit = {
+			NOR = {
+				has_character_modifier = ln_wave_escalation_1_modifier
+				has_character_modifier = ln_wave_escalation_2_modifier
+				has_character_modifier = ln_wave_escalation_3_modifier
+			}
+		}
+		ln_apply_wave_escalation_effect = yes
+	}
 }

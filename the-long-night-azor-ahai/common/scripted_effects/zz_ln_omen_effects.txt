@@ -14,7 +14,25 @@ ln_omen_pulse_effect = {
 	# ── THE LOST RANGING. Long Summer, and only to people with a reason to hear about it.
 	if = {
 		limit = {
-			scope:struggle = { is_struggle_phase = ln_phase_long_summer }
+			# 1.0.16 -- THE STRUGGLE HANDLE CAN OUTLIVE THE STRUGGLE. 12 errors in the 27 Aug run, all of
+			# this shape:
+			#   Error: scope:struggle trigger [ Failed context switch ]
+			# 4 from zz_ln_omen_effects.txt:17, 4 from :66, 4 from zz_ln_coldwinds_effects.txt:18 -- and every
+			# one of them landed at 17:02:16, immediately after ln_struggle_clock_backstop reported
+			# "Scoped object is not valid. Type: weak (Struggle - 1)!". That is the Long Night ending: the
+			# struggle is destroyed, and the pulse on_actions (zz_ln_omen_on_actions.txt:13,
+			# zz_ln_coldwinds_on_actions.txt:8) hand this effect a handle to a thing that is no longer there.
+			#
+			# Two guards, not one, because they fail differently. `exists` answers whether the handle points
+			# at anything; `?=` makes the context switch itself optional so a handle that exists but cannot
+			# be entered returns false instead of throwing. Either alone leaves a hole; the pair is how this
+			# codebase already writes every other risky switch (capital_county ?= in
+			# agot_long_night_scripted_effects.txt, cp:councillor_court_chaplain ?= in zz_ln_pledge_events.txt).
+			#
+			# COSTS NOTHING: with no struggle there is no phase, so every arm below was going to be false
+			# anyway. This changes a thrown error into the false it was always meant to be.
+			exists = scope:struggle
+			scope:struggle ?= { is_struggle_phase = ln_phase_long_summer }
 			NOT = { has_character_flag = ln_omen_cooldown }
 			OR = {
 				has_government = nights_watch_government
@@ -63,7 +81,25 @@ ln_omen_pulse_effect = {
 	# left on it, not like the last thing that happens before the dark.
 	if = {
 		limit = {
-			scope:struggle = { is_struggle_phase = ln_phase_cold_winds }
+			# 1.0.16 -- THE STRUGGLE HANDLE CAN OUTLIVE THE STRUGGLE. 12 errors in the 27 Aug run, all of
+			# this shape:
+			#   Error: scope:struggle trigger [ Failed context switch ]
+			# 4 from zz_ln_omen_effects.txt:17, 4 from :66, 4 from zz_ln_coldwinds_effects.txt:18 -- and every
+			# one of them landed at 17:02:16, immediately after ln_struggle_clock_backstop reported
+			# "Scoped object is not valid. Type: weak (Struggle - 1)!". That is the Long Night ending: the
+			# struggle is destroyed, and the pulse on_actions (zz_ln_omen_on_actions.txt:13,
+			# zz_ln_coldwinds_on_actions.txt:8) hand this effect a handle to a thing that is no longer there.
+			#
+			# Two guards, not one, because they fail differently. `exists` answers whether the handle points
+			# at anything; `?=` makes the context switch itself optional so a handle that exists but cannot
+			# be entered returns false instead of throwing. Either alone leaves a hole; the pair is how this
+			# codebase already writes every other risky switch (capital_county ?= in
+			# agot_long_night_scripted_effects.txt, cp:councillor_court_chaplain ?= in zz_ln_pledge_events.txt).
+			#
+			# COSTS NOTHING: with no struggle there is no phase, so every arm below was going to be false
+			# anyway. This changes a thrown error into the false it was always meant to be.
+			exists = scope:struggle
+			scope:struggle ?= { is_struggle_phase = ln_phase_cold_winds }
 			NOT = { has_character_flag = ln_saw_one_done }
 		}
 		# A HUMAN GETS THE CARD, and the card is where the interesting choice lives -- believe the man, or

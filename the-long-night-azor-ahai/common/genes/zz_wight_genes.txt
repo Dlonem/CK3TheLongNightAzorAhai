@@ -147,7 +147,7 @@ special_genes = {
 						decal = {
 							body_part = torso
 							textures = {
-								diffuse = "gfx/models/portraits/decals/hair_aging_control.dds"
+								diffuse = "gfx/models/portraits/decals/zz_ln_wight_torso_decal.dds"
 								# normal = ""
 								# properties = ""
 							}
@@ -408,7 +408,7 @@ special_genes = {
 						decal = {
 							body_part = torso
 							textures = {
-								diffuse = "gfx/models/portraits/decals/hair_aging_control.dds"
+								diffuse = "gfx/models/portraits/decals/zz_ln_wight_torso_decal.dds"
 								# normal = ""
 								# properties = ""
 							}

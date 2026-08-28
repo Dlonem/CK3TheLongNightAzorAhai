@@ -23,10 +23,36 @@ ln_wfd_cornered_effect = {
 
 	scope:war ?= {
 		every_war_attacker = {
-			limit = { is_alive = yes  is_adult = yes }
+			# 1.0.16 -- DRAGON GUARD. Mirrors the fix 1.0.12 already shipped for the analogous preparation
+			# loops (zz_ln_preparation_effects.txt:98-117), which was never carried over to the funnel.
+			# Without it a high-prowess dragon can win the worthiness ordering, be handed ln_dawn.11, pick
+			# option C ("We have nothing that can end him"), tear down ln_dawn_cornered_king at :655 and
+			# LEAVE THE LONG NIGHT UNENDABLE. Thomas: "ideally, maybe dragons can't be eligible Dawn
+			# Champions... it'd be nice if whoever kills the Night King had a dragon, that that dragon gets
+			# honorable mention." The honorable mention already exists and is untouched -- the dragon is
+			# named in the permanent record by ln_last_dawn_dragon (zz_ln_reveal_effects.txt:88-99).
+			# The animal is credited; it just does not hold the sword.
+			limit = { is_alive = yes  is_adult = yes  NOT = { ln_is_a_dragon_trigger = yes } }
 			add_to_temporary_list = ln_dawn_candidates
+		}
+	}
+
+	# 1.0.16 -- THE KNIGHTS ARE A SIBLING LOOP NOW, NOT A NESTED ONE, AND THAT IS THE BUG THIS FIXES.
+	# every_knight used to sit INSIDE the limited body above. `limit` in an every_ loop decides which
+	# iterations run the body at all -- so a war attacker who was dead, a child, or a dragon did not merely
+	# fail to enter the list himself, HE TOOK HIS ENTIRE KNIGHT ROSTER WITH HIM. That is the precise
+	# opposite of what the header of this effect promises: "not just the war's rulers... Jon Snow sworn to
+	# somebody else's banner is exactly the man this exists for." Jon Snow sworn to a nine-year-old lord, or
+	# to a lord who died in the last battle of the war, was silently not a candidate.
+	# The 1.0.12 pattern this file's dragon guard cites uses sibling loops for exactly this reason --
+	# zz_ln_preparation_effects.txt:98-116 runs every_knight and every_courtier as two separate loops, each
+	# carrying its own limit. Same shape here: the attacker is filtered on his own merits, his knights on
+	# theirs, and neither decides for the other.
+	# STRICTLY WIDENS the candidate pool. Nobody who qualified before stops qualifying.
+	scope:war ?= {
+		every_war_attacker = {
 			every_knight = {
-				limit = { is_alive = yes  is_adult = yes }
+				limit = { is_alive = yes  is_adult = yes  NOT = { ln_is_a_dragon_trigger = yes } }
 				add_to_temporary_list = ln_dawn_candidates
 			}
 		}
@@ -63,8 +89,21 @@ ln_wfd_cornered_effect = {
 		# hidden, idempotent -- and queued at BOTH the leader and the champion (review find: a leader who
 		# also dies inside the fortnight used to take the failsafe to his grave). Whoever still breathes
 		# finishes it; the second copy no-ops on the guards.
-		scope:attacker = { trigger_event = { id = ln_dawn.12  days = 14 } }
-		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.12  days = 15 } }
+		# ── 1.0.16 -- THE DAYS WERE THE WRONG WAY ROUND, AND IT COST THE RECORD. ────────────────────────
+		# The war leader's copy was day 14 and the CHAMPION'S was day 15, so the leader's always landed
+		# first -- and ln_dawn.12's own teardown removes ln_dawn_cornered_king, which disarms the
+		# champion's copy through its trigger. Result: whenever the champion's ln_dawn.11 was lost in the
+		# intervening fortnight, ln_dawn.12 fired at scope:attacker and `killer = root` recorded THE LIEGE
+		# WHO DECLARED THE WAR -- in the reveal card, in the roll-call, and in the permanent
+		# ln_last_dawn_champion global that a Cycle run reads a century later.
+		# Thomas asked exactly this: "you have root in a lot of the killer for the Night King, and I wanna
+		# make sure that applies to the person who's actually killing the Night King versus just me."
+		# The whole funnel exists to find the man the story picked -- "Jon Snow sworn to somebody else's
+		# banner is exactly the man this exists for" (:20) -- and the failsafe was quietly overruling it.
+		# Swapped: the champion gets day 14, the war leader day 16. The leader is still the backstop for a
+		# champion who dies inside the fortnight; he is no longer the default answer.
+		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.12  days = 14 } }
+		scope:attacker = { trigger_event = { id = ln_dawn.12  days = 16 } }
 	}
 	else = {
 		# Nobody fit to swing. The old resolution, unchanged: the war leader takes the kill.
@@ -95,13 +134,32 @@ ln_nk_captured_effect = {
 
 	scope:imprisoner = {
 		save_scope_as = ln_nk_captor
-		add_to_temporary_list = ln_dawn_candidates
+		# 1.0.16 -- THE CAPTOR WAS THE ONE CANDIDATE WITH NO TEST ON HIM AT ALL. Every knight and courtier
+		# below is filtered; he walked straight in. Two consequences, and the second is the quiet one:
+		#   * a dragon captor could win the worthiness ordering and be handed ln_dawn.11 -- the single
+		#     failure this file's dragon guard exists to prevent, left open at the one entry that skipped it;
+		#   * because he was ALWAYS added, ln_dawn_candidates was never empty, ordered_in_list always found
+		#     a position 0, and the else-branch below ("a landless wretch with no knights") was dead code
+		#     that could not run. It has a real job again now.
+		#
+		# is_adult IS DELIBERATELY NOT IN THIS LIMIT, unlike the knights' and courtiers'. A child captor
+		# must stay eligible: he is the last resort in his own cell, and ln_dawn.11 has no is_adult in its
+		# trigger (zz_ln_dawn_events.txt:614-626), so handing him the card ends the Long Night. The
+		# worthiness ordering will still prefer any adult standing in his hall. The dragon is the only
+		# exclusion that is load-bearing here, because a dragon can break off and leave the dark unendable;
+		# a nine-year-old lord cannot.
+		if = {
+			limit = { is_alive = yes  NOT = { ln_is_a_dragon_trigger = yes } }
+			add_to_temporary_list = ln_dawn_candidates
+		}
+		# 1.0.16 -- same dragon guard as ln_wfd_cornered_effect above; see the note there. A captor's hall
+		# can contain a bonded dragon, and a dragon cannot be handed the executioner's card.
 		every_knight = {
-			limit = { is_alive = yes  is_adult = yes }
+			limit = { is_alive = yes  is_adult = yes  NOT = { ln_is_a_dragon_trigger = yes } }
 			add_to_temporary_list = ln_dawn_candidates
 		}
 		every_courtier_or_guest = {
-			limit = { is_alive = yes  is_adult = yes  is_imprisoned = no }
+			limit = { is_alive = yes  is_adult = yes  is_imprisoned = no  NOT = { ln_is_a_dragon_trigger = yes } }
 			add_to_temporary_list = ln_dawn_candidates
 		}
 	}
@@ -132,14 +190,35 @@ ln_nk_captured_effect = {
 		}
 		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.11  days = 3 } }
 		# Review find: the failsafe rides both men, so one death cannot orphan the chain.
-		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.12  days = 15 } }
+		# 1.0.16 -- day 15 -> 14, ahead of the captor's copy below. Same defect and same reasoning as the
+		# score-victory route: the captor's day-14 copy used to land first and record HIM as the killer,
+		# overruling the destiny ordering that had already named someone in his hall.
+		scope:ln_dawn_champion = { trigger_event = { id = ln_dawn.12  days = 14 } }
 	}
 	else = {
 		# A landless wretch with no knights captured the King of Winter. His cell, his blade.
-		set_global_variable = { name = ln_dawn_final_champion  value = scope:ln_nk_captor }
-		scope:ln_nk_captor = { trigger_event = { id = ln_dawn.11  days = 3 } }
+		# 1.0.16 -- REACHABLE FOR THE FIRST TIME (see the captor's limit above), so it now has to be right.
+		# Guarded with the same test, because the only ways to arrive here are an empty hall -- in which
+		# case the captor is fine and this is the intended ending -- or a captor who failed that test, in
+		# which case handing him the card is precisely the failure the test was added to stop.
+		if = {
+			limit = { scope:ln_nk_captor = { is_alive = yes  NOT = { ln_is_a_dragon_trigger = yes } } }
+			set_global_variable = { name = ln_dawn_final_champion  value = scope:ln_nk_captor }
+			scope:ln_nk_captor = { trigger_event = { id = ln_dawn.11  days = 3 } }
+		}
+		else = {
+			# Nobody in the world can hold the sword. Not a stall: ln_dawn_cornered_king and
+			# ln_dawn_in_chains are both set above, the king carries keep_imprisoned, and the day-16
+			# ln_dawn.12 failsafe at the foot of this effect still runs -- so the chain resolves through the
+			# backstop rather than through a champion. Logged loudly because if this line ever appears in a
+			# real run, the reachability reasoning above was wrong and wants revisiting.
+			debug_log = "LN_TRACE ENDGAME: the night king is in chains and NOBODY is eligible to end him - falling through to the day-16 failsafe"
+			debug_log_scopes = yes
+		}
 	}
-	scope:ln_nk_captor = { trigger_event = { id = ln_dawn.12  days = 14 } }
+	# 1.0.16 -- day 14 -> 16. In the else-branch above the captor IS the champion and this is his own
+	# failsafe; in the if-branch he is only the backstop for a champion who died in the fortnight.
+	scope:ln_nk_captor = { trigger_event = { id = ln_dawn.12  days = 16 } }
 }
 
 # ── THE COLD THING IN YOUR CELLS ────────────────────────────────────────────────────────────────────────────

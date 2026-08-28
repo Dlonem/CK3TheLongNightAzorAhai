@@ -108,18 +108,55 @@ ln_summon_the_red_priest_effect = {
 		# will actually accept him; an interloper who has not converted yet gets one out of Essos.
 		# Myrish, either way -- they come from the Free Cities, and it is the culture AGOT gives Thoros.
 		else = {
+			# 1.0.16 LIVE-RUN FIX -- THE 1.0.9 FIX TRADED ONE SILENT FAILURE FOR ANOTHER.
+			# Thomas's 27 Aug run, 17:01:01:
+			#   Error: create_character effect [ New character needs a location because they will be sent to the pool ]
+			#     Script location: file: common/scripted_effects/zz_ln_red_priest_effects.txt line: 161
+			#   Error: create_character effect [ Invalid location (not a province, or not provided) ]
+			#
+			# The 1.0.9 comment inside both blocks below asserts "CK3 derives his location from the employer
+			# anyway." It does not. `employer` only places him if the employer can actually hold a court; when
+			# root cannot, the engine routes the new character to the pool, and a pool character MUST have a
+			# location. PostValidate then fails and NOBODY IS CREATED -- the exact silent failure 1.0.9 set out
+			# to fix, arrived at from the other side. scope:ln_priest is never saved, ln_pledge.1's right_portrait
+			# renders empty, and the road to Court Chaplain -> ln_has_a_seer_trigger -> Chosen stays shut.
+			#
+			# WHY ROOT CANNOT ALWAYS EMPLOY. ln_send_for_a_red_priest_decision gates on is_landed = yes
+			# (zz_ln_pledge_decisions.txt:34) but the card lands 120-400 days later. A lord who lost his last
+			# holding inside that window is a courtier when this runs, and a courtier employs nobody.
+			#
+			# THE SHAPE OF THE FIX, and why it is not "add a location":
+			# `location` and `employer` are MUTUALLY EXCLUSIVE inside create_character -- that is the engine
+			# error 1.0.9 was chasing ("Cannot specify both location and employer"), and it is still true. So
+			# the priest is born at a PLACE, unconditionally, and is then moved into the hall as a separate
+			# step. That separate step is not a new idea: it is the idiom this same file already uses for a
+			# named priest who answers, at :97 -- `scope:ln_priest = { set_employer = root }` -- and the one
+			# every other create_character in the mod uses (zz_ln_favored_events.txt:282,
+			# zz_ln_prophecy_events.txt:119, zz_ln_chosen_events.txt:62). It also degrades correctly: a
+			# landless caller now gets a real priest standing in his province instead of no priest at all.
+			#
+			# The province is resolved ONCE, here, rather than inline in both blocks, so the two branches
+			# cannot drift. capital_province first because a landed lord's priest should arrive at his seat;
+			# location second because every living character has one; and if somehow neither exists the whole
+			# fallback is skipped -- a skipped branch is a priest who did not come, which is a story. A failed
+			# create_character is a bug report.
+			if = { limit = { exists = capital_province }  capital_province = { save_scope_as = ln_priest_arrival } }
+			else_if = { limit = { exists = location }  location = { save_scope_as = ln_priest_arrival } }
 			if = {
-				limit = { faith = { religion = religion:the_rhllor_religion } }
+				limit = {
+					exists = scope:ln_priest_arrival
+					faith = { religion = religion:the_rhllor_religion }
+				}
 				create_character = {
 					# 1.0.9 LIVE-RUN FIX -- `location` WAS HERE AND IT IS MUTUALLY EXCLUSIVE WITH `employer`.
 					# The engine's own words, from Thomas's 14 Aug run: "create_character effect [ Cannot
 					# specify both location and employer ]", twice, and PostValidate returning false both
-					# times -- which means the priest WAS NEVER CREATED. The whole fallback branch, i.e. the
-					# overwhelmingly common outcome of this decision, silently produced nobody. It passed
-					# every static check I have because both keywords are real and spelled right.
-					# employer is the correct one to keep: it puts him in the court, which is the entire
-					# point, and CK3 derives his location from the employer anyway.
-					employer = root
+					# times -- which means the priest WAS NEVER CREATED.
+					# 1.0.16: still mutually exclusive, and `location` is the half that comes back -- the
+					# court seat is now a separate set_employer step below the branch. The last sentence of
+					# the 1.0.9 note ("CK3 derives his location from the employer anyway") was wrong and cost
+					# a second silent failure; see the header of this else-branch for the log line.
+					location = scope:ln_priest_arrival
 					faith = root.faith
 					culture = culture:myrish
 					gender_female_chance = 50
@@ -157,17 +194,18 @@ ln_summon_the_red_priest_effect = {
 					save_scope_as = ln_priest
 				}
 			}
-			else = {
+			else_if = {
+				limit = { exists = scope:ln_priest_arrival }
 				create_character = {
 					# 1.0.9 LIVE-RUN FIX -- `location` WAS HERE AND IT IS MUTUALLY EXCLUSIVE WITH `employer`.
 					# The engine's own words, from Thomas's 14 Aug run: "create_character effect [ Cannot
 					# specify both location and employer ]", twice, and PostValidate returning false both
-					# times -- which means the priest WAS NEVER CREATED. The whole fallback branch, i.e. the
-					# overwhelmingly common outcome of this decision, silently produced nobody. It passed
-					# every static check I have because both keywords are real and spelled right.
-					# employer is the correct one to keep: it puts him in the court, which is the entire
-					# point, and CK3 derives his location from the employer anyway.
-					employer = root
+					# times -- which means the priest WAS NEVER CREATED.
+					# 1.0.16: still mutually exclusive, and `location` is the half that comes back -- the
+					# court seat is now a separate set_employer step below the branch. The last sentence of
+					# the 1.0.9 note ("CK3 derives his location from the employer anyway") was wrong and cost
+					# a second silent failure; see the header of this else-branch for the log line.
+					location = scope:ln_priest_arrival
 					faith = faith:rhllor_fc
 					culture = culture:myrish
 					gender_female_chance = 50
@@ -204,6 +242,25 @@ ln_summon_the_red_priest_effect = {
 					dynasty = none
 					save_scope_as = ln_priest
 				}
+			}
+
+			# ── AND NOW HE WALKS INTO THE HALL ──────────────────────────────────────────────────────
+			# The second half of the 1.0.16 fix. The priest exists and is standing in a province; this is
+			# what puts him in the court, and it is the same one-liner the named-priest branch above uses
+			# at :97. Guarded three ways, none of them optional:
+			#   exists = scope:ln_priest -- both create blocks are now conditional, so he may not be here.
+			#   is_landed -- set_employer on a caller who cannot hold a court is the original failure
+			#     wearing a different hat. A landless caller keeps a priest in his province, which is
+			#     strictly more than the nothing he got before.
+			#   NOT = { exists = scope:ln_priest.employer } -- he was just born, so this is belt and
+			#     braces, but a future edit that reuses this scope should not silently re-home somebody.
+			if = {
+				limit = {
+					exists = scope:ln_priest
+					is_landed = yes
+					NOT = { exists = scope:ln_priest.employer }
+				}
+				scope:ln_priest = { set_employer = root }
 			}
 		}
 	}

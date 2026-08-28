@@ -278,3 +278,12 @@ frostborn_culture_name:0 "Others"
  # -- renaming them means editing the CB file to fix a string, and the CB file is not worth the risk.
  great_ranging_white_peace_desc:0 "The war ends without an ending. No terms are agreed, because there is no one on the other side to agree to them — the host simply stops coming, and the men who are left lower their shields and wait to see whether that means anything.\n\nIt does not. The dead are not beaten. They are only elsewhere."
  great_ranging_invalidated_desc:0 "The war is over because the reason for it is gone. The cause that called these banners no longer stands, and a war needs something to be about.\n\nThe horns sound the recall. Whether that is mercy or merely a pause is not something anyone here can answer."
+
+ # 1.0.16 -- the CB's third key. SCOURING_CB_NAME and SCOURING_CB_NAME_BASE (:35-36) were defined and used by
+ # war_name/war_name_base; `cb_name = SCOURING_CB` at common/casus_belli_types/00_long_night_cbs.txt:1633 had
+ # no key at all, so the CB itself rendered raw wherever the engine names the cb rather than the war.
+ SCOURING_CB:0 "Scouring"
+
+ # 1.0.16 -- the War for the Dawn's new prerequisite. Written as a statement of the world rather than a
+ # rules line: the player should finish reading it knowing what to go and do.
+ ln_wfd_never_been_beaten:0 "No one has yet thrown the dead back. Until an army of the living has beaten them in the field, there is no war to march to — only a winter that has not been argued with."

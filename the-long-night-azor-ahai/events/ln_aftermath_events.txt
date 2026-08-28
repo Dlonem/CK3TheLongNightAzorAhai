@@ -160,17 +160,37 @@ ln_aftermath.20 = {
 				# mirrors what ln_refugee_settler_size_value used to do (camp level, clamped 1-4) -- that value
 				# was Long Night+'s, referenced by nothing, and was removed 10 Aug.  The shape is kept; the
 				# symbol is gone, so do not go looking for it.
+				# 1.0.16 -- has_variable IS AN OUTER `if`, NOT A CLAUSE BESIDE THE READ.
+				# ln_camp_level is a CHARACTER variable (set at agot_long_night_scripted_effects.txt, in
+				# flee_noble_south_effect's root scope; removed at character scope in
+				# zz_long_night_plus_aftermath_effects.txt beside its remove_character_flag calls). An
+				# earlier note here said "set on the camp title" -- it is not, and this event has no `type`
+				# so it defaults to character_event and root is the settler. The read was always in the
+				# right scope; the variable is simply absent on the courtier flee path, where a settler who
+				# never held a camp has no camp level.
+				# A first pass put `has_variable` inside each arm's own limit, next to the `var:` read it
+				# was meant to guard. That guarantees nothing -- a limit does not promise to stop at the
+				# first false clause. Nesting does: the outer `if` decides whether any `var:` read happens
+				# at all, and the outer `else` is the no-variable answer.
+				# NOT A FUNCTIONAL CHANGE: a settler with no camp level got size 1 before and gets size 1
+				# now. The value of this is that the right answer stops being reached through three errors.
 				if = {
-					limit = { var:ln_camp_level >= 4 }
-					create_maa_regiment = { type = laamp_settler_maa  size = 4  check_can_recruit = no }
-				}
-				else_if = {
-					limit = { var:ln_camp_level = 3 }
-					create_maa_regiment = { type = laamp_settler_maa  size = 3  check_can_recruit = no }
-				}
-				else_if = {
-					limit = { var:ln_camp_level = 2 }
-					create_maa_regiment = { type = laamp_settler_maa  size = 2  check_can_recruit = no }
+					limit = { has_variable = ln_camp_level }
+					if = {
+						limit = { var:ln_camp_level >= 4 }
+						create_maa_regiment = { type = laamp_settler_maa  size = 4  check_can_recruit = no }
+					}
+					else_if = {
+						limit = { var:ln_camp_level = 3 }
+						create_maa_regiment = { type = laamp_settler_maa  size = 3  check_can_recruit = no }
+					}
+					else_if = {
+						limit = { var:ln_camp_level = 2 }
+						create_maa_regiment = { type = laamp_settler_maa  size = 2  check_can_recruit = no }
+					}
+					else = {
+						create_maa_regiment = { type = laamp_settler_maa  size = 1  check_can_recruit = no }
+					}
 				}
 				else = {
 					create_maa_regiment = { type = laamp_settler_maa  size = 1  check_can_recruit = no }

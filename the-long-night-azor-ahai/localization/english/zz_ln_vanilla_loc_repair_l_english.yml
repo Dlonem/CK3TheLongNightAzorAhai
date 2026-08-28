@@ -20,3 +20,9 @@
  ALREADY_IN_ACTIVITY:0 "You are not currently busy with something else"
  # ALREADY_PLANNING_ACTIVITY removed 1.0.12b -- vanilla 1.19 ships the key itself now; keeping ours was a
  # "Duplicate localization key" error on every boot.
+
+ # 1.0.16 -- THIRD ENTRY, and like the two above it this is vanilla's gap, not ours.
+ # game/common/factions/00_peasant_faction_new.txt:608 does `custom_description = { text =
+ # character_is_immune_to_factions ... }` and base CK3 ships no such key. We inherit the identical block at
+ # our :651. Defining it here repairs it for the whole playset without shadowing anyone's file.
+ character_is_immune_to_factions:0 "Is immune to factions"

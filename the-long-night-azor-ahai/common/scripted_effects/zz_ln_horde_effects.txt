@@ -11,8 +11,32 @@
 # nuisance; running away with the continent, eight, and the horde becomes the thing you cannot kill fast enough.
 #
 # THE CEILING STILL MATTERS and is deliberately kept: without one this is the exponential snowball we are trying
-# not to build. 120 regiments x stack 500 = 60,000 bodies of 8/25 infantry -- three times the old cap, and still
-# beatable by quality, which is what keeps "one hybrid on the world's oldest dragon still matters" true.
+# not to build.
+#
+# 1.0.16 -- THE ARITHMETIC ON THE LINE THAT USED TO BE HERE WAS WRONG, AND SO WAS THE SENTENCE ABOVE IT.
+# It read "120 regiments x stack 500 = 60,000 bodies", which assumes every regiment is size 1. It is not:
+# create_maa_regiment = { size = N } creates ONE regiment of N size-steps, not N regiments. Base CK3 says so
+# itself -- game/localization/english/gui/militaryview_l_english.yml:149, "Each time you increase the Size of
+# the Regiment, [StackSize] more Soldiers will be added", and maa_effects_l_english.yml:17 reads "Recruits A
+# regiment", singular. So the real ceiling is 120 x N x 500, i.e. up to 480,000 -- roughly EIGHT times the
+# documented intent, in the direction of more mass.
+#
+# It does not actually reach that, and the reason is an engine clamp nobody here knew about:
+# NArmy.REGIMENT_DEFAULT_MAX_SIZE = 3 (game/common/defines/00_defines.txt:641), overridable per MAA type by a
+# `max = N` field (game/common/men_at_arms_types/_men_at_arms_types.info). ln_wight_horde does not set `max`,
+# so EVERY size request here clamps to 3 -- the true ceiling is 120 x 3 x 500 = 180,000.
+#
+# WHICH MEANS THE 4 / 6 / 8 TIERS BELOW ARE CURRENTLY INERT. A horde that has run away with the continent
+# grows at exactly the same rate as one held at the Neck. That is a real design/implementation mismatch.
+#
+# WE ARE DELIBERATELY NOT "FIXING" IT BY ADDING `max = 8`. That would take the ceiling to 480,000, and Corvo
+# reported his machine burns past 300,000 -- the mod's own live record already shows 429,171 men in the field.
+# The clamp is accidentally protecting performance and it stays. The escalation belongs in POWER, not bodies:
+# the wave modifiers (common/modifiers/zz_ln_wave_modifiers.txt) and the strength tiers carry advantage,
+# army_damage_mult, army_toughness_mult and siege_phase_time, none of which costs a single extra soldier.
+# NB the spawn_army path is NOT clamped -- verified against vanilla's own Mongol invasion, which spawns
+# stacks = 100 (game/common/scripted_effects/00_mongol_invasion_effects.txt:1195-1249). Only owned MaA
+# regiments created by create_maa_regiment are governed by the size limit.
 #
 # create_maa_regiment's `size` is a LITERAL INT at parse time -- it is not a script value and it is not a scope.
 # That is why the tiers below are branches on literals rather than arithmetic, and why the add is a macro.

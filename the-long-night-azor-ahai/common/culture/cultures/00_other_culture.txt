@@ -7,6 +7,49 @@
 	martial_custom = martial_custom_equal
 	head_determination = head_determination_domain
 
+	# ── 1.0.16: frostborn had NO traditions block at all. Not empty -- absent. ───────────────────────────
+	# Reported by Zobertus on Discord: "The fact that the Others start with no innovations and that the
+	# Insane strength only adds a levy modifier make them way too easy to deal with (as levies are useless
+	# in battle)." He was right on both halves, from outside the code.
+	# For scale, MEASURED: every one of AGOT's 158 culture definitions carries 5 or 6 traditions -- max 6,
+	# median 6, none with fewer than 5. The Others carried ZERO, so they fought late-medieval Westeros with
+	# none of the tradition bonuses every single one of their enemies has.
+	#
+	# CORRECTION, 27 Aug, and worth leaving in because it is the kind of mistake that reads as authoritative:
+	# an earlier draft of this comment claimed "andal 17, freecities 12, first_man 11, ghiscari 10". Those
+	# numbers came from `grep -c "traditions = {"` per FILE, which counts THE NUMBER OF CULTURES DEFINED IN
+	# THAT FILE, not traditions per culture. 00_agot_cul_andal.txt defines 17 cultures, each with 5-6
+	# traditions. The figures were never real. Caught by an adversarial review pass.
+	#
+	# Three fits: DEFAULT_MAX_TRADITIONS = 5 (game/common/defines/00_defines.txt:1163), +1 per era joined,
+	# and tradition_others' own culture_tradition_max_add = -2 -- so 4-5 slots for the 3 assigned here.
+	# All three of these were ALREADY WRITTEN and shipping in common/culture/traditions/othertraditions.txt,
+	# assigned to nothing -- tradition_others2 alone carries knight_limit = 12, dread_baseline_add = 10,
+	# max_loot_mult = 10, ai_war_chance = 1 and ai_war_cooldown = -0.95. This is wiring up existing work,
+	# not new content, and it costs ZERO extra soldiers -- which is the whole point given Corvo's report
+	# that his machine burns past 300k. Power density, not headcount.
+	# They are assigned here rather than picked: each carries cost = { prestige = 10000 } and
+	# ai_will_do = { value = 0 } precisely so no culture can ever take them through the UI.
+	#
+	# ── WHAT ELSE COMES WITH THEM, flagged rather than buried (adversarial review find). "Costs zero extra
+	# soldiers" is true, but these are not purely military traditions. tradition_others2/3 also switch on a
+	# county_modifier over every frostborn county and a character_modifier on every frostborn character:
+	#     fort_level = 3                              -- their holdings get materially harder to besiege
+	#     monthly_county_control_growth_factor = -1   -- control crawls on land they take
+	#     development_growth = -1, tax_mult = -1      -- the dead do not build or bank
+	#     supply_limit_mult = -0.5, county_opinion_add = 400
+	#     monthly_prestige = -10, vassal_limit = 20, ai_boldness = 100, ai_war_chance = 1
+	# Two of those are load-bearing and should be watched on the boot run: fort_level = 3 lands in the same
+	# release as a siege retune (zz_ln_siege_modifiers.txt), and the control penalty bites a realm whose
+	# levies key off county control. NOTE also that monthly_prestige = -10 runs against wight_government's
+	# use_prestige_to_buy_maa flag (zz_wight_government.txt) -- if the Night King ever looks starved of
+	# men-at-arms rather than of men, that pairing is the first place to look.
+	traditions = {
+		tradition_others
+		tradition_others2
+		tradition_others3
+	}
+
 	coa_gfx = {
 		wildling_coa_gfx
 		first_man_coa_gfx

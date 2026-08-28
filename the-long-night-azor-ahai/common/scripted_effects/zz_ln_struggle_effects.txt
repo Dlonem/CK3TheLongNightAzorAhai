@@ -77,8 +77,16 @@ ln_struggle_monthly_effect = {
 	}
 
 	# ── BACK TO THE LONG SUMMER: re-arm for the next wave ──────────────────────────────────────────────────
+	# 1.0.16 -- ln_struggle_concluded GUARDS THE WHOLE BLOCK. Under the "Once" rule the Dawn branch directly
+	# above has just run end_struggle, and this is the first statement after it: is_struggle_phase on a
+	# struggle that no longer exists. See the note at ln_struggle_dawn_reached_effect's else branch for the
+	# log line. Under "The Cycle" nothing is ended, the latch is never set, and this block behaves exactly as
+	# it always has -- which is the point, because this is the re-arm that turns the wheel.
 	if = {
-		limit = { is_struggle_phase = ln_phase_long_summer }
+		limit = {
+			NOT = { has_global_variable = ln_struggle_concluded }
+			is_struggle_phase = ln_phase_long_summer
+		}
 
 		# THE LEDGER AND THE SCHEDULE ARE PER-SUMMER. Under `long_night_recurs` the wheel turns and a second
 		# Long Summer begins; if the point ledger, the year count and the rolled target survived the winter,
@@ -127,6 +135,31 @@ ln_struggle_monthly_effect = {
 			if = { limit = { has_global_variable = ln_dawn_deferred } remove_global_variable = ln_dawn_deferred }
 			if = { limit = { has_global_variable = ln_nk_cast_down } remove_global_variable = ln_nk_cast_down }
 
+			# ── 1.0.16: FOUR MORE HANDLES THAT WAVE TWO WAS INHERITING FROM WAVE ONE ────────────────
+			# Found by walking every set_global_variable in the mod against every remove_global_variable.
+			# Most of the survivors are permanent BY DESIGN -- ln_the_slayer, ln_last_dawn_champion,
+			# ln_lightbringer_forged and the rest are the game's memory of what happened and must outlive
+			# the wheel. These four are not records. They are per-wave state.
+			#
+			# ln_dawn_knight_1/2/3 -- the roll call of who stood with the slayer, read by ln_reveal.10
+			# (zz_ln_reveal_events.txt:252). They are re-SET each dawn, which hides the bug in the common
+			# case: wave two's slayer overwrites them. But he overwrites only as many as he HAS. A slayer
+			# who rides in with one knight leaves positions 2 and 3 holding wave one's men -- dead for
+			# decades, most of them -- and the card names them as having stood at wave two's dawn.
+			#
+			# ln_nk_has_been_beaten -- the 1.0.16 gate that stops the War for the Dawn being declared
+			# before the dead have lost a war (KhanSaru's report). It is set against THIS Night King. Wave
+			# two crowns a new one who has beaten nobody, and leaving the flag up would hand the player the
+			# endgame CB on day one of a dark he has not fought yet -- which is exactly the hole the gate
+			# was added to close.
+			if = { limit = { has_global_variable = ln_dawn_knight_1 } remove_global_variable = ln_dawn_knight_1 }
+			if = { limit = { has_global_variable = ln_dawn_knight_2 } remove_global_variable = ln_dawn_knight_2 }
+			if = { limit = { has_global_variable = ln_dawn_knight_3 } remove_global_variable = ln_dawn_knight_3 }
+			if = { limit = { has_global_variable = ln_nk_has_been_beaten } remove_global_variable = ln_nk_has_been_beaten }
+			# And the 1.0.16 watchdog marker, so a wave that ended mid-scene does not leave ln_dawn.5
+			# armed against the next one. See ln_dawn.1's immediate.
+			if = { limit = { has_global_variable = ln_dawn_scene_pending } remove_global_variable = ln_dawn_scene_pending }
+
 			# THE WALL IS RAISED AGAIN -- Thomas, 9 Aug: "does the wall recollapse?" It could not: nothing
 			# outside AGOT's debug menu repairs the breach, so wave two of The Cycle arrived at a Wall
 			# already down -- no fall, no cinematic, no card, and the dead simply walked in. The new
@@ -138,22 +171,43 @@ ln_struggle_monthly_effect = {
 					limit = { has_variable = agot_wall_has_fallen_left }
 					set_variable = agot_wall_is_normal
 					remove_variable = agot_wall_has_fallen_left
-					remove_building = special_the_wall_damaged
-					add_building = special_the_wall
+					# 1.0.16: guarded, same reason and same evidence as the collapse side in
+					# events/long_night_plus_wall_events.txt -- special_the_wall_damaged is never placed
+					# in any province, and Castle Black's one special slot holds agot_castle_black_01, so
+					# both calls throw and neither does anything. The variable swap above is the repair.
+					if = {
+						limit = { has_building = special_the_wall_damaged }
+						remove_building = special_the_wall_damaged
+						add_building = special_the_wall
+					}
 				}
 				if = {
 					limit = { has_variable = agot_wall_has_fallen_middle }
 					set_variable = agot_wall_is_normal
 					remove_variable = agot_wall_has_fallen_middle
-					remove_building = special_the_wall_damaged
-					add_building = special_the_wall
+					# 1.0.16: guarded, same reason and same evidence as the collapse side in
+					# events/long_night_plus_wall_events.txt -- special_the_wall_damaged is never placed
+					# in any province, and Castle Black's one special slot holds agot_castle_black_01, so
+					# both calls throw and neither does anything. The variable swap above is the repair.
+					if = {
+						limit = { has_building = special_the_wall_damaged }
+						remove_building = special_the_wall_damaged
+						add_building = special_the_wall
+					}
 				}
 				if = {
 					limit = { has_variable = agot_wall_has_fallen_right }
 					set_variable = agot_wall_is_normal
 					remove_variable = agot_wall_has_fallen_right
-					remove_building = special_the_wall_damaged
-					add_building = special_the_wall
+					# 1.0.16: guarded, same reason and same evidence as the collapse side in
+					# events/long_night_plus_wall_events.txt -- special_the_wall_damaged is never placed
+					# in any province, and Castle Black's one special slot holds agot_castle_black_01, so
+					# both calls throw and neither does anything. The variable swap above is the repair.
+					if = {
+						limit = { has_building = special_the_wall_damaged }
+						remove_building = special_the_wall_damaged
+						add_building = special_the_wall
+					}
 				}
 			}
 			# ...and Castle Black can fall again next time (the ruin pulse's one-shot guard).
@@ -239,6 +293,21 @@ ln_struggle_dawn_reached_effect = {
 		# end_struggle takes `yes`, NOT a decision key -- confirmed against vanilla
 		# (common/on_action/game_start.txt: `struggle:iberian_struggle ?= { end_struggle = yes }`).
 		# The ending decision is listed on the phase for the player's benefit; it is not an argument.
+		#
+		# 1.0.16 -- THE LATCH IS SET BEFORE THE STRUGGLE IS DESTROYED, NOT AFTER, because after there is no
+		# scope left to run in. ln_struggle_monthly_effect calls this effect from the middle of its body and
+		# then keeps going -- and its next statement is the Long Summer block, which asks a destroyed struggle
+		# what phase it is in. That is this line in the 27 Aug run:
+		#     Error: if effect [ Scoped object is not valid. Type:  weak (Struggle - 1)! ]
+		#     Script location: file: common/scripted_effects/zz_ln_struggle_effects.txt line: 80
+		# Once per game, on the "Once" rule, at the Dawn -- i.e. at the mod's headline moment, which is
+		# exactly when somebody is reading the log.
+		#
+		# A GLOBAL, NOT A REORDER. Moving the Long Summer block above the Dawn block would also work and was
+		# the first idea; it is rejected because it makes the file's correctness depend on statement order in
+		# a body where the phase can move underneath you, and nothing would say so out loud. A global read is
+		# scope-free by definition, so it answers even when there is no scope left to ask.
+		set_global_variable = { name = ln_struggle_concluded  value = yes }
 		end_struggle = yes
 	}
 }
@@ -696,6 +765,49 @@ ln_struggle_yearly_work_effect = {
 		ln_watch_recruits_rangers_effect = yes
 		# 1.0.6a: puts stray ranging companies back under the Lord Commander (self-heal for old saves).
 		ln_reanchor_the_companies_effect = yes
+		# 1.0.16 -- STRIP LIVING REGIMENTS FROM THE NIGHT KING HIMSELF.
+		# ln_strip_living_regiments_effect is called at conversion (mutate_into_other_effect) and the
+		# heartbeat re-runs that on existing wights, so every RAISED lord is covered. The Night King is not:
+		# he is created, never converted, so no mutate pass ever touches him -- and he can buy men-at-arms
+		# with prestige (wight_government carries use_prestige_to_buy_maa, and Thomas's 27 Aug screenshot
+		# shows him holding 5,233 prestige and a regiment of vanilla Bowmen).
+		# Cheap: one character, once a year, and destroy_maa_regiment is a no-op when there is nothing to
+		# destroy. His wight horde is Other_infantry and is kept; his elite core comes from spawn_army and
+		# is army-attached, so every_maa_regiment never reaches it.
+		# The prestige he wastes on units that will not survive the year is a feature, not a leak.
+		if = {
+			limit = { exists = title:h_the_others.holder }
+			title:h_the_others.holder = { ln_strip_living_regiments_effect = yes }
+		}
+		# 1.0.16: FIRST, take the dead man's government off the living. ORDER MATTERS AND IT IS THE WHOLE
+		# POINT -- ln_no_dead_landlords_effect below identifies its victims through ln_is_one_of_them_trigger,
+		# whose seventh arm is has_government = wight_government. Run the other way round and a living queen
+		# left on a Risen Thrall government gets every county she holds scoured for one more year before the
+		# thing that mislabels her is removed. Reported by MPREG.
+		# ── THE LATCH IS GONE, AND REMOVING IT IS THE FIX. ──────────────────────────────────────────
+		# An earlier 1.0.16 pass put this call behind has_global_variable = ln_wight_government_issued, on
+		# the reasoning that the effect walks every living character and the global is set by the one
+		# writer of wight_government, so a game that never converted anybody would pay one lookup instead
+		# of a world sweep. The performance argument was fine. The correctness argument was not, and a
+		# second review pass caught it:
+		#
+		#   ln_wight_government_issued IS NEW IN 1.0.16. It has exactly one writer
+		#   (agot_long_night_scripted_effects.txt), and that writer sits inside the conversion itself. MPREG's
+		#   save -- the save that REPORTED this bug, with a living Winter Queen Wynafa Manderly standing on a
+		#   Risen Thrall government -- already has its orphans and its Long Night is already over. Nothing in
+		#   it will ever convert anybody again, so nothing in it will ever set the global, so the sweep would
+		#   never have run. The latch turned the fix off in precisely the population it was written for.
+		#
+		# It also contradicted this effect's own header (zz_ln_ranger_effects.txt:521-523), which says in
+		# as many words that the ln_cast_down_backstop_effect gate is the thing NOT to copy here, because a
+		# gate that closes when the Long Night ends closes at exactly the moment these leftovers appear.
+		# And the pattern argument does not survive contact with the next line: ln_no_dead_landlords_effect
+		# runs unguarded on the very next statement of this same yearly block, and it walks every county in
+		# the world. One more world walk a year is what this codebase already spends here.
+		#
+		# Standing rule, restated because it cost a fix this time: a repair keyed on the PRESENCE of a
+		# marker only reaches games that produced the marker. Mid-save repairs must be self-healing.
+		ln_clear_orphaned_wight_governments_effect = yes
 		# 1.0.6a: and no lord of the dead keeps a county once the Dawn has come.
 		ln_no_dead_landlords_effect = yes
 		# ...and once a captain exists, he needs men. See zz_ln_brother_allocation_effects.txt -- every road

@@ -1,17 +1,24 @@
 ﻿# AGOT: The Long Night & Azor Ahai -- wave escalation.
 # Applied on top of the existing others_weak/standard/strong/insane_modifier when the recurrence game rule is on.
 # Tiered rather than stacked so the numbers stay legible and cannot run away.
+#
+# 1.0.16 -- levy_size rescaled 20/45/80 -> 2/4/7 alongside the strength-tier retune in
+# 00_long_night_character_modifiers.txt. These STACK on top of the tier, so the old numbers took insane from
+# 78x to 156x -- about 2.6 million men, five times past the ~300k where Corvo reported his machine dies.
+# Insane + wave 6 now lands near 21x, i.e. roughly 350k at the worst case the mod can produce, and the
+# escalation the waves exist to express lives in the advantage / toughness / damage / knight lines below,
+# which were already the right shape and are untouched.
 
 # Waves 2-3. The dead learned something.
 ln_wave_escalation_1_modifier = {
-	levy_size = 20
+	levy_size = 2
 	advantage = 3
 	army_toughness_mult = 0.10
 }
 
 # Waves 4-5. The world has been bled for two centuries.
 ln_wave_escalation_2_modifier = {
-	levy_size = 45
+	levy_size = 4
 	advantage = 6
 	army_toughness_mult = 0.20
 	army_damage_mult = 0.10
@@ -20,7 +27,7 @@ ln_wave_escalation_2_modifier = {
 
 # Wave 6 and beyond. If the living have not ended it by now, it ends them.
 ln_wave_escalation_3_modifier = {
-	levy_size = 80
+	levy_size = 7
 	advantage = 10
 	army_toughness_mult = 0.35
 	army_damage_mult = 0.25

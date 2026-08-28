@@ -21,3 +21,13 @@
 # localization at all -- "Missing loc for name_list_others" at every load, and the list showed a raw key
 # in the culture window. AGOT localizes its own the same way: name_list_northman:0 "Northman".
  name_list_others:0 "Other"
+
+# 1.0.16 -- AND THE NIGHT KING'S OWN GIVEN NAME. history/characters/othersinvasion_characters.txt:3 is
+# `name = Other`, and no key answered it anywhere -- not here, not in AGOT. The engine said so twice in the
+# 27 Aug run:
+#     [characterhistory.cpp:808] Missing loc for name 'Other' for character 'others_thenightking'
+#     [culture_name_equivalency.cpp:101] Missing loc Other: "Other"   (x2)
+# `Other` the NAME and `name_list_others` the LIST are different keys and the list one does not answer for
+# the name -- which is why the line above was already here and the error was still being logged. Same shape
+# as the nine ranger names at the top of this file, same fix.
+ Other:0 "Other"

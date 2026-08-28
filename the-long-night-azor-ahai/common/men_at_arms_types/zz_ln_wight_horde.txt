@@ -77,7 +77,12 @@ ln_wight_horde = {
 		}
 	}
 
+	# 1.0.16 -- WAS EMPTY, same as other_maa. Deliberately far weaker than its elite sibling: the Risen Dead
+	# are damage 3, the weakest unit in the game, and they are supposed to be mass rather than quality. They
+	# swamp the levies that make up most of a defending host and nothing else. Thomas's stated intent, kept:
+	# "the wight horde would have the weakest attack."
 	counters = {
+		peasant_militia = 1
 	}
 
 	buy_cost = { gold = 20 }

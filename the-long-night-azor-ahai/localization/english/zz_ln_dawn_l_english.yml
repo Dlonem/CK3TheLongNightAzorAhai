@@ -42,7 +42,15 @@
  ln_dawn.11.desc.field_plain:0 "The war is decided. The hosts of the dead are broken, scattered, burned in windrows along the ice — and their king stands alone in the ruin of them, and looks at nothing but you.\n\nOut of every hand that held a sword in this war — the named, the anointed, the ones the priests were so sure about — the hour has picked yours. No song prepared you for it. Perhaps that is what the songs were always for: the man they never mention.\n\nThe others hang back. Nobody ordered them to.\n\n#bold The war is won. This is the part that was never about the war.#!"
  ln_dawn.11.desc.chains_lb:0 "They brought him in chained in old iron and dragonglass, and the cold came in with him.\n\nThree days he has stood in your cells, and nothing about him has done what a prisoner does. He does not eat. He does not sleep. The guards have stopped drawing lots to bring him water, because the water is ice before it reaches the door.\n\nThere is one thing in this castle that has an answer to him, and it has been warm in its scabbard since the hour they dragged him through your gates.\n\n#bold A cell cannot hold winter. End it while it is yours to end.#!"
  ln_dawn.11.desc.chains_plain:0 "They brought him in chained in old iron and dragonglass, and the cold came in with him.\n\nThree days he has stood in your cells, and nothing about him has done what a prisoner does. He does not eat. He does not sleep. He watches the door — not the way a man watches for rescue, but the way the sea watches a harbour wall.\n\nEvery hour he stands there the frost climbs another stone, and every man in your keep knows where it is coming from.\n\n#bold A cell cannot hold winter. End it while it is yours to end.#!"
- ln_dawn.11.a:0 "End the Long Night."
+ # 1.0.16 -- WAS "End the Long Night." Thomas: "I don't like that one text for the one event about end it.
+ # If anything, it should read more attempt to end it or like go in for the kill." The old text PROMISED an
+ # outcome, and the old option delivered one with no roll -- which is exactly what MPREG reported as a
+ # missing duel. ln_dawn.11.a is a duel now, so the button promises an attempt and nothing more.
+ ln_dawn.11.a:0 "Go in for the kill."
+ # The two duel outcome labels, matching ln_dawn.2.duel.win / .lose in voice: bare, present tense, no drama
+ # in the label itself because the card around it is already carrying all of it.
+ ln_dawn.11.duel.win:0 "Finish him"
+ ln_dawn.11.duel.lose:0 "He is faster than you"
  ln_dawn.11.b:0 "This hour belongs to another. Send for them."
 
  ln_dawn.20.t:0 "The Thing in Your Cells"

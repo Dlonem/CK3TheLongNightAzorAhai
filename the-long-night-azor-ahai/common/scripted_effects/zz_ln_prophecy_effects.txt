@@ -333,7 +333,19 @@ ln_save_priest_scope_effect = {
 		if = {
 			limit = {
 				exists = cp:councillor_court_chaplain
-				cp:councillor_court_chaplain = { has_trait = red_priest  is_available_adult = yes }
+				cp:councillor_court_chaplain = {
+					is_available_adult = yes
+					# 1.0.15a -- MUST MATCH ln_has_red_priest_trigger EXACTLY. It was widened in 1.0.11 to
+					# accept a faith-derived chaplain (the council reads "Red Priestess" off the faith, not
+					# off the red_priest fame trait) and this effect was not. A player whose chaplain passed
+					# the trigger but failed here got ln_prophecy.1.desc.priest with scope:ln_priest unset --
+					# eleven broken name promotes in one card, and a woods witch's portrait beside them.
+					# Reported on the Workshop by O, 25 Aug 2026.
+					OR = {
+						has_trait = red_priest
+						faith = { religion = religion:the_rhllor_religion }
+					}
+				}
 			}
 			cp:councillor_court_chaplain = { save_scope_as = ln_priest }
 		}
@@ -342,7 +354,19 @@ ln_save_priest_scope_effect = {
 		if = {
 			limit = {
 				exists = court_position:camp_priest_camp_officer
-				court_position:camp_priest_camp_officer = { has_trait = red_priest  is_available_adult = yes }
+				court_position:camp_priest_camp_officer = {
+					is_available_adult = yes
+					# 1.0.15a -- MUST MATCH ln_has_red_priest_trigger EXACTLY. It was widened in 1.0.11 to
+					# accept a faith-derived chaplain (the council reads "Red Priestess" off the faith, not
+					# off the red_priest fame trait) and this effect was not. A player whose chaplain passed
+					# the trigger but failed here got ln_prophecy.1.desc.priest with scope:ln_priest unset --
+					# eleven broken name promotes in one card, and a woods witch's portrait beside them.
+					# Reported on the Workshop by O, 25 Aug 2026.
+					OR = {
+						has_trait = red_priest
+						faith = { religion = religion:the_rhllor_religion }
+					}
+				}
 			}
 			court_position:camp_priest_camp_officer = { save_scope_as = ln_priest }
 		}

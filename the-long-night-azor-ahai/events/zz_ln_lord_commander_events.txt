@@ -290,9 +290,21 @@ ln_lc.10 = {
 		}
 		remove_short_term_gold = 50
 		add_piety = 50
-		reverse_add_opinion = {
-			modifier = ln_fed_the_watch_opinion
-			target = title:k_the_wall.holder
+		# 1.0.16 -- THE 1.0.15d FIX ONLY LANDED ON OPTION a. Options b and c carried the identical
+		# unguarded deref and were missed. Same window, and it is a wide one: this card lands 30-240 days
+		# after ln_send_out_the_crows_decision (zz_ln_lord_commander_decisions.txt:237), and the event
+		# trigger checks scope:ln_wandering_crow and any_prisoner -- nothing about who holds the Wall.
+		# The Lord Commander dying inside that window is not exotic; it is what ln_nw_vassal_lc_death
+		# (zz_ln_00_hooks.txt:144) exists to handle.
+		# WORSE HERE THAN ON OPTION a: this option has already charged 50 gold on the line above. Without
+		# the guard the player pays, the promised Wall opinion is silently dropped, and the log gets an
+		# "Undefined event target 'title'" for it.
+		if = {
+			limit = { exists = title:k_the_wall.holder }
+			reverse_add_opinion = {
+				modifier = ln_fed_the_watch_opinion
+				target = title:k_the_wall.holder
+			}
 		}
 	}
 	option = {
@@ -303,9 +315,13 @@ ln_lc.10 = {
 			modifier = { add = 15  has_trait = cynical }
 			modifier = { add = 10  has_trait = callous }
 		}
-		reverse_add_opinion = {
-			modifier = ln_turned_the_crow_away_opinion
-			target = title:k_the_wall.holder
+		# 1.0.16 -- same guard, same reason as option b directly above.
+		if = {
+			limit = { exists = title:k_the_wall.holder }
+			reverse_add_opinion = {
+				modifier = ln_turned_the_crow_away_opinion
+				target = title:k_the_wall.holder
+			}
 		}
 	}
 }

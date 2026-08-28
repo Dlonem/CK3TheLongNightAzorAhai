@@ -26,9 +26,13 @@ ln_deed_count_value = {
 # been eight thousand years." That doubt is the point, and a cheap answer erases it.
 ln_dragonglass_cost_value = {
 	value = 200
-	if = { limit = { highest_held_title_tier >= tier_duchy }   add = 200 }
-	if = { limit = { highest_held_title_tier >= tier_kingdom } add = 200 }
-	if = { limit = { highest_held_title_tier >= tier_empire }  add = 200 }
+	# 1.0.16 -- every tier add is now gated on is_landed. Both landless governments peg their holder to a
+	# TITULAR duchy (zz_ln_ranger_titles.txt:26; vanilla's landless_adventurer_government requires a
+	# duchy-tier landless title), so without this a ranger or an adventurer was quoted 400 -- a duke's price
+	# on a camp's income, from characters who hold no land to tax. Landless pays the 200 floor.
+	if = { limit = { is_landed = yes  highest_held_title_tier >= tier_duchy }   add = 200 }
+	if = { limit = { is_landed = yes  highest_held_title_tier >= tier_kingdom } add = 200 }
+	if = { limit = { is_landed = yes  highest_held_title_tier >= tier_empire }  add = 200 }
 	min = 200
 }
 

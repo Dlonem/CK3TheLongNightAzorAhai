@@ -19,7 +19,11 @@ ln_prophecy.1 = {
 	desc = {
 		first_valid = {
 			triggered_desc = {
-				trigger = { ln_has_red_priest_trigger = yes }
+				# 1.0.15a -- gate on the SCOPE, not on the question the scope answers. This read
+				# ln_has_red_priest_trigger, and ln_save_priest_scope_effect used a narrower rule, so the
+				# variant could win with scope:ln_priest unset and render its names as raw tokens. The
+				# effect is aligned now; this makes the mismatch unrenderable if it ever drifts again.
+				trigger = { exists = scope:ln_priest }
 				desc = ln_prophecy.1.desc.priest
 			}
 			# 1.0.11 -- THIS WAS GATED ON THE WRONG DEED. .desc.self reads "The dreams do not come as
@@ -41,9 +45,11 @@ ln_prophecy.1 = {
 				desc = ln_prophecy.1.desc.self
 			}
 			triggered_desc = {
-				trigger = {
-					any_courtier_or_guest = { has_trait = greensight }
-				}
+				# 1.0.15a -- same repair. The gate asked "is there a greenseer in court?" while
+				# ln_save_greenseer_scope_effect additionally requires is_available_adult, so a court whose
+				# only greenseer was a child won this variant with scope:ln_greenseer unset. That court now
+				# correctly falls through to the woods witch.
+				trigger = { exists = scope:ln_greenseer }
 				desc = ln_prophecy.1.desc.greenseer
 			}
 			desc = ln_prophecy.1.desc.witch

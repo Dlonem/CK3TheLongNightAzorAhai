@@ -2,3 +2,16 @@
 
  death_dawn_broke:0 "crumbled into lifeless flesh as the dawn broke and the Others fell"
  death_claimed_by_cold:0 "was claimed by the cold at last as the dark magic binding the dead unravelled"
+
+ # 1.0.16 -- MPREG's kill record printed the raw keys `Death_the_dawn` and `Death_the_dawn_killer`.
+ # death_the_dawn was declared in common/deathreasons/00_long_night_plus_death_reasons.txt:18 and never
+ # localized. FOUR write sites carry it, and ALL FOUR attach `killer =`, which is why he saw both forms:
+ #   events/zz_ln_dawn_events.txt:424 (ln_dawn.3)   killer = root
+ #   events/zz_ln_dawn_events.txt:481 (ln_dawn.4)   killer = scope:ln_night_king
+ #   events/zz_ln_dawn_events.txt:589 (ln_dawn.11)  killer = root
+ #   events/zz_ln_dawn_events.txt:693 (ln_dawn.12)  killer = root
+ # Voice matches the two above: a predicate completing "<Name> ...". Deliberately reads the same from either
+ # end of the blow -- the record should not distinguish the man who ended it from the man who bought the
+ # seconds that let him.
+ death_the_dawn:0 "fell in the last hour of the Long Night"
+ death_the_dawn_killer:0 "fell to [TARGET_CHARACTER.GetUIName] in the last hour of the Long Night"

@@ -3,9 +3,10 @@
 # (inherit_from_dynastic_government = no) which makes it UNPLAYABLE — exactly like theocracy/republic. So a
 # PLAYER who is conquered and raised becomes unplayable → control hands off to another playable character
 # (heir/dynasty) or the game ends if none remain. AI wights are unaffected (AI plays anything).
-# Assigned ONLY by script (change_government in mutate_into_other_effect). It carries no
-# can_get_government block, which is how AGOT's own script-assigned governments do it -- see the note
-# further down. The old `always = no` did not mean "script only"; it meant "nobody, script included".
+# Assigned ONLY by script (change_government in mutate_into_other_effect). It carries NO can_get_government
+# block, and that is load-bearing rather than an oversight: `always = no` was re-added on 27 Aug and the
+# very next boot threw 54 "Trying to set illegal government" errors as the conversion failed on every
+# conquered ruler. See the full account at the block's old position further down. DO NOT ADD ONE.
 wight_government = {
 	government_rules = {
 		rulers_should_have_dynasty = yes
@@ -13,7 +14,28 @@ wight_government = {
 		legitimacy = yes
 		always_use_patronym = yes
 		affected_by_development = no
-		allow_accolades = yes
+		# 1.0.16 -- WAS `yes`, AND IT IS THE ONLY GOVERNMENT AMONG THE DEAD THAT SAID SO.
+		# AGOT's ruins_government declares allow_accolades = no (00_agot_government_types.txt:274) and our
+		# own ln_ranger_government declares no (zz_ln_ranger_government.txt:22). This one said yes, so the
+		# dead could hold accolade knights -- and vanilla then tries to create SQUIRES for them.
+		#
+		# Thomas's 16:12 boot caught the whole chain, five errors from one execution of ln_dawn.20 (the
+		# card where a captor executes a captured Other):
+		#     Error: Fetched null province from capital_province link
+		#     Error: create_character effect [ Invalid location (not a province, or not provided) ]
+		#     Error: add_courtier effect [ Trying to put character ('Other Ruins of ...') in court of
+		#            someone who cannot have a court ]
+		#     Error: set_knight_status effect [ Target character is not a potential knight ... ]
+		#   ...all under vanilla's on_accolade_create_squire -> accolade_create_squire_effect ->
+		#   accolade_character_creation_effect, with events/zz_ln_dawn_events.txt:926 (ln_dawn.20:option)
+		#   as the outermost frame. Killing the Other freed an accolade slot; vanilla went to fill it; the
+		#   accolade's owner is an Other with no capital province and no court to put a squire in.
+		#
+		# The dead do not knight anyone. There is no squire, no glory, no ceremony -- the whole accolade
+		# system is a thing the living do. Matching what AGOT and our own ranger government already say.
+		# NOTE: this is expected to close that chain, but it has NOT yet been observed closed in a boot --
+		# it needs another captured Other to be executed. Do not mark it verified until that happens.
+		allow_accolades = no
 		inherit_from_dynastic_government = no   # <-- non-dynastic => UNPLAYABLE (the lever, like theocracy)
 	}
 
@@ -28,12 +50,35 @@ wight_government = {
 
 	vassal_contract_group = tribal_vassal
 
-	# NO can_get_government BLOCK, DELIBERATELY. It used to read `always = no`, and change_government
-	# from script checks this -- so the government could never be assigned to anyone and every
-	# conquered ruler kept their old one. AGOT's own script-assigned, non-player governments
-	# (ruins_government, wilderness_government) declare no can_get_government at all; the ones that do
-	# declare it are the ones with real entry conditions. An absent block is how you say "script
-	# assigns this, players do not pick it".
+	# ══════════════════════════════════════════════════════════════════════════════════════════════════════
+	# NO can_get_government BLOCK. THIS WAS RE-TESTED LIVE ON 27 AUG AND THE ORIGINAL AUTHOR WAS RIGHT.
+	#
+	# Earlier that day I restored `can_get_government = { always = no }` here, on the reasoning that
+	# ln_ranger_government declares a can_get_government with real requirements and is nevertheless assigned
+	# by a bare `change_government` before those requirements are met -- which looked like proof that the
+	# EFFECT does not consult the trigger. Base CK3's own doc (_governments.info:351-355, "checked when
+	# landed") seemed to agree.
+	#
+	# THE GAME DISAGREED, IMMEDIATELY AND LOUDLY. Thomas booted it and the log returned:
+	#     [E] Error: change_government effect [ Trying to set illegal government ]
+	#         file: common/scripted_effects/agot_long_night_scripted_effects.txt line: 4854
+	#               (ln_mutate_into_other_unguarded_effect)
+	#         file: ... line: 5173 (mutate_into_other_effect)
+	#         file: events/00_others_heartbeat_events.txt line: 49 (others_heartbeat.1:immediate)
+	# -- 54 times in a four-minute window, once per conquered ruler the heartbeat tried to raise. With
+	# `always = no` the conversion CANNOT assign this government to anyone, which is exactly what the
+	# comment I overruled said it meant, and it silently breaks the core wight mechanic.
+	#
+	# WHAT THAT PROVES, PRECISELY: change_government DOES consult can_get_government, and `always = no`
+	# means "nobody, script included". The ranger evidence was not proof of the opposite -- ln_ranger_
+	# government's conditions are satisfiable and evidently were satisfied; `always = no` never can be.
+	#
+	# THE ORPHANED-GOVERNMENT BUG MPREG REPORTED IS STILL FIXED, by the other half of that work:
+	# ln_clear_orphaned_wight_governments_effect (common/scripted_effects/zz_ln_ranger_effects.txt) strips
+	# the government from any living ruler carrying it without the trait, yearly. That is the half that
+	# addresses the actual report. This half was a theoretical hardening against engine auto-assignment,
+	# and it cost a working mechanic. DO NOT RE-ADD IT without a live boot proving otherwise.
+	# ══════════════════════════════════════════════════════════════════════════════════════════════════════
 
 	ai = {
 		use_legends = yes

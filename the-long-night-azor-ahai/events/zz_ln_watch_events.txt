@@ -421,7 +421,12 @@ ln_watch.9 = {
 			scope:ln_relieved_brother = {
 				add_opinion = { modifier = ln_let_me_keep_my_dignity_opinion  target = root  opinion = 40 }
 			}
-			title:k_the_wall.holder = {
+			# 1.0.16 -- `?=`. This option's own trigger is ln_carries_a_keepership_trigger (is_landed +
+			# nights_watch_government), which says nothing about whether k_the_wall has a holder -- and it
+			# can stand unheld, which is the whole reason ln_lc.10's options carry the same guard and why
+			# zz_ln_relieve_effects.txt:34 already uses `?=` for this exact title. Card lands 7 days out, so
+			# the window is narrow, but a narrow window is still a window.
+			title:k_the_wall.holder ?= {
 				every_vassal_or_below = {
 					limit = {
 						is_alive = yes

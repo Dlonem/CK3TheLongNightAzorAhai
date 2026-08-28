@@ -16,7 +16,7 @@
 #
 # Q: Does AGOT touch that file?
 # A: HEAVILY. Vanilla's knight_killed is 463 lines. AGOT's is 993, with 587 lines of differences:
-#       * they add `is_valid = { is_current_dragonrider_warfare = no }` -- dragonriders cannot be knight-killed
+#       * they add `is_valid = { is_current_dragonrider_warfare = no }` -- see the correction below
 #       * prowess "immortality" scaling changed from 30 to 40 in two places
 #       * garuda_court_position replaced with household_guard_court_position and bloodrider_court_position
 #    Copying their version into this mod means every one of those silently reverts the day AGOT edits it and we
@@ -29,6 +29,31 @@
 #    Verified separately: `on_natural_death_second_chance` is the ONLY hook in the entire game that can stop a
 #    death, and it is natural-death only. There is no on_battle_death_second_chance. `on_death` is reactive and
 #    CK3 cannot un-kill a character.
+#
+# ── TWO CORRECTIONS, 1.0.16, both raised by the Supernatural session working the same mechanic ──────────
+#
+# 1. "DRAGONRIDERS CANNOT BE KNIGHT-KILLED" WAS TOO STRONG, and it would mislead anyone reasoning about
+#    the pool. is_current_dragonrider_warfare is NOT a permanent property of a dragonrider. Its definition
+#    (AGOT 00_agot_dragon_triggers.txt:78) is three clauses:
+#        age >= 14
+#        is_current_dragonrider = yes
+#        NOT = { has_character_flag = agot_not_using_dragon }
+#    That third clause is the one that matters: a rider who is NOT using their dragon fails the trigger and
+#    is fully back in the knight-kill pool. So the accurate statement is "a rider who is actually in the air
+#    is excluded" -- the same man fighting on foot is as killable as anyone. Our own is_valid below carries
+#    the identical clause and its comment ("a rider in the air is not in this lottery") was already right;
+#    it was this header that overstated it.
+#
+# 2. THE POOL IS MUCH BIGGER THAN knight_killed, and the numbers change how you read our chance value.
+#    Base CK3 ships knight_none at chance base = 2000 (00_knight_phase_events.txt:5) against knight_killed's
+#    30. Our base 40 is therefore roughly 2% of a pulse, not 40-vs-30 -- though pulses are every
+#    COMBAT_EVENT_DAYS = 5 days, so a long battle rolls it a dozen times and it accumulates. Read our
+#    escalation modifiers (:96-121, up to 90 in the Long Night) against 2000, not against 30.
+#
+# AND THERE IS NO `forbid` FIELD. Checked directly against the engine's own schema, and this is worth
+# recording because it is the obvious thing to reach for: game/common/combat_phase_events/
+# _combat_phase_events.info documents exactly four fields -- type, is_valid, chance, effect. There is no
+# suppression mechanism. Crowding the pool is genuinely the only additive lever.
 #
 # SO THIS DOES NOT INTERCEPT THE DEATH. It competes for the same slot.
 #
@@ -149,6 +174,130 @@ ln_knight_fell_for_the_dawn = {
 		# survive a delayed trigger_event (see the corrected note in zz_ln_wight_notice_effects.txt).
 		# Stashing still buys something real: it survives the referent dying in the three days before
 		# the priest answers, and it makes the path debuggable, which it was not before.
+		var:ln_blessing_sponsor ?= {
+			save_scope_as = ln_the_priest
+			set_variable = { name = ln_the_fallen_champion  value = scope:ln_the_fallen }
+			trigger_event = { id = ln_prophecy.21  days = 3 }
+		}
+		if = {
+			limit = { exists = scope:ln_the_priest }
+			set_variable = { name = ln_the_kneeling_priest  value = scope:ln_the_priest }
+			trigger_event = { id = ln_prophecy.22  days = 1 }
+		}
+	}
+}
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+# ln_commander_fell_for_the_dawn -- 1.0.16. THE OTHER HALF OF WHAT JURING ASKED FOR.
+#
+# Juring, on the Workshop: "is it possible to make that death in duels and as a battlefield commander also
+# count for the resurrection. In the end Beric was a commander when he died the first time and he died the
+# for the sixth time in a duel against the Hound."
+#
+# He was half-served. ln_knight_fell_for_the_dawn above covers a blessed man dying as a KNIGHT, and it has
+# shipped since 1.0.14. But this mod's entire combat_phase_events directory contained exactly ONE `type =`
+# line and it was `knight` -- so nothing of ours ever entered the COMMANDER pool, and a blessed champion
+# leading his own army simply died. Beric-as-commander was the one case the feature was named for and the
+# one case it could not reach.
+#
+# ── WHY THE NUMBERS HERE ARE NOT THE NUMBERS ABOVE ────────────────────────────────────────────────────────
+# The knight entry runs at base 40. Dropping 40 into the commander pool would have been wildly overtuned,
+# because that pool is a completely different shape. Measured from AGOT's own override, which is the file
+# that actually loads (1158310/2962333032/common/combat_phase_events/00_commander_phase_events.txt):
+#     commander_none               1000        commander_duel                     30
+#     commander_wounded              25        commander_dragon_sum                1
+#     commander_maimed               10        commander_dragon_joined_battle 100000
+#     commander_killed                5        commander_wild_dragon_joined_battle 0
+# commander_killed opens at FIVE, against the knight pool's thirty, and is then scaled down by prowess on
+# the same (30 - prowess)/30 curve. Base 8 here, with no prowess scaling, leaves a blessed commander taking
+# roughly three kill-rolls in four at Cold Winds -- deliberately the same feel the knight entry describes
+# for itself, arrived at with the arithmetic of this pool rather than that one.
+#
+# AND IT IS RESTRICTED THE WAY commander_killed IS RESTRICTED. Vanilla will not kill a commander outright
+# unless he is ALREADY WOUNDED or is bad at both martial and prowess (`00_commander_phase_events.txt`
+# is_valid). Our entry mirrors that condition exactly, and the reason is not politeness: without it we would
+# be winning rolls that were only ever going to WOUND the man, "saving" a commander who was in no danger and
+# quietly suppressing commander_wounded and commander_maimed instead. We take rolls from the entry that
+# kills, and from nothing else.
+#
+# NOTE ON 100000. AGOT's commander_dragon_joined_battle sits at 100000 to make itself unmissable. We do not
+# go near that number: two must-win entries in one pool means one of them silently loses, and it would be
+# theirs. A dragon joining a battle must keep working exactly as AGOT wrote it.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════
+ln_commander_fell_for_the_dawn = {
+	type = commander
+
+	is_valid = {
+		# Same AGOT exclusion the knight entry respects: a rider in the air is not in this lottery. And with
+		# commander_dragon_joined_battle at 100000, a dragon-joined battle is not our business either.
+		is_current_dragonrider_warfare = no
+
+		is_alive = yes
+
+		# commander_killed's OWN gate, mirrored. See the header: we compete with the entry that kills, not
+		# with the ones that wound. Verified against AGOT's override, which matches vanilla here.
+		OR = {
+			has_trait_rank = {
+				trait = wounded
+				rank >= 1
+			}
+			AND = {
+				martial <= low_skill_rating
+				prowess <= low_skill_rating
+			}
+		}
+
+		# Identical handshake preconditions to the knight entry, including the SHARED ln_fell_for_the_dawn
+		# flag -- a man cannot be commander and knight in the same combat, so sharing it is what stops the
+		# two entries paying out twice for one battle.
+		NOT = { has_character_flag = ln_had_the_last_kiss }
+		NOT = { has_character_flag = ln_fell_for_the_dawn }
+		ln_has_living_sponsor_trigger = yes
+		var:ln_blessing_sponsor ?= { ln_sponsor_can_still_pay_trigger = yes }
+	}
+
+	chance = {
+		base = 8
+
+		# The same three tiers as the knight entry, for the same reason -- a priest's promise has no calendar
+		# on it, but the fire listens harder in the dark. Every struggle read is `?=`: is_valid does not
+		# guarantee the struggle exists and a bare `=` on a missing struggle throws.
+		modifier = {
+			factor = 0.5
+			NOR = {
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_cold_winds }
+				struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+			}
+		}
+		modifier = {
+			factor = 1.5
+			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
+		}
+		modifier = {
+			factor = 1.5
+			OR = {
+				has_trait = favored_by_rhllor
+				has_trait = chosen_by_rhllor
+				has_trait = azor_ahai_reborn
+			}
+		}
+	}
+
+	effect = {
+		debug_log = "LN_TRACE FELL FOR THE DAWN: the fire took the roll instead of commander_killed"
+		debug_log_scopes = yes
+		add_character_flag = { flag = ln_fell_for_the_dawn  years = 3 }
+		save_scope_as = ln_the_fallen
+
+		increase_wounds_no_death_effect = { REASON = death_wounds }
+		add_character_modifier = {
+			modifier = ln_fell_in_the_dark_modifier
+			years = 3
+		}
+
+		# The same handshake, into the same four cards: day 1 he goes down, day 3 the priest decides,
+		# day 4 he is told. Nothing downstream needs to know which pool he fell out of.
 		var:ln_blessing_sponsor ?= {
 			save_scope_as = ln_the_priest
 			set_variable = { name = ln_the_fallen_champion  value = scope:ln_the_fallen }
