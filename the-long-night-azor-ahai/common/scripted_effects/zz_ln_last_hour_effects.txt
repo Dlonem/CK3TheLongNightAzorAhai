@@ -1,0 +1,1177 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the shared draft, and the Cold Winds encounter melee (1.1.0, §3.2 + §5.2).
+#
+# One code path for both melees, per the work order: the encounter (1 Walker, a snowfield, a ranging party)
+# proves the engine on a scene that can afford to be wrong before the Last Hour stakes the ending of the mod
+# on it. Root throughout = the champion whose line is being drafted.
+
+# ── THE POOL ────────────────────────────────────────────────────────────────────────────────────────────
+# Presence for the encounter = at root's location. Court and guests: every_courtier_or_guest is the pool the
+# engine's own ToS selection draws from; drafting REAL people first is §5.2's rule -- "a named man from your
+# own hall dying in the snow is worth more than a generated one."
+ln_lh_build_candidates_effect = {
+	set_variable = { name = ln_lh_own_house_drafted  value = 0 }
+
+	# ⚠ 1.1.0 PLAYTEST FIX (1 Sep, Thomas's live Last Hour): THE POOL WAS ONE ITERATOR AND IT WAS THE WRONG
+	# ONE. This effect used to be every_character_in_location alone, on the strength of a comment asserting
+	# that "a stacked army's commanders and knights are in the province, so the same-army case rides along."
+	# That comment was an assumption, not a verified fact, and the standing rule says a comment asserting
+	# precedent is not precedent. The live run proved it wrong: at the Desolate Field the whole draft
+	# returned ONE man -- the champion's own son, who happened to be commanding -- and the melee read as the
+	# player fighting beside a copy of himself. Thomas: "it was only me in that duel... I wanted other
+	# people to be fighting."
+	#
+	# WHY IT FAILED. every_character_in_location iterates characters whose location province IS this one.
+	# An army COMMANDER moves with his army, so he is found. A KNIGHT is abstract -- knight status does not
+	# move a character's location pin -- so the champion's entire retinue of sworn swords, the men whose one
+	# job is to fight for him, were invisible to the only iterator the draft had.
+	#
+	# THE FIX IS A UNION OF THREE SOURCES, deduped, and it is AGOT's own shape: their Trial of Seven
+	# champion selection (00_agot_multi_duel_effects.txt:3664 agot_tos_champion_selection_every_vassal_or_below)
+	# builds its pool SOCIALLY -- every_courtier, every_vassal_or_below, every_vassal.every_courtier -- and
+	# never from a location sweep. We keep the location sweep because it is what puts a sworn brother of the
+	# Watch and a stranger with a Valyrian sword on the line (boot check 12), and add the two social sources
+	# that presence alone cannot see.
+	#
+	# DEDUPE IS LOAD-BEARING. ln_lh_pick_filtered_effect removes a picked man from the candidate list once;
+	# a man who entered the list twice (a knight who is also standing here) could be drafted twice and the
+	# line would show him twice -- the exact duplicate reading this fix exists to end. Every add is guarded.
+	#
+	# The named scope is deliberate: `prev` inside a nested iterator is the trap that filled side_a_duelists
+	# with STORY handles on the first boot (see ln_lasthour.10's block comment). Same discipline here.
+
+	# ── SOURCE ONE: everyone physically here. The Watch brother, the allied lord whose army is stacked with
+	# yours, the stranger who walked out of the snow.
+	location ?= {
+		every_character_in_location = {
+			limit = {
+				NOT = { this = root }
+				ln_can_stand_at_the_last_hour_trigger = yes
+			}
+			save_scope_as = ln_lh_scan
+			root = { ln_lh_consider_candidate_effect = yes }
+		}
+	}
+
+	# ── SOURCE TWO: your own knights. These are the men the game already designated as the ones who fight
+	# for you, and they are the single biggest thing the old pool missed. AGOT's dragons can be knights, so
+	# the no-dragons clause inside ln_can_stand_at_the_last_hour_trigger is doing real work on this branch.
+	every_knight = {
+		limit = {
+			NOT = { this = root }
+			ln_can_stand_at_the_last_hour_trigger = yes
+		}
+		save_scope_as = ln_lh_scan
+		root = { ln_lh_consider_candidate_effect = yes }
+	}
+
+	# ── SOURCE THREE: the commanders of your armies that are actually HERE. A commander sitting in the
+	# Reach does not walk out of the fog at the Wall, so this branch -- and only this branch -- checks the
+	# province. Belt and braces: source one usually finds him too, and the dedupe means it costs nothing.
+	every_army = {
+		# `?=` as a COMPARISON, which is this project's own established idiom and not a guess: the same
+		# shape ships at zz_ln_blessing_interactions.txt:50 (`location ?= scope:recipient.location`), and
+		# zz_ln_household_effects.txt:121 carries the note explaining why `this ?= scope:X` is preferred to
+		# `this = scope:X` when the right side may be unset. An army whose location cannot be read simply
+		# does not match, which is the correct answer.
+		limit = { location ?= root.location }
+		army_commander ?= {
+			if = {
+				limit = {
+					NOT = { this = root }
+					ln_can_stand_at_the_last_hour_trigger = yes
+				}
+				save_scope_as = ln_lh_scan
+				root = { ln_lh_consider_candidate_effect = yes }
+			}
+		}
+	}
+}
+
+# One guarded add, called from every source above. Root = the champion; scope:ln_lh_scan = the man being
+# considered. A second entry for the same man is silently dropped rather than allowed to become a second
+# draft pick.
+ln_lh_consider_candidate_effect = {
+	if = {
+		limit = {
+			exists = scope:ln_lh_scan
+			NOT = {
+				is_target_in_variable_list = {
+					name = ln_lh_candidates
+					target = scope:ln_lh_scan
+				}
+			}
+		}
+		add_to_variable_list = {
+			name = ln_lh_candidates
+			target = scope:ln_lh_scan
+		}
+	}
+}
+
+# ── ONE PICK, HOUSE CAP HONOURED ────────────────────────────────────────────────────────────────────────
+# RULE 1 of §3.2.4: at most 2 companions from root's own house. A counter in the drafting loop, not a
+# trigger -- draft in score order, skip a capped candidate; the cap only binds while strangers remain
+# because the limit filters BEFORE the ordering. Root's var ln_lh_own_house_drafted is initialised by
+# ln_lh_build_candidates_effect, so the read below is always preceded by a write (rule 4 satisfied by
+# construction, and belt-braced with has_variable anyway).
+ln_lh_pick_one_effect = {
+	ordered_in_list = {
+		variable = ln_lh_candidates
+		order_by = ln_last_hour_relevance_value
+		max = 1
+		limit = {
+			trigger_if = {
+				limit = {
+					exists = house
+					exists = root.house
+					house = root.house
+				}
+				root = {
+					has_variable = ln_lh_own_house_drafted
+					var:ln_lh_own_house_drafted < 2
+				}
+			}
+		}
+		save_scope_as = ln_lh_picked
+	}
+	if = {
+		# A CK3 scope cannot be unset, so when the house cap filters everyone out the ordered_in_list above
+		# iterates nobody and scope:ln_lh_picked still holds the PREVIOUS pick. The list check below turns
+		# that stale scope into a no-op instead of a duplicate draft (the same man twice on the line).
+		limit = {
+			exists = scope:ln_lh_picked
+			NOT = {
+				is_target_in_variable_list = {
+					name = ln_lh_the_line
+					target = scope:ln_lh_picked
+				}
+			}
+		}
+		scope:ln_lh_picked = {
+			remove_list_variable = {
+				name = ln_lh_candidates
+				target = this
+			}
+		}
+		add_to_variable_list = {
+			name = ln_lh_the_line
+			target = scope:ln_lh_picked
+		}
+		if = {
+			limit = {
+				exists = scope:ln_lh_picked.house
+				exists = house
+				scope:ln_lh_picked.house = house
+			}
+			change_variable = { name = ln_lh_own_house_drafted  add = 1 }
+		}
+	}
+}
+
+# ── CLEAR THE DRAFT STATE (both on entry and on scrub -- self-healing, rule 2) ──────────────────────────
+ln_lh_clear_draft_effect = {
+	if = { limit = { has_variable_list = ln_lh_candidates }  clear_variable_list = ln_lh_candidates }
+	if = { limit = { has_variable_list = ln_lh_the_line }  clear_variable_list = ln_lh_the_line }
+	if = { limit = { has_variable = ln_lh_own_house_drafted }  remove_variable = ln_lh_own_house_drafted }
+}
+
+# ══ THE ENCOUNTER (§5.2) ════════════════════════════════════════════════════════════════════════════════
+
+# Root = the man in the snow (a player -- the pulse is is_ai = no, matching the Cold Winds atmosphere
+# precedent and RULE-embrace-and-confrontation-stay-player-only's spirit). Called from ln_encounter.1's
+# immediate so every man the card shows is already real. NOTHING IRREVERSIBLE HAPPENS HERE (rule 3): the
+# walker and any temporaries are created, but the fight starts only on the option click, and the fall-back
+# option disposes of everything this created.
+ln_open_encounter_effect = {
+	save_scope_as = ln_enc_champion
+
+	# The party: 1-5 of ours, rolled. Root is slot one; the roll below is the TOTAL.
+	random_list = {
+		15 = { save_scope_value_as = { name = ln_enc_party  value = 1 } }
+		30 = { save_scope_value_as = { name = ln_enc_party  value = 2 } }
+		30 = { save_scope_value_as = { name = ln_enc_party  value = 3 } }
+		15 = { save_scope_value_as = { name = ln_enc_party  value = 4 } }
+		10 = { save_scope_value_as = { name = ln_enc_party  value = 5 } }
+	}
+
+	# Real people first (§5.2). Self-heal any stale draft state, then build and pick.
+	ln_lh_clear_draft_effect = yes
+	ln_lh_build_candidates_effect = yes
+	if = { limit = { scope:ln_enc_party >= 2  any_in_list = { variable = ln_lh_candidates  count >= 1 } }  ln_lh_pick_one_effect = yes }
+	if = { limit = { scope:ln_enc_party >= 3  any_in_list = { variable = ln_lh_candidates  count >= 1 } }  ln_lh_pick_one_effect = yes }
+	if = { limit = { scope:ln_enc_party >= 4  any_in_list = { variable = ln_lh_candidates  count >= 1 } }  ln_lh_pick_one_effect = yes }
+	if = { limit = { scope:ln_enc_party >= 5  any_in_list = { variable = ln_lh_candidates  count >= 1 } }  ln_lh_pick_one_effect = yes }
+
+	# Fall back to created men ONLY when the pool ran short (§5.2, standing rule 15: every one of these is
+	# flagged and disposed of before the story closes -- boot check 13 counts the survivors and wants zero).
+	# Culture and faith come from the LOCATION, not from root.
+	if = {
+		limit = {
+			scope:ln_enc_party >= 2
+			NOT = { any_in_list = { variable = ln_lh_the_line  count >= 1 } }
+		}
+		ln_enc_create_temporary_effect = yes
+	}
+	if = {
+		limit = {
+			scope:ln_enc_party >= 3
+			NOT = { any_in_list = { variable = ln_lh_the_line  count >= 2 } }
+		}
+		ln_enc_create_temporary_effect = yes
+	}
+	if = {
+		limit = {
+			scope:ln_enc_party >= 4
+			NOT = { any_in_list = { variable = ln_lh_the_line  count >= 3 } }
+		}
+		ln_enc_create_temporary_effect = yes
+	}
+	if = {
+		limit = {
+			scope:ln_enc_party >= 5
+			NOT = { any_in_list = { variable = ln_lh_the_line  count >= 4 } }
+		}
+		ln_enc_create_temporary_effect = yes
+	}
+
+	# Portrait scopes for the card -- conditionally saved, unconditionally slotted (91 vanilla events do
+	# exactly that; see RULE-supernatural-event-writing-voice on portraits).
+	ordered_in_list = {
+		variable = ln_lh_the_line
+		order_by = ln_last_hour_relevance_value
+		position = 0
+		save_scope_as = ln_enc_man_1
+	}
+	ordered_in_list = {
+		variable = ln_lh_the_line
+		order_by = ln_last_hour_relevance_value
+		position = 1
+		save_scope_as = ln_enc_man_2
+	}
+	ordered_in_list = {
+		variable = ln_lh_the_line
+		order_by = ln_last_hour_relevance_value
+		position = 2
+		save_scope_as = ln_enc_man_3
+	}
+
+	# Their side: exactly ONE Other. Never the Night King in Cold Winds. other_template is ours
+	# (00_long_night_other_templates.txt) and carries other_trait, spindly and a martial education; the
+	# explicit fields mirror the mod's own spawn sites. age stays inside the template's safe ceiling --
+	# see the negative-age post-mortem at agot_long_night_scripted_effects.txt:160.
+	create_character = {
+		name = other_name
+		template = other_template
+		gender = male
+		culture = culture:frostborn
+		faith = faith:cold_gods
+		prowess = 16
+		location = root.location
+		dynasty_house = house:house_theothers
+		save_scope_as = ln_the_walker
+	}
+	scope:ln_the_walker = {
+		add_character_flag = ln_one_of_them        # identity is stamped at creation -- ln_is_one_of_them_trigger
+		add_character_flag = agot_immersion_bannermen_blocker
+		# (no bespoke disposal flag: the banked var ln_enc_walker_ref IS the disposal duty, and a flag
+		# nothing reads is a dead write -- optioncheck's rule.)
+	}
+	set_variable = { name = ln_enc_walker_ref  value = scope:ln_the_walker }
+}
+
+# One created ranger. Root = the champion. Flagged for boot check 13; disposed by the endings.
+ln_enc_create_temporary_effect = {
+	# An unresolvable field makes CK3 reject the ENTIRE create_character -- "Invalid/missing location or
+	# employer", the frigid rise post-mortem (agot_long_night_scripted_effects.txt:160). A wilderness
+	# province with no county falls back to root's own culture and faith rather than failing the spawn.
+	if = {
+		limit = { root.location ?= { exists = county } }
+		create_character = {
+			age = { 18 45 }
+			gender = male
+			location = root.location
+			culture = root.location.county.culture
+			faith = root.location.county.faith
+			save_scope_as = ln_enc_temp
+		}
+	}
+	else = {
+		create_character = {
+			age = { 18 45 }
+			gender = male
+			location = root.location
+			culture = root.culture
+			faith = root.faith
+			save_scope_as = ln_enc_temp
+		}
+	}
+	scope:ln_enc_temp = {
+		add_character_flag = ln_temporary_ranger
+	}
+	add_to_variable_list = {
+		name = ln_lh_the_line
+		target = scope:ln_enc_temp
+	}
+}
+
+# ── THE FIGHT OPENS (the option click -- the first irreversible step) ───────────────────────────────────
+ln_begin_encounter_melee_effect = {
+	# Same rule in the snowfield as at the Last Hour: skill is worth half against them, and what you brought
+	# is the rest of it (1.1.0).
+	ln_lh_measure_the_whole_line_effect = yes
+	# The champion cannot be killed by the engine: his loss is the TAKING, which needs him alive and downed.
+	# multi_duelist_plot_armor is the engine's own guarantee (00_agot_multi_duel_effects.txt:1825). Removed
+	# at scrub; the days cap is a belt-and-braces bound so a bugged scrub cannot protect him forever.
+	add_character_flag = {
+		flag = multi_duelist_plot_armor
+		days = 400
+	}
+	multi_duel_leaders_effect = {
+		SIDE_A_LEADER = scope:ln_enc_champion
+		SIDE_B_LEADER = scope:ln_the_walker
+		DUEL_BACKGROUND = terrain_type
+		EVENT_BACKGROUND_REFERENCE_CHARACTER = scope:ln_enc_champion
+		SIDE_A_TEAM_SELECTION = ln_encounter.10
+		SIDE_B_TEAM_SELECTION = ln_encounter.11
+		UNIQUE_STORY_NAME = ln_encounter_story
+		STORY_VARIANT = none
+		END_STORY_ON = dead_leader
+	}
+	# Our watchdog owns the ENDING in every case -- victory, defeat, attrition -- because the engine's own
+	# dead_leader rule only fires on a death and our champion cannot die.
+	create_story = ln_encounter_watch_story
+}
+
+# ── NOBODY FIGHTS: the fall-back disposal (the "run" option, rule 15) ──────────────────────────────────
+ln_encounter_stand_down_effect = {
+	if = {
+		limit = { exists = scope:ln_the_walker }
+		scope:ln_the_walker = {
+			# A generated character is a permanent save-file row unless disposed of. He walks back into
+			# the snow; mechanically the cold reclaims its own.
+			death = { death_reason = death_claimed_by_cold }
+		}
+	}
+	every_in_list = {
+		variable = ln_lh_the_line
+		limit = { has_character_flag = ln_temporary_ranger  is_alive = yes }
+		death = { death_reason = death_claimed_by_cold }
+	}
+	ln_lh_clear_draft_effect = yes
+	if = { limit = { has_variable = ln_enc_walker_ref }  remove_variable = ln_enc_walker_ref }
+}
+
+# ── SCRUB: return every fighter to civilian life ────────────────────────────────────────────────────────
+# The engine's own cleanup effects are called per character (they carry their own has_variable guards);
+# the flags are removed bare because remove_character_flag is a silent no-op when absent.
+ln_encounter_scrub_one_effect = {
+	# 1.1.0: the melee's prowess state comes off with everything else. See ln_lh_lay_down_the_cold_effect.
+	ln_lh_lay_down_the_cold_effect = yes
+	remove_character_flag = in_multi_duel
+	remove_character_flag = idle_in_multi_duel
+	remove_character_flag = last_man_standing
+	remove_character_flag = agot_multi_duel_downed
+	remove_character_flag = agot_multi_duel_yielded
+	remove_character_flag = multi_duel_sudden_death_protection
+	remove_character_flag = duel_starting_soon
+	remove_character_flag = chance_to_fight_in_multiduel
+	remove_character_flag = multi_duelist_plot_armor
+	end_duelist_stories = yes
+	clear_every_duelist_variables = yes
+}
+
+ln_encounter_scrub_all_effect = {
+	every_in_list = {
+		variable = ln_lh_the_line
+		limit = { is_alive = yes }
+		ln_encounter_scrub_one_effect = yes
+	}
+	if = {
+		limit = {
+			has_variable = ln_enc_walker_ref
+			var:ln_enc_walker_ref ?= { is_alive = yes }
+		}
+		var:ln_enc_walker_ref = { ln_encounter_scrub_one_effect = yes }
+	}
+	ln_encounter_scrub_one_effect = yes   # root last
+	ln_lh_clear_draft_effect = yes
+	if = { limit = { has_variable = ln_enc_walker_ref }  remove_variable = ln_enc_walker_ref }
+}
+
+# ── THE ENDINGS (fired by the watchdog; effects land on the option clicks -- rule 3, banked first) ─────
+# Root = the champion in all of these.
+
+ln_encounter_victory_effect = {
+	# The counter §6 asks for, then the memory. Guarded read-modify-write.
+	if = {
+		limit = { NOT = { has_variable = ln_walkers_slain } }
+		set_variable = { name = ln_walkers_slain  value = 0 }
+	}
+	change_variable = { name = ln_walkers_slain  add = 1 }
+	create_character_memory = { type = ln_slew_a_walker_memory }
+	add_character_flag = ln_faced_him_and_lived
+	add_prestige = 500
+	# §6: the threshold. Three of his kind is a reputation.
+	if = {
+		limit = {
+			has_variable = ln_walkers_slain
+			var:ln_walkers_slain >= 3
+			NOT = { has_character_modifier = ln_dread_of_the_walker_slayer_modifier }
+		}
+		add_character_modifier = ln_dread_of_the_walker_slayer_modifier
+	}
+
+	# The walker is downed or dead. If the engine did not kill him, the glass finds him now; either way the
+	# generated character is disposed of (rule 15).
+	if = {
+		limit = {
+			has_variable = ln_enc_walker_ref
+			var:ln_enc_walker_ref ?= { is_alive = yes }
+		}
+		var:ln_enc_walker_ref = {
+			death = {
+				death_reason = death_battle
+				killer = root
+			}
+		}
+	}
+	# Survivors carry it too.
+	every_in_list = {
+		variable = ln_lh_the_line
+		limit = { is_alive = yes  NOT = { has_character_flag = ln_temporary_ranger } }
+		add_character_flag = ln_faced_him_and_lived
+		# 1.1.0 (B1): whose steel failed. Before the scrub below strips the bane modifiers it reads.
+		ln_lh_blade_broke_memory_effect = yes
+	}
+	ln_lh_blade_broke_memory_effect = yes
+	# Any created man who survived is also removed -- do not leave generated rangers standing in a court
+	# forever (§5.2). The spared-man story only ever lands on a real person.
+	every_in_list = {
+		variable = ln_lh_the_line
+		limit = { is_alive = yes  has_character_flag = ln_temporary_ranger }
+		death = { death_reason = death_claimed_by_cold }
+	}
+	ln_encounter_scrub_all_effect = yes
+}
+
+# The defeat roll. §3.5: a Walker does not accept a yield -- the outcomes are break-and-run, the taking,
+# and the Sam Tarly branch. The Sam arm needs at least one REAL companion to have stood (the spared man
+# must be somebody the player can go and talk to afterwards).
+ln_encounter_resolve_defeat_effect = {
+	random_list = {
+		# He lets you go -- or you outrun what does not hurry. Fleeing is honourable here in a way
+		# yielding is not.
+		40 = {
+			trigger_event = ln_encounter.24
+		}
+		# The taking. An Other's kill makes a WIGHT, never a Walker -- §3.5's asymmetry, the Night King's
+		# personal attention being the worst outcome in the game.
+		45 = {
+			trigger_event = ln_encounter.21
+		}
+		# The Sam Tarly outcome: he stops. He looks at you. He lets one live.
+		15 = {
+			trigger = {
+				any_in_list = {
+					variable = ln_lh_the_line
+					NOT = { has_character_flag = ln_temporary_ranger }
+					count >= 1
+				}
+			}
+			trigger_event = ln_encounter.22
+		}
+	}
+}
+
+# The dead of the line, by the Walker's hand -- called from the ending cards after everything is banked.
+ln_encounter_finish_the_downed_effect = {
+	if = {
+		limit = {
+			has_variable = ln_enc_walker_ref
+			var:ln_enc_walker_ref ?= { is_alive = yes }
+		}
+		every_in_list = {
+			variable = ln_lh_the_line
+			limit = {
+				is_alive = yes
+				NOT = { has_character_flag = ln_enc_spared }
+			}
+			death = {
+				death_reason = death_murder
+				killer = root.var:ln_enc_walker_ref
+			}
+		}
+	}
+	else = {
+		# The walker reference is gone or he is somehow dead -- the men still do not come home, but no
+		# killer is attributed rather than an unguarded read (standing rule 4).
+		every_in_list = {
+			variable = ln_lh_the_line
+			limit = {
+				is_alive = yes
+				NOT = { has_character_flag = ln_enc_spared }
+			}
+			death = { death_reason = death_claimed_by_cold }
+		}
+	}
+}
+
+# ── THE PULSE (§5.1) ────────────────────────────────────────────────────────────────────────────────────
+# Cold Winds only; the far North only. The struggle handle is guarded the way every pulse in this mod
+# guards it after the 27 Aug "Failed context switch" storm (see zz_ln_coldwinds_effects.txt:18) -- exists
+# AND ?=, because they fail differently. Sightings outnumber encounters seven to three, and the cooldown
+# keeps the phase whispering rather than nagging (the Zetsuji lesson).
+ln_encounter_pulse_effect = {
+	if = {
+		limit = {
+			exists = scope:struggle
+			scope:struggle ?= { is_struggle_phase = ln_phase_cold_winds }
+			is_ai = no
+			is_available_adult = yes
+			NOT = { has_character_flag = ln_encounter_cooldown }
+			ln_can_stand_at_the_last_hour_trigger = yes
+			# The far North: the Watch and what lies past it feel this often; a northern lord sometimes;
+			# the south never -- their silence is itself the point about the realm not believing.
+			OR = {
+				has_government = nights_watch_government
+				location ?= { geographical_region = world_westeros_the_wall }
+				location ?= { geographical_region = world_westeros_beyond_the_wall }
+				capital_province ?= { geographical_region = world_westeros_the_north }
+			}
+		}
+		random = {
+			chance = 15
+			add_character_flag = { flag = ln_encounter_cooldown  years = 4 }
+			random_list = {
+				70 = { trigger_event = { id = ln_encounter.30  days = { 5 120 } } }
+				30 = { trigger_event = { id = ln_encounter.1  days = { 5 120 } } }
+			}
+		}
+	}
+}
+
+# ══ FEATURE A -- THE LAST HOUR MELEE (§3), the mechanical layer ═════════════════════════════════════════
+# The prose pass (§13: thirty-plus options, voice agreed with Thomas on ONE exchange first) and the dragon
+# bridge (§3.6: touches dragon code, build it last, boot it hardest) are NOT here -- this is the engine
+# wiring, the draft, and the endings, entered from ln_dawn.2's new option.
+
+# The filtered pick -- same body as ln_lh_pick_one_effect with a pass filter in the limit.
+ln_lh_pick_filtered_effect = {
+	ordered_in_list = {
+		variable = ln_lh_candidates
+		order_by = ln_last_hour_relevance_value
+		max = 1
+		limit = {
+			$FILTER$ = yes
+			trigger_if = {
+				limit = {
+					exists = house
+					exists = root.house
+					house = root.house
+				}
+				root = {
+					has_variable = ln_lh_own_house_drafted
+					var:ln_lh_own_house_drafted < 2
+				}
+			}
+		}
+		save_scope_as = ln_lh_picked
+	}
+	if = {
+		limit = {
+			exists = scope:ln_lh_picked
+			NOT = {
+				is_target_in_variable_list = {
+					name = ln_lh_the_line
+					target = scope:ln_lh_picked
+				}
+			}
+		}
+		scope:ln_lh_picked = {
+			remove_list_variable = {
+				name = ln_lh_candidates
+				target = this
+			}
+		}
+		add_to_variable_list = {
+			name = ln_lh_the_line
+			target = scope:ln_lh_picked
+		}
+		if = {
+			limit = {
+				exists = scope:ln_lh_picked.house
+				exists = house
+				scope:ln_lh_picked.house = house
+			}
+			change_variable = { name = ln_lh_own_house_drafted  add = 1 }
+		}
+	}
+}
+
+# ── THE THREE-PASS DRAFT (§3.2.4, RULE 2): the line is visibly a COALITION ─────────────────────────────
+# Root = the champion, on the field, scope:ln_night_king live. Six slots. Pass one, the bound (the saved
+# second champion, then friends, lovers and close family) -- maximum 2. Pass two, the armed (Valyrian
+# steel, Lightbringer, dragonglass) -- maximum 3 more; this is the pass that puts a stranger with a
+# Valyrian sword beside you. Pass three, the rest by relevance until 6. The house cap rides every pick:
+# at most 2 of the 6 from root's own house -- "the last thing I want is I show up and it's only people
+# from my house."
+ln_draft_the_last_hour_line_effect = {
+	ln_lh_clear_draft_effect = yes
+	ln_lh_build_candidates_effect = yes
+
+	# Pass one -- the bound. The second champion the story already chose goes first, if he stands.
+	if = {
+		limit = {
+			exists = global_var:ln_dawn_second_champion
+			global_var:ln_dawn_second_champion ?= {
+				is_alive = yes
+				NOT = { this = root }
+				ln_can_stand_at_the_last_hour_trigger = yes
+			}
+		}
+		add_to_variable_list = {
+			name = ln_lh_the_line
+			target = global_var:ln_dawn_second_champion
+		}
+		global_var:ln_dawn_second_champion = {
+			if = {
+				limit = {
+					is_target_in_variable_list = {
+						name = ln_lh_candidates
+						target = this
+					}
+				}
+				remove_list_variable = {
+					name = ln_lh_candidates
+					target = this
+				}
+			}
+		}
+		if = {
+			limit = {
+				exists = global_var:ln_dawn_second_champion.house
+				exists = house
+				global_var:ln_dawn_second_champion.house = house
+			}
+			change_variable = { name = ln_lh_own_house_drafted  add = 1 }
+		}
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 2 } } }
+		ln_lh_pick_filtered_effect = { FILTER = ln_lh_bound_to_champion_trigger }
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 2 } } }
+		ln_lh_pick_filtered_effect = { FILTER = ln_lh_bound_to_champion_trigger }
+	}
+
+	# Pass two -- the armed, up to three more (never past five before pass three).
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 5 } } }
+		ln_lh_pick_filtered_effect = { FILTER = ln_lh_armed_for_the_hour_trigger }
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 5 } } }
+		ln_lh_pick_filtered_effect = { FILTER = ln_lh_armed_for_the_hour_trigger }
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 5 } } }
+		ln_lh_pick_filtered_effect = { FILTER = ln_lh_armed_for_the_hour_trigger }
+	}
+
+	# Pass three -- the rest, highest relevance, house cap enforced, until six.
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 6 } } }
+		ln_lh_pick_one_effect = yes
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 6 } } }
+		ln_lh_pick_one_effect = yes
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 6 } } }
+		ln_lh_pick_one_effect = yes
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 6 } } }
+		ln_lh_pick_one_effect = yes
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 6 } } }
+		ln_lh_pick_one_effect = yes
+	}
+	if = {
+		limit = { NOT = { any_in_list = { variable = ln_lh_the_line  count >= 6 } } }
+		ln_lh_pick_one_effect = yes
+	}
+}
+
+# ── THEIR SIDE (§3.2.5 + §9.4): the Night King and the dial's worth of Walkers ─────────────────────────
+# Real Others first, from the house the spawn code fills; created ones only for the shortfall, flagged and
+# disposed like every generated character (rule 15). Never a dragon -- the trigger says so explicitly.
+ln_build_their_line_effect = {
+	house:house_theothers ?= {
+		every_house_member = {
+			limit = {
+				ln_stands_with_the_dead_trigger = yes
+				NOT = { has_trait = nightking }
+				NOT = { this ?= scope:ln_night_king }
+			}
+			add_to_temporary_list = ln_lh_walker_pool
+		}
+	}
+	ordered_in_list = {
+		list = ln_lh_walker_pool
+		order_by = ln_walker_menace_value
+		position = 0
+		save_scope_as = ln_lh_walker_1
+	}
+	if = {
+		limit = { ln_last_hour_walker_count_value >= 2 }
+		ordered_in_list = {
+			list = ln_lh_walker_pool
+			order_by = ln_walker_menace_value
+			position = 1
+			save_scope_as = ln_lh_walker_2
+		}
+	}
+	if = {
+		limit = { ln_last_hour_walker_count_value >= 3 }
+		ordered_in_list = {
+			list = ln_lh_walker_pool
+			order_by = ln_walker_menace_value
+			position = 2
+			save_scope_as = ln_lh_walker_3
+		}
+	}
+	if = {
+		limit = { exists = scope:ln_lh_walker_1 }
+		add_to_variable_list = { name = ln_lh_their_line  target = scope:ln_lh_walker_1 }
+	}
+	if = {
+		limit = { exists = scope:ln_lh_walker_2 }
+		add_to_variable_list = { name = ln_lh_their_line  target = scope:ln_lh_walker_2 }
+	}
+	if = {
+		limit = { exists = scope:ln_lh_walker_3 }
+		add_to_variable_list = { name = ln_lh_their_line  target = scope:ln_lh_walker_3 }
+	}
+	# Shortfall -- the dial's count is a promise, so created Walkers fill it (other_template; disposed by
+	# the endings, boot check 13's census includes these).
+	if = {
+		limit = {
+			ln_last_hour_walker_count_value >= 1
+			NOT = { any_in_list = { variable = ln_lh_their_line  count >= 1 } }
+		}
+		ln_lh_create_walker_effect = yes
+	}
+	if = {
+		limit = {
+			ln_last_hour_walker_count_value >= 2
+			NOT = { any_in_list = { variable = ln_lh_their_line  count >= 2 } }
+		}
+		ln_lh_create_walker_effect = yes
+	}
+	if = {
+		limit = {
+			ln_last_hour_walker_count_value >= 3
+			NOT = { any_in_list = { variable = ln_lh_their_line  count >= 3 } }
+		}
+		ln_lh_create_walker_effect = yes
+	}
+	# Portrait scopes for the approach card (§3.7: walkers lower left and lower right).
+	ordered_in_list = {
+		variable = ln_lh_their_line
+		order_by = ln_walker_menace_value
+		position = 0
+		save_scope_as = ln_lh_walker_left
+	}
+	ordered_in_list = {
+		variable = ln_lh_their_line
+		order_by = ln_walker_menace_value
+		position = 1
+		save_scope_as = ln_lh_walker_right
+	}
+}
+
+ln_lh_create_walker_effect = {
+	create_character = {
+		name = other_name
+		template = other_template
+		gender = male
+		culture = culture:frostborn
+		faith = faith:cold_gods
+		prowess = 16
+		location = root.location
+		dynasty_house = house:house_theothers
+		save_scope_as = ln_lh_new_walker
+	}
+	scope:ln_lh_new_walker = {
+		add_character_flag = ln_one_of_them
+		add_character_flag = ln_lasthour_temp_walker
+		add_character_flag = agot_immersion_bannermen_blocker
+	}
+	add_to_variable_list = {
+		name = ln_lh_their_line
+		target = scope:ln_lh_new_walker
+	}
+}
+
+# ── OPENING THE LAST HOUR ──────────────────────────────────────────────────────────────────────────────
+# Root = the champion; scope:ln_night_king live. The champion cannot be killed by the engine -- his loss
+# is the taking (§4), the Night King's kind, not a corpse.
+ln_begin_last_hour_melee_effect = {
+	# The whole body is gated on the Night King actually being in scope: the engine call below reads him a
+	# dozen ways, and CK3 re-runs this chain every frame it builds the OPTION TOOLTIP -- a console-fired
+	# card with no scopes flooded the log at ~10 errors a frame before this guard (1 Sep boot).
+	if = {
+		limit = { NOT = { exists = scope:ln_night_king } }
+		debug_log = "LN_LASTHOUR: begin refused -- no Night King in scope"
+	}
+	if = {
+		limit = { exists = scope:ln_night_king }
+		# Banked FIRST (rule 3): the watchdog's tick and the ending cards run days from now in fresh
+		# contexts, where saved event scopes are gone. The var is the durable reference everything
+		# downstream rebuilds scope:ln_night_king from.
+		set_variable = { name = ln_lh_nk_ref  value = scope:ln_night_king }
+		# What everyone on this side is actually worth against them (1.1.0). Before the engine call, so the
+		# very first exchange is already fought on the corrected numbers.
+		ln_lh_measure_the_whole_line_effect = yes
+		add_character_flag = {
+			flag = multi_duelist_plot_armor
+			days = 400
+		}
+		multi_duel_leaders_effect = {
+			SIDE_A_LEADER = root
+			SIDE_B_LEADER = scope:ln_night_king
+			DUEL_BACKGROUND = terrain_type
+			EVENT_BACKGROUND_REFERENCE_CHARACTER = root
+			SIDE_A_TEAM_SELECTION = ln_lasthour.10
+			SIDE_B_TEAM_SELECTION = ln_lasthour.11
+			UNIQUE_STORY_NAME = ln_last_hour_story
+			STORY_VARIANT = none
+			END_STORY_ON = dead_leader
+		}
+		create_story = ln_last_hour_watch_story
+	}
+}
+
+# ── THE ENDINGS ────────────────────────────────────────────────────────────────────────────────────────
+# Victory: the engine may have killed him (DUEL_FATALITY = possible; the on-death catalyst chain -- reveal,
+# trait, nickname, cleanup -- runs off that death, the ln_dawn.11 precedent) or left him downed, in which
+# case the ceremony is ours and the reason is death_the_dawn, the same reason ln_dawn.11's kill carries.
+ln_last_hour_victory_effect = {
+	# Rebuild the handle from the banked var -- the event scope died with the click that opened the melee.
+	if = {
+		limit = { has_variable = ln_lh_nk_ref }
+		var:ln_lh_nk_ref = { save_scope_as = ln_night_king }
+	}
+	# ⚠ BEFORE THE DEATH, and the ordering is the whole point (standing rule 3). Killing the Night King
+	# runs on_death -> ln_death_catalyst_effect -> ln_night_king_slain_reveal_effect in the SAME tick, and
+	# that effect writes the roll call ln_reveal.10 reads. If the line is not banked first, the reveal has
+	# nothing to read and falls back to inventing one. See ln_lh_bank_the_roll_call_effect.
+	ln_lh_bank_the_roll_call_effect = yes
+	if = {
+		limit = { scope:ln_night_king ?= { is_alive = yes } }
+		scope:ln_night_king = {
+			# 1.1.0b -- the stamp goes on before the blow. See ln_mark_the_sanctioned_kill_effect.
+			ln_mark_the_sanctioned_kill_effect = yes
+			death = {
+				death_reason = death_the_dawn
+				killer = root
+			}
+		}
+	}
+	# The cred (§6): every Walker of his line that fell is on the count.
+	if = {
+		limit = { NOT = { has_variable = ln_walkers_slain } }
+		set_variable = { name = ln_walkers_slain  value = 0 }
+	}
+	every_in_list = {
+		variable = ln_lh_their_line
+		limit = { is_alive = no }
+		root = { change_variable = { name = ln_walkers_slain  add = 1 } }
+	}
+	create_character_memory = { type = ln_faced_the_night_king_memory }
+	add_character_flag = ln_faced_him_and_lived
+	add_prestige = 2000
+	# §6: the threshold. Three of his kind is a reputation.
+	if = {
+		limit = {
+			has_variable = ln_walkers_slain
+			var:ln_walkers_slain >= 3
+			NOT = { has_character_modifier = ln_dread_of_the_walker_slayer_modifier }
+		}
+		add_character_modifier = ln_dread_of_the_walker_slayer_modifier
+	}
+
+	every_in_list = {
+		variable = ln_lh_the_line
+		limit = { is_alive = yes  NOT = { has_character_flag = ln_temporary_ranger } }
+		add_character_flag = ln_faced_him_and_lived
+		create_character_memory = { type = ln_faced_the_night_king_memory }
+		# 1.1.0 (B1): whose steel failed. Before the stand-down below strips the bane modifiers it reads.
+		ln_lh_blade_broke_memory_effect = yes
+	}
+	ln_lh_blade_broke_memory_effect = yes
+	ln_last_hour_stand_down_effect = yes
+}
+
+# Defeat: §4's order, exactly. The men who fell stay fallen (the engine killed them); any still-downed
+# companion dies by the dead's hand; the created Walkers are disposed of; the fighters are stood down --
+# and the champion is mutated LAST, then shown the report card on a portrait that is already wrong.
+ln_last_hour_defeat_effect = {
+	if = {
+		limit = { has_variable = ln_lh_nk_ref }
+		var:ln_lh_nk_ref = { save_scope_as = ln_night_king }
+	}
+	if = {
+		limit = { exists = scope:ln_night_king }
+		every_in_list = {
+			variable = ln_lh_the_line
+			limit = { is_alive = yes }
+			death = {
+				death_reason = death_murder
+				killer = scope:ln_night_king
+			}
+		}
+	}
+	else = {
+		every_in_list = {
+			variable = ln_lh_the_line
+			limit = { is_alive = yes }
+			death = { death_reason = death_claimed_by_cold }
+		}
+	}
+	ln_last_hour_stand_down_effect = yes
+	ln_raised_as_an_other_effect = yes
+	trigger_event = ln_lasthour.30
+}
+
+# Stand everyone down: created Walkers disposed, real ones scrubbed, our line scrubbed, root last.
+ln_last_hour_stand_down_effect = {
+	if = {
+		limit = { has_variable = ln_lh_nk_ref }
+		var:ln_lh_nk_ref = { save_scope_as = ln_night_king }
+	}
+	every_in_list = {
+		variable = ln_lh_their_line
+		limit = { is_alive = yes }
+		if = {
+			limit = { has_character_flag = ln_lasthour_temp_walker }
+			death = { death_reason = death_claimed_by_cold }
+		}
+		else = {
+			ln_encounter_scrub_one_effect = yes
+		}
+	}
+	every_in_list = {
+		variable = ln_lh_the_line
+		limit = { is_alive = yes }
+		ln_encounter_scrub_one_effect = yes
+	}
+	if = {
+		limit = { scope:ln_night_king ?= { is_alive = yes } }
+		scope:ln_night_king = { ln_encounter_scrub_one_effect = yes }
+	}
+	ln_encounter_scrub_one_effect = yes
+	if = { limit = { has_variable_list = ln_lh_their_line }  clear_variable_list = ln_lh_their_line }
+	if = { limit = { has_variable = ln_lh_nk_ref }  remove_variable = ln_lh_nk_ref }
+	ln_lh_clear_draft_effect = yes
+}
+
+# Turning back on the approach card: nothing engine-side has started, so this only disposes of what the
+# draft created (rule 15) and clears the lists. The real Walkers walk back into the dark.
+ln_last_hour_disband_effect = {
+	every_in_list = {
+		variable = ln_lh_their_line
+		limit = { is_alive = yes  has_character_flag = ln_lasthour_temp_walker }
+		death = { death_reason = death_claimed_by_cold }
+	}
+	if = { limit = { has_variable_list = ln_lh_their_line }  clear_variable_list = ln_lh_their_line }
+	if = { limit = { has_variable = ln_lh_nk_ref }  remove_variable = ln_lh_nk_ref }
+	ln_lh_clear_draft_effect = yes
+}
+
+
+# ── THE ROLL CALL, TAKEN FROM THE MEN WHO WERE ACTUALLY THERE (1.1.0 playtest fix, 1 Sep) ───────────────
+# Root = the champion, still alive, the Night King not yet dead. Called from ln_last_hour_victory_effect
+# before the death.
+#
+# WHAT THIS REPLACES. ln_reveal.10 ("The Men Who Were There") used to build its roll call in
+# zz_ln_reveal_effects.txt with `ordered_knight order_by = prowess` -- the slayer's three best knights at
+# the moment of death, whether or not any of them had been within a hundred leagues of the fight. That was
+# defensible when the only road to the Night King was a single duel and the three names were a polite
+# fiction about the men holding the flank. It stopped being defensible the moment the melee shipped, because
+# now there IS a real answer and the card was ignoring it. Thomas, 1 Sep: "for that event, everybody who was
+# present needs to have been in the duel. If nobody was in the duel, I don't want them showing up here as
+# present."
+#
+# So: the melee banks the truth here, and the reveal reads it. If no melee was fought, nothing is banked,
+# and ln_reveal.10 correctly reads ln_reveal.10.desc_alone -- the card that already exists for exactly this
+# case and says the record has a silence in it where their names should stand. That is now the honest
+# outcome of a man who went out there by himself, instead of three knights he left at home taking the credit.
+#
+# Created rangers are excluded: ln_temporary_ranger men are disposed of by the endings, and a name the
+# player can never click on afterwards is not a name worth carving. Ordered by the same relevance value the
+# draft used, so the three the card portrays are the three the draft considered most worth having.
+ln_lh_bank_the_roll_call_effect = {
+	if = {
+		limit = {
+			any_in_list = {
+				variable = ln_lh_the_line
+				NOT = { has_character_flag = ln_temporary_ranger }
+				count >= 1
+			}
+		}
+		set_global_variable = { name = ln_dawn_line_stood  value = yes }
+		ordered_in_list = {
+			variable = ln_lh_the_line
+			order_by = ln_last_hour_relevance_value
+			position = 0
+			limit = { NOT = { has_character_flag = ln_temporary_ranger } }
+			set_global_variable = { name = ln_dawn_knight_1  value = this }
+		}
+		ordered_in_list = {
+			variable = ln_lh_the_line
+			order_by = ln_last_hour_relevance_value
+			position = 1
+			limit = { NOT = { has_character_flag = ln_temporary_ranger } }
+			set_global_variable = { name = ln_dawn_knight_2  value = this }
+		}
+		ordered_in_list = {
+			variable = ln_lh_the_line
+			order_by = ln_last_hour_relevance_value
+			position = 2
+			limit = { NOT = { has_character_flag = ln_temporary_ranger } }
+			set_global_variable = { name = ln_dawn_knight_3  value = this }
+		}
+	}
+}
+
+
+# ══ WHAT A SWORD IS WORTH AGAINST THEM (1.1.0, 1 Sep) ═══════════════════════════════════════════════════
+# See common/modifiers/zz_ln_melee_modifiers.txt for the design and the worked arithmetic. Short version:
+# every living fighter loses about half his prowess the moment an LN melee opens, and gets it back -- with
+# interest -- only for what he is actually carrying. Applied to BOTH melees (the snowfield encounter and the
+# Last Hour) and to both the champion and every man of his line.
+#
+# WHY MODIFIERS AND NOT AN OVERRIDE OF AGOT'S DUEL MATHS. The exchange resolution is spread across
+# multi_duel_battle_effect, multi_duel_battle_ai, multi_duel_downed_chance, multi_duel_wound_chance_effect
+# and multi_duel_death_chance_* -- five effects, ~600 lines, all of which read the duellist's live prowess.
+# Shadowing that surface to halve one term would put us on the hook for every AGOT duel in the game and
+# break on their next update. Changing the STAT the engine already reads gets the identical result, touches
+# nothing of theirs, and works for the wound rolls and the downed rolls as well as the win roll.
+#
+# The years = 2 bound is belt-and-braces on the same pattern as multi_duelist_plot_armor's days = 400: the
+# scrub removes these, and if a scrub is ever missed a man is not weakened for the rest of his life.
+ln_lh_the_cold_takes_its_measure_effect = {
+	if      = { limit = { prowess >= 34 }  add_character_modifier = { modifier = ln_the_cold_between_4_modifier  years = 2 } }
+	else_if = { limit = { prowess >= 26 }  add_character_modifier = { modifier = ln_the_cold_between_3_modifier  years = 2 } }
+	else_if = { limit = { prowess >= 18 }  add_character_modifier = { modifier = ln_the_cold_between_2_modifier  years = 2 } }
+	else_if = { limit = { prowess >= 10 }  add_character_modifier = { modifier = ln_the_cold_between_1_modifier  years = 2 } }
+	else    = { add_character_modifier = { modifier = ln_the_cold_between_0_modifier  years = 2 } }
+
+	# THE BANE, best one only -- these do not stack with each other. A man with Lightbringer AND a Valyrian
+	# sword is fighting with Lightbringer; he does not get to swing both.
+	if = {
+		limit = {
+			OR = {
+				has_character_flag = ln_forged_lightbringer
+				has_character_flag = ln_the_star_paid_for_it
+				# 1.1.0 (A4 walk): the sword outlives the man who paid for it. ln_is_lightbringer is on the
+				# ARTIFACT, so an heir or a looter who has it in hand fights with Lightbringer, not with a
+				# hero's sword -- the two flags above only ever mark the forger. Same test ln_dawn.2's
+				# winning option already uses.
+				ln_carries_lightbringer_trigger = yes
+			}
+		}
+		add_character_modifier = { modifier = ln_bane_lightbringer_modifier  years = 2 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				ln_carries_valyrian_steel_trigger = yes
+				ln_has_deed_valyrian_steel_trigger = yes
+				has_character_modifier = ln_valyrian_armed_modifier
+			}
+		}
+		add_character_modifier = { modifier = ln_bane_valyrian_modifier  years = 2 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_modifier = ln_dragonglass_armed_modifier
+				has_character_modifier = ln_dragonglass_stores_modifier
+				has_character_modifier = ln_dragonglass_knight_modifier
+				has_character_flag = ln_mined_the_glass
+			}
+		}
+		add_character_modifier = { modifier = ln_bane_glass_modifier  years = 2 }
+	}
+
+	# AND WHAT HE HAS BEEN NAMED. Stacks with the bane, never replaces it.
+	if = {
+		limit = {
+			OR = {
+				has_trait = azor_ahai_reborn
+				has_trait = chosen_by_rhllor
+			}
+		}
+		add_character_modifier = { modifier = ln_melee_named_chosen_modifier  years = 2 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = favored_by_rhllor
+				has_trait = resurrected_by_rhllor
+			}
+		}
+		add_character_modifier = { modifier = ln_melee_named_favored_modifier  years = 2 }
+	}
+}
+
+# Root = the champion. Called from both melee-open effects, on the click, never in a tooltip build.
+ln_lh_measure_the_whole_line_effect = {
+	ln_lh_the_cold_takes_its_measure_effect = yes
+	every_in_list = {
+		variable = ln_lh_the_line
+		limit = { is_alive = yes }
+		ln_lh_the_cold_takes_its_measure_effect = yes
+	}
+}
+
+# 1.1.0 (B1) -- THE HARDHOME BEAT, RECORDED. ln_blade_broke_memory was written for "your steel shattered
+# against him" and had no firing site. Castle steel does not bite an Other, so a man who stood in the line
+# with none of the three banes and walked away lived on somebody else's blade -- that is the memory. Read
+# off the bane modifiers ln_lh_the_cold_takes_its_measure_effect stamped at the open, which is why both
+# victory effects call this BEFORE their stand-down/scrub strips them (rule 6: read, then remove).
+# Root = the man being asked. One entry per fight -- a man whose steel failed him twice has two dates.
+ln_lh_blade_broke_memory_effect = {
+	if = {
+		limit = {
+			NOR = {
+				has_character_modifier = ln_bane_lightbringer_modifier
+				has_character_modifier = ln_bane_valyrian_modifier
+				has_character_modifier = ln_bane_glass_modifier
+			}
+		}
+		create_character_memory = { type = ln_blade_broke_memory }
+	}
+}
+
+# Removal. Guarded rather than bare: remove_character_flag is a silent no-op when absent, but a modifier
+# removal is not the same call and is not documented to be silent, so every one is asked for first.
+ln_lh_lay_down_the_cold_effect = {
+	if = { limit = { has_character_modifier = ln_the_cold_between_0_modifier }  remove_character_modifier = ln_the_cold_between_0_modifier }
+	if = { limit = { has_character_modifier = ln_the_cold_between_1_modifier }  remove_character_modifier = ln_the_cold_between_1_modifier }
+	if = { limit = { has_character_modifier = ln_the_cold_between_2_modifier }  remove_character_modifier = ln_the_cold_between_2_modifier }
+	if = { limit = { has_character_modifier = ln_the_cold_between_3_modifier }  remove_character_modifier = ln_the_cold_between_3_modifier }
+	if = { limit = { has_character_modifier = ln_the_cold_between_4_modifier }  remove_character_modifier = ln_the_cold_between_4_modifier }
+	if = { limit = { has_character_modifier = ln_bane_lightbringer_modifier }   remove_character_modifier = ln_bane_lightbringer_modifier }
+	if = { limit = { has_character_modifier = ln_bane_valyrian_modifier }       remove_character_modifier = ln_bane_valyrian_modifier }
+	if = { limit = { has_character_modifier = ln_bane_glass_modifier }          remove_character_modifier = ln_bane_glass_modifier }
+	if = { limit = { has_character_modifier = ln_melee_named_chosen_modifier }        remove_character_modifier = ln_melee_named_chosen_modifier }
+	if = { limit = { has_character_modifier = ln_melee_named_favored_modifier }       remove_character_modifier = ln_melee_named_favored_modifier }
+	if = { limit = { has_character_modifier = ln_led_with_the_bane_modifier }   remove_character_modifier = ln_led_with_the_bane_modifier }
+}

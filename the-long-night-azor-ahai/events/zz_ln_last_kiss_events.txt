@@ -24,11 +24,21 @@ ln_prophecy.20 = {
 
 	option = {
 		name = ln_prophecy.20.a
+		ai_chance = {
+			base = 60
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = 20  has_trait = ambitious }
+		}
 		add_piety = major_piety_gain
 	}
 
 	option = {
 		name = ln_prophecy.20.b
+		ai_chance = {
+			base = 40
+			modifier = { add = 25  has_trait = humble }
+			modifier = { add = 25  has_trait = craven }
+		}
 		add_character_flag = ln_wishes_it_had_not_worked
 		add_piety = minor_piety_loss
 	}

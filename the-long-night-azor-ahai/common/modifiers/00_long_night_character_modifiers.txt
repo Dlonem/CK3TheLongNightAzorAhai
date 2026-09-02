@@ -31,22 +31,66 @@
 # +80%. Shape mirrors zz_ln_wave_modifiers.txt, which already had it right.
 # NOTE siege deliberately stays out of these tiers: ln_the_dead_do_not_tire_modifier already carries
 # siege_phase_time and levy_siege, and stacking two sources of it is not reasonable-able from the files.
+# 1.1.0 (§9.3 dial 2): re-verified, the decision HOLDS. zz_ln_siege_modifiers.txt:54-59 is still the one
+# source (levy_siege 0.004, siege_morale_loss 0.5, siege_phase_time -0.25) and its own header explains why
+# a second source per tier is wrong. Revisit only off boot item 16's measurement, never from the armchair.
+
+# ── 1 Sep 2026: THE ADVANTAGE LADDER, RESET ON THOMAS'S NUMBERS ────────────────────────────────────────
+# Live Long Night, Strong, 290 AC: the Night King fielded 5.2M strength against Thomas's 1.6M and lost every
+# engagement decisively. "I still feel like we need to make the Night King a little bit stronger."
+#
+# WHY MASS WAS NOT THE ANSWER *AT THE TIME*. When this was written, NArmy.REGIMENT_DEFAULT_MAX_SIZE = 3
+# (game/common/defines/00_defines.txt:641) clamped every create_maa_regiment and ln_wight_horde set no `max`,
+# so the horde's old 4/6/8 conquest tiers were inert. ⚠ NO LONGER TRUE (1.1.0b, 1 Sep): ln_wight_horde now
+# carries max = 20 and the horde is a milestone ladder (zz_ln_horde_values.txt: 20k / 50k / 100k / 200k /
+# 250k on Standard, x0.75 / x1.25 / x1.5 by rule, hard cap 500,000 -- Thomas's King's Landing number). Mass
+# and advantage now BOTH scale. Advantage stays the cheap knob: ADVANTAGE_DAMAGE_SCALING_FACTOR = 5, invisible
+# in the save, costs not one extra soldier.
+#
+# THOMAS'S CALL, verbatim: "15 across the board, 20 on strong and insane, and 15 for normal, and 10 for weak."
+#     weak      3 -> 10
+#     standard  6 -> 15
+#     strong   12 -> 20
+#     insane   16 -> 20
+#
+# ⚠ THIS COLLAPSES THE STRONG/INSANE GAP ON ADVANTAGE, on purpose, because that is what he asked for. Insane
+# keeps its separation on the three terms Strong does not have at all: toughness 0.35 vs 0.20, damage 0.30 vs
+# 0.15, and knight_effectiveness_mult 0.25 vs none. If the two tiers ever start to FEEL the same in a run,
+# that is the line to move, not this one.
+#
+# THE STACK, so nobody has to reconstruct it again. These are additive with two other sources on the same
+# character: night_king_command_modifier (advantage 12, standing) and ln_apply_wave_escalation_effect
+# (advantage 3/6/10 at waves 2/4/6). Real ceilings after this change:
+#     weak,     wave 1   10 + 12       = 22
+#     standard, wave 1   15 + 12       = 27
+#     strong,   wave 1   20 + 12       = 32
+#     insane,   wave 6+  20 + 12 + 10  = 42
+# The old insane ceiling was 38, so the top of the game moves +4 and the BOTTOM moves +7 -- Weak is the tier
+# that changes most here, which is intended: it was 3.
 
 others_weak_modifier = {
 	levy_size = 3
-	advantage = 3
+	advantage = 10
 }
 
 
 others_standard_modifier = {
 	levy_size = 6
-	advantage = 6
+	advantage = 15
 	army_toughness_mult = 0.10
 }
 
 others_strong_modifier = {
 	levy_size = 10
-	advantage = 10
+	# 1.1.0 (§9.3 dial 1): 10 -> 12. Thomas, in his current Strong playthrough: "we have a shit ton of
+	# troops... we would steamroll the Long Night." At ADVANTAGE_DAMAGE_SCALING_FACTOR = 5 this is +60%
+	# damage -- the cheapest real knob, invisible in the save, and it keeps Strong's gap to Insane's 16.
+	# The agreed target (31 Aug 2026): on Strong, +20 years after the invasion, THE NORTH HAS FALLEN and
+	# the dead press the Neck -- boot item 16 measures against this. If the North still stands at +20 in
+	# that run, the next knobs in order are the horde's regrowth (zz_ln_horde_effects.txt -- measure in a
+	# save first, the tier ladder there is clamp-inert) and only then a per-tier siege term, which would
+	# need the single-source rule below rethought, not silently broken.
+	advantage = 20
 	army_toughness_mult = 0.20
 	army_damage_mult = 0.15
 }
@@ -54,7 +98,7 @@ others_strong_modifier = {
 
 others_insane_modifier = {
 	levy_size = 14
-	advantage = 16
+	advantage = 20
 	army_toughness_mult = 0.35
 	army_damage_mult = 0.30
 	knight_effectiveness_mult = 0.25
@@ -64,6 +108,22 @@ others_insane_modifier = {
 # bleeds its elite faster than it can replace them. This standing command bonus keeps the dead a credible
 # threat — a harder-hitting, more durable horde led by a dread general who fields more of his Others as knights.
 night_king_command_modifier = {
+	# ── 1.1.0, 1 Sep: HE CANNOT RUN OUT OF THE ONE CURRENCY HE NEEDS. ──────────────────────────────────
+	# Workshop report, Enigmatic Clown, 28 Aug: "I found that the Night King will stop invading if he
+	# doesn't have enough prestige. Could you give him some more?"
+	#
+	# WHAT WAS CHECKED. other_cb's cost block is empty (00_long_night_cbs.txt:281), so the invasion CB
+	# itself charges nothing, and base CK3 has no define that gates a war declaration on prestige. He also
+	# already receives add_prestige = 5000 at spawn. So there is no single line to point at -- but there IS
+	# a drain: every white peace on the invasion CB costs him 500 (00_long_night_cbs.txt:92), the AI weighs
+	# prestige when it decides to declare at all, and a ruler sitting at a negative prestige LEVEL carries
+	# real penalties. A one-off grant at spawn cannot survive a long war of white peaces.
+	#
+	# So he gets an income instead of a lump sum. 120 a year: a white peace is recovered in four, he can
+	# never bottom out, and it costs zero soldiers -- the governing constraint of this whole file. Prestige
+	# is meaningless to the dead as a story; it is only ever a currency the engine makes him spend.
+	monthly_prestige = 10
+
 	advantage = 12
 	army_damage_mult = 0.20
 	army_toughness_mult = 0.20
@@ -139,4 +199,24 @@ ln_cold_trophy_modifier = {
 	dread_baseline_add = 15
 	monthly_income_mult = -0.05
 	courtier_and_guest_opinion = -10
+}
+
+# 1.1.0 (§6) -- THE CRED, IN THE NUMBERS AS WELL AS THE STORY. Granted once, when a character's
+# ln_walkers_slain count reaches 3 (both melee victory effects check the threshold). A stacking modifier
+# alone would be the weaker answer -- it says a number and tells no story -- so the memories carry the
+# story and this carries the dread. Modest on purpose: the Night King's own command modifier is the scale
+# ceiling in this file, and a mortal slayer of Walkers is not on it.
+ln_dread_of_the_walker_slayer_modifier = {
+	icon = martial_positive
+	dread_baseline_add = 10
+	monthly_prestige = 0.3
+}
+
+# 1.1.0 (§11, rung two): the dragonglass-edged weapon. prowess_no_portrait is what vanilla's own artifact
+# prowess modifiers use (00_artifact_modifiers.txt: artifact_prowess_3_modifier); Thomas's exact number,
+# exactly where he wanted it -- on the weapon, permanently, travelling with the sword when it is inherited
+# or looted. That last part is a feature and matches the Lightbringer template's own stated philosophy:
+# the sword does not check whether you are Azor Ahai.
+ln_artifact_dragonglass_edged_modifier = {
+	prowess_no_portrait = 3
 }

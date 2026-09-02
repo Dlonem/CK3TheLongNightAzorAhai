@@ -51,7 +51,11 @@ ln_last_kiss_effect = {
 		if = {
 			limit = { exists = scope:ln_the_priest }
 			scope:ln_the_priest = {
-				add_character_modifier = ln_gave_the_last_kiss_modifier
+				# 1.1.0 modifier audit: this permanent mark is applied from more than one road and CK3 stacks duplicates, so the guard makes a second arrival a no-op.
+				if = {
+					limit = { NOT = { has_character_modifier = ln_gave_the_last_kiss_modifier } }
+					add_character_modifier = ln_gave_the_last_kiss_modifier
+				}
 				add_piety = 300
 				# 1.0.15 -- the bedside kiss is the classic way a SPONSOR gets spent on somebody who is not
 				# his charge. The charge is released this instant rather than at a yearly pulse he may not

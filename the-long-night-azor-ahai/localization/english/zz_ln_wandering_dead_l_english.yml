@@ -6,7 +6,7 @@
 
  ln_wandering_dead.1.a:0 "Bring my sword. I will meet them myself."
  ln_wandering_dead.1.b:0 "Send the household guard. That is what they are for."
- ln_wandering_dead.1.c:0 "Bar the gates. Let them walk on south and be someone else's problem."
+ ln_wandering_dead.1.c:0 "Bar the gates and let them walk on south."
  ln_wandering_dead.1.d:0 "Wake the red priest. Let him show them what fire is."
 
  ln_faced_the_dead_modifier:0 "Faced the Dead"

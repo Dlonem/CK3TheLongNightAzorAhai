@@ -43,19 +43,30 @@ ln_dawn.1 = {
 			is_alive = yes
 		}
 
-		# And the thing they beat was HIM. He leads from the front -- the story cycle re-assigns him as army
-		# commander every fifteen days -- but primary_participant is checked too so a stand-in cannot hide him.
+		# ══ 1.0.16a -- HE MUST BE ON THE FIELD, NOT MERELY THE OWNER OF THE WAR. ════════════════════════════
+		# RedSaintNino: "I killed a micro army of the night king, a 2000 man force, and it tigered [triggered]
+		# the end of the night king." side_primary_participant on a combat side is the character the SIDE
+		# BELONGS TO -- so every skirmish any of his stacks lost matched this, and the first one to do it spent
+		# the one-shot ln_dawn_offered latch below. A scouring party losing a scrap in the Riverlands could
+		# consume the mod's flagship scene, and under others_death_resolution the duel that follows ends the
+		# whole Long Night.
+		#
+		# any_side_commander / any_side_knight are vanilla's own combat_side iterators
+		# (game/events/war_events/combat_events.txt:2077-2080; already used in this mod at
+		# zz_ln_spear_triggers.txt:57-62). They cover a side holding several armies, so a stand-in still cannot
+		# hide him -- he simply has to have been there. NO is_ai CLAUSE: 1.0.16 deliberately removed that so an
+		# AI champion can end it, and that stays.
+		#
+		# THE OLD COMMENT HERE WAS WRONG and is not carried over: it claimed the story cycle re-assigns him as
+		# army commander every fifteen days. Nothing in common/story_cycles/the_long_night.txt assigns a
+		# commander at all. The mod's only assign_commander is 00_others_heartbeat_events.txt:175-187 and it
+		# fires ONLY for armies already besieging. In a field battle his commandership is CK3's AI's choice --
+		# which is why the knight arm below is load-bearing, not belt-and-braces.
 		exists = enemy_side
 		enemy_side = {
 			OR = {
-				AND = {
-					exists = side_commander
-					side_commander = { has_trait = nightking }
-				}
-				AND = {
-					exists = side_primary_participant
-					side_primary_participant = { has_trait = nightking }
-				}
+				any_side_commander = { has_trait = nightking }
+				any_side_knight = { has_trait = nightking }
 			}
 		}
 
@@ -85,17 +96,24 @@ ln_dawn.1 = {
 		# Re-arming by removing ln_dawn_offered is this file's established idiom, not a new mechanism: see
 		# ln_dawn.2's option b at :433 and ln_dawn.4 at :543.
 		set_global_variable = { name = ln_dawn_scene_pending  value = yes }
+		debug_log = "LN_TRACE DAWN: the killing-blow director fired - the field scene is armed and queued for tomorrow"
 
+		# 1.0.16a -- AND THE SCOPE MUST FOLLOW THE TRIGGER. The trigger above now admits him as a KNIGHT as
+		# well as a commander; the old `else` here grabbed side_primary_participant, which is the side's owner
+		# and need not be him. Every branch below now saves the man the trigger actually matched.
 		enemy_side = {
 			if = {
-				limit = {
-					exists = side_commander
-					side_commander = { has_trait = nightking }
+				limit = { any_side_commander = { has_trait = nightking } }
+				random_side_commander = {
+					limit = { has_trait = nightking }
+					save_scope_as = ln_night_king
 				}
-				side_commander = { save_scope_as = ln_night_king }
 			}
 			else = {
-				side_primary_participant = { save_scope_as = ln_night_king }
+				random_side_knight = {
+					limit = { has_trait = nightking }
+					save_scope_as = ln_night_king
+				}
 			}
 		}
 
@@ -158,8 +176,12 @@ ln_dawn.2 = {
 				trigger = { has_character_flag = ln_forged_lightbringer }
 				desc = ln_dawn.2.desc.lightbringer
 			}
+			# ⚠ 1 Sep PLAYTEST FIX -- THE WALL. This fired on ln_rides_a_living_dragon_trigger alone, so a
+			# rider who cornered him on the Desolate Field was told his dragon was overhead "turning the
+			# frost to fog for a hundred yards in every direction" -- on the wrong side of the one ward in
+			# the world she will not cross. The card contradicted the mod's own best piece of book lore.
 			triggered_desc = {
-				trigger = { ln_rides_a_living_dragon_trigger = yes }
+				trigger = { ln_dragon_is_over_the_field_trigger = yes }
 				desc = ln_dawn.2.desc.dragon
 			}
 			triggered_desc = {
@@ -180,6 +202,17 @@ ln_dawn.2 = {
 				trigger = { ln_is_a_champion_of_rhllor_trigger = yes }
 				desc = ln_dawn.2.desc.named
 			}
+			# The other half of the Wall rule. You have a dragon; she is a hundred leagues south of here
+			# because she would not come. Deliberately the LAST armament branch: a rider who ALSO carries
+			# Valyrian steel or obsidian is told about the thing that is actually in his hand, because that
+			# is the thing that can hurt him. This branch only catches the man whose dragon was the plan.
+			triggered_desc = {
+				trigger = {
+					ln_rides_a_living_dragon_trigger = yes
+					ln_dragon_is_over_the_field_trigger = no
+				}
+				desc = ln_dawn.2.desc.dragon_refused
+			}
 			# -- AND WHETHER YOU HAVE BEEN HERE BEFORE ------------------------------------------------
 			# Deliberately UNDER every armament branch: a man holding Lightbringer should be told about
 			# Lightbringer, not about his memoirs. These catch the man holding nothing -- who until today
@@ -190,8 +223,12 @@ ln_dawn.2 = {
 			# currently flying for the other side, are not carrying the same thing into this.
 			# ln_survived_the_spear was set by ln_spear.1 and read by nothing until now.
 			triggered_desc = {
-				trigger = { has_character_flag = ln_survived_the_spear }
+				trigger = { has_character_flag = ln_survived_the_spear  exists = scope:ln_spear_dragon }
 				desc = ln_dawn.2.desc.spear
+			}
+			triggered_desc = {
+				trigger = { has_character_flag = ln_survived_the_spear }
+				desc = ln_dawn.2.desc.spear_unnamed
 			}
 			triggered_desc = {
 				trigger = { has_character_flag = ln_faced_him_and_lived }
@@ -207,7 +244,12 @@ ln_dawn.2 = {
 	theme = murder_scheme
 	override_background = { reference = agot_frozen_forest }
 	left_portrait = { character = root  animation = personality_bold }
-	right_portrait = { trigger = { exists = scope:ln_night_king }   character = scope:ln_night_king  animation = disbelief }
+	# ⚠ ANIMATION: personality_callous, NOT disbelief. 1 Sep playtest, Thomas: "maybe you don't have the
+	# Night King showing panic. He's supposed to be in a way emotionless, and he's supposed to be looking
+	# at you sternly as if a human could do all of this." disbelief plays as a man who cannot believe what
+	# he is seeing -- a human reaction, and the one thing this character has never had. personality_callous
+	# is the cold, unmoved stance (verified present in game/gfx/portraits/portrait_animations/animations.txt).
+	right_portrait = { trigger = { exists = scope:ln_night_king }   character = scope:ln_night_king  animation = personality_callous }
 
 	trigger = {
 		is_alive = yes
@@ -225,6 +267,16 @@ ln_dawn.2 = {
 			limit = { has_global_variable = ln_dawn_scene_pending }
 			remove_global_variable = ln_dawn_scene_pending
 		}
+		# 1 Sep -- THE REFUSED-DRAGON CARD NEEDS THE ANIMAL BY NAME. ln_dawn.2.desc.dragon_refused was
+		# written with "she", and AGOT's dragons are not all female -- Thomas: "not all dragons are girls,
+		# and if you're going to reference the sex you need to make sure there's cases for that." The scope
+		# lets the text use the name and the engine's own pronoun tokens instead of guessing. Guarded with
+		# ?= because most men who read this card have no dragon at all and the branch simply will not run.
+		var:current_dragon ?= { save_scope_as = ln_dawn_dragon }
+		# 1.1.0 (B6): the spear survivor's card names the dragon the dead took from him. Banked on him in
+		# ln_spear.1.a; absent on saves from before 1.1.0, which is why desc.spear is gated on the scope and
+		# desc.spear_unnamed exists.
+		var:ln_dragon_taken_from_me ?= { save_scope_as = ln_spear_dragon }
 	}
 
 	# ── END IT. The roll is the tiering: what you brought is the whole of your chance.
@@ -235,6 +287,8 @@ ln_dawn.2 = {
 		# `factor = 0` would fight the `min` floor below. Option-level is also the better read: the man
 		# who cannot hurt it does not get offered the swing, he gets ln_dawn.2.d.
 		trigger = { ln_bears_the_bane_trigger = yes }
+		# 1.1.0 (§7): THE door -- every unarmed player sees what forty years of preparation would have bought.
+		show_as_unavailable = { always = yes }
 		# ══ 1.0.15 -- A REAL DUEL, ON THE ENGINE'S OWN DUELLING MECHANIC. ══════════════════════════════════
 		# Thomas asked the right question: "did you build that Night King duel? Was it mirrored off vanilla
 		# duelling? Can somebody with an inferior prowess possibly gain the upper hand? Is it all prowess
@@ -384,8 +438,49 @@ ln_dawn.2 = {
 	# ── CHARGE HIM ANYWAY. The only swing a baneless man has, and it is not a roll -- it is the answer to
 	# the question the card already asked him. He reaches ln_dawn.4 exactly as a man who fought and lost
 	# does, which is also what re-arms the wave's one scene for the day he comes back armed.
+	# ── 1.1.0 (§3) -- THE MELEE. "You and some other people versus the Night King and a couple of White
+	# Walkers." The single duel above stays exactly as it was -- this is the second road: draft a line by
+	# relevance (no knight gate, no religion gate -- Jon Snow was not a knight, Rhaenyra was not a knight),
+	# and take him together, on AGOT's multi-duel engine. Player-only: the melee is a scene, and the AI
+	# already has its own doors on this card. The draft happens on the CLICK, not in immediate -- a player
+	# who takes the single duel or walks away must not have had six men quietly flagged for a line that
+	# never formed.
+	option = {
+		name = ln_dawn.2.e
+		trigger = { is_ai = no }
+		# ⚠ hidden_effect IS THE PERFORMANCE FIX, not cosmetics. CK3 rebuilds an option's tooltip every
+		# frame the card is open, and that build EXECUTES the effect chain for display -- the draft
+		# (every_character_in_location + a dozen relevance orderings) ran per frame and took the game to
+		# 2 FPS on the 1 Sep boot. hidden_effect is excluded from tooltip builds; the custom_tooltip
+		# line says what the click does instead.
+		custom_tooltip = ln_dawn.2.e_tt
+		hidden_effect = {
+			ln_draft_the_last_hour_line_effect = yes
+			ln_build_their_line_effect = yes
+			# Same tick, not days = 1: a delayed card whose trigger then fails (the Night King dying in
+			# the window) would leak every created Walker the line above just drafted -- rule 15 has no
+			# second chance on an event that never fires.
+			trigger_event = ln_lasthour.1
+		}
+		# ⚠ MULTIPLAYER, and this is not cosmetic. Thomas, 1 Sep: "will this work during multiplayer play?
+		# Because it won't be paused. Will options automatically get selected?"
+		#
+		# THE VERIFIED ANSWER: yes, they will. MULTIPLAYER_EVENT_TIME_OUT = 90 (game/common/defines/00_defines.txt:13,
+		# "how many days an event in multiplayer will be around before auto-selecting an option"), and the
+		# auto-selection goes by ai_chance weight. An option with NO ai_chance block defaults to 100 -- which
+		# made this, the option that commits you and five other men to a melee against the Night King, by far
+		# the heaviest door on the card: 100 against option a's ~10 base, c's 60, d's 30 and b's 5. A co-op
+		# partner who stepped away from the keyboard for three in-game months was going to be marched into the
+		# Last Hour by the timeout. The melee is a scene a player CHOOSES; it is never what happens to someone
+		# who was not looking. Weighted below walking away on purpose.
+		ai_chance = {
+			base = 1
+		}
+	}
+
 	option = {
 		name = ln_dawn.2.d
+		# 1.1.0 (§7): no show_as_unavailable here, deliberately -- mirror of 2.a (bane = no): when you HAVE the bane the empty-handed branch is not a thing you lack.
 		trigger = { ln_bears_the_bane_trigger = no }
 		custom_tooltip = ln_dawn.2.d_tt
 
@@ -422,6 +517,8 @@ ln_dawn.2 = {
 			# not put obsidian in your hand.
 			ln_bears_the_bane_trigger = yes
 		}
+		# 1.1.0 (§7): bane clause kept, the gift dropped: an armed man without greensight sees the seer door greyed.
+		show_as_unavailable = { ln_bears_the_bane_trigger = yes }
 		custom_tooltip = ln_dawn.2.c_tt
 		random_list = {
 			10 = {
@@ -518,6 +615,8 @@ ln_dawn.3 = {
 	immediate = {
 		play_music_cue = "mood_the_others"
 		scope:ln_night_king = {
+			# 1.1.0b -- THE STAMP MUST GO ON BEFORE THE BLOW. See ln_mark_the_sanctioned_kill_effect.
+			ln_mark_the_sanctioned_kill_effect = yes
 			death = {
 				death_reason = death_the_dawn
 				killer = root
@@ -575,6 +674,36 @@ ln_dawn.4 = {
 		}
 		if = {
 			limit = { exists = scope:ln_dawn_shield }
+			# ── 1.1.0b: THE DEBT, BANKED BEFORE THE BLOW. ────────────────────────────────────────────
+			# ln_saved_by_kin_memory and ln_saved_by_a_friend_memory have shipped since the melee pass
+			# with icons, participants and finished localization, and nothing in the mod had ever fired
+			# either of them. This is the beat they were written for: a specific named man steps into a
+			# blow meant for you and dies of it. The participant tag also makes him unpruneable, so the
+			# entry still names him correctly a century later.
+			# Only kin and actual friends -- the friend text says "no oath required it", which is not true
+			# of an ordinary sworn knight, and a memory that lies is worse than one that is missing. The
+			# moment itself is recorded for root either way, one line below.
+			if = {
+				limit = { scope:ln_dawn_shield = { is_close_family_of = root } }
+				create_character_memory = {
+					type = ln_saved_by_kin_memory
+					participants = { target0 = scope:ln_dawn_shield }
+				}
+			}
+			else_if = {
+				limit = {
+					scope:ln_dawn_shield = {
+						OR = {
+							has_relation_friend = root
+							has_relation_best_friend = root
+						}
+					}
+				}
+				create_character_memory = {
+					type = ln_saved_by_a_friend_memory
+					participants = { target0 = scope:ln_dawn_shield }
+				}
+			}
 			scope:ln_dawn_shield = {
 				add_character_flag = ln_stood_at_the_dawn
 				death = { death_reason = death_the_dawn  killer = scope:ln_night_king }
@@ -585,6 +714,11 @@ ln_dawn.4 = {
 			increase_wounds_no_death_effect = { REASON = death_wounds }
 		}
 		add_character_flag = ln_faced_him_and_lived
+		# 1.1.0b -- ln_faced_the_night_king_memory has existed since the melee pass and fired ONLY from
+		# the Last Hour route (zz_ln_last_hour_effects.txt:890, :907), so the man who met him in single
+		# combat -- the loudest scene in the mod, and the one that hands out nick_the_undaunted -- was
+		# the one route that recorded nothing. Same memory, same sentence, both roads.
+		create_character_memory = { type = ln_faced_the_night_king_memory }
 		# ── 1.0.15c REVIEW FIND: AN UNARMED ATTEMPT MUST NOT SPEND THE WAVE'S ONE SCENE. ────────────
 		# ln_dawn.1 offers this once per wave (ln_dawn_offered, cleared only by the Cycle re-arm). With
 		# the bane rule in place, a man who beats the host while carrying nothing that can hurt the King
@@ -661,7 +795,12 @@ ln_dawn.11 = {
 	theme = murder_scheme
 	override_background = { reference = agot_frozen_forest }
 	left_portrait = { character = root  animation = personality_bold }
-	right_portrait = { trigger = { exists = scope:ln_night_king }  character = scope:ln_night_king  animation = disbelief }
+	# ⚠ ANIMATION: personality_callous, NOT disbelief. 1 Sep playtest, Thomas: "maybe you don't have the
+	# Night King showing panic. He's supposed to be in a way emotionless, and he's supposed to be looking
+	# at you sternly as if a human could do all of this." disbelief plays as a man who cannot believe what
+	# he is seeing -- a human reaction, and the one thing this character has never had. personality_callous
+	# is the cold, unmoved stance (verified present in game/gfx/portraits/portrait_animations/animations.txt).
+	right_portrait = { trigger = { exists = scope:ln_night_king }  character = scope:ln_night_king  animation = personality_callous }
 
 	trigger = {
 		is_alive = yes
@@ -713,6 +852,8 @@ ln_dawn.11 = {
 		# The worthiness ordering weights a bane-bearer +1000 so this option is almost always available to
 		# the man the story picked; when nobody in the realm carries one, ln_dawn.11.c below is what is left.
 		trigger = { ln_bears_the_bane_trigger = yes }
+		# 1.1.0 (§7): as ln_dawn.2.a.
+		show_as_unavailable = { always = yes }
 
 		duel = {
 			skill = prowess
@@ -742,6 +883,8 @@ ln_dawn.11 = {
 				# Banked before the blow, per the standing ordering rule: nothing after this line reads
 				# him alive.
 				scope:ln_night_king = {
+					# 1.1.0b -- the stamp goes on before the blow. See ln_mark_the_sanctioned_kill_effect.
+					ln_mark_the_sanctioned_kill_effect = yes
 					death = {
 						death_reason = death_the_dawn
 						killer = root
@@ -781,6 +924,10 @@ ln_dawn.11 = {
 				# Review find: this is what stops ln_dawn.12 from quietly finishing the job for him on
 				# day 14 and recording him as the man who did it. See that event's trigger.
 				add_character_flag = ln_lost_the_last_hour
+				# 1.1.0b -- and he still stood against him. The world had named him, the ordering picked
+				# him, he walked into the reach of a bound king and was carried out. Two character flags
+				# nobody ever reads was the whole record of that.
+				create_character_memory = { type = ln_faced_the_night_king_memory }
 				add_stress = medium_stress_impact_gain
 
 				# Hand the hour on, through the same door option B uses. If the ordering never produced a
@@ -813,6 +960,8 @@ ln_dawn.11 = {
 			NOT = { has_global_variable = ln_dawn_deferred }
 			NOT = { global_var:ln_dawn_second_champion ?= root }
 		}
+		# 1.1.0 (§7): greyed when no second champion stands behind you -- the line teaches that one could.
+		show_as_unavailable = { NOT = { has_global_variable = ln_dawn_deferred } }
 		set_global_variable = { name = ln_dawn_deferred  value = yes }
 		# The this-pattern, same as the reveal's knight stamps: scope in, then write the global off it.
 		global_var:ln_dawn_second_champion ?= {
@@ -830,6 +979,7 @@ ln_dawn.11 = {
 	# knows exactly what it must find before it can finish this.
 	option = {
 		name = ln_dawn.11.c
+		# 1.1.0 (§7): no show_as_unavailable here, deliberately -- mirror of 11.a (bane = no), as 2.d above.
 		trigger = { ln_bears_the_bane_trigger = no }
 		custom_tooltip = ln_dawn.11.c_tt
 
@@ -905,6 +1055,8 @@ ln_dawn.12 = {
 			limit = { ln_bears_the_bane_trigger = yes }
 			debug_log = "LN_TRACE ENDGAME FAILSAFE: the scene was lost - the leader finishes it"
 			global_var:ln_dawn_cornered_king ?= {
+				# 1.1.0b -- the stamp goes on before the blow. See ln_mark_the_sanctioned_kill_effect.
+				ln_mark_the_sanctioned_kill_effect = yes
 				death = {
 					death_reason = death_the_dawn
 					killer = root
@@ -951,13 +1103,80 @@ ln_dawn.12 = {
 ln_dawn.20 = {
 	type = character_event
 	title = ln_dawn.20.t
+	# ── AND WHETHER YOU KNEW IT (1.1.0, 1 Sep) ─────────────────────────────────────────────────────────
+	# Thomas, after putting down a night's worth of them: "is there any chance for custom localization for
+	# the put to the sword every time you capture a wight? If you have any kind of relationship -- best
+	# friend, lover -- I think it'd be really cool to have some unique localization within the event window
+	# that changes based on [who it is]."
+	#
+	# A SECOND STACKED DESC, appended under whichever of the two base cards ran. Four short paragraphs
+	# instead of eight full rewrites, and the base text cannot drift out of step with them.
+	#
+	# ⚠ 1.1.0b -- IT SHIPPED AS TWO SEPARATE TOP-LEVEL `desc = { }` BLOCKS AND THE ENGINE REFUSED IT.
+	# Thomas's live error.log, 1 Sep:
+	#     [E][jomini_dynamicdescription.cpp:28]: There should be only one special desc.
+	#         file: events/zz_ln_dawn_events.txt line: 1113 (ln_dawn.20)
+	#     [E][pdx_persistent_reader.cpp:216]: "Scoped pointer has already been read in: desc"
+	#     [E][pdx_persistent_reader.cpp:216]: "Unexpected token: theme"
+	#     [E][pdx_persistent_reader.cpp:216]: "Unexpected token: left_portrait"
+	# So the second block was dropped AND the parse cascade ate this event's theme and both portraits with
+	# it -- the relationship paragraph never rendered and the card lost its dungeon background and its faces.
+	# An event takes exactly ONE top-level desc; stacking happens INSIDE it, as nested `desc` children
+	# that concatenate. That is what ln_reveal.9 and ln_opening.6 actually do, and what this now does.
+	#
+	# ORDER IS PRIORITY, closest bond first: a wife who is also a friend is a wife. The empty fallback is a
+	# real key rather than an omission, because a first_valid that matches nothing is a silent render and
+	# this file has been bitten by silent renders before.
+	#
+	# THE OTHER SIDE OF §4. This is not only about wights any more. ln_lasthour.30 takes a defeated champion
+	# and makes him one of THEM, still landed in the dead's host -- so the thing in your cells can now be a
+	# man who was your best friend and is now a White Walker, and the card will say so.
 	desc = {
+		# The card itself: wight or Walker.
+		desc = {
+			first_valid = {
+				triggered_desc = {
+					trigger = { scope:ln_captured_other ?= { has_trait = wight_trait } }
+					desc = ln_dawn.20.desc.wight
+				}
+				desc = ln_dawn.20.desc.other
+			}
+		}
+		# And then the paragraph about who it was.
+		desc = {
 		first_valid = {
 			triggered_desc = {
-				trigger = { scope:ln_captured_other ?= { has_trait = wight_trait } }
-				desc = ln_dawn.20.desc.wight
+				trigger = { scope:ln_captured_other ?= { is_spouse_of = root } }
+				desc = ln_dawn.20.desc.knew_spouse
 			}
-			desc = ln_dawn.20.desc.other
+			triggered_desc = {
+				trigger = {
+					scope:ln_captured_other ?= {
+						OR = {
+							has_relation_lover = root
+							has_relation_soulmate = root
+						}
+					}
+				}
+				desc = ln_dawn.20.desc.knew_lover
+			}
+			triggered_desc = {
+				trigger = { scope:ln_captured_other ?= { is_close_family_of = root } }
+				desc = ln_dawn.20.desc.knew_blood
+			}
+			triggered_desc = {
+				trigger = {
+					scope:ln_captured_other ?= {
+						OR = {
+							has_relation_best_friend = root
+							has_relation_friend = root
+						}
+					}
+				}
+				desc = ln_dawn.20.desc.knew_friend
+			}
+			desc = ln_dawn.20.desc.knew_nobody
+		}
 		}
 	}
 	theme = dungeon
@@ -982,8 +1201,12 @@ ln_dawn.20 = {
 	option = {
 		name = ln_dawn.20.a
 		scope:ln_captured_other = {
+			# 1.1.0 tuning (Thomas, live): death_execution routes through the engine's execution machinery,
+			# which grants rank-scaled dread on top of ours -- +25 for a captured wight LORD, per corpse.
+			# Putting down meat that will not stop moving is not a lord's execution; the cold reclaims its
+			# own, the killer is still named, and the dread is only the deliberate +10 below.
 			death = {
-				death_reason = death_execution
+				death_reason = death_claimed_by_cold
 				killer = root
 			}
 		}
@@ -996,6 +1219,7 @@ ln_dawn.20 = {
 	# nobody keeps that. The realm learns what you hold; your hall never quite warms again.
 	option = {
 		name = ln_dawn.20.b
+		# 1.1.0 (§7): no show_as_unavailable here, deliberately -- scope plumbing: no captured Other means nothing to point the option at.
 		trigger = { scope:ln_captured_other ?= { has_trait = other_trait } }
 		add_character_modifier = {
 			modifier = ln_cold_trophy_modifier

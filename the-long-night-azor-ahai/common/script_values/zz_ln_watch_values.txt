@@ -36,3 +36,18 @@ ln_watch_recovered_value = {
 	value = global_var:ln_watch_peak
 	multiply = 0.85
 }
+
+# ── HOW MANY OF THEM WOULD TAKE THE BLACK (1.0.16a) ────────────────────────────────────────────────────
+# Root = the gaoler. Feeds the decision's tooltip so the answer to "who can I send?" is a NUMBER before you
+# click, not a discovery afterwards. 1.1.0 (B1): it was defined and READ NOWHERE for two versions -- now read
+# by ln_send_the_dungeons_to_the_wall_effect_tt as [ROOT.Char.MakeScope.ScriptValue(...)|0], vanilla's idiom. Iterating inside a script value is vanilla's own idiom -- see
+# fp3_persia_supporter_rulers_count_value, game/common/script_values/00_dlc_fp3_script_values.txt:100-108.
+ln_prisoners_fit_for_the_wall_value = {
+	value = 0
+	every_prisoner = {
+		# 1.1.0 (§10): may_be_sent, in step with the decision's own limit -- the number shown must be the
+		# number sent. If these two triggers ever diverge the tooltip lies.
+		limit = { ln_prisoner_may_be_sent_to_the_wall_trigger = yes }
+		add = 1
+	}
+}

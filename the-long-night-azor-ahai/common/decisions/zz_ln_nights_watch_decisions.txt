@@ -7,6 +7,151 @@
 # scripted title grant provides neither. AGOT already ships eighteen keepership court positions that do the
 # whole thing correctly, so this decision now walks a man through their door instead of cutting its own.
 
+# ══ SEND THE DUNGEONS TO THE WALL (1.0.16a) ══════════════════════════════════════════════════════════════
+# Thomas asked for a MASS send-to-the-Night's-Watch beside the prisoner window's mass ransom / release /
+# execute. That is not buildable, and the reason is worth writing down so nobody spends a night on it again:
+# those three buttons are hardcoded C++ calls -- gui/window_court.gui:841-891,
+# `[CourtWindow.MassPrisonerAction('ransom')]` and its two siblings. There is no fourth string, no
+# character_interaction field that opts an interaction into mass mode, and Mass Release runs with ALL
+# sixteen of its send_options switched OFF (that is what "without demanding anything in return" means in
+# MASS_PRISONER_ACTION_RELEASE_TT), so AGOT's own Send to the Wall can never fire through it.
+#
+# A decision is the only batch mechanism the engine leaves open to script -- and the wheel already exists in
+# this mod: ln_lc.10 option a (events/zz_ln_lord_commander_events.txt:240-277) is this exact every_prisoner
+# loop, from the Watch's side. This is that loop from the other side of the Wall, made a player's door.
+#
+# AND IT ANSWERS THE REAL QUESTION. Thomas: "I honestly never know who I can send." The count is in the
+# tooltip before you click, and the three conditions that block every prisoner at once each get their own
+# line. See the block comment on ln_prisoner_fit_for_the_wall_trigger for why AGOT gives you none of that.
+#
+# IT IS AN ORDER, NOT AN OFFER, and that is a deliberate departure. AGOT's send_option routes through a
+# negotiated release the prisoner can refuse at -75 base acceptance (00_prison_interactions.txt:6793). A
+# man in your dungeon being marched to the Wall does not get a vote, and a mass action that silently
+# half-worked would be worse than no mass action.
+# ⚠ 1.1.0 (§10.3): the DISPLAYED name is now "Send the Prisoners to the Wall". The internal key below
+# deliberately still says "dungeons" -- renaming a decision key breaks saves and every reference. Change
+# only loc. Do not "fix" the mismatch.
+ln_send_the_dungeons_to_the_wall_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_prison.dds" }
+
+	# 1.1.0 (§12): the base desc already speaks the south's truth out loud ("the south keeps its hands
+	# clean, and the north gets bodies"). The North gets its own, because a Stark emptying his cells
+	# northward is not dumping -- he is manning his own shield.
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					OR = {
+						culture = culture:northman
+						capital_province ?= { geographical_region = world_westeros_the_north }
+					}
+				}
+				desc = ln_send_the_dungeons_to_the_wall_decision_desc_north
+			}
+			desc = ln_send_the_dungeons_to_the_wall_decision_desc
+		}
+	}
+	selection_tooltip = ln_send_the_dungeons_to_the_wall_decision_tt
+	confirm_text = ln_send_the_dungeons_to_the_wall_decision_confirm
+
+	decision_group_type = major
+	ai_check_interval = 0        # never AI. AGOT's own per-prisoner option already covers the AI's needs.
+
+	is_shown = {
+		is_ai = no
+		# Shown whenever you are holding anyone, EVEN IF NOBODY IS ELIGIBLE -- that is the whole point. A
+		# hidden decision teaches a player nothing; a visible one with a reason teaches him the rule once.
+		any_prisoner = { is_alive = yes }
+	}
+
+	is_valid = {
+		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
+		# hitting. This decision can be taken from the field -- your castellan empties the cells on your written order. The vanilla ladder's
+		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
+		is_available_adult_or_is_commanding = yes
+
+		custom_description = {
+			text = ln_wall_you_are_of_the_free_folk
+			culture = { agot_is_wildling_culture = no }
+		}
+		custom_description = {
+			text = ln_wall_your_seat_is_not_in_the_seven_kingdoms
+			primary_title ?= {
+				title_capital_county.title_province = {
+					geographical_region = world_westeros_seven_kingdoms
+				}
+			}
+		}
+		custom_description = {
+			text = ln_wall_there_is_no_watch_left
+			ln_a_watch_still_stands_trigger = yes
+		}
+		custom_description = {
+			text = ln_wall_none_of_them_will_serve
+			# 1.1.0 (§10): may_be_sent, not fit -- fit never asked who the prisoner IS to you. See the
+			# trigger's block comment for the captured-king defect this closes.
+			any_prisoner = { ln_prisoner_may_be_sent_to_the_wall_trigger = yes }
+		}
+	}
+
+	effect = {
+		save_scope_as = ln_the_gaoler
+		custom_tooltip = ln_send_the_dungeons_to_the_wall_effect_tt
+
+		every_prisoner = {
+			limit = { ln_prisoner_may_be_sent_to_the_wall_trigger = yes }
+			save_scope_as = ln_wall_recruit
+
+			# ══ AGOT HAS THE FINAL SAY. ═══════════════════════════════════════════════════════════════════
+			# The limit above is OUR mirror, which exists so the tooltip can name a reason. This is AGOT's
+			# own trigger, called the way every AGOT caller calls it, and it is what actually authorises the
+			# sending. If their rules ever diverge from our mirror we simply send fewer men than we listed --
+			# never a man they would have refused. That is the safe direction.
+			if = {
+				limit = { agot_nw_can_banish = { BANISHER = scope:ln_the_gaoler  BANISHEE = scope:ln_wall_recruit } }
+
+				release_from_prison = yes
+				agot_add_to_nightswatch_effect = yes
+
+				# The court move, exactly as ln_lc.10 does it and for the same reason brindatm found in 1.0.6:
+				# agot_add_to_nightswatch_effect grants the trait and strips claims but has NEVER moved anybody.
+				# AGOT's own control case pairs it with add_courtier on the Lord Commander, so we do too --
+				# MINUS their per-man agot_nights_watch.0100 notification, which would card a player Lord
+				# Commander once per prisoner. From his court the yearly ln_allocate_brothers_effect sweep
+				# posts them on to whichever company is thinnest.
+				if = {
+					limit = {
+						exists = title:k_the_wall.holder
+						NOT = { this = title:k_the_wall.holder }
+					}
+					title:k_the_wall.holder = { add_courtier = scope:ln_wall_recruit }
+				}
+			}
+		}
+
+		add_piety = 100
+		# 1.0.15d's lesson, carried: k_the_wall can stand without a holder, and an unguarded reach through it
+		# threw "Undefined event target 'title'" ten times in one run.
+		#
+		# 1.0.17 -- AND THE SECOND HALF OF THAT LESSON, WHICH THIS SITE WAS SHIPPED WITHOUT. is_shown here
+		# is `is_ai = no` plus `any_prisoner`, and nothing in it excludes the Lord Commander -- a player LC
+		# holding prisoners is an ordinary case, not an exotic one. When he takes this decision the giver
+		# and the receiver are the same man, so reverse_add_opinion errors with "trying to add an opinion
+		# of themself" and the Wall's gratitude is silently dropped after the men have already been sent.
+		# Confirmed live in the same shape at events/zz_ln_watch_events.txt:255 on 30 Aug.
+		if = {
+			limit = {
+				exists = title:k_the_wall.holder
+				NOT = { this = title:k_the_wall.holder }
+			}
+			reverse_add_opinion = {
+				modifier = ln_fed_the_watch_opinion
+				target = title:k_the_wall.holder
+			}
+		}
+	}
+}
+
 ln_man_an_empty_castle_decision = {
 	picture = { reference = "gfx/interface/illustrations/decisions/decision_castle_view.dds" }
 
@@ -26,7 +171,10 @@ ln_man_an_empty_castle_decision = {
 	}
 
 	is_valid = {
-		is_available = yes
+		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
+		# hitting. This decision can be taken from the field -- an order to a garrison. The vanilla ladder's
+		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
+		is_available_adult_or_is_commanding = yes
 
 		# A CASTLE HAS TO BE AVAILABLE -- which is not the same as standing empty, and the difference matters
 		# more than I realised until I counted. AGOT's own history fills fifteen of sixteen Wall baronies by
@@ -181,7 +329,10 @@ ln_rebuild_the_castle_decision = {
 	}
 
 	is_valid = {
-		is_available = yes
+		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
+		# hitting. This decision can be taken from the field -- you are paying, not laying stone. The vanilla ladder's
+		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
+		is_available_adult_or_is_commanding = yes
 		custom_description = {
 			text = ln_rebuild_needs_the_coin
 			gold >= 400

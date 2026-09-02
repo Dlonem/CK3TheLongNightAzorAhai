@@ -64,5 +64,39 @@ ln_spear_hit_chance_value = {
 	# header warns about.
 	if = { limit = { scope:ln_spear_beyond_the_wall = 1 }  add = 12 }
 
+	# ── AND IF HE DRAGGED HER OVER AN INTACT WALL, IT IS BARELY A THROW (1.1.0, 1 Sep) ──────────────────
+	# Thomas: "if you take your dragon north of the wall while the wall is still standing and you try to
+	# fight the Night King, that would essentially be giving the Night King a free dragon."
+	#
+	# THE FICTION AND THE NUMBER AGREE HERE. The ward is what a Valyrian dragon will not cross; a rider who
+	# overrode that has carried a fire-thing over the one line built to keep fire out, into the only sky
+	# that has ever belonged to the dead. +60 on top of the +12 for merely being up there takes even a
+	# Balerion from 17 to 77 and a hatchling past the ceiling. It is not a certainty -- the songs need the
+	# occasional man who got away with it -- but it is the worst odds in the mod, by design and by choice.
+	#
+	# GATED ON THE WALL STILL STANDING. Once it is broken the ward is gone, she can fly up there like
+	# anywhere else, and this stops being a transgression -- so the term stops applying. Same condition
+	# ln_dragon_is_over_the_field_trigger reads, from the same latch.
+	#
+	# The rider scope is guarded rather than assumed: this file's own header warns that a script value
+	# reaching for a scope its caller may not have set is a silent zero, and silent zeros in THIS value
+	# would quietly hand every forced dragon back to its rider.
+	#
+	# ⚠ AND IT IS A PLACE, NOT A BRAND. Thomas: "make sure you have that getting removed when you come back
+	# down below the wall -- that's just a temporary value." The flag on the rider is permanent (it is a
+	# decision he made and the refusal never asks him again), but this TERM is gated on the fight actually
+	# being up there: scope:ln_spear_beyond_the_wall is banked from combat.location in
+	# ln_find_a_dragonrider_effect, per combat. Fly her home and fight in the Riverlands and the +60 is
+	# simply not in the sum -- there is no state to clean up and no pulse that could forget to.
+	if = {
+		limit = {
+			scope:ln_spear_beyond_the_wall = 1
+			exists = scope:ln_spear_rider
+			scope:ln_spear_rider = { has_character_flag = ln_forced_her_over }
+			ln_the_wall_is_breached_trigger = no
+		}
+		add = 60
+	}
+
 	min = 5
 }

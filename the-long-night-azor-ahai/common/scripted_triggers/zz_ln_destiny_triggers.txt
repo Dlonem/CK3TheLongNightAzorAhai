@@ -102,7 +102,19 @@ ln_bears_the_bane_trigger = {
 		has_character_flag = ln_forged_lightbringer
 		has_character_flag = ln_the_star_paid_for_it
 
-		ln_rides_a_living_dragon_trigger = yes
+		# ⚠ 1 Sep -- THE WALL CASCADE, approved by Thomas: "I think you should do the dragon bane cascade."
+		# This clause used to be ln_rides_a_living_dragon_trigger, which asks whether the man HAS a dragon.
+		# Beyond the Wall that is the wrong question: she would not cross, so the one thing he brought that
+		# could end the Night King is a hundred leagues south of the field, and the card was still offering him
+		# the winning swing. ln_dragon_is_over_the_field_trigger asks whether she is actually HERE, and it opens
+		# again the moment the dead hold a piece of the Wall and the ward fails.
+		#
+		# WHAT THIS COSTS A TARGARYEN, stated plainly because it is a real loss: a rider whose ONLY bane is his
+		# dragon can no longer kill the Night King north of an intact Wall. He reads ln_dawn.2.desc.dragon_refused,
+		# which says exactly that, and he is offered option d -- go out there anyway. He fixes it by bringing
+		# obsidian or Valyrian steel, by forcing the fight south of the Wall, or by waiting for the Wall to
+		# break. All three are the story this mod exists to tell, and none of them was reachable before.
+		ln_dragon_is_over_the_field_trigger = yes
 	}
 }
 
@@ -139,7 +151,9 @@ ln_carries_only_dragonglass_trigger = {
 		has_character_modifier = ln_valyrian_armed_modifier
 		has_character_flag = ln_forged_lightbringer
 		has_character_flag = ln_the_star_paid_for_it
-		ln_rides_a_living_dragon_trigger = yes
+		# Same cascade as ln_bears_the_bane_trigger: a dragon that could not cross the Wall is not a better
+		# answer than obsidian on a field she is not over, so her rider takes the glass-only penalty there.
+		ln_dragon_is_over_the_field_trigger = yes
 	}
 }
 

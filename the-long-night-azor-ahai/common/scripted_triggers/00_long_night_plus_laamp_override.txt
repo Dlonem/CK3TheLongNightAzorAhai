@@ -1,7 +1,10 @@
 ﻿# The Long Night+ — override of AGOT's ai_can_valid_to_create_laamp_trigger.
 # The Others and their wights must NEVER become independent landless adventurers: they remain
 # bound to the Night King. We copy AGOT's definition verbatim (00_laamp_triggers.txt) and append
-# an exclusion for other_trait / wight_trait. Our mod loads after AGOT, so this definition wins.
+# an exclusion for other_trait / wight_trait. This definition wins by FILENAME ORDER, not mod load order:
+# the engine settles same-key scripted_triggers by parse order inside the merged folder, and
+# 00_long_night_plus_... sorts after AGOT's 00_laamp_triggers.txt ("00_lo" > "00_la"). Confirmed winning in
+# database_conflicts.log, 2 Sep 2026 boot. Rename this file to anything sorting before 00_laamp and it loses.
 # NOTE: if AGOT changes the base trigger, re-sync this copy.
 ai_can_valid_to_create_laamp_trigger = {
 	save_temporary_scope_as = char_temp

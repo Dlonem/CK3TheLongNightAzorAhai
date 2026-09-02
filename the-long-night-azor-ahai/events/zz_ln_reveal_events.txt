@@ -93,6 +93,17 @@ ln_reveal.1 = {
 			limit = { exists = global_var:ln_last_dawn_dragon }
 			global_var:ln_last_dawn_dragon = { save_scope_as = ln_dawn_dragon }
 		}
+
+		# 1.1.0b -- THE RECORD FOR EVERYBODY ELSE. Before this, exactly four people in the world came out
+		# of a won Long Night with anything on their page: the slayer and the three knights of the roll
+		# call. Every other king who had fought the whole war from the first snow finished it with a
+		# character sheet indistinguishable from a save where none of it happened. This card is sent to
+		# every living player, which makes its immediate the one place that is true of all of them.
+		# The slayer is skipped: he has ln_slew_the_night_king_memory, which says more.
+		if = {
+			limit = { NOT = { this ?= scope:ln_slayer } }
+			create_character_memory = { type = ln_lived_to_see_the_dawn_memory }
+		}
 	}
 
 	option = {
@@ -181,12 +192,24 @@ ln_reveal.9 = {
 
 	option = {
 		name = ln_reveal.9.a          # write it down. all of it.
+		ai_chance = {
+			base = 70
+			modifier = { add = 25  has_trait = diligent }
+			modifier = { add = 20  has_trait = honest }
+			modifier = { add = -20  has_trait = lazy }
+		}
 		add_learning_lifestyle_xp = 100
 		add_prestige = 100
 		add_character_flag = ln_kept_the_record
 	}
 	option = {
 		name = ln_reveal.9.b          # let the next lot work it out for themselves.
+		ai_chance = {
+			base = 30
+			modifier = { add = 25  has_trait = lazy }
+			modifier = { add = 20  has_trait = arbitrary }
+			modifier = { add = -20  has_trait = diligent }
+		}
 		add_character_flag = ln_let_it_lie
 		stress_impact = { base = medium_stress_impact_loss }
 	}

@@ -310,3 +310,110 @@ ln_commander_fell_for_the_dawn = {
 		}
 	}
 }
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE DEAD DO NOT FALL TO A LUCKY SPEAR (1.1.0, 1 Sep 2026)
+# ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# WHERE THIS CAME FROM. RedSaintNino, Workshop: "I killed a micro army of the night king, a 2000 man force,
+# and it triggered the end of the night king." The 1.1.0 death-reason gate already stops that ending the Long
+# Night -- he is cast down and another of them is crowned instead. But Thomas's read is that the gate treats
+# the symptom:
+#
+#   "I'm not talking about rerouting death. I'm saying let's make it a statistic in probability of ever
+#    rolling the death roll... push that percentage of actually dying in combat from 10% to 0.001%."
+#
+# HE IS DESCRIBING THIS FILE'S OWN MECHANISM, and it is already proven directly above: there is no `forbid`
+# field and no way to intercept knight_killed, but the pool is weighted, so an entry that competes for the
+# same slot takes rolls away from it. ln_knight_fell_for_the_dawn has done exactly that for blessed champions
+# since 1.0.14. This is the same trick pointed at the other side of the field.
+#
+# ── THE ARITHMETIC, because the numbers are not intuitive ────────────────────────────────────────────────
+#   knight_none      base 2000   (game/common/combat_phase_events/00_knight_phase_events.txt:5)
+#   knight_killed    base 30, then scaled by factor = (30 - prowess) / 30, floored at 0.1
+#
+# The Night King is created at prowess 30 (agot_long_night_scripted_effects.txt:233), so his factor is
+# (30-30)/30 = 0, floored to 0.1 -- knight_killed enters the pool at an effective 3 against roughly 2000.
+# That is ~0.15% per pulse, which sounds safe and is not: COMBAT_EVENT_DAYS = 5, so a long war rolls it
+# hundreds of times, and RedSaintNino's 2,000 men found it. Compounding is the whole problem.
+#
+# At base 50000 the pool becomes ~52000 and his death roll is ~0.006% a pulse -- about twenty-five times
+# safer, which is the order of magnitude Thomas asked for. He is still not immortal, and that is deliberate:
+# the songs are allowed the one impossible spear.
+#
+# ── WHAT IT DOES NOT TOUCH ───────────────────────────────────────────────────────────────────────────────
+# Nothing in the mod's own confrontations. ln_dawn.2's duel, ln_dawn.11, ln_dawn.12 and the Last Hour melee
+# all kill him with an explicit `death` effect through AGOT's multi-duel engine -- none of them goes anywhere
+# near the knight pool. This makes the field battle a worse road to his death without making the scenes one
+# jot harder, which is the entire point: "a lot of people who try to take him on who aren't worthy end up
+# dying, possibly, instead of having to replace the Night King outright."
+#
+# WALKERS: ASKED FOR AND ANSWERED, 1 Sep. The note that stood here said an ordinary Other dying to a lucky
+# knight roll was arguably too cheap but that it was a balance call nobody had asked for. Thomas jotted it
+# and then said to take the whole list this pass, so ln_knight_the_walkers_hold below is that entry. The two
+# are deliberately an order of magnitude apart -- see its own arithmetic.
+ln_knight_the_dead_do_not_fall = {
+	type = knight
+
+	is_valid = {
+		is_alive = yes
+		has_trait = nightking
+	}
+
+	chance = {
+		base = 50000
+	}
+
+	effect = {
+		# Nothing happens, and nothing happening is the point -- this entry exists to spend the pulse that
+		# knight_killed would otherwise have had. Same shape as vanilla's own knight_none.
+		debug_log = "LN_TRACE NIGHT KING: a battle pulse spent on him and he is still standing"
+	}
+}
+
+
+# ═════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# AND THE REST OF THEM HOLD TOO (1.1.0)
+# ═════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# Same mechanism as the Night King's entry above, one order of magnitude weaker, and the arithmetic is the
+# reason for both numbers rather than a feel.
+#
+#   An Other is created at prowess 16 (other_template's spawn sites; 00_long_night_other_templates.txt).
+#   knight_killed's own scaling is factor = (30 - prowess) / 30, so his is (30-16)/30 = 0.467 and the entry
+#   enters the pool at an effective ~14 against knight_none's 2000 -- about 0.7% a pulse, five times the
+#   Night King's own rate before his entry was added, and rolled every COMBAT_EVENT_DAYS = 5 days for as
+#   long as the war lasts. Over a Long Night that is most of them, dying to spear levies.
+#
+#   At base 15000 the pool becomes ~17000 and the roll falls to ~0.08% -- roughly eight times safer, and
+#   still an order of magnitude short of the Night King's ~0.006%. That gap is the point: he is the one who
+#   cannot be taken by a lucky spear, and they are merely very hard.
+#
+# WHAT THIS DOES NOT TOUCH, and it is the same list as his. Every place the mod kills a Walker on purpose --
+# the Last Hour melee, the encounter melee, ln_dawn's confrontations -- does it with an explicit `death`
+# effect through AGOT's multi-duel engine and never enters this pool. So the reputation track still works
+# exactly as it did: ln_walkers_slain is earned by standing in front of one, which is what it was always
+# supposed to mean. All this removes is the version where a levy archer collects one by accident.
+#
+# WIGHTS ARE NOT IN HERE ON PURPOSE. They are what the dead spend. A wight that cannot be cut down in the
+# line is not a horror, it is a chore.
+ln_knight_the_walkers_hold = {
+	type = knight
+
+	is_valid = {
+		is_alive = yes
+		has_trait = other_trait
+		# His own entry already spends the pulse for him; two must-win entries in one pool is the mistake
+		# this file warns about in the commander section.
+		NOT = { has_trait = nightking }
+	}
+
+	chance = {
+		base = 15000
+	}
+
+	effect = {
+		# Nothing happens, and nothing happening is the point -- the pulse is spent, and knight_killed did
+		# not get it. Same shape as vanilla's knight_none.
+		debug_log = "LN_TRACE WALKER: a battle pulse spent on one of them and it is still standing"
+	}
+}

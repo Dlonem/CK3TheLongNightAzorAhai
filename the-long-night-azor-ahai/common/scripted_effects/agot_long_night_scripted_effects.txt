@@ -455,7 +455,26 @@ create_character = {
 
 			add_character_modifier = night_king_command_modifier
 
-
+			# ══ 1.0.16a -- THE HEGEMONY COMES FIRST, AND THE ORDER IS THE WHOLE FIX. ════════════════════════════
+			# This grant used to sit BELOW the fifteen counties. While it did, the Night King was COUNTY TIER for
+			# every one of them -- and AGOT runs release_excess_colony on every title gain
+			# (agot_title_on_actions.txt:1259 -> 00_agot_colonization_effects.txt:412-423). At county tier
+			# above_settlement_limit caps an AI holder at ONE settlement county
+			# (00_agot_colonization_triggers.txt:2-9) and reverts every further gain to wilderness via
+			# make_settlement_county_wilderness. Reported live by Achillyz and Matt as "the night king becomes a
+			# wanderer", and by Mat.gopack as the Others "abandoning all their holdings within a year or two" --
+			# and caught firing three times inside this effect's OWN SECOND in Ser Brinda's 60-year log.
+			#
+			# WHY IT ONLY BIT EXISTING SAVES: all fifteen counties ship as tribal_holding
+			# (history/provinces/00_k_the_ice_lakes_prov.txt), and release_excess_colony only touches a county
+			# whose province has_holding_type = settlement_holding. A fresh game has none beyond the Wall; a save
+			# decades old has had AGOT's colonisation planting them the whole time. Matt: "started a new one and
+			# manually kicked it off day 1, it seemed to work as intended."
+			#
+			# HONEST LIMIT: holding a hegemony title first moves him to that trigger's else branch, which is a cap
+			# of FOUR, not unlimited. If his host still comes up short of settled land, the remaining loss is in
+			# AGOT's cap and not in this ordering.
+			get_title = title:h_the_others
 
 			if = { limit = { title:c_the_frigid_rise.holder = { is_ai = yes } } get_title = title:c_the_frigid_rise }
 
@@ -490,10 +509,6 @@ create_character = {
 			mutate_into_other_effect = yes
 
 			every_courtier_or_guest = { mutate_into_other_effect = yes }
-
-			
-
-			get_title = title:h_the_others
 
 			
 
@@ -545,7 +560,31 @@ create_character = {
 
 			}
 
-	
+			# ══ 1.0.16a -- AND HE ANSWERS TO NOBODY. ════════════════════════════════════════════════════════════
+			# The fifteen grants above are bare get_title, which does not touch the new holder's liege -- liege is
+			# a property of the TITLE here, written per-title in AGOT's history. So the Night King inherited
+			# whatever place in the hierarchy the previous county holder had, and Mat.gopack reported exactly
+			# that: "the Others can arrive vassalized to a wildling king". Compare the Great_Other transfer just
+			# above, which correctly wraps itself in a title-and-vassal change.
+			#
+			# IT MAY ALSO BE WHY HE STOPS INVADING. The victim selector is random_neighboring_top_liege_realm_owner
+			# (the_long_night.txt:602); rooted on a vassal that reads his LIEGE's realm, not his own.
+			#
+			# This is AGOT's own guarded shape, from 00_agot_mega_wars_effects.txt:1596-1607. There is no
+			# set_liege/clear_liege effect in CK3 -- becomes_independent inside a title-and-vassal change is the
+			# only correct tool. The change scope is named separately so it cannot collide with the Great_Other
+			# transfer resolved immediately above.
+			if = {
+				limit = { is_independent_ruler = no }
+
+				create_title_and_vassal_change = {
+					type = independency
+					save_scope_as = ln_nk_independence
+					add_claim_on_loss = no
+				}
+				becomes_independent = { change = scope:ln_nk_independence }
+				resolve_title_and_vassal_change = scope:ln_nk_independence
+			}
 
 			add_prestige = 5000
 
@@ -1186,6 +1225,14 @@ create_character = {
 								# 1.0.7: identity is stamped at creation, not inferred later. See ln_is_one_of_them_trigger.
 
 								add_character_flag = ln_one_of_them
+
+								# 1.1.0 -- the donated show-White-Walker face; see common/scripted_effects/zz_ln_walker_face_effects.txt.
+
+								# The female spawner further down this file is deliberately left without it: the donation is a male
+
+								# export, and the Others' armour layer is itself gated is_male = yes.
+
+								ln_wear_the_walkers_face_effect = yes
 
 
 
@@ -2491,29 +2538,33 @@ create_character = {
 
 scope:new_lord_commander = {
 
+# ══ 1.0.16a -- THE SAME GUARD THE NIGHT KING'S OWN GRANTS USE. ═══════════════════════════════════════════
+# This effect had none at all: six bare get_titles that took the Wall from whoever held it, player included.
+# Its caller is now gated on the Watch actually being gone (zz_long_night_plus_aftermath_effects.txt), which
+# is the real fix -- but k_the_wall having no Watch holder does not mean the four castle counties are
+# unheld, and a player who took Castle Black could still lose it here. Belt and braces, and consistent with
+# the fifteen grants at the top of this file.
+#
+# ⚠ 1.1.0 -- `is_ai = yes` WAS THE WRONG QUESTION. See ln_wall_title_is_reclaimable_trigger
+# (zz_ln_nights_watch_triggers.txt) and RedSaintNino's report: the old guard protected the player and
+# nobody else, so a wildling king who TOOK the Wall had it taken straight back off him. The six lines
+# below now ask whether the title is genuinely unheld, held by the dead, or held by a Watch remnant --
+# never whether its owner happens to be run by the AI.
+#
+# `?=` rather than the bare `=` used at :460-488 on purpose: after a Long Night these six titles are far
+# likelier to be sitting unheld than the Lands of Always Winter counties are, and a bare .holder deref on an
+# unheld title throws a context-switch line every time.
+if = { limit = { ln_wall_title_is_reclaimable_trigger = { TITLE = title:c_castle_black } } get_title = title:c_castle_black }
 
+if = { limit = { ln_wall_title_is_reclaimable_trigger = { TITLE = title:c_the_nightfort } } get_title = title:c_the_nightfort }
 
-get_title = title:c_castle_black
+if = { limit = { ln_wall_title_is_reclaimable_trigger = { TITLE = title:c_the_shadow_tower } } get_title = title:c_the_shadow_tower }
 
+if = { limit = { ln_wall_title_is_reclaimable_trigger = { TITLE = title:c_eastwatch } } get_title = title:c_eastwatch }
 
+if = { limit = { ln_wall_title_is_reclaimable_trigger = { TITLE = title:d_the_wall } } get_title = title:d_the_wall }
 
-get_title = title:c_the_nightfort
-
-
-
-get_title = title:c_the_shadow_tower
-
-
-
-get_title = title:c_eastwatch
-
-
-
-get_title = title:d_the_wall
-
-
-
-get_title = title:k_the_wall
+if = { limit = { ln_wall_title_is_reclaimable_trigger = { TITLE = title:k_the_wall } } get_title = title:k_the_wall }
 
 
 
@@ -4945,16 +4996,57 @@ ln_mutate_into_other_unguarded_effect = {
 				}
 
 			}
+
+			# 4) 1.1.0b -- AND THE HOLDING THE GOVERNMENT ACTUALLY REQUIRES HAS TO BE THERE.
+
+			# Thomas's live error.log carried twelve of these from one session:
+
+			#     Error: change_government effect [ Trying to set illegal government ]
+
+			#       agot_long_night_scripted_effects.txt line: 5000 (ln_mutate_into_other_unguarded_effect)
+
+			#       ... events/00_others_heartbeat_events.txt line: 49 (others_heartbeat.1:immediate)
+
+			# wight_government declares `required_county_holdings = { tribal_holding }`
+
+			# (common/governments/zz_wight_government.txt:46). The three guards above all ask whether his
+
+			# capital is CLEAN; not one of them asks whether it has the holding the government demands. The
+
+			# holding conversion further up this effect usually supplies it -- these twelve are the lords it
+
+			# did not reach, most of them caught by the heartbeat backfill sweep years after the fact.
+
+			# Same policy as causes 2 and 3 above, in their own words: SKIP, do not error. He keeps his own
+
+			# government and still takes wight_trait below, and the trait is what makes a wight a wight.
+
+			capital_county ?= {
+
+				any_county_province = { has_holding_type = tribal_holding }
+
+			}
+
 		}
 		change_government = wight_government
 
-		# 1.0.16 -- THE LATCH. ln_clear_orphaned_wight_governments_effect (zz_ln_ranger_effects.txt) has to
-		# run an every_living_character sweep to find rulers left holding this government without the trait,
-		# and running that unguarded every year is off-pattern for this codebase -- ln_cast_down_backstop_effect
-		# puts the identical scan behind a global read for exactly this reason. This is the only writer of
-		# wight_government in the mod, so setting the latch here means the sweep costs one global lookup in
-		# every game where nobody was ever converted, and only does real work once somebody has been.
-		# Never cleared: the orphan population can outlive the Long Night, which is the whole bug.
+		# ⚠ 1.0.17 -- THIS COMMENT DESCRIBED A LATCH THAT NO LONGER EXISTS. READ BEFORE RE-ADDING ONE.
+		#
+		# It said: ln_clear_orphaned_wight_governments_effect walks every living character, running that
+		# unguarded every year is off-pattern, so this global lets the sweep cost one lookup in a game where
+		# nobody was ever converted. The performance argument was fine. THE GATE WAS REMOVED LATER IN 1.0.16
+		# and removing it was the fix -- the full reasoning is at zz_ln_struggle_effects.txt:793-815 and the
+		# short version is that MPREG's save, the save that REPORTED the bug, already has its orphans and its
+		# Long Night is already over, so it will never convert anybody again, never set this global, and never
+		# have run the sweep. The latch turned the fix off in exactly the population it was written for.
+		#
+		# Standing rule it cost us: A REPAIR KEYED ON THE PRESENCE OF A MARKER ONLY REACHES GAMES THAT
+		# PRODUCED THE MARKER. Mid-save repairs must be self-healing.
+		#
+		# The write below therefore has NO READER today, and shows up in every log as
+		# "Variable 'ln_wight_government_issued' is set but is never used". It is kept, not deleted, because
+		# it is the only record of which saves ever ran the conversion and a future diagnostic may want it --
+		# but nothing may gate a REPAIR on it. Decide keep-or-remove deliberately; do not re-wire it.
 		set_global_variable = { name = ln_wight_government_issued  value = yes }
 	}
 
@@ -4976,86 +5068,11 @@ ln_mutate_into_other_unguarded_effect = {
 
 	
 
-	# Purge old age/disease traits
-
-	if = { limit = { has_trait = withering_mind } remove_trait = withering_mind }
-
-	if = { limit = { has_trait = fragile_bones } remove_trait = fragile_bones }
-
-	if = { limit = { has_trait = faltering_heart } remove_trait = faltering_heart }
-
-	if = { limit = { has_trait = clouded_eyes } remove_trait = clouded_eyes }
-
-	if = { limit = { has_trait = infirm } remove_trait = infirm }
-
-	if = { limit = { has_trait = gout_ridden } remove_trait = gout_ridden }
-
-	if = { limit = { has_trait = consumption } remove_trait = consumption }
-
-	if = { limit = { has_trait = leper } remove_trait = leper }
-
-	if = { limit = { has_trait = bubonic_plague } remove_trait = bubonic_plague }
-
-	if = { limit = { has_trait = ill } remove_trait = ill }
-
-	if = { limit = { has_trait = pneumonic } remove_trait = pneumonic }
-
-	if = { limit = { has_trait = typhus } remove_trait = typhus }
-
-	if = { limit = { has_trait = smallpox } remove_trait = smallpox }
-
-	if = { limit = { has_trait = measles } remove_trait = measles }
-
-	if = { limit = { has_trait = ergotism } remove_trait = ergotism }
-
-	# ADDED: the modern CK3 illness set. AGOT replaces vanilla's 00_traits.txt wholesale, and the
-
-	# names Long Night+ was written against (blood_cough, bloody_flux, winter_fever, dancing_plague,
-
-	# shaking_sickness, great_spring_sickness, st_anthonys_fire, goutridden, leper_1) do not exist in
-
-	# ANY loaded trait file. has_trait on an unknown key silently returns false, so this whole purge
-
-	# has been quietly skipping most of what it was meant to clean off.
-
-	if = { limit = { has_trait = great_pox } remove_trait = great_pox }
-
-	if = { limit = { has_trait = early_great_pox } remove_trait = early_great_pox }
-
-	if = { limit = { has_trait = lovers_pox } remove_trait = lovers_pox }
-
-	if = { limit = { has_trait = cancer } remove_trait = cancer }
-
-	if = { limit = { has_trait = sickly } remove_trait = sickly }
-
-	if = { limit = { has_trait = greyscale } remove_trait = greyscale }
-
-	if = { limit = { has_trait = dysentery } remove_trait = dysentery }
-
-	if = { limit = { has_trait = wounded_1 } remove_trait = wounded_1 }
-
-	if = { limit = { has_trait = wounded_2 } remove_trait = wounded_2 }
-
-	if = { limit = { has_trait = wounded_3 } remove_trait = wounded_3 }
-
-	if = { limit = { has_trait = maimed } remove_trait = maimed }
-
-	if = { limit = { has_trait = blind } remove_trait = blind }
-
-	if = { limit = { has_trait = incapable } remove_trait = incapable }
-
-	if = { limit = { has_trait = one_legged } remove_trait = one_legged }
-
-	if = { limit = { has_trait = disfigured } remove_trait = disfigured }
-
-	if = { limit = { has_trait = lovers_pox } remove_trait = lovers_pox }
-
-	if = { limit = { has_trait = early_great_pox } remove_trait = early_great_pox }
-
-	if = { limit = { has_trait = great_pox } remove_trait = great_pox }
-
-
-
+	# 1.1.0 (§4): the purge moved VERBATIM to ln_purge_mortal_frailty_effect in
+	# zz_ln_raising_effects.txt, because the Other-raising (Feature B) needs the identical run and a
+	# second hand-typed copy of forty remove_trait lines is exactly the drift siblingcheck exists to
+	# catch. Same scope, same order, same lines -- nothing else changed here.
+	ln_purge_mortal_frailty_effect = yes
 	# Live-run: the engine refuses set_character_faith on a religious head (the Magnar of Thenn).
 	# SECOND live-run correction: is_head_of_faith is a LANDED_TITLE trigger ("Wrong scope:
 	# character, expected landed_title" x7,000) -- the broken guard evaluated false and new wights

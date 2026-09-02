@@ -1,0 +1,203 @@
+﻿# AGOT: The Long Night & Azor Ahai -- relevance at the Last Hour (1.1.0, §3.2.3).
+#
+# Evaluated on a CANDIDATE; root = the champion whose line is being drafted. Highest scores are drafted
+# first. These are starting numbers to tune at the boot, not laws. Thomas: "they should be relevant as hell
+# if they're gonna participate" -- and "the last thing I want is I show up and it's only people from my
+# house", which is the HOUSE CAP in the draft effect, not a term here.
+ln_last_hour_relevance_value = {
+	# The spine of the score, and what the duel engine itself reads.
+	value = prowess
+	multiply = 2
+
+	# The sword is the story.
+	if = {
+		limit = { has_character_flag = ln_forged_lightbringer }
+		add = 100
+	}
+	# "Anybody with Valyrian steel can get in there."
+	if = {
+		limit = {
+			OR = {
+				ln_carries_valyrian_steel_trigger = yes
+				ln_has_deed_valyrian_steel_trigger = yes
+				has_character_modifier = ln_valyrian_armed_modifier
+			}
+		}
+		add = 60
+	}
+	# He brought something that works.
+	if = {
+		limit = {
+			OR = {
+				has_character_modifier = ln_dragonglass_knight_modifier
+				has_character_flag = ln_mined_the_glass
+			}
+		}
+		add = 35
+	}
+	# Prophecy is relevance.
+	if = {
+		limit = {
+			OR = {
+				has_trait = azor_ahai_reborn
+				has_trait = chosen_by_rhllor
+			}
+		}
+		add = 80
+	}
+	# He knew before you did.
+	if = {
+		limit = {
+			OR = {
+				has_trait = greensight
+				has_trait = dragon_dreams
+			}
+		}
+		add = 30
+	}
+	# The engine already weights it.
+	if = {
+		limit = { has_trait = lifestyle_blademaster }
+		add = 30
+	}
+	# A knight is a BONUS, never a gate -- Thomas's exact word.
+	if = {
+		limit = { is_agot_knight_trigger = yes }
+		add = 25
+	}
+	# He is already leading men here.
+	if = {
+		limit = { is_commanding_army = yes }
+		add = 25
+	}
+	# The Jon Snow term (§3.2.4): the Watch belongs on this line.
+	if = {
+		limit = { government_has_flag = government_is_nw }
+		add = 40
+	}
+	# "If you have a brother or sister, mother, father, lover, wife fighting alongside you."
+	if = {
+		limit = {
+			OR = {
+				has_relation_friend = root
+				has_relation_best_friend = root
+				has_relation_lover = root
+				has_relation_soulmate = root
+			}
+		}
+		add = 45
+	}
+	if = {
+		limit = { is_close_family_of = root }
+		add = 40
+	}
+	# Splendour is a thumb on the scale, not the scale: level x 5, capped at +25.
+	if = {
+		limit = { exists = dynasty }
+		add = {
+			value = dynasty.dynasty_prestige_level
+			multiply = 5
+			max = 25
+		}
+	}
+	# §6's cred, cashed in. ln_he_let_me_live is the Sam Tarly survivor (§5.2): he killed nothing, but he
+	# has stood a spear's length from one and breathed -- that is relevance by any measure this line uses.
+	if = {
+		limit = {
+			OR = {
+				has_character_flag = ln_faced_him_and_lived
+				has_character_flag = ln_he_let_me_live
+				AND = {
+					has_variable = ln_walkers_slain
+					var:ln_walkers_slain >= 1
+				}
+			}
+		}
+		add = 50
+	}
+	# He can come; he will probably run.
+	if = {
+		limit = { has_trait = craven }
+		add = -40
+	}
+	if = {
+		limit = {
+			OR = {
+				age > 60
+				has_trait = infirm
+			}
+		}
+		add = -30
+	}
+}
+
+# ── §9.4: the melee reads the difficulty dial ──────────────────────────────────────────────────────────
+# Walkers beside the Night King at the Last Hour. has_game_rule takes the OPTION name (standing rule 14).
+# Insane's "one of them gets a second turn" is not modelled yet -- the engine has no per-fighter
+# extra-turn knob, so Insane matches Strong's count for now; flagged for the boot's tuning pass.
+ln_last_hour_walker_count_value = {
+	value = 2
+	if = {
+		limit = { has_game_rule = others_weak_invasion }
+		value = 1
+	}
+	if = {
+		limit = {
+			OR = {
+				has_game_rule = others_strong_invasion
+				has_game_rule = others_insane_invasion
+			}
+		}
+		value = 3
+	}
+}
+
+
+# ── WHO OF THEIRS WALKS OUT FIRST (1.1.0, 1 Sep) ────────────────────────────────────────────────────────
+# Replaces a bare `order_by = prowess` in ln_build_their_line_effect. Prowess alone treats a Walker spawned
+# yesterday at 16 and the last champion who came out here and lost as interchangeable, and they are not.
+#
+# Thomas's ask, and the reason the number is as large as it is: a man the Night King took should be the one
+# you meet, not a one-in-six chance of meeting. +40 clears any plausible prowess spread on its own, so a
+# taken champion outranks the ordinary dead every time there is a slot -- while still ordering the taken
+# among THEMSELVES by how good they actually were, which is why prowess stays the base rather than a
+# tiebreaker.
+#
+# Nothing here needs a guard: every term is a flag or trait test on a character who is already in the pool.
+ln_walker_menace_value = {
+	# ⚠ if/limit/add, NOT modifier = { add = N <trigger> }. The first draft of this value used modifier
+	# blocks and the 1 Sep boot rejected all three outright -- "Unexpected token: modifier" at
+	# zz_ln_last_hour_values.txt lines 171, 178 and 185 -- so the whole value failed to parse and every
+	# order_by that reads it was scoring nothing. modifier blocks belong to ai_chance, random_list weights
+	# and scripted_modifiers; a plain script value takes if/else_if/else with a limit. The sibling value at
+	# the top of this same file, ln_last_hour_relevance_value, has been written correctly since the day it
+	# shipped and is the idiom copied here.
+	value = prowess
+
+	# The heroes who tried. This is the whole feature.
+	if = {
+		limit = { has_character_flag = ln_was_taken_at_the_last_hour }
+		add = 40
+	}
+	# And a named man who was taken is the worst thing on that field. The naming traits survive the raising
+	# -- ln_purge_mortal_frailty_effect strips frailty, not standing -- so the prophecy's own champion
+	# turning up on the wrong side is reachable, and it should lead the line when it happens.
+	if = {
+		limit = {
+			OR = {
+				has_trait = azor_ahai_reborn
+				has_trait = chosen_by_rhllor
+			}
+		}
+		add = 15
+	}
+	if = {
+		limit = {
+			OR = {
+				has_trait = favored_by_rhllor
+				has_trait = resurrected_by_rhllor
+			}
+		}
+		add = 8
+	}
+}

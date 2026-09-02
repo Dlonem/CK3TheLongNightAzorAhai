@@ -55,6 +55,8 @@ ln_consecrate.1 = {
 			exists = scope:ln_the_blade
 			scope:ln_the_blade = { NOT = { ln_blade_is_dawn_trigger = yes } }
 		}
+		# 1.1.0 (§7): blade clauses kept, beloved clause dropped: greyed when you brought no one you love.
+		show_as_unavailable = { exists = scope:ln_the_blade  scope:ln_the_blade = { NOT = { ln_blade_is_dawn_trigger = yes } } }
 		ai_chance = {
 			base = 15
 			modifier = { add = 35  has_trait = zealous }
@@ -73,6 +75,8 @@ ln_consecrate.1 = {
 			scope:ln_the_blade = { ln_blade_is_dawn_trigger = yes }
 			has_character_flag = ln_deed_bleeding_star
 		}
+		# 1.1.0 (§7): Dawn clauses kept, the deed dropped: a Dawn-bearer without the bleeding star sees what the deed would buy.
+		show_as_unavailable = { exists = scope:ln_the_blade  scope:ln_the_blade = { ln_blade_is_dawn_trigger = yes } }
 		ai_chance = {
 			base = 80
 			modifier = { add = 20  has_trait = zealous }
@@ -115,6 +119,15 @@ ln_consecrate.2 = {
 	}
 
 	immediate = {
+		# 1.1.0b -- HER NAME, ON HIS PAGE, FOREVER. ln_forged_lightbringer_memory covers all three
+		# forging roads and names nobody, which is right for the volunteer and for the man who tempered
+		# it in his own chest. It is not right for this one. Banked BEFORE the blow so the participant is
+		# captured off a living scope; a participant is also pruning-proof, which is what keeps her name
+		# rendering correctly on a descendant's page two centuries later.
+		create_character_memory = {
+			type = ln_paid_in_full_memory
+			participants = { ln_beloved = scope:ln_beloved }
+		}
 		scope:ln_beloved = {
 			death = {
 				killer = root
@@ -242,7 +255,11 @@ ln_consecrate.4 = {
 	option = {
 		name = ln_consecrate.4.a
 		add_piety = 100
-		add_character_modifier = ln_would_not_pay_the_price_modifier
+		# 1.1.0 modifier audit: this permanent mark is applied from more than one road and CK3 stacks duplicates, so the guard makes a second arrival a no-op.
+		if = {
+			limit = { NOT = { has_character_modifier = ln_would_not_pay_the_price_modifier } }
+			add_character_modifier = ln_would_not_pay_the_price_modifier
+		}
 		stress_impact = { base = medium_stress_impact_loss }
 	}
 }

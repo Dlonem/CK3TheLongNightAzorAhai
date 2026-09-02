@@ -183,6 +183,17 @@ is_character_allowed_to_be_player = {
 			NOT = { has_trait = wight_trait }
 		}
 
+		# 1.1.0 (§4) -- AND THE SAME INTERMISSION FOR A CHAMPION THE NIGHT KING TAKES. The Other version of
+		# the clause above, one line changed: the moment ln_raised_as_an_other_effect lands other_trait on a
+		# human's character, this rule re-evaluates and the player is handed to a playable heir or the game
+		# ends. He is not killed. He is taken -- "the Night King controls your character at that point."
+		# ⚠ Same hazard as the whole file: this rule is a verbatim copy of vanilla+AGOT's with our blocks
+		# added. Re-diff the whole rule against AGOT after any AGOT update.
+		custom_description = {
+			text = "GAME_OVER_CANNOT_PLAY_OTHER"
+			NOT = { has_trait = other_trait }
+		}
+
 		#AGOT Added, NW Vassals -- relaxed by The Long Night & Azor Ahai
 		custom_description = {
 			text = "GAME_OVER_CANNOT_PLAY_NW_VASSAL"

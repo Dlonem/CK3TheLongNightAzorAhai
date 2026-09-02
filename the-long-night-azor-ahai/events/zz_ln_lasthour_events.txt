@@ -1,0 +1,389 @@
+﻿namespace = ln_lasthour
+
+# AGOT: The Long Night & Azor Ahai -- the Last Hour melee (1.1.0, §3).
+#
+# Entered from ln_dawn.2's option e. The engine is AGOT's multi-duel system called with our sides -- see
+# zz_ln_last_hour_effects.txt and the fork note in zz_ln_multi_duel_theme_override.txt. A Walker never
+# accepts a yield (§3.5, DUEL_YIELD = no); the champion cannot be killed by the engine (plot armor),
+# because losing to the Night King is not a death -- it is the taking (§4).
+#
+# ⚠ §13 VOICE GATE: ln_lasthour.1 below is THE ONE EXCHANGE written for Thomas to approve before the
+# other four are written. The per-round equipment doors (§3.3 -- a themed PLAYER_DUEL_EVENT copying
+# agot_multi_duel.0030's effect surface) and the Hardhome beat (§3.4) belong to that writing pass and are
+# NOT built yet; until then the rounds run on AGOT's generic multi-duel cards, which carry non-ToS
+# fallback text. The dragon bridge (§3.6) is also deferred -- dragon code, build it last, boot it hardest.
+
+# ── THE APPROACH ────────────────────────────────────────────────────────────────────────────────────────
+# Root = the champion. The line is already drafted (on the click that opened this card, rule 3); the
+# §3.7 layout exactly: the Night King in the largest slot, his Walkers low at either hand, you at the left
+# edge of your own scene. Never a tournament frame.
+ln_lasthour.1 = {
+	type = character_event
+	window = agot_character_event_huge
+	title = ln_lasthour.1.t
+	# Two stacked desc blocks (the agot_multi_duel.0031 idiom): the first counts HIS side, the second
+	# yours -- so "two of his pale kind" is never a lie on Weak or Strong (Thomas's note from the first
+	# render of this card).
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { exists = scope:ln_lh_walker_3 }
+				desc = ln_lasthour.1.desc.walkers3
+			}
+			triggered_desc = {
+				trigger = { exists = scope:ln_lh_walker_right }
+				desc = ln_lasthour.1.desc.walkers2
+			}
+			triggered_desc = {
+				trigger = { exists = scope:ln_lh_walker_left }
+				desc = ln_lasthour.1.desc.walkers1
+			}
+			desc = ln_lasthour.1.desc.walkers0
+		}
+		first_valid = {
+			triggered_desc = {
+				trigger = { any_in_list = { variable = ln_lh_the_line  count >= 1 } }
+				desc = ln_lasthour.1.desc.line
+			}
+			desc = ln_lasthour.1.desc.alone
+		}
+	}
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+
+	# ⚠ agot_character_event_huge HAS NO center_portrait slot -- its gui defines left (the big one),
+	# right, and the three lower slots only, which is why the Night King rendered as nothing on the first
+	# two boots. Verified against the gui file itself (agot_character_event_huge.gui: GetPortraitCharacter
+	# is wired for left/right/lower_* and nothing else). §3.7's "largest slot" in THIS window is the left,
+	# which stays the player's (Thomas: "having my portrait where it is, that's pretty great") -- so the
+	# Night King takes the right, his Walkers the lower corners.
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+	right_portrait = {
+		character = scope:ln_night_king
+		animation = menacing
+	}
+	lower_left_portrait = { character = scope:ln_lh_walker_left }
+	lower_right_portrait = { character = scope:ln_lh_walker_right }
+
+	trigger = {
+		is_alive = yes
+		scope:ln_night_king ?= { is_alive = yes }
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		debug_log = "LN_LASTHOUR: the approach is on screen"
+		# The centre portrait must never be empty (Thomas, on the first render of this card): if the
+		# chain's saved scope is gone -- a console fire, a stale queue -- rebuild it from the title the
+		# Night King always holds. No holder, no portrait, no error.
+		if = {
+			limit = { NOT = { exists = scope:ln_night_king } }
+			title:h_the_others.holder ?= { save_scope_as = ln_night_king }
+		}
+	}
+
+	# Forward. The engine takes it from here; the watchdog owns the ending.
+	option = {
+		name = ln_lasthour.1.a
+		ai_chance = {
+			base = 80
+			modifier = { add = 25  has_trait = brave }
+			modifier = { add = -55  has_trait = craven }
+			modifier = { add = 20  ln_bears_the_bane_trigger = yes }
+		}
+		# hidden_effect: the engine setup must not run in the tooltip build every frame (the dawn.2.e
+		# lesson, same boot).
+		custom_tooltip = ln_lasthour.1.a_tt
+		hidden_effect = {
+			ln_begin_last_hour_melee_effect = yes
+		}
+		stress_impact = {
+			base = medium_stress_impact_gain
+			brave = minor_stress_impact_gain
+			craven = major_stress_impact_gain
+		}
+	}
+
+	# ── WHAT YOU BROUGHT (1.1.0, 1 Sep) ────────────────────────────────────────────────────────────────
+	# Thomas, after playing the melee end to end: "there are no options that get triggered by possessing
+	# Lightbringer, possessing Chosen, possessing Favored, possessing a Valyrian steel sword. There was
+	# nothing assisting my fight with them."
+	#
+	# THE IDIOM IS HIS OWN, from the Supernatural mod he wrote by hand -- supernatural_ev1.17/.18, where a
+	# vampire and a hybrid get different options on the same card, each gated on `trigger = { has_trait = X }`,
+	# each with its own ai_chance, and each with PLAIN option text. The engine draws the identity; the words
+	# never say "Vampire:" or "Hybrid:". Same three rules here.
+	#
+	# NO show_as_unavailable ON THESE, deliberately, and it is a departure from §7's advertise-the-door rule.
+	# §7 is for cards that teach a player what preparation would have bought -- ln_dawn.2 does that job, on
+	# the same road, one card earlier. This is the moment before the swords come out; four greyed doors here
+	# would be a shopping list read out at a funeral.
+	#
+	# NONE OF THEM IS A WIN BUTTON. The real weight is already applied to every fighter by
+	# ln_lh_measure_the_whole_line_effect regardless of which door is taken -- these buy
+	# ln_led_with_the_bane_modifier, +4 prowess and +2 advantage, and cost the stress of being the man who
+	# goes first and is seen doing it.
+
+	option = {
+		name = ln_lasthour.1.c
+		trigger = {
+			OR = {
+				has_character_flag = ln_forged_lightbringer
+				has_character_flag = ln_the_star_paid_for_it
+			}
+		}
+		custom_tooltip = ln_lasthour.1.c_tt
+		hidden_effect = {
+			add_character_modifier = { modifier = ln_led_with_the_bane_modifier  years = 2 }
+			ln_begin_last_hour_melee_effect = yes
+		}
+		ai_chance = {
+			base = 90
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = 20  has_trait = zealous }
+			modifier = { add = -50  has_trait = craven }
+		}
+		stress_impact = {
+			base = medium_stress_impact_gain
+			brave = minor_stress_impact_gain
+			craven = major_stress_impact_gain
+		}
+	}
+
+	option = {
+		name = ln_lasthour.1.d
+		trigger = {
+			NOR = {
+				has_character_flag = ln_forged_lightbringer
+				has_character_flag = ln_the_star_paid_for_it
+			}
+			OR = {
+				ln_carries_valyrian_steel_trigger = yes
+				ln_has_deed_valyrian_steel_trigger = yes
+				has_character_modifier = ln_valyrian_armed_modifier
+			}
+		}
+		custom_tooltip = ln_lasthour.1.d_tt
+		hidden_effect = {
+			add_character_modifier = { modifier = ln_led_with_the_bane_modifier  years = 2 }
+			ln_begin_last_hour_melee_effect = yes
+		}
+		ai_chance = {
+			base = 85
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = -50  has_trait = craven }
+		}
+		stress_impact = {
+			base = medium_stress_impact_gain
+			brave = minor_stress_impact_gain
+			craven = major_stress_impact_gain
+		}
+	}
+
+	option = {
+		name = ln_lasthour.1.e
+		trigger = {
+			NOR = {
+				has_character_flag = ln_forged_lightbringer
+				has_character_flag = ln_the_star_paid_for_it
+				ln_carries_valyrian_steel_trigger = yes
+				ln_has_deed_valyrian_steel_trigger = yes
+				has_character_modifier = ln_valyrian_armed_modifier
+			}
+			OR = {
+				has_character_modifier = ln_dragonglass_armed_modifier
+				has_character_modifier = ln_dragonglass_stores_modifier
+				has_character_modifier = ln_dragonglass_knight_modifier
+				has_character_flag = ln_mined_the_glass
+			}
+		}
+		custom_tooltip = ln_lasthour.1.e_tt
+		hidden_effect = {
+			add_character_modifier = { modifier = ln_led_with_the_bane_modifier  years = 2 }
+			ln_begin_last_hour_melee_effect = yes
+		}
+		ai_chance = {
+			base = 80
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = -50  has_trait = craven }
+		}
+		stress_impact = {
+			base = medium_stress_impact_gain
+			craven = major_stress_impact_gain
+		}
+	}
+
+	# The named man. Separate from the three above and available alongside them, because being named is not
+	# a weapon -- it is a reason the men behind you keep their feet. A man who has both takes whichever the
+	# player thinks the moment is about, and that is the choice worth offering.
+	option = {
+		name = ln_lasthour.1.f
+		trigger = {
+			OR = {
+				has_trait = azor_ahai_reborn
+				has_trait = chosen_by_rhllor
+				has_trait = favored_by_rhllor
+			}
+		}
+		custom_tooltip = ln_lasthour.1.f_tt
+		hidden_effect = {
+			add_character_modifier = { modifier = ln_led_with_the_bane_modifier  years = 2 }
+			ln_begin_last_hour_melee_effect = yes
+		}
+		ai_chance = {
+			base = 75
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = 20  has_trait = arrogant }
+			modifier = { add = -40  has_trait = craven }
+		}
+		stress_impact = {
+			base = medium_stress_impact_gain
+			zealous = minor_stress_impact_loss
+		}
+	}
+
+	# Turn back. The line disbands; the drafted men were never told what for.
+	option = {
+		name = ln_lasthour.1.b
+		ai_chance = { base = 0 }
+		custom_tooltip = ln_lasthour.1.b_tt
+		hidden_effect = {
+			ln_last_hour_disband_effect = yes
+		}
+		add_character_flag = ln_turned_away_from_him
+		add_prestige = -200
+		stress_impact = {
+			base = medium_stress_impact_gain
+			craven = minor_stress_impact_loss
+		}
+	}
+}
+
+# ── TEAM SELECTION (fired by multi_duel_leaders_effect:272-273) ─────────────────────────────────────────
+# Side A: the drafted line joins the champion. Root = the champion (side A leader); the lists live on him.
+ln_lasthour.10 = {
+	hidden = yes
+	immediate = {
+		# ⚠ DUELIST IS A MACRO AND MUST BE A NAMED SCOPE, NEVER `this`. Macro args are text substitution:
+		# inside multi_duel_participant_effect the add-to-list runs within a scope:multi_duel_leader_story
+		# block, where `this` is the STORY -- so the first boot filled side_a_duelists with STORY handles,
+		# the engine scanned them 353 times ("is_alive on story scope") and never picked a fighter, and the
+		# melee sat idle until the watchdog backstop stood everyone down. AGOT's own team-selection event
+		# (agot_multi_duel.0001) passes named scopes for exactly this reason.
+		every_in_list = {
+			variable = ln_lh_the_line
+			save_scope_as = ln_lh_duelist
+			multi_duel_participant_effect = {
+				DUELIST = scope:ln_lh_duelist
+				LEADER = no
+				SIDE = side_a
+				DUELIST_NUM = 0
+			}
+		}
+	}
+}
+
+# Side B: the Walkers join their King. Root = the Night King; the lists live on the CHAMPION, reached
+# through the engine's own saved scope.
+ln_lasthour.11 = {
+	hidden = yes
+	immediate = {
+		scope:side_a_leader = {
+			every_in_list = {
+				variable = ln_lh_their_line
+				save_scope_as = ln_lh_duelist
+				# Named scope, never `this` -- see ln_lasthour.10's block comment.
+				multi_duel_participant_effect = {
+					DUELIST = scope:ln_lh_duelist
+					LEADER = no
+					SIDE = side_b
+					DUELIST_NUM = 0
+				}
+			}
+		}
+	}
+}
+
+# ── THE DAWN, WON IN A LINE ─────────────────────────────────────────────────────────────────────────────
+# Fired by the watchdog when the Night King can no longer continue. The kill ceremony (if the engine left
+# him downed rather than dead), the walker-slain counts, the memories and the stand-down all land on the
+# click -- banked reads first, deaths last (rule 3).
+ln_lasthour.20 = {
+	type = character_event
+	window = agot_character_event_huge
+	title = ln_lasthour.20.t
+	desc = ln_lasthour.20.desc
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+
+	# ⚠ ANIMATIONS, 1 Sep playtest. Thomas: "in ln_lasthour.20, is there a dead animation? Because it's
+	# showing him as dead, but he looks alive still." There is -- `dead` (verified in
+	# game/gfx/portraits/portrait_animations/animations.txt, used by vanilla at
+	# events/activities/activity_system_events.txt:845). He is a corpse on this card and now looks like one.
+	# Root moves off `shock` for the same reason: the desc is men who have won and cannot yet believe the
+	# cold has gone, not men being startled. war_over_win is the engine's own end-of-war stance.
+	left_portrait = {
+		character = root
+		animation = war_over_win
+	}
+	right_portrait = {
+		character = scope:ln_night_king
+		animation = dead
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		debug_log = "LN_LASTHOUR ENDGAME: the melee is won"
+		if = {
+			limit = { has_variable = ln_lh_nk_ref }
+			var:ln_lh_nk_ref = { save_scope_as = ln_night_king }
+		}
+	}
+
+	option = {
+		name = ln_lasthour.20.a
+		custom_tooltip = ln_lasthour.20.a_tt
+		hidden_effect = {
+			ln_last_hour_victory_effect = yes
+		}
+	}
+}
+
+# ── RAISED AS AN OTHER (§4) -- the report, not a choice ────────────────────────────────────────────────
+# Root = the champion, ALREADY MUTATED -- the portrait on this card is the point: it is no longer his.
+# "You feel what you were slipping away to, there being almost no thoughts." The option ends it; the
+# playable rule (zz_ln_playable_rules.txt) has already re-evaluated, and the player is handed to a
+# playable heir when the card closes. He is not killed. He is taken.
+ln_lasthour.30 = {
+	type = character_event
+	window = agot_character_event_huge
+	title = ln_lasthour.30.t
+	desc = ln_lasthour.30.desc
+	theme = death
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = idle
+	}
+	right_portrait = {
+		character = scope:ln_night_king
+		animation = personality_bold
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		debug_log = "LN_LASTHOUR ENDGAME: the champion is taken"
+		if = {
+			limit = { has_variable = ln_lh_nk_ref }
+			var:ln_lh_nk_ref = { save_scope_as = ln_night_king }
+		}
+	}
+
+	option = {
+		name = ln_lasthour.30.a
+	}
+}

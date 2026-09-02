@@ -20,6 +20,9 @@
  ln_omen.10.desc.close:0 "The Watch on the parapet have stopped pretending to work. One of the older men is not watching the dragon at all. He is watching you, to see what you will do about it, and there is something almost like pity in it.\n\nSeven thousand years of ice, and nobody has ever written down what was put into it."
  ln_omen.10.a:0 "Again. Take [ln_dragon.GetHerHim] up again."
  ln_omen.10.b:0 "Enough. [ln_dragon.GetSheHe|U] knows something I do not."
+ ln_omen.10.b_tt:0 "[ln_dragon.GetSheHe|U] is left out of your wars from now on, as if you had taken #bold Don't Use Dragon#! yourself. Take #bold Use Dragon#! to change your mind."
+ ln_omen.10.d:0 "Ask it of [ln_dragon.GetTitledFirstName] anyway."
+ ln_omen.10.d_tt:0 "[ln_dragon.GetTitledFirstName] has never refused you anything else. [ln_dragon.GetSheHe|U] crosses, and keeps crossing.\n\n#N While the Wall stands, what waits in that sky will most likely bring [ln_dragon.GetHerHim] down — and what he takes does not stay dead.#!"
  ln_omen.10.c:0 "Write to the Citadel. There will be a sensible reason."
 
  # ── THE TALE, for those who will never sit on a dragon ──────────────────────────────────────────────────────

@@ -187,7 +187,7 @@ frostborn_culture_name:0 "Others"
  
  rule_agot_others_invasion_moment:0 "#explanation_link_light_background;bold AGOT:#! #e;bold The Long Night#! Moment"
  setting_others_random_window_invasion:0 "A Random Summer #EMP (Default)#!"
- setting_others_random_window_invasion_desc:0 "It is coming. Nobody knows when.\n\nNever sooner than twenty-five years, usually between ninety and a hundred and thirty, sometimes far later."
+ setting_others_random_window_invasion_desc:0 "It is coming, and nobody knows when. Never sooner than twenty-five years, usually between ninety and a hundred and thirty, sometimes far later."
  setting_others_immediate_invasion:0 "Immediately"
  setting_others_immediate_invasion_desc:0 "The Long Night will begin immediately."
  setting_others_invasion_in_50_years:0 "In Fifty Years"
@@ -197,9 +197,9 @@ frostborn_culture_name:0 "Others"
  setting_others_invasion_in_150_years:0 "In One Hundred-Fifty Years"
  setting_others_invasion_in_150_years_desc:0 "The Long Night will begin around a century and a half after the game starts, give or take a decade."
  setting_others_full_random_invasion:0 "Full Random"
- setting_others_full_random_invasion_desc:0 "The Long Night can begin at any moment. The summer is rolled from a wide spread — it may break within thirty years or run for well over two centuries — and there is no upper limit tied to any date. Pick this if you want a campaign where nobody, including you, knows how long you have."
+ setting_others_full_random_invasion_desc:0 "The Long Night can begin at any moment. The summer is rolled from a wide spread — thirty years to over two centuries — with no date cap. Nobody knows how long you have, including you."
  setting_others_historical_invasion:0 "Historical"
- setting_others_historical_invasion_desc:0 "The Long Night will begin around 300 AC.\n\n#EMP At a start date of 255 AC or later there is no summer left to run, so the game opens already inside Winter Is Coming — the warning phase — and the dark still arrives on schedule.#!"
+ setting_others_historical_invasion_desc:0 "The Long Night begins around 300 AC.\n\nFrom a 255 AC start or later there is no summer left to run, so the game opens already in Winter Is Coming. The dark still arrives on time."
  setting_others_manual_invasion:0 "Manual"
  setting_others_manual_invasion_desc:0 "The Long Night will only arrive when triggered by a player through a special decision. The invasion progress bar stays empty under this rule -- that is the rule working, not a stalled game."
  
@@ -218,13 +218,13 @@ frostborn_culture_name:0 "Others"
  setting_others_death_resolution:0 "Death"
  setting_others_death_resolution_desc:0 "The Long Night ends the moment the leader of the Others dies. Kill him and the dark lifts, wherever the war stands."
  setting_others_war_resolution:0 "#BER War for the Dawn#!"
- setting_others_war_resolution_desc:0 "The Long Night ends only upon winning the #BER War for the Dawn.#!\n\n#EMP Killing the Night King is not enough. Another of the Others takes the crown and the dark goes on — his heir if he has one, and if he has none, whichever of them still stands. The war has to be won.#!"
+ setting_others_war_resolution_desc:0 "The Long Night ends only upon winning the #BER War for the Dawn.#! #EMP Killing the Night King is not enough — another of the Others takes the crown and the dark goes on. The war has to be won.#!"
 
  rule_agot_others_cb_tier:0 "#explanation_link_light_background;bold AGOT:#! #e;bold The Long Night#! War Tier"
  setting_others_cb_kingdom:0 "March (Recommended)"
  setting_others_cb_duchy:0 "Duchy (Slow Grind)"
- setting_others_cb_duchy_desc:0 "The Others take one #bold duchy#! at a time — a finer cut than the map is drawn in, so the advance is harder to read but the front line moves in smaller steps. Great seats still fall last. The slowest invasion by a long way: many wars, decades of them, and plenty of time for the living to answer the call."
- setting_others_cb_kingdom_desc:0 "The Others take one #bold March#! at a time — the unit the map is actually drawn in. In the North that is Last Hearth, then Karhold, then the Dreadfort, and #bold Winterfell only once the country around it has gone quiet#!. A bannerman's seat always falls before his liege's. The default, and the one the story was written for."
+ setting_others_cb_duchy_desc:0 "The Others take one #bold duchy#! at a time — smaller steps, a front line that is harder to read. Great seats still fall last. The slowest invasion by a long way, and the most time to answer the call."
+ setting_others_cb_kingdom_desc:0 "The Others take one #bold March#! at a time — the unit the map is drawn in. A bannerman's seat always falls before his liege's, and #bold Winterfell only once the North has gone quiet#!. The default."
  setting_others_cb_empire:0 "Empire (Rapid Onslaught)"
  setting_others_cb_empire_desc:0 "The Others wage war at the #bold empire#! tier — fewer, vaster wars that sweep entire realms at once. A faster, more apocalyptic invasion."
 
@@ -246,7 +246,7 @@ frostborn_culture_name:0 "Others"
   
    rule_agot_long_night_dragon:0 "#explanation_link_light_background;bold AGOT:#! #e;bold The Long Night#! Ice Dragon"
  setting_agot_long_night_dragon_on:0 "One Simply Appears"
-  setting_agot_long_night_dragon_on_desc:0 "The Others are handed a dragon of their own as long as dragons exist anywhere in the world. #EMP Nothing has to have died first.#!\n\nThe old behaviour, kept for anyone who wants the guarantee."
+  setting_agot_long_night_dragon_on_desc:0 "The Others are handed a dragon of their own as long as dragons exist anywhere. #EMP Nothing has to have died first.#! The old behaviour, for anyone who wants the guarantee."
    setting_agot_long_night_dragon_off:0 "Off"
   setting_agot_long_night_dragon_off_desc:0 "The Others never get a dragon."
  other_unlanded_male:0 "Other"
@@ -266,7 +266,7 @@ frostborn_culture_name:0 "Others"
 
  # ── THE OTHERS' DRAGON ──────────────────────────────────────────────────────────────────────────────────────
  setting_agot_long_night_dragon_raise:0 "They Raise Their Kills #EMP (Default)#!"
- setting_agot_long_night_dragon_raise_desc:0 "#EMP The Others are given nothing.#! They get a dragon only by bringing one down themselves, and until they manage it they have none.\n\nIt comes back as itself: the same name, the same face, the wrong colour. A dragon that was already long dead when they raised it — one of the great historical beasts — comes back changed, because there is nothing left of its face to copy."
+ setting_agot_long_night_dragon_raise_desc:0 "#EMP The Others are given nothing.#! They get a dragon only by bringing one down themselves. It comes back as itself — same name, same face, wrong colour. One dead for centuries comes back changed."
  # ── THE UNDEAD DRAGON ───────────────────────────────────────────────────────────────────────────────────────
  nick_the_undead:0 "the Undead"
  trait_ln_undead_dragon:0 "Risen"
@@ -283,6 +283,10 @@ frostborn_culture_name:0 "Others"
  # war_name/war_name_base; `cb_name = SCOURING_CB` at common/casus_belli_types/00_long_night_cbs.txt:1633 had
  # no key at all, so the CB itself rendered raw wherever the engine names the cb rather than the war.
  SCOURING_CB:0 "Scouring"
+
+ # 1.1.0b -- shown when a lord already fighting takes the decision. Joining is still open to him; only
+ # opening a second war of his own is not.
+ ln_wfd_already_at_war:0 "You are already at war — though if the War for the Dawn is being fought, you may still march to it."
 
  # 1.0.16 -- the War for the Dawn's new prerequisite. Written as a statement of the world rather than a
  # rules line: the player should finish reading it knowing what to go and do.

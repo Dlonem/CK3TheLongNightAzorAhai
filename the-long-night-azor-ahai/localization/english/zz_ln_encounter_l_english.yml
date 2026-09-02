@@ -1,0 +1,54 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- White Walkers in Winter Is Coming (1.1.0, §5).
+
+ # ── The encounter ──
+ ln_encounter.1.t:0 "The Snow Stands Up"
+ ln_encounter.1.desc.men:0 "The wind dies all at once, the way a conversation dies when the wrong man enters the hall. Your breath hangs in front of you and does not move.\n\nIt is standing between two trees, and you understand that it has been standing there for some time. Tall, thin, the colour of milk ice. It carries a blade that looks like nobody made it. The snow does not creak under it, because it is not standing on the snow.\n\nYour men have seen it too. Nobody has run yet. That can still go either way."
+ ln_encounter.1.desc.alone:0 "The wind dies all at once. Your breath hangs in front of you and does not move.\n\nIt is standing between two trees, and you understand that it has been standing there for some time. Tall, thin, the colour of milk ice. It carries a blade that looks like nobody made it. The snow does not creak under it, because it is not standing on the snow.\n\nYou are alone. It knows that too."
+ ln_encounter.1.a:0 "Form the line - we fight it here"
+ ln_encounter.1.b:0 "Fall back - nothing we have can touch it"
+
+ # ── Victory ──
+ ln_encounter.20.t:0 "It Came Apart"
+ ln_encounter.20.desc:0 "The blow lands and the thing does not bleed. It breaks. It comes apart the way ice comes off a roof in spring, all at once and with a sound like a lake splitting, and where it stood there is nothing but frost falling out of the air.\n\nThe cold lifts. The wind comes back, and the trees remember how to move.\n\nWhoever is still standing looks at the frost settling into the snow, and then at you. Men will tell this differently in every hall it reaches. You were there. You know what it cost."
+ ln_encounter.20.a:0 "Look at what is left of it"
+
+ # ── The taking ──
+ ln_encounter.21.t:0 "The Cold Closes"
+ ln_encounter.21.desc:0 "You are on your back in the snow and you cannot remember falling. The fight is over. You can hear how over it is.\n\nIt walks toward you without hurry, because nothing that could hurt it is still standing. The cold arrives ahead of it, into your hands first, then your arms, then the parts of you that you had always assumed were yours.\n\nThe last thing you understand is that it is not going to kill you. It is going to keep you."
+ ln_encounter.21.a:0 "There is nothing left to do"
+
+ # ── The Sam Tarly outcome ──
+ ln_encounter.22.t:0 "It Lets One Live"
+ ln_encounter.22.desc:0 "It stops.\n\nThe blade is at [ln_enc_the_spared.GetTitledFirstName]'s throat and it stops, and the long white face turns and considers him the way a man considers a dog too small to be worth the boot. Then it steps past him, and the blue eyes come to rest on you.\n\nHe will live. He will stand in halls for the rest of his life saying what he saw here, and men will pour him ale and not believe a word. That is why it spared him. Somebody has to tell the living what is coming, and it has decided that it will be him — and not you."
+ ln_encounter.22.a:0 "So somebody will know"
+
+ # ── Break and run ──
+ ln_encounter.24.t:0 "You Do Not Stop Running"
+ ln_encounter.24.desc:0 "There is no order to it and no honour in it either. There is a moment when the line is gone and your legs are moving, and the trees are whipping past, and behind you there is a sound you will hear for the rest of your life: the men who could not run, stopping.\n\nYou run until the blood in your mouth tastes like iron and the cold in your chest feels like drowning. When you finally look back there is nothing between the trees but snow.\n\nIt did not chase you. That is the part you will not tell anyone."
+ ln_encounter.24.a:0 "Keep moving until there are fires"
+
+ # ── A sighting ──
+ ln_encounter.30.t:0 "Something on the Ridge"
+ ln_encounter.30.desc:0 "The hunters come back early and short one dog. They found tracks in the high snow — a man's stride, but too long, and no weight to them, as if whatever made them stepped ON the snow rather than in it. The tracks run for half a mile along the ridge and stop mid-stride.\n\nThe oldest of them has hunted that ridge for thirty years. He is the one who will not talk about it."
+ ln_encounter.30.a:0 "I know what walked there - I have always known"
+ ln_encounter.30.b:0 "The cold plays tricks on tired men"
+
+ # ── option tooltips (the effects run hidden; these lines are what the player is told) ──
+ ln_encounter.1.a_tt:0 "The fight begins. It will be settled man by man over the days that follow, and a White Walker never accepts a yield."
+ ln_encounter.1.b_tt:0 "Nobody fights. The thing watches you go."
+ ln_encounter.20.a_tt:0 "The Walker is destroyed. Your count rises by one, and every survivor carries the memory."
+ ln_encounter.21.a_tt:0 "The men still breathing do not leave the snow. Neither do you — and what the cold takes, the cold keeps."
+ ln_encounter.22.a_tt:0 "He lives. Everyone else stays in the snow, you last of all — and one man walks south to tell a story nobody will believe."
+ ln_encounter.24.a_tt:0 "You live, badly wounded. The men who could not run do not."
+
+ # ── Memories (§6 -- the type key is the title line, then three perspectives: I / you / [owner]) ──
+ ln_slew_a_walker_memory:0 "slew one of the Others"
+ ln_slew_a_walker_memory_desc:0 "I stood against one of the Others in the snow, and it was the one that broke."
+ ln_slew_a_walker_memory_desc_second_perspective:0 "you stood against one of the Others in the snow, and it was the one that broke."
+ ln_slew_a_walker_memory_desc_third_perspective:0 "[owner.GetName] stood against one of the Others in the snow, and it was the one that broke."
+ ln_the_walker_spared_me_memory:0 "spared by one of the Others"
+ ln_the_walker_spared_me_memory_desc:0 "It killed every man beside me, and then it looked at me and let me live. I do not know why me. I ask it in my sleep."
+ ln_the_walker_spared_me_memory_desc_second_perspective:0 "it killed every man beside you, and it looked at you and let you live."
+ ln_the_walker_spared_me_memory_desc_third_perspective:0 "[owner.GetName] was spared by one of the Others, and no one could say why."

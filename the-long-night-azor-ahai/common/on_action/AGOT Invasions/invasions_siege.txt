@@ -1,9 +1,13 @@
-﻿on_siege_completion = {
-    events = {
-        others_siege.0001
-    }
-    on_actions = {
-      
-    }
-}
-
+﻿# AGOT: The Long Night & Azor Ahai
+#
+# INTENTIONALLY EMPTY as of 1.1.0.
+#
+# This file used to declare `on_siege_completion = { events = { others_siege.0001 } }` directly -- the last
+# hook in the mod living outside zz_ln_00_hooks.txt. It worked (an `events` sub-list merges), but the
+# standing rule in that file's header is that a vanilla on_action is declared there and nowhere else.
+# others_siege.0001 is now fired through the ln_others_siege sub-list in 00_others_on_actions.txt,
+# registered under on_siege_completion in zz_ln_00_hooks.txt.
+#
+# Kept as a signpost for the same reason as invasions_game_start.txt beside it: AGOT ships nothing at
+# this relative path (checked 2 Sep 2026 -- its on_siege_completion lives in army_on_actions.txt and
+# agot_on_actions/agot_army_on_actions.txt), so nothing is shadowed either way.

@@ -136,6 +136,7 @@ others_maintenance.3 = {
 	option = {
 		name =  others_maintenance.2.a
 		#custom_tooltip = others_maintenance.2.a.tt
+		# 1.1.0 (§7): no show_as_unavailable here, deliberately -- scope plumbing (iron throne holder), inherited base-mod file: nothing aspirational to teach.
 		trigger = { exists = scope:iron_throne_holder }
 		ai_chance = {
 		base = 25 # What are the chances of selecting this option over others? (Does not need to be 0 to 100, it can be anything)

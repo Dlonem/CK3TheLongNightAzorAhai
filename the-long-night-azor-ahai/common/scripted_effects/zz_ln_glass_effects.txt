@@ -1,0 +1,37 @@
+﻿# AGOT: The Long Night & Azor Ahai -- dragonglass lore (1.1.0, §11).
+
+# One grant, six doors. The modifier is permanent, like agot_taught_dragonlore; the memory records WHERE
+# the learning happened only in the card, deliberately -- one memory type, one firing site (2.34 rule 1),
+# and a second visit to a different site is prestige, not a second memory.
+# ⚠ 1 Sep, THOMAS'S CORRECTION, and he was right. "I don't think it was modifier based. I honestly thought
+# it was character flag based -- like, you travel to someplace, you get the flag for the lore."
+#
+# VERIFIED IN AGOT'S OWN SOURCE. agot_dragon_hatching_dragonlore.0001-0007
+# (events/activities/agot_hatching_activity/agot_hatching_dragonlore_events.txt) each do two things on the
+# option click: raise the stacking `dragonlore` variable by 2, and set a per-site marker variable
+# (agot_dragon_hatching_dragonlore_0001_triggered ... _0006_triggered, had_event_dragonlore_0007). The
+# modifier agot_taught_dragonlore is a DIFFERENT thing entirely -- it comes from the dragonkeeper
+# interaction (00_agot_dragonkeeper_interactions.txt), not from travelling anywhere. This file's original
+# header cited agot_taught_dragonlore as its model and copied the wrong half of AGOT's system.
+#
+# WHAT CHANGED AND WHAT DID NOT. The per-site variable is now set, in AGOT's exact idiom, so the game
+# remembers WHERE you learned it and the debug tooltip shows it the same way Thomas read his own dragonlore
+# progress. The visible modifier STAYS -- it is the player-facing badge on the character sheet, and a player
+# who has never seen the code can read "Studied the Dragonglass" and know what it bought him; a bare
+# variable is invisible and would fail that test. What the site variable buys us today is honest repeat
+# handling: a NEW site is worth prestige, the SAME site twice is not, and until now the game could not tell
+# those apart and paid 50 prestige every time a player re-walked the Dragonstone beach.
+ln_learn_the_glass_effect = {
+	if = {
+		limit = { NOT = { has_variable = ln_glass_site_$SITE$_visited } }
+		set_variable = ln_glass_site_$SITE$_visited
+		if = {
+			limit = { NOT = { has_character_modifier = ln_knows_the_glass_modifier } }
+			add_character_modifier = ln_knows_the_glass_modifier
+			create_character_memory = { type = ln_learned_the_glass_memory }
+		}
+		else = {
+			add_prestige = 50
+		}
+	}
+}

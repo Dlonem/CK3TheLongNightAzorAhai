@@ -36,5 +36,9 @@ other_template = {
 
 	after_creation = {
 		give_random_commander_trait_effect = yes
+		# 1.1.0 -- the donated show-White-Walker face. Self-guarding (male, not the Night King, donor alive);
+		# see common/scripted_effects/zz_ln_walker_face_effects.txt. Every Other built through this template
+		# takes it, which is both Last Hour spawn sites and the scouring.
+		ln_wear_the_walkers_face_effect = yes
 	}
 }

@@ -18,4 +18,22 @@ ln_catalyst_warning_dismissed = {}    # a maester is laughed out of the hall
 ln_catalyst_other_sighted = {}        # someone saw one, and was believed
 
 # The Long Night -> The Dawn
+# ── 1.1.0 (1 Sep): THE TWO WINTER IS COMING ENTRIES ────────────────────────────────────────────────────────
+# Thomas: "I would have two catalysts added. The first catalyst being more of that card so people can
+# understand it -- the Long Night is coming, prepare accordingly. And then the second would be the thing that
+# actually shortens it... you say you already have that. Why not track that? This is the perfect opportunity
+# to show people, and not have an empty list of catalysts for people to continue to message me about."
+#
+# He is right about the SYMPTOM and the fix is not the one the panel implies. Winter Is Coming is time-based,
+# so points have no threshold to move -- that finding is a year old and stands (see the note in the Long
+# Summer's table). But the struggle window does not only draw points: window_struggle.gui:841-871 renders
+# Struggle.GetNumCompletionsOfCatalystForPhase per entry, i.e. HOW MANY TIMES each catalyst has fired in this
+# phase. That counter is real on a time-based phase and it is exactly the tracking he is asking for.
+#
+# So the panel gets two entries that both actually fire, and the loc on each says what it does rather than
+# implying a bar: one on entering the phase, which is the explainer, and one every time a player comes back
+# from the far north having seen one and believed it -- which really does take years off the clock, through
+# ln_the_dark_comes_sooner_effect.
+ln_catalyst_winter_is_coming = {}     # the warning has begun. Fires once, on entering the phase.
+
 ln_catalyst_night_king_slain = {}

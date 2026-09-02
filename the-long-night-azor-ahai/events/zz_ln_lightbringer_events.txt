@@ -45,6 +45,8 @@ ln_lightbringer.1 = {
 			modifier = { add = 10  has_trait = impatient }
 		}
 		trigger = { ln_has_red_priest_trigger = yes }
+		# 1.1.0 (§7): greyed without a red priest at court: employ one and this opens.
+		show_as_unavailable = { always = yes }
 		add_character_flag = ln_forge_knows_the_price
 		add_learning_lifestyle_xp = 100
 		add_piety = 50
@@ -79,6 +81,8 @@ ln_lightbringer.2 = {
 			modifier = { add = 10  has_trait = arrogant }
 		}
 		trigger = { gold >= 200 }
+		# 1.1.0 (§7): the gold ladder shown, vanilla contest_events shape.
+		show_as_unavailable = { always = yes }
 		remove_short_term_gold = 200
 		add_piety = 75
 		add_character_flag = ln_forge_bought_the_lion
@@ -187,6 +191,8 @@ ln_lightbringer.3 = {
 			modifier = { add = -40  has_trait = compassionate }
 		}
 		trigger = { exists = scope:ln_beloved }
+		# 1.1.0 (§7): the Nissa Nissa door: the tragedy is advertised even to a hall with no beloved in it.
+		show_as_unavailable = { always = yes }
 		trigger_event = { id = ln_lightbringer.4  days = 1 }
 	}
 
@@ -199,6 +205,8 @@ ln_lightbringer.3 = {
 			modifier = { add = 10  has_trait = calm }
 		}
 		trigger = { exists = scope:ln_volunteer }
+		# 1.1.0 (§7): greyed when no volunteer steps forward.
+		show_as_unavailable = { always = yes }
 		trigger_event = { id = ln_lightbringer.5  days = 1 }
 	}
 
@@ -213,6 +221,8 @@ ln_lightbringer.3 = {
 			modifier = { add = -30  has_trait = craven }
 		}
 		trigger = { ln_can_temper_in_own_heart_trigger = yes }
+		# 1.1.0 (§7): the own-heart tempering, shown to those it would refuse.
+		show_as_unavailable = { always = yes }
 		trigger_event = { id = ln_lightbringer.6  days = 1 }
 	}
 
@@ -245,6 +255,15 @@ ln_lightbringer.4 = {
 	}
 
 	immediate = {
+		# 1.1.0b -- HER NAME, ON HIS PAGE, FOREVER. ln_forged_lightbringer_memory covers all three
+		# forging roads and names nobody, which is right for the volunteer and for the man who tempered
+		# it in his own chest. It is not right for this one. Banked BEFORE the blow so the participant is
+		# captured off a living scope; a participant is also pruning-proof, which is what keeps her name
+		# rendering correctly on a descendant's page two centuries later.
+		create_character_memory = {
+			type = ln_paid_in_full_memory
+			participants = { ln_beloved = scope:ln_beloved }
+		}
 		scope:ln_beloved = {
 			death = {
 				killer = root
@@ -408,7 +427,11 @@ ln_lightbringer.7 = {
 	trigger = { is_alive = yes }
 
 	immediate = {
-		add_character_modifier = ln_would_not_pay_the_price_modifier
+		# 1.1.0 modifier audit: this permanent mark is applied from more than one road and CK3 stacks duplicates, so the guard makes a second arrival a no-op.
+		if = {
+			limit = { NOT = { has_character_modifier = ln_would_not_pay_the_price_modifier } }
+			add_character_modifier = ln_would_not_pay_the_price_modifier
+		}
 		# The counter stays where it is, so the third forging can be attempted again later. A man is allowed
 		# to change his mind, and the sword does not go anywhere.
 	}

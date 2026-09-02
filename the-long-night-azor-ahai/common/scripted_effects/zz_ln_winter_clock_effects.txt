@@ -58,6 +58,23 @@ ln_winter_clock_start_effect = {
 	}
 
 	set_global_variable = { name = ln_winter_started  value = current_year }
+
+	# ── 1 Sep, SECOND PASS: NOTHING PLAYER-FACING FIRES HERE, AND THAT IS THE FIX. ─────────────────────
+	# The first version of this sent every player a fresh card and fired ln_catalyst_winter_is_coming.
+	# Both were wrong, and Thomas caught it in one line: "make sure you didn't create two crazy events,
+	# because when the struggle changes to Winter Is Coming we have a big event trigger as well."
+	#
+	# We do. ln_opening.6 -- a fullscreen card with eight station-specific variants -- is fired from
+	# ln_struggle_cold_winds_reached_effect, the very effect that calls this one. A second card 3-12 days
+	# behind it was pure noise. Its one useful sentence moved into ln_opening.6 as a shared closing line
+	# instead, which is what he asked for: "a line or two saying we have no idea how much time we have
+	# left, but this winter is different."
+	#
+	# And ln_catalyst_winter_is_coming is now a DELIBERATE PLACEHOLDER -- declared on the phase, localized,
+	# fired by nothing. His call: "even having one functional catalyst, and the other one is more of a
+	# placeholder, a catalyst that's there that can't actually trigger from anything, but lets people know
+	# the Long Night is coming, be prepared." CK3 supports that state explicitly; window_struggle.gui:855
+	# has a never-triggered display branch for a catalyst with zero completions.
 }
 
 # Root = struggle. Called every month from ln_struggle_monthly_effect while the Cold Winds are running.

@@ -97,3 +97,51 @@ ln_blessing_priest_in_reach_trigger = {
 		any_courtier_or_guest = { ln_priest_can_bless_trigger = yes }
 	}
 }
+
+# ══ THE WORLD'S APPETITE FOR MIRACLES (1.0.17) ═══════════════════════════════════════════════════════════
+# Ser Brinda counted 98 characters carrying resurrected_by_rhllor in a 60-year game and asked for scaling.
+# He was right, and the trace said why. Measured across two live logs -- the SAME code, two worlds:
+#
+#     Thomas, early bookmark, no invasion    ->   4.7 blessings a year
+#     Ser Brinda, 60 years in, invasion live ->  55   blessings a year      (11.7x)
+#
+# NOTHING WAS BROKEN. Every gate did exactly what its comment said. The limiter is PER PRIEST --
+# ln_gave_the_last_kiss_modifier is permanent, ln_sponsor_can_still_pay_trigger refuses a spent man -- so
+# one priest still buys exactly one life, ever. What was missing is that nothing in the mod ever read HOW
+# MANY PRIESTS THERE ARE. ai_frequency = 12 on the interaction means every unspent red priest offers
+# roughly once a year, so the blessing count is a straight function of how far R'hllor has spread, and it
+# only ever climbs. 393 blessings produced 31 resurrections in 7.2 years in Ser Brinda's game.
+#
+# THIS IS THE WHEEL THE MOD ALREADY HAS. ln_world_ranging_cooldown and ln_world_sighting_cooldown are the
+# same shape, for the reason zz_ln_omen_effects.txt states outright: "THE GLOBAL COOLDOWN IS DOING THE REAL
+# BALANCING HERE, not the chance ... the roll only decides WHEN inside each window, never how many."
+#
+# TWO TERMS, because either one alone is wrong at one end:
+#   * A YEARLY BUDGET -- 5 in peace, 10 once the dead are walking (ln_blessing_budget_value). A budget
+#     alone leaves a SPARSE world completely untouched, and that is the point rather than a side effect:
+#     Thomas's own 4.7 a year never reaches 5, so his game does not change at all. Ser Brinda's stops at 5.
+#   * A SPACING COOLDOWN of 21 days. A budget alone would let a dense world spend all five in January and
+#     go silent for eleven months. This spreads them over at least a third of the year. It is short enough
+#     that a sparse world -- one offer every ~78 days -- never touches it either.
+#
+# THE PLAYER IS NEVER READ THROUGH THIS. Thomas, 30 Aug: "players should be able to request regardless,
+# they should be able to skip over any gate." It has exactly two callers, both ai_potential blocks
+# (ln_lords_blessing_interaction, ln_ask_for_the_blessing_decision). The player's is_shown and
+# is_valid_showing_failures_only are untouched on both doors, and a blessing with a player on EITHER side
+# does not spend the budget at all -- see the guard in ln_grant_the_blessing_effect.
+#
+# FAILS OPEN ON A SAVE THAT PREDATES IT, per the standing rule. The counter does not exist until the first
+# yearly reset stamps it, and an absent global reads here as "none yet this year", which is permissive.
+ln_world_will_hear_another_blessing_trigger = {
+	OR = {
+		NOT = { has_global_variable = ln_blessings_this_year }
+		# WRITTEN IN THIS ORDER ON PURPOSE. A script value on the LEFT of a comparison is attested in this mod
+		# (ln_deed_count_value >= 1, zz_ln_blessing_decisions.txt) and a global_var on the RIGHT is attested too
+		# (global_var:ln_winter_target < global_var:ln_winter_roll, zz_ln_catalyst_effects.txt:582). The reverse
+		# -- a script value on the right of a global_var -- I could NOT find a single precedent for in vanilla,
+		# AGOT or here, and a comparison that parses but silently reads zero would uncap this quietly. Both
+		# halves of the form below are independently proven, so it is the one that ships.
+		ln_blessing_budget_value > global_var:ln_blessings_this_year
+	}
+	NOT = { has_global_variable = ln_blessing_spacing_cooldown }
+}

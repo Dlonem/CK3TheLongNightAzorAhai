@@ -33,7 +33,14 @@ ln_dragonglass_cost_value = {
 	if = { limit = { is_landed = yes  highest_held_title_tier >= tier_duchy }   add = 200 }
 	if = { limit = { is_landed = yes  highest_held_title_tier >= tier_kingdom } add = 200 }
 	if = { limit = { is_landed = yes  highest_held_title_tier >= tier_empire }  add = 200 }
-	min = 200
+	# 1.1.0 (§11): a man who has STUDIED the glass digs where the seams actually run. A quarter off, after
+	# the tier adds -- the doubt-priced decision stays a decision, it just rewards the forty-years-early
+	# library trip.
+	if = {
+		limit = { has_character_modifier = ln_knows_the_glass_modifier }
+		multiply = 0.75
+	}
+	min = 150
 }
 
 # Twice the cost. An AI holding less than this is buying glass it cannot afford.

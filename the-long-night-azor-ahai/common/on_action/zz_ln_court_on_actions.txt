@@ -1,0 +1,58 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.0, the dead do not take service in a living hall.
+#
+# Root = the character who just joined a court; scope:new_employer = whose court; scope:old_employer = the
+# previous one, if any. Registered as a sub-list on vanilla's on_join_court from zz_ln_00_hooks.txt (AGOT
+# declares that same on_action with seven sub-lists of its own, so this merges rather than competing).
+#
+# WHY. Reported 1 Sep from the Long Night Discord: a player's captain -- AGOT renames the knight concept to
+# "Captain" -- was an Other, and it narrated fund_inspiration.1051 at him. The eligibility gates in
+# common/scripted_triggers/zz_ln_service_triggers.txt stop one of the dead holding a role. This stops one
+# of them standing in the hall at all, which is also what makes them marriageable, schemeable and visible
+# in a court list they have no business being in.
+#
+# The Wall of guards, in order: they must actually be one of the dead; a PRISONER is not a courtier and the
+# execution chain in zz_ln_imprison_on_actions.txt owns him, so imprisonment is left strictly alone; landed
+# characters are not courtiers; and their own kind may keep them -- an Other in the Night King's hall, or in
+# another Other's, is where an Other belongs and nothing here touches that.
+ln_dead_join_court = {
+	trigger = {
+		ln_is_one_of_them_trigger = yes
+		is_imprisoned = no
+		# ⚠ 1.1.0b -- `is_landed = no` WAS NOT ENOUGH, and the live log said so 56 times:
+		#     Error: add_courtier effect [ Trying to put character ('Damina Frey of ...') in court despite
+		#            being a ruler ]
+		#       common/on_action/zz_ln_court_on_actions.txt line: 36 (ln_dead_join_court)
+		#       ... zz_ln_shadows/zz_ln_agot_nw_title_gain_shadow.txt line: 56
+		# CK3 1.19 has landless rulers -- adventurers, camps, administrative and the Watch's own title
+		# holders -- who hold a title and are therefore "a ruler" to add_courtier while is_landed reads no.
+		# The Night's Watch route is exactly how it kept happening: gaining a black title moves a man into
+		# a court, which fires this hook on the same tick he becomes a ruler.
+		is_ruler = no
+		exists = scope:new_employer
+		scope:new_employer = { ln_is_one_of_them_trigger = no }
+	}
+	effect = {
+		if = {
+			limit = {
+				exists = title:h_the_others.holder
+				title:h_the_others.holder = {
+					is_alive = yes
+					NOT = { this = root }
+				}
+			}
+			# Home. h_the_others is the Night King's own title -- the same handle the Long Night decisions
+			# read to find him (common/decisions/00_agot_long_night_decisions.txt:20).
+			# 1.1.0b -- and never into a court he is already standing in. The log carried a second,
+			# quieter version of the same error ("in the court they're already in") for characters whose
+			# employer changed inside the Others' own realm.
+			if = {
+				limit = { NOT = { employer ?= title:h_the_others.holder } }
+				title:h_the_others.holder = { add_courtier ?= root }
+			}
+		}
+		else = {
+			# No king to go back to (he is dead, or this IS him). The pool, not a living hall.
+			move_to_pool = yes
+		}
+	}
+}

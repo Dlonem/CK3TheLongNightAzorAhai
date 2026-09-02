@@ -1,0 +1,42 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.0 (A2.3): the dead employ nobody, and keep nobody living.
+#
+# The hooks in 00_others_on_actions.txt mutate a living character the moment one of the dead becomes his
+# liege (title gain, vassal gained, both county auto-grants) -- and, since 1.1.0, they test
+# ln_is_one_of_them_trigger rather than other_trait, which is how Chieftess Frenya slipped through. Hooks
+# are still only as complete as the list of roads the engine offers, and a war settlement, an inheritance
+# or a title revocation can land a living lord under the Night King by a road that has no hook at all.
+# This is the yearly net under the hooks, run from the story cycle's own pulse (the_long_night.txt), so it
+# only ever runs while there is a Night King with a realm.
+#
+# Root = the story owner (the Night King). mutate_into_other_effect is the one conversion road in the mod
+# and refuses dragons at its own door; the dragon clause below is belt-and-braces. Prisoners are exempt
+# (they are in his dungeon, not his service) and so are the dead themselves. scope:thegreatother is what
+# the conversion body reads for house/liege, exactly as the hooks save it.
+ln_the_dead_employ_nobody_effect = {
+	save_scope_as = thegreatother
+	every_vassal_or_below = {
+		limit = {
+			is_alive = yes
+			ln_is_one_of_them_trigger = no
+			NOT = { has_trait = dragon }
+			is_imprisoned = no
+		}
+		debug_log = "LN_TRACE SERVICE: a living vassal of the dead found by the yearly net - mutating"
+		mutate_into_other_effect = yes
+		every_courtier_or_guest = {
+			limit = { NOT = { has_trait = dragon } }
+			mutate_into_other_effect = yes
+		}
+	}
+	# His own court, too. Courtiers only -- a guest is passing through and is not in his service.
+	every_courtier = {
+		limit = {
+			is_alive = yes
+			ln_is_one_of_them_trigger = no
+			NOT = { has_trait = dragon }
+			is_imprisoned = no
+		}
+		debug_log = "LN_TRACE SERVICE: a living courtier in the Night King's own hall - mutating"
+		mutate_into_other_effect = yes
+	}
+}

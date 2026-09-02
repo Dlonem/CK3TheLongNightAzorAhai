@@ -47,6 +47,9 @@ ln_omen.10 = {
 	}
 
 	theme = dread
+	# 1.1.0 (Thomas, live): this was rendering the character's CURRENT room -- a throne hall, for a scene
+	# about a dragon balking at the ice. The Wall is where it happens; the Wall is what you see.
+	override_background = { reference = agot_the_wall }
 	left_portrait = { character = root  animation = shock }
 	right_portrait = { trigger = { exists = scope:ln_dragon }   character = scope:ln_dragon  animation = anger }
 
@@ -57,10 +60,18 @@ ln_omen.10 = {
 	# content otherwise. The boundary scopes do NOT cross is an on_action, not a delay.
 	# This pattern is kept anyway because it is strictly more robust: it also survives a sender
 	# that never saved the scope on the branch it took, which is the failure that actually bit us.
-	trigger = { exists = var:current_dragon }
+	trigger = {
+		exists = var:current_dragon
+		# 1.1.0 -- DEDUPE AT DELIVERY. The one-shot flag is set at QUEUE time, but on_army_enter_province
+		# can fire for several armies inside one tick before any effect's flag lands -- the 1 Sep log shows
+		# SIX copies of this event queued in the same second, sixteen in the session. The queue-time flag
+		# cannot stop those; this delivery-time flag means exactly one ever reaches the screen.
+		NOT = { has_character_flag = ln_saw_the_refusal }
+	}
 
 	immediate = {
 		debug_log = "LN_TRACE OMEN: the dragon would not cross the Wall"
+		add_character_flag = ln_saw_the_refusal
 		var:current_dragon ?= { save_scope_as = ln_dragon }
 	}
 
@@ -86,9 +97,17 @@ ln_omen.10 = {
 	}
 
 	# ── TURN BACK. The wise answer, and the one that costs nothing but pride.
+	# 1.1.0 (Thomas, live): "one of those options should automatically choose that option" -- taking
+	# "Enough" now ALSO takes AGOT's own Don't Use Dragon decision for you (its whole effect is the
+	# agot_not_using_dragon flag, verified at 00_agot_dragon_decisions.txt:617), so she stays home from
+	# your wars and the ice never has to tell you twice.
 	option = {
 		name = ln_omen.10.b
 
+		custom_tooltip = ln_omen.10.b_tt
+		hidden_effect = {
+			add_character_flag = agot_not_using_dragon
+		}
 		add_character_flag = ln_looked_north
 		stress_impact = { base = minor_stress_impact_loss }
 
@@ -96,6 +115,49 @@ ln_omen.10 = {
 			base = 40
 			modifier = { add = 30  has_trait = patient }
 			modifier = { add = 25  learning >= 12 }
+		}
+	}
+
+	# ── TAKE HER OVER ANYWAY (1.1.0, 1 Sep). ───────────────────────────────────────────────────────────
+	# Thomas: "is there an option to do it anyway? And then obviously suppress the event... if you take
+	# your dragon north of the wall while the wall is still standing and you try to fight the Night King,
+	# then that would essentially be giving the Night King a free dragon, because it would be in his Lands
+	# of Always Winter and the wall would still be up. That would be incredibly badass."
+	#
+	# WHAT THIS OPTION IS. Not a way to make her willing -- she is never willing. It is the rider deciding
+	# that his judgement beats eight thousand years of ward, and forcing it. The flag it sets does three
+	# things, all of them consequences of that one decision:
+	#
+	#   1. The refusal never fires at him again (ln_dragon_refusal_effect reads the flag).
+	#   2. His dragon counts as PRESENT beyond the Wall -- ln_dragon_is_over_the_field_trigger accepts the
+	#      flag the same way it accepts a breached Wall. So the bane is back, the ln_dawn.2 dragon card is
+	#      back, and he really can burn the Night King with her. That is the reward and it is a real one.
+	#   3. The Night King's spear finds her far more easily up there (ln_spear_hit_chance_value). She is a
+	#      fire-thing dragged over a ward built to keep fire out, into the one sky that is his.
+	#
+	# THE AI TAKES IT TOO, and Thomas asked for the weighting explicitly: "definitely would have a modifier
+	# for choosing that option if learning is less than 10 -- they're going to be more likely to choose that
+	# option, implying that their lack of knowledge is the reason they're doing it." So it is the ignorant
+	# and the stubborn who force it, and a learned ruler almost never does.
+	option = {
+		name = ln_omen.10.d
+
+		custom_tooltip = ln_omen.10.d_tt
+		# NOTHING BUT THE FLAG AND THE KNOWLEDGE. Thomas, on the first draft: "no dragon opinion change,
+		# scratch the dread, there's no actual modifier or any of that bullshit." He is right -- the entire
+		# cost of this option is what happens to her in the sky afterwards (ln_spear_hit_chance_value), and
+		# stacking dread and a sulking dragon on top of it was inventing a price the scene already charges.
+		add_character_flag = ln_forced_her_over
+		add_character_flag = ln_heard_the_warning
+
+		ai_chance = {
+			base = 5
+			modifier = { add = 35  learning < 10 }
+			modifier = { add = 25  has_trait = arrogant }
+			modifier = { add = 20  has_trait = stubborn }
+			modifier = { add = 15  has_trait = brave }
+			modifier = { factor = 0  learning >= 14 }
+			modifier = { factor = 0  has_trait = craven }
 		}
 	}
 

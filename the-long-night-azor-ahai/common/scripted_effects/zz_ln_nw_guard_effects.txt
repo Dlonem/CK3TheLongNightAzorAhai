@@ -115,6 +115,14 @@ ln_nw_renounce_title_effect = {
 		# the world is too broken for tidying to help (a shattered realm, a destroyed kingdom). The title
 		# stays -- today's behaviour, minus the silence.
 		debug_log = "LN_TRACE NW GUARD: no lawful recipient found - title stays with the brother (fail-open)"
+		# 1.0.17 -- AND SAY WHICH BROTHER, WHICH TITLE. The 30 Aug -develop run logged this line three times
+		# in fifty minutes, once on each year tick, and the log could not name a single one of them: the
+		# SUCCESS branch above carries debug_log_scopes and this one never did, so "it failed" was all we
+		# could ever learn. Three fail-opens in three consecutive years is not "the world is too broken to
+		# tidy" -- it looks like a standing case the three-rung search cannot reach, and the next run should
+		# say whether it is the same brother every year or three different ones before anybody adds a fourth
+		# rung on a guess. Costs nothing shipped: debug_log only lands with -develop.
+		debug_log_scopes = yes
 	}
 }
 

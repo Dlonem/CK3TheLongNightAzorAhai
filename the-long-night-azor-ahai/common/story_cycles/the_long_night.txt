@@ -101,7 +101,15 @@
 
 	}
 
-	every_character_artifact = { limit = {  has_variable = crown_of_true_winter_artifact } equip_artifact_to_owner = yes }
+	# Same coronation guard as the heartbeat's copy further down this file -- see the note there. One error
+	# at setup rather than twenty a session, but it is the same refusal for the same reason.
+	if = {
+		limit = {
+			is_independent_ruler = yes
+			NOT = { has_realm_law = uncrowned }
+		}
+		every_character_artifact = { limit = {  has_variable = crown_of_true_winter_artifact } equip_artifact_to_owner = yes }
+	}
 
 	
 
@@ -176,7 +184,13 @@
 		}
 		else = {
 			random_ruler = {
+				# 1.1.0b -- prefer their own house; see the note at the reconciler's ladder (~:1800).
 				limit = {
+					has_trait = other_trait
+					house ?= house:house_theothers
+					NOT = { this ?= scope:ln_dead_nightking }
+				}
+				alternative_limit = {
 					has_trait = other_trait
 					NOT = { this ?= scope:ln_dead_nightking }
 				}
@@ -285,7 +299,13 @@
 		}
 		else = {
 			random_ruler = {
+				# 1.1.0b -- prefer their own house; see the note at the reconciler's ladder (~:1800).
 				limit = {
+					has_trait = other_trait
+					house ?= house:house_theothers
+					NOT = { this ?= scope:ln_dead_nightking }
+				}
+				alternative_limit = {
 					has_trait = other_trait
 					NOT = { this ?= scope:ln_dead_nightking }
 				}
@@ -591,6 +611,14 @@
 			# search reads it. It walks every county in the world, so it must never run per candidate.
 
 			ln_refresh_beyond_the_wall_latch_effect = yes
+
+			# 1.1.0b -- AND THEN COUNT THE HOST. Immediately after the latches above, because the muster
+			# reads them: ln_horde_target_men_value is a milestone ladder off ln_btw_unfinished,
+			# ln_castle_black_fell and ln_north_done, and reading them one line before they are refreshed
+			# would always be a pulse behind the front. Body in
+			# common/scripted_effects/zz_ln_horde_effects.txt; it is a top-up to a target, so on a pulse
+			# where he is already at strength it does nothing at all.
+			ln_horde_muster_effect = yes
 
 			# 1.0.8 -- and take one county of the frozen waste. See zz_ln_invasion_target_effects.txt:
 
@@ -1117,8 +1145,24 @@
 			#
 			# Guarded on the condition the engine is actually testing. He puts the crown on when he is a king in
 			# his own right, which is the only state the artifact was ever meant to be worn in anyway.
+			# ── 1 Sep 2026: THE SAME BUG AGAIN, THE OTHER HALF OF IT. The 10 Aug guard above fixed the
+			# "Only an independent ruler..." refusal. The crash-run log still carried TWENTY of these, with a
+			# DIFFERENT message: "A ruler must be coronated before they, their spouses, and their heirs may
+			# wear crowns." That is the Coronations restriction, not the independence one, and the Night King
+			# is never coronated -- there is no septon in the world who is going to crown him.
+			#
+			# has_realm_law = uncrowned is the engine's own test for it, verified in vanilla at
+			# game/common/scripted_triggers/00_clothing_triggers.txt:411 and used by vanilla's own conqueror
+			# code at game/common/scripted_effects/00_mongol_invasion_effects.txt:847. Genghis's answer is to
+			# CROWN himself by realm law; that is the richer fix and it is backlogged rather than guessed at
+			# here, because the law names live in a file this session did not verify and an unverified symbol
+			# does not ship. The guard is the honest minimum: he wears the crown when the game will let him,
+			# and the log stops carrying twenty refusals a session for a thing that cannot happen.
 			if = {
-				limit = { is_independent_ruler = yes }
+				limit = {
+					is_independent_ruler = yes
+					NOT = { has_realm_law = uncrowned }
+				}
 				every_character_artifact = { limit = { has_variable = crown_of_true_winter_artifact } equip_artifact_to_owner_replace = yes }
 			}
 
@@ -1473,6 +1517,18 @@
 
 			
 
+			# 1.1.0 (A2.3) -- THE YEARLY NET. Body and reasoning in common/scripted_effects/zz_ln_service_effects.txt.
+			# Its own group, not a rider on the frostborn-promotion one above: that one is gated on the owner's culture
+			# and only promotes the already-converted; this one asks who under him is still breathing.
+			effect_group = {
+				days = 365
+				triggered_effect = {
+					trigger = { exists = story_owner  story_owner = { is_alive = yes } }
+					effect = {
+						story_owner = { ln_the_dead_employ_nobody_effect = yes }
+					}
+				}
+			}
 			effect_group = {
 
         days = 180
@@ -1760,8 +1816,20 @@
 			}
 			else = {
 				# He is not. Find another Other anywhere in the world and put him on the throne.
+				# 1.1.0b -- PREFER THEIR OWN HOUSE. This search is a whole-world scan and it was picking
+				# Others who rule their own realms far from h_the_others: ln_raised_as_an_other_effect
+				# deliberately makes Others who KEEP their titles (a beaten lord is taken, not killed), so
+				# the free-folk lord of Deadwood Grove can be one, and the crown was landing on him.
+				# alternative_limit keeps the old behaviour as the fallback, so the ladder can still never
+				# come up empty -- it just looks at their own house first.
 				random_ruler = {
 					limit = {
+						has_trait = other_trait
+						house ?= house:house_theothers
+						NOT = { this = scope:ln_original_nightking }
+						NOT = { this = scope:ln_others_holder }
+					}
+					alternative_limit = {
 						has_trait = other_trait
 						NOT = { this = scope:ln_original_nightking }
 						NOT = { this = scope:ln_others_holder }

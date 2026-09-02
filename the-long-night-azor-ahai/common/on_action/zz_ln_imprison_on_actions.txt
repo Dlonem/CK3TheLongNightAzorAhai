@@ -10,12 +10,14 @@
 # (keep_imprisoned hides AGOT's whole prisoner-interaction surface), and the captor's card resolves it.
 # A WIGHT in a cell is a thing that will not stop moving, and gets the same card's grimmer face.
 ln_others_imprisoned = {
+	# 1.1.0 (A2.2): ln_is_one_of_them_trigger, not three traits. A lord converted by mutate_into_other_effect
+	# can carry wight_government and the ln_one_of_them stamp with NO trait at all (1.0.6a's finding, see the
+	# trigger's header) -- captured, he got no keep_imprisoned, and AGOT's prison surface stayed open on him:
+	# that is the "Warden Other ... Demand a Trial by Combat" letter from Thomas's 290 AC run. The identity
+	# test is the same one every other gate in the mod uses; keep_imprisoned is honoured by AGOT's
+	# demand_trial_by_combat_interaction (:40) and five of its prison interactions.
 	trigger = {
-		OR = {
-			has_trait = nightking
-			has_trait = other_trait
-			has_trait = wight_trait
-		}
+		ln_is_one_of_them_trigger = yes
 	}
 	effect = {
 		if = {

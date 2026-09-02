@@ -1,0 +1,22 @@
+﻿# AGOT: The Long Night & Azor Ahai -- how many miracles a year the world has in it.
+#
+# THE NUMBERS ARE THOMAS'S, 30 Aug 2026: "outside of the long night, five blessings a year sounds great.
+# And then ten blessings a year during."
+#
+# They are a WORLD budget, not a per-character one, and they are only ever read by the two AI doors --
+# see ln_world_will_hear_another_blessing_trigger in zz_ln_sponsor_triggers.txt for the whole design and
+# for the measurements that produced these numbers.
+#
+# Deliberately a script value rather than two literals, so the dial is in one place and a future game rule
+# can multiply it without touching the trigger, the effect or either door.
+ln_blessing_budget_value = {
+	value = 5
+
+	# ONCE THE DEAD ARE ACTUALLY WALKING the fire is asked twice as often, and answers. This reads the phase
+	# rather than the invasion latch on purpose: ln_phase_the_long_night is the window where champions are
+	# dying in numbers, which is the thing the budget is really tracking.
+	if = {
+		limit = { struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night } }
+		add = 5
+	}
+}

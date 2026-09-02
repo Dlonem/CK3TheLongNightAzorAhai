@@ -331,6 +331,11 @@ ln_take_the_black_as_a_ranger_effect = {
 	add_character_flag = ln_rode_out
 	add_character_flag = ln_heard_the_warning
 
+	# 1.1.0 (§6): the record, dated natively -- one firing site, this one, because every by-choice road
+	# into the black runs through this ceremony (WORK-ORDER-2.34 rule 1). The dungeons road is an ORDER,
+	# not a choice, and deliberately gets no memory of "taking" anything.
+	create_character_memory = { type = ln_took_the_black_memory }
+
 	trigger_event = { id = ln_ranger.1  days = { 4 12 } }
 }
 
@@ -553,6 +558,18 @@ ln_no_dead_landlords_effect = {
 	if = {
 		limit = {
 			ln_long_night_over_trigger = yes
+			# 1.0.16a -- AND THE INVASION IS NOT RUNNING.
+			# ln_long_night_over_trigger is ONLY `NOT = { exists = title:h_the_others.holder }`
+			# (zz_long_night_plus_aftermath_triggers.txt:47-49). Any window where that title sits unheld while
+			# the dead still hold land -- a Night King dead with his Others still marching, a wave turning over
+			# under The Cycle -- read to it as "the Dawn has come", and this then walked every county in the
+			# world turning their land to ruins MID-INVASION. It is also a second road to a landless Night King,
+			# because ln_is_one_of_them_trigger matches him directly.
+			# The phase is this codebase's own answer to "is it running" (zz_ln_the_long_defeat_triggers.txt:20-22,
+			# zz_ln_ice_dragon_triggers.txt:110-111, zz_ln_travel_danger_triggers.txt:32-34).
+			# ?= keeps it correct after a non-recurring Dawn destroys the struggle: a missing struggle reads
+			# false, the NOT reads true, and the post-Dawn sweep still runs as designed.
+			NOT = { struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night } }
 			any_county = {
 				exists = holder
 				holder = {

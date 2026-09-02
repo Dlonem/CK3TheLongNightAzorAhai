@@ -1,0 +1,19 @@
+﻿# AGOT: The Long Night & Azor Ahai -- White Walkers in Winter Is Coming (1.1.0, §5).
+#
+# THE CONSTRAINT, Thomas's words: "we don't want them to take land either. We want them to be kind of like
+# a shadow threat." Event-only. NEVER create_title_and_vassal_change, never spawn_army, never a holding
+# change -- if a design pressure appears to make them take land, it belongs in ln_phase_the_long_night, not
+# here. Boot check 11: ten years of Cold Winds, and not one county changes hands.
+#
+# Root = a playable character involved in the struggle; scope:struggle guaranteed by
+# yearly_struggle_playable_pulse (the ln_omen_pulse precedent, same file shape). Player-only, like the
+# Cold Winds atmosphere cards: the sighting is a scene, and an AI lord needs no scenes. The dread the
+# WORLD feels in this phase is already carried by the omen catalysts.
+ln_encounter_pulse = {
+	trigger = {
+		scope:struggle = { is_struggle_type = ln_long_night_struggle }
+	}
+	effect = {
+		ln_encounter_pulse_effect = yes
+	}
+}

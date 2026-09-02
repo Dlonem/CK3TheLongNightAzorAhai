@@ -39,5 +39,5 @@
  setting_ln_claimants_players_only:0 "Players Only"
  setting_ln_claimants_players_only_desc:0 "Only players are ever named. In multiplayer the prophecy becomes a thing between the people at the table."
  setting_ln_claimants_one_at_a_time:0 "One at a Time"
- setting_ln_claimants_one_at_a_time_desc:0 "At most one living #EMP Chosen#!. Nobody can be raised while they breathe — and the seat reopens the moment they stop.\n\nWhich does rather incentivise a certain kind of solution."
+ setting_ln_claimants_one_at_a_time_desc:0 "At most one living #EMP Chosen#!. Nobody can be raised while they breathe, and the seat reopens the moment they stop — which does incentivise a certain kind of solution."
 

@@ -8,6 +8,65 @@ Newest first.
 
 ---
 
+## 1.1.0 — The Last Hour
+
+The big one. The Night King is no longer a dice roll: he is fought on foot, in the snow, by you and the people who were actually there, and losing to him is worse than dying. Underneath it, the largest fix pass this mod has had — a full audit of what fires, what never fired, and what the base game had quietly overruled.
+
+This release also contains everything from hotfix 1.0.16a, listed separately below.
+
+### Features
+
+- **The Last Hour.** Reaching the Night King opens a Trial-of-Seven-style melee: you and your companions against him and his Walkers, blow by blow. Castle steel does not bite. Lightbringer, Valyrian steel and dragonglass each open their own option and change the fight; a red priest can pull you back from it; kin and friends can take the blow meant for you.
+- **Raised as an Other.** Lose to him and he keeps you — your character is turned before the card opens, tells you what it felt like, and is his from then on. Later champions may find you standing on his side of the line.
+- **White Walkers in Winter Is Coming.** Rangers and northern lords can meet a lone Walker before the dead take a single county: a small melee, one Walker against a handful of men, with the Sam Tarly outcome in the deck.
+- **Memories.** The character page now records the things worth remembering: killing a Walker, facing him and living, your steel failing against him, being alive when the Wall fell, coming back from the dead and who paid for it, the day the dark won, and the day it lifted.
+- **Dragons over the Wall.** A rider can force a dragon across a standing Wall — the AI is likelier to try it the less it knows — and once the Wall is breached the ward is gone.
+- **The Wall falls, and the world is told.** The monument card now opens in your own station — sworn brother, free folk, dragonrider, northman, red priest, lord or nobody.
+
+### Reworks
+
+- **The Night King's host grows with his conquest** — 20,000 beyond the Wall, 50,000 once it is his, 100,000 when the Wall falls, 200,000 when the North does — scaled by the invasion strength rule and capped at half a million. His men cost him nothing to keep; he can always afford to fight. Raised by **Enigmatic Clown**.
+- **A field kill no longer ends the Long Night.** Ordinary steel casts him down and another is crowned; only a bane destroys him. Beating him in the field does, however, open the War for the Dawn.
+- **Advantage across the four strength rules is now 10 / 15 / 20 / 20.** One Night King at a time, one War for the Dawn at a time.
+- **The dead employ nobody and serve nobody.** A living lord can no longer sit on the Night King's council or hold his court positions, one of them can no longer hold a place under a living lord, and any living vassal the dead pick up by conquest is taken within the year.
+
+### Bug Fixes
+
+- **The endgame respawn.** A gate that ran inside on_death asked a dead man's death reason before he was dead, failed every time, and crowned a new Night King on every sanctioned kill. The war never ended and Azor Ahai was never granted.
+- **Three overrides that had never run.** The Watch-restoration override, the Night's Watch title-gain hook and the siege hook had been losing their parse races to base AGOT since the fork. Moved to where they win.
+- **The Cycle.** The aftermath switch was never cleared between waves, so a second Long Night ran with half its machinery locked. Cleared at every opening.
+- **Faces and stacking.** The Night King and White Walker faces replaced; foreign-mod genes that had shipped since 1.0.x stripped; wight government no longer errors on tribal holdings; several permanent modifiers no longer stack; a card that had lost its portraits and theme to a parse error is whole again.
+- **Text.** Dragons are no longer all "she"; no clocks; options tightened; the prisoner count on Send the Dungeons to the Wall is now actually shown.
+
+---
+
+## Hotfix 1.0.16a — The Wanderer
+
+A hotfix off two log sets and a week of reports. One of these was shipped in 1.0.16 itself; another had been quietly ending the Long Night early for anyone unlucky enough to win a small fight.
+
+### The Night King
+
+- **He keeps his land.** The invasion handed him his fifteen counties before it handed him his realm title, so through that whole setup he counted as a mere count — and AGOT caps a count at one settled county, turning the rest back into wilderness. Fresh games have nothing settled beyond the Wall, so nobody saw it. Old saves do, and he was stripped inside a day. Reported by **Achillyz**, **Matt** and **Mat.gopack**.
+- **He answers to nobody.** Those same grants left him standing wherever the previous holder sat in the pecking order, so the Others could arrive as somebody's vassal — usually a wildling king's. He is now made independent at setup. Reported by **Mat.gopack**.
+- **He can pay his men again.** 1.0.16 gave the Others' culture its traditions, and one of them carried a heavy monthly prestige drain. His government buys and reinforces men-at-arms with prestige, so his host could never recover after a battle. Reported by **Enigmatic Clown**.
+- **The post-Dawn land cleanup can no longer run mid-invasion.** It only ever checked whether the Others' realm title had a holder, so any moment that title sat empty read as "the dark is over".
+
+### The ending and the Wall
+
+- **Beating a small detachment no longer ends the Long Night.** The killing-blow scene fired whenever anyone won a battle against a side he owned — he did not have to be in it. He now has to actually be on the field. Reported by **RedSaintNino**.
+- **The Question of the North no longer takes the Wall off the living.** If wildlings hold Castle Black when the dark lifts, that is a thing they did. It refounds the Watch only when the Watch is genuinely gone. Reported by **RedSaintNino**.
+
+### Features
+
+- **Send the Dungeons to the Wall.** One decision, every prisoner who can take the black. It tells you why when it cannot — four reasons, each one named — and it is an order, not an offer.
+
+### Reworks
+
+- **A limit on how many people the red priests can bring back.** Nothing in the mod ever counted how many priests exist, so resurrections scaled with how far R'hllor had spread. The world will now hear about five a year, ten once the dead are walking. Asking for one yourself is never refused and never counts against it. Raised by **Ser Brinda "the Bad Apple"**.
+- **Ten game rule descriptions rewritten to fit** the fixed box CK3 gives them. Reported by **Diomedian_Swap**.
+
+---
+
 ## 1.0.16 — The Dead That Frighten You
 
 1.0.15 made the ending reachable. This one makes it cost something. The Others are a real army now, the invasion moves at the pace the difficulty setting promises, and the Last Hour is a duel you can lose. Underneath all of that, a pile of text that was never showing up finally does.

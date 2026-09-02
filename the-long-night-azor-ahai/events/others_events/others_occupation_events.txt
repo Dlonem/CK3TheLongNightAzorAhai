@@ -249,6 +249,7 @@ others_occupation.1 = {
 		
 		#### I will sacrifice my child
 		option = {
+		# 1.1.0 (§7): no show_as_unavailable here, deliberately -- scope plumbing (a child to sacrifice): showing the greyed option to the childless teaches nothing worth teaching.
 		trigger = { exists = scope:child }
 		name =  others_occupation.1.c
 		custom_tooltip =  others_occupation.1.c.tt		

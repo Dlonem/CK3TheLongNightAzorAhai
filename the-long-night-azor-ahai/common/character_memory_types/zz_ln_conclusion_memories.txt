@@ -61,3 +61,129 @@ ln_stood_at_the_dawn_memory = {
 
 	duration = { years = 1000 }
 }
+
+# ══ 1.1.0b -- THE TWO ENDINGS NOBODY REMEMBERED ═══════════════════════════════════════════════════════════
+# Thomas: "do we have memories added for the long night, killing the Night King? Do we have anything else?"
+# We had the slayer and his three knights, and that was all four people in the world. Every king who fought
+# the whole war from the first snow, every player who was not the champion, came out of the Long Night with a
+# character page identical to one from a save where nothing had happened.
+#
+# NO PARTICIPANTS ON EITHER, and that is deliberate rather than lazy. A participant tag that is not supplied
+# at the firing site logs an error every time the page is drawn (game/common/character_memory_types/
+# _character_memories.info), and both of these fire on EVERY living player at once -- including the runs where
+# a wild dragon ended it and there is no slayer to name, and the run where the dark simply won and there is
+# nobody at all. These are memories about the world, not about a man, and the text is written that way.
+
+# Created in ln_reveal.1's immediate, on every living player who was not the slayer himself.
+ln_lived_to_see_the_dawn_memory = {
+	categories = { major }
+	icon = "prestige_memory.dds"
+
+	description = {
+		random_valid = { desc = ln_lived_to_see_the_dawn_memory_desc }
+	}
+	second_perspective_description = {
+		random_valid = { desc = ln_lived_to_see_the_dawn_memory_desc_second_perspective }
+	}
+	third_perspective_description = {
+		random_valid = { desc = ln_lived_to_see_the_dawn_memory_desc_third_perspective }
+	}
+
+	duration = { years = 1000 }
+}
+
+# Created in ln_defeat.1's immediate, on every living player. The Long Defeat: the dark won, the struggle
+# ended in their favour, and the game goes on for another fifty years with the sun still down. Until now
+# nothing in the world recorded that it had happened to anyone.
+ln_the_dark_won_memory = {
+	categories = { major }
+	icon = "death_negative.dds"
+
+	description = {
+		random_valid = { desc = ln_the_dark_won_memory_desc }
+	}
+	second_perspective_description = {
+		random_valid = { desc = ln_the_dark_won_memory_desc_second_perspective }
+	}
+	third_perspective_description = {
+		random_valid = { desc = ln_the_dark_won_memory_desc_third_perspective }
+	}
+
+	duration = { years = 1000 }
+}
+
+# ══ 1.1.0b -- AND THE PRICE OF THE SWORD, WITH HER NAME ON IT ═════════════════════════════════════════════
+# ln_forged_lightbringer_memory covers all three forging roads and names nobody, which is right for the
+# volunteer and for the man who tempered it in his own chest. It is not right for Nissa Nissa. The mod's own
+# comment calls that the most significant moment in it; the family already carries a permanent -60 opinion
+# called ln_killed_her_for_a_sword_opinion, so the game already treats her as a person nobody forgets. This
+# is the entry that says who she was. Fired only on the two beloved-sacrifice roads, where scope:ln_beloved
+# is in hand -- never on the other three, which have no one to name.
+ln_paid_in_full_memory = {
+	categories = { major relationships }
+	icon = "death_negative.dds"
+
+	description = {
+		random_valid = { desc = ln_paid_in_full_memory_desc }
+	}
+	second_perspective_description = {
+		random_valid = { desc = ln_paid_in_full_memory_desc_second_perspective }
+	}
+	third_perspective_description = {
+		random_valid = { desc = ln_paid_in_full_memory_desc_third_perspective }
+	}
+
+	participants = { ln_beloved }
+	duration = { years = 1000 }
+}
+
+# ══ 1.1.0 (A3) -- THE BERIC RECORD ═══════════════════════════════════════════════════════════════════════
+# The resurrection track is the one mechanic in this mod that repeats and escalates -- a man dies, a named
+# red priest burns himself out dragging him back, the man comes back less -- and until now NOTHING wrote
+# any of it down on either side. Two types, one per side of the bargain, each with the other party as its
+# participant, so a twice-risen champion's page reads as a LIST: two dates, two priests. Shape copied from
+# ln_paid_in_full_memory above. Both participant tags are supplied at every firing site, guarded on the
+# scope being in hand (an unsupplied tag errors every time the page is drawn).
+#
+# ln_came_back_memory: on the man, once per return. Fired from ln_the_fire_takes_something_effect
+# (zz_ln_returned_effects.txt) -- the one road BOTH resurrection routes run through (the bedside last
+# kiss and the battlefield interception via ln_prophecy.23), so it cannot miss a return and cannot double.
+ln_came_back_memory = {
+	categories = { major }
+	icon = "religious.dds"   # memory_types/ has no faith.dds; religious.dds is vanilla's (11 uses)
+
+	description = {
+		random_valid = { desc = ln_came_back_memory_desc }
+	}
+	second_perspective_description = {
+		random_valid = { desc = ln_came_back_memory_desc_second_perspective }
+	}
+	third_perspective_description = {
+		random_valid = { desc = ln_came_back_memory_desc_third_perspective }
+	}
+
+	participants = { ln_the_priest }
+	duration = { years = 1000 }
+}
+
+# ln_spent_myself_memory: on the priest, from BOTH spend roads -- the natural-death last kiss
+# (zz_ln_last_kiss_effects.txt) and ln_pay_the_last_kiss_effect (zz_ln_sponsor_effects.txt, the
+# interception road). ln_gave_the_last_kiss_modifier is already permanent and stack-guarded; this is the
+# dated, readable version of it, created BEFORE ln_priest_is_spent_now_effect at both sites (rule 6).
+ln_spent_myself_memory = {
+	categories = { major }
+	icon = "religious.dds"   # memory_types/ has no faith.dds; religious.dds is vanilla's (11 uses)
+
+	description = {
+		random_valid = { desc = ln_spent_myself_memory_desc }
+	}
+	second_perspective_description = {
+		random_valid = { desc = ln_spent_myself_memory_desc_second_perspective }
+	}
+	third_perspective_description = {
+		random_valid = { desc = ln_spent_myself_memory_desc_third_perspective }
+	}
+
+	participants = { ln_the_charge }
+	duration = { years = 1000 }
+}

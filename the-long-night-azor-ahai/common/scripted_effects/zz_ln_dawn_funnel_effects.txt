@@ -268,7 +268,13 @@ ln_cast_down_backstop_effect = {
 		}
 		else = {
 			random_living_character = {
-				limit = { has_trait = other_trait }
+				# 1.1.0b -- their own house first, anyone of them second. Same reason as the story cycle's
+				# two ladders: a whole-world scan was crowning Others who rule realms of their own.
+				limit = {
+					has_trait = other_trait
+					house ?= house:house_theothers
+				}
+				alternative_limit = { has_trait = other_trait }
 				save_scope_as = ln_next_nightking
 			}
 		}

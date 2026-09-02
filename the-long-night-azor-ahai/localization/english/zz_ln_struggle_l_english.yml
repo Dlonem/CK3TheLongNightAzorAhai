@@ -68,8 +68,13 @@
  ln_catalyst_ranging_lost_desc:0 "Rangers go north of the Wall and do not come back.\n\n#weak At most once every four years.#!"
  ln_catalyst_warning_dismissed:0 "A warning was laughed at"
  ln_catalyst_warning_dismissed_desc:0 "Someone with something worth saying is not believed.\n\n#weak At most once every three years.#!"
+ # ── 1.1.0: the two entries that make Winter Is Coming's panel readable. Both say what actually happens,
+ # because on a time-based phase the number beside them is not a progress bar and pretending otherwise is
+ # how the panel got a reputation for being broken in the first place.
+ ln_catalyst_winter_is_coming:0 "The warning has begun"
+ ln_catalyst_winter_is_coming_desc:0 "White ravens went out. The wells freeze in the second moon and the free folk are coming south in numbers that are not raiding numbers.\n\n#EMP This phase does not fill a bar.#! It lasts somewhere between a reign and a lifetime, and nothing you do will tell you which. Build now.\n\n#weak Once, when the winds turn.#!"
  ln_catalyst_other_sighted:0 "An Other was seen, and believed"
- ln_catalyst_other_sighted_desc:0 "Someone sees one, survives, and is believed. All three must happen.\n\n#weak At most once every six years. Carries [ln_struggle_phase_cold_winds|E] onward.#!"
+ ln_catalyst_other_sighted_desc:0 "Someone sees one, survives, and is believed. All three must happen.\n\n#EMP During the warning this is the one thing that brings the dark closer.#! Every believed sighting takes years off what is left, directly — it does not wait for a threshold.\n\n#weak At most once every six years. Carries [ln_struggle_phase_cold_winds|E] onward.#!"
  ln_catalyst_night_king_slain:0 "The Night King is slain"
  ln_catalyst_night_king_slain_desc:0 "The blow lands.\n\nEnds [ln_struggle_phase_the_long_night|E] outright. Nothing else can."
 

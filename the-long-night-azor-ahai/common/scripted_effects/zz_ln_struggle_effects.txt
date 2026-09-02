@@ -152,6 +152,10 @@ ln_struggle_monthly_effect = {
 			# two crowns a new one who has beaten nobody, and leaving the flag up would hand the player the
 			# endgame CB on day one of a dark he has not fought yet -- which is exactly the hole the gate
 			# was added to close.
+			# ln_dawn_line_stood -- 1.1.0. The marker that says wave N's roll call came from a real melee
+			# line rather than nowhere. Same lifetime as the three names it guards; leaving it up would let
+			# wave two's single-duel slayer inherit wave one's men as "the men who were there".
+			if = { limit = { has_global_variable = ln_dawn_line_stood } remove_global_variable = ln_dawn_line_stood }
 			if = { limit = { has_global_variable = ln_dawn_knight_1 } remove_global_variable = ln_dawn_knight_1 }
 			if = { limit = { has_global_variable = ln_dawn_knight_2 } remove_global_variable = ln_dawn_knight_2 }
 			if = { limit = { has_global_variable = ln_dawn_knight_3 } remove_global_variable = ln_dawn_knight_3 }
@@ -692,6 +696,12 @@ ln_struggle_yearly_work_effect = {
 			}
 		}
 		set_global_variable = { name = ln_last_yearly_year  value = current_year }
+
+		# 1.0.17 -- THE WORLD'S ALLOWANCE OF BLESSINGS RESETS HERE, behind the same calendar stamp as
+		# everything else in this block, so it happens exactly once a year however many characters reach the
+		# line. It also stamps the global into existence on a save that predates the feature, which is what
+		# takes ln_world_will_hear_another_blessing_trigger off its fail-open branch.
+		set_global_variable = { name = ln_blessings_this_year  value = 0 }
 
 		# FIRST, because every line below this one assumes the struggle exists. On a normal game this is a
 		# single cheap `exists` check; on a save the mod was just added to, it is the whole mod starting.

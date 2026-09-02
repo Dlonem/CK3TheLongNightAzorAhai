@@ -6,7 +6,7 @@
  ln_favored.1.desc:0 "He has walked from Volantis.\n\nNot sailed. Walked, as far as the sea and then worked a crossing and then walked again, and he has been doing it for two years, and he arrived at your gate this morning with his feet in rags and asked the guard — politely, in bad Common — whether this was the right castle.\n\nHe does not want money. He does not want land or a place or a letter. He has come a very long way to stand in a courtyard and look at you, and then, presumably, to walk back.\n\nYour steward is waiting for an instruction. So, less obviously, is everybody else in the yard."
  ln_favored.1.a:0 "Feed him, hear him out, and send him home with boots."
  ln_favored.1.b:0 "Turn him around. This starts here or it does not stop."
- ln_favored.1.c:0 "Give him a bed. A man who walks two years is worth keeping."
+ ln_favored.1.c:0 "Give him a bed; a man who walks two years is worth keeping."
 
  ln_favored.2.t:0 "There Is Another"
  ln_favored.2.desc:0 "There is a man in Myr with the same claim.\n\nA temple there has been saying it for eight months — a captain's son, born in the year of some comet you have never heard of, who walked out of a burning ship without a mark. They have the same word for him that your priests have for you.\n\nThe letter reporting it is from a red priest, and it is entirely matter-of-fact, because the priests have never once said there would be only one. That is a thing men assumed.\n\nIt is you who assumed. And you did not notice until just now, reading this, and finding out how much you disliked it."

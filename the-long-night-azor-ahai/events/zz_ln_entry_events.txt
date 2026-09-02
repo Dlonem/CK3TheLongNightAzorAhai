@@ -74,11 +74,23 @@ ln_prophecy.30 = {
 
 	option = {
 		name = ln_prophecy.30.a          # I know what they say. Say it anyway.
+		ai_chance = {
+			base = 60
+			modifier = { add = 25  has_trait = zealous }
+			modifier = { add = 20  has_trait = ambitious }
+			modifier = { add = -25  has_trait = humble }
+		}
 		add_piety = 50
 		add_character_flag = ln_listened_to_the_seer
 	}
 	option = {
 		name = ln_prophecy.30.b          # I did not ask for this and I do not want it.
+		ai_chance = {
+			base = 40
+			modifier = { add = 25  has_trait = humble }
+			modifier = { add = 25  has_trait = cynical }
+			modifier = { add = -25  has_trait = ambitious }
+		}
 		add_prestige = -25
 		add_character_flag = ln_wants_none_of_it
 		stress_impact = { base = minor_stress_impact_loss }

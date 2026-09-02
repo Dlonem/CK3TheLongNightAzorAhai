@@ -1,0 +1,356 @@
+﻿namespace = ln_encounter
+
+# AGOT: The Long Night & Azor Ahai -- White Walkers in Winter Is Coming (1.1.0, §5).
+#
+# The shadow threat: sightings (.30) and the encounter melee (.1 and its endings). Event-only, no titles,
+# no armies, no land -- the constraint is in the pulse file's header and it is a rule, not an accident.
+# The melee is AGOT's multi-duel engine entered with our sides; see zz_ln_last_hour_effects.txt and the
+# fork note in zz_ln_multi_duel_theme_override.txt. A Walker never accepts a yield (§3.5); losing to an
+# Other makes a wight, and in this phase the dead may take bodies but never land.
+
+# ── THE ENCOUNTER ───────────────────────────────────────────────────────────────────────────────────────
+# Root = a player in the far North. Everything the card shows is created in immediate; nothing
+# irreversible happens until an option is clicked (rule 3), and the fall-back option disposes of every
+# character the immediate created (rule 15).
+ln_encounter.1 = {
+	type = character_event
+	window = agot_character_event_huge
+	title = ln_encounter.1.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { any_in_list = { variable = ln_lh_the_line  count >= 1 } }
+				desc = ln_encounter.1.desc.men
+			}
+			desc = ln_encounter.1.desc.alone
+		}
+	}
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+	right_portrait = {
+		character = scope:ln_the_walker
+		animation = menacing
+	}
+	lower_left_portrait = { character = scope:ln_enc_man_1 }
+	lower_center_portrait = { character = scope:ln_enc_man_2 }
+	lower_right_portrait = { character = scope:ln_enc_man_3 }
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		ln_open_encounter_effect = yes
+	}
+
+	# Stand. The line forms and the engine takes it from here.
+	option = {
+		name = ln_encounter.1.a
+		ai_chance = {
+			base = 80
+			modifier = { add = 25  has_trait = brave }
+			modifier = { add = -60  has_trait = craven }
+			modifier = { add = 15  ln_bears_the_bane_trigger = yes }
+		}
+		# hidden_effect on every heavy option body in this file: tooltip builds execute effect chains per
+		# frame (the ln_dawn.2.e lesson from the 1 Sep boot -- 2 FPS with a card open).
+		custom_tooltip = ln_encounter.1.a_tt
+		hidden_effect = {
+			ln_begin_encounter_melee_effect = yes
+		}
+		stress_impact = {
+			base = minor_stress_impact_gain
+			brave = minor_stress_impact_loss
+			craven = medium_stress_impact_gain
+		}
+	}
+
+	# Fall back. Nobody fights; everything the immediate created is disposed of.
+	option = {
+		name = ln_encounter.1.b
+		ai_chance = { base = 0 }
+		custom_tooltip = ln_encounter.1.b_tt
+		hidden_effect = {
+			ln_encounter_stand_down_effect = yes
+		}
+		add_character_flag = ln_looked_north
+		stress_impact = {
+			base = medium_stress_impact_gain
+			craven = minor_stress_impact_loss
+			brave = major_stress_impact_gain
+		}
+	}
+}
+
+# ── TEAM SELECTION (the engine fires these; see multi_duel_leaders_effect:272-273) ──────────────────────
+# Side A: the drafted line joins the champion. Root = the side A leader.
+ln_encounter.10 = {
+	hidden = yes
+	immediate = {
+		# Named scope, never `this` -- macro substitution puts `this` inside the effect's own
+		# scope:multi_duel_leader_story block, filling the fighter list with STORY handles. See
+		# ln_lasthour.10's block comment for the first boot's post-mortem.
+		every_in_list = {
+			variable = ln_lh_the_line
+			save_scope_as = ln_lh_duelist
+			multi_duel_participant_effect = {
+				DUELIST = scope:ln_lh_duelist
+				LEADER = no
+				SIDE = side_a
+				DUELIST_NUM = 0
+			}
+		}
+	}
+}
+
+# Side B: the Walker stands alone -- never the Night King in Cold Winds (§5.2). The event exists because
+# the engine requires a selection event per side; it marks the fight as underway and adds nobody.
+ln_encounter.11 = {
+	hidden = yes
+	immediate = {
+		# The engine requires a selection event per side; the Walker brings nobody. The log line is the
+		# event's whole job (a flag here was a dead write -- optioncheck caught it).
+		debug_log = "LN_ENCOUNTER: the walker stands alone"
+	}
+}
+
+# ── VICTORY ─────────────────────────────────────────────────────────────────────────────────────────────
+ln_encounter.20 = {
+	type = character_event
+	window = agot_character_event_huge
+	title = ln_encounter.20.t
+	desc = ln_encounter.20.desc
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+	}
+
+	option = {
+		name = ln_encounter.20.a
+		custom_tooltip = ln_encounter.20.a_tt
+		hidden_effect = {
+			ln_encounter_victory_effect = yes
+		}
+	}
+}
+
+# ── THE TAKING ──────────────────────────────────────────────────────────────────────────────────────────
+# Root is downed and the line is spent. The order on the click is the §4 order: everything the scene needs
+# is already banked in scopes; the men die first, the Walker leaves, the fighters are stood down, and the
+# champion's own end comes LAST, because it is the one thing that cannot be taken back (rule 3).
+ln_encounter.21 = {
+	type = character_event
+	window = agot_character_event_huge
+	title = ln_encounter.21.t
+	desc = ln_encounter.21.desc
+	theme = death
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+	}
+
+	option = {
+		name = ln_encounter.21.a
+		custom_tooltip = ln_encounter.21.a_tt
+		hidden_effect = {
+			ln_encounter_finish_the_downed_effect = yes
+			if = {
+				limit = {
+					has_variable = ln_enc_walker_ref
+					var:ln_enc_walker_ref ?= { is_alive = yes }
+				}
+				var:ln_enc_walker_ref = { death = { death_reason = death_claimed_by_cold } }
+			}
+			ln_encounter_scrub_all_effect = yes
+			death = { death_reason = death_taken_by_the_dead }
+		}
+	}
+}
+
+# ── THE SAM TARLY OUTCOME (§5.2) ────────────────────────────────────────────────────────────────────────
+# He stops. He looks at the weakest man left breathing, and he lets him live -- the spared man is always a
+# REAL person (the arm's trigger requires one), because he is now the man who says THEY ARE REAL and is
+# believed or not, and the player must be able to go and talk to him. Lowest prowess is the right and
+# cruellest choice: it is the one Sam would be.
+ln_encounter.22 = {
+	type = character_event
+	window = agot_character_event_huge
+	title = ln_encounter.22.t
+	desc = ln_encounter.22.desc
+	theme = death
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+	right_portrait = {
+		character = scope:ln_enc_the_spared
+		animation = fear
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		ordered_in_list = {
+			variable = ln_lh_the_line
+			limit = {
+				is_alive = yes
+				NOT = { has_character_flag = ln_temporary_ranger }
+			}
+			order_by = {
+				value = prowess
+				multiply = -1
+			}
+			max = 1
+			save_scope_as = ln_enc_the_spared
+		}
+		# Banked before anything irreversible: the flag below is what exempts him from the deaths on the
+		# option click.
+		if = {
+			limit = { exists = scope:ln_enc_the_spared }
+			scope:ln_enc_the_spared = {
+				add_character_flag = ln_enc_spared
+			}
+		}
+	}
+
+	option = {
+		name = ln_encounter.22.a
+		custom_tooltip = ln_encounter.22.a_tt
+		hidden_effect = {
+			if = {
+				limit = { exists = scope:ln_enc_the_spared }
+				scope:ln_enc_the_spared = {
+					add_character_flag = ln_he_let_me_live
+					create_character_memory = { type = ln_the_walker_spared_me_memory }
+					add_stress = 100
+				}
+			}
+			# The spared flag must still be ON him when the deaths below are dealt -- it is what exempts
+			# him. It comes off only after the finishing pass.
+			ln_encounter_finish_the_downed_effect = yes
+			if = {
+				limit = { exists = scope:ln_enc_the_spared }
+				scope:ln_enc_the_spared = { remove_character_flag = ln_enc_spared }
+			}
+			if = {
+				limit = {
+					has_variable = ln_enc_walker_ref
+					var:ln_enc_walker_ref ?= { is_alive = yes }
+				}
+				var:ln_enc_walker_ref = { death = { death_reason = death_claimed_by_cold } }
+			}
+			ln_encounter_scrub_all_effect = yes
+			death = { death_reason = death_taken_by_the_dead }
+		}
+	}
+}
+
+# ── BREAK AND RUN ───────────────────────────────────────────────────────────────────────────────────────
+# Fleeing is honourable here in a way yielding is not (§3.5). The champion comes off a lost melee alive;
+# he does not come off it whole, and the men who could not run are not seen again.
+ln_encounter.24 = {
+	type = character_event
+	window = agot_character_event_huge
+	title = ln_encounter.24.t
+	desc = ln_encounter.24.desc
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+	}
+
+	option = {
+		name = ln_encounter.24.a
+		custom_tooltip = ln_encounter.24.a_tt
+		hidden_effect = {
+			ln_encounter_finish_the_downed_effect = yes
+			if = {
+				limit = {
+					has_variable = ln_enc_walker_ref
+					var:ln_enc_walker_ref ?= { is_alive = yes }
+				}
+				var:ln_enc_walker_ref = { death = { death_reason = death_claimed_by_cold } }
+			}
+			ln_encounter_scrub_all_effect = yes
+			increase_wounds_no_death_effect = { REASON = death_battle }
+		}
+		add_character_flag = ln_faced_him_and_lived
+		stress_impact = {
+			base = major_stress_impact_gain
+			craven = medium_stress_impact_gain
+		}
+	}
+}
+
+# ── A SIGHTING (§5.1 -- the shadow threat that takes nothing) ───────────────────────────────────────────
+ln_encounter.30 = {
+	type = character_event
+	title = ln_encounter.30.t
+	desc = ln_encounter.30.desc
+	theme = realm
+	override_background = { reference = agot_frozen_forest }
+
+	left_portrait = {
+		character = root
+		animation = nervous
+	}
+
+	# It was real. The knowledge ladder's first rung -- the same flag the omen chain sets, so a man who
+	# believes his own eyes can mine the glass forty years before the realm believes him.
+	option = {
+		name = ln_encounter.30.a
+		ai_chance = {
+			base = 40
+			modifier = { add = 20  has_trait = paranoid }
+			modifier = { add = 15  has_trait = brave }
+		}
+		add_character_flag = ln_looked_north
+		# ── 1.1.0 (1 Sep): AND THE REALM COUNTS IT. ────────────────────────────────────────────────────
+		# This option IS the sentence the struggle panel needed a source for: a man goes north, sees one,
+		# comes back, and believes his own eyes. Option b -- the cold plays tricks -- fires nothing, which
+		# is the point of having two options.
+		#
+		# The pulse that sends this card is already player-only and far-north-only
+		# (ln_encounter_pulse_effect: is_ai = no, plus the Wall / beyond / northern-capital test), so this
+		# is the player's sighting, exactly as Thomas asked -- "emphasis on players getting it."
+		#
+		# The helper self-gates on PHASE, so this call is a no-op outside the Cold Winds and the Long
+		# Summer's own call sites are untouched. They share one cooldown global, which is correct: it is
+		# the same catalyst and the same six-year rate limit whichever phase the world is in.
+		save_scope_as = ln_catalyst_culprit
+		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_other_sighted  PHASE = ln_phase_cold_winds  POINTS = 1  COOLDOWN = 6 }
+		stress_impact = { base = minor_stress_impact_gain }
+	}
+
+	# The cold plays tricks on tired men.
+	option = {
+		name = ln_encounter.30.b
+		ai_chance = {
+			base = 60
+			modifier = { add = 20  has_trait = cynical }
+			modifier = { add = 15  has_trait = calm }
+		}
+	}
+}

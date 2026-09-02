@@ -68,7 +68,13 @@ ln_ask_for_the_blessing_decision = {
 	# The AI may ask too, but only where it means something -- base 0, so a lord with no claim on the fire's
 	# attention never bothers his chaplain about it. This is what puts a handful of blessed champions in the
 	# world rather than none, without every count in Westeros queueing up.
-	ai_potential = { is_ai = yes }
+	# 1.0.17 -- the world's yearly allowance is read HERE and in the interaction's ai_potential, and nowhere
+	# else. is_shown and is_valid_showing_failures_only above are deliberately untouched: a player asks his
+	# chaplain whenever he likes, and his blessing does not spend the world's budget either.
+	ai_potential = {
+		is_ai = yes
+		ln_world_will_hear_another_blessing_trigger = yes
+	}
 	# Same worth model as the priest's own, read from the asker's side (root is the lord doing the asking).
 	# Base 0: a lord with no claim on the fire's attention never bothers his chaplain, so the world ends up
 	# with a handful of blessed champions rather than every count in Westeros queueing at the brazier.

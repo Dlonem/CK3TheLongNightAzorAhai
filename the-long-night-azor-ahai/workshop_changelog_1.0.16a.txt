@@ -1,0 +1,36 @@
+[h1]1.0.16a — The Wanderer[/h1]
+
+A hotfix off two log sets and a week of your reports. One of these I shipped in 1.0.16 myself; another had been quietly ending the Long Night early for anyone unlucky enough to win a small fight.
+
+[h2]Bug Fixes — the Night King[/h2]
+[list]
+[*] He keeps his land. The invasion handed him his fifteen counties before it handed him his realm title, so through that whole setup he counted as a mere count — and AGOT caps a count at one settled county, turning the rest back into wilderness. Fresh games have nothing settled beyond the Wall, so nobody saw it. Old saves do, and he was stripped inside a day. — Achillyz, Matt, Mat.gopack
+[*] He answers to nobody. Those same grants left him standing wherever the previous holder sat in the pecking order, so the Others could arrive as somebody's vassal — usually a wildling king's. He is now made independent at setup. This may also be why he stopped invading in some games, since the invasion picks its next target from its own top liege's neighbours. — Mat.gopack
+[*] He can pay his men again. 1.0.16 gave the Others' culture its traditions, and one of them carried a heavy monthly prestige drain. His government buys and reinforces men-at-arms with prestige, so his host could never recover after a battle. From the outside that looks exactly like an invasion running out of steam. — Enigmatic Clown
+[*] The post-Dawn land cleanup can no longer run mid-invasion. It only ever checked whether the Others' realm title had a holder, so any moment that title sat empty read to it as "the dark is over".
+[/list]
+
+[h2]Bug Fixes — the ending and the Wall[/h2]
+[list]
+[*] Beating a small detachment no longer ends the Long Night. The killing-blow scene fired whenever anyone won a battle against a side he owned — he did not have to be in it. He now has to actually be on the field. — RedSaintNino
+[*] The Question of the North no longer takes the Wall off the living. If wildlings hold Castle Black when the dark lifts, that is a thing they did. It only asked whether the holder was undead; it now asks whether he is actually the Night's Watch, and refounds the Watch only when the Watch is genuinely gone. — RedSaintNino
+[/list]
+
+[h2]Features[/h2]
+[list]
+[*] Send the Dungeons to the Wall. One decision, every prisoner who can take the black, with the count shown before you click.
+[*] And it tells you why when it cannot. AGOT hides every condition behind a check that deletes the option instead of greying it, so the commonest blocker of all was invisible: a landed enemy lord can never be sent, only your vassals and your own courtiers. Four reasons, each one named.
+[*] It is an order, not an offer. A man in your dungeon does not get a vote.
+[/list]
+
+[h2]Reworks[/h2]
+[list]
+[*] The world now has a limit on how many people the red priests can bring back. Nothing was broken — one priest still spends himself for one life, ever — but nothing in the mod ever counted how many priests exist, so the resurrections scaled with how far R'hllor had spread. Measured across two games: an early bookmark produced about five blessings a year, a sixty-year game with the faith established produced fifty-five. The world will now hear five a year, ten once the dead are walking. Asking for one yourself is never refused and never counts against it. — Ser Brinda "the Bad Apple"
+[*] Ten game rule descriptions rewritten to fit. CK3 gives every rule a fixed box with no scrollbar, and any description with a blank line in it burns a whole row, so the longer ones were being cut off mid-sentence. Nothing was missing from the files — it was never on screen. — Diomedian_Swap
+[/list]
+
+[h2]Known, and not fixed here[/h2]
+[list]
+[*] Playing as a female Lord Commander ends the game immediately. This is base AGOT, not this mod — its Night's Watch membership check is a plain "is male", and it deposes her on the first tick. The Watch takes brothers, so the rule itself stays; being allowed to start as one and then deposed into a game over is the bug, and it is upstream. — Parabella
+[*] On freezes: I need your system.log to say anything useful, since that is where the build number lives. There is no freeze signal from this mod in any log I have so far. — Fireclaus
+[/list]

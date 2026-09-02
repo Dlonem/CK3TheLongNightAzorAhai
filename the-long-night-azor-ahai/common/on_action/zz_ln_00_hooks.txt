@@ -119,6 +119,15 @@ on_title_gain_inheritance = {
 	}
 }
 
+# 1.1.0 -- THE DEAD DO NOT TAKE SERVICE. Root = the character who just joined a court; scope:new_employer =
+# whose. Body in common/on_action/zz_ln_court_on_actions.txt. AGOT declares this on_action with seven
+# sub-lists of its own, so ours merges alongside them.
+on_join_court = {
+	on_actions = {
+		ln_dead_join_court
+	}
+}
+
 # 1.0.15 -- THE COLD DOES NOT SIT IN A CELL. Root = the prisoner, scope:imprisoner = the captor (vanilla's
 # own header, prison_on_actions.txt:5-6). A captured Night King routes into the execution ending; a captured
 # Other or wight is flagged so AGOT's prison interactions (trial by combat above all) hide for it, and the
@@ -183,6 +192,7 @@ yearly_struggle_playable_pulse = {
 	on_actions = {
 		ln_omen_pulse
 		ln_coldwinds_pulse
+		ln_encounter_pulse       # 1.1.0 -- §5: sightings and the encounter melee, Cold Winds only
 	}
 }
 
@@ -204,6 +214,14 @@ on_natural_death_second_chance = {
 # scope = combat_side; agot_others_events.9000 reads side_primary_participant and combat.location off it), so
 # side_commander / enemy_side / combat.location are all reachable. Used for the killing blow -- see
 # events/zz_ln_dawn_events.txt for why that scene lives here and not in a combat phase event.
+# 1.1.0 (B2): the prisoner-capture pass the invasion CBs run after a county falls. Was a raw declaration in
+# "AGOT Invasions/invasions_siege.txt" (now a tombstone); body in 00_others_on_actions.txt.
+on_siege_completion = {
+	on_actions = {
+		ln_others_siege
+	}
+}
+
 on_combat_end_winner = {
 	on_actions = {
 		ln_dawn_combat

@@ -4,7 +4,7 @@
 
  ln_chosen.1.t:0 "A Crown Has Decided What I Am For"
  ln_chosen.1.desc:0 "The offer is overwhelmingly generous, which is exactly how I know it is not truly an offer.\n\nLands, a seat on a royal council, a prestigious marriage—and in return, I ride under [ln_chosen_king.GetTitledFirstName]'s banner. I am seen doing it. And the prophecy that follows me around is quietly transferred to [ln_chosen_king.GetHerHis] political ledger.\n\nThe envoy is careful not to say any of this out loud. He speaks of honor, necessity, and the darkness of the times. Then he lets the silence stretch just slightly too long, ensuring I understand precisely what his king is buying.\n\nWhat makes it difficult is that he might be right. A chosen champion without an army behind them is just a rumor. A champion with a crown behind them is a holy cause."
- ln_chosen.1.a:0 "I will swear the oath. The realm needs to be united."
+ ln_chosen.1.a:0 "I will swear the oath."
  ln_chosen.1.b:0 "I will fight beside [ln_chosen_king.GetHerHim]. But I belong to no crown."
  ln_chosen.1.c:0 "Kings are a southern problem. Send the envoy away."
 
@@ -39,7 +39,7 @@
  ln_chosen.6.c:0 "Ride out in front, where their archers can see me."
 
  ln_chosen.7.t:0 "Salt and Smoke"
- ln_chosen.7.desc:0 "I am awake. I am entirely certain I am awake, which is the detail that will not leave me.\n\nThere is salt on my lips—actual salt, and no sea within a hundred miles. There is smoke that is not coming from the hearth. And there is a shape at the edge of the room that is not doing anything at all, only being there, which is infinitely worse than if it moved.\n\nIt lasts, by the candle, about nine minutes.\n\nThen the room is just a room, and I am a person sitting up in bed with shaking hands. There is a rime of salt on the back of my hand. It is still there in the morning."
+ ln_chosen.7.desc:0 "I am awake. I am entirely certain I am awake, which is the detail that will not leave me.\n\nThere is salt on my lips—actual salt, and no sea within a hundred miles. There is smoke that is not coming from the hearth. And there is a shape at the edge of the room that is not doing anything at all, only being there, which is infinitely worse than if it moved.\n\nIt lasts, by the candle, about a finger of wax.\n\nThen the room is just a room, and I am a person sitting up in bed with shaking hands. There is a rime of salt on the back of my hand. It is still there in the morning."
  ln_chosen.7.a:0 "Write down exactly what happened. Interpret nothing."
  ln_chosen.7.b:0 "Take it to the priest. He will know what it was."
  ln_chosen.7.c:0 "It was a dream. Men have dreams."

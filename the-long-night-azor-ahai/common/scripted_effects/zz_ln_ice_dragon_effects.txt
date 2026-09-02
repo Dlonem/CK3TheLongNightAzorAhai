@@ -1589,6 +1589,40 @@ ln_undead_dragon_upkeep_effect = {
 		set_global_variable = { name = ln_full_sweep_done_2  value = yes }
 		debug_log = "LN_TRACE: one-shot full repair sweep running from the yearly heartbeat"
 		ln_repair_raised_dragons_full_sweep_effect = yes
+		# 1.1.0 PERFORMANCE PASS -- the blue-fire retrofit and the past_riders copy below were both
+		# yearly FULL-WORLD walks (every_living_dragon = base living_character, the ~191,000-character
+		# walk) and are now list walks. The list cannot see a clone raised before the raise path started
+		# adding to `living_dragons`, so the WORLD-WALK versions of both run here, once, inside this same
+		# one-shot -- a save that already latched has had years of the old world-walks and needs nothing.
+		every_living_dragon = {
+			limit = {
+				has_trait = ln_undead_dragon
+				NOT = { var:gene_dragon_fire_color_template ?= 2 }
+			}
+			debug_log = "LN_TRACE: one-shot blue-fire retrofit (pre-list dragon)"
+			ln_apply_the_cold_effect = yes
+			ln_chill_the_storage_effect = yes
+		}
+		every_living_dragon = {
+			limit = {
+				has_trait = ln_undead_dragon
+				exists = var:ln_raised_from
+				NOT = { any_in_list = { variable = past_riders  count >= 1 } }
+				var:ln_raised_from = { any_in_list = { variable = past_riders  count >= 1 } }
+			}
+			save_scope_as = ln_clone_dragon
+			var:ln_raised_from = {
+				every_in_list = {
+					variable = past_riders
+					scope:ln_clone_dragon = {
+						add_to_variable_list = {
+							name = past_riders
+							target = prev
+						}
+					}
+				}
+			}
+		}
 	}
 	ln_repair_raised_dragons_effect = yes
 	# 1.0.11: the blank-entry sweep, which reaches dragons the two above cannot -- including AGOT's own.
@@ -1597,7 +1631,12 @@ ln_undead_dragon_upkeep_effect = {
 	# but a living flame. One guarded pass: any undead dragon whose fire template is not yet the custom slot
 	# gets the full cold reapplied (both sides -- the constants are fixed, so re-running is a byte-identical
 	# no-op everywhere but the two new fire variables). Runs once per old dragon, then the guard holds.
-	every_living_dragon = {
+	# 1.1.0 PERFORMANCE PASS: THE LIST, NOT THE WORLD -- the ln_repair_raised_dragons_effect precedent
+	# forty lines up, applied here. `living_dragons` holds every dragon the storage system knows,
+	# including every dragon this mod raises; pre-list clones got the world-walk once via the one-shot
+	# above. Thomas, 14 Aug: "for all of our self heal stuff, make sure that it's not performance heavy."
+	every_in_global_list = {
+		variable = living_dragons
 		limit = {
 			has_trait = ln_undead_dragon
 			NOT = { var:gene_dragon_fire_color_template ?= 2 }
@@ -1606,7 +1645,26 @@ ln_undead_dragon_upkeep_effect = {
 		ln_apply_the_cold_effect = yes
 		ln_chill_the_storage_effect = yes
 	}
-	every_living_dragon = {
+	# ⚠ 1.0.17 -- THIS ONE IS NOT A RETROFIT, WHATEVER ITS NEIGHBOURS LOOK LIKE. DO NOT LATCH IT.
+	# The sweep above it is a one-shot for old saves and the full sweep three blocks up is latched on
+	# ln_full_sweep_done_2, so this reads like a third retrofit and it is not: nothing anywhere else in this
+	# mod ever writes past_riders onto a clone. Checked -- the only two mentions in the whole mod are this
+	# block and two comments. So this IS the live mechanism by which a newly raised clone inherits its
+	# source dragon's riders, and it happens to run on the yearly heartbeat rather than at the raise. Latch
+	# it and every future undead dragon loses its history silently.
+	#
+	# It is still a full-world walk: every_living_dragon is AGOT's living_dragon list, and they declare it
+	# base = living_character + has_trait = dragon (00_agot_scripted_lists_filler_lists.txt:71), so this is
+	# the ~191,000-character walk the knowledge base warns about, twice a year, forever. The right fix is to
+	# move the copy to the raise path beside ln_chill_the_storage_effect and leave a narrow backstop -- not
+	# to gate this. See WORK-ORDER-1.0.17 §the dragon heartbeat.
+	# 1.1.0 PERFORMANCE PASS: the list, not the world (same as the retrofit above). STILL YEARLY, STILL
+	# NOT LATCHED -- the block comment above this one stands: this is the live mechanism by which a newly
+	# raised clone inherits its riders, and every new clone IS in `living_dragons` (the raise path ends in
+	# agot_dragon_transfer_vars_to_story_cycle_effect, which adds it). The still-better home for this copy
+	# is the raise path itself; that move stays queued for a session with a boot, per the audit.
+	every_in_global_list = {
+		variable = living_dragons
 		limit = {
 			has_trait = ln_undead_dragon
 			exists = var:ln_raised_from

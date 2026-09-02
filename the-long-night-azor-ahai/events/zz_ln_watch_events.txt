@@ -145,6 +145,8 @@ ln_watch.3 = {
 			modifier = { add = 10  has_trait = zealous }
 		}
 		trigger = { gold >= 100 }
+		# 1.1.0 (§7): the gold gate shown.
+		show_as_unavailable = { always = yes }
 		remove_short_term_gold = 100
 		add_character_flag = ln_watch_went_to_the_fist
 		add_character_modifier = ln_dragonglass_stores_modifier
@@ -250,8 +252,20 @@ ln_watch.5 = {
 			modifier = { add = 10  has_trait = diligent }
 		}
 		add_prestige = 100
+		# 1.0.17 -- SAME GUARD AS ln_watch.4.c THIRTY LINES ABOVE, WHICH THIS SITE WAS MISSING.
+		# 30 Aug live log:
+		#   add_opinion effect [ Edmund of k_the_wall (Internal ID 121825) is trying to add an
+		#   opinion of themself ]  -- events/zz_ln_watch_events.txt line: 255 (ln_watch.5:option)
+		# ln_watch.5 fires for every character with nights_watch_government and the Lord Commander is
+		# one of them, so on his own card the holder and the target are the same man: the call errors
+		# and the admiration is silently dropped. ln_watch.4.c already carried the NOT and said why;
+		# this option did not. Third time this shape has appeared -- see ln_lc.10's 1.0.16 note -- so
+		# holderguard.py in the gate now checks every title:*.holder opinion site.
 		if = {
-			limit = { exists = title:k_the_wall.holder }
+			limit = {
+				exists = title:k_the_wall.holder
+				NOT = { title:k_the_wall.holder = root }
+			}
 			title:k_the_wall.holder = { add_opinion = { modifier = admiration_opinion  target = root  opinion = 30 } }
 		}
 	}
@@ -414,6 +428,8 @@ ln_watch.9 = {
 			modifier = { add = 10  has_trait = just }
 		}
 		trigger = { ln_carries_a_keepership_trigger = yes }
+		# 1.1.0 (§7): a placeless brother sees what a keepership would let him do.
+		show_as_unavailable = { always = yes }
 		add_prestige = 50
 		# He asked for one thing. You gave it to him, and the Wall noticed that too.
 		if = {
@@ -449,6 +465,8 @@ ln_watch.9 = {
 			modifier = { add = 10  has_trait = arbitrary }
 		}
 		trigger = { ln_carries_a_keepership_trigger = yes }
+		# 1.1.0 (§7): as above.
+		show_as_unavailable = { always = yes }
 		add_dread = 10
 		add_prestige = 25
 		if = {
@@ -466,6 +484,7 @@ ln_watch.9 = {
 			modifier = { add = 15  has_trait = humble }
 			modifier = { add = 10  has_trait = content }
 		}
+		# 1.1.0 (§7): no show_as_unavailable here, deliberately -- mirror of 9.a/9.b (keepership = no); one branch always shows.
 		trigger = { NOT = { ln_carries_a_keepership_trigger = yes } }
 		add_character_flag = ln_still_waiting_for_a_castle
 		stress_impact = { base = minor_stress_impact_gain }
@@ -506,6 +525,8 @@ ln_watch.10 = {
 	option = {
 		name = ln_watch.10.a
 		trigger = { gold >= 100 }
+		# 1.1.0 (§7): the gold ladder shown, all three rungs.
+		show_as_unavailable = { always = yes }
 		remove_short_term_gold = 100
 		ln_feed_the_wall_effect = { AMOUNT = 100  LEDGER = 1  OPINION = 25  PIETY = 50  PRESTIGE = 25 }
 		ai_chance = {
@@ -519,6 +540,8 @@ ln_watch.10 = {
 	option = {
 		name = ln_watch.10.b
 		trigger = { gold >= 500 }
+		# 1.1.0 (§7): ladder rung two.
+		show_as_unavailable = { always = yes }
 		remove_short_term_gold = 500
 		ln_feed_the_wall_effect = { AMOUNT = 500  LEDGER = 2  OPINION = 50  PIETY = 120  PRESTIGE = 60 }
 		ai_chance = {
@@ -533,6 +556,8 @@ ln_watch.10 = {
 	option = {
 		name = ln_watch.10.c
 		trigger = { gold >= 1500 }
+		# 1.1.0 (§7): ladder rung three.
+		show_as_unavailable = { always = yes }
 		remove_short_term_gold = 1500
 		ln_feed_the_wall_effect = { AMOUNT = 1500  LEDGER = 3  OPINION = 75  PIETY = 250  PRESTIGE = 120 }
 		add_character_flag = ln_emptied_the_vaults

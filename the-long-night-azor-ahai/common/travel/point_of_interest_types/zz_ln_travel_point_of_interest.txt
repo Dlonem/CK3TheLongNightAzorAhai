@@ -1,0 +1,45 @@
+﻿# AGOT: The Long Night & Azor Ahai -- dragonglass lore (1.1.0, §11).
+#
+# The dragonlore pattern (agot_travel_point_of_interest.txt:2-60), copied faithfully: a province list, an
+# on_visit switch, and a character-modifier reward read by triggers and values -- rung one of the ladder
+# whose rung zero (ln_heard_the_warning and its siblings) already gates the mine.
+#
+# ⚠ PROVINCE IDS ARE THE MOST ERROR-PRONE SYMBOL IN THIS PROJECT. Every ID below was read from AGOT's own
+# 01_agot_landed_titles.txt on 31 Aug 2026, next to the title named in the comment. Dragonstone and the
+# Citadel additionally reuse agot_poi_dragonlore's verified 4415/3499. Re-verify all six after any AGOT
+# map update.
+ln_poi_dragonglass = {
+	build_province_list = {
+		province:4415 = {   # Dragonstone (b_dragonstone -- shared with agot_poi_dragonlore, verified)
+			add_to_list = provinces
+		}
+		province:3499 = {   # the Citadel (shared with agot_poi_dragonlore, verified)
+			add_to_list = provinces
+		}
+		province:77 = {     # Winterfell's crypts (b_winterfell = 77)
+			add_to_list = provinces
+		}
+		province:5 = {      # Castle Black (b_castle_black = 5; the Nightfort is province 1 if ever wanted)
+			add_to_list = provinces
+		}
+		province:1586 = {   # Skagos (b_kingshouse, c_drihisesk = 1586)
+			add_to_list = provinces
+		}
+		province:6028 = {   # the Fist of the First Men (b_fist_of_the_first_men = 6028, k_first_forest)
+			add_to_list = provinces
+		}
+	}
+
+	on_visit = {
+		switch = {
+			trigger = location
+			province:4415 = { root = { trigger_event = ln_glass.1 } }  # Dragonstone
+			province:3499 = { root = { trigger_event = ln_glass.2 } }  # the Citadel
+			province:77   = { root = { trigger_event = ln_glass.3 } }  # Winterfell
+			province:5    = { root = { trigger_event = ln_glass.4 } }  # Castle Black
+			province:1586 = { root = { trigger_event = ln_glass.5 } }  # Skagos
+			province:6028 = { root = { trigger_event = ln_glass.6 } }  # the Fist
+		}
+		custom_tooltip = ln_poi_dragonglass_tt
+	}
+}

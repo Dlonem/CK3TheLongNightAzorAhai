@@ -16,3 +16,30 @@
  # zz_ln_reveal_l_english.yml; this line was not anywhere, and the live log said so:
  # "Character memory name 'ln_stood_at_the_dawn_memory' is not localized".
  ln_stood_at_the_dawn_memory:0 "stood at the dawn"
+
+ # 1.1.0b -- the two endings, for everyone who was not the man who swung.
+ ln_lived_to_see_the_dawn_memory:0 "lived to see the dawn"
+ ln_lived_to_see_the_dawn_memory_desc:0 "I was alive when the dark broke. Most of the men I began it with were not."
+ ln_lived_to_see_the_dawn_memory_desc_second_perspective:0 "you were alive when the dark broke. Most of the men you began it with were not."
+ ln_lived_to_see_the_dawn_memory_desc_third_perspective:0 "[owner.GetName] was alive when the dark broke. Most of the men [owner.GetHeShe] began it with were not."
+
+ ln_the_dark_won_memory:0 "saw the dark win"
+ ln_the_dark_won_memory_desc:0 "The dawn did not come. I have been keeping count of the years since, and I have stopped telling anyone the number."
+ ln_the_dark_won_memory_desc_second_perspective:0 "the dawn did not come. You have been keeping count of the years since, and you have stopped telling anyone the number."
+ ln_the_dark_won_memory_desc_third_perspective:0 "the dawn did not come, and [owner.GetName] is still counting the years since."
+
+ # 1.1.0b -- Nissa Nissa, by name. ln_beloved is the participant tag declared on the type.
+ ln_paid_in_full_memory:0 "paid the price of Lightbringer"
+ ln_paid_in_full_memory_desc:0 "I put the sword through [ln_beloved.GetTitledFirstName]'s heart, and it took the fire, and I have not been able to set it down since."
+ ln_paid_in_full_memory_desc_second_perspective:0 "you put the sword through [ln_beloved.GetTitledFirstName]'s heart, and it took the fire, and you have not been able to set it down since."
+ ln_paid_in_full_memory_desc_third_perspective:0 "[owner.GetName] put the sword through [ln_beloved.GetTitledFirstName]'s heart, and it took the fire."
+
+ # 1.1.0 (A3) -- the Beric record. Participants: ln_the_priest on the man's entry, ln_the_charge on the priest's.
+ ln_came_back_memory:0 "brought back by the fire"
+ ln_came_back_memory_desc:0 "I died, and [ln_the_priest.GetTitledFirstName] knelt over me and gave the fire what it asked for, and I came back. Not all of me came back."
+ ln_came_back_memory_desc_second_perspective:0 "you died, and [ln_the_priest.GetTitledFirstName] gave the fire what it asked for to bring you back."
+ ln_came_back_memory_desc_third_perspective:0 "[owner.GetName] died, and [ln_the_priest.GetTitledFirstName] brought [owner.GetHerHim] back from it."
+ ln_spent_myself_memory:0 "gave the last kiss"
+ ln_spent_myself_memory_desc:0 "I put my mouth to [ln_the_charge.GetTitledFirstName]'s and asked the Lord of Light for one more life, and he took the payment out of me. I will not be asked again."
+ ln_spent_myself_memory_desc_second_perspective:0 "you gave the last kiss to [ln_the_charge.GetTitledFirstName], and the fire took its payment out of you."
+ ln_spent_myself_memory_desc_third_perspective:0 "[owner.GetName] gave the last kiss to [ln_the_charge.GetTitledFirstName], and was never whole again."

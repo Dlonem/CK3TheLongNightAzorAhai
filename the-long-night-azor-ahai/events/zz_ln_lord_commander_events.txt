@@ -222,7 +222,23 @@ ln_lc.4 = {
 ln_lc.10 = {
 	type = character_event
 	title = ln_lc.10.t
-	desc = ln_lc.10.desc
+	# 1.1.0 (§12): this is the card the whole realm receives, so it is where the three voices matter most.
+	# The North answers a duty; the south sees a convenient hole to pour its dungeons into; base key stays
+	# the southern default so nothing can fall through to a raw key.
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					OR = {
+						culture = culture:northman
+						capital_province ?= { geographical_region = world_westeros_the_north }
+					}
+				}
+				desc = ln_lc.10.desc.north
+			}
+			desc = ln_lc.10.desc
+		}
+	}
 	theme = realm
 	left_portrait = { character = root  animation = interested }
 	right_portrait = { trigger = { exists = scope:ln_wandering_crow }   character = scope:ln_wandering_crow  animation = personality_content }
@@ -244,10 +260,16 @@ ln_lc.10 = {
 		}
 		every_prisoner = {
 			limit = {
+				# 1.1.0 (§10 sibling sweep, standing rule 8): this loop predates
+				# ln_prisoner_fit_for_the_wall_trigger and carried only four raw checks -- so a WIGHT, a
+				# free folk captive, or an already-sworn brother in the Lord Commander's own cells could
+				# be "recruited". The fitness trigger now carries those clauses for both doors. The
+				# relationship legs and the §10 protections are NOT applied here on purpose: the Watch
+				# recruits from its own cells whoever the man is to any lord -- but is_landed = no stays,
+				# so no landed lord slips through, and is_adult stays (fit's own floor is AGOT's age 10).
 				is_adult = yes
-				is_male = yes
 				is_landed = no
-				is_ai = yes
+				ln_prisoner_fit_for_the_wall_trigger = yes
 			}
 			release_from_prison = yes
 			save_scope_as = ln_nw_recruit
@@ -282,6 +304,8 @@ ln_lc.10 = {
 	option = {
 		name = ln_lc.10.b          # coin for the Wall, and keep my prisoners.
 		trigger = { gold >= 50 }
+		# 1.1.0 (§7): the gold gate shown.
+		show_as_unavailable = { always = yes }
 		ai_chance = {
 			base = 25
 			modifier = { add = 15  has_trait = paranoid }

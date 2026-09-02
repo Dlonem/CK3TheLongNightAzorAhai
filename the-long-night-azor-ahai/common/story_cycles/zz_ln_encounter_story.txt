@@ -1,0 +1,189 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the encounter melee watchdog (1.1.0, §5.2).
+#
+# WHY A WATCHDOG STORY. The engine ends a dead_leader match on a DEATH, and our champion cannot die -- he
+# carries multi_duelist_plot_armor because his loss is the TAKING, not a corpse. So the engine's own end
+# machinery never fires for the losing case, and something must notice "the fight is decided" and route it.
+# This story is that something: a daily glance at three facts, then one event, then it ends itself.
+# Owner = the champion. Created by ln_begin_encounter_melee_effect; never exists outside a running encounter.
+#
+# ── THE CADENCE WAS QUESTIONED AND IS STAYING AT ONE DAY (1.1.0, 1 Sep) ─────────────────────────────────
+# Thomas jotted "days = 1 -> days = 2?" against both stories in this file while chasing the frame drop at
+# the end of a melee. Measured against what the tick actually costs, it is not where the time is going: one
+# story exists at a time, it belongs to ONE character, and a tick is two triggered_effects -- a variable
+# read and a walk of ln_lh_the_line, which is a handful of men. Everything expensive in the melee
+# (ln_lh_build_candidates_effect's three-source sweep, ln_lh_measure_the_whole_line_effect) is one-shot at
+# setup and never runs from here.
+# Doubling it buys nothing measurable and costs up to a day of latency between the fight being decided and
+# the card that says so -- in a scene that is already the mod's tensest. Left alone deliberately; if the
+# drop is chased again, look at the multi-duel engine's own wind-down and the scrub, not at this file.
+
+ln_encounter_watch_story = {
+	on_setup = { }
+	on_end = { }
+
+	# The world can still kill the champion mid-melee (the plot armor only covers the duel engine's own
+	# death rolls). Dispose of everything this encounter created -- rule 15 -- and stand the fighters down.
+	# ⚠ on_owner_death's body IS the effect -- there is no effect = { } wrapper (vanilla's own
+	# _story_cycles.info). The first cut wrapped it and the parse cascade silently killed BOTH story
+	# types in this file (boot log, 1 Sep 2026).
+	on_owner_death = {
+		story_owner = {
+			if = {
+				limit = {
+					has_variable = ln_enc_walker_ref
+					var:ln_enc_walker_ref ?= { is_alive = yes }
+				}
+				var:ln_enc_walker_ref = { death = { death_reason = death_claimed_by_cold } }
+			}
+			every_in_list = {
+				variable = ln_lh_the_line
+				limit = { is_alive = yes }
+				if = {
+					limit = { has_character_flag = ln_temporary_ranger }
+					death = { death_reason = death_claimed_by_cold }
+				}
+				else = {
+					ln_encounter_scrub_one_effect = yes
+				}
+			}
+			ln_lh_clear_draft_effect = yes
+		}
+	}
+
+	effect_group = {
+		days = 1
+
+		# VICTORY FIRST -- when both sides are spent on the same tick, the walker going down wins the read.
+		triggered_effect = {
+			trigger = {
+				story_owner ?= {
+					has_variable = ln_enc_walker_ref
+					var:ln_enc_walker_ref ?= { agot_multi_duelist_cant_continue = yes }
+				}
+			}
+			effect = {
+				story_owner = { trigger_event = ln_encounter.20 }
+				end_story = yes
+			}
+		}
+
+		# DEFEAT: the champion is down and nobody on the line can still stand between him and it.
+		triggered_effect = {
+			trigger = {
+				story_owner ?= {
+					agot_multi_duelist_cant_continue = yes
+					NOT = {
+						any_in_list = {
+							variable = ln_lh_the_line
+							NOT = { agot_multi_duelist_cant_continue = yes }
+						}
+					}
+				}
+			}
+			effect = {
+				story_owner = { ln_encounter_resolve_defeat_effect = yes }
+				end_story = yes
+			}
+		}
+	}
+
+	# THE BACKSTOP. A melee is a matter of days; a watchdog alive at one year means something upstream
+	# wedged (a skipped tick, an engine change). Log it, dispose, stand everyone down, end. A skipped
+	# check looks exactly as green as a passing one -- this one says so out loud (standing rule 9).
+	effect_group = {
+		days = 365
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				story_owner = {
+					debug_log = "LN_ENCOUNTER: watchdog backstop fired -- the melee never resolved"
+					debug_log_scopes = yes
+					if = {
+						limit = {
+							has_variable = ln_enc_walker_ref
+							var:ln_enc_walker_ref ?= { is_alive = yes }
+						}
+						var:ln_enc_walker_ref = { death = { death_reason = death_claimed_by_cold } }
+					}
+					every_in_list = {
+						variable = ln_lh_the_line
+						limit = { is_alive = yes  has_character_flag = ln_temporary_ranger }
+						death = { death_reason = death_claimed_by_cold }
+					}
+					ln_encounter_scrub_all_effect = yes
+				}
+				end_story = yes
+			}
+		}
+	}
+}
+
+
+# ══ THE LAST HOUR WATCHDOG (1.1.0, §3) ══════════════════════════════════════════════════════════════════
+# Same reasoning as the encounter watchdog above: the champion carries plot armor, so the engine's own
+# dead_leader machinery cannot see his loss -- and the victory needs OUR card even when the engine's kill
+# handled the Night King's death. Owner = the champion.
+ln_last_hour_watch_story = {
+	on_setup = { }
+	on_end = { }
+
+	# Same rule as above: no effect = { } wrapper.
+	on_owner_death = {
+		story_owner = {
+			ln_last_hour_stand_down_effect = yes
+		}
+	}
+
+	effect_group = {
+		days = 1
+
+		# VICTORY FIRST, as in the encounter: the Night King down beats a mutual read.
+		triggered_effect = {
+			trigger = {
+				story_owner ?= {
+					has_variable = ln_lh_nk_ref
+					var:ln_lh_nk_ref ?= { agot_multi_duelist_cant_continue = yes }
+				}
+			}
+			effect = {
+				story_owner = { trigger_event = ln_lasthour.20 }
+				end_story = yes
+			}
+		}
+
+		# DEFEAT: the champion is down and the line is spent. The taking (§4).
+		triggered_effect = {
+			trigger = {
+				story_owner ?= {
+					agot_multi_duelist_cant_continue = yes
+					NOT = {
+						any_in_list = {
+							variable = ln_lh_the_line
+							NOT = { agot_multi_duelist_cant_continue = yes }
+						}
+					}
+				}
+			}
+			effect = {
+				story_owner = { ln_last_hour_defeat_effect = yes }
+				end_story = yes
+			}
+		}
+	}
+
+	# The backstop, same shape and same reason as the encounter's (standing rule 9).
+	effect_group = {
+		days = 365
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				story_owner = {
+					debug_log = "LN_LASTHOUR: watchdog backstop fired -- the melee never resolved"
+					debug_log_scopes = yes
+					ln_last_hour_stand_down_effect = yes
+				}
+				end_story = yes
+			}
+		}
+	}
+}

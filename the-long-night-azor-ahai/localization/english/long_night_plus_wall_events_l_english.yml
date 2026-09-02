@@ -7,3 +7,12 @@
  long_night_plus_wall.2.t:0 "#F The Age of Heroes Is Ended#!"
  long_night_plus_wall.2.desc:0 "Brandon the Builder raised it when the First Men still carved their words in runes, and for eight thousand years every kneeler and king, every wildling and Watchman, every maester and midwife lived their whole life in its shadow and never thought to ask whether it would hold. It held. It was the one promise the world kept.\n\nNo longer. The Wall is fallen at Castle Black, and through the breach walks winter itself. Ravens fly to every keep in Westeros carrying the same three words the Watch has whispered for centuries, words that were a warning and are now simply the weather: the dead come.\n\nWhat stands between the living and the Long Night now is not ice. It is you."
  long_night_plus_wall.2.a:0 "And now our watch begins."
+
+ # 1.1.0 (A1) -- station openers for the monument card. Two sentences each; long_night_plus_wall.2.desc is stacked under them.
+ long_night_plus_wall.2.desc.watch:0 "Every brother alive heard it go, wherever on the Wall he stood. The vow calls us the shield that guards the realms of men; the shield is gone, and the men remain.\n\n"
+ long_night_plus_wall.2.desc.free_folk:0 "We were told the kneelers' ice would stand forever, and we spent our lives on the wrong side of it. Now there is no wrong side, and the thing we ran from can follow us wherever it likes.\n\n"
+ long_night_plus_wall.2.desc.dragon:0 "The blood of the dragon has heard this story since before the Doom, and every telling of it ends in fire. Something eight thousand years old has just come down, and every eye in the realm is turning toward what flies.\n\n"
+ long_night_plus_wall.2.desc.north:0 "Every Northern child is told the Wall is where the world ends. It ended today, and the North is what stands north of nothing now.\n\n"
+ long_night_plus_wall.2.desc.red:0 "The flames showed a wall of ice and something patient behind it, and tonight the ice is gone. Every sermon was for this; every nightfire is lit for what walks through.\n\n"
+ long_night_plus_wall.2.desc.lord:0 "My maester carried the raven's letter in both hands and could not read it aloud. Whatever I sent north in the years before this, it was not enough, and I will know that for the rest of my life.\n\n"
+ long_night_plus_wall.2.desc.nobody:0 "There is no keep and no banner to shelter under, and the news came the way all news reaches me: late, and from a stranger's mouth. The one wall that mattered is down, and every road now leads somewhere the dead can reach.\n\n"

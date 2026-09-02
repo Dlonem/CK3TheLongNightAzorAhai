@@ -165,8 +165,17 @@ ln_spear.1 = {
 				}
 			}
 		}
+		# ln_spear.1.a takes its name from a first_valid block, so there is no plain name line here.
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = brave }
+			modifier = { add = -25  has_trait = craven }
+		}
 		trigger = { scope:ln_spear_lived = 1 }
 		add_character_flag = ln_survived_the_spear
+		# 1.1.0 (B6): bank the animal on the rider. ln_dawn.2.desc.spear ("the sound she made") is read years
+		# later from a card with no dragon scope; this is how it gets the name and the engine's pronouns.
+		set_variable = { name = ln_dragon_taken_from_me  value = scope:ln_spear_dragon }
 		add_trait = wounded_2
 		add_prestige = 200
 		stress_impact = { base = major_stress_impact_gain }
@@ -184,6 +193,12 @@ ln_spear.1 = {
 	# and the player has earned the right to read the thing before it happens to him.
 	option = {
 		name = ln_spear.1.b
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = craven }
+			modifier = { add = -25  has_trait = brave }
+		}
+		# 1.1.0 (§7): no show_as_unavailable here, deliberately -- outcome branch (ln_spear_lived), not a gate: the roll already happened, the other branch shows.
 		trigger = { scope:ln_spear_lived = 0 }
 		death = {
 			killer = scope:ln_night_king
@@ -259,6 +274,8 @@ ln_spear.2 = {
 				has_trait = azor_ahai_reborn
 			}
 		}
+		# 1.1.0 (§7): prophecy advertised: an unchosen rider sees the door the traits would have opened.
+		show_as_unavailable = { always = yes }
 		add_piety = 100
 		add_prestige = minor_prestige_gain
 		stress_impact = {

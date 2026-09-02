@@ -43,6 +43,47 @@ ln_prophecy.31 = {
 		}
 	}
 
+	# ── 1.1.0 (§11, rung two): CUT IT PROPERLY. Only a man who studied the glass knows the facets run one
+	# way and not the other; only a man with a weapon in hand has an edge to set it into. The modifier
+	# rides the ARTIFACT: it travels when the sword is inherited or looted, by design. Greyed to everyone
+	# else -- the whole ladder advertised on the card that ends it (§7's idiom).
+	option = {
+		name = ln_prophecy.31.c
+		# ⚠ primary_weapon is NOT a script link in either context -- the boot log's "Unknown trigger:
+		# primary_weapon" derailed this whole file. The engine's real surface is the equipped-artifact
+		# iterators: any_/every_equipped_character_artifact with artifact_slot_type = primary_armament
+		# (vanilla 00_artifact_triggers.txt:526, tournament_actions.txt). A man with no weapon matches
+		# nothing on both sides -- a no-op, never a wipe (standing rule 4).
+		# ⚠ 1 Sep, Thomas on the live card: "it said that I was missing a modifier." That is CK3's raw
+		# fallback line for a bare has_character_modifier gate, and it tells a player nothing about what to
+		# go and do. Both clauses are now wrapped so the greyed option says, in words, what the door wants:
+		# the vanilla idiom is custom_tooltip = { text = X <triggers> } (00_available_for_events_triggers.txt:22).
+		trigger = {
+			custom_tooltip = {
+				text = ln_knows_the_glass_gate_tt
+				has_character_modifier = ln_knows_the_glass_modifier
+			}
+			custom_tooltip = {
+				text = ln_needs_an_unedged_weapon_tt
+				any_equipped_character_artifact = {
+					artifact_slot_type = primary_armament
+					NOT = { has_artifact_modifier = ln_artifact_dragonglass_edged_modifier }
+				}
+			}
+		}
+		show_as_unavailable = { always = yes }
+		every_equipped_character_artifact = {
+			limit = {
+				artifact_slot_type = primary_armament
+				NOT = { has_artifact_modifier = ln_artifact_dragonglass_edged_modifier }
+			}
+			add_artifact_modifier = ln_artifact_dragonglass_edged_modifier
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+
 	# Arm them quietly. A lord who hands out glass knives with no explanation is a lord people watch.
 	option = {
 		name = ln_prophecy.31.b

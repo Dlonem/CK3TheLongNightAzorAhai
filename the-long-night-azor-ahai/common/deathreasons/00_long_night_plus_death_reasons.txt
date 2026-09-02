@@ -18,3 +18,12 @@ death_claimed_by_cold = {
 death_the_dawn = {
 	icon = "death_unknown.dds"
 }
+
+
+# 1.1.0 (§5.2 / §3.5) -- the champion the encounter melee takes. An Other's kill makes a wight: in Cold
+# Winds the dead may take BODIES but never land, so mechanically he dies and succession runs -- the record
+# says what the snow saw. A landed man raised alive-as-wight here would hand the shadow threat a county,
+# which §5.1 forbids.
+death_taken_by_the_dead = {
+	icon = "death_unknown.dds"
+}

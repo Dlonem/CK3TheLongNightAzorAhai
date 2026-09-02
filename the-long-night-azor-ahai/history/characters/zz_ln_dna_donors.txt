@@ -1,0 +1,25 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.0, DNA donors.
+#
+# A character that exists only to carry a face. common/dna_data keys can be attached to a history character
+# and nowhere else (`dna =` is a history-only field; create_character takes no dna argument), so the one
+# runtime road to a scripted face is to copy it off a donor -- and that means the donor has to be somebody.
+#
+# THE PATTERN IS AGOT'S OWN, not invented here: history/characters/00_agot_dummy_characters.txt is a file of
+# these, Dummy_Scaly_1 and Dummy_Eunuch_1 among them, each born and dead a day later in year 118 and read at
+# runtime by 00_agot_canon_children_effects.txt. The Night King's own face already comes off a donor the same
+# way (others_thenightking, in othersinvasion_characters.txt) -- this is that, for everyone else.
+#
+# He is dead before any bookmark, holds nothing, is in nobody's court and has no father, so he cannot appear
+# in a game. If the engine ever prunes him anyway the copy is skipped and reported rather than failing --
+# see ln_wear_the_walkers_face_effect.
+
+ln_dummy_white_walker = {
+	name = Other
+	dna = ln_dna_white_walker
+	religion = cold_gods
+	culture = frostborn
+	disallow_random_traits = yes
+
+	118.1.1 = { birth = yes }
+	118.1.2 = { death = yes }
+}

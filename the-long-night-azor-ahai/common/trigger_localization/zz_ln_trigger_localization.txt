@@ -1,0 +1,59 @@
+﻿# AGOT: The Long Night & Azor Ahai -- readable failure reasons (1.1.0, §8.1).
+#
+# The mod's first trigger_localization file. This database controls THE SENTENCE SHOWN WHEN A REQUIREMENT
+# FAILS -- nothing else (§0.1 correction 3: it cannot change a decision's title; that is
+# customizable_localization, the other half of §8, in the other folder). Keyed on TRIGGER names; every
+# name below is verified against the live trigger files, and symcheck's trigger_localization extension
+# holds this file to that.
+#
+# Do not override vanilla's own entries -- these are ours, plus AGOT's one raw-key offender.
+
+ln_can_take_the_black_trigger = {
+	global = ln_trigloc_can_take_the_black
+	global_not = ln_trigloc_cannot_take_the_black
+	first = ln_trigloc_can_take_the_black_first
+	first_not = ln_trigloc_cannot_take_the_black_first
+	third = ln_trigloc_can_take_the_black_third
+	third_not = ln_trigloc_cannot_take_the_black_third
+}
+
+ln_bears_the_bane_trigger = {
+	global = ln_trigloc_bears_the_bane
+	global_not = ln_trigloc_bears_no_bane
+	first = ln_trigloc_bears_the_bane_first
+	first_not = ln_trigloc_bears_no_bane_first
+	third = ln_trigloc_bears_the_bane_third
+	third_not = ln_trigloc_bears_no_bane_third
+}
+
+ln_a_watch_still_stands_trigger = {
+	global = ln_trigloc_watch_stands
+	global_not = ln_trigloc_watch_fallen
+	first = ln_trigloc_watch_stands
+	first_not = ln_trigloc_watch_fallen
+	third = ln_trigloc_watch_stands
+	third_not = ln_trigloc_watch_fallen
+}
+
+ln_has_a_forge_trigger = {
+	global = ln_trigloc_has_a_forge
+	global_not = ln_trigloc_no_forge
+	first = ln_trigloc_has_a_forge_first
+	first_not = ln_trigloc_no_forge_first
+	third = ln_trigloc_has_a_forge_third
+	third_not = ln_trigloc_no_forge_third
+}
+
+ln_can_stand_at_the_last_hour_trigger = {
+	global = ln_trigloc_can_stand
+	global_not = ln_trigloc_cannot_stand
+	first = ln_trigloc_can_stand_first
+	first_not = ln_trigloc_cannot_stand_first
+	third = ln_trigloc_can_stand_third
+	third_not = ln_trigloc_cannot_stand_third
+}
+
+# agot_nw_can_banish deliberately has NO entry here: it is parameterised on $BANISHER$/$BANISHEE$, so a
+# trigger_localization row reads to sigcheck (and possibly to the engine) as a call with missing args.
+# The send_to_nightswatch_interaction raw-key fix went into loc instead -- see
+# release_banish_invalid_send_to_nw in zz_ln_trigger_localization_l_english.yml.

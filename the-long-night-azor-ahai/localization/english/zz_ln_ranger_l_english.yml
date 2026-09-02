@@ -29,7 +29,7 @@
  ln_ranger_needs_a_company:0 "The Lord Commander must have a company to give — vacant, or led by a captain he can stand down"
 
  ln_ranger.1.t:0 "A Horse and a Direction"
- ln_ranger.1.desc:0 "[ln_lord_commander.GetTitledFirstName] does the whole thing in about four minutes, which you get the impression is the usual.\n\nYou get a cloak. You get a horse that has clearly done this before and has opinions about it. You get eleven men, four of whom will not meet your eye and one of whom has been north of the Wall more times than he can count.\n\nAnd you get the only instruction the Watch has ever really given a ranger, delivered on his way back inside without turning round:\n\n'Go and look. Come back and say what you saw. If you cannot do the second one, do not bother with the first.'"
+ ln_ranger.1.desc:0 "[ln_lord_commander.GetTitledFirstName] does the whole thing in the time it takes to saddle a horse, which you get the impression is the usual.\n\nYou get a cloak. You get a horse that has clearly done this before and has opinions about it. You get eleven men, four of whom will not meet your eye and one of whom has been north of the Wall more times than he can count.\n\nAnd you get the only instruction the Watch has ever really given a ranger, delivered on his way back inside without turning round:\n\n'Go and look. Come back and say what you saw. If you cannot do the second one, do not bother with the first.'"
  ln_ranger.1.a:0 "North, then. That is the whole of it."
  ln_ranger.1.b:0 "Give me the men who have been up there before."
  ln_ranger.1.c:0 "What is actually out there? Nobody has written any of this down."

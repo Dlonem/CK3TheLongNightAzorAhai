@@ -1,0 +1,68 @@
+﻿# AGOT: The Long Night & Azor Ahai -- what a sword is worth against a thing that is not a man (1.1.0).
+#
+# THOMAS, 1 Sep 2026, after playing the whole Last Hour melee: "there are no options that get triggered by
+# possessing Lightbringer, possessing Chosen, possessing Favored, possessing a Valyrian steel sword. There
+# was nothing assisting my fight with them. If anything, I felt like I could win from pure prowess alone.
+# In a way, I would want prowess to be half as effective against White Walkers and the Night King. Because
+# you can be Jaime Lannister skilled with a sword, but you do it long enough, the Night King's going to beat
+# you. Unless you have a Valyrian steel sword, then Jaime Lannister could actually be the one who does it."
+#
+# THAT IS THE WHOLE DESIGN AND THESE MODIFIERS ARE IT. Two opposed stacks, applied to every living fighter
+# when an LN melee opens and stripped at the scrub:
+#
+#   THE COLD  -- roughly half your prowess, taken away. Skill is worth half against them, always.
+#   THE BANE  -- what you brought, given back, and more than you lost IF you brought the right thing.
+#
+# ⚠ WHY BANDS AND NOT ARITHMETIC. add_character_modifier takes a STATIC modifier definition; it has no
+# verified `multiplier` field (vanilla's `multiplier` hits are all inside compare_modifier, not
+# add_character_modifier -- checked across game/events and game/common on 1 Sep). Guessing an engine field
+# that silently does nothing is exactly the failure mode this project has a standing rule against, so the
+# halving is expressed as five bands on band-midpoint prowess. Real halves at the middle of each band.
+#
+# THE ARITHMETIC, worked, so the next person does not have to:
+#   Jaime (prowess 30), nothing but a good sword   30 - 15            = 15   vs the Night King's 30. He loses.
+#   Jaime, Valyrian steel                          30 - 15 + 14       = 29   an even fight, and that is the point.
+#   Jaime, Lightbringer                            30 - 15 + 20       = 35   he wins.
+#   Azor Ahai reborn, Lightbringer                 30 - 15 + 20 + 6   = 41   he wins well.
+#   A hedge knight (14), dragonglass               14 -  7 +  8       = 15   still not enough. Correct.
+#
+# prowess_no_portrait, not prowess: this is a mid-fight state and the portrait should not change under the
+# player twice in a minute. Same field the mod's own armament modifiers use
+# (00_long_night_artifact_modifiers.txt:3, zz_ln_lightbringer_modifiers.txt:13).
+
+# ── THE COLD BETWEEN. Banded by the fighter's own prowess; ln_lh_the_cold_takes_its_measure_effect picks one.
+ln_the_cold_between_0_modifier = { prowess_no_portrait = -4 }      # prowess below 10
+ln_the_cold_between_1_modifier = { prowess_no_portrait = -7 }      # 10-17
+ln_the_cold_between_2_modifier = { prowess_no_portrait = -11 }     # 18-25
+ln_the_cold_between_3_modifier = { prowess_no_portrait = -15 }     # 26-33
+ln_the_cold_between_4_modifier = { prowess_no_portrait = -19 }     # 34+
+
+# ── THE BANE IN HAND. Exactly one, best first -- the same ladder ln_dawn.2's single duel already weights
+# (Lightbringer 60 / Dawn 55 / Valyrian 35 / glass 20), converted to prowess so it lands inside AGOT's own
+# multi-duel maths instead of beside it.
+ln_bane_lightbringer_modifier = { prowess_no_portrait = 20 }
+ln_bane_valyrian_modifier     = { prowess_no_portrait = 14 }
+ln_bane_glass_modifier        = { prowess_no_portrait = 8 }
+
+# ── AND WHAT THE WORLD HAS NAMED YOU. Stacks with the bane; it is not a substitute for one, because a named
+# man with nothing in his hand still cannot hurt him (ln_bears_the_bane_trigger governs that, unchanged).
+#
+# ⚠ THE ln_melee_ PREFIX IS NOT DECORATION. The first draft of this file called these
+# ln_named_chosen_modifier and ln_named_favored_modifier -- which are ALREADY the mod's permanent naming
+# auras (00_long_night_character_modifiers.txt:167,174), granted by ln_the_world_forms_a_view_effect and
+# localized as "Named the Prince That Was Promised" and "Named as Favored". Modifiers are a keyed database
+# and the last file loaded wins; zz_ sorts after 00_, so these six-point stubs were silently REPLACING the
+# entire prophecy system's aura, everywhere, permanently. Caught by the localization audit on 1 Sep, which
+# is the only reason it was caught at all -- nothing would have logged.
+#
+# Every modifier this file defines is prefixed for that reason. Do not un-prefix them.
+ln_melee_named_chosen_modifier  = { prowess_no_portrait = 6 }
+ln_melee_named_favored_modifier = { prowess_no_portrait = 3 }
+
+# ── LED WITH IT. The small, equal edge for CHOOSING your weapon on the approach card rather than being
+# handed it. Deliberately identical across all four armament options: the choice is voice, not power creep.
+# Thomas's rule on the greensight door applies here too -- "I'm not saying to make it so that boom, instant win."
+ln_led_with_the_bane_modifier = {
+	prowess_no_portrait = 4
+	advantage = 2
+}

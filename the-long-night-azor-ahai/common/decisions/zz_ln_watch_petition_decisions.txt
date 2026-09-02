@@ -34,7 +34,10 @@ ln_petition_the_realm_decision = {
 	}
 
 	is_valid = {
-		is_available = yes
+		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
+		# hitting. This decision can be taken from the field -- a petition IS a letter. The vanilla ladder's
+		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
+		is_available_adult_or_is_commanding = yes
 	}
 
 	effect = {

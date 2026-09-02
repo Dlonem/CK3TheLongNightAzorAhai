@@ -1,0 +1,365 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the death blow, branched on what the loser actually is (1.1.0).
+#
+# Called from the ten agot_multi_duel.0020.desc.outroN keys this mod overrides. Scope = scope:loser_duelist.
+# random_valid on the ice branch so a long melee against several Walkers does not print the same sentence
+# five times; the fallback is a single fixed key because it is AGOT's own line and must not vary.
+
+LN_MultiDuelOutro_1 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_1
+	}
+}
+
+LN_MultiDuelOutro_2 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_2
+	}
+}
+
+LN_MultiDuelOutro_3 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_3
+	}
+}
+
+LN_MultiDuelOutro_4 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_4
+	}
+}
+
+LN_MultiDuelOutro_5 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_5
+	}
+}
+
+LN_MultiDuelOutro_6 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_6
+	}
+}
+
+LN_MultiDuelOutro_7 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_7
+	}
+}
+
+LN_MultiDuelOutro_8 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_8
+	}
+}
+
+LN_MultiDuelOutro_9 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_9
+	}
+}
+
+LN_MultiDuelOutro_10 = {
+	type = character
+	random_valid = yes
+
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_1
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_2
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_3
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_4
+	}
+	text = {
+		trigger = { OR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_ice_5
+	}
+
+	# Anything that is not one of them dies the way AGOT wrote it.
+	# ⚠ THE TRIGGER ON THIS BLOCK IS LOAD-BEARING, and leaving it off was a real bug caught in review.
+	# random_valid picks at random among ALL blocks whose trigger passes -- an untriggered block is valid
+	# for everyone, so without this clause a Walker would have read AGOT's blood-and-final-gasp line one time
+	# in six. It is the exact inverse of the ice trigger above; the two are mutually exclusive by construction.
+	text = {
+		trigger = { NOR = { has_trait = other_trait  has_trait = nightking } }
+		localization_key = ln_duel_outro_agot_10
+	}
+}

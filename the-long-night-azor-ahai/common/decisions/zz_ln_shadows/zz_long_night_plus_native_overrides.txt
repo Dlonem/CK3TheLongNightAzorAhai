@@ -1,4 +1,14 @@
-﻿# The Long Night+ — overrides of NATIVE AGOT decisions (same key redefined → ours, loaded after AGOT, wins).
+﻿# The Long Night+ — overrides of NATIVE AGOT decisions (same key redefined → ours wins).
+#
+# ⚠ 1.1.0 (B2) -- THIS FILE LIVES IN A SUBDIRECTORY ON PURPOSE, AND IT HAD NEVER WON BEFORE. It sat at the top
+# of common/decisions/ from the fork until 2 Sep 2026, and database_conflicts.log:291 from that boot reads
+# "Overriding entry 'restore_the_nights_watch' ... in 'file: common/decisions/agot_decisions/
+# 00_agot_nights_watch_decisions.txt'" -- AGOT's copy was the winner, and the aftermath gate below had never
+# once been live. Same cause as the on_action shadow (common/on_action/zz_ln_shadows/, 22 Aug): the engine
+# parses a folder's top-level files first, in path order, THEN its subdirectories, and the last definition
+# parsed wins. A zz_ top-level file therefore loses to ANY file in agot_decisions/. In a subdirectory the
+# comparison is directory-to-directory and zz_ln_shadows/ sorts after agot_decisions/. Verify after any
+# reload: that log line must name THIS path as the file being overridden-by.
 #
 # restore_the_nights_watch: verbatim copy of AGOT's decision (00_agot_nights_watch_decisions.txt) with ONE
 # added is_shown gate — once the Long Night has ended (global ln_aftermath_started), Watch restoration belongs

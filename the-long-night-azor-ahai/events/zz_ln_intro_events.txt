@@ -145,12 +145,24 @@ ln_intro.1 = {
 	# is right. Deliberately unrewarded -- being right early should not be a bonus, it should just be true.
 	option = {
 		name = ln_intro.1.a
+		ai_chance = {
+			base = 55
+			modifier = { add = 25  has_trait = diligent }
+			modifier = { add = 20  learning >= 12 }
+			modifier = { add = -20  has_trait = lazy }
+		}
 		add_character_flag = ln_heard_the_warning
 	}
 
 	# Dismiss it. This is a real cost, applied silently.
 	option = {
 		name = ln_intro.1.b
+		ai_chance = {
+			base = 45
+			modifier = { add = 25  has_trait = lazy }
+			modifier = { add = 20  has_trait = cynical }
+			modifier = { add = -20  has_trait = diligent }
+		}
 		save_scope_as = ln_catalyst_culprit
 		ln_fire_catalyst_blaming_effect = { CATALYST = ln_catalyst_warning_dismissed  PHASE = ln_phase_long_summer  POINTS = 2  COOLDOWN = 3 }
 	}

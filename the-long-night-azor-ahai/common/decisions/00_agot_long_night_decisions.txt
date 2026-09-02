@@ -113,7 +113,20 @@ war_for_the_dawn_decision = {
 	}
 
 	is_valid_showing_failures_only = {
-		is_at_war = no
+		# 1.1.0b -- WAS A BARE `is_at_war = no`, AND IT WAS PART OF WHY THERE WERE THREE OF THESE WARS.
+		# Thomas, observer run: "There's at least three different War for the Dawns going on. Instead of
+		# people offering to join just the one main one." Every lord already fighting the dead -- which is
+		# every lord who matters, once the invasion is rolling -- was locked out of this decision entirely,
+		# so the men who could still take it were the peaceful ones far from the front, and each of them
+		# opened a fresh war of their own. A second front is a real cost and the bar stays for DECLARING;
+		# it does not apply to JOINING, which costs nobody anything.
+		custom_description = {
+			text = ln_wfd_already_at_war
+			OR = {
+				is_at_war = no
+				title:h_the_others.holder ?= { any_character_war = { using_cb = war_for_the_dawn_cb } }
+			}
+		}
 
 		# ── 1.0.16 -- THOMAS'S GATE: THE DEAD MUST HAVE BEEN BEATEN ONCE. ──────────────────────────────
 		# "If the Night King can suffer a defeat, perhaps that is a flag to indicate that the War for the
@@ -138,6 +151,58 @@ war_for_the_dawn_decision = {
 	}
 
 	effect = {
+		# ══ 1.1.0b -- JOIN THE ONE THAT EXISTS, WHEREVER IT IS. ═══════════════════════════════════════
+		# Thomas, observer run, 290 AC: "There's at least three different War for the Dawns going on.
+		# Instead of people offering to join just the one main one."
+		#
+		# The old order asked the wrong question first. Branch one below checks whether the Night King is
+		# prosecuting an INVASION war and, if so, quietly adds the taker to that instead -- and he almost
+		# always is, that IS the invasion, so almost nobody ever reached the War for the Dawn branch at
+		# all. And when they did, the join test looked only at `title:h_the_others.holder`'s own wars.
+		# war_for_the_dawn_cb declares `on_primary_defender_death = inherit`, so the moment a Night King
+		# dies the war stays alive under whoever inherits it while the CROWN goes wherever the successor
+		# ladders send it. Defender and title-holder drift apart, the join test finds nothing, and the next
+		# man declares a second war. Then a third.
+		#
+		# So: look for a live War for the Dawn ANYWHERE first, and join it. The cheap check is the holder,
+		# because that is where it is nine times in ten; the global scan is the fallback for exactly the
+		# drifted case above and runs only when the cheap one misses. Only if there is genuinely no War for
+		# the Dawn in the world does anything below get to declare one.
+		if = {
+			limit = { title:h_the_others.holder ?= { any_character_war = { using_cb = war_for_the_dawn_cb } } }
+			title:h_the_others.holder = {
+				random_character_war = {
+					limit = { using_cb = war_for_the_dawn_cb }
+					add_attacker = root
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				any_living_character = {
+					any_character_war = {
+						using_cb = war_for_the_dawn_cb
+						is_defender = prev
+					}
+				}
+			}
+			random_living_character = {
+				limit = {
+					any_character_war = {
+						using_cb = war_for_the_dawn_cb
+						is_defender = prev
+					}
+				}
+				random_character_war = {
+					limit = {
+						using_cb = war_for_the_dawn_cb
+						is_defender = prev
+					}
+					add_attacker = root
+				}
+			}
+		}
+		else = {
 		title:h_the_others.holder = { 
 				 if = { limit = { any_character_war = {
 								is_attacker = title:h_the_others.holder
@@ -219,6 +284,7 @@ war_for_the_dawn_decision = {
 					}
 									
 	}
+		}
 	}
 
 	ai_will_do = {

@@ -66,6 +66,30 @@ ln_grant_the_blessing_effect = {
 		}
 	}
 	trigger_event = ln_prophecy.40
+
+	# ══ 1.0.17 -- THE WORLD BUDGET IS SPENT HERE, AND ONLY BY THE AI. ═══════════════════════════════════════
+	# Root is the man being blessed; scope:ln_the_priest is the priest doing it. A blessing with a PLAYER on
+	# either side -- his own chaplain offering, or his own lord asking -- costs the world nothing and is never
+	# refused, because Thomas asked for exactly that: "players should be able to request regardless."
+	# So the counter only moves when both sides are AI, and only the two AI doors ever read it. See
+	# ln_world_will_hear_another_blessing_trigger for the measurements behind the numbers.
+	if = {
+		limit = {
+			is_ai = yes
+			scope:ln_the_priest ?= { is_ai = yes }
+		}
+		# Initialise-or-increment, the same shape ln_fire_catalyst_effect uses for ln_summer_points: a bare
+		# change_global_variable on a global that does not exist yet is an error line, not a no-op.
+		if = {
+			limit = { NOT = { has_global_variable = ln_blessings_this_year } }
+			set_global_variable = { name = ln_blessings_this_year  value = 1 }
+		}
+		else = {
+			change_global_variable = { name = ln_blessings_this_year  add = 1 }
+		}
+		# And the spacing, so a dense world cannot spend its whole allowance inside one month.
+		set_global_variable = { name = ln_blessing_spacing_cooldown  value = yes  days = 21 }
+	}
 }
 
 # Root = a playable character, from the yearly pulse.
@@ -126,11 +150,24 @@ ln_pay_the_last_kiss_effect = {
 	debug_log = "LN_TRACE LAST KISS PAID: the priest is spending himself"
 
 	# The price, identical to the last kiss given at a bedside -- because it is the same act.
-	add_character_modifier = ln_gave_the_last_kiss_modifier
+	# 1.1.0 modifier audit: this permanent mark is applied from more than one road and CK3 stacks duplicates, so the guard makes a second arrival a no-op.
+	if = {
+		limit = { NOT = { has_character_modifier = ln_gave_the_last_kiss_modifier } }
+		add_character_modifier = ln_gave_the_last_kiss_modifier
+	}
 	add_piety = 300
 	# 1.0.15 -- and any OTHER charge he was still promised to is freed this instant; see
 	# ln_priest_is_spent_now_effect. (For the sponsored route the fallen man IS the charge, and the
 	# scope guard inside keeps that bond alone untouched.)
+	# 1.1.0 (A3): the priest's own dated entry, naming the man he paid for. Before the spend (rule 6), and
+	# guarded on the scope because the tag must be supplied or the page errors on every draw.
+	if = {
+		limit = { exists = scope:ln_the_fallen }
+		create_character_memory = {
+			type = ln_spent_myself_memory
+			participants = { ln_the_charge = scope:ln_the_fallen }
+		}
+	}
 	ln_priest_is_spent_now_effect = yes
 
 	if = {

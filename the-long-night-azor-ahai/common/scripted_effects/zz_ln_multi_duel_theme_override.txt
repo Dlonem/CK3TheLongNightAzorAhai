@@ -1,0 +1,90 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the ONE forked effect of the multi-duel engine (1.1.0, §3.1).
+#
+# ⚠ SAME-NAME OVERRIDE OF AGOT's multi_duel_battle_theme_effect (00_agot_multi_duel_effects.txt:713-747).
+# REGISTERED IN UPSTREAM-WATCH; re-diff against AGOT's copy after every AGOT update.
+#
+# WHY A FORK, AND WHY ONLY THIS ONE. §3.1's question -- can the engine be entered with two arbitrary leaders
+# outside a tournament and outside a Trial of Seven -- was answered on 31 Aug 2026 by reading the live files:
+# YES. multi_duel_leaders_effect is parameterised on leaders, team-selection events, story name, variant,
+# background and end rule; all twelve ToS couplings in the effects file sit behind
+# `var:unqiue_story_name = flag:tos_story` [sic -- their typo, load-bearing, do not "fix" it]; the round loop
+# reads only its own flags and vars. ONE effect is coupled: this one, the scenario dispatch the daily story
+# tick calls -- its body fires multi_duel_battle_effect only for the two ToS variants, so any other story
+# name ticks and nothing happens. Its own header says "Has to be set in multi_duel_battle_theme_effect with
+# scenario specific condition": it is the designed extension point. Forking the 10,626-line engine for the
+# sake of these 35 lines would be the largest shadow this mod has ever held; forking the dispatch alone is
+# this project's normal practice, with this written reason.
+#
+# THEIR BODY IS COPIED VERBATIM BELOW (observer handling + both ToS branches), then our branches follow.
+# If AGOT adds a scenario of their own, this override swallows it until re-diffed -- that is what the
+# UPSTREAM-WATCH entry is for.
+multi_duel_battle_theme_effect = {
+	#Handle Observers
+	if = {
+		limit = {
+			any_player = {
+				has_character_flag = multi_duel_just_observed
+			}
+		}
+		every_player = {
+			limit = { has_character_flag = multi_duel_just_observed }
+			remove_character_flag = multi_duel_just_observed
+		}
+	}
+
+	#TOS STORY
+	if = {
+		limit = {
+			exists = var:unqiue_story_name
+			var:unqiue_story_name = flag:tos_story
+			exists = var:story_variant
+			OR = {
+				var:story_variant = flag:usurpation
+				var:story_variant = flag:dishonorable_imprisonment
+			}
+		}
+		multi_duel_battle_effect = {
+			SIDE_A_LEADER = scope:side_a_leader #Shouldn't be changed.
+			SIDE_B_LEADER = scope:side_b_leader #Shouldn't be changed.
+			PLAYER_DUEL_EVENT = agot_multi_duel.0030 #Can be set to a different event for thematic purposes, but effects should be copied.
+			DUEL_FATALITY = possible #possible or always or no
+			DUEL_YIELD = yes #yes or no
+		}
+	}
+
+	# ══ OURS -- THE COLD WINDS ENCOUNTER (1.1.0 §5.2) ═══════════════════════════════════════════════════
+	# DUEL_YIELD = no IS §3.5: a White Walker never accepts a yield. The engine parameter exists for
+	# exactly this, so the rule costs one token instead of a forked outcome effect.
+	# DUEL_FATALITY = possible: companions can genuinely die. The champion cannot -- he carries the
+	# engine's own multi_duelist_plot_armor flag (set at melee open, removed at scrub), because his loss
+	# is the TAKING (§3.5), which needs him downed, not dead.
+	if = {
+		limit = {
+			exists = var:unqiue_story_name
+			var:unqiue_story_name = flag:ln_encounter_story
+		}
+		multi_duel_battle_effect = {
+			SIDE_A_LEADER = scope:side_a_leader
+			SIDE_B_LEADER = scope:side_b_leader
+			PLAYER_DUEL_EVENT = agot_multi_duel.0030
+			DUEL_FATALITY = possible
+			DUEL_YIELD = no
+		}
+	}
+
+	# ══ OURS -- THE LAST HOUR (1.1.0 §3, feature A). Registered now so the story name is reserved and the
+	# rule is in one place; the great melee's own opening builds on it. Same no-yield ruling.
+	if = {
+		limit = {
+			exists = var:unqiue_story_name
+			var:unqiue_story_name = flag:ln_last_hour_story
+		}
+		multi_duel_battle_effect = {
+			SIDE_A_LEADER = scope:side_a_leader
+			SIDE_B_LEADER = scope:side_b_leader
+			PLAYER_DUEL_EVENT = agot_multi_duel.0030
+			DUEL_FATALITY = possible
+			DUEL_YIELD = no
+		}
+	}
+}

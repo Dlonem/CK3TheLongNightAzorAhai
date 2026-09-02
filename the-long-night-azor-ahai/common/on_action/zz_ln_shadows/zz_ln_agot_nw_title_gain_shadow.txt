@@ -1,7 +1,7 @@
 ﻿# AGOT: The Long Night & Azor Ahai -- a SHADOW of ONE AGOT handler, and nothing else.
 #
 # SOURCE: AGOT common/on_action/agot_on_actions/agot_title_on_actions.txt, agot_on_title_gain_nightswatch,
-# copied verbatim on 10 Aug 2026 except for the block marked "THE ONLY CHANGED LINE IN THIS FILE".
+# copied verbatim on 10 Aug 2026 except for the two blocks marked "THE LONG NIGHT+" inside the last if.
 #
 # WHY A SHADOW AND NOT A PATCH. A named on_action merges its SUB-LISTS (on_actions = {}, events = {}) but its
 # `trigger` and `effect` are single blocks -- one wins whole. There is no way to add one clause to somebody
@@ -40,8 +40,9 @@
 # theory holds and this shadow is the one the engine runs. Every ranger appointment since 1.0.12 has been
 # going through the exempted handler.
 #
-# ALSO RE-DIFFED 22 AUG against AGOT 0.5.1: block-for-block identical apart from the one added clause and
-# its comment -- eight differing lines, all of them ours, zero AGOT-side drift to fold in.
+# ALSO RE-DIFFED 22 AUG against AGOT 0.5.1: block-for-block identical apart from our added clauses and
+# their comments, zero AGOT-side drift to fold in. 31 Aug: a SECOND clause was added to the same limit --
+# is_ruler = yes -- off the multiplayer log. Both are in the final if; nothing else in the file is ours.
 #
 # WHAT IT COSTS. If AGOT changes this handler, our copy silently keeps the old behaviour. That is the real
 # price and it is worth paying here, because the alternative is every ranger appointment for the rest of the
@@ -135,7 +136,7 @@ agot_on_title_gain_nightswatch = {
 			limit = {
 				NOT = { government_has_flag = government_is_nw }
 				NOT = { this = title:d_nw_landless_first_ranger.holder }
-				# ── THE LONG NIGHT+: THE ONLY CHANGED LINE IN THIS FILE ────────────────────────────────
+				# ── THE LONG NIGHT+: FIRST EDIT (10 Aug 2026) ─────────────────────────────────────────
 				# AGOT already exempts its own ranger title here, for exactly our reason: a landless
 				# ranging captain cannot legally hold nights_watch_government, which wants a castle
 				# holding. Their design has one such title; ours has eight, and they are not on the list,
@@ -143,6 +144,18 @@ agot_on_title_gain_nightswatch = {
 				# our own backstop a few lines later. Read off the variable rather than naming eight
 				# titles, so companies added later are covered the day they are added.
 				NOT = { any_held_title = { has_variable = ln_is_a_ranger_title } }
+
+				# ── THE LONG NIGHT+: SECOND EDIT (31 Aug 2026) ─────────────────────────────────────────
+				# The depose branch at the top of this effect can un-land root before we get here, and a
+				# character with no title has no government to change. AGOT's original has no guard, so
+				# every deposal through this handler threw
+				#
+				#   change_government effect [ Character needs to be a ruler to change government ]
+				#
+				# four times in one tick in the 30 Aug session. Same class as the mutate_into_other_effect
+				# guard from the 7 Aug crash log: the call did nothing and errored once per character.
+				# Nobody who is still a ruler is affected.
+				is_ruler = yes
 			}
 			change_government = nights_watch_government
 		}

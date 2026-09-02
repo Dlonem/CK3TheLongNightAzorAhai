@@ -31,8 +31,10 @@ ln_ruins_decay_effect = {
 	# THE CHEAP PRE-FILTER, ported 10 Aug from ln_ruins_decay_pulse before that orphaned sub-list was deleted.
 	# The pulse never ran -- it was listed in no hook -- but its trigger encoded something worth keeping: there
 	# can be no scoured county before the aftermath begins, so walking every county in the world once a year to
-	# find nothing is pure waste. ln_aftermath_started is set once (the_long_night.txt) and never removed, so
-	# this can never stall a decay that should happen.
+	# find nothing is pure waste. ln_aftermath_started is set at the Dawn (zz_ln_dark_spent_effects.txt) and,
+	# since 1.1.0 (B7), cleared again when the next wave opens (ln_invasion_opening_effect) -- so decay runs
+	# through every aftermath and pauses while a new Long Night is re-scouring the map, which is the intent.
+	# (An earlier note here said it was "never removed"; that was true, and it was the recurrence bug.)
 	#
 	# Thomas asked the right question about deleting those sub-lists -- "were they there for a reason?" Two of
 	# the three were redundant with guards already inside their own effects. This one was not.

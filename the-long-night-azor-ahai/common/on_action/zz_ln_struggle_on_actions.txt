@@ -33,6 +33,24 @@ ln_struggle_game_start = {
 			debug_log = "LN_TRACE FACE: night king face donor already absent at game start"
 		}
 
+		# 1.1.0b -- AND THE WALKERS' DONOR, FOR EXACTLY THE SAME REASON, WHICH I LEARNED THE SAME WAY.
+		# ln_dna_white_walker shipped this morning attached to ln_dummy_white_walker
+		# (history/characters/zz_ln_dna_donors.txt), and Thomas's very next run said so, fifty times:
+		#     LN_TRACE FACE: walker donor pruned - generated face kept
+		# against one solitary "donor exists" for the Night King. The difference was this block: his donor
+		# was pinned in 1.0.15 and the new one was not, so every Other created in that session went on
+		# wearing a randomly generated frostborn face under the ice armour.
+		# Pinned beside him, guarded the same way, and it reports the same way -- one grep settles it:
+		#     grep "LN_TRACE FACE" logs/debug.log
+		if = {
+			limit = { exists = character:ln_dummy_white_walker }
+			character:ln_dummy_white_walker = { agot_make_unpruneable = yes }
+			debug_log = "LN_TRACE FACE: walker face donor pinned unprunable at game start"
+		}
+		else = {
+			debug_log = "LN_TRACE FACE: walker face donor already absent at game start"
+		}
+
 		# 1.0.15 -- one greppable line answering "did the playset have Seasons of Ice and Fire?", which every
 		# compat report so far has had to establish by asking the reporter for their whole mod list.
 		if = {

@@ -65,6 +65,21 @@ ln_the_fire_takes_something_effect = {
 		track = returned
 		value = 25
 	}
+	# 1.1.0 (A3) -- THE RECORD, with the priest's name on it. Both callers have scope:ln_the_priest in hand
+	# (the natural-death road saves it two blocks before calling this; ln_prophecy.23 saves it in its
+	# immediate from var:ln_the_kneeling_priest). Guarded anyway: a participant tag that is not supplied
+	# errors every time the page is drawn, and a return with no priest to name is not a return this mod
+	# can produce -- if it ever is, the trace below is how it will be found.
+	if = {
+		limit = { exists = scope:ln_the_priest }
+		create_character_memory = {
+			type = ln_came_back_memory
+			participants = { ln_the_priest = scope:ln_the_priest }
+		}
+	}
+	else = {
+		debug_log = "LN_TRACE RETURNED: a return with no priest scope - ln_came_back_memory NOT written"
+	}
 
 	# COMING BACK IS ITSELF A DEED, and Thomas is right that the second one should start turning heads:
 	# "if it gets to level two, they get named or something." ln_check_naming_effect reads the deed count,

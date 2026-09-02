@@ -22,11 +22,22 @@ ln_prophecy.40 = {
 
 	option = {
 		name = ln_prophecy.40.a
+		ai_chance = {
+			base = 60
+			modifier = { add = 30  has_trait = zealous }
+			modifier = { add = -20  has_trait = cynical }
+		}
 		add_piety = 50
 	}
 
 	option = {
 		name = ln_prophecy.40.b
+		ai_chance = {
+			base = 40
+			modifier = { add = 25  has_trait = cynical }
+			modifier = { add = 20  has_trait = paranoid }
+			modifier = { add = -25  has_trait = zealous }
+		}
 		stress_impact = { base = minor_stress_impact_gain }
 	}
 }
@@ -76,6 +87,8 @@ ln_prophecy.21 = {
 			# no anything. Dead fallen -> only "let him go" remains, which is then just grief.
 			scope:ln_the_fallen ?= { is_alive = yes }
 		}
+		# 1.1.0 (§7): greyed while he still breathes and the price cannot be paid -- the throttle taught, not hidden.
+		show_as_unavailable = { scope:ln_the_fallen ?= { is_alive = yes } }
 		ln_pay_the_last_kiss_effect = yes
 
 		ai_chance = {
@@ -97,6 +110,8 @@ ln_prophecy.21 = {
 			# 1.0.15 -- same corpse-guard as option a.
 			scope:ln_the_fallen ?= { is_alive = yes }
 		}
+		# 1.1.0 (§7): same shape as option a.
+		show_as_unavailable = { scope:ln_the_fallen ?= { is_alive = yes } }
 		ln_pay_the_last_kiss_effect = yes
 		set_relation_lover = scope:ln_the_fallen
 
@@ -289,9 +304,19 @@ ln_prophecy.41 = {
 
 	option = {
 		name = ln_prophecy.41.a
+		ai_chance = {
+			base = 40
+			modifier = { add = 35  has_trait = cynical }
+			modifier = { add = -30  has_trait = zealous }
+		}
 	}
 	option = {
 		name = ln_prophecy.41.b
+		ai_chance = {
+			base = 60
+			modifier = { add = 35  has_trait = zealous }
+			modifier = { add = -25  has_trait = cynical }
+		}
 		add_piety = minor_piety_gain
 	}
 }

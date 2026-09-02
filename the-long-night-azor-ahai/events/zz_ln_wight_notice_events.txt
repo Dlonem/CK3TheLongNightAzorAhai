@@ -49,16 +49,30 @@ ln_wight.1 = {
 	# The plain answer. No mechanical effect -- see the note above.
 	option = {
 		name = ln_wight.1.a
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = forgiving }
+			modifier = { add = 20  has_trait = compassionate }
+			modifier = { add = -20  has_trait = vengeful }
+		}
 	}
 
 	# Only if you are already fighting the dead. Costs nothing; it is there so the moment can land differently
 	# for someone in the war than for someone hearing about it from a thousand miles away.
 	option = {
 		name = ln_wight.1.b
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = vengeful }
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = -20  has_trait = craven }
+		}
 		trigger = {
 			exists = title:h_the_others.holder
 			is_at_war_with = title:h_the_others.holder
 		}
+		# 1.1.0 (§7): existence kept, the war dropped: greyed until you are at war with the dead, hidden while there are no dead.
+		show_as_unavailable = { exists = title:h_the_others.holder }
 	}
 }
 
@@ -107,15 +121,29 @@ ln_wight.2 = {
 	# The plain answer. No mechanical effect -- see the note above.
 	option = {
 		name = ln_wight.2.a
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = forgiving }
+			modifier = { add = 20  has_trait = compassionate }
+			modifier = { add = -20  has_trait = vengeful }
+		}
 	}
 
 	# Only if you are already fighting the dead, so the moment can land differently for someone in the
 	# war than for someone hearing it from a thousand miles away. Mirrors ln_wight.1.b.
 	option = {
 		name = ln_wight.2.b
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = vengeful }
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = -20  has_trait = craven }
+		}
 		trigger = {
 			exists = title:h_the_others.holder
 			is_at_war_with = title:h_the_others.holder
 		}
+		# 1.1.0 (§7): same shape as ln_wight.1.b.
+		show_as_unavailable = { exists = title:h_the_others.holder }
 	}
 }

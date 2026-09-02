@@ -37,7 +37,13 @@ ln_defeat.1 = {
 	theme = murder_scheme
 	override_background = { reference = agot_frozen_forest }
 
-	immediate = { play_music_cue = "mood_the_others" }
+	immediate = {
+		play_music_cue = "mood_the_others"
+		# 1.1.0b -- the mod's second ending left no mark on anyone at all. ln_defeat.2's own text
+		# establishes that play continues fifty years and more past this card, with the sun still down,
+		# so a man who was alive on the day it was decided should carry it for the rest of that.
+		create_character_memory = { type = ln_the_dark_won_memory }
+	}
 
 	option = { name = ln_defeat.1.a }
 }
@@ -113,6 +119,12 @@ ln_defeat.2 = {
 	# Burn him. It is the only thing anyone can do for the dead in this war, and it is not nothing.
 	option = {
 		name = ln_defeat.2.a
+		ai_chance = {
+			base = 65
+			modifier = { add = 25  has_trait = compassionate }
+			modifier = { add = 20  has_trait = just }
+			modifier = { add = -25  has_trait = callous }
+		}
 		add_character_flag = ln_burned_my_own
 		# If this was the one he left standing the first time, that account is closed and the
 		# recognition goes back to picking whoever it finds.
@@ -125,6 +137,11 @@ ln_defeat.2 = {
 	# Leave him where he lies. You will be back this way.
 	option = {
 		name = ln_defeat.2.b
+		ai_chance = {
+			base = 35
+			modifier = { add = 30  has_trait = callous }
+			modifier = { add = -25  has_trait = compassionate }
+		}
 		add_character_flag = ln_left_him_standing
 		# AND THE MOD REMEMBERS WHICH ONE. Overwrites on purpose: the man left MOST RECENTLY is the
 		# one still out there, and carrying a queue of them would be bookkeeping, not a story.

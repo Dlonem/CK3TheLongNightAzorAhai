@@ -85,3 +85,11 @@ ln_dragonglass_knight_modifier = {
 	icon = prowess_positive
 	prowess = 5
 }
+
+# 1.1.0 (§11, rung one): STUDIED the glass -- granted by any ln_poi_dragonglass visit event, modelled on
+# agot_taught_dragonlore (00_agot_dragon_modifiers.txt:2). Read by: ln_dragonglass_cost_value (the cheaper
+# mine), ln_prophecy.31.c (cut it properly), and the melee's "studied the glass" door (§3.3).
+ln_knows_the_glass_modifier = {
+	icon = learning_positive
+	learning = 1
+}

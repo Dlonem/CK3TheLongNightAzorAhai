@@ -1,0 +1,78 @@
+﻿# AGOT: The Long Night & Azor Ahai -- decision titles that know where you are standing (1.1.0, §8.2).
+#
+# Thomas: "if you are a commander in an army, the text on the decision itself changes to 'Send a raven'...
+# you can't send a raven to Forge Lightbringer, but perhaps you can send a raven to empty your dungeons."
+#
+# THIS IS HALF OF A TWO-PART CHANGE and neither half works alone: the gate swap
+# (is_available_adult_or_is_commanding, marked §8.2 at each decision) lets the decision through while
+# commanding; these tokens rename it while he is in the field. Called from loc as
+# [ROOT.Char.Custom('token')]. This is the mod's first file in this folder -- customlockcheck.py (gate)
+# resolves every token and every localization_key in it.
+#
+# ⚠ NOT trigger_localization. Different folder, different shape, different job (§8's two halves).
+
+ln_SendDungeonsTitle = {
+	type = character
+	text = {
+		trigger = { is_commanding_army = yes }
+		localization_key = ln_send_the_dungeons_raven
+	}
+	text = {
+		localization_key = ln_send_the_dungeons_plain
+	}
+}
+
+ln_SendMenAndGrainTitle = {
+	type = character
+	text = {
+		trigger = { is_commanding_army = yes }
+		localization_key = ln_send_men_and_grain_raven
+	}
+	text = {
+		localization_key = ln_send_men_and_grain_plain
+	}
+}
+
+ln_PetitionTheRealmTitle = {
+	type = character
+	text = {
+		trigger = { is_commanding_army = yes }
+		localization_key = ln_petition_the_realm_raven
+	}
+	text = {
+		localization_key = ln_petition_the_realm_plain
+	}
+}
+
+ln_RebuildTheCastleTitle = {
+	type = character
+	text = {
+		trigger = { is_commanding_army = yes }
+		localization_key = ln_rebuild_the_castle_raven
+	}
+	text = {
+		localization_key = ln_rebuild_the_castle_plain
+	}
+}
+
+ln_ManAnEmptyCastleTitle = {
+	type = character
+	text = {
+		trigger = { is_commanding_army = yes }
+		localization_key = ln_man_an_empty_castle_raven
+	}
+	text = {
+		localization_key = ln_man_an_empty_castle_plain
+	}
+}
+
+ln_MineDragonglassTitle = {
+	type = character
+	text = {
+		trigger = { is_commanding_army = yes }
+		localization_key = ln_mine_dragonglass_raven
+	}
+	text = {
+		localization_key = ln_mine_dragonglass_plain
+	}
+}

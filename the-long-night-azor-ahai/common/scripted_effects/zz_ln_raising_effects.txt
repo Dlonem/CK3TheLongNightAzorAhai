@@ -1,0 +1,222 @@
+﻿# AGOT: The Long Night & Azor Ahai -- the raisings (1.1.0, §4).
+#
+# ln_purge_mortal_frailty_effect -- extracted VERBATIM from ln_mutate_into_other_unguarded_effect on
+# 31 Aug 2026 so the wight pipeline and the Other-raising share one list instead of drifting apart.
+# Runs on the character being raised. Trait `opposites` BLOCK add_trait, so this must run before either
+# raising trait lands -- both callers keep that order.
+ln_purge_mortal_frailty_effect = {
+	# Purge old age/disease traits
+
+	if = { limit = { has_trait = withering_mind } remove_trait = withering_mind }
+
+	if = { limit = { has_trait = fragile_bones } remove_trait = fragile_bones }
+
+	if = { limit = { has_trait = faltering_heart } remove_trait = faltering_heart }
+
+	if = { limit = { has_trait = clouded_eyes } remove_trait = clouded_eyes }
+
+	if = { limit = { has_trait = infirm } remove_trait = infirm }
+
+	if = { limit = { has_trait = gout_ridden } remove_trait = gout_ridden }
+
+	if = { limit = { has_trait = consumption } remove_trait = consumption }
+
+	if = { limit = { has_trait = leper } remove_trait = leper }
+
+	if = { limit = { has_trait = bubonic_plague } remove_trait = bubonic_plague }
+
+	if = { limit = { has_trait = ill } remove_trait = ill }
+
+	if = { limit = { has_trait = pneumonic } remove_trait = pneumonic }
+
+	if = { limit = { has_trait = typhus } remove_trait = typhus }
+
+	if = { limit = { has_trait = smallpox } remove_trait = smallpox }
+
+	if = { limit = { has_trait = measles } remove_trait = measles }
+
+	if = { limit = { has_trait = ergotism } remove_trait = ergotism }
+
+	# ADDED: the modern CK3 illness set. AGOT replaces vanilla's 00_traits.txt wholesale, and the
+
+	# names Long Night+ was written against (blood_cough, bloody_flux, winter_fever, dancing_plague,
+
+	# shaking_sickness, great_spring_sickness, st_anthonys_fire, goutridden, leper_1) do not exist in
+
+	# ANY loaded trait file. has_trait on an unknown key silently returns false, so this whole purge
+
+	# has been quietly skipping most of what it was meant to clean off.
+
+	if = { limit = { has_trait = great_pox } remove_trait = great_pox }
+
+	if = { limit = { has_trait = early_great_pox } remove_trait = early_great_pox }
+
+	if = { limit = { has_trait = lovers_pox } remove_trait = lovers_pox }
+
+	if = { limit = { has_trait = cancer } remove_trait = cancer }
+
+	if = { limit = { has_trait = sickly } remove_trait = sickly }
+
+	if = { limit = { has_trait = greyscale } remove_trait = greyscale }
+
+	if = { limit = { has_trait = dysentery } remove_trait = dysentery }
+
+	if = { limit = { has_trait = wounded_1 } remove_trait = wounded_1 }
+
+	if = { limit = { has_trait = wounded_2 } remove_trait = wounded_2 }
+
+	if = { limit = { has_trait = wounded_3 } remove_trait = wounded_3 }
+
+	if = { limit = { has_trait = maimed } remove_trait = maimed }
+
+	if = { limit = { has_trait = blind } remove_trait = blind }
+
+	if = { limit = { has_trait = incapable } remove_trait = incapable }
+
+	if = { limit = { has_trait = one_legged } remove_trait = one_legged }
+
+	if = { limit = { has_trait = disfigured } remove_trait = disfigured }
+
+	if = { limit = { has_trait = lovers_pox } remove_trait = lovers_pox }
+
+	if = { limit = { has_trait = early_great_pox } remove_trait = early_great_pox }
+
+	if = { limit = { has_trait = great_pox } remove_trait = great_pox }
+
+
+
+}
+
+# ══ FEATURE B -- RAISED AS AN OTHER (§4) ════════════════════════════════════════════════════════════════
+# The Night King's kill. A White Walker makes a wight; THE NIGHT KING MAKES A WHITE WALKER -- Thomas's
+# ruling, recorded as lore-deliberate in the work order (§3.5): he knows it bends the books and has ruled
+# it in. Do not silently "correct" it.
+#
+# THE ORDER IS THE FEATURE (Thomas's own sequence, §4): everything the scene needs to say about who he WAS
+# is banked into scopes by the caller BEFORE this runs; then this mutates him; THEN the report card opens
+# on a portrait that is already wrong; then it ends and the playable rule hands the player to an heir.
+# No death, no landlessness -- he is not killed. He is taken, standing in the dead's host.
+#
+# Borrows the wight pipeline almost whole (the §2.4 inventory), with three swaps: other_trait instead of
+# wight_trait, the Others' own conversion dressing (the_long_night.txt:30-60) instead of the wight gore
+# variants and poses, and ln_raised_as_an_other_memory instead of wight_raised_memory. The wight-worded
+# notify and marriage CARDS are deliberately not called -- their prose says "wight" and this man is not
+# one; the mechanical marriage severance still runs. Flagged for the §13 writing pass.
+ln_raised_as_an_other_effect = {
+	if = {
+		limit = {
+			# The mutate front-door lesson (1.0.12b): dragons never come through a character conversion.
+			NOT = { has_trait = dragon }
+			NOT = { has_trait = other_trait }
+			NOT = { has_trait = nightking }
+		}
+		save_temporary_scope_as = ln_raised_other
+
+		# The purge first -- opposites block add_trait (same reason, same order as the wight pipeline).
+		ln_purge_mortal_frailty_effect = yes
+
+		# Faith and culture, with the wight pipeline's own head-of-faith guard (the Magnar of Thenn lesson:
+		# the engine refuses set_character_faith on a religious head, and the character-scope test is
+		# any_held_title, not is_head_of_faith on the character).
+		if = {
+			limit = { NOT = { any_held_title = { is_head_of_faith = yes } } }
+			set_character_faith = faith:cold_gods
+		}
+		set_culture = culture:frostborn
+		set_house = house:house_theothers
+
+		# The dead do not fight with the living's kit (both strips are the wight pipeline's, verbatim).
+		ln_strip_living_regiments_effect = yes
+		remove_character_modifier = ln_dragonglass_armed_modifier
+		remove_character_modifier = ln_dragonglass_knight_modifier
+		remove_character_modifier = ln_dragonglass_stores_modifier
+		remove_character_modifier = ln_valyrian_armed_modifier
+
+		# The Others' own dressing, from the spawn conversion (the_long_night.txt:30-60). Trait first would
+		# be blocked by nothing now the purge has run; the inactive marks are no-ops on men who lack the
+		# traits, kept for parity with the spawn conversion.
+		add_trait = other_trait
+		add_character_flag = ln_one_of_them
+		if = {
+			limit = { NOT = { has_trait = spindly } }
+			add_trait = spindly
+		}
+		make_trait_inactive = cool_silver_hair
+		make_trait_inactive = blue_eyes
+
+		# The record. Dated natively; the heir reads it on the ancestor's page.
+		create_character_memory = { type = ln_raised_as_an_other_memory }
+
+		# ── 1.1.0 (1 Sep): AND HE IS REMEMBERED BY THE OTHER SIDE. ──────────────────────────────────────
+		# Thomas: "it would be really awesome if there's increased weight on your previous character who got
+		# turned into a White Walker showing up in the next Trial of Seven for the Long Night -- in the
+		# spirit of, oh my god, these are the best heroes that attempted, and now you have to fight them."
+		#
+		# The plumbing for this already existed and nobody had noticed: a taken champion is set_house
+		# house_theothers twelve lines above, and ln_build_their_line_effect draws its Walker pool from
+		# exactly that house. He was ALWAYS eligible to turn up on the enemy line -- he was just competing
+		# for a slot on raw prowess against Walkers spawned at 16, which is a coin flip rather than a
+		# reunion. This flag is what ln_walker_menace_value reads to put him at the front of the queue.
+		#
+		# Deliberately set for EVERY raised champion, not only the player's own: an AI king who went out
+		# there and was taken is the same story from the other side of the map, and the heir who has to
+		# fight his own father is the version of this worth having.
+		add_character_flag = ln_was_taken_at_the_last_hour
+
+		# A raised man belongs to the dead -- sever every alliance and every scripted bond, the wight
+		# pipeline's blocks with the scope renamed. Collected into temporary lists first: never mutate a
+		# relation list while iterating it.
+		every_ally = {
+			break_alliance = scope:ln_raised_other
+		}
+		every_relation = { type = friend       add_to_temporary_list = ln_sever_friend }
+		every_relation = { type = best_friend  add_to_temporary_list = ln_sever_best_friend }
+		every_relation = { type = lover        add_to_temporary_list = ln_sever_lover }
+		every_relation = { type = soulmate     add_to_temporary_list = ln_sever_soulmate }
+		every_in_list = { list = ln_sever_friend       remove_relation_friend      = scope:ln_raised_other }
+		every_in_list = { list = ln_sever_best_friend  remove_relation_best_friend = scope:ln_raised_other }
+		every_in_list = { list = ln_sever_lover        remove_relation_lover       = scope:ln_raised_other }
+		every_in_list = { list = ln_sever_soulmate     remove_relation_soulmate    = scope:ln_raised_other }
+		# Marriage: the mechanical severance only -- the card's prose is wight-worded (see header).
+		ln_wight_marriage_severance_effect = yes
+
+		# A landed man stays landed IN THE DEAD'S HOST (§4: no death, no landlessness). The guard chain is
+		# the wight pipeline's, verbatim -- the 1.0.15 lesson about ruin/wilderness capitals included.
+		if = {
+			limit = { exists = capital_county }
+			capital_county = {
+				every_county_province = {
+					limit = {
+						OR = {
+							has_holding_type = wilderness_holding
+							has_holding_type = ruin_holding
+						}
+					}
+					set_holding_type = tribal_holding
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_ruler = yes
+				NOT = { has_government = wight_government }
+				NOR = {
+					government_has_flag = government_is_landless_adventurer
+					government_has_flag = government_is_custom_landless
+				}
+				exists = capital_county
+				NOT = {
+					capital_county ?= {
+						any_county_province = {
+							OR = {
+								has_holding_type = wilderness_holding
+								has_holding_type = ruin_holding
+							}
+						}
+					}
+				}
+			}
+			change_government = wight_government
+		}
+	}
+}

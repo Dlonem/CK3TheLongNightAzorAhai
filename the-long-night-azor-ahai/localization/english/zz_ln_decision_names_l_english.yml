@@ -5,7 +5,9 @@
  # is what it has been doing -- for the inherited ones as well as ours.
 
  ln_read_the_signs_decision:0 "Read the Signs"
- ln_mine_dragonglass_decision:0 "Mine the Dragonglass"
+ ln_mine_dragonglass_decision:0 "[ROOT.Char.Custom('ln_MineDragonglassTitle')]"
+ ln_mine_dragonglass_plain:0 "Mine the Dragonglass"
+ ln_mine_dragonglass_raven:0 "Send a Raven: Open the Mine"
  ln_end_the_long_night_struggle_decision:0 "The Long Night Ends"
  ln_send_for_a_red_priest_decision:0 "Send for a Red Priest"
  # NOTE: ln_man_an_empty_castle_decision and ln_return_with_fire_decision carry their own name keys in

@@ -12,12 +12,21 @@
 # to keep fire out, and having it balk at the Wall would be the single most immersion-breaking line in the mod.
 
 ln_rides_a_living_dragon_trigger = {
-	exists = var:current_dragon
-	var:current_dragon = {
-		is_alive = yes
-		has_trait = dragon
-		# Not one of theirs. See the note above.
-		NOT = { house ?= house:house_theothers }
+	# 1.1.0 -- trigger_if, not a bare exists-then-read pair. The pair is logically correct, but CK3's
+	# TOOLTIP build evaluates every line independently, so an option gated on this trigger logged
+	# "Failed to fetch variable for 'current_dragon'" once per FRAME while its card was open -- 1,424
+	# lines in one sitting of ln_dawn.2, and measurable FPS. trigger_if short-circuits the tooltip too.
+	trigger_if = {
+		limit = { exists = var:current_dragon }
+		var:current_dragon = {
+			is_alive = yes
+			has_trait = dragon
+			# Not one of theirs. See the note above.
+			NOT = { house ?= house:house_theothers }
+		}
+	}
+	trigger_else = {
+		always = no
 	}
 
 	# And the rider is still among the living too.
@@ -47,3 +56,46 @@ ln_is_a_dragon_trigger = {
 	has_trait = dragon
 }
 
+
+# ── IS SHE ACTUALLY OVER THIS FIELD ────────────────────────────────────────────────────────────────────────
+# 1.1.0 PLAYTEST FIX, 1 Sep. ln_rides_a_living_dragon_trigger answers "does this man have a living dragon",
+# which is a question about the BOND. Several cards were using it to answer a different question -- "is there
+# a dragon in the sky above this scene" -- and beyond the Wall those two answers come apart, because of the
+# mod's own founding piece of lore: Silverwing refused the Wall three times and Alysanne never got her over
+# (see zz_ln_dragon_wall_effects.txt). Thomas, watching ln_dawn.2 fire its dragon card on the Desolate Field:
+# "it's basically all well and good except for that one little bit about crossing the wall."
+#
+# The North is NOT excluded -- the North is south of the Wall and she flies there happily; that is why the
+# refusal event uses the North as its catchment. Only the Wall itself and what lies past it are closed to her.
+# No exemption is needed for the Night King's mount: house_theothers is already excluded upstream, and this
+# trigger is only ever asked about a living man's living dragon.
+# The ward is a thing in a structure, and the structure can fail. Latched every pulse by
+# ln_refresh_beyond_the_wall_latch_effect (zz_ln_invasion_target_effects.txt) rather than asked as a map
+# sweep, because ln_bears_the_bane_trigger reads it and that trigger is rebuilt every frame a tooltip is open.
+ln_the_wall_is_breached_trigger = {
+	has_global_variable = ln_wall_is_breached
+}
+
+ln_dragon_is_over_the_field_trigger = {
+	ln_rides_a_living_dragon_trigger = yes
+	# She will not cross an intact Wall. Once the dead hold a piece of it, there is a hole and the ward that
+	# turned Silverwing three times is not there any more -- Thomas's call, 1 Sep: "maybe you can fly your
+	# dragon up there after the wall falls." So this clause only binds while the Wall is whole.
+	# 1.1.0: TWO WAYS SHE CAN BE UP THERE. The Wall is broken, or her rider forced her over it anyway
+	# (ln_omen.10's fourth option). The second is the expensive one -- see ln_spear_hit_chance_value, where
+	# forcing an intact ward makes the Night King's spear far likelier to find her.
+	trigger_if = {
+		limit = {
+			ln_the_wall_is_breached_trigger = no
+			NOT = { has_character_flag = ln_forced_her_over }
+		}
+		NOT = {
+			location ?= {
+				OR = {
+					geographical_region = world_westeros_the_wall
+					geographical_region = world_westeros_beyond_the_wall
+				}
+			}
+		}
+	}
+}

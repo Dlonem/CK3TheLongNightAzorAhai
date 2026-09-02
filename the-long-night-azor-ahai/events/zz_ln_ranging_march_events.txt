@@ -43,6 +43,11 @@ ln_ranging.1 = {
 	# Craster's Keep -- the near ground. A known roof and a bad host, a few days out.
 	option = {
 		name = ln_ranging.1.a
+		ai_chance = {
+			base = 40
+			modifier = { add = 20  has_trait = craven }
+			modifier = { add = -15  has_trait = brave }
+		}
 		set_variable = { name = ln_ranging_ground  value = flag:crasters_keep }
 		start_travel_plan = {
 			destination = title:c_crasters_keep.title_province
@@ -56,6 +61,11 @@ ln_ranging.1 = {
 	# Whitetree -- the deep forest and the old gods' trees.
 	option = {
 		name = ln_ranging.1.b
+		ai_chance = {
+			base = 25
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = -15  has_trait = craven }
+		}
 		set_variable = { name = ln_ranging_ground  value = flag:whitetree }
 		start_travel_plan = {
 			destination = title:c_whitetree.title_province
@@ -69,6 +79,12 @@ ln_ranging.1 = {
 	# Hardhome -- the far shore. The one the older brothers go quiet about.
 	option = {
 		name = ln_ranging.1.c
+		ai_chance = {
+			base = 20
+			modifier = { add = 25  has_trait = brave }
+			modifier = { add = 15  has_trait = zealous }
+			modifier = { add = -20  has_trait = craven }
+		}
 		set_variable = { name = ln_ranging_ground  value = flag:hardhome }
 		start_travel_plan = {
 			destination = title:c_hardhome.title_province
@@ -82,6 +98,12 @@ ln_ranging.1 = {
 	# Stay.
 	option = {
 		name = ln_ranging.1.d
+		ai_chance = {
+			base = 15
+			modifier = { add = 25  has_trait = craven }
+			modifier = { add = 15  has_trait = patient }
+			modifier = { add = -15  has_trait = brave }
+		}
 	}
 }
 

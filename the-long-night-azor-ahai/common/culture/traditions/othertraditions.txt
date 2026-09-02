@@ -80,7 +80,15 @@ tradition_others2 = {
 		ai_sociability = -100
 		ai_vengefulness = 100
 		cultural_head_fascination_mult = -1
-		monthly_prestige = -10
+		# 1.0.16a -- THE -10 A MONTH PRESTIGE DRAIN IS REMOVED FROM HERE.
+		# Reported by Enigmatic Clown: "the Night King will stop invading if he doesn't have enough prestige."
+		# He was right, and 1.0.16 is what caused it -- this tradition was assigned to frostborn in that release
+		# (00_other_culture.txt), and the Night King is created culture = culture:frostborn. wight_government
+		# sets regiments_prestige_as_gold, so prestige BUYS AND REINFORCES his men-at-arms
+		# (game/common/governments/_governments.info:40-44). Against the government's +0.2 a month, a -10 drain
+		# nets about -118 a year: the setup's add_prestige = 5000 is a ~42-year buffer and then his host can
+		# never reinforce after a battle. It only ratchets down, which from outside reads as "he stopped
+		# invading". The note in 00_other_culture.txt predicted this exact report, in almost these words.
 		vassal_limit = 20
 		title_creation_cost_mult = 100
 	}

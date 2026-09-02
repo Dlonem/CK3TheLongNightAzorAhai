@@ -79,6 +79,9 @@ ln_lords_blessing_interaction = {
 			exists = var:ln_blessed_charge
 			var:ln_blessed_charge = { is_alive = yes }
 		}
+		# 1.0.17 -- the world's yearly allowance. AI-SIDE ONLY: is_shown and is_valid are untouched, so a
+		# player red priest can always offer. See ln_world_will_hear_another_blessing_trigger.
+		ln_world_will_hear_another_blessing_trigger = yes
 	}
 
 	# WHO A COURT PRIEST CAN REACH, in the order the story would go. His liege first -- that is the man he

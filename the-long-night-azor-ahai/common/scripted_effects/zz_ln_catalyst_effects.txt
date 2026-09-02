@@ -113,6 +113,23 @@ ln_ledger_the_points_effect = {
 # times a run -- and the blanket guard was throwing every one of those deaths away, dragon deaths, house
 # extinctions and THE NIGHT KING'S OWN DEATH included. Branches that identify the dead by trait or by house
 # need no such guard and must never carry one again.
+# ══ THE SANCTIONED KILL (1.1.0b) ══════════════════════════════════════════════════════════════════════════
+# Root = the Night King, one line before he is killed. Says: this death is one of the mod's own, not a spear
+# in a field. Read by the two gates in ln_death_catalyst_effect below.
+#
+# It is a FLAG and not a death reason on purpose. on_death fires before is_alive flips, so death_reason
+# errors and reads false at exactly the moment these gates are asked -- which is what shipped in 1.1.0 and
+# what made the Night King respawn after every scripted kill. A flag has no such timing.
+#
+# Stamped at exactly four sites, and there must never be a fifth without a note here:
+#   events/zz_ln_dawn_events.txt:611              ln_dawn.3   -- the field duel
+#   events/zz_ln_dawn_events.txt:844              ln_dawn.11  -- the cornered king
+#   events/zz_ln_dawn_events.txt:1012             ln_dawn.12  -- the day-14 failsafe
+#   common/scripted_effects/zz_ln_last_hour_effects.txt:875   -- the Last Hour victory ceremony
+ln_mark_the_sanctioned_kill_effect = {
+	add_character_flag = ln_fell_in_the_scene
+}
+
 ln_death_catalyst_effect = {
 	save_scope_as = ln_catalyst_culprit
 
@@ -307,6 +324,56 @@ ln_death_catalyst_effect = {
 		limit = {
 			has_trait = nightking
 			ln_slain_by_a_bane_trigger = yes
+			# ⚠ 1.1.0 -- AND IT HAS TO BE OUR CONFRONTATION. Workshop report, RedSaintNino, 28 Aug:
+			# "The writing is very good. Felt very moving when my favored warrior went to fight the night
+			# king, recently stolen Valyrian steel in hand.... unfortunately, it seems to be a bit bugged. I
+			# killed a micro army of the night king, a 2000 man force, and it triggered the end of the night
+			# king."
+			#
+			# HE FOUND A REAL HOLE AND THE BANE RULE ABOVE IS WHY IT WAS INVISIBLE. The 1.0.15b gate asks
+			# whether the hand that did it COULD end him -- and his warrior was carrying Valyrian steel, so
+			# it passed. A lucky commander death in an anonymous 2,000-man skirmish therefore ended the
+			# entire Long Night: no scene, no duel, no melee, no card. Exactly the "dice roll" ending
+			# Thomas has ruled against from the first brief -- "killing the Night King should be an event
+			# chain, not a dice roll."
+			#
+			# THE DISCRIMINATOR IS THE DEATH REASON. Every sanctioned kill in this mod carries
+			# death_the_dawn and there are exactly four of them: the field duel (ln_dawn.2 -> :605), the
+			# cornered-king scene (ln_dawn.11 -> :836), its day-14 failsafe (ln_dawn.12 -> :1002), and the
+			# Last Hour melee's victory ceremony (zz_ln_last_hour_effects.txt:875). The War for the Dawn CB
+			# does not kill him itself -- its on_victory routes into ln_dawn.11, so it comes through the
+			# same door. Anything else that kills him is a battle, an accident, or another mod.
+			#
+			# ⚠⚠ 1.1.0b -- THIS WAS `death_reason = death_the_dawn` AND IT BROKE EVERY SANCTIONED KILL.
+			# Thomas, observer run, 290 AC: "my character killed the Night King the first two times, but
+			# I guess because there hasn't been a War for the Dawn declared, he just kind of kept
+			# respawning." His own error.log proves it, twice, with timestamps:
+			#     [16:54:32] death_reason trigger [ Trying to check death reason on LIVING character
+            #                other_name of The Others of h_the_others (Internal ID 155326) ]
+            #       zz_ln_catalyst_effects.txt line: 337  <- this line
+            #       ... events/zz_ln_dawn_events.txt line: 610 (ln_dawn.3:immediate)
+			# and again at 16:55:33 from ln_dawn.11. A new holder of h_the_others appears eight and then
+			# six seconds later: 155326 -> 158957 -> 33692569.
+			#
+			# WHY. on_death does NOT wait for is_alive to flip -- this file's own on-action header
+			# (common/on_action/zz_ln_catalyst_on_actions.txt:7-29) recorded that in August after a
+			# four-hour run produced 5,916 passes on a living root. death_reason on a living character
+			# ERRORS and returns FALSE. So the gate written to admit exactly the four sanctioned kills
+			# refused all four of them: the war never ended, the reveal never fired, Azor Ahai Reborn was
+			# never granted, the struggle never reached its Dawn, and the unguarded else_if below caught
+			# the fall and armed a respawn. Every single time.
+			#
+			# THE DISCRIMINATOR IS NOW A FLAG, stamped by the killing site itself one line before the blow
+			# (ln_mark_the_sanctioned_kill_effect, defined just above ln_death_catalyst_effect in this
+			# file). A flag is readable on a living character, on a dying one and on a dead one alike, so
+			# it cannot be defeated by when the engine chooses to flip is_alive. The four stamping sites
+			# are the same four kills the comment above names -- ln_dawn.3, ln_dawn.11, ln_dawn.12 and the
+			# Last Hour ceremony -- and nothing else in the game can set it. RedSaintNino's 2,000-man
+			# field kill still fails this gate, which was the whole point of adding one.
+			#
+			# death_reason = death_the_dawn is still SET at all four sites: it is what the player reads on
+			# the death, and code that runs later (when he really is dead) may still ask for it.
+			has_character_flag = ln_fell_in_the_scene
 		}
 		every_character_war = {
 			limit = {
@@ -342,6 +409,12 @@ ln_death_catalyst_effect = {
 		# ln_cast_down_backstop_effect in zz_ln_dawn_funnel_effects.txt. Ordering is still on the
 		# owed-test list; the backstop means the answer no longer decides whether the mod works.
 		set_global_variable = { name = ln_nk_cast_down  value = root }
+		# 1.1.0 (§7): A FIELD KILL IS "THE DEAD LOST A BATTLE". The War for the Dawn opens on
+		# ln_nk_has_been_beaten, which the three invasion CBs set in on_defeat -- so until now a realm
+		# that killed the Night King himself in open battle, and watched a successor crowned, still could
+		# not declare it, while one that merely won a siege war could. Same global, same meaning,
+		# same re-arm (zz_ln_struggle_effects.txt clears it with the other latches).
+		set_global_variable = { name = ln_nk_has_been_beaten  value = yes }
 	}
 
 	# The Night King is slain. Worth the entire Long Night threshold at once, which is the whole point --
@@ -362,6 +435,11 @@ ln_death_catalyst_effect = {
 			# reveal, grants Azor Ahai Reborn and pulls the struggle to its Dawn. Ordinary steel does not
 			# buy any of it, under either resolution rule.
 			ln_slain_by_a_bane_trigger = yes
+			# Same gate as the war branch above, same reason, and the same 1.1.0b correction -- see the
+			# block comment there for the two logged failures this caused. Under EITHER resolution rule the
+			# reveal, Azor Ahai Reborn and the pull to the Dawn belong to a death that happened in one of
+			# this mod's four confrontation scenes, never to a field casualty.
+			has_character_flag = ln_fell_in_the_scene
 			OR = {
 				has_game_rule = others_death_resolution
 				has_global_variable = war_for_dawn_victory
@@ -688,6 +766,42 @@ ln_btw_restlessness_catalyst_effect = {
 # Root = the character taking the crown. Every clause guarded, so calling it on somebody who is already
 # wearing it is a no-op and the invasion modifiers can never stack.
 ln_crown_the_next_nightking_effect = {
+	# ══ 1.1.0b -- THERE IS ONE OF HIM. ════════════════════════════════════════════════════════════════
+	# Thomas, observer run, 290 AC: "There's been multiple Night Kings." His screenshots show two at once
+	# -- "Hegemon Other II 'the Old' The Others" and a "Warden Other The Others of Deadwood Grove" who was
+	# free enough to send the player a Demand a Trial by Combat, because keep_imprisoned (which hides
+	# AGOT's whole prisoner-interaction surface) only ever lands on a Night King the mod has captured.
+	#
+	# HOW TWO HAPPEN. `remove_trait = nightking` did not exist anywhere in this mod -- once crowned, always
+	# crowned -- and five of this effect's six callers had no test for a Night King already living. The
+	# guards below are all SELF-guards: they stop double-application to one man and say nothing about the
+	# world. Worse, the h_the_others reconciler (common/story_cycles/the_long_night.txt:1747) fires
+	# PRECISELY in the state where a living Night King does not hold the title, and crowned the holder
+	# without stripping him. This file already knew: see the note at :353-357 about "a living non-owner
+	# still carrying the trait".
+	#
+	# THE FIX IS HERE AND NOT AT THE SIX CALL SITES, because here is the one place all seven crownings
+	# (six callers plus the original spawn) agree to pass through, and because a rule enforced at the
+	# moment of crowning is self-healing: however a second king got made, the next crowning ends him.
+	# The old king is DEMOTED, not killed -- he stays an Other, keeps his lands and his place in the host,
+	# and simply is not the one wearing it. Killing him here would fire on_death, and on_death is what
+	# calls this chain in the first place.
+	every_living_character = {
+		limit = {
+			has_trait = nightking
+			NOT = { this = root }
+		}
+		debug_log = "LN_TRACE CROWN: a second night king was still standing - demoted"
+		debug_log_scopes = yes
+		remove_trait = nightking
+		# The crown's own kit goes with the crown. The invasion-strength modifier stays: he is still one of
+		# them and still worth fighting, he is just not their king.
+		if = {
+			limit = { has_character_modifier = night_king_command_modifier }
+			remove_character_modifier = night_king_command_modifier
+		}
+	}
+
 	if = {
 		limit = { NOT = { has_trait = nightking } }
 		add_trait = nightking

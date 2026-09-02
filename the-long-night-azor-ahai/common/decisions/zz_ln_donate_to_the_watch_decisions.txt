@@ -7,7 +7,24 @@
 ln_send_men_and_grain_decision = {
 	picture = { reference = "gfx/interface/illustrations/decisions/decision_social.dds" }
 
-	desc = ln_send_men_and_grain_decision_desc
+	# 1.1.0 (§12): the Watch reads differently depending on who is looking at it. To the North it is an
+	# obligation and a shield they help hold; to the rest of the Seven Kingdoms it is a dumping ground and
+	# a tax. Saying so makes the North's difference FELT rather than asserted. Same first_valid /
+	# triggered_desc method as ln_dawn.2 -- no new events, no code.
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					OR = {
+						culture = culture:northman
+						capital_province ?= { geographical_region = world_westeros_the_north }
+					}
+				}
+				desc = ln_send_men_and_grain_decision_desc_north
+			}
+			desc = ln_send_men_and_grain_decision_desc
+		}
+	}
 	selection_tooltip = ln_send_men_and_grain_decision_tt
 	confirm_text = ln_send_men_and_grain_decision_confirm
 
@@ -33,7 +50,10 @@ ln_send_men_and_grain_decision = {
 	}
 
 	is_valid = {
-		is_available = yes
+		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
+		# hitting. This decision can be taken from the field -- a steward's job, and the men are already levied. The vanilla ladder's
+		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
+		is_available_adult_or_is_commanding = yes
 		custom_description = {
 			text = ln_donate_needs_the_coin
 			gold >= 100

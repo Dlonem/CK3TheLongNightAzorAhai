@@ -64,4 +64,8 @@ can_be_commander_basic_trigger = {
 		has_trait = maester
 		NOT = { is_human = yes } # TT error if trigger not formatted this way
 	}
+
+	# 1 Sep: the dead lead their own hosts and nobody else's. Same gate as the knight/court-position
+	# overrides in zz_ln_service_triggers.txt -- silent unless the candidate really is one of them.
+	ln_may_serve_trigger = { LORD = $ARMY_OWNER$ }
 }

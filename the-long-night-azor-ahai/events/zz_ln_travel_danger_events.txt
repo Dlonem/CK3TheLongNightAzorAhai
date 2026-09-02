@@ -146,6 +146,8 @@ ln_travel.1 = {
 				}
 			}
 		}
+		# 1.1.0 (§7): guard clause kept, entourage size dropped: a thin party sees what three companions would have bought.
+		show_as_unavailable = { exists = scope:ln_travel_guard }
 		custom_tooltip = ln_travel.1.b_tt
 		current_travel_plan ?= {
 			delay_travel_plan = { days = 45 }
@@ -289,6 +291,8 @@ ln_travel.2 = {
 		trigger = {
 			ln_carries_something_that_can_hurt_them_trigger = yes
 		}
+		# 1.1.0 (§7): THE dragonglass lesson on the road: greyed steel teaches the mine.
+		show_as_unavailable = { always = yes }
 		duel = {
 			skill = prowess
 			value = very_high_skill_rating
@@ -345,6 +349,8 @@ ln_travel.2 = {
 		trigger = {
 			exists = scope:ln_travel_guard
 		}
+		# 1.1.0 (§7): greyed when you travel unguarded.
+		show_as_unavailable = { always = yes }
 		custom_tooltip = ln_travel.2.b_tt
 		current_travel_plan ?= {
 			remove_character = scope:ln_travel_guard

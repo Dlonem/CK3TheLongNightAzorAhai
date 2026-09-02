@@ -292,7 +292,7 @@ ln_prophecy.3 = {
 	}
 	desc = ln_prophecy.3.desc
 	theme = faith
-	left_portrait = { character = root  animation = skeptical }
+	left_portrait = { character = root  animation = disbelief }   # 1.1.0 (B2): `skeptical` is not among the 696 animations vanilla+AGOT define
 	right_portrait = { trigger = { exists = scope:ln_speaker }   character = scope:ln_speaker  animation = worry }
 
 	trigger = {

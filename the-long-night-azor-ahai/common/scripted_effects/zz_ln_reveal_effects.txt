@@ -154,9 +154,21 @@ ln_night_king_slain_reveal_effect = {
 				# sees azor_ahai_reborn and applies the permanent top-rung aura (ln_named_azor_ahai_modifier).
 				ln_the_world_forms_a_view_effect = yes
 				add_character_flag = ln_ended_the_long_night
-				# The dated, visible-forever version of that flag. See zz_ln_conclusion_memories.txt.
-				create_character_memory = { type = ln_slew_the_night_king_memory }
 				ln_name_the_dawn_effect = yes
+			}
+		}
+
+		# ── 1.1.0b: THE MEMORY CAME OUT OF THAT BLOCK, AND IT MATTERS WHICH BLOCK IT IS IN. ────────────
+		# It used to sit inside the `if` above, which is gated on `is_alive = yes` and on the slayer not
+		# ALREADY carrying azor_ahai_reborn. So the mod's flagship memory was silently skipped in its two
+		# most cinematic cases: the champion who trades his life for the blow and dies in the same tick,
+		# and -- under the long_night_recurs rule -- the man who ended the first Long Night and lives to
+		# end the second. He ends the world's darkness and his page says nothing.
+		# The trait gate belongs to the TRAIT. The record belongs to whoever did it, alive or not.
+		if = {
+			limit = { exists = scope:ln_slayer }
+			scope:ln_slayer = {
+				create_character_memory = { type = ln_slew_the_night_king_memory }
 			}
 		}
 
@@ -167,24 +179,32 @@ ln_night_king_slain_reveal_effect = {
 		# (ln_reveal.10) arrives after the theology card, before the chronicle.
 		if = {
 			limit = { exists = scope:ln_slayer }
-			scope:ln_slayer = {
-				ordered_knight = {
-					order_by = prowess
-					position = 0
-					limit = { is_alive = yes }
-					save_scope_as = ln_dawn_knight_1
+			# ⚠ 1.1.0 PLAYTEST FIX, 1 Sep -- THE ROLL CALL IS NO LONGER INVENTED. This block used to read
+			# `ordered_knight order_by = prowess` on the slayer: his three best knights at the moment of
+			# death, whoever they were and wherever they had spent the battle. Before the melee shipped
+			# that was a polite fiction with nothing better available. It is not defensible now, because
+			# the melee knows the real answer. Thomas, watching the card name three men who had not been
+			# in the fight: "everybody who was present needs to have been in the duel. If nobody was in
+			# the duel, I don't want them showing up here as present."
+			#
+			# ln_lh_bank_the_roll_call_effect (zz_ln_last_hour_effects.txt) writes these globals from the
+			# actual line, BEFORE the Night King dies, precisely so they are readable here. No melee means
+			# no globals means no names -- and ln_reveal.10 already has the card for that
+			# (ln_reveal.10.desc_alone), which until today was unreachable because this block always found
+			# somebody. A man who walked out there alone is now recorded as having walked out there alone.
+			if = {
+				limit = { has_global_variable = ln_dawn_line_stood }
+				if = {
+					limit = { has_global_variable = ln_dawn_knight_1  global_var:ln_dawn_knight_1 ?= { always = yes } }
+					global_var:ln_dawn_knight_1 = { save_scope_as = ln_dawn_knight_1 }
 				}
-				ordered_knight = {
-					order_by = prowess
-					position = 1
-					limit = { is_alive = yes }
-					save_scope_as = ln_dawn_knight_2
+				if = {
+					limit = { has_global_variable = ln_dawn_knight_2  global_var:ln_dawn_knight_2 ?= { always = yes } }
+					global_var:ln_dawn_knight_2 = { save_scope_as = ln_dawn_knight_2 }
 				}
-				ordered_knight = {
-					order_by = prowess
-					position = 2
-					limit = { is_alive = yes }
-					save_scope_as = ln_dawn_knight_3
+				if = {
+					limit = { has_global_variable = ln_dawn_knight_3  global_var:ln_dawn_knight_3 ?= { always = yes } }
+					global_var:ln_dawn_knight_3 = { save_scope_as = ln_dawn_knight_3 }
 				}
 			}
 			scope:ln_dawn_knight_1 ?= {
@@ -322,8 +342,12 @@ ln_night_king_slain_reveal_effect = {
 			scope:ln_dawn_knight_2 ?= { set_global_variable = { name = ln_dawn_knight_2  value = this } }
 			scope:ln_dawn_knight_3 ?= { set_global_variable = { name = ln_dawn_knight_3  value = this } }
 
+			# 1 Sep PACING FIX. Ten days put this card inside the same burst as the dawn card, AGOT's own
+			# death management events and the struggle-end cards -- at speed 5 the player is clicking, not
+			# reading, and this is the card that is supposed to be read slowly. It now lands well after the
+			# dust, and before the chronicle at 120.
 			every_player = {
-				trigger_event = { id = ln_reveal.10  days = 10 }
+				trigger_event = { id = ln_reveal.10  days = { 25 40 } }
 			}
 		}
 
@@ -339,8 +363,9 @@ ln_night_king_slain_reveal_effect = {
 
 		# Everyone sees a card. Which of the four they read depends on two things the player has had no way to
 		# check for the entire campaign.
+		# 1 Sep PACING FIX -- see ln_reveal.10 above. Three days landed this on top of the dawn card.
 		every_player = {
-			trigger_event = { id = ln_reveal.1  days = 3 }
+			trigger_event = { id = ln_reveal.1  days = { 6 10 } }
 		}
 	}
 }

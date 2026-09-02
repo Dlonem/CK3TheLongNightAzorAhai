@@ -262,6 +262,12 @@ ln_aftermath.21 = {
 	# Settle here and now.
 	option = {
 		name = ln_aftermath.21.a
+		ai_chance = {
+			base = 60
+			modifier = { add = 25  has_trait = content }
+			modifier = { add = 20  has_trait = compassionate }
+			modifier = { add = -25  has_trait = ambitious }
+		}
 		custom_tooltip = ln_aftermath.21.a.tt
 		hidden_effect = { ln_refugee_settle_here_effect = yes }
 	}
@@ -269,6 +275,12 @@ ln_aftermath.21 = {
 	# Not yet — the camp stays; the native settle decision (or another Return North) remains available.
 	option = {
 		name = ln_aftermath.21.b
+		ai_chance = {
+			base = 40
+			modifier = { add = 30  has_trait = ambitious }
+			modifier = { add = 20  has_trait = brave }
+			modifier = { add = -25  has_trait = content }
+		}
 	}
 }
 

@@ -123,10 +123,204 @@ ln_wall_has_a_free_keepership_trigger = {
 # Could this man take the black at all? Mirrors AGOT's own valid_character on every keeper -- male, adult, not
 # a maester or a septon, not already sworn, not the landless First Ranger -- so the decision never offers a
 # door that appoint_court_position would then refuse at the threshold.
+# ══ SENDING THE DUNGEONS TO THE WALL (1.0.16a) ═══════════════════════════════════════════════════════════
+# Thomas: "I honestly never know who I can send to the Night's Watch."
+#
+# HE IS NOT MISSING SOMETHING. AGOT puts every eligibility condition for its Send to the Wall option in
+# `is_shown` (00_prison_interactions.txt:6129-6162), and an is_shown failure REMOVES THE OPTION ENTIRELY --
+# no greyed button, no tooltip, nothing. The one tooltip that does exist says only "Send to Night's Watch",
+# and one of the two conditions that DO render, `release_banish_invalid_send_to_nw`, has no localisation
+# anywhere in AGOT, vanilla or here, so it prints as a raw key. The most common blocker of all is invisible:
+# a LANDED enemy lord can never be sent, only your vassals-or-below and your own courtiers.
+#
+# So these two triggers exist to be READ OUT LOUD, not to gate. They mirror agot_nw_can_banish
+# (00_agot_nights_watch_triggers.txt:23-50) clause for clause, split into the two halves a player actually
+# needs told apart: what is wrong with YOU, and what is wrong with HIM.
+#
+# WHY MIRROR RATHER THAN WRAP -- and this is a deliberate exception to the do-not-reinvent rule, not an
+# oversight. agot_nw_can_banish is parameterised on TWO scopes ($BANISHER$/$BANISHEE$) and every caller
+# passes saved scopes; there is no saved scope for "the prisoner currently being tested" inside an
+# every_prisoner limit. And a single bundled trigger cannot say WHICH clause failed, which is the entire
+# feature. So: the mirror below explains, and AGOT's own trigger is still called as the FINAL AUTHORITY in
+# the decision's effect before anybody is actually sent. We can therefore never send a man AGOT would not.
+# If AGOT changes agot_nw_can_banish, the sending stays correct and only the explanation goes stale --
+# which is the safe direction to drift in. Re-check this against their file after an AGOT update.
+
+# Root = the man in your dungeon. The BANISHEE half.
+ln_prisoner_fit_for_the_wall_trigger = {
+	is_alive = yes
+	is_ai = yes
+	is_male = yes                              # AGOT: agot_valid_potential_nw_member. Thomas's ruling stands -- brothers.
+	age >= 10                                  # AGOT's number, and note it is not adulthood.
+	culture = { agot_is_wildling_culture = no } # a free folk captive will not swear.
+	# Ours, not AGOT's: a man already sworn, already dead, or not a man at all.
+	NOR = {
+		has_trait = nightswatch
+		has_trait = nightswatch_temp
+		has_trait = nightswatch_historical
+		has_trait = wight_trait
+		has_trait = other_trait
+		has_trait = nightking
+		has_trait = dragon
+	}
+}
+
+# ══ 1.1.0 FEATURE I -- THE §10 REPAIR: WHO IS TOO GREAT FOR THE WALL ════════════════════════════
+# ln_prisoner_fit_for_the_wall_trigger above answers "could the Wall take this man at all" -- AGOT's own
+# clauses, mirrored so each can be read out loud. It never asks who he IS. Neither does agot_nw_can_banish:
+# AGOT keeps its relationship test in send_to_nightswatch_interaction's is_shown trigger_if chain
+# (00_prison_interactions.txt:6129-6162) and nowhere else, and agot_nw_can_banish is only the tooltip
+# beneath it. 1.0.16a's decision treated the tooltip trigger as final authority, so a captured independent
+# king passed every check we made. Thomas, before it was even confirmed: "what if I capture the King of
+# Westeros... next thing you know the King of the Iron Throne is now a part of the Night's Watch." He can.
+# This is the repair, decided 31 Aug 2026: tier ceiling ON behind a game rule, last-of-house ON.
+#
+# Root = the character doing the sending. This = the man in the dungeon.
+ln_prisoner_not_too_great_for_the_wall_trigger = {
+	# No independent rulers -- the King of Westeros case, stated directly.
+	custom_description = {
+		text = ln_wall_he_is_a_king_in_his_own_right
+		NOT = { is_independent_ruler = yes }
+	}
+	# No house heads. is_house_head is vanilla's scripted trigger (00_dynasty_triggers.txt:3); = no negates.
+	custom_description = {
+		text = ln_wall_his_house_looks_to_him
+		is_house_head = no
+	}
+	# No dynasts. Vanilla scripted trigger, 00_dynasty_triggers.txt:15.
+	custom_description = {
+		text = ln_wall_his_dynasty_looks_to_him
+		NOT = { is_dynast = yes }
+	}
+	# Not the last living member of his house. The count INCLUDES the prisoner himself, so >= 2 means
+	# somebody else still lives -- no prev-reach, no self-exclusion needed (the §10 trap). Wrapped in
+	# trigger_if on exists, NOT house ?=: ?= fails closed and would have silently blocked every LOWBORN
+	# prisoner in the mod -- a man with no house cannot end one. Test cases: two-member house passes
+	# (the other member survives him), one-member house is refused.
+	trigger_if = {
+		limit = { exists = house }
+		custom_description = {
+			text = ln_wall_he_is_the_last_of_his_house
+			house = {
+				any_house_member = {
+					count >= 2
+					is_alive = yes
+				}
+			}
+		}
+	}
+	# The tier ceiling, behind a game rule (standing rule 13). A captured duke becoming a sworn brother is
+	# nearly as strange as a king. has_game_rule takes the OPTION name (standing rule 14).
+	trigger_if = {
+		limit = { NOT = { has_game_rule = ln_wall_send_any_tier } }
+		custom_description = {
+			text = ln_wall_he_is_too_great_a_lord
+			highest_held_title_tier <= tier_county
+		}
+	}
+}
+
+# The full §10 gate for the decision: could the Wall take him, is he yours to send, is he not too great.
+# Root = the gaoler taking the decision. This = the prisoner being tested.
+ln_prisoner_may_be_sent_to_the_wall_trigger = {
+	ln_prisoner_fit_for_the_wall_trigger = yes
+
+	# THE RELATIONSHIP LAYER -- AGOT's three is_shown legs from send_to_nightswatch_interaction
+	# (00_prison_interactions.txt:6129-6162), mirrored leg for leg. This is the test 1.0.16a shipped
+	# without: only your own vassals-or-below, the servants of your vassals, and your own courtiers.
+	trigger_if = {
+		limit = { is_playable_character = yes }
+		custom_description = {
+			text = ln_wall_he_is_not_yours_to_send
+			is_vassal_or_below_of = root
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			exists = employer
+			NOT = { employer = root }
+		}
+		custom_description = {
+			text = ln_wall_he_is_not_yours_to_send
+			employer = { is_vassal_or_below_of = root }
+		}
+	}
+	trigger_else = {
+		custom_description = {
+			text = ln_wall_he_is_not_yours_to_send
+			is_courtier_of = root
+		}
+	}
+
+	ln_prisoner_not_too_great_for_the_wall_trigger = yes
+}
+
+# ── ln_can_send_prisoners_to_the_wall_trigger WAS REMOVED HERE (31 Aug 2026). It no longer exists. ────
+#
+# It bundled the three BANISHER-side conditions -- not of the free folk, seat inside the Seven Kingdoms,
+# a Watch still standing -- into one call. `wirecheck2` caught it defined and never called: the decision
+# was built the other way round, and deliberately.
+#
+# WHY THE BUNDLE COULD NOT BE USED. The whole point of this feature is that AGOT tells a player NOTHING
+# when he cannot send a man -- every condition sits in `is_shown`, and an `is_shown` failure deletes the
+# option instead of greying it. So our decision spends three separate `custom_description` blocks, one
+# per condition, in `is_valid` -- see zz_ln_nights_watch_decisions.txt:51-66. A bundled trigger returns
+# one boolean and cannot say WHICH clause failed, which is exactly the thing we are fixing.
+#
+# WHERE EACH CLAUSE WENT, verified line by line before this was removed:
+#   culture = { agot_is_wildling_culture = no }                    -> decisions:54-57  ln_wall_you_are_of_the_free_folk
+#   primary_title ?= { ... world_westeros_seven_kingdoms }         -> decisions:58-65  ln_wall_your_seat_is_not_in_the_seven_kingdoms
+#   ln_a_watch_still_stands_trigger = yes                          -> decisions:66-69  ln_wall_there_is_no_watch_left
+#
+# Nothing is lost and nothing else called it. Do not re-add it: a future caller that wants all three at
+# once should call the three, so the reason survives to the tooltip.
+
+# Split out because the decision names it separately and because it is the one that changes during a game.
+ln_a_watch_still_stands_trigger = {
+	OR = {
+		title:k_the_wall.holder ?= { government_has_flag = government_is_nw }
+		title:d_the_wall.holder ?= { government_has_flag = government_is_nw }
+	}
+}
+
 ln_can_take_the_black_trigger = {
 	is_male = yes
 	is_adult = yes
 	is_alive = yes
+
+	# ── 1.0.17: THE FREE FOLK DO NOT TAKE THE BLACK, AND NEITHER DOES A MAN STANDING IN ESSOS ───────────
+	# Thomas, live: "a wildling can do the decision Take the Black -- that should only be available to
+	# people within the iron throne's domain, adventurer or landed."
+	#
+	# NEITHER CLAUSE IS AN INVENTION; BOTH ARE AGOT'S OWN RULE. agot_nw_can_banish
+	# (00_agot_nights_watch_triggers.txt:23-39) opens with their comment -- "Must be not a wildling and
+	# have a capital in westeros to send" -- and applies culture = { agot_is_wildling_culture = no } to
+	# BOTH the banisher and the banishee. And ln_prisoner_fit_for_the_wall_trigger, FORTY LINES ABOVE
+	# THIS ONE IN THIS FILE, already carries the culture line with the reason on it: "a free folk captive
+	# will not swear."
+	#
+	# This was the only door into the Watch in the mod that lacked it. The other three were checked:
+	# ln_man_an_empty_castle_decision and ln_take_the_black_and_wait_decision are brother-only
+	# (ln_is_an_unplaced_brother_trigger requires ln_is_a_sworn_brother_trigger), and
+	# ln_send_the_dungeons_to_the_wall_decision carries the gate on both sides already. One door, missed.
+	culture = { agot_is_wildling_culture = no }
+
+	# WHERE HE STANDS, NOT WHAT HE HOLDS. AGOT tests the banisher's primary_title capital, which is right
+	# for a lord sending somebody else and wrong here: this decision deliberately admits the landless --
+	# "the poorest start in the mod is also the most authentic one," and is_landed = no is an explicit
+	# branch of its is_valid -- and an adventurer has no primary title to test.
+	#
+	# location is the equivalent that survives him: 587 uses across vanilla and AGOT, and AGOT tests
+	# characters exactly this way in 00_agot_cultural_triggers.txt:17. world_westeros_seven_kingdoms
+	# CONTAINS world_westeros_the_wall (00_agot_geographical_region.txt), so a man already standing at
+	# Castle Black passes, and it excludes world_westeros_beyond_the_wall and the whole of Essos. It is
+	# map data, not politics, so it does not move when the North falls to the dead.
+	#
+	# ?= rather than =: a character with no location fails closed and the decision simply does not show,
+	# which is the right answer for a man who is nowhere -- and it cannot throw the "Character with no
+	# location in link 'location'" that vanilla's own health_events does.
+	location ?= { geographical_region = world_westeros_seven_kingdoms }
+
 	NOR = {
 		has_trait = nightswatch
 		has_trait = nightswatch_temp
@@ -238,5 +432,48 @@ ln_is_an_unplaced_brother_trigger = {
 ln_the_watch_survived_trigger = {
 	exists = title:k_the_wall
 	exists = title:k_the_wall.holder
-	title:k_the_wall.holder = { ln_is_one_of_them_trigger = no }
+	title:k_the_wall.holder = {
+		ln_is_one_of_them_trigger = no
+		# 1.0.16a -- AND "NOT UNDEAD" IS NOT "IS THE NIGHT'S WATCH".
+		# A living wildling who took the Wall passed all three of the old conditions, so the Question of the
+		# North told the crown the Watch was still standing and option A then handed six titles to a brand new
+		# Lord Commander. RedSaintNino: "my Wildlings took the Wall in my playthrough. Huge moment, point of
+		# pride. The mod just gave it back to the night watch... this was no fun."
+		# government_is_nw is AGOT's own way of asking this and already this mod's idiom
+		# (zz_ln_lord_commander_decisions.txt:50, zz_ln_independence_war_shadow.txt:47). It covers
+		# nights_watch_government, AGOT's first_ranger_government and our own ln_ranger_government -- and a
+		# conqueror cannot acquire any of them, because nights_watch_government's can_get_government requires
+		# an NW trait (00_agot_government_types.txt:189-201).
+		government_has_flag = government_is_nw
+	}
+}
+
+
+# ── IS THIS WALL TITLE ACTUALLY FREE TO RECLAIM (1.1.0, 1 Sep) ─────────────────────────────────────────────
+# WORKSHOP REPORT, RedSaintNino, 28 Aug: "my Wildlings took the wall in my playthrough. Huge moment, point of
+# pride. The mod just gave it back to the night watch... this was no fun, but I think you can fix it!"
+#
+# HE IS RIGHT AND THE CAUSE IS SIX BARE LINES. The Watch-restoration effect
+# (agot_long_night_scripted_effects.txt) ends with six `get_title` calls guarded only by
+# `holder ?= { is_ai = yes }`. That guard was added in 1.0.16a to stop the effect stealing from the PLAYER --
+# and it does that. What it never asked was whether the AI holding the title had WON it. A wildling king who
+# took Castle Black by force, a northern lord who garrisoned the Nightfort, a player's own vassal holding
+# Eastwatch: all AI, all robbed, silently, by a restoration effect that was written for an EMPTY Wall.
+#
+# THE RULE THIS ENCODES: the Watch may repopulate a Wall that nobody is holding, or one the dead are holding.
+# It may never take a castle off a living realm that conquered it. Undoing a player's conquest is the single
+# least fun thing a mod can do, and this did it to the one moment on the Wall worth having.
+#
+# The four government clauses are CK3's and AGOT's own "nobody really holds this" states -- the same three
+# the playable rule refuses to hand a player (zz_ln_playable_rules.txt) plus ruins. A title sitting in one of
+# those is unclaimed in every sense that matters.
+ln_wall_title_is_reclaimable_trigger = {
+	OR = {
+		NOT = { exists = $TITLE$.holder }
+		$TITLE$.holder ?= { ln_is_one_of_them_trigger = yes }
+		$TITLE$.holder ?= { has_government = nights_watch_government }
+		$TITLE$.holder ?= { has_government = ruins_government }
+		$TITLE$.holder ?= { has_government = unknown_government }
+		$TITLE$.holder ?= { has_government = wilderness_government }
+	}
 }

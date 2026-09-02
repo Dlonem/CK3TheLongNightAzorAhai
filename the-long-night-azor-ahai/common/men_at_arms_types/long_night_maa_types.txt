@@ -82,5 +82,7 @@ other_maa = {
 	ai_quality = { value = @cultural_maa_extra_ai_score }
 	stack = 500
 	hired_stack_size = 1
-	icon = titan
+	# 1.1.0 (B2): was `titan` -- no titan.dds exists in vanilla, AGOT or this mod, so the regiment drew the missing-
+	# texture placeholder. Zombie is the mod's own regimenttypes icon, the one ln_wight_horde already uses.
+	icon = Zombie
 }

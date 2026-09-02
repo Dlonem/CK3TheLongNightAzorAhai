@@ -18,5 +18,5 @@
 
  ln_intro.1.desc.nobody:0 "#e No one has warned me of anything, because there is nothing to tell.\n\nThe summers are delightfully long, the harvests overflow the granaries, and the roads are safe enough that merchants complain about tolls instead of cutthroats. Men of my age have never seen a true winter. The greybeards describe the cold the way sailors describe legendary storms—as something survived, and greatly exaggerated in the telling.\n\nSomewhere far to the north, I am told there is a giant wall of ice. I have never had cause to wonder why.#!"
 
- ln_intro.1.a:0 "Send a raven to the Citadel. I am curious what the official records say."
- ln_intro.1.b:0 "The world is full of ancient myths. This one can wait."
+ ln_intro.1.a:0 "Send a raven to the Citadel and ask what the records say."
+ ln_intro.1.b:0 "The world is full of ancient myths, and this one can wait."

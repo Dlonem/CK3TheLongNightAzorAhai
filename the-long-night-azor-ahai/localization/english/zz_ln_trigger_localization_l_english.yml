@@ -1,0 +1,48 @@
+﻿l_english:
+
+ # AGOT: The Long Night & Azor Ahai -- trigger_localization sentences (1.1.0, §8.1).
+ # These render where a requirement is shown passing or failing. Wildlings call the Watch "crows";
+ # nobody below does, because none of these lines is spoken by a wildling (crowcheck).
+
+ ln_trigloc_can_take_the_black:0 "The Wall would take this one"
+ ln_trigloc_cannot_take_the_black:0 "The Wall will not take this one"
+ ln_trigloc_can_take_the_black_first:0 "I can take the black"
+ ln_trigloc_cannot_take_the_black_first:0 "I cannot take the black"
+ ln_trigloc_can_take_the_black_third:0 "[CHARACTER.GetTitledFirstName] can take the black"
+ ln_trigloc_cannot_take_the_black_third:0 "[CHARACTER.GetTitledFirstName] cannot take the black"
+
+ ln_trigloc_bears_the_bane:0 "Carries something that can hurt them"
+ ln_trigloc_bears_no_bane:0 "Carries nothing that can harm them — dragonglass, Valyrian steel, or worse for them"
+ ln_trigloc_bears_the_bane_first:0 "I carry something that can hurt them"
+ ln_trigloc_bears_no_bane_first:0 "I carry nothing that can harm them"
+ ln_trigloc_bears_the_bane_third:0 "[CHARACTER.GetTitledFirstName] carries something that can hurt them"
+ ln_trigloc_bears_no_bane_third:0 "[CHARACTER.GetTitledFirstName] carries nothing that can harm them"
+
+ ln_trigloc_watch_stands:0 "A Night's Watch still stands to receive them"
+ ln_trigloc_watch_fallen:0 "There is no Night's Watch left to receive them"
+
+ ln_trigloc_has_a_forge:0 "Has a forge fit for the work"
+ ln_trigloc_no_forge:0 "The forge is not ready for this work"
+ ln_trigloc_has_a_forge_first:0 "My forge is fit for the work"
+ ln_trigloc_no_forge_first:0 "My forge is not ready for this work"
+ ln_trigloc_has_a_forge_third:0 "[CHARACTER.GetTitledFirstName]'s forge is fit for the work"
+ ln_trigloc_no_forge_third:0 "[CHARACTER.GetTitledFirstName]'s forge is not ready for this work"
+
+ ln_trigloc_can_stand:0 "Can stand at the Last Hour"
+ ln_trigloc_cannot_stand:0 "Cannot stand at the Last Hour — the line takes the living, the grown, the able, and never a dragon"
+ ln_trigloc_can_stand_first:0 "I can stand at the Last Hour"
+ ln_trigloc_cannot_stand_first:0 "I cannot stand at the Last Hour"
+ ln_trigloc_can_stand_third:0 "[CHARACTER.GetTitledFirstName] can stand at the Last Hour"
+ ln_trigloc_cannot_stand_third:0 "[CHARACTER.GetTitledFirstName] cannot stand at the Last Hour"
+
+ # AGOT's send_to_nightswatch_interaction shows the literal string "release_banish_invalid_send_to_nw"
+ # when both send options are somehow on at once -- their trigger_localization entry exists but the key
+ # still renders raw in the wild (1.0.16a audit). A same-named LOC key is the additive belt: if the engine
+ # falls back to key-as-text, this is what the player reads.
+ release_banish_invalid_send_to_nw:0 "You cannot banish a man and send him to the Night's Watch at the same time."
+
+ # 1 Sep: shown only when the character being weighed for a knight's place, a court position, a
+ # council seat or a command really is one of the dead. Living candidates never see this line.
+ ln_may_serve_trigger_tt:0 "The dead do not serve the living"
+ # 1.1.0 (A2.1): the mirror -- shown only when a LIVING candidate is weighed for a place under one of the dead.
+ ln_may_not_serve_the_dead_tt:0 "The living do not serve the dead"

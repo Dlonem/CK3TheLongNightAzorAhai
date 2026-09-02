@@ -131,7 +131,19 @@ ln_nights_watch_restored_effect = {
 	# 1.0.7: the delayed notification card needs the restorer's face, and a saved scope does not
 	# survive a queued event -- durable global at the source, rebuilt in the card's immediate.
 	scope:ln_watch_chooser ?= { set_global_variable = { name = ln_watch_restorer  value = this } }
-	longnight_reform_nightswatch_effect = yes
+	# ══ 1.0.16a -- REFOUND ONLY WHAT IS ACTUALLY GONE. ══════════════════════════════════════════════════════
+	# longnight_reform_nightswatch_effect creates a NEW Lord Commander and takes c_castle_black, c_the_nightfort,
+	# c_the_shadow_tower, c_eastwatch, d_the_wall and k_the_wall from whoever holds them, with no guard of any
+	# kind. Fixing ln_the_watch_survived_trigger (zz_ln_nights_watch_triggers.txt) makes the CARD tell the
+	# truth; this makes the BUTTON honest. If the Wall still has a legitimate living holder -- a surviving
+	# Watch, or the wildlings who took it and held it -- nothing is taken and no stranger is installed.
+	# Thomas's call, 31 Aug, over the alternative of splitting option A into reinforce-vs-refound: that is a
+	# design change and this is a hotfix. The two labels the card already carries (ln_aftermath.1.a.held vs
+	# ln_aftermath.1.a) are still there if he wants that split later.
+	if = {
+		limit = { ln_the_watch_survived_trigger = no }
+		longnight_reform_nightswatch_effect = yes
+	}
 	# Notify every player except the crown who just chose (scope:ln_watch_chooser, saved by the event option).
 	# ?= keeps the comparison safe when the scope is unset.
 	every_player = {

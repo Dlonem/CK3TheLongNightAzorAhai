@@ -281,6 +281,8 @@ ln_chosen.3 = {
 	option = {
 		name = ln_chosen.3.d
 		trigger = { has_trait = greensight }
+		# 1.1.0 (§7): the gift advertised: a player without greensight sees the door the trait would have opened.
+		show_as_unavailable = { always = yes }
 		add_piety = 100
 		add_prestige = 50
 		add_character_flag = ln_chosen_told_the_citadel_nothing
@@ -571,6 +573,8 @@ ln_chosen.7 = {
 	option = {
 		name = ln_chosen.7.d
 		trigger = { has_trait = dragon_dreams }
+		# 1.1.0 (§7): as with greensight above -- the dream door shows greyed.
+		show_as_unavailable = { always = yes }
 		add_piety = 100
 		add_prestige = 100
 		add_character_flag = ln_chosen_knew_the_dream
@@ -749,7 +753,11 @@ ln_chosen.10 = {
 		add_character_flag = ln_chosen_went_north
 		add_prestige = 300
 		add_piety = 200
-		add_character_modifier = ln_sworn_to_the_dawn_modifier
+		# 1.1.0 modifier audit: this permanent mark is applied from more than one road and CK3 stacks duplicates, so the guard makes a second arrival a no-op.
+		if = {
+			limit = { NOT = { has_character_modifier = ln_sworn_to_the_dawn_modifier } }
+			add_character_modifier = ln_sworn_to_the_dawn_modifier
+		}
 	}
 	option = {
 		name = ln_chosen.10.b         # not yet. there is more to do here first.

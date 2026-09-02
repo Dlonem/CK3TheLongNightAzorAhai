@@ -1,0 +1,84 @@
+﻿namespace = ln_glass
+
+# AGOT: The Long Night & Azor Ahai -- the dragonglass lore visits (1.1.0, §11).
+# Fired by ln_poi_dragonglass's on_visit switch. Every card lands on the same grant
+# (ln_learn_the_glass_effect), so the LADDER is one code path and the sites are voice.
+
+ln_glass.1 = {
+	type = character_event
+	title = ln_glass.1.t
+	desc = ln_glass.1.desc
+	theme = learning
+	left_portrait = { character = root  animation = interested }
+
+	option = {
+		name = ln_glass.1.a
+		ln_learn_the_glass_effect = { SITE = 1 }
+	}
+}
+
+ln_glass.2 = {
+	type = character_event
+	title = ln_glass.2.t
+	desc = ln_glass.2.desc
+	theme = learning
+	left_portrait = { character = root  animation = interested }
+
+	option = {
+		name = ln_glass.2.a
+		ln_learn_the_glass_effect = { SITE = 2 }
+	}
+}
+
+ln_glass.3 = {
+	type = character_event
+	title = ln_glass.3.t
+	desc = ln_glass.3.desc
+	theme = learning
+	left_portrait = { character = root  animation = interested }
+
+	option = {
+		name = ln_glass.3.a
+		ln_learn_the_glass_effect = { SITE = 3 }
+	}
+}
+
+ln_glass.4 = {
+	type = character_event
+	title = ln_glass.4.t
+	desc = ln_glass.4.desc
+	theme = learning
+	left_portrait = { character = root  animation = interested }
+
+	option = {
+		name = ln_glass.4.a
+		ln_learn_the_glass_effect = { SITE = 4 }
+	}
+}
+
+ln_glass.5 = {
+	type = character_event
+	title = ln_glass.5.t
+	desc = ln_glass.5.desc
+	theme = learning
+	left_portrait = { character = root  animation = nervous }
+
+	option = {
+		name = ln_glass.5.a
+		ln_learn_the_glass_effect = { SITE = 5 }
+	}
+}
+
+ln_glass.6 = {
+	type = character_event
+	title = ln_glass.6.t
+	desc = ln_glass.6.desc
+	theme = learning
+	override_background = { reference = agot_beyond_the_wall }
+	left_portrait = { character = root  animation = nervous }
+
+	option = {
+		name = ln_glass.6.a
+		ln_learn_the_glass_effect = { SITE = 6 }
+	}
+}

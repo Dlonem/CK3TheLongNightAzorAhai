@@ -75,6 +75,7 @@ ln_pledge.1 = {
 	# an interloper INVOLVED, with the Struggle Involvement panel giving the true reason.
 	option = {
 		name = ln_pledge.1.a
+		# 1.1.0 (§7): no show_as_unavailable here, deliberately -- negative gate (NOT rhllor): R'hllor's own get their branch; nothing aspirational is hidden.
 		trigger = {
 			NOT = { faith = { religion = religion:the_rhllor_religion } }
 		}
@@ -114,7 +115,11 @@ ln_pledge.1 = {
 
 		add_character_flag = ln_sworn_to_the_dawn
 		add_character_flag = ln_heard_the_warning     # whatever else, you now KNOW, and the dragonglass opens
-		add_character_modifier = ln_sworn_to_the_dawn_modifier
+		# 1.1.0 modifier audit: this permanent mark is applied from more than one road and CK3 stacks duplicates, so the guard makes a second arrival a no-op.
+		if = {
+			limit = { NOT = { has_character_modifier = ln_sworn_to_the_dawn_modifier } }
+			add_character_modifier = ln_sworn_to_the_dawn_modifier
+		}
 		add_prestige = 100
 
 		trigger_event = { id = ln_pledge.3  days = { 30 90 } }
@@ -188,6 +193,12 @@ ln_pledge.2 = {
 	# Hold the line. Costs you him, gains you the realm knowing you meant it.
 	option = {
 		name = ln_pledge.2.a
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = arrogant }
+			modifier = { add = 25  has_trait = ambitious }
+			modifier = { add = -25  has_trait = humble }
+		}
 		add_prestige = 100
 		add_dread = 5
 		if = {
@@ -199,6 +210,12 @@ ln_pledge.2 = {
 	# Let him keep the Seven. You did not do this to make anyone else do it.
 	option = {
 		name = ln_pledge.2.b
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = humble }
+			modifier = { add = 25  has_trait = just }
+			modifier = { add = -25  has_trait = arbitrary }
+		}
 		add_piety = -50
 		if = {
 			limit = { exists = scope:ln_objector }
@@ -225,6 +242,12 @@ ln_pledge.3 = {
 	# Send more than you promised.
 	option = {
 		name = ln_pledge.3.a
+		ai_chance = {
+			base = 50
+			modifier = { add = 25  has_trait = brave }
+			modifier = { add = 25  has_trait = zealous }
+			modifier = { add = -25  has_trait = craven }
+		}
 		add_prestige = 150
 		add_character_modifier = {
 			modifier = ln_sworn_to_the_dawn_modifier
@@ -236,6 +259,12 @@ ln_pledge.3 = {
 	# Send what you promised and not a man more. Somebody has to hold the south.
 	option = {
 		name = ln_pledge.3.b
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = paranoid }
+			modifier = { add = 25  has_trait = craven }
+			modifier = { add = -20  has_trait = zealous }
+		}
 		add_gold = 50
 	}
 }
@@ -253,12 +282,23 @@ ln_pledge.4 = {
 
 	option = {
 		name = ln_pledge.4.a
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = honest }
+			modifier = { add = -25  has_trait = deceitful }
+		}
 		stress_impact = { base = minor_stress_impact_gain }
 	}
 
 	# It meant nothing. Say so out loud, where people can hear you say it.
 	option = {
 		name = ln_pledge.4.b
+		ai_chance = {
+			base = 50
+			modifier = { add = 30  has_trait = deceitful }
+			modifier = { add = 25  has_trait = ambitious }
+			modifier = { add = -25  has_trait = honest }
+		}
 		add_piety = 50
 		add_dread = 5
 	}

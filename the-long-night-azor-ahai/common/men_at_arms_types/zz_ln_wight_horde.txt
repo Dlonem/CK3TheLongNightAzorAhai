@@ -85,9 +85,34 @@ ln_wight_horde = {
 		peasant_militia = 1
 	}
 
+	# ══ 1.1.0b -- THE SIZE CAP, AND WHY IT MOVED ══════════════════════════════════════════════════════
+	# Thomas, observer run at 290 AC: "I didn't see him get over 20,000 troops once. By the time he attacks
+	# the wall, he should be 50,000 strong... By the time all of the North is taken, at a minimum there
+	# should be 200k."
+	#
+	# The 10 Aug note in zz_ln_horde_effects.txt refused to set this field, on the grounds that
+	# REGIMENT_DEFAULT_MAX_SIZE = 3 was "accidentally protecting performance" after Corvo reported his
+	# machine burning past 300,000 men. That reasoning was sound and it is not being thrown away -- it is
+	# being satisfied a different way. Bodies cost frames; REGIMENTS cost frames too, and a regiment is the
+	# thing the engine actually iterates. 200,000 men as 20 regiments of 10,000 is cheaper to simulate than
+	# 200,000 men as 400 regiments of 500, and it is far cheaper than the 120-regiment ceiling the old
+	# design was aiming at. So the cap goes up and the COUNT comes down: see ln_horde_target_men_value and
+	# ln_horde_muster_effect, which top him up to a milestone target in a handful of very large regiments.
+	#
+	# max is per-type and overrides NArmy.REGIMENT_DEFAULT_MAX_SIZE for this unit only
+	# (game/common/men_at_arms_types/_men_at_arms_types.info:31). 20 x stack 500 = 10,000 men a regiment.
+	max = 20
+
+	# ══ THE DEAD ARE FREE TO KEEP. ════════════════════════════════════════════════════════════════════
+	# wight_government carries `regiments_prestige_as_gold` and `use_prestige_to_buy_maa`
+	# (common/governments/zz_wight_government.txt:13, :105), so every gold figure here is actually billed
+	# to the Night King's PRESTIGE. Thomas's 290 AC screenshot shows him at -47 gold and -82 prestige with
+	# only thirteen small regiments standing; the horde this file is meant to be would have buried him.
+	# A wight is not paid, not fed, and does not desert. Maintenance is nil and buy_cost stays, so the
+	# AI still spends something when it recruits on its own initiative.
 	buy_cost = { gold = 20 }
-	low_maintenance_cost = { gold = 2 }
-	high_maintenance_cost = { gold = 6 }
+	low_maintenance_cost = { gold = 0 }
+	high_maintenance_cost = { gold = 0 }
 	ai_quality = { value = 10 }
 	stack = 500
 	hired_stack_size = 1

@@ -1,7 +1,7 @@
 ﻿# AGOT: The Long Night & Azor Ahai -- THE OTHERS' CONVERSION HOOKS.
 #
 # 1.0.12: NOTHING IN THIS FILE DECLARES A VANILLA OR AGOT on_action ANY MORE. Every hook here is a
-# uniquely-named sub-action; all four are registered under their real on_action in zz_ln_00_hooks.txt,
+# uniquely-named sub-action; all five are registered under their real on_action in zz_ln_00_hooks.txt,
 # per that file's standing rule.
 #
 # WHY ALL THREE OF THE REMAINING ONES HAD TO MOVE -- AND WHY THE OLD READING OF THIS WAS BACKWARDS.
@@ -63,15 +63,19 @@ ln_others_title_gain = {
 				trigger_event = { id = others_heartbeat.1 }
 			}
 		}
+		# 1.1.0 (A2.3): the liege test is ln_is_one_of_them_trigger, not other_trait. A WIGHT lord (wight_government,
+		# wight_trait, no other_trait -- 1.0.6a's finding, see that trigger's header) handing out a title left the
+		# recipient living and serving the dead. others_heartbeat.1 keeps its own other_trait trigger and refuses
+		# a wight liege on its own; the mutate no longer depends on it.
 		if = {
 			limit = {
 				exists = root.liege
-				root.liege = { has_trait = other_trait }
+				root.liege = { ln_is_one_of_them_trigger = yes }
 			}
 			root.liege = {
 				save_scope_as = thegreatother
 				if = {
-					limit = { NOT = { has_character_flag = others_heartbeat_active } }
+					limit = { has_trait = other_trait  NOT = { has_character_flag = others_heartbeat_active } }
 					trigger_event = { id = others_heartbeat.1 }
 				}
 			}
@@ -86,11 +90,17 @@ ln_others_title_gain = {
 # and both survive the sub-list indirection: AGOT ships the same pattern in
 # agot_on_actions/agot_esr_on_actions.txt:207, where esr_on_vassal_gained is registered as a sub-list and
 # reads scope:old_liege out of the parent hook. Body otherwise untouched.
+# 1.1.0 (A2.3) -- THE FRENYA VECTOR. Thomas's 290 AC observer run: a living wildling chieftess, three titles,
+# a thousand men, listed as the Night King's spymaster and his realm vassal at -100 opinion. She came in by war
+# settlement under a WIGHT lord -- wight_government, wight_trait, no other_trait -- and this hook asked for
+# other_trait, so she stayed alive and stayed his. ln_is_one_of_them_trigger is the identity test everywhere
+# else in the mod; it is the test here now too. The yearly self-heal on the story pulse (the_long_night.txt)
+# catches anyone who got in by a road with no hook at all.
 ln_others_vassal_gained = {
 	effect = {
 		if = {
 			limit = {
-				root = { has_trait = other_trait }
+				root = { ln_is_one_of_them_trigger = yes }
 			}
 			root = { save_scope_as = thegreatother }
 			scope:vassal = {
@@ -111,7 +121,7 @@ ln_others_county_local_culture = {
 		if = {
 			limit = {
 				exists = scope:landed_title.holder
-				scope:actor = { has_trait = other_trait }
+				scope:actor = { ln_is_one_of_them_trigger = yes }   # 1.1.0 (A2.3): any of the dead, not only Others
 			}
 			scope:actor = { save_scope_as = thegreatother }
 			scope:landed_title.holder = {
@@ -130,7 +140,7 @@ ln_others_county_liege_culture = {
 		if = {
 			limit = {
 				exists = scope:landed_title.holder
-				scope:actor = { has_trait = other_trait }
+				scope:actor = { ln_is_one_of_them_trigger = yes }   # 1.1.0 (A2.3): any of the dead, not only Others
 			}
 			scope:actor = { save_scope_as = thegreatother }
 			scope:landed_title.holder = {
@@ -140,5 +150,18 @@ ln_others_county_liege_culture = {
 				}
 			}
 		}
+	}
+}
+
+# 1.1.0 (B2) -- WAS a raw `on_siege_completion = { events = { others_siege.0001 } }` in
+# "AGOT Invasions/invasions_siege.txt", the last hook in the mod declared outside zz_ln_00_hooks.txt. An
+# `events` sub-list merges rather than competes, so it worked -- but the standing rule is one file, and a
+# future `effect` in that block would have been the on_vassal_gained story all over again. Registered under
+# on_siege_completion in the hooks file; that file is now a tombstone. Engine scopes are the hook's own
+# (root = the sieging character, scope:county / scope:barony / scope:war / scope:previous_controller), and
+# they survive the sub-list indirection exactly as ln_others_vassal_gained's do.
+ln_others_siege = {
+	events = {
+		others_siege.0001
 	}
 }

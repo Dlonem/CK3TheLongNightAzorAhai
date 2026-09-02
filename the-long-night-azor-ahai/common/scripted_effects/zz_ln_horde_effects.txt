@@ -49,23 +49,60 @@ ln_horde_add_effect = {
 	}
 }
 
-ln_horde_reinforce_effect = {
+# ══ THE MUSTER (1.1.0b) ═══════════════════════════════════════════════════════════════════════════════════
+# No root; finds the Night King itself. Called every 30 days from the story cycle's own pulse (see
+# common/story_cycles/the_long_night.txt, immediately after ln_refresh_beyond_the_wall_latch_effect so the
+# milestone latches it reads are current), and once a year from ln_horde_reinforce_effect below.
+#
+# It is a TOP-UP, not growth: it asks how far short of ln_horde_target_men_value he is and adds regiments
+# until he is not. That makes it self-correcting in both directions -- a horde that loses forty thousand men
+# in a bad month gets them back, and a horde already at target adds nothing at all, forever. The old design
+# could only ever add, which is why it could not respond to a milestone and could not respond to a defeat.
+#
+# WHY REGIMENTS OF TWENTY AND NOT A HUNDRED SMALL ONES: see the note on `max` in
+# common/men_at_arms_types/zz_ln_wight_horde.txt. Twenty chunks x stack 500 = 10,000 men a regiment, so even
+# a 300,000-man horde is thirty regiments -- a quarter of what the old 120-regiment ceiling contemplated, and
+# the regiment is the thing the engine iterates.
+#
+# THE PACE IS DELIBERATE. Four regiments a month is the fastest it will ever go, so a 200,000-man gap closes
+# over about five months rather than appearing between two frames. `size` on create_maa_regiment is a literal
+# integer at parse time -- not a script value, not a scope (zz_ln_camp_retinue_effects.txt:3-9 recorded that
+# the hard way) -- which is why this is a ladder of repeated macro calls rather than arithmetic.
+ln_horde_muster_effect = {
 	if = {
 		limit = {
 			exists = title:h_the_others.holder
 			title:h_the_others.holder = {
+				# The old safety ceiling, kept. Nothing here should ever come near it now.
 				NOT = { "number_maa_regiments_of_type(ln_wight_horde)" >= 120 }
-				any_sub_realm_county = { count >= 10 }
+				ln_horde_shortfall_value >= 10000
 			}
 		}
 		title:h_the_others.holder = {
-			if      = { limit = { any_sub_realm_county = { count >= 80 } }  ln_horde_add_effect = { N = 8 } }
-			else_if = { limit = { any_sub_realm_county = { count >= 60 } }  ln_horde_add_effect = { N = 6 } }
-			else_if = { limit = { any_sub_realm_county = { count >= 40 } }  ln_horde_add_effect = { N = 4 } }
-			else_if = { limit = { any_sub_realm_county = { count >= 25 } }  ln_horde_add_effect = { N = 3 } }
-			else    = { ln_horde_add_effect = { N = 2 } }
+			ln_horde_add_effect = { N = 20 }
+			if = {
+				limit = { ln_horde_shortfall_value >= 20000 }
+				ln_horde_add_effect = { N = 20 }
+			}
+			if = {
+				limit = { ln_horde_shortfall_value >= 30000 }
+				ln_horde_add_effect = { N = 20 }
+			}
+			if = {
+				limit = { ln_horde_shortfall_value >= 40000 }
+				ln_horde_add_effect = { N = 20 }
+			}
+			debug_log = "LN_TRACE HORDE: mustered to the milestone target"
+			debug_log_scopes = yes
 		}
 	}
+}
+
+# The yearly slot this used to own (zz_ln_struggle_effects.txt:747) still calls this name. It is now a second
+# heartbeat on the same muster rather than a separate growth rule -- harmless if the 30-day pulse has already
+# brought him to target, and a backstop if the story cycle's pulse is ever not running.
+ln_horde_reinforce_effect = {
+	ln_horde_muster_effect = yes
 }
 
 # ── THE REALM RENAMES ITSELF ───────────────────────────────────────────────────────────────────────────────────

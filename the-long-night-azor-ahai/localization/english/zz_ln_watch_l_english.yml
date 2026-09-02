@@ -2,7 +2,9 @@
 
  # AGOT: The Long Night & Azor Ahai -- the Wall.
 
- ln_man_an_empty_castle_decision:0 "Man an Empty Castle"
+ ln_man_an_empty_castle_decision:0 "[ROOT.Char.Custom('ln_ManAnEmptyCastleTitle')]"
+ ln_man_an_empty_castle_plain:0 "Man an Empty Castle"
+ ln_man_an_empty_castle_raven:0 "Send a Raven: Man the Castle"
  # Updated! note this triggers for Rangers of the Night's Watch
  ln_man_an_empty_castle_decision_desc:0 "I have served ably as a ranger, but a different project calls to me now. Many of the castles along the Wall lie in ruin, abandoned out of necessity as our numbers have dwindled. Settling men in the ruins will shore up our defenses, and the sight of smoke rising above the Wall may dissuade the wildlings from attempting to climb over and raid the southern lands."
  ln_man_an_empty_castle_decision_tt:0 "Ask the Lord Commander for one of the Wall's empty Castles. You will hold it as his vassal, and defend your stretch of the Wall from invaders.\n\n#weak If the Nightfort is unmanned, you will receive it; otherwise, you will get a random empty castle.#!"
@@ -11,7 +13,7 @@
  ln_watch.1.desc:0 "[ln_lord_commander.GetTitledFirstName] seems hesitant as he meets me in my new holding. "I'm still not sure this is the right idea," he admits warily, taking in the dismal scene, "but what's done is done."\n\nThe men of the Night's Watch have already begun the arduous task of making this fort habitable, but it will be a long time before this place can be truly called a castle again. The walls have long since crumbled, the kitchen roof has collapsed, and the smell of mold wafts out from what's left of the library.\n\nThe Lord Commander offers some final words of advice before he leaves. 'You'll do well to choose one problem to fix at a time, else you'll drown in a swamp of your own making.'"
  ln_watch.1.a:0 "We start with the walls. Security is our top priority."
  ln_watch.1.b:0 "The kitchens first. Men can't fight on an empty stomach."
- ln_watch.1.c:0 "The library. Perhaps we might rediscover some of the knowledge we lost."
+ ln_watch.1.c:0 "The library, and whatever knowledge we lost with it."
 
  ln_watch.2.t:0 "Mole's Town"
  # Updated! Left option c alone; it seemed good enough. Reduced number of crows from 6 to 2 because that's how many pop up
@@ -40,7 +42,9 @@
  # reads like unlocking a menu; the decision takes one of YOUR ruins and makes it a working castle again.
  # The two stale TODO comments that used to sit here ("Might need to be renamed. Not clear if it does
  # anything") were inherited and are answered now.
- ln_rebuild_the_castle_decision:0 "Restore a Ruined Castle"
+ ln_rebuild_the_castle_decision:0 "[ROOT.Char.Custom('ln_RebuildTheCastleTitle')]"
+ ln_rebuild_the_castle_plain:0 "Restore a Ruined Castle"
+ ln_rebuild_the_castle_raven:0 "Send a Raven: Coin for the Castle"
  ln_rebuild_the_castle_decision_desc:0 "Many of the castles along the Wall lie in ruin, abandoned out of necessity as our numbers dwindled. The time has come to rebuild these castles and shore up our defenses against threats to our north. Wood will be cut from the Gift, stone shipped from White Harbor, and builders sent from the Shadow Tower and Eastwatch-by-the-Sea to see the work to completion. The work will be arduous, but the work will all be worth it when a castle stands where there was once only a ruin."
  ln_rebuild_the_castle_decision_tt:0 "Bring one of your ruined castles back into service, making it fit to defend a stretch of the Wall and house sworn brothers of the Night's Watch.\n\nThe work will be slow and expensive. This decision can be repeated as long as there are castles left to restore."
  ln_rebuild_the_castle_decision_confirm:0 "Send for the masons."
@@ -49,9 +53,9 @@
  ln_watch.5.t:0 "It Has a Roof"
  # Updated! Mostly.
  ln_watch.5.desc:0 "As the builders remove the last of the scaffolding, I gaze upon their finished work. The castle is not beautiful. The new stone is a different color than the old, and the walls are not quite level with one another. But the gate shuts, the well has water, and a fire blazes in the kitchens. Though it's not perfect, [ln_rebuilt_county.GetName] is once again home to the Night's Watch— and that's all that counts."
- ln_watch.5.a:0 "Send a raven to Castle Black. Tell them the castle is manned."
+ ln_watch.5.a:0 "Send a raven to Castle Black: the castle is manned."
  # consider improving this
- ln_watch.5.b:0 "Spread the news south. Tell all the realm what I have accomplished."
+ ln_watch.5.b:0 "Spread the news south, so the whole realm knows what I have done."
  ln_black_needs_somewhere_for_the_realm_to_go:0 "You must have an heir or a liege for your lands to pass to"
  ln_black_needs_a_castle_standing_empty:0 "The Lord Commander must have a castle standing empty"
  ln_black_not_at_war_with_the_watch:0 "Must not be at war with the Night's Watch"
@@ -59,7 +63,9 @@
  ln_black_needs_to_be_somebody:0 "The Lord Commander gives castles to men who can hold them — a known name, a lordship to lay down, a knight's spurs, or men at your back"
 
  # ── BEGGING ─────────────────────────────────────────────────────────────────────────────────────────────────
- ln_petition_the_realm_decision:0 "Petition the Realm"
+ ln_petition_the_realm_decision:0 "[ROOT.Char.Custom('ln_PetitionTheRealmTitle')]"
+ ln_petition_the_realm_plain:0 "Petition the Realm"
+ ln_petition_the_realm_raven:0 "Send a Raven: Petition the Realm"
  # Updated with clearer text!
  # This event gives you gold but doesn't tell you how much!
  ln_petition_the_realm_decision_desc:0 "The lands of the Gift have never been enough to feed the Night's Watch. Ever since the Age of Heroes, the lords of Westeros have understood the importance of the Wall... and the importance of keeping its defenders fed.\n\nThe realm's generosity has faded over time, but if we send our ravens, at least a few northern lords will always answer."
@@ -69,7 +75,7 @@
  ln_watch.6.t:0 "Carts on the Kingsroad"
  ln_watch.6.desc:0 "Carts of supplies from the lords of the North arrive one by one over the next several days. The Night's Watch is not the noble institution it once was, in the eyes of the realm. My brothers are disheartened to see how little they have sent us; a few barrels of salted beef, some hard tack, and a few meager coins. It's not much, but it's better than nothing.\n\nAlong with the supplies, we have also received a murder of ravens, each one bearing a letter from one of the lords of the North. Some inform me they have sent the Watch what they could, while others explain with honeyed words why they sent us nothing. Etiquette dictates I should answer them all, but the Night's Watch runs short on parchment, and I must choose which letters to answer."
  ln_watch.6.a:0 "Write to those who sent us aid, thanking them for their contributions."
- ln_watch.6.b:0 "Send rebukes to the lords who sent us nothing. Maybe next time, they will reconsider."
+ ln_watch.6.b:0 "Send rebukes to the lords who sent us nothing."
 
  # ── THE WATCH GOES ON ───────────────────────────────────────────────────────────────────────────────────────
  ln_watch.7.t:0 "And Now My Watch Begins"
@@ -77,9 +83,12 @@
  ln_watch.7.a:0 "The words are the same words. Say them again."
 
  # ── THE OTHER SIDE OF THE PETITION ──────────────────────────────────────────────────────────────────────────
- ln_send_men_and_grain_decision:0 "Send Men and Grain to the Wall"
+ ln_send_men_and_grain_decision:0 "[ROOT.Char.Custom('ln_SendMenAndGrainTitle')]"
+ ln_send_men_and_grain_plain:0 "Send Men and Grain to the Wall"
+ ln_send_men_and_grain_raven:0 "Send a Raven: Men and Grain for the Wall"
  # Updated! Added some flavor about the north, since this event only triggers for northern houses as far as I can tell
  ln_send_men_and_grain_decision_desc:0 "The Night's Watch has no shortage of costs. Men, grain, and coin are essential to keep the Wall standing and the wildlings at bay. Every year, their list of needs grows longer; a generous contribution from one of the noble houses would relieve some of the Watch's burden... and win favor with the Lord Commander."
+ ln_send_men_and_grain_decision_desc_north:0 "Your house has fed the Watch since before there were Kings in the South to forget it. The Wall is the North's roof; the men on it are the North's men, whoever they were born to; and a northern lord who lets Castle Black go hungry will answer for it to his own dead.\n\nSend what the year can spare. It is not generosity. It is the oldest rent in the world, and it has always been paid."
  ln_send_men_and_grain_decision_tt:0 "Send coin, grain and men north. The Night's Watch will remember those who help them."
  ln_send_men_and_grain_decision_confirm:0 "Load the carts."
  ln_send_men_and_grain_effect_tt:0 "Choose how much to send north. Every copper  counts!"
@@ -99,10 +108,10 @@
  ln_take_the_black_and_wait_decision_confirm:0 "Write to the Lord Commander."
  ln_watch.9.t:0 "My New Command"
  ln_watch.9.desc:0 "It doesn't take long for the Lord Commander to find me a post. The previous commander of the castle isn't happy to be handing over the reins, but he doesn't argue, either. After he hands me the keys and the ledger, he asks whether he may at least remain here as a steward.\n\n\"I've held this castle most of my life,\" he tells me with a grim sigh. \"I mean to stay here, if you'll let me.\""
- ln_watch.9.a:0 "Of course you may stay. I could use a good man like you."
+ ln_watch.9.a:0 "Stay; I could use a good man like you."
  ln_watch.9.b:0 "I have no more use for you. Don't bother me again."
  # It's unclear what option C does, except that it triggers if there is no castle available. May need to be rewritten.
- ln_watch.9.c:0 "I suppose that's a good thing. Inform me if a post opens."
+ ln_watch.9.c:0 "Then inform me when a post opens."
 
 
  ln_watch.10.t:0 "How Much"

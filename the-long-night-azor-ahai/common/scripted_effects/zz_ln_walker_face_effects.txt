@@ -1,0 +1,36 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.0, the Others wear one face.
+#
+# Root = a newly created Other. Gives him the donated show-White-Walker look
+# (common/dna_data/agot_dna_a_long_night.txt -> ln_dna_white_walker) by copying it off the donor character,
+# which is the only runtime road to a scripted face -- create_character takes no dna argument and `dna =` is
+# a history-character-only field. Same shape, and the same guard, as the Night King's own copy at
+# common/scripted_effects/agot_long_night_scripted_effects.txt:449.
+#
+# THREE THINGS IT REFUSES, each for a reason:
+#   * the Night King -- he has his own donated face and takes it at his own spawn site. He is the one of
+#     them who is meant to look different.
+#   * women -- the donation is a male export, and the Others' armour layer is itself gated is_male = yes
+#     (ln_others_portrait_modifiers.txt), so a female Other is already a different-looking thing. Putting a
+#     man's face on her would be worse than leaving her generated.
+#   * a converted lord -- this is called from creation sites only, never from mutate_into_other_effect. A
+#     lord who is taken keeps his own face on purpose: that he is still recognisably himself is the whole
+#     horror of it, and it is what makes the Return North and the spouse cards land.
+#
+# GUARDED, AND IT REPORTS. The donor dies in 118 and so is a long-dead historical character that the engine
+# MAY prune before a late bookmark. If he is gone the Other simply keeps his generated face -- current
+# behaviour exactly, nothing lost -- and one relaunch settles which happened:
+#     grep "LN_TRACE FACE" logs/debug.log
+ln_wear_the_walkers_face_effect = {
+	if = {
+		limit = {
+			is_male = yes
+			NOT = { has_trait = nightking }
+			exists = character:ln_dummy_white_walker
+		}
+		copy_inheritable_appearance_from = character:ln_dummy_white_walker
+	}
+	else_if = {
+		limit = { NOT = { exists = character:ln_dummy_white_walker } }
+		debug_log = "LN_TRACE FACE: walker donor pruned - generated face kept"
+	}
+}

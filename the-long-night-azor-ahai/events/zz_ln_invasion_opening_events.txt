@@ -128,6 +128,17 @@ ln_opening.6 = {
 			}
 			desc = ln_opening.6.desc
 		}
+		# ── 1 Sep: ONE SHARED CLOSING LINE, UNDER ALL EIGHT STATIONS. ─────────────────────────────────
+		# A second stacked desc block appends to whichever variant won above -- the agot_multi_duel.0031
+		# idiom this mod already uses at ln_lasthour.1. One key instead of eight edits, and it can never
+		# drift out of step with the variants.
+		#
+		# WHY IT EXISTS. Winter Is Coming is time-based and its length is a hidden roll, so the struggle
+		# window can only ever tell a player "this phase does not fill a bar". That is a UI fact, not a
+		# story, and this card is where the story goes. Thomas: "I would have only added a line or two
+		# saying that we have no idea how much time we have left, but this winter is different -- you want
+		# it to be as specifically vague as possible."
+		desc = ln_opening.6.desc.close
 	}
 	theme = murder_scheme
 	# ── ONE BACKGROUND PER STATION (1.0.11a) ─────────────────────────────────────────────────────────

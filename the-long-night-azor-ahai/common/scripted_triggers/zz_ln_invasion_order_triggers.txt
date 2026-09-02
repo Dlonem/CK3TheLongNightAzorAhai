@@ -82,3 +82,19 @@ ln_target_kingdom_is_legal_trigger = {
 ln_target_duchy_is_legal_trigger = {
 	kingdom ?= { ln_target_kingdom_is_legal_trigger = yes }
 }
+
+# ══ 1.1.0b -- IS EVERYTHING BEYOND THE WALL THEIRS? ════════════════════════════════════════════════════════
+# No root; reads globals only. Needed because the latch it reads is a NEGATIVE one:
+# ln_refresh_beyond_the_wall_latch_effect sets ln_btw_unfinished while any county in
+# world_westeros_beyond_the_wall is still held by the living, and REMOVES it the moment the region is
+# complete -- but it also removes it once the Wall falls, and it does not exist at all before the invasion
+# starts. So "the global is absent" is true in three completely different situations and cannot be read on
+# its own. The invasion having started, plus Castle Black as the discriminator for "we are already past it",
+# is what makes the reading unambiguous.
+ln_beyond_the_wall_is_theirs_trigger = {
+	has_global_variable = ln_long_night_started
+	OR = {
+		has_global_variable = ln_castle_black_fell
+		NOT = { has_global_variable = ln_btw_unfinished }
+	}
+}

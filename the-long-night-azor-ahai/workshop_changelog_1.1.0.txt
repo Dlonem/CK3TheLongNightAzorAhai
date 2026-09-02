@@ -1,0 +1,30 @@
+[h1]1.1.0 — The Last Hour[/h1]
+
+The big one. The Night King is no longer a dice roll: he is fought on foot, in the snow, by you and the people who were actually there, and losing to him is worse than dying. Underneath it, the largest fix pass this mod has had — a full audit of what fires, what never fired, and what the base game had quietly overruled.
+
+[h2]Features[/h2]
+[list]
+[*] The Last Hour. Reaching the Night King opens a Trial-of-Seven-style melee: you and your companions against him and his Walkers, blow by blow. Castle steel does not bite. Lightbringer, Valyrian steel and dragonglass each open their own option and change the fight; a red priest can pull you back from it; kin and friends can take the blow meant for you.
+[*] Raised as an Other. Lose to him and he keeps you — your character is turned before the card opens, tells you what it felt like, and is his from then on. Later champions may find you standing on his side of the line.
+[*] White Walkers in Winter Is Coming. Rangers and northern lords can meet a lone Walker before the dead take a single county: a small melee, one Walker against a handful of men, with the Sam Tarly outcome in the deck.
+[*] Memories. The character page now records the things worth remembering: killing a Walker, facing him and living, your steel failing against him, being alive when the Wall fell, coming back from the dead and who paid for it, the day the dark won, and the day it lifted.
+[*] Dragons over the Wall. A rider can force a dragon across a standing Wall — the AI is likelier to try it the less it knows — and once the Wall is breached the ward is gone.
+[*] The Wall falls, and the world is told: the monument card now opens in your own station — sworn brother, free folk, dragonrider, northman, red priest, lord or nobody.
+[/list]
+
+[h2]Reworks[/h2]
+[list]
+[*] The Night King's host grows with his conquest — 20,000 beyond the Wall, 50,000 once it is his, 100,000 when the Wall falls, 200,000 when the North does — scaled by the invasion strength rule and capped at half a million. His men cost him nothing to keep; he can always afford to fight. — Enigmatic Clown
+[*] A field kill no longer ends the Long Night. Ordinary steel casts him down and another is crowned; only a bane destroys him. Beating him in the field does, however, open the War for the Dawn.
+[*] Advantage across the four strength rules is now 10 / 15 / 20 / 20. One Night King at a time, one War for the Dawn at a time.
+[*] The dead employ nobody and serve nobody. A living lord can no longer sit on the Night King's council or hold his court positions, one of them can no longer hold a place under a living lord, and any living vassal the dead pick up by conquest is taken within the year.
+[/list]
+
+[h2]Bug Fixes[/h2]
+[list]
+[*] The endgame respawn: a gate that ran inside on_death asked a dead man's death reason before he was dead, failed every time, and crowned a new Night King on every sanctioned kill. The war never ended and Azor Ahai was never granted.
+[*] The Watch-restoration override, the Night's Watch title-gain hook and the siege hook had been losing their parse races to base AGOT since the fork and had never run. Moved to where they win.
+[*] The Cycle: the aftermath switch was never cleared between waves, so a second Long Night ran with half its machinery locked. Cleared at every opening.
+[*] The Night King and White Walker faces replaced; foreign-mod genes that shipped since 1.0.x stripped; wight government no longer errors on tribal holdings; several permanent modifiers no longer stack; a card that had lost its portraits and theme to a parse error is whole again.
+[*] Text: dragons are no longer all "she"; no clocks; options tightened; the prisoner count on Send the Dungeons to the Wall is now actually shown.
+[/list]

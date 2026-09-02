@@ -80,8 +80,17 @@ wight_government = {
 	# and it cost a working mechanic. DO NOT RE-ADD IT without a live boot proving otherwise.
 	# ══════════════════════════════════════════════════════════════════════════════════════════════════════
 
+	# 1.1.0 (A2.2) -- WHAT THE DEAD DO NOT DO. There is no single choke point for character interactions
+	# (each carries its own is_shown/is_valid; ai_target_quick_trigger is an engine field; is_human has
+	# 1,121 AGOT uses), so the cheapest lever is the government's own AI block, vanilla's republic pattern
+	# (00_government_types.txt:53). The dead do not court marriages, reform faiths or promote legends of
+	# themselves. Goals, decisions and scripted GUIs stay ON -- the invasion AI drives through them.
+	# The letters a player actually receives (trial by combat and the prison interactions) are handled
+	# by keep_imprisoned in zz_ln_imprison_on_actions.txt, not here.
 	ai = {
-		use_legends = yes
+		arrange_marriage = no
+		perform_religious_reformation = no
+		use_legends = no
 	}
 
 	character_modifier = {

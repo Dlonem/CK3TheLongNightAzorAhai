@@ -40,6 +40,9 @@ ln_dragon_refusal_effect = {
 		if = {
 			limit = {
 				NOT = { has_character_flag = ln_dragon_refused_the_wall }
+				# 1.1.0: a man who already forced her over is not shown the refusal again. He made that
+				# decision once and the game does not nag him about it -- ln_omen.10's fourth option.
+				NOT = { has_character_flag = ln_forced_her_over }
 				ln_rides_a_living_dragon_trigger = yes
 				location ?= {
 					OR = {

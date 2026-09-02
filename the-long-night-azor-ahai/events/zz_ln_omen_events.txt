@@ -42,6 +42,8 @@ ln_omen.1 = {
 			modifier = { add = 10  has_trait = brave }
 		}
 		trigger = { gold >= 25 }
+		# 1.1.0 (§7): the gold gate shown.
+		show_as_unavailable = { always = yes }
 		remove_short_term_gold = 25
 		add_character_flag = ln_looked_north
 		add_prestige = minor_prestige_gain

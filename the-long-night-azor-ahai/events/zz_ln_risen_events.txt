@@ -66,6 +66,8 @@ ln_risen.1 = {
 	option = {
 		name = ln_risen.1.d
 		trigger = { has_trait = greensight }
+		# 1.1.0 (§7): the gift advertised, as in zz_ln_chosen_events.
+		show_as_unavailable = { always = yes }
 		add_piety = 150
 		add_character_flag = ln_risen_named_the_corridor
 		stress_impact = { base = medium_stress_impact_loss }
@@ -205,6 +207,8 @@ ln_risen.4 = {
 			modifier = { add = 10  has_trait = just }
 		}
 		trigger = { gold >= 250 }
+		# 1.1.0 (§7): the gold gate shown.
+		show_as_unavailable = { always = yes }
 		remove_short_term_gold = 250
 		add_piety = 150
 		faith = { change_fervor = { value = 1  desc = ln_fervor_gain_blessing } }
@@ -585,7 +589,11 @@ ln_risen.11 = {
 		add_character_flag = ln_risen_they_follow_me
 		add_prestige = 250
 		add_martial_lifestyle_xp = 100
-		add_character_modifier = ln_death_holds_no_terror_modifier
+		# 1.1.0 modifier audit: this permanent mark is applied from more than one road and CK3 stacks duplicates, so the guard makes a second arrival a no-op.
+		if = {
+			limit = { NOT = { has_character_modifier = ln_death_holds_no_terror_modifier } }
+			add_character_modifier = ln_death_holds_no_terror_modifier
+		}
 		every_courtier = {
 			add_opinion = { modifier = admiration_opinion  target = root  opinion = 20 }
 		}
@@ -604,7 +612,11 @@ ln_risen.11 = {
 		add_character_flag = ln_risen_refused_to_lead
 		add_piety = 150
 		add_prestige = 50
-		add_character_modifier = ln_death_holds_no_terror_modifier
+		# 1.1.0 modifier audit: this permanent mark is applied from more than one road and CK3 stacks duplicates, so the guard makes a second arrival a no-op.
+		if = {
+			limit = { NOT = { has_character_modifier = ln_death_holds_no_terror_modifier } }
+			add_character_modifier = ln_death_holds_no_terror_modifier
+		}
 		stress_impact = { base = major_stress_impact_loss  humble = medium_stress_impact_loss }
 	}
 }

@@ -116,3 +116,16 @@ agot_long_night_recurrence = {
 	long_night_once = { }
 	long_night_recurs = { }
 }
+
+# 1.1.0 (§10.2) -- THE TIER CEILING ON SEND THE PRISONERS TO THE WALL.
+# Default ON: counts and below can be marched north, dukes and above cannot. Thomas's call, 31 Aug 2026,
+# with the off switch for the players who like the chaos (standing rule 13). Read via the OPTION names.
+ln_wall_tier_ceiling = {
+	categories = {
+		agot
+	}
+	default = ln_wall_county_ceiling
+
+	ln_wall_county_ceiling = { }   # counts and below only
+	ln_wall_send_any_tier = { }    # any rank -- a captured king can end his days a sworn brother
+}

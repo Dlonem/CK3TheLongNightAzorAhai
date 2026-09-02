@@ -1,0 +1,120 @@
+﻿# AGOT: The Long Night & Azor Ahai -- memories of the melees (1.1.0, §6).
+# House rules (WORK-ORDER-2.34): three description keys per memory or a raw key shows on someone else's
+# character page; participants only when a second character is genuinely in the scene; icons verified
+# against vanilla's real inventory -- there is NO friendly.dds (§0.1 correction 2).
+
+# You killed an Other in a melee. No participants: the walker is a generated character, disposed of when
+# the story closes, and a memory should not point at a row the save only keeps by accident.
+ln_slew_a_walker_memory = {
+	categories = { positive martial }
+	icon = "martial.dds"
+	description = { random_valid = { desc = ln_slew_a_walker_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_slew_a_walker_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_slew_a_walker_memory_desc_third_perspective } }
+	duration = { years = 200 }
+}
+
+# §5.2, the Sam Tarly outcome: he stopped, and he let you live. Not a kill -- the walker-slain count does
+# not move -- and the man who carries this is the man who says THEY ARE REAL and is believed or not.
+ln_the_walker_spared_me_memory = {
+	categories = { negative death }
+	icon = "death_negative.dds"
+	description = { random_valid = { desc = ln_the_walker_spared_me_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_the_walker_spared_me_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_the_walker_spared_me_memory_desc_third_perspective } }
+	duration = { years = 200 }
+}
+
+# You stood in the line against the Night King himself, and you were still breathing when it ended.
+ln_faced_the_night_king_memory = {
+	categories = { positive martial }
+	icon = "martial.dds"
+	description = { random_valid = { desc = ln_faced_the_night_king_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_faced_the_night_king_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_faced_the_night_king_memory_desc_third_perspective } }
+	duration = { years = 200 }
+}
+
+# The taking (§4). Dated natively, read by the heir on the ancestor's page -- the record of the worst
+# outcome in the game.
+ln_raised_as_an_other_memory = {
+	categories = { negative death }
+	icon = "death_negative.dds"
+	description = { random_valid = { desc = ln_raised_as_an_other_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_raised_as_an_other_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_raised_as_an_other_memory_desc_third_perspective } }
+	duration = { years = 500 }
+}
+
+# Someone took the blow meant for you. Two types, not one, because there is no friendly.dds (§0.1
+# correction 2) and because kin and friend are different debts: family.dds and friend.dds are both
+# verified against vanilla's real icon inventory. participants carries the one who bled -- the scope is
+# saved before add_character_memory at the firing site.
+# ⚠ FIRING SITES BELONG TO THE §13 WRITING PASS (the melee's per-round cards, where "took the blow" is a
+# visible beat) -- the types ship first so the loc and validators cover them; wire them there.
+ln_saved_by_kin_memory = {
+	categories = { positive family }
+	icon = "family.dds"
+	description = { random_valid = { desc = ln_saved_by_kin_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_saved_by_kin_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_saved_by_kin_memory_desc_third_perspective } }
+	participants = { target0 }
+	duration = { years = 200 }
+}
+
+ln_saved_by_a_friend_memory = {
+	# "friendly" is not a vanilla category -- the verified triple is what vanilla's own friend memories use.
+	categories = { positive relationships friend }
+	icon = "friend.dds"
+	description = { random_valid = { desc = ln_saved_by_a_friend_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_saved_by_a_friend_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_saved_by_a_friend_memory_desc_third_perspective } }
+	participants = { target0 }
+	duration = { years = 200 }
+}
+
+# Your steel shattered against him -- the Hardhome beat. 1.1.0 (B1): fired from ln_last_hour_victory_effect
+# and ln_encounter_victory_effect on every living man of the line (root included) who carried none of the
+# three banes -- castle steel failed him, and he lived because somebody else's blade held.
+ln_blade_broke_memory = {
+	categories = { negative martial }
+	icon = "death_negative.dds"
+	description = { random_valid = { desc = ln_blade_broke_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_blade_broke_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_blade_broke_memory_desc_third_perspective } }
+	duration = { years = 100 }
+}
+
+# You took the black by choice. Fired from ln_take_the_black_as_a_ranger_effect -- the one ceremony every
+# by-choice road runs through.
+ln_took_the_black_memory = {
+	categories = { positive martial }
+	icon = "martial.dds"
+	description = { random_valid = { desc = ln_took_the_black_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_took_the_black_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_took_the_black_memory_desc_third_perspective } }
+	duration = { years = 200 }
+}
+
+# You were alive when Castle Black fell. 1.1.0 (A1): fired from long_night_plus_wall.2's immediate -- the
+# monument card that agot_long_night_wall_collapse_effect sends to every player once, 30 days after the
+# breach. (An earlier header here claimed the mod had no single "the Wall fell" moment; it did -- that
+# effect is the moment, and the card is its player-facing face.) Landed or not: the loc says "alive".
+ln_the_wall_fell_memory = {
+	categories = { negative death }
+	icon = "death_negative.dds"
+	description = { random_valid = { desc = ln_the_wall_fell_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_the_wall_fell_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_the_wall_fell_memory_desc_third_perspective } }
+	duration = { years = 200 }
+}
+
+# The glass gave up what it knew (§11). Fired from the dragonglass lore chain's completion.
+ln_learned_the_glass_memory = {
+	categories = { positive }
+	icon = "_default.dds"
+	description = { random_valid = { desc = ln_learned_the_glass_memory_desc } }
+	second_perspective_description = { random_valid = { desc = ln_learned_the_glass_memory_desc_second_perspective } }
+	third_perspective_description = { random_valid = { desc = ln_learned_the_glass_memory_desc_third_perspective } }
+	duration = { years = 200 }
+}

@@ -1,0 +1,68 @@
+﻿# AGOT: The Long Night & Azor Ahai -- who may stand at the Last Hour (1.1.0, §3.2).
+#
+# ⚠ THIS REPLACES agot_ready_for_tos_trigger FOR OUR MELEES AND MUST NEVER CALL IT. That trigger requires
+# knighthood, the Faith of the Seven and a martial education (00_agot_multi_duel_triggers.txt:56), and every
+# one of those bars somebody the story needs. Thomas: "Jon Snow was not a knight. Rhaenyra was not a knight
+# either... anybody of any religion should be able to participate." Reuse the ENGINE, not the doorman.
+#
+# Explicitly NOT required, each because Thomas named it: is_agot_knight_trigger (a knight is a BONUS -- see
+# the relevance value), religion = the_seven_religion, education_martial_prowess, is_landed (a sworn brother
+# of the Watch is landless and he is the whole point), is_ai, a shared top_liege.
+
+# The hard requirements -- five, every one physical rather than social. Presence (same army / same location /
+# the saved second champion) is enforced by whoever builds the candidate pool, because "present" means a
+# different thing in a snowfield encounter and at the Last Hour itself.
+ln_can_stand_at_the_last_hour_trigger = {
+	is_alive = yes
+	is_adult = yes
+	is_incapable = no
+	# ⚠ NO DRAGONS IN THE MELEE -- Thomas's explicit requirement, written on BOTH side triggers because we
+	# are not using agot_ready_for_tos_trigger, whose knighthood clause excluded them incidentally.
+	# Dragonback is handled by the §3.6 bridge, never by a dragon joining the line.
+	NOT = { has_trait = dragon }
+	# The dead do not stand with the living. A wight in a courtyard pool is unlikely; it is also exactly the
+	# kind of unlikely this project has shipped twice.
+	NOR = {
+		has_trait = wight_trait
+		has_trait = other_trait
+		has_trait = nightking
+	}
+}
+
+# Their side. Same explicit dragon exclusion, same reason.
+ln_stands_with_the_dead_trigger = {
+	is_alive = yes
+	NOT = { has_trait = dragon }   # ⚠ NO DRAGONS -- on either side
+	OR = {
+		has_trait = other_trait
+		has_trait = nightking
+	}
+}
+
+# ── The draft's pass filters (§3.2.4) ──────────────────────────────────────────────────────────────────
+# This = the candidate; root = the champion.
+
+# Pass one: "if you have a brother or sister, mother, father, lover, wife fighting alongside you."
+ln_lh_bound_to_champion_trigger = {
+	OR = {
+		has_relation_friend = root
+		has_relation_best_friend = root
+		has_relation_lover = root
+		has_relation_soulmate = root
+		is_close_family_of = root
+	}
+}
+
+# Pass two: the pass that puts a stranger with a Valyrian sword beside you.
+ln_lh_armed_for_the_hour_trigger = {
+	OR = {
+		has_character_flag = ln_forged_lightbringer
+		has_character_flag = ln_the_star_paid_for_it
+		ln_carries_valyrian_steel_trigger = yes
+		ln_has_deed_valyrian_steel_trigger = yes
+		has_character_modifier = ln_valyrian_armed_modifier
+		has_character_modifier = ln_dragonglass_knight_modifier
+		has_character_flag = ln_mined_the_glass
+		has_character_modifier = ln_knows_the_glass_modifier
+	}
+}

@@ -781,4 +781,40 @@ ln_refresh_beyond_the_wall_latch_effect = {
 			add_character_flag = { flag = ln_wall_gate_window  years = 4 }
 		}
 	}
+
+	# ── IS THERE A HOLE IN THE WALL (1.1.0, 1 Sep) ──────────────────────────────────────────────────────
+	# THE LORE THIS SERVES, and it is Thomas's call: Silverwing would not cross the Wall because the Wall is
+	# warded against fire magic (zz_ln_dragon_wall_effects.txt has the full note). But a ward is a thing in
+	# a structure, and the structure can fail. Thomas: "maybe you can fly your dragon up there after the
+	# wall falls... because there's a big hole in the wall. That would make it so that you're allowed to go
+	# past, because then that specific magic protecting beyond the wall goes away."
+	#
+	# THE DEFINITION: the dead hold a county ON the Wall. Not "beyond it" -- beyond the Wall is theirs from
+	# the start and the ward is intact all through that. The Wall itself changing hands is the breach.
+	#
+	# ⚠ WHY THIS IS LATCHED IN A GLOBAL AND NOT ASKED AS A TRIGGER. `any_county` is a sweep of every county
+	# on the map. ln_bears_the_bane_trigger, which now reads this state, has eleven call sites and is
+	# rebuilt by CK3 EVERY FRAME an option tooltip is open -- the same surface that produced 1,424 error
+	# lines and measurable FPS loss in one sitting of ln_dawn.2 before the 1.1.0 trigger_if fix. A map
+	# sweep on that path would be far worse than the bug it replaced. This pulse already runs on the Long
+	# Night story cycle's own cadence, so the state is at most one tick stale and costs nothing to read.
+	#
+	# NOT LATCHED PERMANENTLY, on purpose: retake the Wall and the ward closes behind you. That is the
+	# right answer both mechanically (it is a live condition, not an achievement) and in the fiction.
+	if = {
+		limit = {
+			any_county = {
+				title_province ?= { geographical_region = world_westeros_the_wall }
+				exists = holder
+				holder = { ln_is_one_of_them_trigger = yes }
+			}
+		}
+		set_global_variable = { name = ln_wall_is_breached  value = yes }
+	}
+	else = {
+		if = {
+			limit = { has_global_variable = ln_wall_is_breached }
+			remove_global_variable = ln_wall_is_breached
+		}
+	}
 }

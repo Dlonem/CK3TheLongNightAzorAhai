@@ -13,9 +13,35 @@
 		shader_file = "gfx/FX/jomini/portrait.shader"
 	}
 
+	# ── 1.0.17: THIS BLOCK NAMED THE WRONG SHAPE AND THE ENGINE SAID SO EVERY LAUNCH ────────────────────
+	# The mesh binary contains TWO shapes -- its own string table has exactly
+	#   male_clothes_secular_other_war_02Shape
+	#   male_clothes_secular_other_war_02Shape-001
+	# -- and both meshsettings blocks named only the first, one at index 0 and one at index 1. So:
+	#
+	#   pdxassetutil.cpp:900   Failed to create material with shader portrait_skin (in gfx/FX/pdxmesh.shader)
+	#                          for mesh [male_clothes_secular_other_war_02Shape-001]
+	#   pdxassetutil.cpp:1763  pdxmesh [male_clothes_others_armor_mesh] is out of sync with its meshsettings.
+	#                          [male_clothes_secular_other_war_02Shape] is not in use
+	#
+	# -001 had no settings at all, so it fell back to the DEFAULT portrait_skin shader and failed to build a
+	# material; and the index = 1 block matched nothing, because that shape carries one material, not two.
+	# Ours was the only material-creation failure in the entire playset -- 1 of 1 across the base game, AGOT
+	# and six other mods.
+	#
+	# THE CONVENTION, read off vanilla rather than guessed: when a mesh holds several shapes, vanilla writes
+	# ONE meshsettings block PER SHAPE, each naming its own shape, all at index = 0 --
+	# f_clothes_sec_ccp1_african_nob_01.asset and four others do exactly this. The same-name-index-0-and-1
+	# pattern our copy used belongs to meshes with a SINGLE shape carrying two materials
+	# (f_clothes_sec_ep3_byzantine_era1_nob_01.asset).
+	#
+	# ⚠ VISIBLE CHANGE, AND IT NEEDS EYES BEFORE UPLOAD. -001 currently renders through a material that
+	# failed to build; after this it renders through portrait_attachment_alpha_to_coverage with the other_02
+	# textures, which is what the author asked for. That is a repair, not a redesign -- but it IS a change to
+	# how every Other looks, so LOOK AT ONE before this ships. Session 25c's standing call applies.
 	meshsettings = {
-		name = "male_clothes_secular_other_war_02Shape"
-		index = 1
+		name = "male_clothes_secular_other_war_02Shape-001"
+		index = 0
 		texture_diffuse = "other_02_diffuse.dds"
 		texture_normal = "other_02_normal.dds"
 		texture_specular = "other_02_properties.dds"
@@ -28,11 +54,24 @@ entity = {
 	name = "male_clothes_others_armor_entity"
 	pdxmesh = "male_clothes_others_armor_mesh"
 	
-	attribute = { name = "bs_body_infant_1"								blend_shape = "male_clothes_secular_other_war_02_bs_infant" }
-	attribute = { name = "bs_body_fat_1"									blend_shape = "male_clothes_secular_other_war_02_bs_fat" }
-	attribute = { name = "bs_body_gaunt_1"									blend_shape = "male_clothes_secular_other_war_02_bs_gaunt" }
-	attribute = { name = "bs_body_muscular_1"								blend_shape = "male_clothes_secular_other_war_02_bs_muscular" }	
-	attribute = { name = "bs_body_old_1"									blend_shape = "male_clothes_secular_other_war_02_bs_old" }
-	attribute = { name = "bs_body_dwarf_1"									blend_shape = "male_clothes_secular_other_war_02_bs_dwarf" }
+	# ── 1.0.17: SIX BLEND-SHAPE ATTRIBUTES THAT POINTED AT NOTHING, REMOVED. THIS IS NOT A REPAIR. ──────
+	# The entity carried six attributes -- bs_body_{infant,fat,gaunt,muscular,old,dwarf}_1 -- each naming a
+	# blend shape male_clothes_secular_other_war_02_bs_*. The engine's answer, six times a launch:
+	#
+	#   pdx_entity.cpp:594  male_clothes_others_armor_entity.bs_body_X_1 uses [blend_shape = ..._bs_X]
+	#                       but the entity does not have blend shapes
+	#
+	# It is right. In CK3 a blend shape is a SEPARATE .mesh file, DECLARED inside the pdxmesh block --
+	#   blend_shape = { id = "..._bs_fat"  type = "..._bs_fat.mesh" }
+	# -- which is how vanilla does it (m_clothes_sec_ccp5_english_war_nob_01.asset). This asset declared
+	# none, the six _bs_*.mesh files do not exist in this folder, and the main mesh binary contains no blend
+	# shape data at all (zero "bs_" strings in its whole string table). So the attributes were inert: they
+	# were not deforming anything, and removing them changes nothing a player can see. Ours was the only
+	# entity in the entire playset throwing this error -- 6 of 6.
+	#
+	# ⚠ WHAT IS STILL MISSING, SO NOBODY RECORDS THIS AS DONE: the Others' armour does not deform to body
+	# type. A fat, gaunt, old or dwarf Other wears it undeformed, and did before this change too. Fixing that
+	# for real needs six _bs_*.mesh exports from the 3D source, which this mod does not have. Removing dead
+	# attributes is not a substitute for them; it just stops the log claiming work that was never wired.
 
 }

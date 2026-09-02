@@ -93,7 +93,18 @@ ln_return.1 = {
 					}
 				}
 				scope:ln_squatter = { add_opinion = { modifier = hate_opinion  target = root  opinion = -60 } }
-				# Stash him -- ln_return.2 is five days out and the scope will not survive that.
+				# ⚠ THIS COMMENT WAS WRONG AND THE CODE IS KEPT ANYWAY (corrected 1 Sep). It used to read "the
+				# scope will not survive that." Saved scopes DO survive a delayed trigger_event -- verified
+				# against vanilla and written up at zz_ln_dragon_wall_events.txt:56-62 (court.4751 delays 90
+				# days with no re-save; stewardship_duty.1063 re-sends itself at 1820 days and never
+				# re-saves). The boundary scopes do not cross is an on_action, not a delay.
+				#
+				# Left in place because the variable is still the more robust handle -- it survives a sender
+				# that never saved the scope on the branch it took, which is the failure that has actually
+				# bitten this project. Two live comments in one codebase disagreeing about an engine rule is
+				# how a future session codes against the wrong one, so this one now says which is which.
+				# ln_return.3 relies on the scope surviving and is correct to: ln_return.1's own trigger
+				# (:25) requires var:ln_lost_seat to have a holder, so ln_squatter is always saved.
 				set_variable = { name = ln_yielded_squatter  value = scope:ln_squatter }
 				trigger_event = { id = ln_return.2  days = 5 }
 			}

@@ -1,0 +1,87 @@
+﻿# AGOT: The Long Night & Azor Ahai -- how big the dead are supposed to be (1.1.0b).
+#
+# THOMAS'S BRIEF, verbatim, from the 290 AC observer run:
+#   "I keep critiquing the strength of the Night King. I didn't see him get over 20,000 troops once. By the
+#    time he attacks the wall, he should be 50,000 strong. And by the time he's taken most of the North,
+#    there should be well over 200,000 in his army. Like minimum, that's like the minimum. Don't scale it so
+#    that it's that number by the end of it. By the time all of the North is taken, at a minimum there
+#    should be 200k. By the time all of Beyond the Wall is taken, he should at minimum have 50k, that kind
+#    of stuff. Especially on the strong difficulty."
+#
+# WHAT HE ACTUALLY HAD, and it is a design failure rather than a tuning one. The whole growth mechanism was
+# ONE create_maa_regiment call a year (zz_ln_horde_effects.txt), at a size the engine silently clamped to 3.
+# 500 men a chunk, three chunks, once a year: 1,500 men a year. His save reads Risen Dead 16000/19500 --
+# thirteen years of invasion, thirteen ticks, exactly 39 chunks. The ceiling of that design is 180,000 and it
+# takes 120 game-years to reach; 50,000 arrives around year 33, thirty years after he wanted it. His tooltip
+# also read Levies 66/66, which is why the strength game rule felt like it did nothing: its only headcount
+# term is levy_size, and the mod's own domain-limit, county-control and development penalties had driven the
+# levy pool it multiplies to sixty-six men.
+#
+# WHAT THIS DOES INSTEAD: names a target, and tops him up toward it. Milestones, not a curve -- because the
+# brief is written as floors ("by the time X is taken, at minimum N"), not as a rate. Every latch read below
+# is already maintained once per 30 days by ln_refresh_beyond_the_wall_latch_effect; nothing new is tracked.
+#
+#   the invasion has begun, still fighting for the lands beyond the Wall      20,000
+#   everything beyond the Wall is theirs                                      50,000   <- his floor
+#   the Wall has fallen                                                      100,000
+#   the North has fallen                                                     200,000   <- his floor
+#   the North has fallen and they hold 140+ counties                         250,000
+#
+# THE STRENGTH RULE FINALLY MOVES MASS. Retuned by Thomas on the first read of the ladder: the floors above
+# are STANDARD, not strong, and every tier tops up from there.
+#
+#   weak x0.75   standard x1.0   strong x1.25   insane x1.5
+#
+# So the North falling is 150,000 / 200,000 / 250,000 / 300,000, and a total conquest of Westeros is
+# 187,500 / 250,000 / 312,500 / 375,000.
+#
+# THE CEILING IS 500,000, AND IT IS A LORE NUMBER RATHER THAN A PERFORMANCE ONE. Thomas: "the population of
+# King's Landing, as it's mentioned in the television show, is half a million. So that should be our real
+# cap." Nothing the dead field should outnumber the largest city in the world. For the record, the
+# performance data that used to set this number: Corvo reported his machine burning past 300,000 men in the
+# field and this mod's live record is 429,171 -- so the top of this ladder is reachable but heavy, which is
+# why the muster spends regiments of 10,000 rather than 500 (see zz_ln_wight_horde.txt).
+ln_horde_target_men_value = {
+	value = 20000
+
+	if = {
+		limit = { ln_beyond_the_wall_is_theirs_trigger = yes }
+		add = 30000
+	}
+	if = {
+		limit = { has_global_variable = ln_castle_black_fell }
+		add = 50000
+	}
+	if = {
+		limit = { has_global_variable = ln_north_done }
+		add = 100000
+	}
+	# Past the North the brief says the number keeps going -- "don't scale it so that it's that number by
+	# the end of it". One more rung rather than an open curve, so the ceiling stays legible.
+	if = {
+		limit = {
+			has_global_variable = ln_north_done
+			title:h_the_others.holder ?= { any_sub_realm_county = { count >= 140 } }
+		}
+		add = 50000
+	}
+
+	if = { limit = { has_game_rule = others_weak_invasion }   multiply = 0.75 }
+	if = { limit = { has_game_rule = others_strong_invasion } multiply = 1.25 }
+	if = { limit = { has_game_rule = others_insane_invasion } multiply = 1.5 }
+	# standard is x1 -- the ladder above is written in standard's numbers.
+
+	max = 500000
+}
+
+# Root = the Night King. How far short of the target he is right now.
+#
+# max_military_strength is the honest measure -- it is levies plus every owned men-at-arms regiment, which is
+# exactly what the muster adds to, so the top-up converges instead of running away. It does NOT count the
+# 10,000-man event host spawned once at setup (spawn_army troops are not owned regiments), so he ends up
+# slightly ahead of the target early on and that is the harmless direction to be wrong in.
+ln_horde_shortfall_value = {
+	value = ln_horde_target_men_value
+	subtract = max_military_strength
+	min = 0
+}

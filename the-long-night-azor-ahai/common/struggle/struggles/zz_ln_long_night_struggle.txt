@@ -288,8 +288,29 @@ ln_long_night_struggle = {
 			# believed during the Cold Winds takes years straight off it (ln_the_dark_comes_sooner_effect),
 			# floored at five remaining. What the player gets is a warning of unknown length that can get
 			# shorter, which is the whole point.
+			# ── 1.1.0 (1 Sep): THE PANEL IS NO LONGER EMPTY, AND NEITHER ENTRY IS A LIE. ──────────────
+			# Recurring Workshop question (BoganTheLastard and others): "There are no event catalysts for
+			# Winter is Coming. Is this intentional?" It was, and it read as broken every time.
+			#
+			# WHAT IS AND IS NOT TRUE HERE. This phase is time-based, so the POINTS below move no threshold --
+			# the clock in ln_winter_clock_effect ends this phase, not an accumulation. What the struggle
+			# window also draws, per entry, is the COMPLETION COUNT
+			# (window_struggle.gui:841 Struggle.GetNumCompletionsOfCatalystForPhase), and that is live on a
+			# time-based phase. So a player watching this panel sees "you have seen one of them, twice" --
+			# which is the real signal, because a believed sighting takes years straight off the clock via
+			# ln_the_dark_comes_sooner_effect.
+			#
+			# The values are deliberately 1 rather than the Long Summer's 15. If points here are inert they
+			# cost nothing; if a future CK3 build makes them count, a 1 cannot quietly wreck a warning
+			# length Thomas spent three sessions tuning. Both catalysts genuinely fire -- see
+			# ln_winter_clock_start_effect and ln_encounter.30 -- so neither entry can sit at zero forever.
 			future_phases = {
-				ln_phase_the_long_night = { }
+				ln_phase_the_long_night = {
+					catalysts = {
+						ln_catalyst_winter_is_coming = 1
+						ln_catalyst_other_sighted = 1
+					}
+				}
 			}
 
 			war_effects = {

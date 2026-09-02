@@ -44,6 +44,7 @@
 
  ln_lc.10.t:0 "A Black Brother at the Gate"
  ln_lc.10.desc:0 "[ln_wandering_crow.GetTitledFirstName] has been on the road long enough that the black has gone grey at the hem, and he does not bother with ceremony.\n\nHe eats what your hall serves him, thanks the server by name, and then asks you the question he has asked at every gate between here and the Wall: how full are your dungeons, my lord, and what were you planning to do with the men in them?\n\n'The rope is quick,' he says, in the tone of a man agreeing with an argument you have not made yet. 'The Wall is not. But the Wall is nineteen castles held by eight hundred men, and winter is not getting further away. A man who would die for nothing here can freeze for something there.'\n\nHe is not begging. He has done this too long to beg. He is simply waiting, and he can wait longer than you can."
+ ln_lc.10.desc.north:0 "The wandering brother does not have to explain himself in this hall. Your grandfather gave men to the Watch, and his, and every Stark-sworn lord back past the counting of it. The cells hold what they hold; the Wall needs what it has always needed; the arithmetic is older than your name.\n\nHe asks quietly, as northern men do, and waits. Both of you already know what a lord of the North says to the Watch's asking."
  ln_lc.10.a:0 "Take them. Every unlanded man in my cells."
  ln_lc.10.b:0 "Coin for the Wall. My prisoners are my business."
  ln_lc.10.c:0 "The Wall gets nothing of mine. Good roads to you."

@@ -43,6 +43,8 @@ ln_wandering_dead.1 = {
 			prowess >= 8
 			is_available_healthy_adult = yes
 		}
+		# 1.1.0 (§7): health clause kept, prowess dropped: the hale but soft see what a sword arm would have bought.
+		show_as_unavailable = { is_available_healthy_adult = yes }
 		random_list = {
 			# you cut them down and the story travels
 			70 = {
@@ -137,6 +139,8 @@ ln_wandering_dead.1 = {
 			exists = cp:councillor_court_chaplain
 			cp:councillor_court_chaplain = { has_trait = red_priest }
 		}
+		# 1.1.0 (§7): greyed without a red priest chaplain: the faith's answer advertised.
+		show_as_unavailable = { always = yes }
 		add_piety = major_piety_gain
 		cp:councillor_court_chaplain = {
 			add_prestige = minor_prestige_gain
