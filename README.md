@@ -11,6 +11,7 @@ exists for people who can't use the Workshop at all.
 - **Steam Workshop** — https://steamcommunity.com/sharedfiles/filedetails/?id=3780269495
 - **Full install guide** — https://dlonem.com/mods/the-long-night/download
 - **Mod page** — https://dlonem.com/mods/the-long-night
+- **Wiki** — https://github.com/Dlonem/CK3TheLongNightAzorAhai/wiki (mirrors the mod page; carries the full version history)
 - **Discord** — https://discord.gg/PTJzPQbqG7
 
 ---
@@ -20,6 +21,8 @@ exists for people who can't use the Workshop at all.
 ```
 the-long-night-azor-ahai/      the mod itself
 the-long-night-azor-ahai.mod   the descriptor the launcher reads
+wiki/                          source for the GitHub wiki pages (not part of the mod)
+CHANGELOG.md                   every release note, newest first
 ```
 
 Both are needed. The launcher does **not** read the `descriptor.mod` inside the

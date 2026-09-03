@@ -1,0 +1,1 @@
+AGOT: The Long Night & Azor Ahai — a Crusader Kings III mod by [Dlonem](https://dlonem.com). The full mod page, with screenshots, the video showcase and the install guide, is at **[dlonem.com/mods/the-long-night](https://dlonem.com/mods/the-long-night)**. A fork standing on Freeholder's original Long Night, Tehaen's 1.19 update, and Wepo94's The Long Night+.
