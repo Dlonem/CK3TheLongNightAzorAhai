@@ -835,7 +835,25 @@ ln_struggle_yearly_work_effect = {
 # Root = anything. The monthly work. ln_struggle_monthly_effect wants struggle scope and is latched internally,
 # so this is safe to call from a character pulse, from a rootless event, or from the struggle itself.
 ln_struggle_monthly_work_effect = {
-	struggle:ln_long_night_struggle ?= { ln_struggle_monthly_effect = yes }
+	# ── 1.1.0a: `?=` IS NOT ENOUGH ONCE end_struggle HAS RUN. ───────────────────────────────────────────────
+	# Thomas's 3 Sep run, at 01:19:52 -- six seconds after he beat the Night King:
+	#     Error: if effect [ Scoped object is not valid. Type:  weak (Struggle - 1)! ]
+	#     Script location: ... zz_ln_struggle_effects.txt line: 85 (ln_struggle_monthly_effect)
+	#            ... line 838 (ln_struggle_monthly_work_effect) ... line 848 (ln_struggle_clock_backstop_effect)
+	#            ... common/on_action/zz_ln_struggle_on_actions.txt line: 74 (ln_struggle_clock_backstop)
+	# `struggle:ln_long_night_struggle ?=` still RESOLVES after end_struggle -- it hands back a weak,
+	# invalidated handle rather than nothing -- so the body was entered and every `if` inside it was evaluated
+	# against a struggle that no longer exists. The limits inside those blocks cannot save them; the node's own
+	# scope is what is dead.
+	#
+	# 1.0.16 met the same error one line earlier and answered it with ln_struggle_concluded, a GLOBAL, chosen
+	# precisely because "a global read is scope-free by definition, so it answers even when there is no scope
+	# left to ask" (see the note at :305-314). That answer was right and it belongs one level up, here, where it
+	# stops us entering the scope at all -- rather than inside the body, where it can only stop one block.
+	if = {
+		limit = { NOT = { has_global_variable = ln_struggle_concluded } }
+		struggle:ln_long_night_struggle ?= { ln_struggle_monthly_effect = yes }
+	}
 }
 
 # Root = a playable character, from yearly_playable_pulse. The engine-driven half of both clocks.

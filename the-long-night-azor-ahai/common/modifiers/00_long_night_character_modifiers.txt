@@ -82,14 +82,18 @@ others_standard_modifier = {
 
 others_strong_modifier = {
 	levy_size = 10
-	# 1.1.0 (§9.3 dial 1): 10 -> 12. Thomas, in his current Strong playthrough: "we have a shit ton of
-	# troops... we would steamroll the Long Night." At ADVANTAGE_DAMAGE_SCALING_FACTOR = 5 this is +60%
-	# damage -- the cheapest real knob, invisible in the save, and it keeps Strong's gap to Insane's 16.
-	# The agreed target (31 Aug 2026): on Strong, +20 years after the invasion, THE NORTH HAS FALLEN and
-	# the dead press the Neck -- boot item 16 measures against this. If the North still stands at +20 in
-	# that run, the next knobs in order are the horde's regrowth (zz_ln_horde_effects.txt -- measure in a
-	# save first, the tier ladder there is clamp-inert) and only then a per-tier siege term, which would
-	# need the single-source rule below rethought, not silently broken.
+	# 1.1.0a -- A STALE COMMENT STOOD HERE AND IT CONTRADICTED THE LINE BELOW IT. It read "1.1.0 (§9.3
+	# dial 1): 10 -> 12 ... it keeps Strong's gap to Insane's 16", which describes a draft that never
+	# shipped: the values on disk are 20 and 20, set by the 1 Sep advantage-ladder decision recorded
+	# thirty lines above (Thomas, verbatim: "15 across the board, 20 on strong and insane, and 15 for
+	# normal, and 10 for weak"), and confirmed by git diff 301de81..d0c2a2b. Two right answers in one
+	# file is how the next reader gets it wrong, so the wrong one is gone.
+	#
+	# THE STANDING TARGET IS UNCHANGED (31 Aug 2026): on Strong, +20 years after the invasion, THE NORTH
+	# HAS FALLEN and the dead press the Neck -- boot item 16 measures against this. If the North still
+	# stands at +20 in that run, the next knobs in order are the horde's regrowth (zz_ln_horde_effects.txt
+	# -- measure in a save first) and only then a per-tier siege term, which would need the single-source
+	# rule above rethought, not silently broken.
 	advantage = 20
 	army_toughness_mult = 0.20
 	army_damage_mult = 0.15

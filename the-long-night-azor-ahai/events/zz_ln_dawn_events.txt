@@ -117,7 +117,24 @@ ln_dawn.1 = {
 			}
 		}
 
-		side_commander = { trigger_event = { id = ln_dawn.2  days = 1 } }
+		# ── 1.1.0a: days = 1 -> 2, SO THE SPEAR CARD IS ALWAYS READ FIRST. ──────────────────────────────
+		# Thomas's 3 Sep run: ln_spear.1 ("Out of the Sky") and ln_dawn.2 ("The Field Afterwards") arrived
+		# together off the same battle, and the second one contradicted the first. Both hang off
+		# on_combat_end_winner and both were scheduled `days = 1`, so they landed on the same day; his
+		# ln_dawn.2 debug panel shows ln_dawn_dragon still saved as Paarthurnax -- the dragon the Night King
+		# had just taken out of the sky one card earlier -- and the card he read was the dragon variant,
+		# "the thing above you, the heat coming off it in waves".
+		#
+		# ORDERING IT HERE RATHER THAN IN THE HOOK. zz_ln_00_hooks.txt:226 runs ln_dawn_combat BEFORE
+		# ln_others_spear, so this hook cannot see a flag the spear has not set yet, and reordering the
+		# sub-list would move which saved scopes exist when -- a much larger change than the bug.
+		# One day is enough: ln_spear.1's immediate is what clears the rider's dragon, so by day 2
+		# ln_dragon_is_over_the_field_trigger correctly reads no and the desc chain falls through to
+		# ln_dawn.2.desc.spear, which was written for exactly this man and until now could not be reached
+		# on the same battle that earned it.
+		#
+		# ln_dawn.5's day 3 is untouched and still lands after this; ln_dawn.12's failsafe is +14/16 days.
+		side_commander = { trigger_event = { id = ln_dawn.2  days = 2 } }
 		scope:ln_night_king = { trigger_event = { id = ln_dawn.5  days = 3 } }
 	}
 }

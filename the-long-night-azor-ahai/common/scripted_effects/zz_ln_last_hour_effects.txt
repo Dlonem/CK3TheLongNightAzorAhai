@@ -242,17 +242,29 @@ ln_open_encounter_effect = {
 		position = 0
 		save_scope_as = ln_enc_man_1
 	}
-	ordered_in_list = {
-		variable = ln_lh_the_line
-		order_by = ln_last_hour_relevance_value
-		position = 1
-		save_scope_as = ln_enc_man_2
+	# ── 1.1.0a: SAME GUARD AS THE ROLL CALL, SAME REASON. ─────────────────────────────────────────────
+	# Unguarded, a snowfield line of one or two men made position 1 and 2 cap to position 0, and
+	# ln_encounter.1 drew the SAME companion in two or three of its lower portraits. No error appeared in
+	# Thomas's 3 Sep log because his line was full; the roll-call sites (this file, :1035/:1042) are the
+	# same defect and they logged 1,726 times when his was not. The portraits at
+	# events/zz_ln_encounter_events.txt:40-41 now carry `exists` triggers so an unset scope draws nothing.
+	if = {
+		limit = { any_in_list = { variable = ln_lh_the_line  count >= 2 } }
+		ordered_in_list = {
+			variable = ln_lh_the_line
+			order_by = ln_last_hour_relevance_value
+			position = 1
+			save_scope_as = ln_enc_man_2
+		}
 	}
-	ordered_in_list = {
-		variable = ln_lh_the_line
-		order_by = ln_last_hour_relevance_value
-		position = 2
-		save_scope_as = ln_enc_man_3
+	if = {
+		limit = { any_in_list = { variable = ln_lh_the_line  count >= 3 } }
+		ordered_in_list = {
+			variable = ln_lh_the_line
+			order_by = ln_last_hour_relevance_value
+			position = 2
+			save_scope_as = ln_enc_man_3
+		}
 	}
 
 	# Their side: exactly ONE Other. Never the Night King in Cold Winds. other_template is ours
@@ -1032,19 +1044,62 @@ ln_lh_bank_the_roll_call_effect = {
 			limit = { NOT = { has_character_flag = ln_temporary_ranger } }
 			set_global_variable = { name = ln_dawn_knight_1  value = this }
 		}
-		ordered_in_list = {
-			variable = ln_lh_the_line
-			order_by = ln_last_hour_relevance_value
-			position = 1
-			limit = { NOT = { has_character_flag = ln_temporary_ranger } }
-			set_global_variable = { name = ln_dawn_knight_2  value = this }
+		# ── 1.1.0a: THE SECOND AND THIRD NAMES ARE GUARDED, AND THE EMPTY SLOTS ARE CLEARED. ─────────
+		# Thomas's 3 Sep run: 1,726 lines of
+		#     [E][jomini_scriptlists.cpp:406]: Given position was bigger than the list, capping at list size
+		#         at ... zz_ln_last_hour_effects.txt line 1035 / 1042 (ln_lh_bank_the_roll_call_effect)
+		# -- a champion who went out with fewer than three men beside him. And the log line was the smaller
+		# half of it: "capping at list size" means position 1 and position 2 BOTH resolved to position 0, so
+		# ln_dawn_knight_2 and ln_dawn_knight_3 were set to the same man as ln_dawn_knight_1, and
+		# ln_reveal.10 -- which reads all three by `has_global_variable` (zz_ln_reveal_effects.txt:198-203)
+		# -- would have carved one name into the record three times.
+		#
+		# The count test carries the SAME limit as the ordered_in_list it guards, so the two always agree
+		# about which men are in the line.
+		#
+		# AND THE else_if IS NOT DECORATION. These are GLOBAL variables and the melee can be fought more than
+		# once in a game (a second wave, a second Night King). A line of one, following an earlier line of
+		# three, would otherwise leave the previous fight's second and third men standing in this fight's
+		# roll call.
+		if = {
+			limit = {
+				any_in_list = {
+					variable = ln_lh_the_line
+					NOT = { has_character_flag = ln_temporary_ranger }
+					count >= 2
+				}
+			}
+			ordered_in_list = {
+				variable = ln_lh_the_line
+				order_by = ln_last_hour_relevance_value
+				position = 1
+				limit = { NOT = { has_character_flag = ln_temporary_ranger } }
+				set_global_variable = { name = ln_dawn_knight_2  value = this }
+			}
 		}
-		ordered_in_list = {
-			variable = ln_lh_the_line
-			order_by = ln_last_hour_relevance_value
-			position = 2
-			limit = { NOT = { has_character_flag = ln_temporary_ranger } }
-			set_global_variable = { name = ln_dawn_knight_3  value = this }
+		else_if = {
+			limit = { has_global_variable = ln_dawn_knight_2 }
+			remove_global_variable = ln_dawn_knight_2
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					variable = ln_lh_the_line
+					NOT = { has_character_flag = ln_temporary_ranger }
+					count >= 3
+				}
+			}
+			ordered_in_list = {
+				variable = ln_lh_the_line
+				order_by = ln_last_hour_relevance_value
+				position = 2
+				limit = { NOT = { has_character_flag = ln_temporary_ranger } }
+				set_global_variable = { name = ln_dawn_knight_3  value = this }
+			}
+		}
+		else_if = {
+			limit = { has_global_variable = ln_dawn_knight_3 }
+			remove_global_variable = ln_dawn_knight_3
 		}
 	}
 }

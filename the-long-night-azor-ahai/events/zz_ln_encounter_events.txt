@@ -36,9 +36,11 @@ ln_encounter.1 = {
 		character = scope:ln_the_walker
 		animation = menacing
 	}
-	lower_left_portrait = { character = scope:ln_enc_man_1 }
-	lower_center_portrait = { character = scope:ln_enc_man_2 }
-	lower_right_portrait = { character = scope:ln_enc_man_3 }
+	lower_left_portrait = { trigger = { exists = scope:ln_enc_man_1 }  character = scope:ln_enc_man_1 }
+	# 1.1.0a: `trigger = { exists = ... }` -- the second and third companions are now only saved when the
+	# line actually has that many men (zz_ln_last_hour_effects.txt), so these two slots can be empty.
+	lower_center_portrait = { trigger = { exists = scope:ln_enc_man_2 }  character = scope:ln_enc_man_2 }
+	lower_right_portrait = { trigger = { exists = scope:ln_enc_man_3 }   character = scope:ln_enc_man_3 }
 
 	immediate = {
 		play_music_cue = "mood_the_others"

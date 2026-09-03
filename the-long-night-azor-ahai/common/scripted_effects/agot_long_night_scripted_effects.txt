@@ -4295,6 +4295,22 @@ ln_camp_add_upgrade_effect = {
 }
 
 flee_noble_south_effect = {
+	# ── 1.1.0a: `root` IS NOT THE FLEEING LORD ON EVERY ROAD INTO THIS EFFECT. ──────────────────────────────
+	# Thomas's 3 Sep run, 97 lines across two signatures:
+	#     Error: Event target link 'culture' did not get a matching scope type.
+	#            Expected 'character, landed_title, province', but got 'story'
+	#     Script location: ... agot_long_night_scripted_effects.txt line 4451 (flee_noble_south_effect)
+	#            ... 4816 (ln_mutate_into_other_unguarded_effect) ... 5294 (mutate_into_other_effect)
+	#            ... zz_ln_service_effects.txt line 25 (ln_the_dead_employ_nobody_effect)
+	# The yearly service net is called from the story cycle's own effect_group, so the ROOT of that execution
+	# is the STORY, not a character -- and `root.culture` / `root.faith` / `FLAVOR_CHAR = root` below were
+	# silently reaching for it. On the decision road (flee_south_decision) root happened to be the lord and
+	# nobody noticed for four releases.
+	#
+	# The lord is `this` at the top of this effect on every road, so he is banked here and read by name.
+	# save_temporary_scope_as, not save_scope_as: this runs inside every_vassal_or_below and must not leave a
+	# scope standing for the next man in the loop.
+	save_temporary_scope_as = ln_fleeing_lord
 
 	# Remember the lord's former standing BEFORE the titles are lost below — it scales both the starting camp and
 
@@ -4448,9 +4464,9 @@ flee_noble_south_effect = {
 
 				age = { 25 45 }
 
-				culture = root.culture
+				culture = scope:ln_fleeing_lord.culture
 
-				faith = root.faith
+				faith = scope:ln_fleeing_lord.faith
 
 				location = capital_province
 
@@ -4501,7 +4517,7 @@ flee_noble_south_effect = {
 
 		REASON = flag:voluntary
 
-		FLAVOR_CHAR = root
+		FLAVOR_CHAR = scope:ln_fleeing_lord
 
 	}
 

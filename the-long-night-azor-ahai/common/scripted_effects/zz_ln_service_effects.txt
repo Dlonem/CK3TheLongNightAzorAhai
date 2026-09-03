@@ -39,4 +39,41 @@ ln_the_dead_employ_nobody_effect = {
 		debug_log = "LN_TRACE SERVICE: a living courtier in the Night King's own hall - mutating"
 		mutate_into_other_effect = yes
 	}
+
+	# 1.1.0a -- AND NOBODY OF THEIRS KEEPS A FRIEND. See ln_the_dead_have_no_allies_effect below.
+	ln_the_dead_have_no_allies_effect = yes
+}
+
+# 1.1.0a -- THE BELT TO is_alliance_valid's BRACES.
+#
+# common/scripted_rules/zz_ln_alliance_rules.txt is the primary ban and it is the better one: CK3 asks that
+# rule whether an alliance REASON is still valid, so it severs what stands and refuses what is offered. But
+# it is a scripted rule, scripted rules resolve by name with one definition per playset, and at least four
+# installed mods ship their own is_alliance_valid -- Legacy of Valyria - AGOT 0.5.1 among them. If one of
+# them parses after us, our clause is discarded silently and there is no log line but database_conflicts.log
+# to say so.
+#
+# A yearly sweep does not care who won that race. It runs from the same story-cycle pulse as the effect
+# above, so it only ever runs while there is a Night King with a realm, and it costs one cheap flag test per
+# landed ruler per year -- ln_is_one_of_them_trigger opens on has_character_flag = ln_one_of_them.
+#
+# every_ruler rather than every_vassal_or_below on purpose: the population this is FOR is the dead lord who
+# is nobody's vassal. That is the same population that produced MPREG's de jure screenshot, and a sweep
+# scoped to the Night King's own realm would walk straight past him.
+#
+# break_alliance takes a target and every vanilla call site passes a saved scope (00_war_effects.txt:584,
+# 00_marriage_interaction_effects.txt:1668, and six more in events/); `prev` has no vanilla precedent, so
+# the owner is saved and passed by name.
+ln_the_dead_have_no_allies_effect = {
+	every_ruler = {
+		limit = {
+			ln_is_one_of_them_trigger = yes
+			any_ally = { always = yes }
+		}
+		save_temporary_scope_as = ln_ally_owner
+		debug_log = "LN_TRACE SERVICE: one of the dead was holding an alliance - breaking it"
+		every_ally = {
+			break_alliance = scope:ln_ally_owner
+		}
+	}
 }

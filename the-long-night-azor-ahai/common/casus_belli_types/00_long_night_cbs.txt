@@ -8,7 +8,11 @@ war_for_the_dawn_cb = {
 	interface_priority = 110
 
 	allowed_for_character = {
-	NOT = { has_trait = other_trait }
+	# 1.1.0a -- WAS `NOT = { has_trait = other_trait }`. The trait test is not the identity test: a lord
+	# raised by mutate_into_other_effect carries wight_government and, as Thomas's post-war save showed in
+	# 1.0.6a, often no trait at all (see ln_is_one_of_them_trigger's own header). One of the dead could
+	# therefore declare the War for the Dawn on his own king.
+	ln_is_one_of_them_trigger = no
 	}
 
 	allowed_against_character = {
@@ -207,7 +211,12 @@ other_cb = {
 	
 	allowed_against_character = {
 	
-		NOT = { has_trait = other_trait }
+		# 1.1.0a -- WAS `NOT = { has_trait = other_trait }`, which spared true Others and nobody else. A
+		# raised lord carries wight_trait or wight_government without other_trait, so the Night King's own
+		# invasion CB accepted one of his own as a victim -- the same family as MPREG's de jure screenshot.
+		# ln_is_one_of_them_trigger is already the test the pulse's target picker uses
+		# (zz_ln_invasion_order_triggers.txt:38,52); it is the test here now too.
+		ln_is_one_of_them_trigger = no
 	}
 	target_titles = neighbor_land_or_water
 	target_title_tier = kingdom
@@ -730,7 +739,12 @@ other_cb_duchy = {
 	
 	allowed_against_character = {
 	
-		NOT = { has_trait = other_trait }
+		# 1.1.0a -- WAS `NOT = { has_trait = other_trait }`, which spared true Others and nobody else. A
+		# raised lord carries wight_trait or wight_government without other_trait, so the Night King's own
+		# invasion CB accepted one of his own as a victim -- the same family as MPREG's de jure screenshot.
+		# ln_is_one_of_them_trigger is already the test the pulse's target picker uses
+		# (zz_ln_invasion_order_triggers.txt:38,52); it is the test here now too.
+		ln_is_one_of_them_trigger = no
 
 		# Under the KINGDOM rule this CB is the small-victim path only -- anyone who actually holds a kingdom
 		# title still gets the kingdom-tier war, so nothing south of the Wall changes. Under the DUCHY rule
@@ -1234,7 +1248,12 @@ other_cb_empire = {
 	
 	allowed_against_character = {
 	
-		NOT = { has_trait = other_trait }
+		# 1.1.0a -- WAS `NOT = { has_trait = other_trait }`, which spared true Others and nobody else. A
+		# raised lord carries wight_trait or wight_government without other_trait, so the Night King's own
+		# invasion CB accepted one of his own as a victim -- the same family as MPREG's de jure screenshot.
+		# ln_is_one_of_them_trigger is already the test the pulse's target picker uses
+		# (zz_ln_invasion_order_triggers.txt:38,52); it is the test here now too.
+		ln_is_one_of_them_trigger = no
 	}
 	target_titles = neighbor_land_or_water
 	target_title_tier = empire

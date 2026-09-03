@@ -13,7 +13,31 @@
 
 ln_spear.1 = {
 	type = character_event
-	window = fullscreen_event
+	# ── 1.1.0a: `window = fullscreen_event` WAS HERE, AND IT WAS SILENTLY DELETING ALL THREE PORTRAITS. ──
+	# Thomas, 3 Sep: "there's no dragon portrait showing up... I don't even know if you're allowed to have
+	# portraits."
+	#
+	# You are not, in this window. game/gui/event_windows/fullscreen_event.gui is 352 lines and the string
+	# "portrait" does not appear in it once -- the window has an image, a title and a description, and no
+	# portrait container of any kind. No mod in the playset overrides that file (checked: AGOT, AGOT+,
+	# Submod Core, LoV, Essos Expanded, EE:FE, Nobility of Westeros, and this mod). So left_portrait,
+	# right_portrait and lower_left_portrait below parsed fine, threw no error, and rendered nothing.
+	# Base CK3 ships the same dead config in its own fullscreen events (mpo_greatest_of_khans.0001 declares
+	# a left_portrait that has never been drawn), which is presumably where the idiom came from.
+	#
+	# AND THE PORTRAITS ARE THE WHOLE POINT OF THIS CARD. The 1.0.12b note twelve lines down records the
+	# instruction that shaped it -- "you should have had it in the same event window that base AGOT does the
+	# whole dragon fighting conflict in -- my dragon in one part, the Night King in the other" -- and the
+	# switcheroo below exists specifically so the dragon is still alive to render. The window was defeating
+	# the thing it was chosen to achieve.
+	#
+	# The default character-event window carries all three, and override_background works there exactly as
+	# it does here (vanilla ep3_decisions_events.txt:2712-2716 sets one on a plain character_event), so the
+	# frozen forest is kept.
+	#
+	# FOUR OTHER FULLSCREEN CARDS IN THIS MOD DECLARE PORTRAITS THAT CANNOT DRAW -- ln_dawn.11,
+	# ln_return.1, ln_reveal.1 and others.2. They are deliberately cinematic and they are NOT changed here;
+	# that is a look-and-feel decision for a content release, not a hotfix. See the 1.1.0a session note.
 	title = ln_spear.1.t
 	desc = {
 		first_valid = {

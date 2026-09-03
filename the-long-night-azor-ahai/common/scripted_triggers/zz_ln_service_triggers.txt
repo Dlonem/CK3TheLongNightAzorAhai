@@ -40,6 +40,20 @@ ln_may_serve_trigger = {
 			ln_is_one_of_them_trigger = yes
 		}
 	}
+	# ── 1.1.0a: THE CHAIN HAD NO CLOSE, AND THE ENGINE THREW THE WHOLE THING OUT. ────────────────────
+	# Thomas's 3 Sep run, 40 times:
+	#     Error: trigger_else_if trigger [ trigger_else_if with no trigger_else ]
+	#     Script location: ... zz_ln_service_triggers.txt line: 36 (ln_may_serve_trigger[args#...])
+	# CK3 requires a trigger_if / trigger_else_if chain to end in a trigger_else; without one it fails
+	# PostValidate, which means the A2.1 mirror clause shipped in 1.1.0 -- "the living do not serve the
+	# dead" -- was not actually being enforced at any of its four call sites (knight, court position,
+	# council seat, command).
+	#
+	# always = yes is the correct close, not a copy of a clause above it: a living candidate under a living
+	# lord is exactly the ordinary case, and the ordinary case is allowed.
+	trigger_else = {
+		always = yes
+	}
 }
 
 can_be_knight_trigger = {

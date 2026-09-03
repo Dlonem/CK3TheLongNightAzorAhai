@@ -1,0 +1,89 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.0a. SAME-NAME SHADOW of AGOT's agot_mw_war_valid_during_megawar
+# (common/scripted_triggers/00_agot_mega_wars_triggers.txt:872). AGOT's body below is VERBATIM; one clause
+# is added at the top. Scripted triggers resolve by name, one definition per playset, ours parses last.
+#
+# ================================ WHY THIS FILE EXISTS ================================
+#
+# MPREG, Discord, 1 Sep 2026: "i dont think the others should be having dejure wars lmao", with a screenshot
+# reading "Stalkingshore De Jure War for the The Army of the Dead of Reindeer Heath" -- a Walker with 118,494
+# men suing a 315-man realm for a county. Vanilla's own war-name string is the confession
+# (wars_l_english.yml:58): "[ATTACKER.GetPrimaryTitle.GetAdjective] De Jure War for the [TITLE.GetBaseName]".
+# "The Army of the Dead of X" is OUR loc for a dead-held county (theothers_l_english.yml:17). Attacker and
+# defender were both ours. The dead were fighting the dead.
+#
+# The root cause is in history/cultures/frostborn.txt, and it is fixed there -- 1.0.16 handed the culture
+# innovation_casus_belli, whose only two lines in the whole game unlock individual_county_de_jure_cb and
+# individual_duchy_de_jure_cb. But a history file seeds a culture ONCE, at game start. Every save already
+# running keeps the innovation and keeps the bug. This is the half that reaches those saves.
+#
+# ================================ WHY THIS TRIGGER ================================
+#
+# agot_mw_war_valid_during_megawar is called from allowed_against_character in THIRTEEN CBs -- all three
+# de jure CBs (00_dejure_war.txt:35,383,742), claim (00_claim.txt:50), all three conquests
+# (00_conquest.txt:45,482,971), the five dragon wars (00_agot_dragon_wars.txt) and tributarize
+# (00_tributarize.txt:73). It is 24 lines long. Shadowing it buys all thirteen doors for the price of one
+# small file, instead of forking ~700 lines of AGOT's de jure CBs and re-diffing them forever. This is the
+# same move the mod already makes on set_title_localization_effect: take the pen, not the switch.
+#
+# ================================ WHAT THE CLAUSE SAYS, AND WHAT IT DELIBERATELY DOES NOT ================
+#
+# It blocks a war ONLY when BOTH sides are ours. The dead are one host; they do not sue each other for
+# counties they both already hold against the living.
+#
+# IT DOES NOT BLOCK THE DEAD FROM ATTACKING THE LIVING ON THESE CBs, and that restraint is deliberate rather
+# than timid. wight_government carries government_is_tribal, so conquest_cb's can_use_conquest_cbs_trigger
+# very likely already passes for the dead -- meaning some of the pressure players feel today may be coming
+# through these doors. Closing them would make the Long Night measurably WEAKER, which is the opposite of
+# what 1.0.16 and 1.1.0 spent their tuning budget on, and a hotfix is not where that gets decided. If it is
+# ever decided, the change is one line: drop the scope:defender half of the AND below. Measure first.
+#
+# IT DOES NOT BLOCK THE LIVING FROM ATTACKING THE DEAD, ever, on any CB. The living retaking their land is
+# the point of the whole mod.
+#
+# ================================ MAINTENANCE ================================
+#
+# RE-DIFF THE BODY AGAINST AGOT ON EVERY AGOT UPDATE. Everything below the clause is a verbatim copy of
+# 00_agot_mega_wars_triggers.txt:872-895 and nothing else. If another mod shadows this trigger too, one of
+# the two copies is lost silently -- watch logs/database_conflicts.log for this key.
+
+agot_mw_war_valid_during_megawar = {
+	# -- 1.1.0a: THE DEAD DO NOT SUE THE DEAD. -----------------------------------------------------------
+	# ln_is_one_of_them_trigger is the mod's identity test everywhere else (zz_ln_ice_dragon_triggers.txt:82):
+	# the ln_one_of_them stamp, other_trait, nightking, wight_trait, house_theothers, ruins_government and
+	# wight_government. A trait-only test would miss the converted lord who carries the government and no
+	# trait at all -- the 1.0.6a finding recorded in that trigger's own header, and the exact population on
+	# both ends of MPREG's screenshot.
+	#
+	# `?=` on both scopes so this fails OPEN: if either scope is missing the clause is simply true and AGOT's
+	# body decides, which is the behaviour this file must never change.
+	NOT = {
+		AND = {
+			scope:attacker ?= { ln_is_one_of_them_trigger = yes }
+			scope:defender ?= { ln_is_one_of_them_trigger = yes }
+		}
+	}
+
+	# -- AGOT's body, verbatim from 00_agot_mega_wars_triggers.txt:873-894 --------------------------------
+	trigger_if = {
+		limit = {
+			scope:defender = {
+				is_alive = yes
+			}
+		}
+		NOT = {
+			scope:defender = {
+				has_variable = agot_pwl_direct
+			}
+		}
+	}
+	trigger_if = {
+		limit = {
+			scope:attacker = {
+				is_alive = yes
+				has_variable = agot_pwl_direct
+			}
+			exists = scope:attacker.var:agot_pwl_direct
+		}
+		scope:defender != scope:attacker.var:agot_pwl_direct
+	}
+}

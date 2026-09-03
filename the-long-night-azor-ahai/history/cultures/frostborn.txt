@@ -36,7 +36,7 @@
 #   innovation_motte              -- they hold what they take, in the ruins of what was there.
 #   innovation_barracks           -- somewhere to put an army that never sleeps.
 #   innovation_bannus             -- the summons. Everything north of the Wall answers it.
-#   innovation_casus_belli        -- they declare wars; the mod's invasion CBs are the whole clock.
+#   innovation_casus_belli        -- REMOVED IN 1.1.0a. SEE THE BLOCK AT THE BOTTOM OF THIS FILE.
 #   innovation_development_01     -- the one civic rung with a real effect on a realm this size.
 #
 # ── innovation_catapult IS NOT ON THIS LIST, AND THE REASON IS A TRAP WORTH RECORDING. ────────────────────
@@ -75,10 +75,41 @@
 	discover_innovation = innovation_barracks
 }
 
-300.1.1 = {
-	discover_innovation = innovation_casus_belli
-}
-
 1000.1.1 = {
 	discover_innovation = innovation_development_01
 }
+
+# ── 1.1.0a: THE ONE RUNG WE TOOK BACK ────────────────────────────────────────────
+# `300.1.1 = { discover_innovation = innovation_casus_belli }` STOOD HERE FROM 1.0.16 UNTIL 1.1.0a, on the
+# reasoning "they declare wars; the mod's invasion CBs are the whole clock." That reasoning was wrong, and
+# MPREG's 1 Sep screenshot is what it cost: "Stalkingshore De Jure War for the The Army of the Dead of
+# Reindeer Heath" -- one of the dead suing another of the dead for a county, in the middle of the invasion.
+#
+# WHAT innovation_casus_belli ACTUALLY DOES, in full (AGOT/vanilla 00_tribal_innovations.txt:317-331):
+#     unlock_casus_belli = individual_county_de_jure_cb
+#     unlock_casus_belli = individual_duchy_de_jure_cb
+# No modifier block, no unit, no building, nothing else. Those two lines are the entire innovation, and
+# those two CBs are the only place the key `innovation_casus_belli` appears in AGOT's whole
+# common/casus_belli_types/ folder.
+#
+# AND OUR OWN CBs NEVER WANTED IT. other_cb (00_long_night_cbs.txt:196), other_cb_duchy (:699) and
+# other_cb_empire (:1223) gate on the game rule, `has_trait = nightking` and the cooldown flag. No
+# innovation is asked for anywhere in that file. The "whole clock" argument was for a lock that was never
+# on the door.
+#
+# IT REACHED EVERY DEAD RULER, NOT ONLY THE OTHERS. mutate_into_other_effect runs
+# `set_culture = culture:frostborn` (agot_long_night_scripted_effects.txt:5085), so a raised Umber and the
+# Night King share one culture and one innovation list. Every lord the invasion made could sue every other
+# lord the invasion made.
+#
+# AND IT WAS A SECOND CONQUEST ROAD. A de jure war carries no long_night_cooldown, no
+# ln_take_one_more_duchy_effect grab budget and no is_neighbor_to_realm front -- it walks straight past the
+# tempo work of 1.0.10 and 1.0.16. The pulse's own picker already refuses dead-held titles
+# (zz_ln_invasion_order_triggers.txt:38,52); the AI declaring on its own does not use the pulse.
+#
+# DELETING THE LINE ONLY FIXES NEW GAMES -- a history file seeds a culture once. The save-safe half of this
+# fix is common/scripted_triggers/zz_ln_megawar_cb_shadow.txt, which closes the same door from the CB side
+# in games already running. Both halves ship together in 1.1.0a; keep them together.
+#
+# DO NOT ADD IT BACK. If a future feature really needs the dead to declare something new, give them a CB of
+# our own in 00_long_night_cbs.txt, where we control who may use it and against whom.

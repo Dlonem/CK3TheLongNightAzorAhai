@@ -766,6 +766,16 @@ ln_btw_restlessness_catalyst_effect = {
 # Root = the character taking the crown. Every clause guarded, so calling it on somebody who is already
 # wearing it is a no-op and the invasion modifiers can never stack.
 ln_crown_the_next_nightking_effect = {
+	# ── 1.1.0a: `root` IS NOT THE MAN BEING CROWNED ON EVERY ROAD IN. ───────────────────────────────────
+	# The header above says "Root = the character taking the crown", and that is true for five of the six
+	# callers. The sixth is the story cycle itself (the_long_night.txt on_owner_death,
+	# `scope:ln_next_nightking = { ln_crown_the_next_nightking_effect = yes }`), where the execution root is
+	# the STORY -- the same class of bug the 3 Sep log caught in flee_noble_south_effect. The demotion sweep
+	# below used `NOT = { this = root }` to spare the new king; against a story root that test is never
+	# true, so on that road a successor who already wore the trait was demoted and re-crowned in one pass,
+	# with a "second night king" trace that was not telling the truth. The man is `this` at the top of this
+	# effect on every road, so he is banked here and compared by name.
+	save_temporary_scope_as = ln_the_crowned
 	# ══ 1.1.0b -- THERE IS ONE OF HIM. ════════════════════════════════════════════════════════════════
 	# Thomas, observer run, 290 AC: "There's been multiple Night Kings." His screenshots show two at once
 	# -- "Hegemon Other II 'the Old' The Others" and a "Warden Other The Others of Deadwood Grove" who was
@@ -789,7 +799,7 @@ ln_crown_the_next_nightking_effect = {
 	every_living_character = {
 		limit = {
 			has_trait = nightking
-			NOT = { this = root }
+			NOT = { this = scope:ln_the_crowned }
 		}
 		debug_log = "LN_TRACE CROWN: a second night king was still standing - demoted"
 		debug_log_scopes = yes

@@ -1,0 +1,34 @@
+[h1]1.1.0a — One Host[/h1]
+
+A hotfix. No new content: twelve fixes to things 1.1.0 shipped with. The first half all come from the same idea — the dead are one host, they do not sue each other for land and nobody keeps a friend on that side of the line. The second half comes from a full playthrough log: a Trial of Seven, a dragon taken out of the sky, and the Night King beaten in the snow.
+
+[h2]The dead stop fighting the dead[/h2]
+[list]
+[*] The Others no longer declare de jure wars. 1.0.16 gave their culture a tribal innovation whose only purpose in the entire game is to unlock the two "individual de jure" casus belli — which is how you ended up watching a White Walker sue another White Walker for a county, in the middle of his own invasion. The innovation is gone. Nothing in this mod ever needed it: the invasion casus belli have never asked for one. — MPREG
+[*] And in games already running, the dead cannot fight each other at all. A history file only seeds a culture at game start, so removing the innovation alone would have left every existing save exactly as it was. A second, save-safe fix closes the same door from the other side: on thirteen of the base game's and AGOT's casus belli — all three de jure wars, claims, all three conquests, the dragon wars and tributarize — a war where BOTH sides are of the dead can no longer be declared. Your save does not need to be restarted.
+[*] The Night King's own invasion can no longer be aimed at his own. The three invasion casus belli identified the dead by a single trait, and a lord raised during the invasion usually does not carry it — he carries the wight government instead. So his own conquered lords were legal targets. They are not any more, and neither is the Night King a legal target of the War for the Dawn declared by one of his own.
+[/list]
+
+[h2]The dead have no friends, and nobody living works for them[/h2]
+[list]
+[*] Nobody keeps an alliance with the dead. The ban has existed since 1.0.10, and it was reading two traits where the mod's own test for "is this one of them" reads seven — so a lord raised by the invasion, who often carries no trait at all, kept the alliances he made in life and could make new ones after death. The ban now uses the full test on both sides.
+[*] And a yearly sweep breaks them anyway. That ban lives in a scripted rule, and scripted rules are winner-take-all across a playset: several other popular mods ship their own copy of the same rule, and whichever loads last is the only one the game keeps. Once a year, while the Long Night runs, every ruler of the dead simply has their alliances broken — whoever won that argument.
+[*] "The living do not serve the dead" is now actually enforced. 1.1.0 added the rule that bars a living man from being knight, councillor, court official or commander to one of the dead — and shipped it as a conditional chain the engine rejects outright, so it was never applied at any of its four call sites. It works now.
+[/list]
+
+[h2]From the playthrough log[/h2]
+[list]
+[*] The Trial of Seven no longer carves the same name three times. The melee records the three men who actually stood with you, and if fewer than three did, it was quietly recording the first man again in the second and third slots — so the record of the fight could name one companion three times. It now records exactly who was there, and clears the empty slots from any earlier fight.
+[*] "Out of the Sky" shows the dragon and the Night King. The card that opens when the dead spear a dragon out of the sky was built to put your dragon on one side and the thing that killed her on the other — and it was using a window type that has no portrait slots at all, so all three portraits were silently dropped. They are back.
+[*] "Out of the Sky" and "The Field Afterwards" no longer arrive together. Both hang off the end of the same battle and both were scheduled for the next day, so they could land on the same day and contradict each other — the second card describing the dragon still circling overhead, one card after the dead had taken her. The confrontation card now waits a day, and the man who lost a dragon reads the paragraph that was written for him.
+[*] A lord who flees south keeps his own people. The successor installed behind a fleeing lord took his culture and faith from the wrong place on one of the two roads into that code, and on that road it was not a person at all.
+[*] The Long Night's clock stops when the Long Night does. A yearly backstop kept poking the struggle for a few ticks after the Dawn had already ended it.
+[*] The snowfield encounter no longer draws the same companion twice when you ride out with fewer than three men.
+[*] Crowning the next Night King spares the right man. The sweep that demotes any second Night King compared against the wrong thing when the crowning came from the invasion's own story cycle, so a successor who already carried the trait could be demoted and re-crowned in the same breath. Found in a full static sweep for the same class of bug as the fleeing-lord fix above; nothing else in the mod has it.
+[/list]
+
+[h2]Notes[/h2]
+[list]
+[*] If you run a large playset, it is worth checking logs/database_conflicts.log once: this mod and several other AGOT submods define some of the same scripted rules, and load order decides which survives. This mod should be last.
+[*] Compatible with AGOT Additional Models and Special Buildings — checked file by file, symbol by symbol. Their Night's Watch content is additive and goes through AGOT's own recruitment effect, exactly as this mod's does. Load either order after AGOT. — lilv1314
+[/list]
