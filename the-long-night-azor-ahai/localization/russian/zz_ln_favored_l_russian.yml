@@ -75,3 +75,7 @@
 
  ln_the_hand_that_did_not_burn_modifier:0 "Рука, которая не сгорела"
  ln_the_hand_that_did_not_burn_modifier_desc:0 "Держал её в жаровне перед полным чертогом, и она до сих пор смыкается на рукояти меча. Никто из тех, кто был в той комнате, не перестал об этом рассказывать."
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ ln_favored.1.d:0 "I know his face. I have known it for two years — I only did not know it was a face."
+ ln_favored.10.desc.knew:0 "I keep coming back to the man who walked from Volantis.\n\nI knew his face before he raised it. Not from anywhere — I had simply carried it around behind my eyes for two years and mistaken it for a shape in a fire. He walked across the world to look at me, and I had already been looking at him.\n\nEverything since has had that quality. Not revelation. Recognition, arriving slightly late."

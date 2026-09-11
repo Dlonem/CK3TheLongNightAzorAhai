@@ -1,0 +1,34 @@
+﻿l_russian:
+# 1.1.1 -- scaffolded from the English file so no key renders raw in Russian. Untranslated; English text until replaced.
+
+ # AGOT: The Long Night & Azor Ahai -- emptying a dungeon northward.
+
+ ln_send_the_dungeons_to_the_wall_decision:0 "[ROOT.Char.Custom('ln_SendDungeonsTitle')]"
+ ln_send_the_dungeons_plain:0 "Send the Prisoners to the Wall"
+ ln_send_the_dungeons_raven:0 "Send a Raven: Empty the Cells"
+ ln_send_the_dungeons_to_the_wall_decision_desc:0 "Your gaoler keeps the list on a board by the door, and it has not got shorter in a year. Men taken in a war that ended. Men whose families stopped answering the ravens. Men nobody is coming to ransom and nobody particularly wants hanged.\n\nThe Wall does not ask what they did. It has never asked. It asks only whether they can hold a spear and whether they will still be standing at the top of the causeway when the horn goes, and it will take every one of them on those terms without a word of thanks.\n\nIt is not mercy. It is the oldest arrangement in the Seven Kingdoms: the south keeps its hands clean, and the north gets bodies."
+ ln_send_the_dungeons_to_the_wall_decision_tt:0 "Send every prisoner who can take the black north to the Night's Watch, in one order.\n\n#weak They go as sworn brothers, not as an offer they can refuse. Any man the Wall will not have stays in your cells.#!"
+ ln_send_the_dungeons_to_the_wall_decision_confirm:0 "Empty the cells. The Wall will take them."
+ ln_send_the_dungeons_to_the_wall_decision_desc_north:0 "Your gaoler keeps the list on a board by the door. In the South they would call emptying it northward a mercy, or a joke. You were raised to call it what it is: the Wall must be manned, the North has always manned it, and a man who broke the King's peace can still hold a spear on the right side of it.\n\nThey will curse you on the causeway and thank no one. Their sons will be sworn brothers of the oldest order in the world. Both things are true, and neither one is your concern past the Gift."
+ ln_send_the_dungeons_to_the_wall_effect_tt:0 "#V [ROOT.Char.MakeScope.ScriptValue('ln_prisoners_fit_for_the_wall_value')|0]#! of your prisoners will take the black. They are released to the Night's Watch and join the Lord Commander's court"
+
+ # ── The four things that can stop you, each said out loud. AGOT hides all of these in is_shown. ──
+ ln_wall_you_are_of_the_free_folk:0 "You are of the free folk — the Watch will not take men from you"
+ ln_wall_your_seat_is_not_in_the_seven_kingdoms:0 "Your seat lies outside the Seven Kingdoms — the Wall is not yours to send men to"
+ ln_wall_there_is_no_watch_left:0 "There is no Night's Watch left to receive them"
+ ln_wall_none_of_them_will_serve:0 "Not one of your prisoners can take the black"
+
+ # ── 1.1.0 (§10): the protections, each named out loud. A correct refusal with no reason reads as a bug. ──
+ ln_wall_he_is_not_yours_to_send:0 "He is not yours to send — only your own vassals and their servants, or your own court, can be marched north"
+ ln_wall_he_is_a_king_in_his_own_right:0 "He is a king in his own right — crowned heads are ransomed or die, they are not sent to the Wall"
+ ln_wall_his_house_looks_to_him:0 "His house looks to him — the Wall does not take a house's head"
+ ln_wall_his_dynasty_looks_to_him:0 "His dynasty looks to him — the Wall does not take a dynasty's head"
+ ln_wall_he_is_the_last_of_his_house:0 "He is the last of his house — the Wall ends men, not bloodlines"
+ ln_wall_he_is_too_great_a_lord:0 "He is too great a lord — none above county rank may be sent"
+
+ # ── 1.1.0 (§10.2): the tier-ceiling game rule ──
+ rule_ln_wall_tier_ceiling:0 "#explanation_link_light_background;bold LN:#! #e;bold Send the Prisoners#! Tier Ceiling"
+ setting_ln_wall_county_ceiling:0 "Counts and Below"
+ setting_ln_wall_county_ceiling_desc:0 "Captured lords above county rank cannot be sent to the Wall. Kings and dukes are ransomed or executed like the great men they are."
+ setting_ln_wall_send_any_tier:0 "Any Rank"
+ setting_ln_wall_send_any_tier_desc:0 "Any eligible prisoner can be sent to the Wall, whatever he holds. The King of the Iron Throne can end his days a sworn brother."

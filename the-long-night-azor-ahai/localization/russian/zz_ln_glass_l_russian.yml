@@ -1,0 +1,38 @@
+﻿l_russian:
+# 1.1.1 -- scaffolded from the English file so no key renders raw in Russian. Untranslated; English text until replaced.
+
+ # AGOT: The Long Night & Azor Ahai -- dragonglass lore (1.1.0, §11).
+
+ TRAVEL_POINT_OF_INTEREST_TT_ln_poi_dragonglass:0 "Site of Dragonglass Lore"
+ ln_poi_dragonglass_tt:0 "Will trigger a Dragonglass Lore Event"
+
+ ln_glass.1.t:0 "The Glass Shore"
+ ln_glass.1.desc:0 "The beaches below the Dragonmont are black. Not dark — black, the true black of a thing that has never once been anything else. The smallfolk here gather it the way other coasts gather driftwood, and they will tell you, if you ask, which seams give blades and which give beads.\n\nAn old quarryman turns a lump of it in his fingers and shows you the trick of it: where the stone wants to break, and where it will fight you. Frozen fire, the Valyrians called it. He does not know why. He knows everything else about it."
+ ln_glass.1.a:0 "Learn the stone"
+ ln_glass.2.t:0 "What the Records Keep"
+ ln_glass.2.desc:0 "The Citadel has a room for it — not a shelf, a room. Treatises on obsidian from three continents, a case of blades from digs beyond the Wall, and a maester with three links of Valyrian steel on his chain who is delighted, in the way of a man whose subject nobody has asked about in forty years.\n\nThe old accounts agree with each other, which is what makes them worth the candle. The children gave the Watch a hundred daggers a year. The daggers were obsidian. Nobody at the time thought to write down why, because everybody at the time knew."
+ ln_glass.2.a:0 "Read them all"
+ ln_glass.3.t:0 "The Crypts Remember"
+ ln_glass.3.desc:0 "The old Kings of Winter sit in the dark with iron swords across their knees, and the deeper you go the older the dark gets. Down past the vaults you know, the crypts run on — collapsed, sealed, older than the castle above them.\n\nIn the oldest reach your torch finds a shelf cut into the living rock, and on it, laid flat and orderly as the day they were left, a row of black glass blades. Left by whom? For what? The Starks have sat above this shelf for eight thousand years. Somebody, at the beginning of that, thought there should be knives at the bottom of the house."
+ ln_glass.3.a:0 "Take up one of the blades"
+ ln_glass.4.t:0 "The Watch Wrote It Down"
+ ln_glass.4.desc:0 "The Watch keeps its records in a vault under the armoury, and the oldest of them are not paper but tally-sticks and stone. A hundred daggers a year, from the children to the Watch, for as long as the agreement held. The clerks recorded the counts without comment for three thousand years.\n\nA sworn brother with ink-stained fingers shows you the last entry in that ledger. Then he shows you the shelf where the daggers were kept. It is empty, and the dust on it is old."
+ ln_glass.4.a:0 "Copy what matters"
+ ln_glass.5.t:0 "The Stoneborn Know"
+ ln_glass.5.desc:0 "The Skagosi do not welcome you, exactly. But obsidian stands in the walls of this island like fat in a sheep, and the stoneborn work it the way their fathers did, without ever having stopped.\n\nA carver with a unicorn-bone handle in his fist tells you, in trade-tongue and gesture, what his grandmother told him: the glass is for the cold ones. Not for hunting. Not for war. For the cold ones, when they come back. He says WHEN the way southern men say IN WINTER."
+ ln_glass.5.a:0 "Trade for the knowledge"
+ ln_glass.6.t:0 "The Cache Under the Stones"
+ ln_glass.6.desc:0 "The Fist rises out of the haunted forest like a knuckle of the old world, ringed by a wall no living hand remembers building. The ground here gives things up, if you dig where the ground looks wrong.\n\nUnder a barrow-stone at the crown of the hill: a bundle. A cloak that comes apart at a touch, and inside it, wrapped like something precious or something dangerous, dragonglass — spearheads, knife-blades, arrowheads, dozens of them. Someone cached these here, on the worst ground in the world, against a need they could not name. You stand where they stood. You can name it."
+ ln_glass.6.a:0 "Take the bundle south"
+
+ ln_prophecy.31.c:0 "Cut it properly - I know how the facets run"
+
+ # ── the gate lines. Written as what the player must GO AND DO, not as what he lacks. ──
+ ln_knows_the_glass_gate_tt:0 "You have studied the dragonglass — where the seams run, and how the facets break"
+ ln_needs_an_unedged_weapon_tt:0 "You are carrying a weapon that has not been edged with it yet"
+
+ # ── the modifiers ──
+ ln_knows_the_glass_modifier:0 "Studied the Dragonglass"
+ ln_knows_the_glass_modifier_desc:0 "Went where the records are and learned what the frozen fire is for — where the seams run, how the facets break, and why the children counted out a hundred daggers a year."
+ ln_artifact_dragonglass_edged_modifier:0 "Dragonglass-Edged"
+ ln_artifact_dragonglass_edged_modifier_desc:0 "A properly cut edge of frozen fire, set by a hand that studied the stone. It stays with the weapon, whoever carries it next."

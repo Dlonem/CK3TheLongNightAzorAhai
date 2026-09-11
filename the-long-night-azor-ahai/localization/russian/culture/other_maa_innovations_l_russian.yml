@@ -3,3 +3,6 @@
  # Tribal Era
  culture_parameter_other_parameter:0 "Позволяет набирать упырей в качестве [men_at_arms|E]"
  other_maa:0 "Ледяные пауки"
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ other_maa_flavor:0 "#F Cold things that were never men, moving faster than anything that size should. Where they pass, the ground stays white.#!"

@@ -1,0 +1,85 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.1, THE DEAD ANSWER TO NOBODY LIVING.
+#
+# void, on the Workshop, 9 Sep: "there is a game breaking bug where the others (night king) become vassals
+# under the iron throne specifically the starks, i believe this is happening bc of the megawar rebuilding
+# automation making them vassals to the starks if they hold lands in the de jure north. this bug occurs when
+# in 300 ac dany and young griff invade, and the subsequent resolution of those wars make the others vassals"
+#
+# He is the second reporter of the same hole. Mat.gopack filed the first door in on 30 Aug -- "the Others can
+# arrive vassalized to a wildling king" -- and session39 root-caused it then:
+#
+#   "set_independent / change_liege appear nowhere for him. The fifteen grants are bare get_title, and liege
+#    is a property of the title in this codebase (AGOT's own wildling code has to add change_liege explicitly
+#    at 00_agot_wildling_effects.txt:103-116). So he inherits whatever place in the hierarchy the previous
+#    holder had."
+#
+# WHY 1.0.16a's FIX WAS NOT ENOUGH, AND THIS IS NOT A SECOND SYSTEM. The independence assertion already exists
+# and is already correct -- agot_long_night_scripted_effects.txt:577-587, written for Mat.gopack's report.
+# It runs ONCE, at the Night King's setup. void's door opens years later, when AGOT's megawar resolution
+# re-parents de jure titles the mod never granted, and a one-shot assertion at setup cannot survive that.
+# So the SHAPE below is that block's, lifted verbatim -- same effect, same change type, same guard -- and the
+# only new thing is WHERE it is called from: every road in, plus a yearly sweep for the roads nobody has found
+# yet. One effect to maintain instead of fifteen grant sites.
+#
+# THE DUPLICATION, NAMED RATHER THAN TIDIED. agot_long_night_scripted_effects.txt:577-587 still holds its own
+# copy of this block and is NOT refactored to call the effect below. That is deliberate: the setup-site copy
+# works, it sits deep inside an inherited file with hand-mangled formatting, and rewriting a working path for
+# neatness is exactly the class of change that produced the white dragons on 20 Aug. If that block ever needs
+# editing, replace it with `ln_enforce_independence_effect = yes` then -- the limit here is strictly narrower
+# (it also requires a LIVING liege, which at setup is always true) so the behaviour is identical.
+#
+# becomes_independent inside a title-and-vassal change is the only correct tool; there is no set_liege or
+# clear_liege effect in CK3. Verified in vanilla at 00_war_effects.txt:1243
+# (change_liege_or_become_independent), in AGOT at agot_title_on_actions.txt:3885, and in this mod already.
+# NOTE FOR ANYONE READING THE OLD WORK ORDER: `set_independent` is NOT a CK3 effect. It appears nowhere in
+# vanilla, nowhere in AGOT and nowhere in this mod. It was an invented symbol.
+
+# ── THE ONE ASSERTION ───────────────────────────────────────────────────────────────────────────────────────
+# Root = a character who may be one of the dead.
+#
+# ONLY IF: he is one of them, he is a ruler, he is not already independent, and his DIRECT LIEGE IS LIVING.
+# NEVER IF: his liege is also one of the dead -- an Other in the Night King's realm is where an Other belongs,
+# and freeing him would shatter the dead's own hierarchy from the inside. That clause is the whole reason this
+# is not simply "free every Other": in a chain of Other -> Other -> living king, only the OUTERMOST dead man
+# matches, and freeing him carries his dead vassals out with him, which is the correct answer in one move.
+ln_enforce_independence_effect = {
+	if = {
+		limit = {
+			ln_is_one_of_them_trigger = yes
+			is_ruler = yes
+			is_independent_ruler = no
+			exists = liege
+			liege = { ln_is_one_of_them_trigger = no }
+		}
+		debug_log = "LN_TRACE INDEPENDENCE: one of the dead was serving a living liege and no longer is"
+		debug_log_scopes = yes
+		create_title_and_vassal_change = {
+			type = independency
+			save_scope_as = ln_independence_change
+			add_claim_on_loss = no
+		}
+		becomes_independent = { change = scope:ln_independence_change }
+		resolve_title_and_vassal_change = scope:ln_independence_change
+	}
+}
+
+# ── THE SWEEP ───────────────────────────────────────────────────────────────────────────────────────────────
+# Called once a year from ln_struggle_yearly_work_effect, behind that effect's own calendar stamp, so it runs
+# exactly once a year however many characters reach the line.
+#
+# THE HOOKS ARE NOT ENOUGH ON THEIR OWN, and void's report is the proof: on_title_gain and on_vassal_gained
+# catch a title CHANGING HANDS, but AGOT's megawar automation re-parents a title the dead already hold, which
+# fires neither. A yearly pass is the only thing that closes a door nobody has enumerated yet. It is cheap --
+# every_ruler once a year, and the limit rejects everyone living on its first clause. Same cost profile as
+# ln_bastion_effects.txt, which walks every_ruler twice a year and says so.
+ln_others_independence_sweep_effect = {
+	every_ruler = {
+		limit = {
+			ln_is_one_of_them_trigger = yes
+			is_independent_ruler = no
+			exists = liege
+			liege = { ln_is_one_of_them_trigger = no }
+		}
+		ln_enforce_independence_effect = yes
+	}
+}

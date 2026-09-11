@@ -49,31 +49,73 @@ ln_summon_the_red_priest_effect = {
 		#
 		# ANOTHER PLAYER'S COURT IS ALREADY SAFE and always was -- ln_named_priest_is_free_trigger requires
 		# is_ai = yes on the priest, so neither of them can ever be pulled out of a human player's hall.
-		random = {
-			chance = 10
-			random_list = {
-				50 = {
-					modifier = { add = 15  ln_deed_count_value >= 2 }
-					modifier = { add = 20  ln_deed_count_value >= 4 }
-					modifier = { add = 30  ln_deed_count_value >= 6 }
-					modifier = { add = 15  ln_is_a_champion_of_rhllor_trigger = yes }
-					if = {
-						limit = { ln_named_priest_is_free_trigger = { PRIEST = Melisandre_1 } }
-						character:Melisandre_1 = { save_scope_as = ln_priest }
+		# ══ 1.1.1 -- STANNIS GETS MELISANDRE, AND THE ROLL DOES NOT GET A VOTE. ════════════════════════════
+		# Thomas, 9 Sep: "if the player is playing a Stannis, then they get her one hundred percent of the
+		# time... or at the very least it should be incredibly weighted. Player or AI, if Stannis and
+		# Melisandre are present." Before this, a Stannis player met her one game in twenty at best.
+		#
+		# EVERY AVAILABILITY GATE IS THE EXISTING ONE, UNCHANGED. ln_named_priest_is_free_trigger is called
+		# exactly as the roll below calls it: alive, adult, AI, unlanded, not the asker, and -- the clause
+		# that matters -- never out of a HUMAN PLAYER'S hall. Stannis raises the odds; he does not get to
+		# raid somebody's court. In single-player that means he gets her essentially always, which is the ask.
+		#
+		# AND IT FALLS THROUGH CLEANLY. If she is dead, held by a player, or the start is too early for her to
+		# exist, nothing here fires and the coin below runs exactly as it did before -- and then the generated
+		# priest below that. Nobody ends up with no priest because of this block.
+		#
+		# THE ID IS A GUARANTEE; THE ISLAND IS A WEIGHT. See the header on ln_is_stannis_trigger for why there
+		# are two arms. 75 rather than 100 on the second one because "a Baratheon holding Dragonstone" is the
+		# right shape of answer and not the same claim as "this is Stannis".
+		if = {
+			limit = {
+				NOT = { has_character_flag = ln_a_named_priest_answered }
+				ln_named_priest_is_free_trigger = { PRIEST = Melisandre_1 }
+				ln_is_stannis_trigger = yes
+			}
+			character:Melisandre_1 = { save_scope_as = ln_priest }
+		}
+		else_if = {
+			limit = {
+				NOT = { has_character_flag = ln_a_named_priest_answered }
+				ln_named_priest_is_free_trigger = { PRIEST = Melisandre_1 }
+				ln_is_the_lord_of_dragonstone_trigger = yes
+			}
+			random = {
+				chance = 75
+				character:Melisandre_1 = { save_scope_as = ln_priest }
+			}
+		}
+
+		# 1.1.1 -- AND THE ORDINARY ROLL ONLY HAPPENS IF NOBODY ANSWERED ABOVE. Without this guard the coin
+		# would run anyway and could overwrite Melisandre with Thoros one line after she agreed to come.
+		if = {
+			limit = { NOT = { exists = scope:ln_priest } }
+			random = {
+				chance = 10
+				random_list = {
+					50 = {
+						modifier = { add = 15  ln_deed_count_value >= 2 }
+						modifier = { add = 20  ln_deed_count_value >= 4 }
+						modifier = { add = 30  ln_deed_count_value >= 6 }
+						modifier = { add = 15  ln_is_a_champion_of_rhllor_trigger = yes }
+						if = {
+							limit = { ln_named_priest_is_free_trigger = { PRIEST = Melisandre_1 } }
+							character:Melisandre_1 = { save_scope_as = ln_priest }
+						}
+						else_if = {
+							limit = { ln_named_priest_is_free_trigger = { PRIEST = Brotherhood_8 } }
+							character:Brotherhood_8 = { save_scope_as = ln_priest }
+						}
 					}
-					else_if = {
-						limit = { ln_named_priest_is_free_trigger = { PRIEST = Brotherhood_8 } }
-						character:Brotherhood_8 = { save_scope_as = ln_priest }
-					}
-				}
-				50 = {
-					if = {
-						limit = { ln_named_priest_is_free_trigger = { PRIEST = Brotherhood_8 } }
-						character:Brotherhood_8 = { save_scope_as = ln_priest }
-					}
-					else_if = {
-						limit = { ln_named_priest_is_free_trigger = { PRIEST = Melisandre_1 } }
-						character:Melisandre_1 = { save_scope_as = ln_priest }
+					50 = {
+						if = {
+							limit = { ln_named_priest_is_free_trigger = { PRIEST = Brotherhood_8 } }
+							character:Brotherhood_8 = { save_scope_as = ln_priest }
+						}
+						else_if = {
+							limit = { ln_named_priest_is_free_trigger = { PRIEST = Melisandre_1 } }
+							character:Melisandre_1 = { save_scope_as = ln_priest }
+						}
 					}
 				}
 			}

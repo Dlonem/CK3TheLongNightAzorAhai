@@ -12,24 +12,80 @@
 #   * ln_watch_yearly's sweep (zz_ln_nw_guard_effects.txt) -- the self-heal for every save where a brother
 #     is already sitting on inherited land, including everything NHNster already has.
 #
-# ONLY IF: the gainer is a sworn brother by AGOT's own definition (agot_is_member_of_nights_watch), the title
-# is county-tier or better, and it is OUTSIDE the Watch -- not de jure k_the_wall, not one of our ranger
-# company titles, and the gainer is not himself the Night's Watch government (the Lord Commander's own title
-# flow is AGOT's on_title_gain handler, shadowed in zz_ln_shadows, and this must not fight it).
+# ONLY IF: the gainer is a sworn brother by AGOT's own definition (agot_is_member_of_nights_watch) and the
+# title is OUTSIDE the Watch -- not k_the_wall, not de jure inside it, not one of our ranger company titles.
 # NEVER IF: any of that fails, or no lawful hand can be found to take it -- then it FAILS OPEN and the title
 # simply stays, which is exactly the behaviour every save has today.
+#
+# ══ 1.1.1 -- THE 1.0.15 GUARD HAD TWO DOORS LEFT OPEN, AND THOMAS WALKED THROUGH ONE OF THEM. ═══════════════
+# Thomas, 10 Sep, from his own campaign: "the night's watch inherited some random parcel of land in the north,
+# and that was pretty weird. Like, there was just a random part of the wall."
+#
+# HOLE 1 -- `NOT = { government_has_flag = government_is_nw }`. That clause exempted the Lord Commander and all
+# eighteen castle keepers, and those are precisely the brothers who ARE landed, so their holdings paint on the
+# map in the Watch's colours. A county in the North inherited by any of them shows up as exactly what Thomas
+# described: a detached piece of the Wall's realm sitting out in the North. It is also why the guard could
+# never touch the character in the report it was written for -- NHNster named JEOR MORMONT, who is the Lord
+# Commander and therefore carried government_is_nw. Alliser Thorne it would have caught; Jeor it never could.
+#
+# The clause was there so this would not fight AGOT's own on_title_gain handler over the Lord Commander's seat.
+# It does not need to be: the two Wall clauses below already refuse k_the_wall and everything de jure inside it
+# on their own terms, and ln_is_a_ranger_title covers the companies. Nothing this guard can now reach is a
+# title the Watch is supposed to hold.
+#
+# HOLE 2 -- `tier >= tier_county`. A barony was never renounced, by this guard or by the yearly sweep. A barony
+# IS a random parcel of land, and a third son holding a lone barony inside somebody else's county is a
+# character this codebase already knows about (ln_lay_down_the_realm_effect exists for exactly him).
+#
+# THE ONE THING THE TIER FLOOR WAS ACCIDENTALLY DOING RIGHT, and which is now explicit instead: CK3 refuses to
+# move a county's CAPITAL barony on its own -- "Trying to change ownership of a capital barony; change the
+# ownership of the county instead" -- and the call fails silently when it happens. Same trigger_if that
+# zz_ln_nights_watch_effects.txt:60-63 uses for the same engine rule, verbatim: if the county over the barony
+# is his too, the county carries it and this skips the barony.
 #
 # Root = the character who gained the title; scope:title = the title (vanilla's on_title_gain_inheritance
 # contract, same scopes our ln_others_title_gain hook already relies on for on_title_gain).
 ln_nw_title_inheritance_guard = {
 	trigger = {
 		agot_is_member_of_nights_watch = yes
-		NOT = { government_has_flag = government_is_nw }
 		scope:title ?= {
-			tier >= tier_county
 			NOT = { this = title:k_the_wall }
 			NOT = { target_is_de_jure_liege_or_above = title:k_the_wall }
 			NOT = { has_variable = ln_is_a_ranger_title }
+
+			# ── 1.1.1b: AND A TITLE THAT IS NOT LAND IS NOT WHAT THE OATH IS ABOUT. ──────────────────
+			# The first live run after 1.1.1 caught this in four minutes. Dropping the
+			# government_is_nw exemption let the guard reach two titles it has no business touching,
+			# both of them landless offices rather than land:
+			#
+			#   LN_TRACE NW GUARD: no lawful recipient found ... title: First Ranger (d_nw_landless_first_ranger)
+			#   LN_TRACE NW GUARD: no lawful recipient found ... title: Harriers of Borremose (x_d_laamp_1431)
+			#
+			# Both FAILED OPEN, so nothing was taken -- but that was luck, not design. Had the search
+			# found a lawful hand, the guard would have posted AGOT's First Ranger to a southern lord.
+			#
+			# Three overlapping guards, because these are three different shapes of "not land":
+			#   is_landless_type_title -- adventurer and LAAMP company titles (the x_d_laamp_* one).
+			#     Vanilla's own test, paired with is_noble_family_title in 00_war_effects.txt:1370 and
+			#     00_faction_effects.txt:348, and used by AGOT at title_on_actions.txt:712.
+			#   any_de_jure_county above county tier -- a duchy or kingdom with no de jure counties is
+			#     titular, which is the general rule the First Ranger falls under. Counties are never
+			#     titular in CK3, so the test is scoped above them.
+			#   d_nw_landless_first_ranger by name -- AGOT exempts this exact title in their own
+			#     agot_on_title_gain_nightswatch, and our shadow of that handler carries the same
+			#     exemption. Naming it here keeps the three copies saying the same thing.
+			is_landless_type_title = no
+			is_noble_family_title = no
+			NOT = { this = title:d_nw_landless_first_ranger }
+			trigger_if = {
+				limit = { tier > tier_county }
+				any_de_jure_county = { always = yes }
+			}
+
+			trigger_if = {
+				limit = { tier = tier_barony }
+				NOT = { title_province.county.holder ?= root }
+			}
 		}
 	}
 	effect = {

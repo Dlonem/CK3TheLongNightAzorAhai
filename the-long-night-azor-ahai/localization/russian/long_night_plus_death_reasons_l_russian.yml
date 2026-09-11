@@ -2,3 +2,7 @@
 
  death_dawn_broke:0 "рассыпался безжизненной плотью, когда занялась заря и Иные пали"
  death_claimed_by_cold:0 "был наконец забран холодом, когда тёмные чары, державшие мёртвых, распались"
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ death_the_dawn:0 "fell in the last hour of the Long Night"
+ death_the_dawn_killer:0 "fell to [TARGET_CHARACTER.GetUIName] in the last hour of the Long Night"

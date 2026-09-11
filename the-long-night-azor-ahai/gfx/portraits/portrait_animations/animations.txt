@@ -5,6 +5,9 @@
 # five wight_pose_* entries inside idle -> male (wounded, loss, aggressive, yield, stayback). Verified
 # 27 Aug by diff against AGOT 0.5.1: our copy is a strict SUPERSET -- 77 lines added, ZERO lines of theirs
 # removed or altered. It is not stale today.
+# RE-VERIFIED 4 Sep 2026 against the 0.5.2 hotfix: AGOT changed exactly one line (dragon_egg_idle now reads
+# has_trait_with_flag = can_not_bond_dragon instead of has_trait = dragonwidowed) and it is carried here. Same 77 lines
+# of ours, zero of theirs removed. The diff command that proved it: diff AGOT/animations.txt ours | grep "^<".
 #
 # WHY IT IS A WHOLE-FILE COPY AND NOT A SMALL ADDITIVE FILE. The directory does merge by file -- AGOT itself
 # ships five (animations.txt, b_agot_animations.txt, c_agot_eggs_, d_agot_sword_, e_agot_dragon_) and other
@@ -911,7 +914,7 @@ idle = {
 					add = 100
 					age >= 10
 					NOR = {
-						has_trait = dragonwidowed
+						has_trait_with_flag = can_not_bond_dragon
 						has_character_modifier = agot_dragon_disinterest
 						any_relation = {
 							type = agot_dragon

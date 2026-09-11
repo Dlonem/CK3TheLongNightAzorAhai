@@ -130,24 +130,96 @@ ln_nw_renounce_title_effect = {
 # happened: a landed sworn brother whose primary title is southern hands the whole stack back, one title a
 # year -- gentle on purpose, so a save with years of accumulated leakage un-knots itself without a single
 # frame spike, and any brother the guard above catches at the moment of inheritance never reaches this.
+# ══ 1.1.1 -- THE SAME TWO HOLES AS THE ON-GAIN GUARD, CLOSED THE SAME WAY. ══════════════════════════════════
+# The government exemption and the county-tier floor are both gone; the capital-barony skip replaces what the
+# floor was accidentally protecting. Full working in the header of
+# common/on_action/zz_ln_nw_inheritance_on_actions.txt -- read that first, it is the same fix twice.
+# The two limits below must stay identical to each other: the `any_held_title` one decides whether there is
+# work to do and the `random_held_title` one picks the title, and a brother who passes the first and matches
+# nothing in the second is a silent no-op once a year, forever.
 ln_nw_holdings_yearly_selfheal_effect = {
 	if = {
 		limit = {
 			agot_is_member_of_nights_watch = yes
-			NOT = { government_has_flag = government_is_nw }
 			any_held_title = {
-				tier >= tier_county
 				NOT = { this = title:k_the_wall }
 				NOT = { target_is_de_jure_liege_or_above = title:k_the_wall }
 				NOT = { has_variable = ln_is_a_ranger_title }
+
+				# ── 1.1.1b: AND A TITLE THAT IS NOT LAND IS NOT WHAT THE OATH IS ABOUT. ──────────────────
+				# The first live run after 1.1.1 caught this in four minutes. Dropping the
+				# government_is_nw exemption let the guard reach two titles it has no business touching,
+				# both of them landless offices rather than land:
+				#
+				#   LN_TRACE NW GUARD: no lawful recipient found ... title: First Ranger (d_nw_landless_first_ranger)
+				#   LN_TRACE NW GUARD: no lawful recipient found ... title: Harriers of Borremose (x_d_laamp_1431)
+				#
+				# Both FAILED OPEN, so nothing was taken -- but that was luck, not design. Had the search
+				# found a lawful hand, the guard would have posted AGOT's First Ranger to a southern lord.
+				#
+				# Three overlapping guards, because these are three different shapes of "not land":
+				#   is_landless_type_title -- adventurer and LAAMP company titles (the x_d_laamp_* one).
+				#     Vanilla's own test, paired with is_noble_family_title in 00_war_effects.txt:1370 and
+				#     00_faction_effects.txt:348, and used by AGOT at title_on_actions.txt:712.
+				#   any_de_jure_county above county tier -- a duchy or kingdom with no de jure counties is
+				#     titular, which is the general rule the First Ranger falls under. Counties are never
+				#     titular in CK3, so the test is scoped above them.
+				#   d_nw_landless_first_ranger by name -- AGOT exempts this exact title in their own
+				#     agot_on_title_gain_nightswatch, and our shadow of that handler carries the same
+				#     exemption. Naming it here keeps the three copies saying the same thing.
+				is_landless_type_title = no
+				is_noble_family_title = no
+				NOT = { this = title:d_nw_landless_first_ranger }
+				trigger_if = {
+					limit = { tier > tier_county }
+					any_de_jure_county = { always = yes }
+				}
+
+				trigger_if = {
+					limit = { tier = tier_barony }
+					NOT = { title_province.county.holder ?= root }
+				}
 			}
 		}
 		random_held_title = {
 			limit = {
-				tier >= tier_county
 				NOT = { this = title:k_the_wall }
 				NOT = { target_is_de_jure_liege_or_above = title:k_the_wall }
 				NOT = { has_variable = ln_is_a_ranger_title }
+
+				# ── 1.1.1b: AND A TITLE THAT IS NOT LAND IS NOT WHAT THE OATH IS ABOUT. ──────────────────
+				# The first live run after 1.1.1 caught this in four minutes. Dropping the
+				# government_is_nw exemption let the guard reach two titles it has no business touching,
+				# both of them landless offices rather than land:
+				#
+				#   LN_TRACE NW GUARD: no lawful recipient found ... title: First Ranger (d_nw_landless_first_ranger)
+				#   LN_TRACE NW GUARD: no lawful recipient found ... title: Harriers of Borremose (x_d_laamp_1431)
+				#
+				# Both FAILED OPEN, so nothing was taken -- but that was luck, not design. Had the search
+				# found a lawful hand, the guard would have posted AGOT's First Ranger to a southern lord.
+				#
+				# Three overlapping guards, because these are three different shapes of "not land":
+				#   is_landless_type_title -- adventurer and LAAMP company titles (the x_d_laamp_* one).
+				#     Vanilla's own test, paired with is_noble_family_title in 00_war_effects.txt:1370 and
+				#     00_faction_effects.txt:348, and used by AGOT at title_on_actions.txt:712.
+				#   any_de_jure_county above county tier -- a duchy or kingdom with no de jure counties is
+				#     titular, which is the general rule the First Ranger falls under. Counties are never
+				#     titular in CK3, so the test is scoped above them.
+				#   d_nw_landless_first_ranger by name -- AGOT exempts this exact title in their own
+				#     agot_on_title_gain_nightswatch, and our shadow of that handler carries the same
+				#     exemption. Naming it here keeps the three copies saying the same thing.
+				is_landless_type_title = no
+				is_noble_family_title = no
+				NOT = { this = title:d_nw_landless_first_ranger }
+				trigger_if = {
+					limit = { tier > tier_county }
+					any_de_jure_county = { always = yes }
+				}
+
+				trigger_if = {
+					limit = { tier = tier_barony }
+					NOT = { title_province.county.holder ?= root }
+				}
 			}
 			save_scope_as = title
 		}

@@ -277,3 +277,9 @@ frostborn_culture_name:0 "Иные"
  # -- renaming them means editing the CB file to fix a string, and the CB file is not worth the risk.
  great_ranging_white_peace_desc:0 "Война кончается, не кончившись. Условий не заключают, потому что заключать их не с кем — воинство просто перестаёт приходить, и те, кто остался, опускают щиты и ждут, значит ли это хоть что-нибудь.\n\nНе значит. Мёртвые не разбиты. Они просто в другом месте."
  great_ranging_invalidated_desc:0 "Война окончена, потому что исчезла её причина. То, ради чего созвали эти знамёна, больше не стоит, а войне нужно быть о чём-то.\n\nРога трубят отход. Милость это или лишь передышка — здесь никто ответить не может."
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ ln_wfd_no_recent_victory:0 "The Others must not be savoring a recent victory — unless the War for the Dawn is already being fought, in which case you may still join it."
+ SCOURING_CB:0 "Scouring"
+ ln_wfd_already_at_war:0 "You are already at war — though if the War for the Dawn is being fought, you may still march to it."
+ ln_wfd_never_been_beaten:0 "No one has yet thrown the dead back. Until an army of the living has beaten them in the field, there is no war to march to — only a winter that has not been argued with."

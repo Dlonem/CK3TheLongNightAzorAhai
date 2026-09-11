@@ -21,3 +21,6 @@
 # localization at all -- "Missing loc for name_list_others" at every load, and the list showed a raw key
 # in the culture window. AGOT localizes its own the same way: name_list_northman:0 "Northman".
  name_list_others:0 "Иные"
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ Other:0 "Other"

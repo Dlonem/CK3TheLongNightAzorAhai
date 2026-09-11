@@ -661,7 +661,24 @@ other_cb = {
 	defender_capital_gives_war_score = yes				# 1.0.15d: taking the seat IS the win condition
 	attacker_score_from_occupation_scale = 150
 	max_attacker_score_from_occupation = 150
-	attacker_wargoal_percentage = 0.8
+	# ══ 1.1.0b -- ONCE THE DEAD HOLD THE GROUND, THE WAR ENDS. ═══════════════════════════════════════════
+	# Measured on the 4 Sep 2026 Strong run (283-305 AC save): south of the Wall every war took 12-23 months
+	# and paid out 2-6 counties, ~1.75 counties a year against the 6.3/yr measured for 1.0.8, and the pauses
+	# between wars were already 1-3 months -- so the length of the WAR was the whole gap. Battles were never
+	# the problem (the dead won every field), and 1.0.15d's occupation keys never closed a war on their own.
+	# Thomas, 4 Sep: "once they hold the entire county and they've won a battle, there really isn't too much
+	# awareness left." Two keys, both the engine's own and both already used by AGOT's ranging war
+	# (00_agot_nights_watch_wars.txt: attacker_ticking_warscore = 1, attacker_wargoal_percentage = 1):
+	#   attacker_wargoal_percentage 0.8 -> 0.6   -- the goal counts as HELD once the dead occupy six tenths of
+	#                                              it, not four fifths of a kingdom's every last holding.
+	#   attacker_ticking_warscore = 0.5          -- and from that day the score climbs half a point a day
+	#                                              (vanilla default 0.055). Held ground plus a won field
+	#                                              closes the war inside a season instead of a second winter.
+	# Nothing here touches what the living can do: the defender's ticking, delay and battle cap stay at the
+	# defaults, so a defender who keeps the dead OFF the ground still gains on them after a year exactly as
+	# before. The Night King has to take the land; he simply is not made to keep proving it.
+	attacker_wargoal_percentage = 0.6
+	attacker_ticking_warscore = 0.5
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
 	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
 
@@ -1209,7 +1226,24 @@ other_cb_duchy = {
 	defender_capital_gives_war_score = yes				# 1.0.15d: taking the seat IS the win condition
 	attacker_score_from_occupation_scale = 150
 	max_attacker_score_from_occupation = 150
-	attacker_wargoal_percentage = 0.8
+	# ══ 1.1.0b -- ONCE THE DEAD HOLD THE GROUND, THE WAR ENDS. ═══════════════════════════════════════════
+	# Measured on the 4 Sep 2026 Strong run (283-305 AC save): south of the Wall every war took 12-23 months
+	# and paid out 2-6 counties, ~1.75 counties a year against the 6.3/yr measured for 1.0.8, and the pauses
+	# between wars were already 1-3 months -- so the length of the WAR was the whole gap. Battles were never
+	# the problem (the dead won every field), and 1.0.15d's occupation keys never closed a war on their own.
+	# Thomas, 4 Sep: "once they hold the entire county and they've won a battle, there really isn't too much
+	# awareness left." Two keys, both the engine's own and both already used by AGOT's ranging war
+	# (00_agot_nights_watch_wars.txt: attacker_ticking_warscore = 1, attacker_wargoal_percentage = 1):
+	#   attacker_wargoal_percentage 0.8 -> 0.6   -- the goal counts as HELD once the dead occupy six tenths of
+	#                                              it, not four fifths of a kingdom's every last holding.
+	#   attacker_ticking_warscore = 0.5          -- and from that day the score climbs half a point a day
+	#                                              (vanilla default 0.055). Held ground plus a won field
+	#                                              closes the war inside a season instead of a second winter.
+	# Nothing here touches what the living can do: the defender's ticking, delay and battle cap stay at the
+	# defaults, so a defender who keeps the dead OFF the ground still gains on them after a year exactly as
+	# before. The Night King has to take the land; he simply is not made to keep proving it.
+	attacker_wargoal_percentage = 0.6
+	attacker_ticking_warscore = 0.5
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
 	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
 
@@ -1692,7 +1726,24 @@ other_cb_empire = {
 	defender_capital_gives_war_score = yes				# 1.0.15d: taking the seat IS the win condition
 	attacker_score_from_occupation_scale = 150
 	max_attacker_score_from_occupation = 150
-	attacker_wargoal_percentage = 0.8
+	# ══ 1.1.0b -- ONCE THE DEAD HOLD THE GROUND, THE WAR ENDS. ═══════════════════════════════════════════
+	# Measured on the 4 Sep 2026 Strong run (283-305 AC save): south of the Wall every war took 12-23 months
+	# and paid out 2-6 counties, ~1.75 counties a year against the 6.3/yr measured for 1.0.8, and the pauses
+	# between wars were already 1-3 months -- so the length of the WAR was the whole gap. Battles were never
+	# the problem (the dead won every field), and 1.0.15d's occupation keys never closed a war on their own.
+	# Thomas, 4 Sep: "once they hold the entire county and they've won a battle, there really isn't too much
+	# awareness left." Two keys, both the engine's own and both already used by AGOT's ranging war
+	# (00_agot_nights_watch_wars.txt: attacker_ticking_warscore = 1, attacker_wargoal_percentage = 1):
+	#   attacker_wargoal_percentage 0.8 -> 0.6   -- the goal counts as HELD once the dead occupy six tenths of
+	#                                              it, not four fifths of a kingdom's every last holding.
+	#   attacker_ticking_warscore = 0.5          -- and from that day the score climbs half a point a day
+	#                                              (vanilla default 0.055). Held ground plus a won field
+	#                                              closes the war inside a season instead of a second winter.
+	# Nothing here touches what the living can do: the defender's ticking, delay and battle cap stay at the
+	# defaults, so a defender who keeps the dead OFF the ground still gains on them after a year exactly as
+	# before. The Night King has to take the land; he simply is not made to keep proving it.
+	attacker_wargoal_percentage = 0.6
+	attacker_ticking_warscore = 0.5
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
 	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
 

@@ -715,6 +715,11 @@ ln_struggle_yearly_work_effect = {
 		ln_watch_strength_catalyst_effect = yes
 		ln_dragon_census_effect = yes
 
+		# 1.1.1 (void) -- THE DEAD ANSWER TO NOBODY LIVING, checked once a year. The two on_action hooks catch
+		# a title changing hands; this catches AGOT's megawar automation re-parenting a title the dead already
+		# hold, which fires no hook at all. zz_ln_independence_effects.txt has the report and the reasoning.
+		ln_others_independence_sweep_effect = yes
+
 		# ══ 1.0.15 -- THE BACKSTOP THAT NOTICES A DAWN NOBODY CLEANED UP AFTER. ════════════════════════
 		# Every proper ending calls ln_the_dark_is_spent_effect at the moment the Night King dies. But a
 		# story the engine destroyed silently, a save that rode through the old invalidation bug, or any

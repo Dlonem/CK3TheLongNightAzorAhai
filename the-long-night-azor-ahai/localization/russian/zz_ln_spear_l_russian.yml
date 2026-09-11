@@ -1,0 +1,33 @@
+﻿l_russian:
+# 1.1.1 -- scaffolded from the English file so no key renders raw in Russian. Untranslated; English text until replaced.
+
+ # AGOT: The Long Night & Azor Ahai -- the spear.
+ # TOKEN FORM: bare saved-scope names, the form the rest of this mod uses and the one proven live.
+ # A dragon is an ordinary character in AGOT, so the person promotes work on it normally.
+
+ ln_spear.1.t:0 "Out of the Sky"
+
+ ln_spear.1.desc.lived_champion:0 "The field is decided. From up here I cannot tell whose way it went, and for a moment I do not much care.\n\nThen [ln_spear_dragon.GetFirstName] banks for another pass, and down on the ice something raises its arm.\n\nI never see the spear. What I see is [ln_spear_dragon.GetFirstName]’s left wing stop working—beating, and then simply not there—and I hear a sound come out of [ln_spear_dragon.GetHerHim] that I am going to be hearing for the rest of my life.\n\nWe come down together. I remember the ground arriving very fast and being very white, and I remember thinking, with a clarity that frightens me more than the fall did, that this is not how it ends.\n\nI am broken in a great many places and I am on my feet inside the hour, and the men who dragged me out of the wreck of [ln_spear_dragon.GetHerHim] will not look straight at me. One of them has started praying in a language I do not have. Whatever the red god wants from me, it is evidently not finished asking.\n\n#bold It is standing on the ice a mile away and it is looking back at me, and I do not think either of us is surprised.#!"
+
+ ln_spear.1.desc.lived:0 "The field is decided. From up here I cannot tell whose way it went, and for a moment I do not much care.\n\nThen [ln_spear_dragon.GetFirstName] banks for another pass, and down on the ice something raises its arm.\n\nI never see the spear. I do not think anyone sees the spear. What I see is [ln_spear_dragon.GetFirstName]’s left wing stop working—beating, and then simply not there—and I hear a sound come out of [ln_spear_dragon.GetHerHim] that I am going to be hearing for the rest of my life.\n\nWe come down together. I remember the ground arriving very fast and being very white. I do not remember hitting it.\n\nThere are men standing over me now, shouting something I cannot hear any of. My left side does not answer when I ask it to, and there is a great deal of blood that I am fairly sure is mine. [ln_spear_dragon.GetFirstName] is two hundred yards off with steam coming off [ln_spear_dragon.GetHerHis] mouth, and nothing else about [ln_spear_dragon.GetHerHim] is moving.\n\n#bold They have never been able to reach us up there. That was the whole of it. That was the only thing we had.#!"
+
+ ln_spear.1.desc.died:0 "The field is decided. From up here I cannot tell whose way it went, and for a moment I do not much care.\n\nThen [ln_spear_dragon.GetFirstName] banks for another pass, and down on the ice something raises its arm.\n\nI never see the spear. What I see is [ln_spear_dragon.GetFirstName]’s left wing stop working—beating, and then simply not there—and the horizon comes around to a place horizons do not go.\n\nWe come down together. There is a stretch of it that lasts longer than it has any right to, where the ground is still a long way off and there is nothing whatsoever to hold on to, and I have time to think one clear thought.\n\n#bold They have never been able to reach us up there.#!"
+
+ ln_spear.1.a:0 "Get me up. I want to see what it did to [ln_spear_dragon.GetFirstName]."
+ ln_spear.1.a.champion:0 "Get me up. It has seen my face now, and I want it to have seen me standing."
+ ln_spear.1.b:0 "So that is how it goes."
+
+ # ── THE TAKEN DRAGON'S RECORD (1.0.12b) ─────────────────────────────────────────
+ ln_dragon_taken_memory:0 "taken by the Night King's spear"
+ ln_dragon_taken_memory_desc:0 "Struck from the sky by the Night King's spear, and raised before the body was cold. The wings still fly. Nothing behind the eyes is what it was."
+ ln_dragon_taken_memory_desc_second_perspective:0 "Your dragon was struck from the sky by the Night King's spear, and raised before the body was cold. It still flies. It is not yours, and it is not it."
+ ln_dragon_taken_memory_desc_third_perspective:0 "This dragon was struck from the sky by the Night King's spear, and raised before the body was cold. It flies for the dead now."
+
+ # ── THE EMPTY SKY (1.0.12b) ─────────────────────────────────────────────────────
+ ln_spear.2.t:0 "The Empty Sky"
+ ln_spear.2.desc:0 "The splints come off my arm in a month, they tell me. Nobody tells me what comes off the rest.\n\nI keep doing the thing where I listen for [ln_spear_dragon.GetHerHim]. Ten years of knowing where [ln_spear_dragon.GetSheHe] was the way you know where your own hand is, and the knowing is still there — it has just gone the wrong colour. [ln_spear_dragon.GetSheHe|U] is north of me. [ln_spear_dragon.GetSheHe|U] is always north of me now.\n\nA shepherd came in yesterday swearing he saw [ln_spear_dragon.GetFirstName] over the ridge, and the hall went quiet, because everyone knows whose [ln_spear_dragon.GetSheHe] was. Pale, he said. Like frost with wings. Still [ln_spear_dragon.GetHerHim]. That is the part I cannot make my mind hold: it is still [ln_spear_dragon.GetHerHis] shape, still [ln_spear_dragon.GetHerHis] wingbeat, still the way [ln_spear_dragon.GetSheHe] banks left before [ln_spear_dragon.GetSheHe] lands.\n\nIt is only that [ln_spear_dragon.GetSheHe] will not be landing for me."
+ ln_spear.2.desc.gone:0 "They tell me [ln_spear_dragon.GetFirstName] is dead — truly dead now, put down somewhere north of the Wall, and this time nothing stood back up.\n\nI thought it would be worse than the first time. It is not. The first time, the dead took [ln_spear_dragon.GetHerHis] shape and flew it like a stolen cloak, and every report of pale wings over the trees was a hook in me.\n\nNow the sky is only empty. A rider can grieve an empty sky."
+ ln_spear.2.a:0 "[ln_spear_dragon.GetSheHe|U] is mine. I will take [ln_spear_dragon.GetHerHim] back, or I will put [ln_spear_dragon.GetHerHim] down myself."
+ ln_spear.2.b:0 "Let me sit with it. [ln_spear_dragon.GetSheHe|U] earned that much."
+ ln_spear.2.c:0 "The fire took [ln_spear_dragon.GetHerHim] and left me. The fire is not done with me."
+

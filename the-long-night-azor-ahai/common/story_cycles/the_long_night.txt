@@ -630,6 +630,102 @@
 
 			ln_absorb_the_frozen_waste_effect = yes
 
+			# ══ 1.1.1b -- SAY WHY, WHEN NOTHING HAPPENS. ════════════════════════════════════════════════
+			# Thomas, 10 Sep, from a live run: "the night king stalling after completely taking the north
+			# ... that may be a bug if he hasn't progressed to take the entire continent."
+			#
+			# The 10 Sep log says the pulse is HEALTHY and the war is simply never declared: 35 passes
+			# through this effect over three and a half game years, `others_heartbeat.1` firing 34 times,
+			# and ZERO `start_war` failures -- so this is not the 10 Aug "No valid titles found" stall,
+			# which was loud. It is the mod's signature failure instead: an absence that logs nothing.
+			#
+			# This is the third generation of the same report. dewi1994 and Grantma filed "AI stops
+			# attacking once it takes the Wall"; the 1.0.12 note further down this file root-caused that
+			# one as stage gates testing a top liege's CAPITAL rather than his realm. Nobody could see
+			# WHICH gate was refusing then either, and the fix took a decade of in-game silence to find.
+			#
+			# So before anyone guesses again: four lines that cost nothing shipped -- debug_log only lands
+			# with -develop -- and answer the question on the next boot. They are ordered so that exactly
+			# one of the first two, or the fourth, always fires, and the third is orthogonal.
+			#
+			# WHAT EACH ONE MEANS IF YOU SEE IT:
+			#   at war      -- the candidate clamp at :715 leaves only neighbours under four counties
+			#                  eligible, so the war branch is unreachable until the current war ends. If
+			#                  this repeats for years, look at the war he is stuck in, not at this pulse.
+			#   cooldowned  -- the same clamp via long_night_cooldown (:728). Expected after a defeat.
+			#   no neighbour-- the candidate search has nothing to return before any stage gate is even
+			#                  asked. That would mean the invasion is boxed in geographically.
+			#   ran free    -- not at war, not cooldowned, and a war still did not follow, which puts the
+			#                  refusal squarely in a stage gate or the rest of the candidate limit below.
+			#
+			# any_neighboring_top_liege_realm_owner is the any_ form of the search this effect already
+			# uses one line down, and it is verified in vanilla at events/dlc/fp2/fp2_struggle_events.txt
+			# line 7285. It is deliberately a LOOSER test than the real limit -- living and independent
+			# only -- so that "no neighbour" means the search is empty at the source rather than that some
+			# gate rejected everyone. If it does not fire and no war follows, the gates are the answer.
+			if = {
+				limit = { is_at_war = yes }
+				debug_log = "LN_TRACE INVASION: pulse ran, but the dead are already at war -- only neighbours under four counties are eligible, so no new war can start this pulse"
+			}
+			if = {
+				limit = { has_character_flag = long_night_cooldown }
+				debug_log = "LN_TRACE INVASION: pulse ran under the post-defeat cooldown -- same clamp, no new war this pulse"
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_neighboring_top_liege_realm_owner = {
+							ln_is_one_of_them_trigger = no
+							is_independent_ruler = yes
+						}
+					}
+				}
+				debug_log = "LN_TRACE INVASION: pulse ran and there is NO independent living neighbour at all -- the candidate search is empty before any stage gate is asked"
+			}
+			if = {
+				limit = {
+					NOT = { is_at_war = yes }
+					NOT = { has_character_flag = long_night_cooldown }
+				}
+				debug_log = "LN_TRACE INVASION: pulse ran free -- not at war, not cooldowned. If no war follows this line, a stage gate or the candidate limit refused every neighbour"
+				debug_log_scopes = yes
+			}
+
+			# ── 1.1.1b: THE SECOND TRACE, aimed. The first run of the lines above (10 Sep, 15 pulses) came
+			# back 8 x "already at war" and 7 x "ran free" -- and on all seven free pulses the candidate
+			# search returned nobody: no war, no fealty absorption. So a gate is refusing every neighbour,
+			# and the only stage gate that can still be armed once the Wall has fallen is the North one.
+			# These say whether it is armed, and whether anyone at all could pass it. The region key is the
+			# one the gate itself uses (world_westeros_the_north, further down this limit).
+			if = {
+				limit = { has_global_variable = ln_north_done }
+				debug_log = "LN_TRACE INVASION: latch ln_north_done is SET -- the North gate is finished and cannot be what refuses"
+			}
+			if = {
+				limit = {
+					has_global_variable = ln_north_unfinished
+					has_character_flag = ln_north_gate_window
+				}
+				debug_log = "LN_TRACE INVASION: the North stage gate is ARMED -- ln_north_unfinished is set and the 20-year window is open, so only a neighbour holding land in the North can be picked"
+			}
+			if = {
+				limit = {
+					has_global_variable = ln_north_unfinished
+					has_character_flag = ln_north_gate_window
+					NOT = {
+						any_neighboring_top_liege_realm_owner = {
+							ln_is_one_of_them_trigger = no
+							is_independent_ruler = yes
+							OR = {
+								capital_province ?= { geographical_region = world_westeros_the_north }
+								any_sub_realm_county = { title_province = { geographical_region = world_westeros_the_north } }
+							}
+						}
+					}
+				}
+				debug_log = "LN_TRACE INVASION: ...and NO living independent neighbour holds a single county in the North -- the North gate is refusing everyone. Whoever still holds northern land is not a top liege the search can see"
+			}
+
 			random_neighboring_top_liege_realm_owner = {
 
 			limit = {
@@ -1158,11 +1254,19 @@
 			# here, because the law names live in a file this session did not verify and an unverified symbol
 			# does not ship. The guard is the honest minimum: he wears the crown when the game will let him,
 			# and the log stops carrying twenty refusals a session for a thing that cannot happen.
+			# ── 1.1.1b: AND THE THIRD GUESS WAS READING THE ARTIFACT. Both guards above were correct and the
+			# artifact still refused 40 times a boot, because neither is the question it asks. The crown is
+			# built on AGOT's crown_of_true_winter_template (00_agot_historical_artifacts_crowns.txt:2017),
+			# whose can_equip is exactly one line: agot_can_wear_crown_trigger. That trigger
+			# (00_agot_crown_triggers.txt:1) wants agot_is_independent_ruler -- vanilla's is_independent_ruler
+			# AND no agot_pwl_direct variable AND no bookmark_independent flag -- and then AGOT's own
+			# coronation test, agot_is_coronated_trigger, not has_realm_law = uncrowned. The Night King fails
+			# one of those and the guard here could not see it because it was asking a different question.
+			#
+			# So this now asks the same one. If the artifact will take him, he puts it on; if not, nothing
+			# runs and nothing logs. Whatever AGOT does to that trigger later, this follows it.
 			if = {
-				limit = {
-					is_independent_ruler = yes
-					NOT = { has_realm_law = uncrowned }
-				}
+				limit = { agot_can_wear_crown_trigger = yes }
 				every_character_artifact = { limit = { has_variable = crown_of_true_winter_artifact } equip_artifact_to_owner_replace = yes }
 			}
 

@@ -1,3 +1,6 @@
 ﻿l_russian:
  ln_fed_the_watch_opinion:0 "Дал людей Дозору"
  ln_turned_the_crow_away_opinion:0 "Прогнал Дозор прочь"
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ other_crime:0 "Is one of the dead"

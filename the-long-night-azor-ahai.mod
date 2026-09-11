@@ -1,4 +1,4 @@
-version="1.1.0a"
+version="1.1.1"
 tags={
 	"Events"
 	"Warfare"

@@ -110,3 +110,14 @@
  ln_nw_keeper_steward_flavor_possessive:0 "Старшего строителя"
  ln_nw_keeper_chancellor_flavor:0 "Вербовщик"
  ln_nw_keeper_chancellor_flavor_possessive:0 "Вербовщика"
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ ln_man_an_empty_castle_plain:0 "Man an Empty Castle"
+ ln_man_an_empty_castle_raven:0 "Send a Raven: Man the Castle"
+ ln_rebuild_the_castle_plain:0 "Restore a Ruined Castle"
+ ln_rebuild_the_castle_raven:0 "Send a Raven: Coin for the Castle"
+ ln_petition_the_realm_plain:0 "Petition the Realm"
+ ln_petition_the_realm_raven:0 "Send a Raven: Petition the Realm"
+ ln_send_men_and_grain_plain:0 "Send Men and Grain to the Wall"
+ ln_send_men_and_grain_raven:0 "Send a Raven: Men and Grain for the Wall"
+ ln_send_men_and_grain_decision_desc_north:0 "Your house has fed the Watch since before there were Kings in the South to forget it. The Wall is the North's roof; the men on it are the North's men, whoever they were born to; and a northern lord who lets Castle Black go hungry will answer for it to his own dead.\n\nSend what the year can spare. It is not generosity. It is the oldest rent in the world, and it has always been paid."

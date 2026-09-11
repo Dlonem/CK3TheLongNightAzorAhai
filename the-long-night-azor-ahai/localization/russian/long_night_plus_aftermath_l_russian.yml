@@ -52,3 +52,7 @@
  ln_restored_ancestral_seat_modifier:0 "Восстановил родовой престол"
  ln_restored_ancestral_seat_modifier_desc:0 "Бежал впереди мёртвых, пережил Долгую Ночь и вернулся домой, чтобы поднять родовой престол из пепла. Песни это запомнят."
  ln_sold_the_north_opinion:0 "Продал северную землю чужеземцам"
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ ln_aftermath.1.desc.watch_held:0 "The Long Night is over. The dead lie still at last — and the Wall is still there, and there are still black cloaks on it.\n\nThey are fewer than they were. Half the castles are ash and the Lord Commander's muster rolls read like a casualty list, but they held the breach and they are holding it now, which is more than any king in Westeros managed in the same years.\n\nBeyond them the survivors of the free folk are waiting, and they are not raiding. They are asking. The realm looks to [ROOT.Char.GetTitledFirstName] for an answer that cannot wait: reinforce the Watch and keep that gate shut — or open it, and settle the free folk in a North with nobody left to farm it.\n\nWhichever road is taken, there will be no walking back."
+ ln_aftermath.1.a.held:0 "The Watch held. Reinforce it, and keep the gate shut."

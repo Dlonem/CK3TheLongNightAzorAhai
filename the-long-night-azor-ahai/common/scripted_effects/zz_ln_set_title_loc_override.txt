@@ -1,6 +1,8 @@
 ﻿# AGOT: The Long Night & Azor Ahai -- 1.0.15a
 # SAME-NAME OVERRIDE of AGOT's set_title_localization_effect (00_agot_character_data_effects.txt).
-# TWIN FILE: an identical copy sits in replace/ so ours parses last under either db-ordering theory.
+# TWIN FILE: RETIRED 4 Sep 2026 (1.1.0b). A copy used to sit in replace/ so ours parsed last under either
+# db-ordering theory; the directory had been empty since 1 Sep and was removed. This is the only copy now, and
+# ln-audit-tools/agotsync.py checks it against AGOT's body on every gate run.
 #
 # =============================== WHAT THIS REPLACED, AND WHY ===============================
 #

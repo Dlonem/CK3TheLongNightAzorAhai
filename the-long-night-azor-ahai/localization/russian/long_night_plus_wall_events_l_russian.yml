@@ -7,3 +7,12 @@
  long_night_plus_wall.2.t:0 "#F Век Героев окончен#!"
  long_night_plus_wall.2.desc:0 "Брандон Строитель поднял её, когда Первые Люди ещё резали свои слова рунами, и восемь тысяч лет всякий коленопреклонённый и король, всякий одичалый и дозорный, всякий мейстер и повитуха прожили свою жизнь в её тени и ни разу не подумали спросить, устоит ли она. Она стояла. Это было единственное обещание, которое мир сдержал.\n\nБольше нет. Стена пала у Чёрного Замка, и в пролом входит сама зима. Вороны летят в каждый замок Вестероса с теми же тремя словами, что Дозор шептал столетиями, — словами, которые были предупреждением, а стали просто погодой: мёртвые идут.\n\nМежду живыми и Долгой Ночью стоит теперь не лёд. Стоите вы."
  long_night_plus_wall.2.a:0 "И теперь начинается наш дозор."
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ long_night_plus_wall.2.desc.watch:0 "Every brother alive heard it go, wherever on the Wall he stood. The vow calls us the shield that guards the realms of men; the shield is gone, and the men remain.\n\n"
+ long_night_plus_wall.2.desc.free_folk:0 "We were told the kneelers' ice would stand forever, and we spent our lives on the wrong side of it. Now there is no wrong side, and the thing we ran from can follow us wherever it likes.\n\n"
+ long_night_plus_wall.2.desc.dragon:0 "The blood of the dragon has heard this story since before the Doom, and every telling of it ends in fire. Something eight thousand years old has just come down, and every eye in the realm is turning toward what flies.\n\n"
+ long_night_plus_wall.2.desc.north:0 "Every Northern child is told the Wall is where the world ends. It ended today, and the North is what stands north of nothing now.\n\n"
+ long_night_plus_wall.2.desc.red:0 "The flames showed a wall of ice and something patient behind it, and tonight the ice is gone. Every sermon was for this; every nightfire is lit for what walks through.\n\n"
+ long_night_plus_wall.2.desc.lord:0 "My maester carried the raven's letter in both hands and could not read it aloud. Whatever I sent north in the years before this, it was not enough, and I will know that for the rest of my life.\n\n"
+ long_night_plus_wall.2.desc.nobody:0 "There is no keep and no banner to shelter under, and the news came the way all news reaches me: late, and from a stranger's mouth. The one wall that mattered is down, and every road now leads somewhere the dead can reach.\n\n"

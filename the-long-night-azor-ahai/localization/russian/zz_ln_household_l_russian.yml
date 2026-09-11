@@ -22,3 +22,13 @@
  # Retained for saves that still carry it. No decision applies or reads this any more.
  ln_household_ledger_cooldown_modifier:0 "Счета сведены"
  ln_household_ledger_cooldown_modifier_desc:0 "Домовые книги недавно свели. Найти в них что-то ещё какое-то время будет нечего."
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ ln_valyria_sword_tt:0 "A #bold Valyrian steel blade#! of uncertain make comes off the ship, into your trunk — the blade in your hand stays in your hand."
+ ln_valyria_eggs_tt:0 "#bold Two dragon eggs#!, colours unknown until they are unwrapped."
+ ln_valyria_dragon_tt:0 "If a living dragon is bonded to you, it is fed and flown: it grows, quickens, and its constitution improves one step — and the blood of the dragon is confirmed in your line."
+ ln_household_mend_decision:0 "Send for the House's Physician"
+ ln_household_mend_decision_desc:0 "The household keeps its own physician, and he asks no questions the ledger has not already answered. Wounds close, fevers break, and the body is given back the years the story took from it.\n\nWhat he cannot mend is a name. What people say about you, you keep."
+ ln_household_mend_decision_tt:0 "Mend the body — wounds, scars, sickness and the weight on the mind."
+ ln_household_mend_decision_confirm:0 "Let him work."
+ ln_household_mend_effect_tt:0 "Every wound, scar, sickness and infirmity is healed, and #V 100#! stress is lifted. Nicknames, reputation and the prophecy are untouched."

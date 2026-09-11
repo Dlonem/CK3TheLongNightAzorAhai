@@ -8,6 +8,45 @@ Newest first.
 
 ---
 
+## Hotfix 1.1.1 — The Watch Keeps No Land
+
+A fix release, no new content. Every change was tested in three live runs from a mid-invasion save before it went out. Safe to add to a running game.
+
+### Bug fixes
+- The Night's Watch keeps no land. A sworn brother who inherits a county or barony outside the Wall now renounces it to its lawful lord. The Lord Commander was exempt from that rule, which is how the Watch ended up holding a random county in the North. The guard never touches the Wall's own castles, the ranging companies, the First Ranger's title or any adventurer company.
+- The dead answer to nobody living. A lord raised by the invasion who still had a living liege stays independent from the day he rises, on every road in: inheritance, conquest and the yearly sweep.
+- The Night King's own crown no longer refuses him. The check was asking a different question than the artifact does; it now asks the same one.
+- A load-time error on the house of the Others is gone. Twenty-seven "failed to fetch a valid house" lines per load, on saves where the house had no living member yet.
+
+### Balance
+- The dead have no control problem. Every county that comes into dead hands is set to full control the day it arrives, and their land recovers control after a siege instead of never. This is the end of the peasant revolts on the Night King's side, and it also means the invasion no longer stalls waiting for one of his own rebellions to finish.
+- The Others cannot run schemes. No hostile or personal schemes from the Night King, the White Walkers or the wights.
+- Stannis gets Melisandre. Send for a Red Priest as Stannis and she comes if she is free; as a Baratheon lord of Dragonstone she comes three times in four. Both now qualify for the decision, and the AI takes it.
+
+### Notes
+- Russian: every key in the mod now exists in Russian. Text added since 1.0.12 shows in English until it is translated, instead of as a raw key.
+- The complete reference for every mechanic in the mod, with the numbers, is now one page: https://dlonem.com/mods/the-long-night/wiki
+
+---
+
+## Hotfix 1.1.0b — Keeping pace with A Game of Thrones
+
+A hotfix for this morning's A Game of Thrones update (the 0.5.2 hotfix pushed 4 September), plus one pacing fix from a full Long Night run on Strong. No new content.
+
+### Bug Fixes
+- The dead no longer spend a second winter proving a war they have already won. On a 22-year Strong run, every war south of the Wall took one to two years and paid out two to six counties — the Night King was winning every battle and holding the ground, and the scoreboard kept asking for more. An invasion war now counts its goal as held once the dead occupy six tenths of it, and from that day the war score climbs on its own, so held ground plus a won field closes a war inside a season. Nothing the living can do has changed: the defender's own war score, delay and battle cap are untouched, and a lord who keeps the dead off his land still gains on them after a year exactly as before.
+
+### Compatibility
+- The seventy-two named dragons look the way AGOT now paints them. AGOT retuned thirty-eight appearance values in its curated dragon table — mostly fire colour, plus a few scale and horn tones on Sunfyre, Tessarion, Vermithor and Arrax. This mod keeps a copy of that table to repair dragons whose stored appearance has gone blank, and it now matches theirs exactly.
+- A camp with a dragon in it cannot be moved beyond the Wall. AGOT added this rule today and this mod's copy of the camp-moving rule now carries it — with the two exceptions the rest of this mod already makes: once the dead hold a piece of the Wall the ward is broken and the door is open, and a rider who already forced a dragon over the Wall is not refused a second time.
+- Dragon eggs are held by the right people. AGOT changed one line in its portrait animations (who may be shown cradling an egg) and this mod's copy of that file carries the same line.
+
+### Notes
+- Safe to drop onto a running save. The pacing change applies to wars declared after you load, not to one already in progress.
+- Every scripted rule, effect, trigger, on_action and event this mod shares a name with was re-diffed against the new AGOT build; the rest are current.
+
+---
+
 ## Hotfix 1.1.0a — One Host
 
 No new content. Twelve fixes to things 1.1.0 shipped with. The first group are one idea from several directions — the dead are one host: they do not sue each other for land, they do not besiege each other, and nobody keeps a friend on that side of the line. The rest come out of a full playthrough log (a Trial of Seven, a dragon speared out of the sky, and the Night King beaten in the snow), triaged file by file.

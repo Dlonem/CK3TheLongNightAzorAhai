@@ -77,6 +77,15 @@ ln_send_for_a_red_priest_decision = {
 			has_character_flag = ln_looked_north
 			has_character_flag = ln_named_it_first
 			ln_has_deed_greensight_trigger = yes
+			# 1.1.1 -- AND STANNIS NEEDS NO OMEN. This decision is the ONLY caller of ln_pledge.1, which is
+			# the only caller of ln_summon_the_red_priest_effect -- so the Melisandre branch added there is
+			# unreachable for a man who cannot open this door. At a 300 AC start Stannis is fots_seven and
+			# stormlander_main, holds no greensight and carries no warning flag, so before the Cold Winds he
+			# had no route in at all and the feature would simply never have fired for the one character it
+			# was written for. The Lord of Dragonstone is where the red priests came ashore; that is knowing
+			# enough. Both triggers live in zz_ln_prophecy_triggers.txt with their verification.
+			ln_is_stannis_trigger = yes
+			ln_is_the_lord_of_dragonstone_trigger = yes
 			struggle:ln_long_night_struggle ?= {
 				OR = {
 					is_struggle_phase = ln_phase_cold_winds
@@ -103,6 +112,19 @@ ln_send_for_a_red_priest_decision = {
 	# fire priest is a genuinely strange act, and it should read as one.
 	ai_will_do = {
 		base = 5
+
+		# 1.1.1 -- THE AI ARM OF THE MELISANDRE FIX. Thomas asked for "player or AI", and without this the AI
+		# half never happens: base 5 against -20 for zealous means an AI Stannis effectively never takes this
+		# decision, so the guaranteed branch inside ln_summon_the_red_priest_effect would only ever fire for a
+		# human. An AI Stannis with Melisandre in his hall is the world telling its own story correctly and it
+		# costs nothing. Large enough to clear the zealous penalty and the 0.1 factor below on its own.
+		modifier = {
+			add = 120
+			OR = {
+				ln_is_stannis_trigger = yes
+				ln_is_the_lord_of_dragonstone_trigger = yes
+			}
+		}
 
 		# Personality (v0.2.1 pass): a zealous son of the Seven does not write to a foreign fire,
 		# whatever the weather. The frightened and the searching do.

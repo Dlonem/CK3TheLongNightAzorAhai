@@ -84,3 +84,7 @@
  ln_catalyst_dragon_born_desc:0 "Дракон вылупляется в мире, где их осталось трое или меньше.\n\n#weak Не чаще раза в три года и никогда, пока драконы обычны.#!"
  ln_catalyst_minor_house_ended:0 "Пресёкся малый дом"
  ln_catalyst_minor_house_ended_desc:0 "Малый [house|E] теряет последнего своего члена. Здесь важно их число.\n\n#weak Не чаще раза в два года.#!"
+
+# 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
+ ln_catalyst_winter_is_coming:0 "The warning has begun"
+ ln_catalyst_winter_is_coming_desc:0 "White ravens went out. The wells freeze in the second moon and the free folk are coming south in numbers that are not raiding numbers.\n\n#EMP This phase does not fill a bar.#! It lasts somewhere between a reign and a lifetime, and nothing you do will tell you which. Build now.\n\n#weak Once, when the winds turn.#!"

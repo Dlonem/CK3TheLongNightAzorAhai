@@ -1,0 +1,24 @@
+[h1]1.1.1 — The Watch Keeps No Land[/h1]
+
+A fix release, no new content. Every change was tested in three live runs from a mid-invasion save before it went out. Safe to add to a running game.
+
+[h2]Bug fixes[/h2]
+[list]
+[*] The Night's Watch keeps no land. A sworn brother who inherits a county or barony outside the Wall now renounces it to its lawful lord. The Lord Commander was exempt from that rule, which is how the Watch ended up holding a random county in the North. The guard never touches the Wall's own castles, the ranging companies, the First Ranger's title or any adventurer company.
+[*] The dead answer to nobody living. A lord raised by the invasion who still had a living liege stays independent from the day he rises, on every road in: inheritance, conquest and the yearly sweep.
+[*] The Night King's own crown no longer refuses him. The check was asking a different question than the artifact does; it now asks the same one.
+[*] A load-time error on the house of the Others is gone. Twenty-seven "failed to fetch a valid house" lines per load, on saves where the house had no living member yet.
+[/list]
+
+[h2]Balance[/h2]
+[list]
+[*] The dead have no control problem. Every county that comes into dead hands is set to full control the day it arrives, and their land recovers control after a siege instead of never. This is the end of the peasant revolts on the Night King's side, and it also means the invasion no longer stalls waiting for one of his own rebellions to finish.
+[*] The Others cannot run schemes. No hostile or personal schemes from the Night King, the White Walkers or the wights.
+[*] Stannis gets Melisandre. Send for a Red Priest as Stannis and she comes if she is free; as a Baratheon lord of Dragonstone she comes three times in four. Both now qualify for the decision, and the AI takes it.
+[/list]
+
+[h2]Notes[/h2]
+[list]
+[*] Russian: every key in the mod now exists in Russian. Text added since 1.0.12 shows in English until it is translated, instead of as a raw key.
+[*] The complete reference for every mechanic in the mod, with the numbers, is now one page: https://dlonem.com/mods/the-long-night/wiki
+[/list]

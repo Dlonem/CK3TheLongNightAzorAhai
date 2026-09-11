@@ -90,7 +90,24 @@ ln_is_one_of_them_trigger = {
 		has_trait = other_trait
 		has_trait = nightking
 		has_trait = wight_trait
-		house ?= house:house_theothers
+		# 1.1.1b -- GUARDED, because the bare lookup threw 27 times on the 10 Sep run:
+		#     Error: Failed to fetch a valid house 'house_theothers'
+		#       zz_ln_ice_dragon_triggers.txt line: 93 (ln_is_one_of_them_trigger)
+		# all of them in one burst at save-load, from can_be_knight and on_join_court. `?=` on the
+		# LEFT guards whether the character has a house; it does nothing about the right-hand lookup,
+		# and a dynasty_house with no living members is not in the database to be fetched.
+		#
+		# trigger_if + trigger_else = { always = no } rather than a bare AND, for two reasons: CK3 does
+		# not short-circuit AND siblings, so the lookup would still run and still log; and a trigger_if
+		# whose limit is false returns TRUE, which inside this OR would make every character in the
+		# world one of the dead. The else is not optional. Same shape as the use_secrecy guard in the
+		# compatibility patch (session 57 §4). `exists = <global lookup>` is AGOT's own idiom --
+		# agot_death.txt:826, `exists = dynasty:dynn_Mopatis`.
+		trigger_if = {
+			limit = { exists = house:house_theothers }
+			house ?= house:house_theothers
+		}
+		trigger_else = { always = no }
 		has_government = ruins_government
 		# 13 Aug (1.0.6a): a lord converted by mutate_into_other_effect carries this and, as Thomas found
 		# after his war, does NOT necessarily carry a trait -- his survivors were dynasty-only.

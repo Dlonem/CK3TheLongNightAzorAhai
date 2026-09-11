@@ -81,6 +81,49 @@ ln_others_title_gain = {
 			}
 			root = { mutate_into_other_effect = yes every_courtier_or_guest = { mutate_into_other_effect = yes } }
 		}
+
+		# 1.1.1 (void) -- AND HE ANSWERS TO NOBODY LIVING. Outside the `if` above on purpose: a title gained by
+		# one of the dead has to be checked whether or not the LIEGE is one of them, because the case that
+		# broke was a title arriving with a LIVING liege attached to it. The effect's own limit does the
+		# deciding; this is just the road in. See common/scripted_effects/zz_ln_independence_effects.txt.
+		root = { ln_enforce_independence_effect = yes }
+
+		# ══ 1.1.1b -- THE DEAD HAVE NO CONTROL PROBLEM. ═══════════════════════════════════════════════════
+		# Thomas, 10 Sep, with a map full of hatched counties: "Let me know what you think about having
+		# control at +100 for all lands owned by the night king that way he doesn't have to deal with
+		# peasant revolts?"
+		#
+		# He had found the invasion stall. The 10 Sep -develop run, fifteen pulses of the invasion clock:
+		# EIGHT of them logged "pulse ran, but the dead are already at war". The candidate clamp at
+		# the_long_night.txt (the `is_at_war` trigger_if in the candidate limit) leaves only neighbours
+		# under four counties eligible while he is at war, and those go down the fealty branch -- so a
+		# standing peasant revolt is a standing war, and a standing war means the invasion never declares.
+		# Same run: 44 faction_revolt_war, 44 peasant_faction, 30 populist_faction in eight minutes.
+		#
+		# WHY HIS COUNTIES REVOLT. Control never rises on land the dead hold. Before a county's culture
+		# converts to frostborn it is an ordinary conquest -- foreign ruler, control left where the siege
+		# left it. After it converts, tradition_others2 and tradition_others3 used to put a -2 flat and a
+		# -100% factor on control growth (fixed in the same release, othertraditions.txt). Either way it
+		# sat at the floor forever, and the floor is where peasant factions come from.
+		#
+		# WHY THIS COSTS HIM NOTHING. Control gates levies, taxes and development. His host is
+		# create_maa_regiment scaling on sub-realm county COUNT (zz_ln_horde_effects.txt), not on levies;
+		# tradition_others3 sets tax_mult = -1, so he collects nothing anyway. Control gave him nothing and
+		# cost him everything -- it existed solely to generate revolts against him.
+		#
+		# WHY HERE. on_title_gain fires for every route a county can take into his hands -- war, grant,
+		# inheritance, usurpation, the megawar automation -- so one hook covers every writer instead of a
+		# clause at each of the fifteen grant sites. A modifier cannot set a control LEVEL, only its growth
+		# and decline, which is why this is a snap and not a modifier. change_county_control is verified:
+		# the mod uses it in five places and vanilla's peasant-war effects use it
+		# (00_faction_effects.txt:1739, :2130). It clamps at the county's maximum.
+		if = {
+			limit = {
+				root = { ln_is_one_of_them_trigger = yes }
+				scope:title ?= { tier = tier_county }
+			}
+			scope:title = { change_county_control = 100 }
+		}
 	}
 }
 
@@ -109,6 +152,12 @@ ln_others_vassal_gained = {
 					mutate_into_other_effect = yes
 				}
 			}
+
+			# 1.1.1 (void) -- gaining a vassal is one of the shapes a war settlement takes, and a settlement
+			# that hands one of the dead a vassal can just as easily have handed him a LIEGE. Checked on root,
+			# not on the new vassal: a vassal of one of the dead is exactly where he belongs and the effect's
+			# own limit refuses to touch him.
+			root = { ln_enforce_independence_effect = yes }
 		}
 	}
 }

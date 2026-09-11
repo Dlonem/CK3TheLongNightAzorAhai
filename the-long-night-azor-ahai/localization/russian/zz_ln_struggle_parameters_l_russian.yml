@@ -1,0 +1,46 @@
+﻿l_russian:
+# 1.1.1 -- scaffolded from the English file so no key renders raw in Russian. Untranslated; English text until replaced.
+
+ # AGOT: The Long Night & Azor Ahai -- STRUGGLE PHASE PARAMETERS, 1.0.16.
+ #
+ # WHY THIS FILE EXISTS. CK3 renders a struggle phase parameter as `struggle_parameter_<name>`, while the
+ # parameter itself is written BARE in the struggle script. Base CK3 proves the convention both ways:
+ #   game/common/struggle/struggles/iberian_struggle_script.txt:132  writes the parameter bare
+ #   game/localization/english/struggles_l_english.yml:117           defines struggle_parameter_<that name>
+ # and base ships 97 such keys. All 20 of our parameters were written bare in the SCRIPT (correct) and their
+ # strings were keyed bare in the LOC (wrong) -- `grep -c struggle_parameter_` across our English loc returned
+ # zero. So every one of the four phases printed raw keys in the struggle window, in every game, since the
+ # struggle shipped. Nobody reported it; it was found by sweeping definitions against required derivations.
+ #
+ # THE BARE KEYS IN zz_ln_concepts_l_english.yml:34-59 ARE DELIBERATELY LEFT IN PLACE. They cost one parse
+ # each and nothing else. Deleting a key because "nothing in the mod references it" is exactly how the three
+ # eye_color_*_long_night genes got removed and started throwing errors out of saved ruler files
+ # (see common/genes/zz_long_night_genes.txt). Deprecate, never delete.
+
+ # The Long Summer
+ struggle_parameter_ln_the_dark_is_distant:0 "The dark is a long way off, and getting closer"
+ struggle_parameter_ln_the_dark_is_a_story:0 "Beyond the Narrow Sea it is a story told to children, and not a very good one"
+ struggle_parameter_ln_summer_peace:0 "Long years of quiet: the North picks fewer fights and raiders move slowly"
+ struggle_parameter_ln_insular_in_good_times:0 "Comfortable people close ranks — warmth for your own, coldness for everyone else"
+ struggle_parameter_ln_the_gods_are_quiet:0 "Nobody prays hard when the harvest is good"
+
+ # The Cold Winds Rise
+ struggle_parameter_ln_the_dark_is_coming:0 "The dark is coming, and everyone north of the Neck knows it"
+ struggle_parameter_ln_the_muster_begins:0 "Every man who can hold a spear is being counted, and the walls are being manned"
+ struggle_parameter_ln_southern_disbelief:0 "The southern realms go on squabbling, and will have cause to regret it"
+ struggle_parameter_ln_old_enemies_talk:0 "Kneelers and [free_folk|E] have started speaking to each other"
+ struggle_parameter_ln_prayers_multiply:0 "Every sept, grove and temple is full, and the faithful come armed"
+
+ # The Long Night
+ struggle_parameter_ln_the_dark_is_here:0 "The dark is here"
+ struggle_parameter_ln_wars_of_the_living:0 "Every war fought now is fought in the cold, and the dead take the leavings"
+ struggle_parameter_ln_every_spear_counts:0 "Those who live with the cold have got very good at one thing and worse at all the rest"
+ struggle_parameter_ln_the_living_stand_together:0 "Old grievances stop mattering when the enemy does not care who you were"
+ struggle_parameter_ln_the_red_god_rises:0 "The night is dark and full of terrors, and the man saying so is no longer laughed at"
+ struggle_parameter_ln_essos_profits:0 "Somewhere across the water, someone is selling grain and steel to the desperate"
+
+ # The Dawn
+ struggle_parameter_ln_the_dark_has_passed:0 "The dark has passed"
+ struggle_parameter_ln_no_stomach_for_war:0 "Nobody who was there wants another war"
+ struggle_parameter_ln_bled_together:0 "They bled beside each other, and for a while that is worth more than any treaty"
+ struggle_parameter_ln_reckoning_of_faiths:0 "Every faith is arguing about which of them was right, and all of them are recruiting"

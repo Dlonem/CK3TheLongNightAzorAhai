@@ -1,0 +1,21 @@
+[h1]1.1.0b — Keeping pace with A Game of Thrones[/h1]
+
+A hotfix for this morning's A Game of Thrones update (the 0.5.2 hotfix pushed 4 September), plus one pacing fix from a full Long Night run on Strong. No new content.
+
+[h2]Bug Fixes[/h2]
+[list]
+[*] The dead no longer spend a second winter proving a war they have already won. On a 22-year Strong run, every war south of the Wall took one to two years and paid out two to six counties — the Night King was winning every battle and holding the ground, and the scoreboard kept asking for more. An invasion war now counts its goal as held once the dead occupy six tenths of it, and from that day the war score climbs on its own, so held ground plus a won field closes a war inside a season. Nothing the living can do has changed: the defender's own war score, delay and battle cap are untouched, and a lord who keeps the dead off his land still gains on them after a year exactly as before.
+[/list]
+
+[h2]Compatibility[/h2]
+[list]
+[*] The seventy-two named dragons look the way AGOT now paints them. AGOT retuned thirty-eight appearance values in its curated dragon table — mostly fire colour, plus a few scale and horn tones on Sunfyre, Tessarion, Vermithor and Arrax. This mod keeps a copy of that table to repair dragons whose stored appearance has gone blank, and it now matches theirs exactly.
+[*] A camp with a dragon in it cannot be moved beyond the Wall. AGOT added this rule today and this mod's copy of the camp-moving rule now carries it — with the two exceptions the rest of this mod already makes: once the dead hold a piece of the Wall the ward is broken and the door is open, and a rider who already forced a dragon over the Wall is not refused a second time.
+[*] Dragon eggs are held by the right people. AGOT changed one line in its portrait animations (who may be shown cradling an egg) and this mod's copy of that file carries the same line.
+[/list]
+
+[h2]Notes[/h2]
+[list]
+[*] Safe to drop onto a running save. The pacing change applies to wars declared after you load, not to one already in progress.
+[*] Every scripted rule, effect, trigger, on_action and event this mod shares a name with was re-diffed against the new AGOT build; the rest are current.
+[/list]

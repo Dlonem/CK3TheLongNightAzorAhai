@@ -303,6 +303,40 @@ ln_can_sit_and_think_trigger = {
 # somebody's hall already -- that somebody is AI.
 # NEVER IF: any of those fail. The caller falls through to a priest of no particular fame, which is the
 # overwhelmingly common outcome and reads perfectly well on its own.
+# ══ 1.1.1 -- STANNIS, AND THE LORD OF DRAGONSTONE. ══════════════════════════════════════════════════════════
+# Thomas, 9 Sep: "Stannis is supposed to have Melisandre. So there needs to be maybe a little trigger or a gate
+# that if the player is playing a Stannis, then they get her one hundred percent of the time... Player or AI,
+# if Stannis and Melisandre are present." And, to ulas, on why it did not already work: "RNG. I didn't code any
+# kind of flag that if you're playing a Stannis then you're guaranteed to her."
+#
+# TWO TRIGGERS, NOT ONE, BECAUSE THEY DESERVE DIFFERENT ANSWERS. The ID is exact and it is also brittle -- if
+# AGOT ever rekeys Stannis, an ID-only test silently does nothing and nobody ever finds out, which is this
+# mod's signature failure mode. The second is the story rather than the man: Melisandre came to DRAGONSTONE and
+# attached herself to its lord. So a rename degrades the feature to "the Lord of Dragonstone, heavily
+# favoured" instead of to nothing, and it can catch a later Baratheon on the island -- which is the right
+# behaviour for the same reason it is the right behaviour for Stannis.
+#
+# EVERY SYMBOL VERIFIED, NOT ASSUMED:
+#   Baratheon_3       -- AGOT history/characters/00_agot_char_stormlands.txt:306,
+#                        `name = Stannis # Canon, THE Stannis the Mannis Baratheon, a lord`
+#   dynn_Baratheon    -- his own `dynasty =` line, same block
+#   c_dragonstone     -- AGOT common/landed_titles/01_agot_landed_titles.txt:4425
+#                        (k_dragonstone :4382, d_dragonstone :4404, b_dragonstone :4427)
+#
+# `exists = character:X` ahead of the deref is this file's own established idiom -- see the note above
+# ln_named_priest_is_free_trigger, which is about the same class of problem in the same breath.
+ln_is_stannis_trigger = {
+	exists = character:Baratheon_3
+	this = character:Baratheon_3
+}
+
+# A Baratheon holding the island. Deliberately the COUNTY and not the barony: a lord of Dragonstone holds
+# c_dragonstone, and testing the barony would miss him the moment somebody else garrisons the castle.
+ln_is_the_lord_of_dragonstone_trigger = {
+	dynasty ?= dynasty:dynn_Baratheon
+	any_held_title = { this = title:c_dragonstone }
+}
+
 ln_named_priest_is_free_trigger = {
 	exists = character:$PRIEST$
 	character:$PRIEST$ = {

@@ -1,0 +1,38 @@
+﻿l_russian:
+# 1.1.1 -- scaffolded from the English file so no key renders raw in Russian. Untranslated; English text until replaced.
+
+ # AGOT: The Long Night & Azor Ahai -- the melee's prowess modifiers (1.1.0).
+ #
+ # These are all temporary: applied when an LN melee opens, stripped at the scrub, bounded at two years so a
+ # missed scrub cannot follow a man for life. Every one of them is visible on the character sheet while the
+ # fight is running, which is why every one of them needs a name -- the 1 Sep audit found the whole set
+ # shipping with none, which would have put raw keys like "ln_the_cold_between_3_modifier" on screen mid-duel.
+ #
+ # The five cold bands share a name on purpose. A fighter only ever holds one of them, so the band number is
+ # bookkeeping and the player has no use for it.
+
+ ln_the_cold_between_0_modifier:0 "The Cold Between"
+ ln_the_cold_between_1_modifier:0 "The Cold Between"
+ ln_the_cold_between_2_modifier:0 "The Cold Between"
+ ln_the_cold_between_3_modifier:0 "The Cold Between"
+ ln_the_cold_between_4_modifier:0 "The Cold Between"
+ ln_the_cold_between_0_modifier_desc:0 "Everything you know about killing men was learned on men. Skill counts for half against a thing that has not been one in eight thousand years."
+ ln_the_cold_between_1_modifier_desc:0 "Everything you know about killing men was learned on men. Skill counts for half against a thing that has not been one in eight thousand years."
+ ln_the_cold_between_2_modifier_desc:0 "Everything you know about killing men was learned on men. Skill counts for half against a thing that has not been one in eight thousand years."
+ ln_the_cold_between_3_modifier_desc:0 "Everything you know about killing men was learned on men. Skill counts for half against a thing that has not been one in eight thousand years."
+ ln_the_cold_between_4_modifier_desc:0 "Everything you know about killing men was learned on men. Skill counts for half against a thing that has not been one in eight thousand years."
+
+ ln_bane_lightbringer_modifier:0 "Lightbringer in Hand"
+ ln_bane_lightbringer_modifier_desc:0 "The sword the whole prophecy is about, in the one fight it was made for. It gives back more than the cold takes."
+ ln_bane_valyrian_modifier:0 "Valyrian Steel in Hand"
+ ln_bane_valyrian_modifier_desc:0 "Dragonsteel. Nobody living remembers how it was made, and it does not care what it is cutting."
+ ln_bane_glass_modifier:0 "Dragonglass in Hand"
+ ln_bane_glass_modifier_desc:0 "Frozen fire, and it works — at arm's length, which is the whole trouble with it."
+
+ ln_melee_named_chosen_modifier:0 "Named, and the Line Knows It"
+ ln_melee_named_chosen_modifier_desc:0 "The men behind you have heard what the priests call you. Whether it is true has stopped mattering; what matters is that they keep their feet while they watch you."
+ ln_melee_named_favored_modifier:0 "Favored, and the Line Knows It"
+ ln_melee_named_favored_modifier_desc:0 "Somebody said the words over you once and the line remembers hearing about it."
+
+ ln_led_with_the_bane_modifier:0 "You Went First"
+ ln_led_with_the_bane_modifier_desc:0 "You drew before anyone asked you to and walked out ahead of your own line. It buys you a step, and it means the thing in the middle of that field is looking at nobody else."

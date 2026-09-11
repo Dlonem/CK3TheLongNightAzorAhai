@@ -96,8 +96,15 @@ tradition_others2 = {
 	county_modifier = {
 		development_growth = -1
 		development_growth_factor = -1
-		monthly_county_control_growth_add = -1
-		monthly_county_control_growth_factor = -1
+		# ── 1.1.1b: THE CONTROL DRAG IS REVERSED. Was -1 add AND -1 factor here, plus another -1 add in
+		# tradition_others3 below: -2 flat and -100% growth on every frostborn county, so control on land
+		# the dead hold could never rise, ever. That floor is where peasant factions come from, a standing
+		# peasant war is a standing war, and the invasion's candidate clamp will not declare while he is at
+		# war -- Thomas's "stalled after taking the North", traced live on 10 Sep (8 of 15 pulses "already
+		# at war"). Control gives the dead nothing they use (the horde is scripted, tax_mult is -1 below), so
+		# there was never a reason to starve it. Now it recovers after a siege instead of never.
+		# The snap to full on the day a county changes hands lives in 00_others_on_actions.txt.
+		monthly_county_control_growth_add = 1
 		build_gold_cost = 10
 		build_speed = 10
 		fort_level = 3
@@ -131,7 +138,7 @@ tradition_others3 = {
 	}
 	county_modifier = {
 		development_growth = -1
-		monthly_county_control_growth_add = -1
+		# 1.1.1b: monthly_county_control_growth_add = -1 REMOVED from here -- see tradition_others2 above.
 		tax_mult = -1
 		#levy_size = -1
 		build_gold_cost = 5
