@@ -1,0 +1,18 @@
+﻿l_french:
+ other_turnoff_decision:0 "Arrêter le relèvement"
+ other_turnoff_decision_desc:0 "Interdisez le relèvement des morts à la main, afin qu'aucun geste égaré n'éveille ce qui devrait rester endormi. Prenez de nouveau cette décision pour lever l'interdit."
+ other_turnoff_decision_tooltip:0 "Interdire ou autoriser l'interaction de relèvement"
+ other_turnoff_decision_confirm:0 "Qu'il en soit ainsi"
+ other_turnoff_flag_tooltip:0 "L'interaction de relèvement est actuellement interdite"
+
+ # The Long Night+: Flee South decision
+ flee_south_decision_title:0 "Fuir vers le sud"
+ flee_south_decision_desc:0 "Les morts sont à mes portes et mon armée gît, brisée, dans la neige. Je peux me tenir sur mes murs et mourir avec mon peuple... ou tout abandonner — mon siège, mes terres, ma salle —, rassembler les parents et les épées loyales qui voudront suivre, et chevaucher vers le sud devant le froid. Un réfugié sans terre, oui. Mais vivant, pour combattre pour l'Aube un autre jour."
+ flee_south_decision_confirm:0 "Tout abandonner et fuir vers le sud"
+ flee_south_decision_tooltip:0 "Abandonnez vos terres aux Autres et fuyez vers le sud en réfugié sans terre de l'Aube"
+
+ # The Long Night+: Reform the Night's Watch decision
+ reform_nights_watch_decision_title:0 "Restaurer la Garde de Nuit"
+ reform_nights_watch_decision_desc:0 "La Longue Nuit est brisée et les morts reposent immobiles, mais le Mur est presque vide d'hommes : ses forts sont froids, ses garnisons dispersées ou tuées. Comme c'est le droit de la couronne, je refonderai la Confrérie Jurée : je nommerai un nouveau lord Commandant, je rendrai à la Garde ses anciens sièges, et je replacerai sur le Mur des guetteurs en manteau noir, afin que les royaumes des hommes ne soient plus jamais pris au dépourvu."
+ reform_nights_watch_decision_confirm:0 "Restaurer la Garde"
+ reform_nights_watch_decision_tooltip:0 "Refondez la Garde de Nuit sous un nouveau lord Commandant et accordez-lui les forts du Mur"

@@ -64,11 +64,17 @@ ln_send_the_dungeons_to_the_wall_decision = {
 		any_prisoner = { is_alive = yes }
 	}
 
+	# 1.1.3 (W12): the availability test moved out of is_valid. There it rendered AGOT's whole
+	# availability trigger line by line under Requirements -- raw NOT_has_variable_trigger keys, and
+	# failure-sense text shown as passed. Vanilla puts it here 164 times and in is_valid 4.
+	is_valid_showing_failures_only = {
+		is_available_adult_or_is_commanding = yes
+	}
+
 	is_valid = {
 		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
 		# hitting. This decision can be taken from the field -- your castellan empties the cells on your written order. The vanilla ladder's
 		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
-		is_available_adult_or_is_commanding = yes
 
 		custom_description = {
 			text = ln_wall_you_are_of_the_free_folk
@@ -170,11 +176,17 @@ ln_man_an_empty_castle_decision = {
 		title:k_the_wall.holder ?= { has_government = nights_watch_government }
 	}
 
+	# 1.1.3 (W12): the availability test moved out of is_valid. There it rendered AGOT's whole
+	# availability trigger line by line under Requirements -- raw NOT_has_variable_trigger keys, and
+	# failure-sense text shown as passed. Vanilla puts it here 164 times and in is_valid 4.
+	is_valid_showing_failures_only = {
+		is_available_adult_or_is_commanding = yes
+	}
+
 	is_valid = {
 		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
 		# hitting. This decision can be taken from the field -- an order to a garrison. The vanilla ladder's
 		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
-		is_available_adult_or_is_commanding = yes
 
 		# A CASTLE HAS TO BE AVAILABLE -- which is not the same as standing empty, and the difference matters
 		# more than I realised until I counted. AGOT's own history fills fifteen of sixteen Wall baronies by
@@ -262,8 +274,14 @@ ln_take_the_black_and_wait_decision = {
 		NOT = { ln_wall_has_a_free_keepership_trigger = yes }
 	}
 
-	is_valid = {
+	# 1.1.3 (W12): the availability test moved out of is_valid. There it rendered AGOT's whole
+	# availability trigger line by line under Requirements -- raw NOT_has_variable_trigger keys, and
+	# failure-sense text shown as passed. Vanilla puts it here 164 times and in is_valid 4.
+	is_valid_showing_failures_only = {
 		is_available = yes
+	}
+
+	is_valid = {
 		is_imprisoned = no
 
 		custom_description = {
@@ -328,11 +346,17 @@ ln_rebuild_the_castle_decision = {
 		}
 	}
 
+	# 1.1.3 (W12): the availability test moved out of is_valid. There it rendered AGOT's whole
+	# availability trigger line by line under Requirements -- raw NOT_has_variable_trigger keys, and
+	# failure-sense text shown as passed. Vanilla puts it here 164 times and in is_valid 4.
+	is_valid_showing_failures_only = {
+		is_available_adult_or_is_commanding = yes
+	}
+
 	is_valid = {
 		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
 		# hitting. This decision can be taken from the field -- you are paying, not laying stone. The vanilla ladder's
 		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
-		is_available_adult_or_is_commanding = yes
 		custom_description = {
 			text = ln_rebuild_needs_the_coin
 			gold >= 400

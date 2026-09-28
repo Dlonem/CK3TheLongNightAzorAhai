@@ -1,0 +1,42 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- coming home on a dragon.
+
+ ln_return_with_fire_decision:0 "Regresar con fuego"
+ ln_return_with_fire_decision_title:0 "Regresar con fuego"
+ ln_return_with_fire_decision_desc:0 "Tu salón sigue en pie.\n\nHabías dado por hecho que no lo estaría. Huiste al sur con todos los demás cuando cayó la oscuridad, y todo lo que sabías decía que lo que dejaste atrás sería a estas alturas una huella calcinada.\n\nNo lo es. Alguien le mantuvo el techo puesto, y le puso una puerta nueva, y esta noche está sentado en la silla de tu padre comiendo el grano de tu padre, y lo lleva haciendo años, y con toda razón ha dejado de esperar que vuelva nadie.\n\nNadie en ese salón ha visto nunca un dragón."
+ # NO SCOPE REFERENCE HERE. ln_lost_seat is a VARIABLE on the character, not a saved scope, and a decision
+ # selection_tooltip has no scopes saved yet -- the effect block has not run. [ln_lost_seat.GetName] would
+ # print as an unresolved key. Plain text.
+ ln_return_with_fire_decision_tt:0 "Vuela hasta el solar que abandonaste y resuelve la cuestión de quién lo tiene.\n\nHay cuatro maneras de que esto acabe y solo una de ellas es tranquila."
+ ln_return_with_fire_decision_confirm:0 "Alza el vuelo con el dragón."
+
+ ln_return.1.t:0 "Sobre tu propio salón"
+ ln_return.1.desc:0 "Llegas bajo desde el norte con la luz a la espalda, y lo primero que notas es que han reconstruido mal el muro oriental.\n\nLo segundo que notas son los gritos.\n\nCuando te posas en el patio ya no hay nadie en él. Las puertas están atrancadas, lo cual casi tiene gracia.\n\nLuego se abren, y [ln_squatter.GetTitledFirstName] sale sin nadie más. Sin guardia, sin espada, las manos a la vista. [ln_squatter.GetSheHe|U] se detiene a lo que [ln_squatter.GetSheHe] ha juzgado evidentemente una distancia sobrevivible, y espera, porque no hay nada que [ln_squatter.GetSheHe] pueda decir que cambie algo, y lo único que queda es averiguar qué clase de hombre ha vuelto."
+ ln_return.1.a:0 "Arrodíllate, y seguirá siendo tuyo para que lo guardes. Para mí."
+ ln_return.1.b:0 "Nada. Alza a [ln_dragon.GetHerHim] otra vez y quémalo."
+ ln_return.1.c:0 "[ln_squatter.GetHerHim|U], y [ln_squatter.GetHerHis] linaje. Que no quede nadie para reclamar nada."
+ ln_return.1.d:0 "Tengo un derecho y lo reclamaré como un hombre. No así."
+ ln_return.1.e:0 "Entonces zanjémoslo a la vieja usanza. Dadle una espada a [ln_squatter.GetHerHim]."
+
+ ln_return.2.t:0 "[ln_squatter.GetSheHe|U] mantuvo el techo en pie"
+ ln_return.2.desc:0 "Los libros están impecables.\n\nEso es lo que no esperabas. Volviste preparado para la ruina y una década de robo, y en su lugar hay un libro de cuentas con letra firme que se remonta al año en que se levantó la oscuridad: cada cosecha, cada leva, cada reparación, cada muerte. [ln_squatter.GetSheHe|U] enterró a tu servidumbre como es debido. Hay una lista de dónde.\n\n[ln_squatter.GetSheHe|U] está al otro extremo de la mesa sin decir nada de esto, porque decirlo sonaría a súplica, y ha decidido no suplicar.\n\nAunque el muro oriental sí que está mal construido. [ln_squatter.GetSheHe|U] se quedó sin piedra y usó lo que tenía a mano."
+ ln_return.2.a:0 "Tendrás un solar bajo mi mando. Eso te lo has ganado."
+ ln_return.2.b:0 "Un caballo y el camino. Fuera antes de que anochezca."
+
+ ln_return.3.t:0 "[ln_squatter.GetSheHe|U] lo vio venir"
+ ln_return.3.desc:0 "«No», dice [ln_squatter.GetSheHe].\n\nY luego, cuando no haces nada de inmediato: «Llevas mucho tiempo ahí arriba, mi señor. Un dragón puede quemar mi salón. No puede tenerlo. No puede sentarse en él y tomar juramentos y casar a mi hija con el hijo de alguien. Al día siguiente de quemar este sitio tendrás un dragón y ningún techo, y todos los señores de aquí al Cuello lo sabrán.»\n\n[ln_squatter.GetSheHe|U] ya no tiene ni miedo. Eso se le pasó en algún punto en mitad de la frase.\n\n«Así que quémalo o no lo quemes. Pero no te plantes en mi patio a decirme que es una elección que estás tomando.»"
+ ln_return.3.a:0 "Entonces lo haremos por el camino largo. Alzad los estandartes."
+ ln_return.3.b:0 "[ln_squatter.GetSheHe|U] tiene razón. Ya no soy ese hombre."
+
+ ln_return.4.t:0 "Lo que dejó el fuego"
+ ln_return.4.desc.burned:0 "Volviste a sobrevolarlo con la primera luz porque querías verlo.\n\nNo hay salón. Hay una forma negra donde había un salón, con la chimenea aún en pie, porque las chimeneas siempre quedan en pie. La aldea de abajo se fue también: no pretendías la aldea, y esa no es una distinción que vaya a hacer nadie.\n\nLos que salieron están en la linde del bosque, y son más de los que creías. No hacen nada, solo están de pie en el frío mirando el lugar donde vivían, y uno a uno, a medida que tu sombra les pasa por encima, levantan la vista.\n\nNo era tuyo para quemarlo. Ahora sí que es tuyo."
+ ln_return.4.desc.blood:0 "Llevó menos tiempo del que esperabas, y ese es el detalle que te quedará.\n\n[ln_squatter.GetSheHe|U] no corrió, y ellos tampoco. Hubo un momento en el patio en que [ln_squatter.GetHerHis] hija menor levantó la vista con una expresión de asombro sin complicaciones, porque tenía seis años y nunca había visto uno, y nadie había tenido tiempo de contarle lo que iba a pasar.\n\nEl salón es tuyo. Los libros de cuentas están en la solana, escritos de [ln_squatter.GetHerHis] mano. La gente que trabajaba para [ln_squatter.GetHerHim] sigue aquí —¿a dónde iba a ir?— y ninguno te mirará a los ojos.\n\nTienes lo que viniste a buscar. Aquí va a haber mucho silencio durante un tiempo."
+ ln_return.4.a:0 "Está hecho. No necesita explicación."
+ ln_return.4.b:0 "Encontrad a los que huyeron. Que se les dé de comer."
+
+ ln_dragonfire_scar_modifier:0 "Fuego de dragón"
+ ln_dragonfire_scar_modifier_desc:0 "Quemada por su propio señor, desde el aire, en la memoria de los vivos. Nada se ha reconstruido en el lugar y a la gente de aquí le queda muchísimo camino antes de olvidarlo."
+
+ ln_the_lord_who_left_modifier:0 "El señor que se marchó"
+ ln_the_lord_who_left_modifier_desc:0 "Vieron marchar los estandartes al sur y se quedaron. Otro mantuvo el granero honrado durante años y luego tú volviste del cielo y lo tomaste en una tarde. Lo superarán. Les llevará unos quince años."

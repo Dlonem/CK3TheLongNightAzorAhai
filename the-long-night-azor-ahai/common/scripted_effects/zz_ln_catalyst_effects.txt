@@ -320,6 +320,19 @@ ln_death_catalyst_effect = {
 	# dragonglass, Valyrian steel, or dragonfire. A Night King "killed" by castle-forged steel in some
 	# anonymous field is CAST DOWN AND NOT DESTROYED -- the war does not end, the dawn does not come, and
 	# the story's own on_owner_death crowns the next of them. That is the book's rule and Thomas's ruling.
+
+	# ── 1.1.3: BEFORE ANYTHING ELSE HAPPENS TO A DYING NIGHT KING, HIS HEIR IS ONE OF THE OTHERS. ────────
+	# on_death runs before title inheritance (this file's own timing note below), and h_the_others follows
+	# the primary heir. Naming an Other here is AGOT's own designate-then-inherit pattern at death
+	# (agot_death.txt:61, :291), and it is what makes h_the_others land on the same Other the story is about
+	# to crown, instead of on whatever relative-less-ruler heir the engine computed (Tureno's "last regent").
+	# Runs on every Night King death, whichever branch below is taken: when the story ends it is moot, when
+	# it does not it is the whole point. Body beside ln_crown_the_next_nightking_effect.
+	if = {
+		limit = { has_trait = nightking }
+		ln_designate_an_other_heir_effect = yes
+	}
+
 	if = {
 		limit = {
 			has_trait = nightking
@@ -409,6 +422,18 @@ ln_death_catalyst_effect = {
 		# ln_cast_down_backstop_effect in zz_ln_dawn_funnel_effects.txt. Ordering is still on the
 		# owed-test list; the backstop means the answer no longer decides whether the mod works.
 		set_global_variable = { name = ln_nk_cast_down  value = root }
+		# 1.1.3 -- AND WHO DID IT, for the card the story sends at the crowning (ln_dawn.30). scope:killer
+		# exists here, in on_death, and is not known to exist in the story's on_owner_death, so it is banked
+		# now. An accident, a scorpion bolt or a scripted death with no killer leaves the global unset, and
+		# the card reads that as its own case. Cleared by the card's sender once read.
+		if = {
+			limit = { exists = scope:killer }
+			set_global_variable = { name = ln_nk_cast_down_by  value = scope:killer }
+		}
+		else_if = {
+			limit = { has_global_variable = ln_nk_cast_down_by }
+			remove_global_variable = ln_nk_cast_down_by
+		}
 		# 1.1.0 (§7): A FIELD KILL IS "THE DEAD LOST A BATTLE". The War for the Dawn opens on
 		# ln_nk_has_been_beaten, which the three invasion CBs set in on_defeat -- so until now a realm
 		# that killed the Night King himself in open battle, and watched a successor crowned, still could
@@ -465,8 +490,18 @@ ln_death_catalyst_effect = {
 		# at the story's end, same death reason, no killer named: the cold that stirred them is spent.
 		# (The story-end sweep in the_long_night.txt is the backstop for dawns that arrive without
 		# this branch; both are idempotent.)
-		every_living_character = {
+		# 1.1.3 (W15.8): AGOT's living_dragons global list (tens of entries, maintained at
+		# 00_agot_dragon_effects.txt:2298/:2973, read live at 00_commander_phase_events.txt:832), collected
+		# into a temporary list and then killed, instead of a walk over every living character in the tick
+		# that ends the Long Night. Collect-then-act so nothing dies inside the walk of a script list. The
+		# story-end sweep in zz_ln_dark_spent_effects.txt remains the backstop for a dragon the list missed.
+		every_in_global_list = {
+			variable = living_dragons
 			limit = { has_trait = ln_undead_dragon }
+			add_to_temporary_list = ln_undead_dragons_at_the_dawn
+		}
+		every_in_list = {
+			list = ln_undead_dragons_at_the_dawn
 			death = { death_reason = death_claimed_by_cold }
 		}
 
@@ -810,6 +845,11 @@ ln_crown_the_next_nightking_effect = {
 			limit = { has_character_modifier = night_king_command_modifier }
 			remove_character_modifier = night_king_command_modifier
 		}
+		# 1.1.3 -- and the name: there is one 'the Night King' (ln_the_night_king_rises_again_effect).
+		if = {
+			limit = { has_nickname = nick_the_great_other }
+			remove_nickname = yes
+		}
 	}
 
 	if = {
@@ -868,5 +908,187 @@ ln_crown_the_next_nightking_effect = {
 			}
 		}
 		ln_apply_wave_escalation_effect = yes
+	}
+
+	# 1.1.3 -- HE RISES AGAIN: the man crowned wears the Night King's face, name and 'the Night King'.
+	# See ln_the_night_king_rises_again_effect below.
+	ln_the_night_king_rises_again_effect = yes
+
+	# 1.1.3 -- EVERY KING NAMES HIS HEIR THE DAY HE IS CROWNED. See ln_designate_an_other_heir_effect below.
+	ln_designate_an_other_heir_effect = yes
+
+	# 1.1.3 -- AND SAY IT LOUDLY IF THE CROWN EVER LANDS ON A MAN WHO IS NOT ONE OF THEM. The two
+	# primary-heir rungs in the story are guarded now (the_long_night.txt), so this should never print; if it
+	# does, some road crowned a human and the reconciler will not repair it (it only fires when the owner
+	# does not hold h_the_others).
+	if = {
+		limit = { NOT = { has_trait = other_trait } }
+		debug_log = "LN_TRACE CROWN: a man WITHOUT other_trait was crowned Night King - a road handed the crown to a human"
+		debug_log_scopes = yes
+	}
+}
+
+# ── 1.1.3: HE RISES AGAIN. ──────────────────────────────────────────────────────────────────────────────
+# Thomas, 27 Sep, the players' complaint: when the Night King died "somebody else would just basically
+# become the Night King, and then that person would be known as the Other" -- there should only ever be
+# one Night King. The rule is unchanged (an ordinary death casts him down and the crown passes); what
+# changes is who the player sees. The man crowned takes the Night King's face, his name and 'the Night
+# King', so to the player there is one Night King and he got back up. h_the_others carries
+# disable_regnal_numbers (zz_others_landed_titles.txt), so he is not "Other II" either.
+# The face: the donor setup uses (pinned unprunable at game start, zz_ln_struggle_on_actions.txt:38),
+# else the king who fell. Never copied onto the donor himself. The two traits and the flag are exactly
+# the setup's own (agot_long_night_scripted_effects.txt:386-397, :312): the traits would paint over the
+# donor face, the flag keeps AGOT's hair-dye events off him (agot_generic_events.txt:856, :1005).
+# Scope (this) = the man crowned; root is whatever the caller's root is (the story, from the story's own
+# crowning), so the body only ever uses `this`. Called by ln_crown_the_next_nightking_effect (every crowning), and once a year
+# on the holder of h_the_others when he lacks has_scripted_appearance -- a king crowned before 1.1.3 rose
+# in another man's face (zz_ln_struggle_effects.txt, beside the heir heal). Idempotent: the face copy and
+# the name are the same values every time; the rest is guarded.
+ln_the_night_king_rises_again_effect = {
+	# 1.1.3 review: only one of them wears his face. A 1.1.2 save can hold a HUMAN crowned Night King (the
+	# unguarded primary-heir rung W8 closed); dressing him as the Night King would hide that, not heal it. He
+	# keeps his own face, and the heir heal makes sure an Other takes the crown when he dies.
+	if = {
+		limit = { has_trait = other_trait }
+		if = {
+			limit = {
+				exists = character:others_thenightking
+				NOT = { this = character:others_thenightking }
+			}
+			copy_inheritable_appearance_from = character:others_thenightking
+		}
+		else_if = {
+			limit = {
+				exists = scope:ln_dead_nightking
+				NOT = { this = scope:ln_dead_nightking }
+			}
+			copy_inheritable_appearance_from = scope:ln_dead_nightking
+		}
+		if = {
+			limit = { has_trait = cool_silver_hair }
+			make_trait_inactive = cool_silver_hair
+		}
+		if = {
+			limit = { has_trait = blue_eyes }
+			make_trait_inactive = blue_eyes
+		}
+		if = {
+			limit = { NOT = { has_character_flag = has_scripted_appearance } }
+			add_character_flag = has_scripted_appearance
+		}
+		change_first_name = other_name
+		if = {
+			limit = { NOT = { has_nickname = nick_the_great_other } }
+			give_nickname = nick_the_great_other
+		}
+		debug_log = "LN_TRACE CROWN: he rises again - the crowned man wears the Night King's face and name"
+		debug_log_scopes = yes
+	}
+	else = {
+		debug_log = "LN_TRACE CROWN: the man wearing the crown is NOT one of the Others - not given the Night King's face; an Other inherits at his death"
+		debug_log_scopes = yes
+	}
+}
+
+# ── 1.1.3: THE NIGHT KING'S HEIR IS ONE OF THE OTHERS, CHOSEN, NOT LEFT TO THE ENGINE ─────────────────────
+# Tureno (Steam, 14 Sep): "whenever the long night starts, his heir always starts out as the last regent
+# before the trigger instead of another Other."
+#
+# WHY. the_long_night_setup_effect creates him with no family and never names an heir; the sixty-two Others
+# it spawns beside him are his courtiers, not his kin. h_the_others has always_follows_primary_heir = yes
+# (zz_others_landed_titles.txt:7), so the hegemony goes to whoever the engine computes for a relative-less
+# ruler -- which is engine code we cannot read, and which Tureno says is the last regent. Two successor
+# rungs in the story then promoted that man without asking whether he is an Other, and
+# ln_crown_the_next_nightking_effect adds nightking but never other_trait, so a HUMAN could come out as
+# Night King holding h_the_others and owning the story; the yearly reconciler only fires when the owner does
+# not hold the title, so it never repaired it.
+#
+# THE FIX MAKES THE ENGINE'S CHOICE MOOT: name one of the Others as his designated heir, in the one place
+# every crowning passes through, at setup, before inheritance at his death, and once a year as a self-heal
+# for saves already running. set_designated_heir_unsafe is AGOT's own form for a non-relative
+# (00_agot_nw_btw_effects.txt:534; agot_death.txt:61, :291, the designate-then-inherit pattern this copies).
+# The best sword in his hall (ordered_courtier, order_by = prowess -- vanilla, 00_accolades_scripted_effects.txt:10154)
+# rather than a random one, so the heir shown is the one who would plausibly take the crown. If no Other stands in
+# his court any more (they get landed as the conquest spreads), the fallback is the same ladder the story's
+# cast-down branch uses: an Other ruler of their own house first, any Other ruler second.
+#
+# Scope (this) = the Night King (root differs by caller: the yearly heal runs with a playable root). Idempotent:
+# if his designated heir is already a living, free Other who is not himself,
+# nothing happens. `designated_heir ?=` is vanilla's link (00_diarch_interactions.txt:9625).
+ln_designate_an_other_heir_effect = {
+	if = {
+		limit = {
+			NOT = {
+				designated_heir ?= {
+					is_alive = yes
+					# 1.1.3 review: an heir in a cell would inherit in the cell (the best sword is the Other
+					# most likely to be taken alive, and a kept trophy never re-fires on_imprison).
+					is_imprisoned = no
+					has_trait = other_trait
+					# (was NOT = { this = root }: root is not the Night King at every call site -- the
+					# yearly heal runs with a playable character as root -- and the next line says what
+					# was meant without comparing scopes of unknown type.)
+					NOT = { has_trait = nightking }
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_courtier = {
+					has_trait = other_trait
+					is_adult = yes
+					is_imprisoned = no
+					NOT = { has_trait = nightking }
+				}
+			}
+			ordered_courtier = {
+				limit = {
+					has_trait = other_trait
+					is_adult = yes
+					is_imprisoned = no
+					NOT = { has_trait = nightking }
+				}
+				# 1.1.3 -- a man first: the heir rises as the Night King, in his likeness (the crowning
+				# effect above). Inline value, vanilla's form (00_faction_effects.txt:958).
+				order_by = {
+					value = prowess
+					if = {
+						limit = { is_male = yes }
+						add = 1000
+					}
+				}
+				save_temporary_scope_as = ln_other_heir
+			}
+		}
+		else = {
+			random_ruler = {
+				limit = {
+					has_trait = other_trait
+					is_alive = yes
+					is_imprisoned = no
+					NOT = { has_trait = nightking }
+					trigger_if = {
+						limit = { exists = house:house_theothers }
+						house ?= house:house_theothers
+					}
+				}
+				alternative_limit = {
+					has_trait = other_trait
+					is_alive = yes
+					is_imprisoned = no
+					NOT = { has_trait = nightking }
+				}
+				save_temporary_scope_as = ln_other_heir
+			}
+		}
+		if = {
+			limit = { exists = scope:ln_other_heir }
+			debug_log = "LN_TRACE CROWN: the night king names one of the Others as his heir"
+			debug_log_scopes = yes
+			set_designated_heir_unsafe = scope:ln_other_heir
+		}
+		else = {
+			debug_log = "LN_TRACE CROWN: the night king has no Other left to name as heir"
+		}
 	}
 }

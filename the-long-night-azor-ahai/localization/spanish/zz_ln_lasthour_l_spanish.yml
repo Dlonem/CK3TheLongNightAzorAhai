@@ -1,0 +1,50 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the Last Hour melee (1.1.0, §3).
+ # ⚠ ln_lasthour.1 is the §13 VOICE SAMPLE -- Thomas approves this exchange before the other four are written.
+
+ ln_dawn.2.e:0 "No vamos solos a él - formad la línea"
+
+ ln_lasthour.1.t:0 "La Última Hora"
+ # The first block counts HIS side (the walker scopes vary 1-3 with the difficulty rule, §9.4); the
+ # second counts yours. Never promise a number the portraits cannot keep.
+ ln_lasthour.1.desc.walkers3:0 "Te espera en la nieve abierta, y no se ha molestado en traer a su ejército. Tres de sus pálidos semejantes aguardan a una lanza de distancia detrás de él, quietos como hielo tallado. No necesita más, y sabe que tú lo sabes."
+ ln_lasthour.1.desc.walkers2:0 "Te espera en la nieve abierta, y no se ha molestado en traer a su ejército. Dos de sus pálidos semejantes aguardan a una lanza de distancia detrás de él, quietos como hielo tallado. No necesita más, y sabe que tú lo sabes."
+ ln_lasthour.1.desc.walkers1:0 "Te espera en la nieve abierta, y no se ha molestado en traer a su ejército. Uno de sus pálidos semejantes aguarda a una lanza de distancia detrás de él, quieto como hielo tallado. No necesita más, y sabe que tú lo sabes."
+ ln_lasthour.1.desc.walkers0:0 "Te espera en la nieve abierta, y no se ha molestado en traer a su ejército. No lo necesita, y sabe que tú lo sabes."
+ ln_lasthour.1.desc.line:0 "\n\nPero tú tampoco has venido solo. Crujen botas a tu espalda: los que respondieron, los que tienen una razón propia para estar en este campo. Acero, vidrio y los dioses que cada uno de vosotros conserve aún.\n\nÉl mira formarse la línea. Algo se mueve en el azul de sus ojos que, en un rostro vivo, podría haber sido interés."
+ ln_lasthour.1.desc.alone:0 "\n\nNadie respondió. Nadie vino. Estáis tú, el viento y los muertos.\n\nÉl te mira recorrer solo los últimos cien pasos. Algo se mueve en el azul de sus ojos que, en un rostro vivo, podría haber sido respeto."
+ ln_lasthour.1.a:0 "Adelante - esto acaba aquí, de un modo o de otro"
+ ln_lasthour.1.c:0 "Desenváinala primero. Que todo el campo vea lo que es."
+ ln_lasthour.1.d:0 "Voy en cabeza. Esta espada se forjó para algo."
+ ln_lasthour.1.e:0 "Acercadme a él."
+ ln_lasthour.1.f:0 "Han venido aquí por mí. Que me vean entrar primero."
+ ln_lasthour.1.b:0 "Retirarse - no es esta la hora"
+
+ # ── option tooltips (the effects run hidden; these lines are what the player is told) ──
+ ln_dawn.2.e_tt:0 "Se forma una línea con los que están en el campo: el hombre que la historia ya eligió, primero tu familia y tus amigos, después todo desconocido que lleve acero que sirva, seis como máximo y nunca más de dos de tu propia casa. Luego vais a él juntos."
+ ln_lasthour.1.c_tt:0 "Entras primero, con lo único de lo que ha oído hablar cada hombre que va detrás de ti. Te compra un paso. También significa que la cosa que está en el centro de ese campo no mira a nadie más."
+ ln_lasthour.1.d_tt:0 "Acero valyrio, llevado a la única lucha para la que de verdad estaba hecho. Tomas la primera fila y la atención que viene con ella."
+ ln_lasthour.1.e_tt:0 "La obsidiana es una respuesta de pelea a cuchillo. Funciona, y funciona a un brazo de distancia, que es todo el problema que tiene."
+ ln_lasthour.1.f_tt:0 "Eres lo que los sacerdotes les han estado contando durante años. Que sea cierto ha dejado de importar; lo que importa es que la línea lo crea mientras te ven salir."
+ ln_lasthour.1.a_tt:0 "Comienza la refriega. Se peleará hombre a hombre en los días que siguen —heridas, caídas y cosas peores— y un Caminante Blanco nunca acepta una rendición."
+ ln_lasthour.1.b_tt:0 "La línea se disuelve y el campo queda. Él seguirá allí cuando encuentres tu valor."
+ ln_lasthour.20.a_tt:0 "El Rey de la Noche acaba por tu mano. Cada Caminante caído de su estirpe se suma a tu cuenta, y cada uno de tus supervivientes lleva el recuerdo."
+
+ ln_lasthour.20.t:0 "El Amanecer"
+ ln_lasthour.20.desc:0 "Ha terminado, y por un momento nadie se lo cree. El viento sigue soplando. La nieve sigue en sus ventisqueros. Pero el frío —el frío que ha estado dentro del pecho de cada hombre desde que empezó la larga oscuridad— se está yendo del mundo como el agua de un cuenco rajado.\n\nDonde cayó no hay ahora más que un anillo de escarcha que se extiende, y sus pálidos semejantes han desaparecido como si no hubieran estado nunca allí. Por todo el Norte, por todo el mundo, cien mil muertos caen a la vez y no se levantan.\n\nLos hombres que siguen en pie en la línea se miran unos a otros. Alguien ríe, agudo y roto. Otro está de rodillas. El sol está saliendo, y hace años que el sol no salía."
+ ln_lasthour.20.a:0 "Que amanezca"
+
+ ln_lasthour.30.t:0 "Lo que el frío se queda"
+ ln_lasthour.30.desc:0 "No hay dolor. Eso es lo primero que está mal. Hubo dolor, muchísimo, y luego el frío subió a través de él como el agua a través de la nieve, y ahora no hay nada en absoluto.\n\nVes tus propias manos afirmarse sobre el hielo sin habérselo pedido. Tienen el color equivocado. Los pensamientos que piensas se van haciendo más cortos, y el espacio entre ellos se va haciendo más ancho, y en algún lugar de ese espacio que se ensancha comprendes —sin miedo, porque el miedo se ha ido a donde se fue el dolor— que este es el último que vas a pensar con palabras.\n\nÉl está de pie sobre ti. No se regodea. Espera, como espera un hombre a que termine de formarse el hielo en un estanque que quiere cruzar."
+ ln_lasthour.30.a:0 "..."
+
+ # ── Memories ──
+ ln_faced_the_night_king_memory:0 "se enfrentó al Rey de la Noche"
+ ln_faced_the_night_king_memory_desc:0 "Estuve en la línea en la Última Hora, contra el Rey de la Noche en persona, y seguía respirando cuando salió el sol."
+ ln_faced_the_night_king_memory_desc_second_perspective:0 "estuviste en la línea en la Última Hora, contra el Rey de la Noche en persona, y seguías respirando cuando salió el sol."
+ ln_faced_the_night_king_memory_desc_third_perspective:0 "[owner.GetName] estuvo en la línea en la Última Hora, contra el Rey de la Noche en persona."
+ ln_raised_as_an_other_memory:0 "se lo llevó el Rey de la Noche"
+ ln_raised_as_an_other_memory_desc:0 "Caí en la Última Hora, y el Rey de la Noche no me dejó morir. Me hizo uno de los suyos."
+ ln_raised_as_an_other_memory_desc_second_perspective:0 "caíste en la Última Hora, y el Rey de la Noche no te dejó morir. Te hizo uno de los suyos."
+ ln_raised_as_an_other_memory_desc_third_perspective:0 "[owner.GetName] cayó en la Última Hora, y el Rey de la Noche hizo de [owner.GetHerHim] uno de los suyos."

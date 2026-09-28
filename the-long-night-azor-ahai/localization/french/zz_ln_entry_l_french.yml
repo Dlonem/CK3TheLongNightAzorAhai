@@ -1,0 +1,13 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the orientation card.
+
+ ln_prophecy.30.t:0 "Cela se dit depuis un temps"
+ ln_prophecy.30.desc_open:0 "[ln_the_seer.GetTitledFirstName] tourne autour de cela depuis des semaines et l'a enfin dit, du ton plat et sans gêne d'un homme qui a décidé que la gêne n'était pas l'important.\n\n"
+ ln_prophecy.30.desc_favored:0 "« Il y a une chose que les gens disent de vous. Pas en face. C'est la vieille prophétie : celle du prince qui fut promis, l'homme né de nouveau parmi le sel et la fumée pour éveiller les dragons hors de la pierre et mettre fin à la Longue Nuit avant qu'elle ne commence. »\n\n« On le dit de quelqu'un à chaque génération. On s'est trompé chaque fois, sans exception. »\n\n"
+ ln_prophecy.30.desc_chosen:0 "« Il y a une chose que les gens disent de vous, et elle a cessé d'être un murmure depuis un temps déjà. Le prince qui fut promis. Azor Ahai réincarné. »\n\n« Comprenez ce que cela veut dire en pratique. Des prêtres viendront. Des hommes qui y croient vous suivront plus loin que le bon sens ne l'autorise. Et quelque part il y a un second homme à qui on dit la même chose, et quelqu'un qui fait le calcul de la façon de régler cela. »\n\n"
+ ln_prophecy.30.desc_risen:0 "« Vous êtes mort. Je veux être clair : je ne parle pas en poète. Votre cœur s'est arrêté et votre corps a refroidi, puis il n'est pas resté ainsi, et chaque homme qui était dans cette pièce a raconté l'histoire depuis avec le même visage. »\n\n« La Foi Rouge a un mot pour ce que vous êtes et je ne vais pas l'employer devant vous pour l'instant. Mais sachez que les gens vont commencer à l'employer, et que tous ne le diront pas avec bienveillance. »\n\n"
+ ln_prophecy.30.desc_azor:0 "« Vous le savez déjà. Vous y étiez. Mais les histoires auront besoin que quelqu'un l'ait dit à voix haute dans une pièce avec des témoins, alors : Azor Ahai réincarné, le prince qui fut promis, et l'homme qui y a mis fin. »\n\n« Je n'ai rien à vous apprendre. Je suis venu de très loin pour me tenir ici et en être certain, et je le suis. »\n\n"
+ ln_prophecy.30.desc_close:0 "« Il n'y a rien à faire de tout cela aujourd'hui. Mais cela continuera, et cela se fera plus bruyant, et un jour quelqu'un arrivera qui voudra en tirer quelque chose. Mieux vaut que vous l'ayez entendu de moi, assis. »"
+ ln_prophecy.30.a:0 "Je sais ce qu'on dit. Dites-le quand même."
+ ln_prophecy.30.b:0 "Je n'ai pas demandé cela et je n'en veux pas."

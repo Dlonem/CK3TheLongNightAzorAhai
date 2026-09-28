@@ -1,0 +1,32 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- government display keys the engine derives and looks up on its
+ # own (<government>_adjective and friends; the raw key was showing in the realm panel, live-run
+ # report 305 AC), plus the names for zz_ln_government_title_holders.txt. wight_government and
+ # wight_government_desc already live in long_night_plus_memories_l_english.yml -- NOT restated here,
+ # one definition per key.
+
+ wight_government_with_icon:0 "$wight_government$"
+ wight_government_adjective:0 "Alzado"
+ wight_government_realm:0 "Hueste alzada"
+ wight_government_filter_option:0 "Siervo alzado"
+ wight_government_filter_option_desc:0 "Mostrar solo personajes alzados al servicio de los muertos"
+
+ baron_wight_male:0 "Siervo alzado"
+ baron_wight_female:0 "Sierva alzada"
+ count_wight_male:0 "Señor espectro"
+ count_wight_female:0 "Dama espectro"
+ duke_wight_male:0 "Señor del Frío"
+ duke_wight_female:0 "Dama del Frío"
+ king_wight_male:0 "Rey del Invierno"
+ king_wight_female:0 "Reina del Invierno"
+ emperor_wight_male:0 "Emperador del Invierno"
+ emperor_wight_female:0 "Emperatriz del Invierno"
+
+ ln_ranger_government_with_icon:0 "$ln_ranger_government$"
+ ln_ranger_government_realm:0 "Compañía de expedición"
+ ln_ranger_government_filter_option:0 "Compañía de expedición"
+ ln_ranger_government_filter_option_desc:0 "Mostrar solo hermanos juramentados en expedición más allá del Muro"
+
+ duke_ln_ranger_male:0 "Capitán explorador"
+ duke_ln_ranger_female:0 "Capitana exploradora"

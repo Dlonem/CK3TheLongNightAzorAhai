@@ -56,6 +56,24 @@ ln_struggle_monthly_effect = {
 		ln_winter_clock_effect = yes
 	}
 
+	# ── 1.1.3 review: A 1.1.2 SAVE THAT PRESSED THE MANUAL TRIGGER DURING THE DAWN ────────────────────────────
+	# Before 1.1.3 the decision came back during the Dawn (ashen03, R17); pressing it forced the phase back to
+	# the Long Night with ln_latch_dawn still standing, so when THAT wave reached its Dawn the Dawn branch below
+	# was skipped, others_invasion_has_arrived was never cleared and the next Long Summer jammed. The decision
+	# is hidden during the Dawn now; this lets a save already in that forced wave end it properly. The only
+	# way to be in the Long Night phase with the Dawn latch up is that button (the Long Summer re-arm clears
+	# the latch in every other road), and a living Night King means the wave is really running. A save already
+	# jammed with no Night King is left alone -- that repair is Thomas's call.
+	if = {
+		limit = {
+			is_struggle_phase = ln_phase_the_long_night
+			has_global_variable = ln_latch_dawn
+			exists = title:h_the_others.holder
+		}
+		debug_log = "LN_TRACE STRUGGLE: a wave forced during the Dawn (pre-1.1.3 manual trigger) - Dawn latch cleared so this wave can end"
+		remove_global_variable = ln_latch_dawn
+	}
+
 	# ── THE LONG NIGHT: the invasion ───────────────────────────────────────────────────────────────────────
 	if = {
 		limit = {
@@ -225,6 +243,17 @@ ln_struggle_monthly_effect = {
 			# have shown up in a first-wave test, which is the only kind of test this mod has ever had.
 			if = { limit = { has_global_variable = ln_north_done } remove_global_variable = ln_north_done }
 			if = { limit = { has_global_variable = ln_north_unfinished } remove_global_variable = ln_north_unfinished }
+			# 1.1.3 (D-o) -- AND THE THREE STAGE CLOCKS. They were flags on the Night King, which a cast-down
+			# successor never inherited (each new king restarted 8 / 4 / 20 years); they are wave-scoped
+			# globals now (zz_ln_invasion_target_effects.txt), so the wheel has to take them down here or wave
+			# two would start with wave one's windows already spent.
+			if = { limit = { has_global_variable = ln_btw_gate_started } remove_global_variable = ln_btw_gate_started }
+			if = { limit = { has_global_variable = ln_btw_gate_window } remove_global_variable = ln_btw_gate_window }
+			if = { limit = { has_global_variable = ln_wall_gate_started } remove_global_variable = ln_wall_gate_started }
+			if = { limit = { has_global_variable = ln_wall_gate_window } remove_global_variable = ln_wall_gate_window }
+			if = { limit = { has_global_variable = ln_north_gate_started } remove_global_variable = ln_north_gate_started }
+			if = { limit = { has_global_variable = ln_north_gate_window } remove_global_variable = ln_north_gate_window }
+			if = { limit = { has_global_variable = ln_btw_unfinished } remove_global_variable = ln_btw_unfinished }
 			# ...and the broken-Wall mark comes off with the repair (1.0.6).
 			title:c_castle_black = {
 				remove_county_modifier = ln_wall_broken_modifier
@@ -403,9 +432,12 @@ ln_struggle_yearly_drip_effect = {
 # back round under the recurrence rule so wave two gets its own number.
 #
 # EVERY FIGURE HERE IS "YEARS OF LONG SUMMER", NOT "YEARS UNTIL THE LONG NIGHT" -- ln_phase_cold_winds sits
-# between them and is a flat twenty-five years. That is the recalibration this needed: Cold Winds went from ten
-# years to twenty-five when Thomas asked for a real warning window, and every one of these numbers was still
-# written for a ten-year gap, so "In Fifty Years" was quietly promising sixty-five.
+# between them. It was a flat twenty-five years when these figures were chosen; since then it ROLLS
+# 12/20/28/36/45 (zz_ln_winter_clock_effects.txt), mean about twenty-five, so every figure below is "plus a
+# roll centred on twenty-five", not "plus twenty-five" (1.1.3 correction; the note at the random-window rule
+# further down already said so). The recalibration this block records is still true: Cold Winds went from ten
+# years to about twenty-five when Thomas asked for a real warning window, and every one of these numbers was
+# still written for a ten-year gap, so "In Fifty Years" was quietly promising sixty-five.
 ln_struggle_set_pace_effect = {
 	if = {
 		limit = { NOT = { has_global_variable = ln_summer_target } }
@@ -632,10 +664,17 @@ ln_struggle_start_if_absent_effect = {
 		# so a bookmark AFTER the canonical date still gets a run at it rather than the dark on turn one).
 		# Players get ln_opening.6 in the first month from the phase-entry latch, which is the right card for
 		# a world that is already too late to prepare quietly.
+		# 1.1.3 -- AND THE CHANCE RULE HAS A SAY HERE TOO. This branch skipped the summer and, with it, the
+		# only place the invasion-chance rule was ever asked: a Historical game from 255+ that rolled NO
+		# invasion still opened in the Cold Winds with the clock set for 8300. ln_the_dark_may_come_trigger
+		# reads an absent global as yes, so nothing changes for the default (certain) rule or for a save
+		# from before the roll existed; a world that rolled "no" takes the ordinary summer below instead,
+		# where the drip already asks the same question.
 		if = {
 			limit = {
 				has_game_rule = others_historical_invasion
 				current_year >= 8255
+				ln_the_dark_may_come_trigger = yes
 			}
 			set_global_variable = { name = ln_winter_target  value = ln_historical_overdue_winter_value }
 			start_struggle = {
@@ -715,10 +754,31 @@ ln_struggle_yearly_work_effect = {
 		ln_watch_strength_catalyst_effect = yes
 		ln_dragon_census_effect = yes
 
+		# 1.1.3 (W16) -- THE CENSUS, DEBUG BUILDS ONLY. Three walks over every living character, so it is
+		# gated on debug_only: a player never pays for it, and a -debug_mode run gets one LN_CENSUS line a
+		# year in debug.log to set beside character_stats.csv. Values in zz_ln_census_values.txt.
+		# 1.1.3, after the 26 Sep boot: the [x.GetValue] form printed "ERROR:[ln_census_wights.GetValue]" in an inline debug_log
+		# string (26 Sep run) even though the values were saved -- debug_log_scopes printed them fine three
+		# lines later. So the numbers come out through debug_log_scopes, as "ln_census_wights: 718.00" lines
+		# under the LN_CENSUS header. grep -A6 LN_CENSUS debug.log.
+		if = {
+			limit = { debug_only = yes }
+			save_scope_value_as = { name = ln_census_wights  value = ln_census_wights_value }
+			save_scope_value_as = { name = ln_census_others  value = ln_census_others_value }
+			save_scope_value_as = { name = ln_census_house  value = ln_census_house_theothers_value }
+			debug_log = "LN_CENSUS: year [GetCurrentDate.GetYear] - the three counts follow (ln_census_wights / ln_census_others / ln_census_house)"
+			debug_log_scopes = yes
+		}
+
 		# 1.1.1 (void) -- THE DEAD ANSWER TO NOBODY LIVING, checked once a year. The two on_action hooks catch
 		# a title changing hands; this catches AGOT's megawar automation re-parenting a title the dead already
 		# hold, which fires no hook at all. zz_ln_independence_effects.txt has the report and the reasoning.
 		ln_others_independence_sweep_effect = yes
+
+		# 1.1.2 -- and none of the dead stands in a living hall. Same yearly slot, same reason: the
+		# on_guest_arrived_from_pool hook added in 1.1.2 catches arrivals, and this catches everyone
+		# already sitting there and everyone converted after he arrived. See zz_ln_service_effects.txt.
+		ln_the_dead_stand_in_no_living_hall_effect = yes
 
 		# ══ 1.0.15 -- THE BACKSTOP THAT NOTICES A DAWN NOBODY CLEANED UP AFTER. ════════════════════════
 		# Every proper ending calls ln_the_dark_is_spent_effect at the moment the Night King dies. But a
@@ -742,6 +802,22 @@ ln_struggle_yearly_work_effect = {
 		# steel and never replaced, because the story handler and the death catalyst raced. See
 		# ln_cast_down_backstop_effect.
 		ln_cast_down_backstop_effect = yes
+		# 1.1.3 -- and the Night King's heir is one of the Others, checked once a year: the self-heal for
+		# saves from before the heir was ever chosen (Tureno's "last regent"). One designated_heir read a
+		# year when it is already right. Body in zz_ln_catalyst_effects.txt.
+		title:h_the_others.holder ?= {
+			if = {
+				limit = { has_trait = nightking }
+				ln_designate_an_other_heir_effect = yes
+				# 1.1.3 -- and a king crowned before 1.1.3 rose in another man's face and name; he takes the
+				# Night King's now. The flag is the marker: the first king has it from setup, every king
+				# crowned since from the crowning. Body in zz_ln_catalyst_effects.txt.
+				if = {
+					limit = { NOT = { has_character_flag = has_scripted_appearance } }
+					ln_the_night_king_rises_again_effect = yes
+				}
+			}
+		}
 		ln_ruins_decay_effect = yes
 		# 1.0.10: stamps pre-conversion culture+faith onto dead-held counties any other route missed.
 		ln_stamp_swept_counties_effect = yes
@@ -780,9 +856,13 @@ ln_struggle_yearly_work_effect = {
 		ln_watch_recruits_rangers_effect = yes
 		# 1.0.6a: puts stray ranging companies back under the Lord Commander (self-heal for old saves).
 		ln_reanchor_the_companies_effect = yes
+		# 1.1.3 review: and a camp set up before 1.1.3 (Silence's save) still has its old council in seats a
+		# camp does not have, and may have no brother to appoint. Body in zz_ln_ranger_effects.txt.
+		ln_repair_the_ranger_camps_effect = yes
 		# 1.0.16 -- STRIP LIVING REGIMENTS FROM THE NIGHT KING HIMSELF.
-		# ln_strip_living_regiments_effect is called at conversion (mutate_into_other_effect) and the
-		# heartbeat re-runs that on existing wights, so every RAISED lord is covered. The Night King is not:
+		# ln_strip_living_regiments_effect is called at conversion (mutate_into_other_effect), so every
+		# RAISED lord is covered at the raise. (1.1.3 correction: the heartbeat does NOT re-run the conversion
+		# on existing wights -- its limits skip wight_trait since v0.2.1.) The Night King is not:
 		# he is created, never converted, so no mutate pass ever touches him -- and he can buy men-at-arms
 		# with prestige (wight_government carries use_prestige_to_buy_maa, and Thomas's 27 Aug screenshot
 		# shows him holding 5,233 prestige and a regiment of vanilla Bowmen).
@@ -834,6 +914,10 @@ ln_struggle_yearly_work_effect = {
 		# 1.0.9: restamps a pre-1.0.7 Lightbringer to illustrious so it stops rendering grey. Costs one
 		# failed has_global_variable check in any game where nobody has forged one. brindatm's report.
 		ln_lightbringer_restamp_effect = yes
+		# 1.1.3: unmakes a consecrated goblet or breastplate (the rite accepted any Valyrian trinket before
+		# 1.1.3) and reopens the one-Lightbringer global if nothing else carries it. Same latch shape as the
+		# line above; one failed global read a year in any game where nobody consecrated anything.
+		ln_unconsecrate_what_is_not_a_blade_effect = yes
 	}
 }
 

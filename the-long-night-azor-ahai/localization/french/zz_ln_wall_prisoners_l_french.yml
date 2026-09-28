@@ -1,0 +1,33 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- emptying a dungeon northward.
+
+ ln_send_the_dungeons_to_the_wall_decision:0 "[ROOT.Char.Custom('ln_SendDungeonsTitle')]"
+ ln_send_the_dungeons_plain:0 "Envoyer les prisonniers au Mur"
+ ln_send_the_dungeons_raven:0 "Envoyer un corbeau : videz les cellules"
+ ln_send_the_dungeons_to_the_wall_decision_desc:0 "Votre geôlier tient la liste sur un panneau près de la porte, et elle n'a pas raccourci en un an. Des hommes pris dans une guerre qui s'est terminée. Des hommes dont la famille a cessé de répondre aux corbeaux. Des hommes que personne ne viendra racheter et que personne ne tient particulièrement à voir pendus.\n\nLe Mur ne demande pas ce qu'ils ont fait. Il ne l'a jamais demandé. Il demande seulement s'ils peuvent tenir une lance et s'ils seront encore debout en haut de la chaussée quand le cor sonnera, et il les prendra tous à ces conditions sans un mot de remerciement.\n\nCe n'est pas de la clémence. C'est le plus vieil arrangement des Sept Couronnes : le sud garde les mains propres, et le nord reçoit des corps."
+ ln_send_the_dungeons_to_the_wall_decision_tt:0 "Envoyez au nord, à la Garde de Nuit, tout prisonnier capable de prendre le noir, en un seul ordre.\n\n#weak Ils partent comme frères juretés, non comme une offre qu'ils pourraient refuser. Tout homme dont le Mur ne veut pas reste dans vos cellules.#!"
+ ln_send_the_dungeons_to_the_wall_decision_confirm:0 "Videz les cellules. Le Mur les prendra."
+ ln_send_the_dungeons_to_the_wall_decision_desc_north:0 "Votre geôlier tient la liste sur un panneau près de la porte. Dans le Sud, on appellerait la vider vers le nord une clémence, ou une plaisanterie. On vous a élevé pour l'appeler par son nom : le Mur doit être tenu, le Nord l'a toujours tenu, et un homme qui a rompu la paix du roi peut encore tenir une lance du bon côté.\n\nIls vous maudiront sur la chaussée et ne remercieront personne. Leurs fils seront frères juretés du plus vieil ordre du monde. Les deux choses sont vraies, et aucune ne vous concerne au-delà du Gift."
+ ln_send_the_dungeons_to_the_wall_effect_tt:0 "#V [ROOT.Char.MakeScope.ScriptValue('ln_prisoners_fit_for_the_wall_value')|0]#! de vos prisonniers prendront le noir. Ils sont remis à la Garde de Nuit et rejoignent la cour du lord Commandant"
+
+ # ── The four things that can stop you, each said out loud. AGOT hides all of these in is_shown. ──
+ ln_wall_you_are_of_the_free_folk:0 "Vous êtes du peuple libre — la Garde ne vous prendra pas d'hommes"
+ ln_wall_your_seat_is_not_in_the_seven_kingdoms:0 "Votre siège se trouve hors des Sept Couronnes — le Mur n'est pas le vôtre pour y envoyer des hommes"
+ ln_wall_there_is_no_watch_left:0 "Il ne reste plus de Garde de Nuit pour les recevoir"
+ ln_wall_none_of_them_will_serve:0 "Aucun de vos prisonniers ne peut prendre le noir"
+
+ # ── 1.1.0 (§10): the protections, each named out loud. A correct refusal with no reason reads as a bug. ──
+ ln_wall_he_is_not_yours_to_send:0 "Il n'est pas à vous de l'envoyer — seuls vos propres vassaux et leurs serviteurs, ou votre propre cour, peuvent être menés au nord"
+ ln_wall_he_is_a_king_in_his_own_right:0 "Il est roi de son propre droit — les têtes couronnées sont rançonnées ou meurent, elles ne sont pas envoyées au Mur"
+ ln_wall_his_house_looks_to_him:0 "Sa maison s'en remet à lui — le Mur ne prend pas le chef d'une maison"
+ ln_wall_his_dynasty_looks_to_him:0 "Sa dynastie s'en remet à lui — le Mur ne prend pas le chef d'une dynastie"
+ ln_wall_he_is_the_last_of_his_house:0 "Il est le dernier de sa maison — le Mur met fin aux hommes, pas aux lignées"
+ ln_wall_he_is_too_great_a_lord:0 "C'est un trop grand seigneur — personne au-dessus du rang comtal ne peut être envoyé"
+
+ # ── 1.1.0 (§10.2): the tier-ceiling game rule ──
+ rule_ln_wall_tier_ceiling:0 "#explanation_link_light_background;bold LN:#! #e;bold Envoyer les prisonniers#! Plafond de rang"
+ setting_ln_wall_county_ceiling:0 "Comtes et en dessous #EMP (Par défaut)#!"
+ setting_ln_wall_county_ceiling_desc:0 "Les seigneurs capturés au-dessus du rang comtal ne peuvent pas être envoyés au Mur. Les rois et les ducs sont rançonnés ou exécutés, comme les grands hommes qu'ils sont."
+ setting_ln_wall_send_any_tier:0 "Tout rang"
+ setting_ln_wall_send_any_tier_desc:0 "Tout prisonnier éligible peut être envoyé au Mur, quels que soient ses titres. Le roi du Trône de Fer peut finir ses jours frère jureté."

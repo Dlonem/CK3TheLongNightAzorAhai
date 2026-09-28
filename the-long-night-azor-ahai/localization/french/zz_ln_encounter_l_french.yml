@@ -1,0 +1,54 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- White Walkers in Winter Is Coming (1.1.0, §5).
+
+ # ── The encounter ──
+ ln_encounter.1.t:0 "La neige se dresse"
+ ln_encounter.1.desc.men:0 "Le vent meurt d'un coup, comme meurt une conversation quand le mauvais homme entre dans la salle. Votre souffle reste suspendu devant vous et ne bouge pas.\n\nIl se tient entre deux arbres, et vous comprenez qu'il se tient là depuis un moment. Grand, mince, de la couleur de la glace laiteuse. Il porte une lame qui n'a l'air faite par personne. La neige ne craque pas sous lui, parce qu'il ne se tient pas sur la neige.\n\nVos hommes l'ont vu aussi. Personne n'a encore couru. Cela peut encore tourner dans les deux sens."
+ ln_encounter.1.desc.alone:0 "Le vent meurt d'un coup. Votre souffle reste suspendu devant vous et ne bouge pas.\n\nIl se tient entre deux arbres, et vous comprenez qu'il se tient là depuis un moment. Grand, mince, de la couleur de la glace laiteuse. Il porte une lame qui n'a l'air faite par personne. La neige ne craque pas sous lui, parce qu'il ne se tient pas sur la neige.\n\nVous n'avez personne avec vous. Cela aussi, il le sait."
+ ln_encounter.1.a:0 "Formez la ligne - nous le combattons ici"
+ ln_encounter.1.b:0 "Reculez - rien de ce que nous avons ne peut le toucher"
+
+ # ── Victory ──
+ ln_encounter.20.t:0 "Il s'est brisé"
+ ln_encounter.20.desc:0 "Le coup porte et la chose ne saigne pas. Elle se brise. Elle se défait comme la glace se détache d'un toit au printemps, d'un seul coup et avec un bruit de lac qui se fend, et là où elle se tenait il n'y a plus que du givre qui tombe de l'air.\n\nLe froid se lève. Le vent revient, et les arbres se souviennent comment bouger.\n\nCeux qui tiennent encore debout regardent le givre se poser dans la neige, puis vous regardent. Les hommes raconteront ceci autrement dans chaque salle que l'histoire atteindra. Vous y étiez. Vous savez ce que cela a coûté."
+ ln_encounter.20.a:0 "Regardez ce qu'il en reste"
+
+ # ── The taking ──
+ ln_encounter.21.t:0 "Le froid se referme"
+ ln_encounter.21.desc:0 "Vous êtes sur le dos dans la neige et vous n'avez aucun souvenir de la chute. Le combat est fini. On entend à quel point il est fini.\n\nIl marche vers vous sans se presser, parce que plus rien de ce qui pouvait le blesser ne tient debout. Le froid arrive avant lui, dans vos mains d'abord, puis dans vos bras, puis dans les parties de vous que vous aviez toujours tenues pour vôtres.\n\nLa dernière chose que vous comprenez, c'est qu'il ne va pas vous tuer. Il va vous garder."
+ ln_encounter.21.a:0 "Il n'y a plus rien à faire"
+
+ # ── The Sam Tarly outcome ──
+ ln_encounter.22.t:0 "Il en laisse un vivre"
+ ln_encounter.22.desc:0 "Il s'arrête.\n\nLa lame est à la gorge de [ln_enc_the_spared.GetTitledFirstName] et elle s'arrête, et le long visage blanc se tourne et le considère comme un homme considère un chien trop petit pour mériter un coup de botte. Puis il passe devant lui, et les yeux bleus viennent se poser sur vous.\n\nIl vivra. Il passera le reste de sa vie dans des salles à raconter ce qu'il a vu ici, et les hommes lui verseront de la bière sans croire un mot. C'est pour cela qu'il l'a épargné. Il faut bien que quelqu'un dise aux vivants ce qui vient, et il a décidé que ce serait lui — et pas vous."
+ ln_encounter.22.a:0 "Pour que quelqu'un sache"
+
+ # ── Break and run ──
+ ln_encounter.24.t:0 "Vous ne cessez pas de courir"
+ ln_encounter.24.desc:0 "Il n'y a là aucun ordre et aucun honneur non plus. Il y a un moment où la ligne n'existe plus et où vos jambes courent, et les arbres défilent en fouettant l'air, et derrière vous il y a un bruit que vous entendrez le reste de votre vie : les hommes qui ne pouvaient pas courir, s'arrêtant.\n\nVous courez jusqu'à ce que le sang dans votre bouche ait un goût de fer et que le froid dans votre poitrine ressemble à la noyade. Quand vous regardez enfin derrière vous, il n'y a entre les arbres que de la neige.\n\nIl ne vous a pas poursuivi. C'est la part que vous ne raconterez à personne."
+ ln_encounter.24.a:0 "Continuez jusqu'à ce qu'il y ait des feux"
+
+ # ── A sighting ──
+ ln_encounter.30.t:0 "Quelque chose sur la crête"
+ ln_encounter.30.desc:0 "Les chasseurs rentrent tôt et avec un chien de moins. Ils ont trouvé des traces dans la neige haute : une enjambée d'homme, mais trop longue, et sans aucun poids, comme si ce qui les avait faites avait marché SUR la neige et non dedans. Les traces courent sur un demi-mille le long de la crête et s'arrêtent au milieu d'un pas.\n\nLe plus vieux d'entre eux chasse sur cette crête depuis trente ans. C'est lui qui refuse d'en parler."
+ ln_encounter.30.a:0 "Je sais ce qui a marché là - je l'ai toujours su"
+ ln_encounter.30.b:0 "Le froid joue des tours aux hommes fatigués"
+
+ # ── option tooltips (the effects run hidden; these lines are what the player is told) ──
+ ln_encounter.1.a_tt:0 "Le combat commence. Il se réglera homme par homme dans les jours qui suivent, et un Marcheur Blanc n'accepte jamais une reddition."
+ ln_encounter.1.b_tt:0 "Personne ne combat. La chose vous regarde partir."
+ ln_encounter.20.a_tt:0 "Le Marcheur est détruit. Votre compte augmente de un, et chaque survivant en garde le souvenir."
+ ln_encounter.21.a_tt:0 "Les hommes qui respirent encore ne quittent pas la neige. Vous non plus — et ce que le froid prend, le froid le garde."
+ ln_encounter.22.a_tt:0 "Il vit. Tous les autres restent dans la neige, vous le dernier de tous — et un homme marche vers le sud pour raconter une histoire que personne ne croira."
+ ln_encounter.24.a_tt:0 "Vous survivez, avec de graves blessures. Les hommes qui ne pouvaient pas courir, non."
+
+ # ── Memories (§6 -- the type key is the title line, then three perspectives: I / you / [owner]) ──
+ ln_slew_a_walker_memory:0 "a tué l'un des Autres"
+ ln_slew_a_walker_memory_desc:0 "J'ai tenu tête à l'un des Autres dans la neige, et c'est lui qui s'est brisé."
+ ln_slew_a_walker_memory_desc_second_perspective:0 "vous avez tenu tête à l'un des Autres dans la neige, et c'est lui qui s'est brisé."
+ ln_slew_a_walker_memory_desc_third_perspective:0 "[owner.GetName] a tenu tête à l'un des Autres dans la neige, et c'est lui qui s'est brisé."
+ ln_the_walker_spared_me_memory:0 "épargné par l'un des Autres"
+ ln_the_walker_spared_me_memory_desc:0 "Il a tué tous les hommes à mes côtés, puis il m'a regardé et m'a laissé vivre. Je ne sais pas pourquoi moi. Je le demande dans mon sommeil."
+ ln_the_walker_spared_me_memory_desc_second_perspective:0 "il a tué tous les hommes à vos côtés, et il vous a regardé et vous a laissé vivre."
+ ln_the_walker_spared_me_memory_desc_third_perspective:0 "[owner.GetName] a été épargné par l'un des Autres, et personne n'a pu dire pourquoi."

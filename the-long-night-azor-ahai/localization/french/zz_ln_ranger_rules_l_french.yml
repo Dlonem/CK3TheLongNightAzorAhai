@@ -1,0 +1,23 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the ranging companies rule.
+ # Written the way Thomas asked game rules to be written: obvious unless the vagueness is the point, and the
+ # default marked so you can see it without opening anything.
+
+ rule_ln_ranger_recruitment:0 "Les compagnies de patrouille"
+ rule_ln_ranger_recruitment_desc:0 "Il y a huit compagnies de patrouille sur le Mur. Ceci décide combien d’entre elles la Garde de Nuit pourvoit elle-même. Le lord Commandant peut relever un capitaine pour toi avec n’importe quel réglage."
+
+ setting_ln_rangers_watch_fills_ranks:0 "La Garde recrute #EMP (Par défaut)#!"
+ setting_ln_rangers_watch_fills_ranks_desc:0 "Les huit chevauchent dès le début de la partie. Quand un capitaine meurt, la Garde le remplace, mais elle ne gardera jamais plus de cinq des siens en campagne. #EMP Les trois autres attendent un joueur.#!"
+ setting_ln_rangers_players_only:0 "Les laisser aux joueurs"
+ setting_ln_rangers_players_only_desc:0 "Les huit chevauchent dès le début de la partie sous leurs capitaines historiques. Quand l’un meurt, la Garde ne nomme personne et la place attend un joueur."
+ setting_ln_rangers_all_eight_ride:0 "Les huit chevauchent"
+ setting_ln_rangers_all_eight_ride_desc:0 "Quand une compagnie perd son capitaine, la Garde nomme toujours le suivant. Aucune place réservée."
+
+ # -- 1.1.3 : qui répond à la Question du Nord ------------------------------------------------------------
+ rule_ln_question_of_the_north:0 "La Question du Nord"
+ rule_ln_question_of_the_north_desc:0 "Quand la Longue Nuit s'achève, un souverain décide si la Garde de Nuit renaît ou si le peuple libre franchit le Mur. Ceci décide qui est consulté en premier."
+ setting_ln_question_player_in_the_north_first:0 "Un joueur dans le Nord d'abord #EMP (Par défaut)#!"
+ setting_ln_question_player_in_the_north_first_desc:0 "Un joueur sur le Trône de Fer, puis un joueur tenant le Nord (vassal ou non), puis le joueur du plus haut rang possédant des terres dans le Nord. Ce n'est que si aucun joueur ne remplit ces conditions que la question va à la couronne IA."
+ setting_ln_question_the_crown:0 "La Couronne"
+ setting_ln_question_the_crown_desc:0 "Le Trône de Fer, sinon un souverain indépendant du Nord, sinon celui qui gouverne Westeros. Un joueur sous une couronne IA n'est pas consulté."

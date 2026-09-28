@@ -5,11 +5,19 @@
  # default marked so you can see it without opening anything.
 
  rule_ln_ranger_recruitment:0 "The Ranging Companies"
- rule_ln_ranger_recruitment_desc:0 "There are eight ranging companies on the Wall. This decides whether the Night's Watch fills them itself, or leaves them standing empty for players."
+ rule_ln_ranger_recruitment_desc:0 "There are eight ranging companies on the Wall. This decides how many of them the Night's Watch keeps filled itself. The Lord Commander can stand a captain down for you under any setting."
 
  setting_ln_rangers_watch_fills_ranks:0 "The Watch Recruits #EMP (Default)#!"
- setting_ln_rangers_watch_fills_ranks_desc:0 "The Watch appoints its own rangers over time, but never more than five. #EMP Three companies are always held open for players.#!"
+ setting_ln_rangers_watch_fills_ranks_desc:0 "All eight ride from game start. When a captain dies the Watch replaces him, but it will never keep more than five of its own in the field. #EMP The other three wait for a player.#!"
  setting_ln_rangers_players_only:0 "Leave Them for Players"
- setting_ln_rangers_players_only_desc:0 "The eight companies ride from game start under their historical captains, but when one dies the Watch appoints nobody — his camp stands and his seat waits for a player. For a full group."
+ setting_ln_rangers_players_only_desc:0 "The eight ride from game start under their historical captains. When one dies the Watch appoints nobody, and the seat waits for a player."
  setting_ln_rangers_all_eight_ride:0 "All Eight Ride"
- setting_ln_rangers_all_eight_ride_desc:0 "When a company loses its captain the Watch always appoints the next — all eight, no seats held back. The most alive Wall; the Lord Commander can still stand a captain down for you."
+ setting_ln_rangers_all_eight_ride_desc:0 "When a company loses its captain the Watch always appoints the next. No seats held back."
+
+ # -- 1.1.3: who answers the Question of the North -------------------------------------------------------
+ rule_ln_question_of_the_north:0 "The Question of the North"
+ rule_ln_question_of_the_north_desc:0 "When the Long Night ends, one ruler decides whether the Night's Watch rises again or the free folk come through the Wall. This decides who is asked first."
+ setting_ln_question_player_in_the_north_first:0 "A Player in the North First #EMP (Default)#!"
+ setting_ln_question_player_in_the_north_first_desc:0 "A player on the Iron Throne, then a player holding the North (vassal or not), then the highest-ranked player with land in the North. Only if no player qualifies does it go to the AI crown."
+ setting_ln_question_the_crown:0 "The Crown"
+ setting_ln_question_the_crown_desc:0 "The Iron Throne, else an independent ruler of the North, else whoever rules Westeros. A player under an AI crown is not asked."

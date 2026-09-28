@@ -1,0 +1,22 @@
+﻿l_spanish:
+
+ # ── the horde ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_wight_horde:0 "Muertos alzados"
+ ln_wight_horde_flavor:0 "Los muertos comunes de cada plaza que han tomado los Otros, que caminan porque se les ordena. Por separado no son nada: lentos, quebradizos y armados con lo que tuvieran en la mano al morir. Simplemente son muchísimos, y no se detienen."
+
+ # ── the realm renames itself ────────────────────────────────────────────────────────────────────────────────
+ ln_realm_the_long_night:0 "La Larga Noche"
+
+ # ── recurrence game rule ────────────────────────────────────────────────────────────────────────────────────
+ rule_agot_long_night_recurrence:0 "#explanation_link_light_background;bold AGOT:#! Recurrencia de #e;bold La Larga Noche#!"
+ setting_long_night_once:0 "Una vez #EMP (Por defecto)#!"
+ setting_long_night_once_desc:0 "La Larga Noche viene una vez. Si los vivos la sobreviven, ha terminado."
+ setting_long_night_recurs:0 "El Ciclo"
+ setting_long_night_recurs_desc:0 "La Larga Noche vuelve, y cada invierno es peor que el anterior. El tiempo que el mundo tiene entre una y otra lo fija la regla del Momento. Termina cuando una dinastía rompe el ciclo, o el ciclo rompe el mundo."
+ # ── wave escalation modifiers ───────────────────────────────────────────────────────────────────────────────
+ ln_wave_escalation_1_modifier:0 "Los muertos recuerdan"
+ ln_wave_escalation_1_modifier_desc:0 "Ya han bajado al sur antes, y no olvidaron el camino."
+ ln_wave_escalation_2_modifier:0 "Siglos de invierno"
+ ln_wave_escalation_2_modifier_desc:0 "El mundo ha sido desangrado dos veces. Cada plaza que los muertos tomaron alguna vez sigue siendo suya para volver a alzarla."
+ ln_wave_escalation_3_modifier:0 "La última Larga Noche"
+ ln_wave_escalation_3_modifier_desc:0 "No queda mucho que conquistar, y no queda nada que recuerde un verano."

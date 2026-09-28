@@ -1,0 +1,38 @@
+﻿l_spanish:
+
+ # ── THE NAMING ──────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.1.t:0 "Una espada sacada del fuego"
+
+ ln_prophecy.1.desc.priest:0 "[ln_priest.GetTitledFirstName] pidió hablar conmigo a solas, algo que [ln_priest.GetSheHe] no había hecho jamás.\n\nEs a [ln_priest.GetHerHim] a quien las llamas muestran las mismas visiones desde la primavera, dice [ln_priest.GetSheHe], y [ln_priest.GetSheHe] las ha ido poniendo una junto a otra desde entonces. Sal y humo. Una estrella sangrando sobre el mar. Una espada sacada ardiendo de un fuego y no consumida por él. Y al final de cada lectura, mi rostro.\n\n\"Eres Azor Ahai renacido\", me dice [ln_priest.GetSheHe], y hay en [ln_priest.GetHerHis] mirada una certeza que inquieta. \"El príncipe que fue prometido. Nacido de nuevo cuando el mundo se vuelve frío, para hacer frente a lo que llega con él.\"\n\n[ln_priest.GetFirstName] quiere declararlo en público, y antes pide mi permiso. Si [ln_priest.GetSheHe] tiene razón, el reino tiene a su campeón. Si [ln_priest.GetSheHe] se equivoca, no soy más que otro necio que dejó que un sacerdote lo nombrara elegido de un dios, y hombres han ardido por menos."
+
+ ln_prophecy.1.desc.self:0 "No se lo he contado a nadie, porque no hay nadie a quien se lo confiaría.\n\nLos sueños no llegan como profecía. Llegan como recuerdo. Una espada ardiendo en mi mano. Una estrella sangrando sobre aguas negras. Nieve cayendo sobre un campo de batalla que nunca he pisado. Despierto seguro de que estas cosas ya han ocurrido, y sin embargo sé que no han empezado siquiera.\n\nTodos los niños de los Siete Reinos conocen el título reservado a quien lleva estas señales. Azor Ahai renacido. El príncipe que fue prometido.\n\nHe contado mis propias marcas cien veces en la oscuridad, esperando que no salieran las cuentas. Siempre salen."
+
+ ln_prophecy.1.desc.greenseer:0 "[ln_greenseer.GetTitledFirstName] me encontró al anochecer y no se molestó en cortesías.\n\nLos arcianos sostienen el mismo rostro desde mucho antes de que yo tomara aliento, dice [ln_greenseer.GetSheHe]. Junto a él, el mismo puñado de señales: humo sobre un lecho de parto, una estrella que sangró en el cielo, una hoja que arde y no es devorada por su propio fuego. El rostro de los árboles es el mío.\n\n\"Tú eres a quien se prometió\", dice [ln_greenseer.GetSheHe], con una voz que cruje como hojas muertas. \"Los árboles solo esperaban a ver de quién resultaría ser el rostro.\"\n\n[ln_greenseer.GetSheHe] quiere que el Norte lo sepa antes de que el invierno golpee de verdad. No se me pide nada a cambio, lo cual, de algún modo, sienta peor que si exigieran un precio."
+
+ ln_prophecy.1.desc.witch:0 "La vieja ya estaba entre mi gente antes de que nadie la anunciara, y después nadie supo decir cómo se había colado entre los guardias.\n\nLleva mucho tiempo caminando, me dice, y contando mientras caminaba. Humo el día de un nacimiento. Una estrella que sangró sobre el agua. Sueños que llegan como recuerdo en lugar de profecía. Ha ido reuniendo estas señales durante años, de campamento en salón, y todas la han traído aquí.\n\n\"Eres tú\", grazna, señalando con un dedo nudoso. \"El que fue prometido, nacido de nuevo cuando el mundo se vuelve frío.\" Se niega a usar el nombre que usan los sacerdotes rojos. Pronuncia uno más antiguo, y mi maestre palidece al traducirlo.\n\nLuego se da la vuelta y sale, dejando a media casa mirándome en absoluto silencio."
+
+ ln_prophecy.1.a:0 "Si el reino necesita un campeón, que me llamen Azor Ahai."
+ ln_prophecy.1.b:0 "Baja la voz. No se lo digas a nadie más por ahora."
+ ln_prophecy.1.c:0 "Has leído mal las señales. No soy el salvador de nadie."
+
+ # ── CHOSEN ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.2.t:0 "El príncipe que fue prometido"
+
+ ln_prophecy.2.desc.first:0 "Ya no es una sola voz la que lo dice.\n\nLo que [ln_speaker.GetTitledFirstName] dijo de mí ha viajado como viaja la palabra entre templos—que es mucho más rápido de lo que viaja entre reyes. Ha vuelto coincidiendo consigo misma, y eso casi nunca pasa. Sacerdotes que jamás han visto mi rostro han contado las mismas marcas y han llegado exactamente al mismo total.\n\nMe llaman el príncipe que fue prometido. Los más atrevidos usan el nombre antiguo, Azor Ahai renacido, y los más atrevidos no suelen ser los que acaban teniendo razón.\n\nEsto no me hace un campeón. Me hace una pretensión. Hay hombres que tomarán las armas por ella, y hombres que tomarán las armas contra ella.\n\n#N Nadie en todo esto sabe si es verdad. Yo menos que nadie.#!"
+
+ ln_prophecy.2.desc.rival:0 "Ya no es una sola voz la que lo dice y, peor aún, no soy el único de quien se dice.\n\nYa hay otro que lleva el título, con un templo detrás y un ejército de seguidores además. Tienen una versión de la profecía en la que sus marcas son las verdaderas y las mías no son más que [ln_speaker.GetTitledFirstName] leyendo esperanza desesperada en un fuego.\n\nY sin embargo ahora se dice exactamente lo mismo de mí, y lo dicen sacerdotes igual de seguros.\n\nNo podemos ser los dos el príncipe que fue prometido. La fe es perfectamente capaz de sostener esa idea y financiarnos a ambos de todos modos—porque una fe que ha esperado ocho mil años ha aprendido a cubrir sus apuestas.\n\n#N Uno de los dos será recordado como el necio que solo se lo creyó.#!"
+
+ ln_prophecy.2.a:0 "Pues que el mundo sepa que soy el elegido."
+ ln_prophecy.2.b:0 "Silenciad estos rumores. Se equivocan de aspirante."
+
+ # ── THE DOUBT ───────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.3.t:0 "Una llama que vacila"
+
+ ln_prophecy.3.desc:0 "[ln_speaker.GetFirstName] no lo dice abiertamente. [ln_speaker.GetFirstName] no es ningún necio, y no se me conoce precisamente por mi paciencia.\n\nAsí que la duda llega de lado. ¿Sigo teniendo lo que tenía? ¿Sigue contando la estrella, y el humo, y los sueños? Hay una pausa pesada y larga en cada marca que ya no se sostiene, y esas pausas son todo el mensaje.\n\nLa profecía no fue nunca más que un recuento, y el mío ha ido hacia atrás.\n\n\"No estoy diciendo que no seas el elegido\", dice [ln_speaker.GetSheHe] al fin, mirando a otro lado. Eso es lo peor de todo. [ln_speaker.GetSheHe] ya no sabe si [ln_speaker.GetSheHe] estuvo alguna vez seguro, o si solo deseaba estarlo."
+
+ ln_prophecy.3.a:0 "Si tus fuegos mintieron, admítelo a mi cara."
+ ln_prophecy.3.b:0 "Hemos llegado demasiado lejos. No puedes retirarme el nombre ahora."
+
+ # ── THE CAPSTONE TRAIT ──────────────────────────────────────────────────────────────────────────────────
+ trait_azor_ahai_reborn:0 "Azor Ahai Renacido"
+ trait_azor_ahai_reborn_desc:0 "Mató al Rey de la Noche.\n\nSin nombramiento de sacerdote. Sin aclamación de templo. Salió al encuentro de la oscuridad con acero en la mano y la quebró. Ocupa el único peldaño de esta escalera que nadie puede discutir, ganado por el hecho mismo y no por la lectura esperanzada que alguien hiciera de un fuego.\n\nSi eso basta de verdad para ser el príncipe que fue prometido es otra cuestión, pero muchísima gente va a responderla con enorme seguridad en ambos sentidos."

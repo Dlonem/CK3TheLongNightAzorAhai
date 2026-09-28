@@ -1,0 +1,61 @@
+﻿l_spanish:
+
+ # ── THE INTERACTION ─────────────────────────────────────────────────────────────────────────────────────────
+ ln_lords_blessing_interaction:0 "Ofrecer la bendición del Señor"
+ ln_lords_blessing_interaction_desc:0 "Ponte ante [recipient.GetTitledFirstName] y di las palabras: que el Señor de Luz tiene un uso para [recipient.GetHerHim], que estarás allí cuando importe, y que cuando [recipient.GetSheHe] caiga tienes intención de discutirlo.\n\n[recipient.GetSheHe|U] puede, por supuesto, mandarte fuera."
+ LN_LORDS_BLESSING_NOTIFICATION:0 "[actor.GetTitledFirstName] ofrece a [recipient.GetTitledFirstName] la bendición de R'hllor"
+ ln_blessing_must_be_present_tt:0 "Debes estar en la misma corte que esa persona: una bendición se da en persona o no se da"
+ ln_fervor_gain_blessing:0 "Un señor recibió la bendición del Señor"
+ ln_fervor_gain_resurrection:0 "Un hombre fue llamado de vuelta desde el fuego"
+
+ # ── THE BLESSING LANDS ──────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.40.t:0 "Las palabras están dichas"
+ ln_prophecy.40.desc:0 "[ln_blessing_sponsor.GetTitledFirstName] no hace de ello una ceremonia, lo cual en cierto modo es peor.\n\nNo hay incienso ni cánticos ni se invita a nadie. [ln_blessing_sponsor.GetSheHe|U] te encuentra donde da la casualidad de que estás, te pone la mano plana sobre el esternón, dice algo corto en una lengua que no tienes y luego, en la lengua común, para que no haya confusión: «Cuando caigas, no dejes que te entierren deprisa. Manda a buscarme. Lo que quede de ti, manda a buscarme.»\n\nLuego [ln_blessing_sponsor.GetSheHe] retira [ln_blessing_sponsor.GetHerHis] mano y pregunta si has comido.\n\nMás tarde esa noche te das cuenta de que no has dejado de pensar en ese «lo que quede»."
+ ln_prophecy.40.a:0 "Entonces mandaré a buscarte. Que R'hllor nos guarde a los dos."
+ ln_prophecy.40.b:0 "He aceptado algo y no tengo claro qué."
+
+ # ── THE KILLING BLOW ────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.21.t:0 "Manda a buscarme, quede lo que quede"
+ ln_prophecy.21.desc:0 "Cumplieron su palabra. Hicieron falta dos días y un caballo que murió en el camino, pero mandaron a buscarte, y ahora estás en una tienda con [ln_the_fallen.GetTitledFirstName] sobre una mesa de caballetes y la capa de alguien sobre [ln_the_fallen.GetHerHis] rostro.\n\nLos hombres que trajeron aquí a [ln_the_fallen.GetHerHim] no se han ido. Se ha corrido la voz de lo que dijiste en aquel patio, y medio campamento ha decidido que era una promesa y la otra mitad que era una fanfarronada, y las dos esperan para averiguar cuál.\n\nTienes uno de estos. Siempre has tenido exactamente uno.\n\nEl fuego del brasero hace lo que hace el fuego cuando estás a punto de pedirle algo. Se inclina."
+ ln_prophecy.21.a:0 "Entonces sácalo de mí. No de [ln_the_fallen.GetHerHim]."
+ ln_prophecy.21.b:0 "No esta vez. R'hllor me perdone: no esta vez."
+
+ # ── THE MODIFIER ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_fell_in_the_dark_modifier:0 "Cayó en la oscuridad"
+ ln_fell_in_the_dark_modifier_desc:0 "Cayó por un golpe que debería haber terminado con todo, y desde entonces no se ha levantado del todo."
+
+ # ── THE DECISION (1.0.14) ───────────────────────────────────────────────────────────────────────────────────
+ ln_ask_for_the_blessing_decision_title:0 "Pedir la bendición del Señor"
+ ln_ask_for_the_blessing_decision_desc:0 "Hay un sacerdote rojo bajo tu techo, y llevas tiempo pensando en algo que dijo uno de ellos una vez.\n\nNo lo ofrecen a menudo, y no lo ofrecen a cualquiera. Pero pedirlo no cuesta nada, salvo la parte en la que tienes que decirlo en voz alta: que esperas morir, que preferirías no hacerlo y que te gustaría que alguien estuviera allí cuando ocurra."
+ ln_ask_for_the_blessing_decision_tt:0 "Pide al sacerdote rojo que diga las palabras sobre ti."
+ ln_ask_for_the_blessing_decision_confirm:0 "Manda a buscarlo."
+ ln_ask_blessing_already_blessed_tt:0 "Un sacerdote ya ha dicho las palabras sobre ti"
+ # 1.0.16 -- DEPRECATED, DELIBERATELY KEPT. Its clause was removed from
+ # common/decisions/zz_ln_blessing_decisions.txt to open the Beric track, so nothing in the mod requests this
+ # string today. It stays because deleting a key on the grounds that "nothing references it" is precisely how
+ # the three eye_color_*_long_night genes were removed in v0.1.0 and started throwing portraitcontext errors
+ # out of saved ruler files (see common/genes/zz_long_night_genes.txt). One parse, no risk. Deprecate, never
+ # delete -- and if the gate ever returns, the string is still here and still right.
+ ln_ask_blessing_already_returned_tt:0 "El fuego ya te ha devuelto una vez"
+
+ # ── THE NUDGE (1.0.14) ──────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.41.t:0 "Para qué sirve el sacerdote rojo"
+ ln_prophecy.41.desc:0 "[ln_the_priest.GetTitledFirstName] no es un huésped cómodo. [ln_the_priest.GetSheHe|U] mantiene el fuego más alto de lo que nadie quiere y tiene opiniones sobre las sombras de los rincones de tu salón.\n\nPero alguien de tu casa repite algo que dijo [ln_the_priest.GetHerHim] a un mozo de cuadra agonizante el invierno pasado, y se te queda dentro: que el Señor de Luz no siempre recupera lo que se le ofrece, y que un sacerdote que esté lo bastante cerca en el momento justo puede a veces discutírselo.\n\nEl mozo de cuadra murió de todos modos. Nadie se lo había pedido antes a [ln_the_priest.GetTitledFirstName]."
+ ln_prophecy.41.a:0 "Supersticiones. El fuego se lleva lo que se lleva."
+ ln_prophecy.41.b:0 "Entonces alguien debería pedírselo a [ln_the_priest.GetTitledFirstName] por adelantado."
+
+ # ── THE TWO-WAY HANDSHAKE (1.0.14) ──────────────────────────────────────────────────────────────────────────
+ ln_prophecy.21.c:0 "Dalo, y que sepa lo que me ha costado."
+
+ ln_prophecy.22.t:0 "No te levantas"
+ ln_prophecy.22.desc.hope:0 "El golpe entra y el suelo llega más rápido de lo que debería.\n\nNotas que el ruido se va. Alguien grita una orden que ya no te concierne. Hay mucha sangre tuya entre tú y el cielo, y la aritmética no es complicada.\n\nEn algún punto detrás de la línea, han mandado a buscar a [ln_the_priest.GetTitledFirstName]. Si [ln_the_priest.GetSheHe] viene, y qué precio pagará [ln_the_priest.GetSheHe] cuando [ln_the_priest.GetSheHe] llegue, ya está del todo fuera de tus manos."
+ ln_prophecy.22.desc.spent:0 "El golpe entra y el suelo llega más rápido de lo que debería.\n\nNotas que el ruido se va. Alguien grita una orden que ya no te concierne. Hay mucha sangre tuya entre tú y el cielo, y la aritmética no es complicada.\n\nEn algún punto detrás de la línea, han mandado a buscar a [ln_the_priest.GetTitledFirstName]. Pero [ln_the_priest.GetSheHe] ya ha hecho esto antes, por otra persona, y nunca hubo más que uno para dar."
+ ln_prophecy.22.a:0 "Así que así es como acaba."
+
+ ln_prophecy.23.t:0 "El fuego te devolvió"
+ ln_prophecy.23.desc:0 "No eres consciente de la discusión que se tiene sobre ti. No eres consciente de nada, que es justamente el problema, y dura un tiempo sobre el que después nadie se pondrá de acuerdo.\n\nLuego hay una mano en tu pecho que está demasiado caliente, y una voz que dice palabras en una lengua que no tienes, una y otra vez, con una obstinación que suena menos a oración que a una deuda que se cobra.\n\nVuelves como vuelve un hombre que sale de aguas profundas: mal, y de golpe. [ln_the_priest.GetTitledFirstName] tiene los labios grises y no te mira. Algo se ha cobrado para pagar esto, y no se ha cobrado solo de ti."
+ ln_prophecy.23.a:0 "Levántate."
+
+ ln_prophecy.24.t:0 "El fuego se quedó lo que tenía"
+ ln_prophecy.24.desc:0 "[ln_the_priest.GetTitledFirstName] se arrodilla en el barro a tu lado y te mira un largo momento.\n\nNo puedes oír lo que decide [ln_the_priest.GetSheHe]. Solo puedes ver [ln_the_priest.GetHerHis|U] rostro mientras [ln_the_priest.GetSheHe] lo decide, y después a [ln_the_priest.GetHerHim] poniéndose de pie, y el cielo donde había estado [ln_the_priest.GetHerHis] cabeza.\n\nNunca hay más que uno para dar. No iba a dársete a ti."
+ ln_prophecy.24.a:0 "Entonces acaba aquí."

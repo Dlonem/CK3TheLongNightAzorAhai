@@ -10,9 +10,24 @@
 # ── THE ARRIVAL ─────────────────────────────────────────────────────────────────────────────────────────────
 ln_pledge.1 = {
 	type = character_event
-	title = ln_pledge.1.t
+	# 1.1.3 review: the in-hall hearing has no gate to stand at.
+	title = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_character_flag = ln_heard_the_priest_in_hall }
+				desc = ln_pledge.1.t.hall
+			}
+			desc = ln_pledge.1.t
+		}
+	}
 	desc = {
 		first_valid = {
+			# 1.1.3 -- the priest was already under your roof (the "Hear the Red Priest" face of the
+			# decision); no ship, no gate. The flag is set by the decision for five days.
+			triggered_desc = {
+				trigger = { has_character_flag = ln_heard_the_priest_in_hall }
+				desc = ln_pledge.1.desc.hall
+			}
 			# The dark is already here. He did not come to convince you of anything.
 			triggered_desc = {
 				trigger = {
@@ -61,6 +76,45 @@ ln_pledge.1 = {
 				court_position:camp_priest_camp_officer = { save_scope_as = ln_priest }
 			}
 		}
+		# ── 1.1.3: OR ANYWHERE ELSE IN THE HALL (samurai, Discord, 24 Sep: Melisandre as Spymaster). ─────
+		# The branch above reads the chaplain seat only, so a red priest serving in another seat, or as a
+		# guest, was invisible here, and ln_summon_the_red_priest_effect then made a stranger -- its
+		# Melisandre branch refuses a priest whose employer is a player, which she was. Her, then Thoros,
+		# then any red priest in the hall, by name because she does not carry the trait at most bookmarks
+		# (see ln_red_priest_in_hall_trigger). The summon below then no-ops as designed.
+		else_if = {
+			limit = { ln_red_priest_in_hall_trigger = yes }
+			if = {
+				limit = {
+					exists = character:Melisandre_1
+					character:Melisandre_1 = {
+						OR = { employer ?= root  host ?= root }   # 1.1.3 review: a guest counts, as in the trigger
+						is_imprisoned = no
+					}
+				}
+				character:Melisandre_1 = { save_scope_as = ln_priest }
+			}
+			else_if = {
+				limit = {
+					exists = character:Brotherhood_8
+					character:Brotherhood_8 = {
+						OR = { employer ?= root  host ?= root }   # 1.1.3 review: a guest counts, as in the trigger
+						is_imprisoned = no
+					}
+				}
+				character:Brotherhood_8 = { save_scope_as = ln_priest }
+			}
+			else = {
+				random_courtier_or_guest = {
+					limit = {
+						is_adult = yes
+						is_imprisoned = no
+						has_trait = red_priest
+					}
+					save_scope_as = ln_priest
+				}
+			}
+		}
 
 		# 1.0.9 -- AND IF NOBODY IS STANDING THERE, ONE ARRIVES. This event has always spoken of a priest
 		# and never produced one, which was fine while the decision was only an interloper's door: the
@@ -84,7 +138,24 @@ ln_pledge.1 = {
 		# not a mechanic, it is a puzzle.
 		custom_tooltip = ln_pledge.1.a.tt
 
-		set_character_faith = faith:rhllor_fc
+		# ── 1.1.3: THE PRIEST'S OWN FAITH, NOT A FIXED ONE. ──────────────────────────────────────────────
+		# This was `set_character_faith = faith:rhllor_fc` for everyone. Melisandre is rhllor_asshai, and
+		# AGOT's chaplain seat requires the ruler's EXACT faith (00_councillor_triggers.txt:166), so after
+		# converting, a generated rhllor_fc priest could hold the seat and she could not -- "they become
+		# Court Chaplain instead of Melisandre" (samurai). Stannis takes her faith now, and she can be his
+		# chaplain. `set_character_faith = scope:X.faith` is vanilla's form
+		# (00_religious_interaction_effects.txt:1159). rhllor_fc stays the answer when the priest is
+		# offstage or not of the red god.
+		if = {
+			limit = {
+				exists = scope:ln_priest
+				scope:ln_priest = { faith = { religion = religion:the_rhllor_religion } }
+			}
+			set_character_faith = scope:ln_priest.faith
+		}
+		else = {
+			set_character_faith = faith:rhllor_fc
+		}
 		add_character_flag = ln_took_the_red
 		add_character_flag = ln_sworn_to_the_dawn
 		add_character_modifier = {

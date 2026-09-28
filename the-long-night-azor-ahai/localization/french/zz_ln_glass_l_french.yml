@@ -1,0 +1,37 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- dragonglass lore (1.1.0, §11).
+
+ TRAVEL_POINT_OF_INTEREST_TT_ln_poi_dragonglass:0 "Site de savoir sur le verredragon"
+ ln_poi_dragonglass_tt:0 "Déclenchera un événement de savoir sur le verredragon"
+
+ ln_glass.1.t:0 "La côte de verre"
+ ln_glass.1.desc:0 "Les plages au pied du Dragonmont sont noires. Pas sombres — noires, du vrai noir d'une chose qui n'a jamais été autre chose. Le petit peuple le ramasse ici comme d'autres côtes ramassent le bois flotté, et on vous dira, si vous demandez, quelles veines donnent des lames et quelles veines donnent des perles.\n\nUn vieux carrier fait rouler un morceau entre ses doigts et vous en montre le secret : là où la pierre veut se briser, et là où elle vous résistera. Du feu gelé, disaient les Valyriens. Il ne sait pas pourquoi. Il sait tout le reste."
+ ln_glass.1.a:0 "Apprendre la pierre"
+ ln_glass.2.t:0 "Ce que gardent les registres"
+ ln_glass.2.desc:0 "La Citadelle y consacre une pièce — pas une étagère, une pièce. Des traités sur l'obsidienne venus de trois continents, une vitrine de lames tirées de fouilles au-delà du Mur, et un mestre portant trois maillons d'acier valyrien à sa chaîne, ravi comme l'est un homme à qui personne n'a posé de question sur son sujet depuis quarante ans.\n\nLes vieux comptes rendus s'accordent entre eux, et c'est ce qui les rend dignes de la chandelle. Les enfants donnaient à la Garde cent dagues par an. Les dagues étaient d'obsidienne. Nul à l'époque n'a songé à écrire pourquoi, car à l'époque tout le monde le savait."
+ ln_glass.2.a:0 "Les lire tous"
+ ln_glass.3.t:0 "Les cryptes se souviennent"
+ ln_glass.3.desc:0 "Les vieux Rois de l'Hiver siègent dans le noir, l'épée de fer en travers des genoux, et plus on descend, plus le noir est ancien. Au-delà des caveaux que vous connaissez, les cryptes se prolongent — effondrées, scellées, plus vieilles que le château au-dessus d'elles.\n\nDans le plus ancien boyau votre torche trouve une tablette taillée dans la roche vive et, posée dessus, à plat et en ordre comme au jour où on l'y a laissée, une rangée de lames de verre noir. Laissées par qui ? Pour quoi ? Les Stark siègent au-dessus de cette tablette depuis huit mille ans. Quelqu'un, au commencement de tout cela, a jugé qu'il devait y avoir des couteaux au fond de la maison."
+ ln_glass.3.a:0 "Prendre une des lames"
+ ln_glass.4.t:0 "La Garde l'a consigné"
+ ln_glass.4.desc:0 "La Garde tient ses registres dans un caveau sous l'armurerie, et les plus anciens ne sont pas de papier mais des bâtons de taille et de la pierre. Cent dagues par an, des enfants à la Garde, aussi longtemps que l'accord a tenu. Les greffiers ont consigné les comptes sans commentaire pendant trois mille ans.\n\nUn frère jureté aux doigts tachés d'encre vous montre la dernière entrée de ce livre. Puis il vous montre la tablette où les dagues étaient rangées. Elle est vide, et la poussière dessus est ancienne."
+ ln_glass.4.a:0 "Copier ce qui compte"
+ ln_glass.5.t:0 "Les nés-de-la-pierre savent"
+ ln_glass.5.desc:0 "Les Skagosi ne vous accueillent pas, pas exactement. Mais l'obsidienne se tient dans les parois de cette île comme le gras dans un mouton, et les nés-de-la-pierre la travaillent comme le faisaient leurs pères, sans avoir jamais cessé.\n\nUn tailleur, un manche en os de licorne au poing, vous dit, en langue de commerce et par gestes, ce que sa grand-mère lui a dit : le verre est pour les froids. Pas pour la chasse. Pas pour la guerre. Pour les froids, quand ils reviendront. Il dit QUAND comme les hommes du sud disent EN HIVER."
+ ln_glass.5.a:0 "Troquer pour le savoir"
+ ln_glass.6.t:0 "La cache sous les pierres"
+ ln_glass.6.desc:0 "Le Fist se dresse hors de la forêt hantée comme une phalange du vieux monde, ceint d'un mur qu'aucune main vivante ne se souvient d'avoir bâti. Le sol, ici, rend ce qu'il garde, si l'on creuse là où le sol a l'air faux.\n\nSous une pierre de tumulus au sommet de la colline : un ballot. Un manteau qui se défait au moindre contact et, dedans, enveloppé comme une chose précieuse ou une chose dangereuse, du verredragon : fers de lance, lames de couteau, pointes de flèche, par dizaines. Quelqu'un a caché cela ici, sur le pire sol du monde, contre un besoin qu'il ne pouvait pas nommer. Vous vous tenez là où il se tenait. Vous pouvez le nommer."
+ ln_glass.6.a:0 "Emporter le ballot vers le sud"
+
+ ln_prophecy.31.c:0 "Le tailler comme il faut - je sais comment courent les facettes"
+
+ # ── the gate lines. Written as what the player must GO AND DO, not as what he lacks. ──
+ ln_knows_the_glass_gate_tt:0 "Vous avez étudié le verredragon — où courent les veines, et comment se brisent les facettes"
+ ln_needs_an_unedged_weapon_tt:0 "Vous portez une arme qui n'a pas encore reçu ce tranchant"
+
+ # ── the modifiers ──
+ ln_knows_the_glass_modifier:0 "A étudié le verredragon"
+ ln_knows_the_glass_modifier_desc:0 "Est allé là où sont les registres et a appris à quoi sert le feu gelé — où courent les veines, comment se brisent les facettes, et pourquoi les enfants comptaient cent dagues par an."
+ ln_artifact_dragonglass_edged_modifier:0 "Tranchant de verredragon"
+ ln_artifact_dragonglass_edged_modifier_desc:0 "Un tranchant de feu gelé taillé comme il faut, posé par une main qui a étudié la pierre. Il reste avec l'arme, quel que soit celui qui la portera ensuite."

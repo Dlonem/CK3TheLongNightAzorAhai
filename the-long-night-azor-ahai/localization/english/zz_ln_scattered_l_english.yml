@@ -8,7 +8,7 @@
  ln_scatter.2.a:0 "There is room in my hall for men who have seen it."
  ln_scatter.2.b:0 "Feed them. Arm them. And send them to every keep south of here."
  ln_scatter.2.c:0 "The penalty for abandoning the Wall is death."
- ln_scatter_brothers_join_tt:0 "The three brothers take service in your court. They are sworn men of a Watch that no longer exists — hard, experienced, and worth more in a battle line than their years suggest."
+ ln_scatter_brothers_join_tt:0 "The brothers take service in your court. The Watch they swore to no longer exists and they are released from its vows: they wear no black now, but they are hard, experienced, and worth more in a battle line than their years suggest."
  ln_scatter.3.t:0 "What the Watch Left You"
  ln_scatter.3.desc:0 "[ln_scattered_brother.GetTitledFirstName] has been in your hall a season now, and he has not once asked for anything.\n\nHe eats with the guard. He is up before them. Word came up from the barracks three days ago, awkward about it, that the man has forgotten more about holding a wall in winter than anyone in this castle has ever learned — and that the garrison has started standing straighter when he walks past, which is not something you can order men to do.\n\nHe still wakes in the dark sometimes. Nobody asks him about that."
  ln_scatter.3.a:0 "Put him on the walls. That is what he is for."

@@ -1,0 +1,4 @@
+﻿l_french:
+ # 1.0.8 -- see common/modifiers/zz_ln_siege_modifiers.txt
+ ln_the_dead_do_not_tire_modifier:0 "Les morts ne se fatiguent pas"
+ ln_the_dead_do_not_tire_modifier_desc:0 "Ils ne dorment pas, ils ne mangent pas, et ils ne quittent jamais la ligne pour se reposer. On ne fait pas de sortie contre une armée qui n'a pas besoin de repos, et on ne l'épuise pas en attendant. Les hommes sur les murs les regardent se tenir là toute la nuit, puis la nuit suivante, et dans ce regard quelque chose cède bien avant la porte."

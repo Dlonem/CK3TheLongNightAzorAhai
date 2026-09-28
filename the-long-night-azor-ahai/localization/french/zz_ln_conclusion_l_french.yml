@@ -1,0 +1,32 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the conclusion.
+
+ nick_the_dawnbringer:0 "le Porteur de l'Aube"
+ nick_the_dawn:0 "l'Aube"
+ nick_the_prince_that_was_promised:0 "le prince qui fut promis"
+
+ ln_reveal.9.t:0 "Le bilan"
+ ln_reveal.9.desc_open:0 "Les mestres s'y attellent depuis la fonte des neiges et ils ont enfin produit un chiffre, et ce chiffre est la raison pour laquelle personne ne veut lire le reste de la page.\n\n"
+ ln_reveal.9.desc_sword:0 "Cela s'est terminé avec une épée forgée pour cela. C'est la part que les chanteurs garderont et dont les mestres débattront pendant quatre cents ans : que quelqu'un a forgé ce que la vieille histoire disait de forger, puis est allé faire ce que la vieille histoire disait de faire, et que cela a marché exactement comme annoncé. Il n'y a aucune façon confortable d'écrire cela dans un livre d'histoire.\n\n"
+ ln_reveal.9.desc_sword_unused:0 "L'épée a été forgée. Elle a coûté ce que le récit disait qu'elle coûterait. Et à la fin ce n'est pas l'épée qui en a fini, phrase que quelqu'un va devoir expliquer à celui qui l'a payée.\n\n"
+ ln_reveal.9.desc_no_sword:0 "Aucune épée n'a été forgée. Personne n'a chanté. Cela s'est terminé comme finissent la plupart des choses : des hommes avec de l'acier ordinaire, au mauvais endroit au bon moment, et la plupart n'y ont pas survécu.\n\n"
+ ln_reveal.9.desc_watch_held:0 "La Garde de Nuit a tenu. Pas intacte — rien en elle n'est intact —, mais il y a des manteaux noirs sur le Mur et des hommes dans les forts, et l'institution que le sud a passé un siècle à traiter comme une colonie pénitentiaire pour violeurs et voleurs est la raison pour laquelle il y a un sud.\n\n"
+ ln_reveal.9.desc_watch_broke:0 "La Garde de Nuit n'a pas tenu. Les forts sont vides d'une manière dont ils ne l'ont jamais été, et les hommes qui auraient pu les tenir sont sous la neige entre ici et le Mur.\n\n"
+ ln_reveal.9.desc_close:0 "Le soleil s'est levé. C'est là toute la bonne nouvelle et elle suffit.\n\nLe grand mestre veut savoir ce qu'il doit écrire en haut de la page. Il le demande depuis une semaine. Il voudrait un nom pour cela, et une date, et une phrase que des gens dans trois cents ans pourront lire sans avoir besoin du reste du livre."
+ ln_reveal.9.a:0 "L'écrire. Tout. Surtout les passages dont personne ne sort bien."
+ ln_reveal.9.b:0 "Que les suivants s'en débrouillent eux-mêmes. Nous l'avons fait."
+ # ── WHAT KIND OF MAN THE HISTORIES ARE WRITING ABOUT ────────────────────────────────────────────────────────
+ ln_reveal.9.desc_you_forge:0 "Votre nom y figure plus d'une fois, et pas pour les raisons que vous auriez choisies. Ils ont la forge. Ils ont les trois trempes. Quelqu'un a consigné ce que la troisième a coûté et quelqu'un d'autre l'a rayé puis réécrit.\n\n"
+ ln_reveal.9.desc_you_risen:0 "Votre nom y figure, avec ce qui vous est arrivé consigné du ton plat et indifférent que les mestres emploient pour les choses auxquelles ils ne croient pas. '[ROOT.Char.GetSheHe|U] était mort. [ROOT.Char.GetSheHe|U] n'était plus mort ensuite.' Quatre mots de prudence et aussitôt l'entrée suivante.\n\n"
+ ln_reveal.9.desc_you_watch:0 "Votre nom y figure sous le Mur, dans la liste des hommes qui ont tenu un fort que personne n'avait tenu de mémoire d'homme. C'est une liste courte et c'est la seule partie de tout ceci que le Nord lira deux fois.\n\n"
+ ln_reveal.9.desc_you_return:0 "Votre nom y figure, et à côté le mot qu'ils emploient pour les hommes revenus d'Essos avec quelque chose que le royaume ne voulait pas et ne pouvait pas refuser.\n\n"
+ ln_reveal.9.desc_you_chosen:0 "Votre nom y figure énormément : la désignation, les hommes venus voir si c'était vrai, ceux venus s'assurer que ce ne l'était pas. Quoi que décident les histoires, elles ne pourront pas vous laisser de côté.\n\n"
+ ln_reveal.9.desc_you_favored:0 "Votre nom y figure, dans la partie sur les prêtres, entouré des mots que les mestres emploient quand ils consignent que les gens ont cru une chose plutôt qu'elle était vraie.\n\n"
+ ln_reveal.9.desc_you_witness:0 "Votre nom y figure une fois, dans une liste, au milieu. Vous y étiez. Il se trouve que cela vaut plus que presque tout le reste de ce livre.\n\n"
+ ln_reveal.9.desc_you_nobody:0 "Votre nom n'y figure pas du tout, ce qui n'a pas été simple étant donné où vous vous teniez pendant l'essentiel de tout cela.\n\n"
+
+ ln_reveal.9.desc_close_cycle:0 "Le soleil s'est levé. C'est là toute la bonne nouvelle et elle suffit.\n\nLe grand mestre veut un nom pour cela, et une date, et une phrase que des gens liront dans trois cents ans. Il a arrêté son choix sur 'la fin'.\n\nLe peuple libre, qui a perdu plus que tout autre et qui n'écrit rien, emploie un autre mot. Non pas finie — #EMP endormie#!. Personne ne le leur conteste. Personne de ceux qui y étaient n'est tout à fait sûr qu'ils ont tort."
+
+ # ln_dawn.4 -- he walked into its reach and walked back out.
+ nick_the_undaunted:0 "l'Intrépide"

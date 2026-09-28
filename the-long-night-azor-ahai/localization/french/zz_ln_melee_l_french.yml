@@ -1,0 +1,37 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the melee's prowess modifiers (1.1.0).
+ #
+ # These are all temporary: applied when an LN melee opens, stripped at the scrub, bounded at two years so a
+ # missed scrub cannot follow a man for life. Every one of them is visible on the character sheet while the
+ # fight is running, which is why every one of them needs a name -- the 1 Sep audit found the whole set
+ # shipping with none, which would have put raw keys like "ln_the_cold_between_3_modifier" on screen mid-duel.
+ #
+ # The five cold bands share a name on purpose. A fighter only ever holds one of them, so the band number is
+ # bookkeeping and the player has no use for it.
+
+ ln_the_cold_between_0_modifier:0 "Le Froid Entre Nous"
+ ln_the_cold_between_1_modifier:0 "Le Froid Entre Nous"
+ ln_the_cold_between_2_modifier:0 "Le Froid Entre Nous"
+ ln_the_cold_between_3_modifier:0 "Le Froid Entre Nous"
+ ln_the_cold_between_4_modifier:0 "Le Froid Entre Nous"
+ ln_the_cold_between_0_modifier_desc:0 "Tout ce que tu sais de l'art de tuer des hommes, tu l'as appris sur des hommes. L'adresse ne compte qu'à moitié contre une chose qui n'en est plus un depuis huit mille ans."
+ ln_the_cold_between_1_modifier_desc:0 "Tout ce que tu sais de l'art de tuer des hommes, tu l'as appris sur des hommes. L'adresse ne compte qu'à moitié contre une chose qui n'en est plus un depuis huit mille ans."
+ ln_the_cold_between_2_modifier_desc:0 "Tout ce que tu sais de l'art de tuer des hommes, tu l'as appris sur des hommes. L'adresse ne compte qu'à moitié contre une chose qui n'en est plus un depuis huit mille ans."
+ ln_the_cold_between_3_modifier_desc:0 "Tout ce que tu sais de l'art de tuer des hommes, tu l'as appris sur des hommes. L'adresse ne compte qu'à moitié contre une chose qui n'en est plus un depuis huit mille ans."
+ ln_the_cold_between_4_modifier_desc:0 "Tout ce que tu sais de l'art de tuer des hommes, tu l'as appris sur des hommes. L'adresse ne compte qu'à moitié contre une chose qui n'en est plus un depuis huit mille ans."
+
+ ln_bane_lightbringer_modifier:0 "Illumination en main"
+ ln_bane_lightbringer_modifier_desc:0 "L'épée dont parle toute la prophétie, dans le seul combat pour lequel elle fut faite. Elle rend plus que le froid ne prend."
+ ln_bane_valyrian_modifier:0 "Acier valyrien en main"
+ ln_bane_valyrian_modifier_desc:0 "De l'acier de dragon. Aucun vivant ne se souvient comment il fut forgé, et il ne se soucie pas de ce qu'il tranche."
+ ln_bane_glass_modifier:0 "Verredragon en main"
+ ln_bane_glass_modifier_desc:0 "Du feu gelé, et cela marche — à longueur de bras, ce qui est tout le problème."
+
+ ln_melee_named_chosen_modifier:0 "Nommé, et la ligne le sait"
+ ln_melee_named_chosen_modifier_desc:0 "Les hommes derrière toi ont entendu comment les prêtres t'appellent. Que ce soit vrai a cessé de compter ; ce qui compte, c'est qu'ils tiennent debout tant qu'ils te regardent."
+ ln_melee_named_favored_modifier:0 "Favorisé, et la ligne le sait"
+ ln_melee_named_favored_modifier_desc:0 "Quelqu'un a prononcé les mots sur toi un jour, et la ligne se souvient d'en avoir entendu parler."
+
+ ln_led_with_the_bane_modifier:0 "Tu es passé le premier"
+ ln_led_with_the_bane_modifier_desc:0 "Tu as tiré ta lame avant qu'on te le demande et tu es sorti devant ta propre ligne. Cela t'achète un pas, et cela veut dire que la chose au milieu de ce champ ne regarde personne d'autre."

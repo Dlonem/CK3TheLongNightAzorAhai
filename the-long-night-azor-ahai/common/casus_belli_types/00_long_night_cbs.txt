@@ -223,9 +223,9 @@ other_cb = {
 	target_de_jure_regions_above = yes
 	ignore_effect = change_title_holder
 
-	ai_can_target_all_titles = {
-		has_trait = other_trait
-	}
+	# 1.1.3 -- the ai_can_target_all_titles block that stood here is gone. The engine refused it at load on
+	# all three invasion CBs ("Casus belli other_cb has ai_can_target_all_titles, but doesn't target 'all'",
+	# session 59), so it never did anything; the CB targets neighbor_land_or_water, not all.
 	ai_score_mult = {
 		value = viking_conquest_ai_score_value
 
@@ -458,9 +458,9 @@ other_cb = {
 			limit = {
 				NOT = { has_global_variable = ln_castle_black_fell }
 				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
-				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+				has_global_variable = ln_wall_gate_started   # 1.1.3: a wave-scoped global, not a flag on the king
 			}
-			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+			set_global_variable = { name = ln_wall_gate_window  value = yes  years = 4 }
 		}
 
 		#EP2 accolade glory gain for doing ok against higher ranked enemy
@@ -571,9 +571,9 @@ other_cb = {
 			limit = {
 				NOT = { has_global_variable = ln_castle_black_fell }
 				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
-				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+				has_global_variable = ln_wall_gate_started   # 1.1.3: a wave-scoped global, not a flag on the king
 			}
-			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+			set_global_variable = { name = ln_wall_gate_window  value = yes  years = 4 }
 		}
 		# Legitimacy
 		add_legitimacy_attacker_defeat_effect = yes
@@ -650,8 +650,9 @@ other_cb = {
 	#                                             lever for it; it was explicitly `no` on all three.
 	#   attacker_score_from_occupation_scale    -- 150, vanilla's conquest number (00_conquest.txt:47).
 	#   max_attacker_score_from_occupation      -- 150, vanilla's invasion number (00_invasion_war.txt:449).
-	#   attacker_wargoal_percentage = 0.8       -- vanilla's invasion figure (00_invasion_war.txt:445): you do
-	#                                             not have to hold every last holding to have taken a kingdom.
+	#                                             (75 on other_cb and other_cb_empire since 1.1.3; see below.)
+	#   attacker_wargoal_percentage             -- 0.8 at 1.0.15d, vanilla's invasion figure
+	#                                             (00_invasion_war.txt:445); 0.6 since 1.1.0b, set below.
 	# Battles keep their default cap on purpose. Slaughter alone still tops out at half the bar and cannot win
 	# this war by itself -- that is the half of his sentence it would be easy to miss.
 	#
@@ -660,7 +661,7 @@ other_cb = {
 	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
 	defender_capital_gives_war_score = yes				# 1.0.15d: taking the seat IS the win condition
 	attacker_score_from_occupation_scale = 150
-	max_attacker_score_from_occupation = 150
+	max_attacker_score_from_occupation = 75				# 1.1.3: WAS 150, see below
 	# ══ 1.1.0b -- ONCE THE DEAD HOLD THE GROUND, THE WAR ENDS. ═══════════════════════════════════════════
 	# Measured on the 4 Sep 2026 Strong run (283-305 AC save): south of the Wall every war took 12-23 months
 	# and paid out 2-6 counties, ~1.75 counties a year against the 6.3/yr measured for 1.0.8, and the pauses
@@ -672,13 +673,47 @@ other_cb = {
 	#   attacker_wargoal_percentage 0.8 -> 0.6   -- the goal counts as HELD once the dead occupy six tenths of
 	#                                              it, not four fifths of a kingdom's every last holding.
 	#   attacker_ticking_warscore = 0.5          -- and from that day the score climbs half a point a day
-	#                                              (vanilla default 0.055). Held ground plus a won field
-	#                                              closes the war inside a season instead of a second winter.
+	#                                              (vanilla default 0.055).
 	# Nothing here touches what the living can do: the defender's ticking, delay and battle cap stay at the
 	# defaults, so a defender who keeps the dead OFF the ground still gains on them after a year exactly as
 	# before. The Night King has to take the land; he simply is not made to keep proving it.
+	#
+	# ── 1.1.3 -- WHAT 1.1.0b ACTUALLY DID, READ AGAINST THE DEFINES, AND WHAT IT DID NOT ─────────────────
+	# The 1.1.0b comment used to say "held ground plus a won field closes the war inside a season". There
+	# was never a won-field clause. Thomas's own words above were "hold the entire county AND they've won a
+	# battle", and the "and" never reached the code. Against AGOT's defines (00_defines.txt:813-834):
+	# ATTACKER_TICKING_WAR_SCORE_DELAY_DAYS = 0, so the tick starts the day the goal counts as held, and
+	# OCCUPATION_SCORE_PER_BARONY_SCALE = 0.04 "extra occupation score from each individual barony", which at
+	# our scale of 150 is about six war score per occupied barony whatever the size of the defender's realm.
+	# With the occupation cap at 150 the sieges alone could carry the whole bar. So a war on the Watch, whose
+	# field army is a few hundred men, or on the Iron Throne, whose host is in the south, ended on ~17
+	# besieged baronies before anyone met the dead, and the AI enforces at 100. Jendrik (Discord, 24 Sep):
+	# "the war on the Night's Watch ended at once with no battle and the Wall fell; every war on the Iron
+	# Throne ended at once." The Wall collapse is our own 7-day check reacting to Castle Black changing
+	# hands, working as written. The war resolution was the root.
+	# Two keys on THIS CB and on other_cb_empire (other_cb_duchy keeps 1.1.0b's numbers -- every war beyond
+	# the Wall on the default rule runs on it, Jendrik says those were fine, and the far-north pace was tuned
+	# 1.0.8-1.1.0b; Thomas's call D-m):
+	#   attacker_ticking_warscore_delay = { months = 6 }  -- no ticking score for the dead in the first six
+	#                                              months (the engine counts the delay from the war's start;
+	#                                              whether it also waits on the goal is for the boot to read).
+	#                                              Vanilla's key (_casus_belli.info:6; the months form is
+	#                                              theirs, 03_fp2_wars.txt:401; live use of the attacker key
+	#                                              at 00_event_war.txt:2938).
+	#   max_attacker_score_from_occupation 150 -> 75  -- sieges top out at three quarters of the bar. The
+	#                                              last quarter comes from a won battle (the default attacker
+	#                                              battle cap is 50) or from holding the goal past the delay
+	#                                              (0.5/day closes 25 in ~50 days).
+	# So "hold the ground and win a field" still ends a war fast, which is what 1.1.0b was for, and "hold the
+	# ground while nobody fights" takes about seven months instead of weeks. PLACEHOLDER NUMBERS until a boot
+	# measures them: the baseline to beat is the 12-23 months above, the target is Thomas's (the North in
+	# ~10 years on Strong). Boot check: `grep 00_long_night_cbs error.log` (the delay key has never been used
+	# in this mod), then open a Watch war on day 1 and at weeks 2/4/8 and read the breakdown -- if "War goal
+	# held" ticks on day 1 the dead already count their own land toward the 60% and the target picker should
+	# stop choosing kingdoms they mostly hold.
 	attacker_wargoal_percentage = 0.6
 	attacker_ticking_warscore = 0.5
+	attacker_ticking_warscore_delay = { months = 6 }
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
 	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
 
@@ -776,9 +811,9 @@ other_cb_duchy = {
 	target_de_jure_regions_above = yes
 	ignore_effect = change_title_holder
 
-	ai_can_target_all_titles = {
-		has_trait = other_trait
-	}
+	# 1.1.3 -- the ai_can_target_all_titles block that stood here is gone. The engine refused it at load on
+	# all three invasion CBs ("Casus belli other_cb has ai_can_target_all_titles, but doesn't target 'all'",
+	# session 59), so it never did anything; the CB targets neighbor_land_or_water, not all.
 	ai_score_mult = {
 		value = viking_conquest_ai_score_value
 
@@ -1023,9 +1058,9 @@ other_cb_duchy = {
 			limit = {
 				NOT = { has_global_variable = ln_castle_black_fell }
 				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
-				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+				has_global_variable = ln_wall_gate_started   # 1.1.3: a wave-scoped global, not a flag on the king
 			}
-			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+			set_global_variable = { name = ln_wall_gate_window  value = yes  years = 4 }
 		}
 
 		#EP2 accolade glory gain for doing ok against higher ranked enemy
@@ -1136,9 +1171,9 @@ other_cb_duchy = {
 			limit = {
 				NOT = { has_global_variable = ln_castle_black_fell }
 				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
-				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+				has_global_variable = ln_wall_gate_started   # 1.1.3: a wave-scoped global, not a flag on the king
 			}
-			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+			set_global_variable = { name = ln_wall_gate_window  value = yes  years = 4 }
 		}
 		# Legitimacy
 		add_legitimacy_attacker_defeat_effect = yes
@@ -1215,8 +1250,9 @@ other_cb_duchy = {
 	#                                             lever for it; it was explicitly `no` on all three.
 	#   attacker_score_from_occupation_scale    -- 150, vanilla's conquest number (00_conquest.txt:47).
 	#   max_attacker_score_from_occupation      -- 150, vanilla's invasion number (00_invasion_war.txt:449).
-	#   attacker_wargoal_percentage = 0.8       -- vanilla's invasion figure (00_invasion_war.txt:445): you do
-	#                                             not have to hold every last holding to have taken a kingdom.
+	#                                             (75 on other_cb and other_cb_empire since 1.1.3; see below.)
+	#   attacker_wargoal_percentage             -- 0.8 at 1.0.15d, vanilla's invasion figure
+	#                                             (00_invasion_war.txt:445); 0.6 since 1.1.0b, set below.
 	# Battles keep their default cap on purpose. Slaughter alone still tops out at half the bar and cannot win
 	# this war by itself -- that is the half of his sentence it would be easy to miss.
 	#
@@ -1237,11 +1273,28 @@ other_cb_duchy = {
 	#   attacker_wargoal_percentage 0.8 -> 0.6   -- the goal counts as HELD once the dead occupy six tenths of
 	#                                              it, not four fifths of a kingdom's every last holding.
 	#   attacker_ticking_warscore = 0.5          -- and from that day the score climbs half a point a day
-	#                                              (vanilla default 0.055). Held ground plus a won field
-	#                                              closes the war inside a season instead of a second winter.
+	#                                              (vanilla default 0.055).
 	# Nothing here touches what the living can do: the defender's ticking, delay and battle cap stay at the
 	# defaults, so a defender who keeps the dead OFF the ground still gains on them after a year exactly as
 	# before. The Night King has to take the land; he simply is not made to keep proving it.
+	#
+	# ── 1.1.3 -- WHAT 1.1.0b ACTUALLY DID, READ AGAINST THE DEFINES, AND WHAT IT DID NOT ─────────────────
+	# The 1.1.0b comment used to say "held ground plus a won field closes the war inside a season". There
+	# was never a won-field clause. Thomas's own words above were "hold the entire county AND they've won a
+	# battle", and the "and" never reached the code. Against AGOT's defines (00_defines.txt:813-834):
+	# ATTACKER_TICKING_WAR_SCORE_DELAY_DAYS = 0, so the tick starts the day the goal counts as held, and
+	# OCCUPATION_SCORE_PER_BARONY_SCALE = 0.04 "extra occupation score from each individual barony", which at
+	# our scale of 150 is about six war score per occupied barony whatever the size of the defender's realm.
+	# With the occupation cap at 150 the sieges alone could carry the whole bar. So a war on the Watch, whose
+	# field army is a few hundred men, or on the Iron Throne, whose host is in the south, ended on ~17
+	# besieged baronies before anyone met the dead, and the AI enforces at 100. Jendrik (Discord, 24 Sep):
+	# "the war on the Night's Watch ended at once with no battle and the Wall fell; every war on the Iron
+	# Throne ended at once." The Wall collapse is our own 7-day check reacting to Castle Black changing
+	# hands, working as written. The war resolution was the root.
+	# other_cb_duchy KEEPS 1.1.0b's numbers (occupation cap 150, no ticking delay): every war beyond the Wall
+	# on the default rule runs on this CB, the tribes contest their own ground, and Jendrik says those wars
+	# were fine. The 1.1.3 slow-down is on other_cb and other_cb_empire only (Thomas's call D-m). A player on
+	# the others_cb_duchy game rule runs every war on this CB and keeps the old speed.
 	attacker_wargoal_percentage = 0.6
 	attacker_ticking_warscore = 0.5
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
@@ -1294,9 +1347,9 @@ other_cb_empire = {
 	target_de_jure_regions_above = yes
 	ignore_effect = change_title_holder
 
-	ai_can_target_all_titles = {
-		has_trait = other_trait
-	}
+	# 1.1.3 -- the ai_can_target_all_titles block that stood here is gone. The engine refused it at load on
+	# all three invasion CBs ("Casus belli other_cb has ai_can_target_all_titles, but doesn't target 'all'",
+	# session 59), so it never did anything; the CB targets neighbor_land_or_water, not all.
 	ai_score_mult = {
 		value = viking_conquest_ai_score_value
 
@@ -1523,9 +1576,9 @@ other_cb_empire = {
 			limit = {
 				NOT = { has_global_variable = ln_castle_black_fell }
 				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
-				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+				has_global_variable = ln_wall_gate_started   # 1.1.3: a wave-scoped global, not a flag on the king
 			}
-			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+			set_global_variable = { name = ln_wall_gate_window  value = yes  years = 4 }
 		}
 
 		#EP2 accolade glory gain for doing ok against higher ranked enemy
@@ -1636,9 +1689,9 @@ other_cb_empire = {
 			limit = {
 				NOT = { has_global_variable = ln_castle_black_fell }
 				scope:defender ?= { capital_province ?= { geographical_region = world_westeros_the_wall } }
-				scope:attacker ?= { has_character_flag = ln_wall_gate_started }
+				has_global_variable = ln_wall_gate_started   # 1.1.3: a wave-scoped global, not a flag on the king
 			}
-			scope:attacker = { add_character_flag = { flag = ln_wall_gate_window  years = 4 } }
+			set_global_variable = { name = ln_wall_gate_window  value = yes  years = 4 }
 		}
 		# Legitimacy
 		add_legitimacy_attacker_defeat_effect = yes
@@ -1715,8 +1768,9 @@ other_cb_empire = {
 	#                                             lever for it; it was explicitly `no` on all three.
 	#   attacker_score_from_occupation_scale    -- 150, vanilla's conquest number (00_conquest.txt:47).
 	#   max_attacker_score_from_occupation      -- 150, vanilla's invasion number (00_invasion_war.txt:449).
-	#   attacker_wargoal_percentage = 0.8       -- vanilla's invasion figure (00_invasion_war.txt:445): you do
-	#                                             not have to hold every last holding to have taken a kingdom.
+	#                                             (75 on other_cb and other_cb_empire since 1.1.3; see below.)
+	#   attacker_wargoal_percentage             -- 0.8 at 1.0.15d, vanilla's invasion figure
+	#                                             (00_invasion_war.txt:445); 0.6 since 1.1.0b, set below.
 	# Battles keep their default cap on purpose. Slaughter alone still tops out at half the bar and cannot win
 	# this war by itself -- that is the half of his sentence it would be easy to miss.
 	#
@@ -1725,7 +1779,7 @@ other_cb_empire = {
 	attacker_capital_gives_war_score = no 				# No warscore from attacker capital
 	defender_capital_gives_war_score = yes				# 1.0.15d: taking the seat IS the win condition
 	attacker_score_from_occupation_scale = 150
-	max_attacker_score_from_occupation = 150
+	max_attacker_score_from_occupation = 75				# 1.1.3: WAS 150, see below
 	# ══ 1.1.0b -- ONCE THE DEAD HOLD THE GROUND, THE WAR ENDS. ═══════════════════════════════════════════
 	# Measured on the 4 Sep 2026 Strong run (283-305 AC save): south of the Wall every war took 12-23 months
 	# and paid out 2-6 counties, ~1.75 counties a year against the 6.3/yr measured for 1.0.8, and the pauses
@@ -1737,13 +1791,47 @@ other_cb_empire = {
 	#   attacker_wargoal_percentage 0.8 -> 0.6   -- the goal counts as HELD once the dead occupy six tenths of
 	#                                              it, not four fifths of a kingdom's every last holding.
 	#   attacker_ticking_warscore = 0.5          -- and from that day the score climbs half a point a day
-	#                                              (vanilla default 0.055). Held ground plus a won field
-	#                                              closes the war inside a season instead of a second winter.
+	#                                              (vanilla default 0.055).
 	# Nothing here touches what the living can do: the defender's ticking, delay and battle cap stay at the
 	# defaults, so a defender who keeps the dead OFF the ground still gains on them after a year exactly as
 	# before. The Night King has to take the land; he simply is not made to keep proving it.
+	#
+	# ── 1.1.3 -- WHAT 1.1.0b ACTUALLY DID, READ AGAINST THE DEFINES, AND WHAT IT DID NOT ─────────────────
+	# The 1.1.0b comment used to say "held ground plus a won field closes the war inside a season". There
+	# was never a won-field clause. Thomas's own words above were "hold the entire county AND they've won a
+	# battle", and the "and" never reached the code. Against AGOT's defines (00_defines.txt:813-834):
+	# ATTACKER_TICKING_WAR_SCORE_DELAY_DAYS = 0, so the tick starts the day the goal counts as held, and
+	# OCCUPATION_SCORE_PER_BARONY_SCALE = 0.04 "extra occupation score from each individual barony", which at
+	# our scale of 150 is about six war score per occupied barony whatever the size of the defender's realm.
+	# With the occupation cap at 150 the sieges alone could carry the whole bar. So a war on the Watch, whose
+	# field army is a few hundred men, or on the Iron Throne, whose host is in the south, ended on ~17
+	# besieged baronies before anyone met the dead, and the AI enforces at 100. Jendrik (Discord, 24 Sep):
+	# "the war on the Night's Watch ended at once with no battle and the Wall fell; every war on the Iron
+	# Throne ended at once." The Wall collapse is our own 7-day check reacting to Castle Black changing
+	# hands, working as written. The war resolution was the root.
+	# Two keys on THIS CB and on other_cb_empire (other_cb_duchy keeps 1.1.0b's numbers -- every war beyond
+	# the Wall on the default rule runs on it, Jendrik says those were fine, and the far-north pace was tuned
+	# 1.0.8-1.1.0b; Thomas's call D-m):
+	#   attacker_ticking_warscore_delay = { months = 6 }  -- no ticking score for the dead in the first six
+	#                                              months (the engine counts the delay from the war's start;
+	#                                              whether it also waits on the goal is for the boot to read).
+	#                                              Vanilla's key (_casus_belli.info:6; the months form is
+	#                                              theirs, 03_fp2_wars.txt:401; live use of the attacker key
+	#                                              at 00_event_war.txt:2938).
+	#   max_attacker_score_from_occupation 150 -> 75  -- sieges top out at three quarters of the bar. The
+	#                                              last quarter comes from a won battle (the default attacker
+	#                                              battle cap is 50) or from holding the goal past the delay
+	#                                              (0.5/day closes 25 in ~50 days).
+	# So "hold the ground and win a field" still ends a war fast, which is what 1.1.0b was for, and "hold the
+	# ground while nobody fights" takes about seven months instead of weeks. PLACEHOLDER NUMBERS until a boot
+	# measures them: the baseline to beat is the 12-23 months above, the target is Thomas's (the North in
+	# ~10 years on Strong). Boot check: `grep 00_long_night_cbs error.log` (the delay key has never been used
+	# in this mod), then open a Watch war on day 1 and at weeks 2/4/8 and read the breakdown -- if "War goal
+	# held" ticks on day 1 the dead already count their own land toward the 60% and the target picker should
+	# stop choosing kingdoms they mostly hold.
 	attacker_wargoal_percentage = 0.6
 	attacker_ticking_warscore = 0.5
+	attacker_ticking_warscore_delay = { months = 6 }
 	imprisonment_by_attacker_give_war_score = no 		# No warscore when the attackers imprisons people
 	imprisonment_by_defender_give_war_score = no 		# No warscore when the defenders imprisons people
 

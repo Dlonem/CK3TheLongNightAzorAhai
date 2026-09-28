@@ -18,7 +18,6 @@
  #   rendering as "Activity(BUG: ...". Same sentence, without the link.
 
  ALREADY_IN_ACTIVITY:0 "Вы сейчас не заняты другим делом"
- ALREADY_PLANNING_ACTIVITY:0 "Вы уже не планируете другое мероприятие"
 
 # 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
- character_is_immune_to_factions:0 "Is immune to factions"
+ character_is_immune_to_factions:0 "Неподвластен фракциям"

@@ -1,0 +1,300 @@
+﻿l_french:
+
+# Others Dynasty
+# NOTE: dynn_others / dynn_Others / dynn_others_motto used to be defined HERE as "Winter" and AGAIN in
+# dynasties/otherdynasty_names_l_english.yml as "The Others". Duplicate keys make CK3 pick one arbitrarily.
+# Settled on "The Others"; the dedicated dynasty-name file is now the single definition.
+ dynn_the_others:0 "Les Autres"
+ dynn_the_others_motto:0 "Tous gèleront."
+ house_theothers:0 "Les Autres"
+
+# White Walker Titles
+ h_the_others:0 "Les Terres de l'Éternel Hiver"
+ d_others:0 "Hiver"
+ head_of_faith_the_other:0 "Roi de la Nuit"
+ 
+ other_barony_title:0 "l'Armée des Morts"
+ other_county_title:0 "l'Armée des Morts"
+ other_duchy_title:0 "l'Armée des Morts"
+ other_kingdom_title:0 "l'Armée des Morts"
+ other_empire_title:0 "l'Armée des Morts"
+ other_hegemony_title:0 "l'Armée des Morts"
+ other_leader_name:0 "Autre"
+ # REMOVED: ten placeholder title keys here all read "Other" and were re-defined further
+ # down this same file with the real titles (Chieftain / High Chieftain / King of Winter /
+ # The Great Other). Duplicate keys make CK3 warn and pick one -- the good set was a coin flip.
+ other_name:0 "Autre"
+ # "Skroth" was Long Night+'s invention -- neither book nor show. Under the default rule this name is never
+ # seen: ln_raise_fallen_dragon_effect renames the raised dragon to whatever it was called in life, so it
+ # comes back as Vhagar the Undead. It only shows on the legacy "One Simply Appears" setting, where there is
+ # no dead dragon to take a name from -- so it is now the plain folk name the northerners use.
+ dragon_skroth:0 "Le Dragon de Glace"
+
+freehold_call_vassal_to_war_interaction_notification_title: "Appel à l'aide RP du Fief Franc utilisé"
+freehold_call_vassal_to_war_interaction_toast: "[actor.GetTitledFirstName] a appelé son vassal [recipient.GetTitledFirstName] à la guerre"
+
+SCOURING_CB_NAME:0 "Ravage de [TITLE.GetNameNoTier]"
+SCOURING_CB_NAME_BASE:0 "Ravage"
+scouring_cb:0 "Ravage"
+
+# Nickname
+ nick_the_great_other:0 "le Roi de la Nuit"
+ nick_the_great_other_desc:0 "Le petit peuple a désormais un nom pour [CHARACTER.GetShortUINameNoTooltipNoFormat|U] : le Roi de la Nuit, qui règne sur les ténèbres et sur les morts."
+
+#White Walker Traits
+ trait_other:0 "Autre"
+ trait_other_desc:0 "Les Autres sont grands et décharnés, la chair pâle comme le lait. Leurs yeux sont d'un bleu froid que l'on a décrit comme brûlant à la manière de la glace, ou brillant comme des étoiles bleues. Les Autres ont un sang bleu pâle et des os luisants comme du verre laiteux"
+
+ trait_nightking:0 "Grand Autre"
+ trait_nightking_desc:0 "Premier des Autres et maître des morts. L'hiver marche là où il marche, et il ne s'arrête pas."
+
+
+# rhllor trait
+ trait_chosen_by_rhllor:0 "Élu"
+ trait_chosen_by_rhllor_desc:0 "Les temples ne le murmurent plus, ils le prêchent : Azor Ahai Réincarné, le prince qui fut promis. Que les flammes aient raison, personne de vivant ne peut le vérifier, et quelque part il y a toujours un autre homme à qui l'on dit la même chose."
+# rhllor trait
+ trait_favored_by_rhllor:0 "Favorisé"
+ trait_favored_by_rhllor_desc:0 "Un voyant a compté les signes de cette vie et a dit le mot à voix haute : favorisé de R'hllor. Des prêtres l'ont déjà dit d'autres hommes, et en ont enterré la plupart. Les feux surveillent celui-ci désormais, et tout le monde avec eux."
+ # rhllor trait
+ trait_resurrected_by_rhllor:0 "Rendu par R'hllor"
+ trait_resurrected_by_rhllor_desc:0 "Mort, devant témoins, et n'est pas resté mort. Un prêtre rouge a demandé celui-là au feu, et le feu en a rendu la plus grande part."
+ 
+ 
+#Modifiers
+agot_long_night_smallfolk_outraged_modifier:0 "Petit peuple outragé"
+
+agot_long_night_destruction_modifier:0 "Destruction de la Longue Nuit"
+
+#war for the dawn
+
+WAR_FOR_THE_DAWN_WAR_NAME:0 "La Guerre pour l'Aube"
+ WAR_FOR_THE_DAWN_WAR_NAME_BASE:0 ""
+ WAR_FOR_THE_DAWN_WAR_CB:0 "La Guerre pour l'Aube"
+ war_for_the_dawn_defeat_desc:0 "Une heure des loups et des boucliers brisés, où l'âge des hommes s'effondre."
+ war_for_the_dawn_victory_desc:0 "Un jour viendra peut-être où le courage des hommes faillira, où nous abandonnerons nos amis et briserons tout lien de fraternité, mais ce n'est pas ce jour."
+ 
+ 
+  #Letters on Winter
+ others_sword:0 "Épée de cristal"
+ other_sword_description:0 "Une épée portée par les Autres, venue du nord profond."
+ 
+ dusk_sword:0 "Lame d'Hiver"
+ dusk_sword_desc:0 "L'épée portée par le Grand Autre, forgée dans les Terres de l'Éternel Hiver, il y a des milliers d'années."
+ 
+crown_of_the_great_other_name:0 "Couronne des Autres"
+crown_of_the_great_other_description:0 "Une couronne de glace, forgée dans les Terres de l'Éternel Hiver."
+ 
+ 
+ #Letters on Winter
+ long_nights_WINTER_IS_COMING:0 "L'Hiver Vient"
+ long_nights_WINTER_IS_COMING_DESC:0 "Nous vous écrivons de la Citadelle avec des nouvelles urgentes : l'hiver vient. Hélas, nous nous trouvons incapables de prédire la durée de cette saison, anomalie sans précédent dans nos archives. Nous exhortons chacun à se préparer à une période indéterminée de froid rigoureux et à demeurer vigilant."
+ 
+ long_nights_WINTER_IS_HERE:0 "Aux seigneurs du royaume"
+ long_nights_WINTER_IS_HERE_DESC:0 "J'écris de Châteaunoir avec la plus extrême urgence : les sauvageons fuient vers le sud en nombre sans précédent, chassés par la montée impitoyable des vents froids. La menace grandit chaque jour, et nos rangs sont cruellement trop clairsemés pour affronter ce qui vient. Je vous en implore, pour la sûreté du royaume : envoyez sur-le-champ davantage d'hommes renforcer le Mur."
+ 
+ long_nights_WAR_FOR_THE_DAWN:0 "Aux vaillants"
+ long_nights_WAR_FOR_THE_DAWN_DESC:0 "Je chevauche vers le nord pour affronter la plus grande menace que notre monde ait jamais connue : les Marcheurs Blancs, dans une guerre pour l'aube elle-même. J'appelle chaque homme et chaque femme en état de se battre à prendre les armes et à me rejoindre dans ce noble combat, car si nous faiblissons, notre monde sombrera dans les ténèbres éternelles. Tenez-vous à mes côtés, et ensemble rendons sa lumière au royaume."
+ 
+  long_nights_WINTER_IS_OVER:0 "L'Aube est arrivée"
+ long_nights_WINTER_IS_OVER_DESC:0 "Le cœur débordant de joie, nous proclamons la fin de la Longue Nuit et la venue de l'Aube."
+ 
+
+
+
+
+
+
+
+wights:0 "Spectres"
+
+others.2.title:0 "#e Les Vents de l'Hiver#!"
+others.2.desc:0 "#e La nouvelle est venue du nord profond, là où les hommes vont et reviennent rarement, et ce qu'ils ont raconté a glacé même les volontés les plus fermes.\n\n Les sauvageons fuient vers le sud en nombre jamais vu, comme poursuivis par des #bold ombres#!, et les mestres marmonnent d'un hiver qui rongera la chair et fendra la pierre, s'étirant sur des années sans nombre.\n\n Mais ce n'est pas le froid qu'il faut craindre, ni la faim. C'est ce qui attend au cœur de ces ténèbres, dans le silence entre deux souffles.\n\n #bold Les Autres sont revenus, et la Longue Nuit a commencé.#!#!"
+others.2.a:0 "L'hiver est là."
+
+others.3.title:0 "#BER Un Rêve de Printemps#!"
+others.3.desc:0 "#BER Les Autres s'en étaient allés, refoulés vers les recoins obscurs du monde qui les avaient engendrés, et le royaume était enfin libre de leur ombre de glace.\n\n Les champs gisaient calcinés et les villages vides là où les morts avaient marché, mais les hommes pouvaient rebâtir ; ils l'avaient toujours fait.\n\n Le premier signe du #bold printemps#! était venu après un hiver brutal. Des voix pleines d'espoir parlaient de paix, d'une unité forgée dans la terreur partagée. \n\n Mais au fond des vieilles maisons et dans les regards des grands seigneurs s'attardait une crainte : celle de voir les alliances nouées dans le feu et la glace s'effilocher et rompre, maintenant que la #bold Grande Guerre#! était terminée.\n\n Car les hommes avaient été épargnés par les morts, oui, mais les hommes avaient toujours été leur pire ennemi.#!"
+
+
+others.3.a:0 "Les alliances de la Grande Guerre tiendront, assurément."
+others.2.a.tt:0 "Vous ne ferez aucun sacrifice aux Dieux Froids et vous en subirez les conséquences."
+
+others_occupation.1.t:0 "#e Le Ravage de [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.1_desc:0 "#e La nuit ne finit plus : un drap de givre et de mort rampe sur les ruines de mes terres. \n\n Les Autres, avec leur malveillance froide et silencieuse, ont dévasté le royaume, et je n'ai pas le choix : il faut y faire face.\n\n Tandis que le froid se referme et que mon souffle devient brume, je me tiens au bord du gouffre : faut-il offrir un #warning sacrifice#! à #bold [thenightking.GetFaith.GetName]#! en espérant la clémence, ou m'accrocher à un feu mourant et résister jusqu'au bout ?#!"
+others_occupation.1_desc_child:0 "\n\n#e Je vois la peur dans les yeux #bold [child.GetTitledFirstNamePossessive]#!.#!"
+others_occupation.1_desc_faith:0 "#e \n\nY aurait-il un pardon pour moi dans [ROOT.Char.GetFaith.GetName] ?#!"
+
+others_occupation.1.a:0 "Je n'adorerai pas ces démons."
+others_occupation.1.a.tt:0 "Vous ne ferez aucun sacrifice aux Dieux Froids et vous en subirez les conséquences."
+
+others_occupation.1.b:0 "Accepteront-ils un moindre sacrifice ?"
+others_occupation.1.b.tt:0 "Vous sacrifierez des courtisans et des gens du commun aux Dieux Froids."
+
+others_occupation.1.c:0 "Je suis désolé, [child.GetTitledFirstName]."
+others_occupation.1.c.tt:0 "[child.GetFirstName] sera sacrifié."
+
+
+others_occupation.2.t:0 "#e Le Ravage de [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.2.desc:0 "#e #bold Les Autres étaient venus.#!\n\n Il n'y avait rien entre nous et les morts.\n\n Le givre s'accrochait à l'air, chaque souffle était une prière muette, mais les morts ne prient pas.\n\n Ils avançaient dans la neige comme des fantômes, et je sentais le froid gagner mes os.\n\n Nos épées pesaient, nos mains étaient engourdies de froid. Si nous échouions maintenant, ce serait plus que notre mort : la fin de la chaleur, de la vie même. \n\n #warning;bold La nuit ne finirait jamais.#! #!"
+others_occupation.2.a:0 "#BER Pour l'Aube !#!"
+others_occupation.2.a.tt:0 "Vous vous battrez pour la survie de votre maison et de vos terres. Si vous perdez cette guerre, vous et toute votre cour risquez la mort. Vos terres seront #warning ravagées.#!"
+
+others_occupation.3.t:0 "#e Le Sauveur de [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.3.desc:0 "#BER Les morts avaient été repoussés, mais de justesse.\n\n Leur souffle de glace traînait encore dans le vent, rappel que cette victoire n'était rien de plus qu'une pause fugace dans le massacre.\n\n La maison [ROOT.Char.GetHouse.GetBaseName] tient debout, mes terres ne sont pas encore englouties par le givre, mais je le sens dans mes os : ce n'est pas le salut. Les Autres reviendront, plus terribles qu'avant, et quand ils viendront, ils viendront en nombre incalculable.\n\n La Longue Nuit n'est pas finie. Et si nous voulons survivre, il nous faut trouver les rares âmes qui restent et nous tenir ensemble dans ces ténèbres... ou être dévorés par elles.#!"
+others_occupation.3.a:0 "Nous devons persévérer."
+others_occupation.3.a.tt:0 "Vous avez repoussé les Autres pour un temps."
+
+others_occupation.4.t:0 "#e Le Ravage de [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.4.desc:0 "#e La bataille était perdue, mes bannières piétinées dans la neige, mes hommes dispersés comme des feuilles mortes au vent.\n\n Le froid était venu pour nous tous, et derrière lui les Autres, glissant comme des ombres à travers la tempête, silencieux, inarrêtables. Mes terres étaient désormais dans leur poigne de glace.\n\n Ce qui restait de mon peuple se serrait de peur, priant pour une aube qui ne viendrait peut-être jamais.#!"
+others_occupation.4.a:0 "Non !"
+others_occupation.4.a.tt:0 "Vous avez été vaincu."
+
+others_maintenance.2.t:0 "#bold L'Avenir des Sept Couronnes#!"
+others_maintenance.2.desc:0 "Les Autres étaient tombés et la Longue Nuit était terminée. \n \n Mais la victoire avait son propre poids, et la question se dressait comme une ombre à l'aube : quelle voie le royaume emprunterait-il maintenant ?\n\n Ployer le genou devant le Trône de Fer, ou saisir notre propre destin et nous gouverner nous-mêmes, libres des caprices lointains d'un roi étranger ?"
+others_maintenance.2.a:0 "Nous jurerons fidélité au Trône de Fer."
+others_maintenance.2.a.tt:0 "Vous jurerez fidélité au Trône de Fer."
+others_maintenance.2.b:0 "La maison [ROOT.Char.GetHouse.GetBaseName] doit régner."
+others_maintenance.2.b.tt:0 "Vous resterez indépendant."
+
+others_trigger_title:0 "#e Déclencher la Longue Nuit#!"
+others_trigger_desc:0 "La Longue Nuit va commencer. Les Autres prendront aussitôt des terres au-delà du Mur et entameront leur conquête."
+others_trigger_confirm:0 "L'Hiver Vient"
+others_trigger_tooltip:0 "Les Autres envahiront immédiatement"
+
+war_for_the_dawn_cb:0 "Guerre pour l'Aube"
+ln_contiguous_transfer_tt:0 "Les terres occupées qui touchent les terres des morts sont prises aussi ; tout ce qui se trouve plus loin est abandonné"
+
+war_for_the_dawn_decision_title:0 "Guerre pour l'Aube"
+war_for_the_dawn_decision_desc:0 "Les Autres sont revenus, et tout ce qu'ils tuent marche avec eux : des hommes morts sur des chevaux morts, et des choses pires encore venues du grand nord. Aucun royaume ne peut tenir seul devant cela. Ce n'est qu'ensemble que Westeros peut espérer voir l'aube. #warning La Guerre pour l'Aube ne peut être déclarée tant que les Autres savourent une victoire récente.#!"
+war_for_the_dawn_decision_confirm:0 "Pour l'aube"
+war_for_the_dawn_decision_tt:0 "Il est possible de perdre des terres occupées au profit des Autres"
+ ln_wfd_no_recent_victory:0 "Les Autres ne doivent pas savourer une victoire récente, à moins que la Guerre pour l'Aube ne soit déjà en cours, auquel cas vous pouvez encore la rejoindre."
+
+frostborn_culture_name:0 "Autres"
+
+
+
+ #Game rules
+ rule_agot_others_invasion_chance:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Longue Nuit#! : probabilité"
+ setting_others_certain_invasion_chance:0 "Certaine #EMP (par défaut)#!"
+ setting_others_certain_invasion_chance_desc:0 "La Longue Nuit aura lieu à coup sûr."
+ setting_others_near_certain_invasion_chance:0 "Quasi certaine"
+ setting_others_near_certain_invasion_chance_desc:0 "La Longue Nuit aura probablement lieu. Le dé n'est jeté qu'une fois, pour la première Longue Nuit ; sous Le Cycle, toutes les suivantes viennent quoi qu'il arrive."
+ setting_others_even_odds_invasion_chance:0 "Chances égales"
+ setting_others_even_odds_invasion_chance_desc:0 "La Longue Nuit peut avoir lieu ou non. Le dé n'est jeté qu'une fois, pour la première Longue Nuit ; sous Le Cycle, toutes les suivantes viennent quoi qu'il arrive."
+ setting_others_remote_odds_invasion_chance:0 "Chances infimes"
+ setting_others_remote_odds_invasion_chance_desc:0 "La Longue Nuit n'aura probablement pas lieu. Le dé n'est jeté qu'une fois, pour la première Longue Nuit ; sous Le Cycle, toutes les suivantes viennent quoi qu'il arrive."
+ setting_others_invasion_wont_happen:0 "Aucune chance"
+ setting_others_invasion_wont_happen_desc:0 "La Longue Nuit n'aura jamais lieu."
+ 
+ rule_agot_others_invasion_moment:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Longue Nuit#! : moment"
+ setting_others_random_window_invasion:0 "Un été au hasard #EMP (par défaut)#!"
+ setting_others_random_window_invasion_desc:0 "Elle vient, et personne ne sait quand. D'ordinaire entre soixante-dix et cent soixante ans, parfois bien plus tard."
+ setting_others_immediate_invasion:0 "Immédiatement"
+ setting_others_immediate_invasion_desc:0 "La Longue Nuit commencera immédiatement."
+ setting_others_invasion_in_50_years:0 "Dans cinquante ans"
+ setting_others_invasion_in_50_years_desc:0 "Environ cinquante ans après le début."
+ setting_others_invasion_in_100_years:0 "Dans cent ans"
+ setting_others_invasion_in_100_years_desc:0 "Environ un siècle après le début."
+ setting_others_invasion_in_150_years:0 "Dans cent cinquante ans"
+ setting_others_invasion_in_150_years_desc:0 "Environ un siècle et demi après le début, à quinze ans près."
+ setting_others_full_random_invasion:0 "Totalement aléatoire"
+ setting_others_full_random_invasion_desc:0 "La fourchette la plus large qui soit : moins de trente ans, ou près de trois cents. Personne ne sait combien de temps il vous reste, vous y compris."
+ setting_others_historical_invasion:0 "Historique"
+ setting_others_historical_invasion_desc:0 "Dans une partie débutant avant 255 ap. C., L'Hiver Vient commence vers 275 ap. C. et la Longue Nuit suit 12 à 45 ans plus tard : elle peut donc tomber entre 280 et 320 ap. C. environ. À partir de 255 ap. C., le jeu s'ouvre déjà sur L'Hiver Vient et la Longue Nuit arrive d'ici 300 ap. C. Dans les deux cas, seulement si la règle de probabilité la laisse venir."
+ setting_others_manual_invasion:0 "Manuel"
+ setting_others_manual_invasion_desc:0 "Rien ne se produit avant qu'un joueur ne prenne la décision, et chaque vague suivante doit être appelée de la même façon. La barre de progression vide est la règle qui fonctionne, non un blocage."
+ 
+ rule_agot_others_invasion_strength:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Longue Nuit#! : puissance"
+ setting_others_weak_invasion:0 "Faible"
+ setting_others_weak_invasion_desc:0 "La Longue Nuit ne sera pas particulièrement difficile."
+ setting_others_standard_invasion:0 "Standard #EMP (par défaut)#!"
+ setting_others_standard_invasion_desc:0 "Les Autres seront assez forts pour mettre les Sept Couronnes en difficulté."
+ setting_others_strong_invasion:0 "Forte"
+ setting_others_strong_invasion_desc:0 "Les Autres seront assez puissants pour submerger les Sept Couronnes."
+ setting_others_insane_invasion:0 "Démente"
+ setting_others_insane_invasion_desc:0 "La Longue Nuit sera impitoyable et impossible à vaincre par des moyens ordinaires !"
+ 
+ 
+ rule_agot_others_resolution:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Longue Nuit#! : résolution"
+ setting_others_death_resolution:0 "Mort #EMP (par défaut)#!"
+ setting_others_death_resolution_desc:0 "Les ténèbres se lèvent lorsque le Roi de la Nuit est détruit en personne : sur le champ après que son armée a été brisée, acculé après une Guerre pour l'Aube perdue, ou enchaîné, par une main portant du verredragon, de l'acier valyrien ou Illumination, ou avec un dragon dans le ciel. Toute autre mort (une bataille, un dragon dans la mêlée, un accident) ne fait que l'abattre, et en quelques jours il se relève."
+ setting_others_war_resolution:0 "#BER Guerre pour l'Aube#!"
+ setting_others_war_resolution_desc:0 "Les ténèbres ne se lèvent que lorsque la #BER Guerre pour l'Aube#! est gagnée. Tuer le Roi de la Nuit n'y suffit pas à lui seul. Toute mort avant cela ne fait que l'abattre."
+
+ rule_agot_others_cb_tier:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Longue Nuit#! : rang de guerre"
+ setting_others_cb_kingdom:0 "Marche #EMP (par défaut)#!"
+ setting_others_cb_duchy:0 "Duché (lente usure)"
+ setting_others_cb_duchy_desc:0 "Les Autres prennent un #bold duché#! à la fois. L'invasion la plus lente de loin, et celle qui laisse le plus de temps pour répondre à l'appel."
+ setting_others_cb_kingdom_desc:0 "Les Autres prennent une #bold Marche#! à la fois. Le siège d'un banneret tombe avant celui de son suzerain, et #bold Winterfell seulement quand le Nord s'est tu#!."
+ setting_others_cb_empire:0 "Empire (assaut foudroyant)"
+ setting_others_cb_empire_desc:0 "Les Autres font la guerre au rang d'#bold empire#! : des guerres moins nombreuses et bien plus vastes, qui balaient des royaumes entiers d'un coup."
+
+ rule_agot_longnight_iron_throne_reformation:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Longue Nuit#! : réforme du Trône de Fer"
+ setting_longnight_iron_throne_reformation_on:0 "Activée #EMP (par défaut)#!"
+ setting_longnight_iron_throne_reformation_on_desc:0 "Après la Longue Nuit, chaque souverain indépendant qui subsiste à Westeros se voit offrir la possibilité de jurer fidélité au Trône de Fer."
+ setting_longnight_iron_throne_reformation_off:0 "Désactivée"
+ setting_longnight_iron_throne_reformation_off_desc:0 "Les souverains restent indépendants après la Longue Nuit."
+
+ # The Long Night+: Night King command bonus (keeps the dead a credible threat)
+ night_king_command_modifier:0 "Le Commandement Froid"
+ night_king_command_modifier_desc:0 "La volonté du Grand Autre pousse l'armée des morts : elle frappe plus fort, endure plus longtemps, et elle est menée sans pitié ni peur."
+ 
+ rule_agot_long_night_armor:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Longue Nuit#! : Autres en armure"
+ setting_agot_long_night_armor_on:0 "Activé"
+  setting_agot_long_night_armor_on_desc:0 "Les Autres porteront une armure spéciale."
+   setting_agot_long_night_armor_off:0 "Désactivé"
+  setting_agot_long_night_armor_off_desc:0 "Les Autres ne porteront pas d'armure spéciale. #warning UTILISEZ CETTE OPTION SI VOUS JOUEZ AVEC UN MOD QUI AJOUTE DES VÊTEMENTS ET QUE VOUS NE VOULEZ PAS D'AUTRES TOUT NUS#!"
+  
+   rule_agot_long_night_dragon:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Longue Nuit#! : dragon de glace"
+ setting_agot_long_night_dragon_on:0 "Il en apparaît un, simplement"
+  setting_agot_long_night_dragon_on_desc:0 "Un dragon est donné aux Autres tant qu'il existe des dragons quelque part. #EMP Nul besoin qu'un seul soit mort avant.#!"
+   setting_agot_long_night_dragon_off:0 "Désactivé"
+  setting_agot_long_night_dragon_off_desc:0 "Les Autres n'obtiennent jamais de dragon."
+ other_unlanded_male:0 "Autre"
+ other_unlanded_female:0 "Autre"
+
+ other_county_male:0 "Chef"
+ other_county_female:0 "Cheffe"
+ other_duchy_male:0 "Grand chef"
+ other_duchy_female:0 "Grande cheffe"
+
+ other_barony_male:0 "Chef"
+ other_barony_female:0 "Cheffe"
+ other_kingdom_male:0 "Roi de l'Hiver"
+ other_kingdom_female:0 "Reine de l'Hiver"
+ other_empire_male:0 "Roi de l'Hiver"
+ other_empire_female:0 "Reine de l'Hiver"
+ # 1.1.2 -- h_the_others is HEGEMONY tier and rendered as "Hegemon Other". 1.1.3: the Others' ruler names are
+ # stamped by the frostborn branch in common/scripted_effects/zz_ln_set_title_loc_override.txt (the flavorization
+ # entry never reached AGOT's title chain). Hegemony is "King" (Thomas, 27 Sep); empire reads as the kingdom does,
+ # so no rank ever prints "Other Other".
+ other_hegemony_male:0 "Roi"
+ other_hegemony_female:0 "Reine"
+
+ # ── THE OTHERS' DRAGON ──────────────────────────────────────────────────────────────────────────────────────
+ setting_agot_long_night_dragon_raise:0 "Ils relèvent leurs proies #EMP (par défaut)#!"
+ setting_agot_long_night_dragon_raise_desc:0 "#EMP On ne donne rien aux Autres.#! Ils n'obtiennent un dragon qu'en en abattant un, et il revient tel qu'il était : même nom, même visage, mauvaise couleur."
+ # ── THE UNDEAD DRAGON ───────────────────────────────────────────────────────────────────────────────────────
+ nick_the_undead:0 "le Mort-Vivant"
+ trait_ln_undead_dragon:0 "Relevé"
+ trait_ln_undead_dragon_desc:0 "Mort une fois, dans la guerre pour l'aube, et contraint à se relever. Il obéit à la chose qui l'a tué."
+
+ # 1.0.8 -- war_for_the_dawn_cb's on_white_peace_desc and on_invalidated_desc pointed at these two keys and
+ # NOTHING DEFINED THEM, so either outcome printed the raw key to the player. Pre-existing; found by the
+ # loc-key audit. The key NAMES are inherited leftovers from the Great Ranging and are left alone on purpose
+ # -- renaming them means editing the CB file to fix a string, and the CB file is not worth the risk.
+ great_ranging_white_peace_desc:0 "La guerre s'achève sans fin. Aucune condition n'est accordée, car il n'y a personne en face pour les accorder : l'armée cesse simplement de venir, et les hommes qui restent baissent leurs boucliers et attendent de voir si cela signifie quelque chose.\n\nCela ne signifie rien. Les morts ne sont pas battus. Ils sont seulement ailleurs."
+ great_ranging_invalidated_desc:0 "La guerre est finie parce que sa raison a disparu. La cause qui a convoqué ces bannières ne tient plus, et une guerre a besoin d'un objet.\n\nLes cors sonnent le rappel. Est-ce une grâce ou seulement un répit, personne ici ne peut le dire."
+
+ # 1.0.16 -- the CB's third key. SCOURING_CB_NAME and SCOURING_CB_NAME_BASE (:35-36) were defined and used by
+ # war_name/war_name_base; `cb_name = SCOURING_CB` at common/casus_belli_types/00_long_night_cbs.txt:1633 had
+ # no key at all, so the CB itself rendered raw wherever the engine names the cb rather than the war.
+ SCOURING_CB:0 "Ravage"
+
+ # 1.1.0b -- shown when a lord already fighting takes the decision. Joining is still open to him; only
+ # opening a second war of his own is not.
+ ln_wfd_already_at_war:0 "Vous êtes déjà en guerre, même si, lorsque la Guerre pour l'Aube est en cours, vous pouvez encore y marcher."
+
+ # 1.0.16 -- the War for the Dawn's new prerequisite. Written as a statement of the world rather than a
+ # rules line: the player should finish reading it knowing what to go and do.
+ ln_wfd_never_been_beaten:0 "Personne n'a encore repoussé les morts. Tant qu'une armée de vivants ne les aura pas battus en campagne, il n'y a pas de guerre où marcher, seulement un hiver avec lequel on n'a pas discuté."

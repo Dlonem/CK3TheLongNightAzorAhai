@@ -1,0 +1,80 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the Chosen chain.
+
+ ln_chosen.1.t:0 "Une couronne a décidé à quoi je sers"
+ ln_chosen.1.desc:0 "L'offre est d'une générosité écrasante, et c'est précisément ainsi que je sais qu'il ne s'agit pas vraiment d'une offre.\n\nDes terres, un siège au conseil royal, un mariage prestigieux—et en échange, je chevauche sous la bannière de [ln_chosen_king.GetTitledFirstName]. On me voit le faire. Et la prophétie qui me suit partout passe discrètement dans [ln_chosen_king.GetHerHis] registre politique.\n\nL'envoyé se garde bien de rien dire de tout cela à voix haute. Il parle d'honneur, de nécessité et des ténèbres de l'époque. Puis il laisse le silence s'étirer un peu trop longtemps, pour être sûr que je comprenne exactement ce que son roi est en train d'acheter.\n\nCe qui rend la chose difficile, c'est qu'il a peut-être raison. Un champion élu sans armée derrière lui n'est qu'une rumeur. Un champion avec une couronne derrière lui est une cause sainte."
+ ln_chosen.1.a:0 "Je prononcerai le serment."
+ ln_chosen.1.b:0 "Je combattrai avec [ln_chosen_king.GetHerHim]. Mais je n'appartiens à aucune couronne."
+ ln_chosen.1.c:0 "Les rois sont un problème du sud. Renvoyez l'envoyé."
+
+ ln_chosen.2.t:0 "Un envoyé de l'autre"
+ ln_chosen.2.desc:0 "Il est venu sans présents, sans titres et sans exigences. Cela seul me dit que ces gens sont terriblement sérieux.\n\n\"Celui qui m'envoie ne dit pas que vous êtes un imposteur,\" dit l'envoyé à voix basse. \"Seulement qu'il ne sait pas. Les mêmes marques, les mêmes prêtres, et un grand désir de se trouver dans une pièce avec la seule autre personne vivante qui comprenne le problème.\"\n\nIl attend. Puis, baissant encore la voix : \"On m'a demandé de dire une chose de plus, exactement ainsi—si c'est vous, ils vous suivront. Et de regarder votre visage pendant que je le disais.\"\n\nIl regarde mon visage."
+ ln_chosen.2.a:0 "Alors nous nous rencontrerons. L'un de nous deux se trompe, et ce peut être moi."
+ ln_chosen.2.b:0 "Renvoyez-le chez lui. Je n'ai rien à dire à une rumeur."
+ ln_chosen.2.c:0 "Renvoyez-le chez lui avec un nom, et l'endroit où je me tiendrai."
+
+ ln_chosen.3.t:0 "La Citadelle a des questions"
+ ln_chosen.3.desc:0 "La lettre fait onze pages et elle est d'une politesse incroyable.\n\nUn mestre de la Citadelle a été affecté à mon cas, et il serait reconnaissant d'obtenir des réponses. Les noms des témoins. Si la comète de l'année de ma naissance peut être corroborée par quelqu'un d'étranger à ma maison. Si je consentirais à être examiné.\n\nChaque question est parfaitement raisonnable. Chaque question est aussi, très précisément, conçue pour produire une réponse qu'on puisse consigner, classer et ignorer sans bruit.\n\nLa Citadelle exerce depuis très longtemps le métier de faire que la magie n'arrive pas, et elle y est terriblement douée."
+ ln_chosen.3.a:0 "Répondre aux onze pages. Honnêtement."
+ ln_chosen.3.b:0 "La brûler. Ils ne m'étudient pas, ils me cataloguent."
+ ln_chosen.3.c:0 "L'inviter ici. Qu'il m'observe pendant un an."
+
+ ln_chosen.4.t:0 "Ils n'ont pas demandé"
+ ln_chosen.4.desc:0 "Le bûcher est déjà dressé quand j'entre dans la cour, et un homme y est déjà attaché.\n\nPersonne ne m'a fait venir. C'est le détail que je n'arrive pas à dépasser. Tout cela a été arrangé dans mon propre château par des prêtres qui tiennent l'affaire pour réglée, et il n'est venu à l'esprit d'aucun d'eux que l'homme au centre de leur prophétie aurait peut-être son mot à dire.\n\nLe condamné est un braconnier d'une quarantaine d'années, enfermé dans mes cachots depuis le jour de la Jouvencelle. Il ne fait aucun bruit, ce qui est d'une certaine manière le plus épouvantable.\n\nLa torche est allumée. Le prêtre qui la tient me regarde avec une expression d'accueil pur et sans détour."
+ ln_chosen.4.a:0 "L'éteindre. De mes propres mains s'il le faut."
+ ln_chosen.4.b:0 "Il est trop tard pour l'arrêter. Rester là et regarder."
+ ln_chosen.4.c:0 "L'éteindre — et pendre l'homme qui l'a allumée."
+
+ ln_chosen.5.t:0 "Le couteau"
+ ln_chosen.5.desc:0 "Il s'est approché plus près que mes gardes ne veulent l'admettre.\n\nC'était un serviteur, quatre mois dans ma maison, avec des références que quelqu'un a payées en or véritable pour qu'elles paraissent authentiques. Il a été rapide, mais il n'a pas eu de chance. Il est à présent dans les cachots, un bras brisé et un calme profondément dérangeant.\n\nIl ne dira pas qui l'a envoyé. Il dit en revanche, sans qu'on le lui demande, qu'il ne me croit pas imposteur—et qu'il croit entièrement à la prophétie. C'est précisément pour cela qu'il est venu. Deux hommes ne peuvent pas être tous les deux le prince qui fut promis, et la façon la plus rapide de résoudre une prophétie est de réduire le nombre de candidats avec une lame dans le noir.\n\nQuelqu'un a payé une très grosse somme pour cette arithmétique."
+ ln_chosen.5.a:0 "Qu'on sache qu'il a échoué. Cela vaut plus que lui."
+ ln_chosen.5.b:0 "Découvrir qui l'a envoyé. Discrètement, et jusqu'au bout."
+ ln_chosen.5.c:0 "Le laisser partir. Qu'il leur raconte ce qu'il a vu."
+
+ ln_chosen.6.t:0 "Ils attendent quelque chose"
+ ln_chosen.6.desc:0 "Je le sens tout le long de la ligne avant même que les cors ne sonnent.\n\nIls n'ont pas peur. C'est là le problème. Des hommes effrayés sont utiles : la peur les garde vifs et les garde attentifs. Ceux-là sont calmes, parce qu'une histoire a couru autour des feux sur celui qui les mène, et qu'un nombre effrayant d'entre eux en a tranquillement conclu qu'aujourd'hui n'est pas le jour de leur mort.\n\nDonc quand la ligne rompra—et les lignes rompent toujours—elle ne pliera pas comme plient d'ordinaire les lignes. Elle se brisera d'un seul coup, parce que ce qui la tenait n'a jamais été la discipline.\n\nMon maréchal n'en a rien dit. Il a aussi pris bien soin de ne pas me regarder une seule fois ce matin."
+ ln_chosen.6.a:0 "Parcourir la ligne à cheval et leur dire la vérité avant les cors."
+ ln_chosen.6.b:0 "Ne rien dire. Leur laisser cela un jour de plus."
+ ln_chosen.6.c:0 "Chevaucher en avant, là où leurs archers pourront me voir."
+
+ ln_chosen.7.t:0 "Sel et fumée"
+ ln_chosen.7.desc:0 "Je suis éveillé. J'ai l'absolue certitude d'être éveillé, et c'est ce détail-là qui ne me quitte pas.\n\nIl y a du sel sur mes lèvres—du vrai sel, et pas une mer à cent milles d'ici. Il y a une fumée qui ne vient pas de l'âtre. Et il y a une forme au bord de la chambre qui ne fait absolument rien, qui est seulement là, ce qui est infiniment pire que si elle bougeait.\n\nCela dure, à la chandelle, environ un doigt de cire.\n\nPuis la chambre n'est plus qu'une chambre, et je ne suis qu'un homme assis dans son lit, les mains tremblantes. Il y a une pellicule de sel sur le dos de ma main. Elle y est encore au matin."
+ ln_chosen.7.a:0 "Consigner exactement ce qui s'est passé. Ne rien interpréter."
+ ln_chosen.7.b:0 "En parler au prêtre. Il saura ce que c'était."
+ ln_chosen.7.c:0 "C'était un rêve. Les hommes font des rêves."
+
+ ln_chosen.8.t:0 "La Foi répond"
+ ln_chosen.8.desc:0 "Cela a été lu sur les marches du Grand Septuaire, et sera lu dans chaque septuaire du royaume avant la fin du mois.\n\nOn ne me nomme pas hérétique de façon explicite—le Grand Septon est toujours prudent. Ce que l'on condamne, c'est 'le feu étranger et ceux qui le laissent les nommer', ce qui est exactement la même chose dite d'une manière à laquelle on ne peut répondre par un duel.\n\nDeux septons ont déjà fui mes terres. Un pacte de mariage aux trois quarts conclu s'est tout à fait tu. Mon mestre m'avertit qu'on en fait aussi la lecture dans le Nord, et là-bas cela passe très mal.\n\nCe qui ne signifie pas que cela tourne bien pour moi. C'est simplement une autre sorte d'ennui, plus loin."
+ ln_chosen.8.a:0 "Qu'ils le fassent. J'ai une guerre à préparer."
+ ln_chosen.8.b:0 "Y répondre. Par écrit, à chaque septuaire du royaume."
+ ln_chosen.8.c:0 "Bien. Qu'ils le lisent dans le Nord et qu'on voie ce qui arrive."
+
+ ln_chosen.9.t:0 "Celui qui refuse de le dire"
+ ln_chosen.9.desc:0 "[ln_holdout.GetTitledFirstName] ne m'a jamais rien refusé, et ne me refuse rien aujourd'hui. [ln_holdout.GetSheHe|U] est venu avec [ln_holdout.GetHerHis] ban dénombré, [ln_holdout.GetHerHis] contingent de chevaliers assermenté, et un refus net de prononcer le mot.\n\n\"Je chevaucherai où vous me direz, et j'y mourrai s'il le faut,\" dit [ln_holdout.GetSheHe], les yeux droit dans les miens. \"Ce que je ne ferai pas, c'est me tenir dans une cour et appeler prophétie un homme vivant, parce que je n'y crois pas, et que je ne vais pas mentir devant mes propres fils.\"\n\nToute la salle l'a entendu. La question n'est pas de savoir si [ln_holdout.GetSheHe] est loyal—de toute évidence [ln_holdout.GetSheHe] l'est. C'est ce que le reste de mes bannerets fera du fait que dire 'non' à voix haute au prince qui fut promis s'est révélé survivable."
+ ln_chosen.9.a:0 "[ln_holdout.GetSheHe|U] n'a pas à y croire. [ln_holdout.GetSheHe|U] doit chevaucher."
+ ln_chosen.9.b:0 "Faire un exemple de [ln_holdout.GetHerHim]. Les autres regardent."
+
+ ln_chosen.10.t:0 "Il ne reste rien à faire ici"
+ ln_chosen.10.desc.open:0 "Les chevaux sont prêts, et ils le sont depuis la première lueur. Personne ne me l'a demandé de nouveau. Ils ont simplement tout préparé, puis trouvé autre chose à faire à portée de vue de la cour.\n\n"
+ ln_chosen.10.desc.burned:0 "Je ne cesse de penser au braconnier que j'ai brûlé. Pas aux cris—au silence. Il avait quarante ans et n'a pas émis un son, tandis qu'une foule de mes propres gens regardait ce qu'elle croyait être une chose sainte."
+ ln_chosen.10.desc.believed:0 "Je ne cesse de penser aux hommes dans la cour. Ils n'avaient pas peur, parce qu'ils croyaient vraiment que la prophétie me rendait invincible. Je pense à ce que cela leur coûtera quand la ligne rompra enfin."
+ ln_chosen.10.desc.dismissed:0 "Je n'ai plus goûté le sel depuis. Je me suis dit que ce n'était qu'un rêve de fièvre, mais depuis je prends grand soin de ne pas regarder le dos de ma main à la lumière."
+ ln_chosen.10.desc.risen:0 "J'ai déjà été une fois de l'autre côté de tout cela. C'est la seule chose qui rende l'attente supportable. Quoi qui sorte du fond des bois, j'ai une assez bonne idée de ce que c'est que de perdre, et c'était plus silencieux que les gens ne le croient."
+ ln_chosen.10.desc.plain:0 "Mon maréchal a compté la colonne trois fois. Il sait exactement combien d'hommes partent. Il n'a pas dit le nombre à voix haute, car nous savons tous les deux qu'il ne suffit pas."
+ ln_chosen.10.desc.close:0 "\n\nLa route du nord est la seule qui ait été dégagée."
+ ln_chosen.10.a:0 "Alors nous partons."
+ ln_chosen.10.b:0 "Pas encore. Il y a d'abord du travail ici."
+
+ # ── FERVOR REASONS ──────────────────────────────────────────────────────────────────────────────────────────
+ ln_fervor_loss_refusal:0 "L'Élu a refusé le feu"
+
+ # The friendship reason when two Chosen meet instead of feuding (ln_chosen.2, option a).
+ ln_friend_two_chosen:0 "A rencontré la seule autre personne vivante qui comprenne le problème"
+
+ # ── 1.0.13: THE SIGHTED OPTIONS ────────────────────────────────────────────────
+ ln_chosen.3.d:0 "J'ai déjà vu ce que la Citadelle fait de cette lettre. La renvoyer sans l'ouvrir."
+ ln_chosen.7.d:0 "J'ai rêvé cette chambre. Je l'ai rêvée avant le sel."
+ ln_chosen.10.desc.dreamt:0 "J'ai déjà été ici, dans le sens qui compte. Pas cette chambre — cette heure. Je l'ai rêvée il y a des années et je me suis réveillé incapable d'expliquer à qui que ce soit pourquoi je pleurais, et depuis je marche vers elle sans avoir pu le dire une seule fois à voix haute.\n\nIl y a une solitude particulière à reconnaître le pire jour de sa vie alors qu'on se tient encore à son commencement.\n\nLes hommes me regardent comme on regarde quelqu'un qui sait quelque chose. Ils ont raison, et cela n'a jamais servi à rien."
+ ln_chosen.10.desc.silent:0 "La Citadelle m'a écrit onze pages et je les ai renvoyées le sceau intact, et j'y ai pensé plus souvent que je ne l'aurais cru.\n\nIls voulaient que ce soit consigné pour pouvoir le classer. Les choses classées cessent d'être vraies. Quoi que soit cette chose, elle est restée dangereuse précisément parce qu'aucun mestre n'a jamais pu y mettre un chiffre et la poser sur une étagère.\n\nIl n'y aura aucune trace de moi. Il n'y aura que ce qui vient ensuite, et la question de savoir s'il restera quelqu'un pour le mal raconter."
+

@@ -121,8 +121,17 @@ ln_lay_down_the_realm_effect = {
 		# tell us when it has gone stale.
 		#
 		# CLOSE FAMILY ONLY. The household guard, the councillors and the hangers-on going north with him is
-		# correct and is AGOT's design -- their sweep gives them the black or sends them to the pool. Sons,
-		# daughters, parents and siblings are the ones who should not be on the Wall by accident.
+		# correct and is Thomas's design. Sons, daughters, parents and siblings are the ones who should not
+		# be on the Wall by accident.
+		# 1.1.3 -- WHO GIVES THE HOUSEHOLD THE BLACK, as the 27 Sep boot showed it. On the ranger road two
+		# passes run: ln_set_up_the_camp_effect (zz_ln_ranger_effects.txt, from on_government_change at the
+		# top of the ceremony) swears the fit and pools the unfit, keeping family, consorts, lovers, friends,
+		# kin's spouses and the heir; then, because that government change succeeds and puts him on an
+		# NW-flagged government before the company grant, AGOT's title-gain sweep (our shadow,
+		# zz_ln_agot_nw_title_gain_shadow.txt) runs too and swears any FIT man the first pass kept who is not
+		# close family (a friend, a lover, a cousin) -- as it did in 1.1.2. Close family stays for the move
+		# below. On the keepership road the man already wears the black when the castle lands, so only AGOT's
+		# sweep runs there.
 		if = {
 			limit = {
 				exists = scope:ln_black_successor

@@ -1,0 +1,82 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the Favored chain.
+
+ ln_favored.1.t:0 "Le premier d’entre eux"
+ ln_favored.1.desc:0 "Il est venu à pied depuis Volantis.\n\nPas en bateau. À pied, jusqu’à la mer, puis il a payé sa traversée en travaillant, puis il a repris la route à pied, et cela fait deux ans qu’il marche, et ce matin il s’est présenté à ta porte, les pieds enveloppés de chiffons, et il a demandé au garde — poliment, dans un commun exécrable — si c’était bien le bon château.\n\nIl ne veut pas d’argent. Il ne veut ni terre, ni place, ni lettre. Il a fait un très long chemin pour se tenir dans une cour et te regarder, puis, sans doute, pour repartir à pied.\n\nTon intendant attend un ordre. Et, de façon moins visible, toute la cour l’attend aussi."
+ ln_favored.1.a:0 "Nourrissez-le, écoutez-le, et renvoyez-le chez lui avec des bottes."
+ ln_favored.1.b:0 "Renvoyez-le. Cela commence ici, ou cela ne s’arrête plus."
+ ln_favored.1.c:0 "Donnez-lui un lit ; un homme qui marche deux ans mérite qu’on le garde."
+
+ ln_favored.2.t:0 "Il y en a un autre"
+ ln_favored.2.desc:0 "Il y a un homme à Myr qui prétend à la même chose.\n\nUn temple là-bas le dit depuis huit mois : le fils d’un capitaine, né l’année d’une comète dont tu n’as jamais entendu parler, sorti d’un navire en flammes sans une marque. On emploie pour lui le mot même que tes prêtres emploient pour toi.\n\nLa lettre qui le rapporte vient d’un prêtre rouge, et elle est parfaitement factuelle, car les prêtres n’ont jamais dit qu’il n’y en aurait qu’un. Cela, ce sont les hommes qui l’ont supposé.\n\nC’est toi qui l’as supposé. Et tu ne l’as remarqué qu’à l’instant, en lisant ceci, en découvrant à quel point cela te déplaît."
+ ln_favored.2.a:0 "Bien. Qu’ils aillent le contempler quelque temps, lui."
+ ln_favored.2.b:0 "Écrivez-lui. Quoi que ce soit, nous sommes tous deux dedans."
+ ln_favored.2.c:0 "Il se trompe. Dites-le, et dites-le là où les prêtres l’entendront."
+
+ ln_favored.3.t:0 "Renonce-y"
+ ln_favored.3.desc:0 "[ln_asker.GetTitledFirstName] a manifestement répété tout cela et ira jusqu’au bout quoi que fasse ton visage.\n\n« C’est un mot étranger, monseigneur, venu d’un feu étranger, et on le dit de vous dans vos propres salles, et ceux qui le disent ne vous doivent rien. Je ne vous demande pas de ne pas y croire. Je vous demande de dire, une fois, à voix haute, que vous n’y prétendez pas. C’est tout. Une phrase, et cela meurt. »\n\nEt [ln_asker.GetSheHe] a raison : cela mourrait. Une prétention pareille ne tient qu’aussi longtemps que l’homme qui en est le centre refuse de la renverser, et tout le monde dans cette salle le sait, toi compris."
+ ln_favored.3.a:0 "Alors j’y renonce. À voix haute, et devant vous tous."
+ ln_favored.3.b:0 "Je ne l’ai jamais revendiqué. Je ne le renierai pas non plus."
+ ln_favored.3.c:0 "Je le garde. Dis-le dans ton septuaire le septième jour."
+
+ ln_favored.4.t:0 "Son fils regarde"
+ ln_favored.4.desc:0 "L’homme va mourir cette nuit et tout le monde dans la pièce le sait, sauf peut-être l’homme.\n\nSon fils est venu te chercher. Il a couru tout le chemin, ne s’est pas laissé éconduire par l’intendant, et il se tient au pied du lit avec une expression dont tu te souviendras : pas encore du chagrin, pas tout à fait de l’espoir non plus. De l’attente.\n\nTu es là à cause de ce que tes prêtres racontent sur toi. Le garçon l’a entendu dans une taverne, et il a passé le dernier après-midi de son père à croire qu’une main sur la poitrine pourrait faire quelque chose.\n\nElle ne fera rien. Tu es presque entièrement sûr qu’elle ne fera rien."
+ ln_favored.4.a:0 "Pose ta main sur lui. La bonté ne coûte rien."
+ ln_favored.4.b:0 "Emmène le garçon dans le couloir et dis-lui la vérité."
+
+ ln_favored.5.t:0 "Alors prouve-le"
+ ln_favored.5.desc:0 "C’est un petit brasero, et il brûle depuis midi.\n\nLa suggestion n’a pas été faite par malice, ce qui est d’une certaine façon pire. L’un des prêtres l’a dite presque avec chaleur, comme pour mettre fin à la dispute : les Élus de R'hllor ne brûlent pas. La moitié de la salle a trouvé l’idée excellente avant même d’avoir fini de l’entendre.\n\nLe brasero est contre ton coude. La salle s’est tue de cette manière particulière. Et tu retournes le seul fait qui compte : tu n’as aucune idée de si l’histoire du feu qui ne brûle pas est vraie, et il n’existe qu’une seule manière de l’apprendre."
+ ln_favored.5.a:0 "Mets-y la main. Que le feu décide ce que je suis."
+ ln_favored.5.b:0 "Non. Et celui qui l’a proposé peut se trouver une autre salle."
+
+ ln_favored.6.t:0 "Il veut un bûcher"
+ ln_favored.6.desc:0 "Il a déjà choisi l’homme : un pillard pris au printemps, qui doit être pendu dans quinze jours, et que personne absolument ne regrettera.\n\n« Vous posez la mauvaise question, dit le prêtre. Il meurt dans quatorze jours de toute façon. Au bout d’une corde, il meurt pour rien. Dans le feu, il meurt pour l’aube, et le Maître prend note de celui qui l’a donnée. » Il dit tout cela du ton d’un intendant proposant un achat de grain.\n\nLe pire, c’est le calcul. Cela ne coûte réellement pas une vie. Cela coûte le *genre* de lieu qu’est ta salle, une fois, devant tout le monde, et il n’existe aucune version de ceci où les gens oublient de quel côté tu es allé."
+ ln_favored.6.a:0 "Non. Pas tant que cette salle est à moi."
+ ln_favored.6.b:0 "Qu’il brûle. La corde l’attendait de toute façon."
+
+ ln_favored.7.t:0 "Cela me revient-il aussi ?"
+ ln_favored.7.desc:0 "[ln_asker.GetTitledFirstName] le demande sans détour, au-dessus des comptes, sans lever les yeux.\n\n« Quand ce sera à moi : le siège, les hommes, tout. Est-ce que l’autre chose vient avec ? »\n\nCe qu’il y a dessous n’est pas de l’avidité. [ln_asker.GetSheHe|U] a vu ce que ce nom fait à une maison et veut savoir s’il vient aussi pour [ln_asker.GetHerHim].\n\nTu n’en as aucune idée. La prophétie parle d’une personne. Personne n’a jamais expliqué ce qui arrive quand cette personne a des enfants."
+ ln_favored.7.a:0 "Non. Ce n’est pas un titre. Cela ne s’hérite pas."
+ ln_favored.7.b:0 "Je ne sais pas. Personne ne sait. Voilà la réponse honnête."
+ ln_favored.7.c:0 "Qu’ils croient que oui. Cela ne nous coûte rien."
+
+ ln_favored.8.t:0 "Le miracle"
+ ln_favored.8.desc:0 "Une fillette aveugle, dans un village à deux jours au sud, voit. Cela s’est produit à l’instant où tu passais à cheval, et il y a maintenant dans ce village quatre cents personnes qui n’y étaient pas la semaine dernière.\n\nElle n’a jamais été aveugle. Son oncle a tout arrangé, et il prend la pièce au sanctuaire qu’il a dressé dans sa propre cour. Ce n’est même pas une bonne fraude : trois personnes de ce village pourraient la défaire en un après-midi, et aucune ne le fera, parce que les quatre cents achètent du pain et de la bière et que le village n’a jamais connu une année pareille.\n\nEt tes prêtres sont ravis. Ils le racontent jusqu’au Neck."
+ ln_favored.8.a:0 "Tout dévoiler, sur la place, moi-même."
+ ln_favored.8.b:0 "Ne rien dire. C’est une belle histoire et elle fait du bon travail."
+ ln_favored.8.c:0 "Trouvez qui a payé l’oncle. Quelqu’un l’a fait."
+
+ ln_favored.9.t:0 "Ils t’ont bâti quelque chose"
+ ln_favored.9.desc:0 "C’est au carrefour en dessous du château, et cela s’est élevé en un mois environ.\n\nCeux qui l’ont bâti n’avaient aucune idée de ce qu’ils faisaient. Il y a un feu nocturne, ce qui est l’affaire des prêtres rouges, et un visage de barral taillé dans le poteau, et de l’étoffe rouge du genre qu’un septon reconnaîtrait. Ce n’est le temple de rien. C’est un sanctuaire dédié à *toi*, assemblé à partir de toutes les fois dont les bâtisseurs avaient jamais entendu parler.\n\nIls viennent au crépuscule. Peu nombreux, et sans bruit. Ton septon l’a vu et n’a rien dit, ce qui de sa part est une déclaration. Ton prêtre rouge l’a vu et n’a rien dit non plus, et celle-là est pire."
+ ln_favored.9.a:0 "Qu’on le démonte avant qu’un autre ne le démonte."
+ ln_favored.9.b:0 "Laissez-le. Qu’ils aient quelque chose."
+
+ ln_favored.10.t:0 "Alors viens avec nous"
+ ln_favored.10.desc.open:0 "Ils ont fait un long chemin pour demander, et ils ont apporté une carte.\n\nUn patrouilleur, un prêtre rouge et un chevalier dont le frère n’est pas revenu d’une patrouille ; à eux trois, ils ont un plan qui n’est pas fou : des hommes, des vivres, une saison, une route passé la Tour Ombreuse. Ce qu’ils n’ont pas, c’est une raison pour que quiconque les suive.\n\nIls voudraient que cette raison, ce soit toi.\n\n"
+ ln_favored.10.desc.ordeal:0 "« Ils vous ont vu mettre la main dans ce brasero, dit le chevalier. La moitié du Nord en a entendu parler à l’heure qu’il est. Vous n’avez rien à faire là-haut. Il faut qu’on vous voie partir. »"
+ ln_favored.10.desc.lie:0 "Tu penses à un village à deux jours au sud, et à quatre cents personnes, et à une fillette qui a toujours parfaitement bien vu. Tout ce qu’ils t’offrent est bâti sur le même genre de terrain."
+ ln_favored.10.desc.quiet:0 "Tu n’as pas prononcé le mot une seule fois. Tu remarques qu’ils ne te l’ont pas demandé. Ils sont simplement arrivés et ont commencé à faire des plans comme si l’affaire était réglée, ce qu’elle est, apparemment, pour tout le monde sauf pour toi."
+ ln_favored.10.desc.plain:0 "Le prêtre n’a encore rien dit du tout. Il laisse les deux autres s’en charger, ce qui t’apprend de qui vient l’idée."
+ ln_favored.10.desc.close:0 "\n\nLa carte est toujours sur la table. Personne ne l’a roulée."
+ ln_favored.10.a:0 "Alors je monte au nord avec vous."
+ ln_favored.10.b:0 "Vous aurez des hommes et de l’argent. Moi, je reste."
+ ln_favored.10.c:0 "Non. Je suis un seigneur, pas un signe."
+
+ # ── THE SHRINE ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_shrine_county_modifier:0 "Sanctuaire du carrefour"
+ ln_shrine_county_modifier_desc:0 "Un feu nocturne, un visage de barral et un fer à cheval, dans le même petit bâtiment. Ceux qui viennent ici au crépuscule ne savent pas tout à fait ce qu’ils adorent, et cela ne semble pas les troubler."
+
+ # ── THE ORDEAL, ANSWERED ────────────────────────────────────────────────────────────────────────────────────
+ ln_favored.11.t:0 "La main"
+ ln_favored.11.desc:0 "Le mestre ôte le dernier pansement, puis ne dit rien pendant un moment, ce qui de sa part revient à crier.\n\nElle est couverte de cicatrices et le restera. Ce n’est pas cela qui le rend muet. C’est que la main fonctionne : chaque doigt, toute sa force, pas de gangrène, et elle s’est refermée en quelques semaines. La nuit où c’est arrivé, il t’a dit de t’attendre à perdre deux doigts, et peut-être le bras.\n\n« J’aimerais consigner ceci, dit-il enfin. Je n’avance rien. J’aimerais simplement que ce soit écrit quelque part. »\n\nDehors, quelqu’un qui était dans la salle cette nuit-là le raconte à quelqu’un qui n’y était pas."
+ ln_favored.11.a:0 "Il a tenu sa part. Dites-le, et dites-le haut."
+ ln_favored.11.b:0 "C’est une cicatrice. Les hommes se font des cicatrices et les hommes guérissent."
+
+ ln_the_hand_that_did_not_burn_modifier:0 "La main qui n’a pas brûlé"
+ ln_the_hand_that_did_not_burn_modifier_desc:0 "Tenue dans un brasero devant une salle comble, et elle se referme encore sur une épée. Aucun de ceux qui étaient dans cette pièce n’a cessé de le raconter."
+
+ # ── 1.0.13: THE SIGHTED OPTION ─────────────────────────────────────────────────
+ ln_favored.1.d:0 "Je connais son visage. Je le connais depuis deux ans — seulement je ne savais pas que c’était un visage."
+ ln_favored.10.desc.knew:0 "Je reviens sans cesse à l’homme qui est venu à pied de Volantis.\n\nJe connaissais son visage avant qu’il ne le relève. De nulle part : je l’avais simplement porté derrière mes yeux pendant deux ans et pris pour une forme dans un feu. Il a traversé le monde pour me regarder, et moi, je le regardais déjà.\n\nTout ce qui a suivi a eu cette qualité-là. Pas la révélation. La reconnaissance, arrivant un peu tard."
+

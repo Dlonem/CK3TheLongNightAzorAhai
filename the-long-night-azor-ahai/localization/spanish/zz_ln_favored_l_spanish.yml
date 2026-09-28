@@ -1,0 +1,82 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the Favored chain.
+
+ ln_favored.1.t:0 "El primero de ellos"
+ ln_favored.1.desc:0 "Ha venido a pie desde Volantis.\n\nNo en barco. A pie, hasta el mar, y allí se ganó el pasaje trabajando, y después siguió a pie otra vez, y lleva dos años haciéndolo, y esta mañana se presentó en tu puerta con los pies envueltos en harapos y preguntó al guardia —con toda cortesía, en una lengua común lamentable— si este era el castillo correcto.\n\nNo quiere dinero. No quiere tierras ni un puesto ni una carta. Ha recorrido un camino larguísimo para estar de pie en un patio y mirarte y luego, cabe suponer, para volver andando.\n\nTu mayordomo espera una orden. También la espera, de manera menos evidente, todo el resto del patio."
+ ln_favored.1.a:0 "Dadle de comer, escuchadlo y que vuelva a casa con botas."
+ ln_favored.1.b:0 "Dadle media vuelta. Esto empieza aquí o no se detiene nunca."
+ ln_favored.1.c:0 "Dadle una cama; un hombre que camina dos años merece quedarse."
+
+ ln_favored.2.t:0 "Hay otro"
+ ln_favored.2.desc:0 "Hay un hombre en Myr que reclama lo mismo.\n\nUn templo de allí lo viene diciendo desde hace ocho meses: el hijo de un capitán, nacido en el año de un cometa del que nunca has oído hablar, que salió caminando de un barco en llamas sin una sola marca. Usan con él la misma palabra que tus sacerdotes usan contigo.\n\nLa carta que lo informa es de un sacerdote rojo, y es del todo desapasionada, porque los sacerdotes no han dicho nunca que hubiera de haber solo uno. Eso lo dieron por supuesto los hombres.\n\nLo diste por supuesto tú. Y no te has dado cuenta hasta ahora mismo, leyendo esto y descubriendo cuánto te desagrada."
+ ln_favored.2.a:0 "Bien. Que vayan a mirarlo a él una temporada."
+ ln_favored.2.b:0 "Escribidle. Sea lo que sea esto, los dos estamos dentro."
+ ln_favored.2.c:0 "Se equivoca. Decidlo, y decidlo donde lo oigan los sacerdotes."
+
+ ln_favored.3.t:0 "Renuncia a ello"
+ ln_favored.3.desc:0 "[ln_asker.GetTitledFirstName] ha ensayado esto, está claro, y va a llegar al final por mucho que hagas con la cara.\n\n«Es una palabra extranjera, mi señor, de un fuego extranjero, y se dice de vos en vuestros propios salones, y la dicen hombres que no os rinden cuentas. No os pido que no la creáis. Os pido que digáis, una vez, en voz alta, que no la reclamáis. Nada más. Una frase y muere.»\n\nY [ln_asker.GetSheHe] tiene razón: moriría. Una pretensión así solo se sostiene mientras el hombre que está en su centro se niega a tirarla abajo, y todos en esta sala lo saben, tú incluido."
+ ln_favored.3.a:0 "Entonces renuncio a ello. En voz alta y ante todos vosotros."
+ ln_favored.3.b:0 "Nunca lo reclamé. Tampoco lo voy a negar."
+ ln_favored.3.c:0 "Me lo quedo. Dilo en tu septo el séptimo día."
+
+ ln_favored.4.t:0 "Su hijo está mirando"
+ ln_favored.4.desc:0 "El hombre va a morir esta noche y todos en la habitación lo saben, salvo quizá el hombre.\n\nSu hijo fue a buscarte. Vino corriendo todo el camino, no se dejó despachar por el mayordomo, y está a los pies de la cama con una expresión que vas a recordar: aún no es dolor, y tampoco es del todo esperanza. Es espera.\n\nEstás aquí por lo que tus sacerdotes vienen diciendo de ti. El muchacho lo oyó en una taberna y ha pasado la última tarde de su padre creyendo que una mano en el pecho podría hacer algo.\n\nNo va a hacer nada. Estás casi del todo seguro de que no va a hacer nada."
+ ln_favored.4.a:0 "Pon la mano sobre él. Ser piadoso no cuesta nada."
+ ln_favored.4.b:0 "Lleva al muchacho al pasillo y dile la verdad."
+
+ ln_favored.5.t:0 "Pues demuéstralo"
+ ln_favored.5.desc:0 "Es un brasero pequeño y lleva encendido desde el mediodía.\n\nLa propuesta no se hizo con mala intención, lo cual en cierto modo es peor. Uno de los sacerdotes lo dijo casi con calidez, como manera de terminar la discusión: los Elegidos de R'hllor no se queman. Media sala pensó que era una idea excelente antes de haber terminado de oírla.\n\nEl brasero está junto a tu codo. La sala ha callado de esa manera tan concreta. Y tú le das vueltas al único hecho que importa: que no tienes ni idea de si la historia de no quemarse es cierta, y solo hay una manera de que alguien lo averigüe."
+ ln_favored.5.a:0 "Mete la mano dentro. Que el fuego decida lo que soy."
+ ln_favored.5.b:0 "No. Y quien lo ha propuesto puede buscarse otro salón."
+
+ ln_favored.6.t:0 "Quiere una hoguera"
+ ln_favored.6.desc:0 "Ya ha elegido al hombre: un saqueador apresado en primavera, condenado a la horca dentro de quince días, y no lo va a echar de menos absolutamente nadie.\n\n«Hacéis la pregunta equivocada —dice el sacerdote—. Muere dentro de catorce días de todos modos. En la cuerda muere para nada. En el fuego muere por el amanecer, y el Señor toma nota del hombre que lo entregó.» Dice todo esto con el tono de un mayordomo que propone una compra de grano.\n\nLo peor es la aritmética. De verdad no cuesta una vida. Cuesta la *clase* de sitio que es tu salón, una vez, delante de todos, y no hay ninguna versión de esto en la que la gente olvide por dónde tiraste."
+ ln_favored.6.a:0 "No. No mientras yo tenga este salón."
+ ln_favored.6.b:0 "Que arda. Iba a la horca de todas formas."
+
+ ln_favored.7.t:0 "¿Eso también me toca?"
+ ln_favored.7.desc:0 "[ln_asker.GetTitledFirstName] lo pregunta sin rodeos, sobre las cuentas, sin levantar la vista.\n\n«Cuando sea mío: el asiento, los hombres, todo. ¿La otra cosa viene con ello?»\n\nLo que hay debajo no es codicia. [ln_asker.GetSheHe|U] ha visto lo que el nombre le hace a un salón y quiere saber si también va a por [ln_asker.GetHerHim].\n\nNo tienes ni idea. La profecía habla de una persona. Nadie ha explicado nunca qué ocurre cuando esa persona tiene hijos."
+ ln_favored.7.a:0 "No. No es un título. No se hereda."
+ ln_favored.7.b:0 "No lo sé. Nadie lo sabe. Esa es la respuesta honesta."
+ ln_favored.7.c:0 "Que crean que sí. No nos cuesta nada."
+
+ ln_favored.8.t:0 "El milagro"
+ ln_favored.8.desc:0 "Una niña ciega de una aldea a dos días al sur ve. Ocurrió en el momento en que pasabas a caballo, y ahora hay cuatrocientas personas en esa aldea que la semana pasada no estaban.\n\nNunca fue ciega. Su tío lo organizó todo y está cobrando monedas en el santuario que ha levantado en su propio corral. No es ni siquiera un buen fraude: tres personas de esa aldea podrían deshacerlo en una tarde, y ninguna lo hará, porque los cuatrocientos compran pan y cerveza y la aldea no ha tenido nunca un año así.\n\nY tus sacerdotes están encantados. Lo están contando hasta el Cuello."
+ ln_favored.8.a:0 "Destaparlo todo, en la plaza, yo mismo."
+ ln_favored.8.b:0 "No decir nada. Es una buena historia y está haciendo un buen trabajo."
+ ln_favored.8.c:0 "Averiguad quién pagó al tío. Alguien lo hizo."
+
+ ln_favored.9.t:0 "Te han construido algo"
+ ln_favored.9.desc:0 "Está en el cruce de caminos al pie del castillo y se levantó en cerca de un mes.\n\nQuien lo construyó no tenía ni idea de lo que hacía. Hay un fuego nocturno, que es cosa de los sacerdotes rojos, y un rostro de arciano tallado en el poste, y tela roja de la clase que un septón reconocería. No es un templo de nada. Es un santuario dedicado a *ti*, armado con todas las fes de las que sus constructores habían oído hablar.\n\nVienen al anochecer. No muchos, y sin ruido. Tu septón lo ha visto y no ha dicho nada, lo cual en él es una declaración. Tu sacerdote rojo también lo ha visto y tampoco ha dicho nada, y esa es una declaración peor."
+ ln_favored.9.a:0 "Que lo desmonten antes de que lo desmonte otro."
+ ln_favored.9.b:0 "Dejadlo. Que tengan algo."
+
+ ln_favored.10.t:0 "Pues ven con nosotros"
+ ln_favored.10.desc.open:0 "Han hecho un largo camino para preguntar y han traído un mapa.\n\nUn explorador, un sacerdote rojo y un caballero cuyo hermano no volvió de una expedición, y entre los tres tienen un plan que en realidad no es una locura: hombres, provisiones, una estación, una ruta más allá de la Torre Sombría. Lo que no tienen es una razón para que alguien los siga.\n\nLes gustaría que la razón fueras tú.\n\n"
+ ln_favored.10.desc.ordeal:0 "«Os vieron meter la mano en ese brasero —dice el caballero—. A estas alturas lo ha oído medio Norte. No tenéis que hacer nada allí arriba. Solo hace falta que os vean ir.»"
+ ln_favored.10.desc.lie:0 "Estás pensando en una aldea a dos días al sur, y en cuatrocientas personas, y en una niña que siempre vio perfectamente bien. Todo lo que te están ofreciendo está levantado sobre la misma clase de terreno."
+ ln_favored.10.desc.quiet:0 "Tú no has dicho la palabra ni una sola vez. Te fijas en que no te han pedido que la digas. Simplemente han llegado y han empezado a planear como si el asunto estuviera resuelto, lo cual, por lo visto, para todos menos para ti lo está."
+ ln_favored.10.desc.plain:0 "El sacerdote todavía no ha dicho nada en absoluto. Deja que lo hagan los otros dos, lo cual te dice a quién se le ocurrió."
+ ln_favored.10.desc.close:0 "\n\nEl mapa sigue sobre la mesa. Nadie lo ha enrollado."
+ ln_favored.10.a:0 "Entonces iré al norte con vosotros."
+ ln_favored.10.b:0 "Tendréis hombres y monedas. Yo me quedo."
+ ln_favored.10.c:0 "No. Soy un señor, no una señal."
+
+ # ── THE SHRINE ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_shrine_county_modifier:0 "Santuario en el cruce de caminos"
+ ln_shrine_county_modifier_desc:0 "Un fuego nocturno, un rostro de arciano y una herradura, en el mismo edificio pequeño. Quienes vienen aquí al anochecer no están del todo seguros de qué adoran y no parece inquietarlos."
+
+ # ── THE ORDEAL, ANSWERED ────────────────────────────────────────────────────────────────────────────────────
+ ln_favored.11.t:0 "La mano"
+ ln_favored.11.desc:0 "El maestre retira el último vendaje y luego no dice nada durante un rato, lo cual en él es casi un grito.\n\nEstá llena de cicatrices y lo estará siempre. No es eso lo que lo tiene callado. Es que la mano funciona: todos los dedos, fuerza entera, sin gangrena, y cerró en semanas. La noche en que ocurrió te dijo que contaras con perder dos dedos, y quizá el brazo.\n\n«Me gustaría dejar constancia de esto —dice al final—. No estoy afirmando nada al respecto. Solo me gustaría que quedara escrito en algún sitio.»\n\nFuera, alguien que estaba en el salón aquella noche se lo está contando a alguien que no estaba."
+ ln_favored.11.a:0 "Él cumplió su parte. Decidlo, y decidlo bien alto."
+ ln_favored.11.b:0 "Es una cicatriz. Los hombres se hacen cicatrices y los hombres sanan."
+
+ ln_the_hand_that_did_not_burn_modifier:0 "La mano que no se quemó"
+ ln_the_hand_that_did_not_burn_modifier_desc:0 "Sostenida en un brasero ante un salón lleno, y todavía se cierra sobre una espada. Nadie de los que estaban en esa sala ha dejado de contarlo."
+
+ # ── 1.0.13: THE SIGHTED OPTION ─────────────────────────────────────────────────
+ ln_favored.1.d:0 "Conozco su cara. La conozco desde hace dos años; solo que no sabía que fuera una cara."
+ ln_favored.10.desc.knew:0 "Vuelvo una y otra vez al hombre que vino a pie desde Volantis.\n\nConocía su cara antes de que la levantara. No de ninguna parte: simplemente la había llevado detrás de los ojos durante dos años y la había confundido con una forma en el fuego. Cruzó el mundo para mirarme, y yo llevaba ya mucho tiempo mirándolo.\n\nTodo lo que ha venido después tiene esa misma cualidad. No revelación. Reconocimiento, llegando un poco tarde."
+

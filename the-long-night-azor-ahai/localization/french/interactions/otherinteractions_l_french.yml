@@ -1,0 +1,4 @@
+﻿l_french:
+ call_antiother_interaction:0 "Appeler à l'aide"
+ call_antiother_interaction_desc:0 "Appelez-les à l'aide dans votre guerre"
+ CALL_OTHER_WAR_NOTIFICATION:0 "Je fais appel à votre aide."

@@ -20,20 +20,9 @@
  setting_ln_naming_off:0 "Nobody Is Ever Named"
  setting_ln_naming_off_desc:0 "The prophecy chain is off. The champion traits stay unobtainable."
 
- # ── DEED FLAG DESCRIPTIONS ──────────────────────────────────────────────────────────────────────────────────
- # Used by tooltips that list what marks a character carries.
- ln_deed_salt_and_smoke:0 "Born amid salt and smoke"
- ln_deed_bleeding_star:0 "Born beneath a bleeding star"
- ln_deed_survived_the_others:0 "Walked away from the dead"
- ln_deed_dragon_dreams:0 "Dreams that arrive as memory"
- ln_deed_greensight:0 "Sees through the weirwoods"
- ln_deed_valyrian_steel:0 "Carries spell-forged steel"
- ln_deed_woke_dragons:0 "Woke dragons out of stone"
- ln_deed_returned:0 "Died, and did not stay dead"
-
  # ── WHO MAY BE NAMED ────────────────────────────────────────────────────────────────────────────────────────
  rule_ln_prophecy_claimants:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Who May Be Named"
- rule_ln_prophecy_claimants_desc:0 "#EMP Chosen#! is a claim, not a fact — several can hold it at once. #EMP Azor Ahai Reborn#! is the exception: it goes to whoever kills the Night King, once."
+ rule_ln_prophecy_claimants_desc:0 "#EMP Chosen#! is a claim, not a fact — several can hold it at once. #EMP Azor Ahai Reborn#! is the exception: it goes to whoever destroys the Night King, once."
  setting_ln_claimants_anyone:0 "Anyone at All #EMP (Default)#!"
  setting_ln_claimants_anyone_desc:0 "As many claimants as qualify, AI and player alike. No way to tell from inside the world which is the mistake."
  setting_ln_claimants_players_only:0 "Players Only"

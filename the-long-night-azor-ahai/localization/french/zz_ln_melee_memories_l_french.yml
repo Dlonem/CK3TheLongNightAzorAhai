@@ -1,0 +1,32 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- memories of the Long Night (1.1.0, §6).
+
+ ln_saved_by_kin_memory:0 "sauvé par [target0.GetTitledFirstName]"
+ ln_saved_by_kin_memory_desc:0 "[target0.GetTitledFirstName] a reçu le coup qui m'était destiné. Le sang répond du sang ; le mien marche encore grâce à [target0.GetHerHis]."
+ ln_saved_by_kin_memory_desc_second_perspective:0 "[target0.GetTitledFirstName] a reçu le coup qui t'était destiné."
+ ln_saved_by_kin_memory_desc_third_perspective:0 "[target0.GetTitledFirstName] a reçu le coup qui était destiné à [owner.GetName]."
+ ln_saved_by_a_friend_memory:0 "sauvé par [target0.GetTitledFirstName]"
+ ln_saved_by_a_friend_memory_desc:0 "[target0.GetTitledFirstName] s'est jeté au-devant du coup qui m'était destiné. Aucun serment ne l'exigeait. C'est cette part-là que je n'arrive pas à déposer."
+ ln_saved_by_a_friend_memory_desc_second_perspective:0 "[target0.GetTitledFirstName] s'est jeté au-devant du coup qui t'était destiné."
+ ln_saved_by_a_friend_memory_desc_third_perspective:0 "[target0.GetTitledFirstName] s'est jeté au-devant du coup destiné à [owner.GetName]."
+ ln_blade_broke_memory:0 "l'acier a cédé contre l'Autre"
+ ln_blade_broke_memory_desc:0 "J'ai opposé du bon acier forgé au château à la lame pâle, et le mien s'est défait comme la glace d'un étang. Je me souviens du bruit qu'il a fait mieux que de tout ce qui a suivi."
+ ln_blade_broke_memory_desc_second_perspective:0 "ton acier s'est défait contre la lame pâle."
+ ln_blade_broke_memory_desc_third_perspective:0 "l'acier de [owner.GetName] s'est défait contre la lame d'un Autre."
+ ln_took_the_black_memory:0 "a pris le noir"
+ ln_took_the_black_memory_desc:0 "J'ai dit les mots de mon propre chef. Ce que j'étais avant, je l'ai laissé au sud du Mur."
+ ln_took_the_black_memory_desc_second_perspective:0 "tu as dit les mots de ton propre chef."
+ ln_took_the_black_memory_desc_third_perspective:0 "[owner.GetName] a pris le noir par choix."
+ ln_the_wall_fell_memory:0 "vivant quand le Mur est tombé"
+ ln_the_wall_fell_memory_desc:0 "J'étais vivant le jour où Castle Black est tombé, et je sais exactement ce que j'ai envoyé et ce que je n'ai pas envoyé vers le nord dans les années d'avant."
+ ln_the_wall_fell_memory_desc_second_perspective:0 "tu étais vivant le jour où Castle Black est tombé."
+ ln_the_wall_fell_memory_desc_third_perspective:0 "[owner.GetName] était vivant le jour où Castle Black est tombé."
+ ln_learned_the_glass_memory:0 "a étudié le verredragon"
+ ln_learned_the_glass_memory_desc:0 "Je suis allé là où sont les archives et j'ai appris à quoi sert le feu gelé. La plupart des hommes qui affrontent le froid l'apprennent à la dernière seconde de leur vie ; moi, je l'ai appris dans une bibliothèque."
+ ln_learned_the_glass_memory_desc_second_perspective:0 "tu es allé là où sont les archives et tu as appris à quoi sert le feu gelé."
+ ln_learned_the_glass_memory_desc_third_perspective:0 "[owner.GetName] a étudié le verredragon et a appris à quoi il sert."
+
+ # ── §6's threshold modifier ──
+ ln_dread_of_the_walker_slayer_modifier:0 "Tueur de Marcheurs Blancs"
+ ln_dread_of_the_walker_slayer_modifier_desc:0 "Trois de l'espèce pâle se sont brisés contre celui-ci. Les vivants racontent l'histoire dans les salles ; et ce qui tient de parole chez les morts, cela leur est parvenu aussi."

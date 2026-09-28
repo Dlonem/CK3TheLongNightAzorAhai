@@ -1,0 +1,23 @@
+﻿l_spanish:
+
+ # The Cold Winds flavour cards -- Wall and North only, strictly atmosphere.
+ ln_coldwinds.1.t:0 "No había nadie"
+ ln_coldwinds.1.desc:0 "El explorador que lo cuenta ha dicho cosas más duras sin pestañear, y [ROOT.Char.GetSheHe] tampoco está pestañeando ahora. Eso es lo que lo hace malo.\n\n«Encontramos la expedición a tres días de camino. A todos. Tendidos en la nieve con los ojos abiertos, fríos como la piedra. Conté los cuerpos dos veces, mi [ROOT.Char.Custom('FormOfAddressForLiege')]. Volvimos cabalgando por un carro y más manos. Estuvimos fuera medio día».\n\nMira al fuego, no a [ROOT.Char.GetHerHim].\n\n«Cuando regresamos, no había nadie. No los habían arrastrado. Ni rastros de salida. Solo la nieve, aplastada donde habían estado tendidos, y ocho juegos de huellas caminando hacia el norte»."
+ ln_coldwinds.1.a:0 "Los muertos no se levantan y se van. Buscad otra vez."
+ ln_coldwinds.1.b:0 "Atrancad la puerta al crepúsculo. Cada crepúsculo."
+ ln_coldwinds.2.t:0 "El silencio"
+ ln_coldwinds.2.desc:0 "El bosque encantado siempre ha tenido voz: lobos al crepúsculo, cuervos riñendo en los árboles blancos, el pequeño forcejeo y crujido de las cosas que viven su vida bajo la nieve.\n\nLos hombres que caminan por lo alto del hielo han empezado a comentarlo, lo que en hombres así significa dos palabras y un movimiento de mentón: nada se mueve. Ningún lobo este mes. Ningún pájaro esta semana. La última patrulla volvió y el único sonido que pudo referir de tres días entre los árboles fue la respiración de sus propios caballos.\n\nUn bosque nunca está en silencio. A no ser que todo lo que hay en él tenga un sitio mejor donde estar."
+ ln_coldwinds.2.a:0 "Un bosque se calla cuando algo caza en él."
+ ln_coldwinds.2.b:0 "El invierno. No es más que el invierno."
+ ln_coldwinds.3.t:0 "Los fuegos piden atención"
+ ln_coldwinds.3.desc:0 "Fueron los hombres más viejos los que se dieron cuenta, los que llevan cuarenta años alimentando fuegos nocturnos y conocen sus humores como un pastor conoce el tiempo. Los fuegos piden atención, dicen. Leña que debería arder hasta la mañana es ceniza gris a media guardia. Las llamas se alzan raras en el aire quieto, inclinadas, como si hubiera un viento que nadie de los que están a su lado puede sentir.\n\nY sin que nadie haya dado una orden, los viejos han dejado de sentarse de espaldas al norte."
+ ln_coldwinds.3.a:0 "Doblad la ración de leña. No digáis nada."
+ ln_coldwinds.3.b:0 "Sentarme con los viejos. Oírlos hasta el final."
+ ln_coldwinds.4.t:0 "Los lobos bajan al sur"
+ ln_coldwinds.4.desc:0 "La caza se mueve. Alces en el camino real en un número que el cazador más viejo no ha visto nunca, ciervos cruzando a nado ríos que nunca han cruzado, y detrás de ellos los lobos: manadas enteras, que pasan de noche junto a [ROOT.Char.GetHerHis] fortaleza y no se detienen a molestar a los rebaños.\n\nEse es el detalle que los plebeyos repiten sin parar, como hacen cuando una cosa los asusta de lado: los lobos no están cazando. Están viajando. Todo lo que vive al norte de aquí tiene un sitio en el que preferiría estar, y todo ello está al sur."
+ ln_coldwinds.4.a:0 "Buena caza, entonces."
+ ln_coldwinds.4.b:0 "Preguntad de qué huyen."
+ ln_coldwinds.5.t:0 "Nunca se ha equivocado"
+ ln_coldwinds.5.desc:0 "Hay una anciana en las cocinas que ha sobrevivido a tres señores de este salón, y en cada invierno de su larga vida ha anunciado el tiempo antes de que llegara: los hombres que planean la matanza y el grano de siembra la consultan en voz baja primero, y lo han hecho durante años.\n\nEste año no quiere dar una fecha para el deshielo. Se sienta más cerca del fuego que antes, trabaja sus agujas y dice lo mismo a todo el que pregunta, con la voz plana de una mujer que informa de lo que puede ver por una ventana:\n\n«Los vientos fríos se están levantando. Este no acaba»."
+ ln_coldwinds.5.a:0 "Dadle un sitio junto al fuego grande."
+ ln_coldwinds.5.b:0 "Las viejas dicen cosas viejas."

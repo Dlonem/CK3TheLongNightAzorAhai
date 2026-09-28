@@ -1,0 +1,32 @@
+﻿l_french:
+
+ ln_omen.1.t:0 "La patrouille n'est pas revenue"
+ ln_omen.1.desc:0 "Six hommes sont partis au nord [wall|E] avant le dernier dégel. Des hommes d'expérience — l'un d'eux avait fait la traversée onze fois et savait trouver la Milkwater dans le brouillard.\n\n Ils ont huit semaines de retard. Cela, en soi, n'a rien de remarquable. Les patrouilles s'étirent, les hommes se cassent des jambes, le [free_folk|E] fait des prisonniers et les rend parfois contre rançon.\n\n Ce qui est remarquable, c'est que le détachement envoyé pour les retrouver a fait demi-tour à la Forêt hantée et est rentré, et qu'aucun des quatre ne veut dire pourquoi.\n\n Le lord Commandant l'a consigné comme six perdus. Le scribe qui a écrit la ligne n'a pas levé les yeux en le faisant."
+ ln_omen.1.a:0 "Envoyez des hommes. Je veux savoir ce qui a fait demi-tourner ce détachement."
+ ln_omen.1.b:0 "Six hommes. La Garde en perd six la plupart des années."
+
+ ln_omen.2.t:0 "L'homme qui est revenu"
+ ln_omen.2.desc:0 "C'est un patrouilleur, ou c'en était un. Il est entré dans ta salle sans s'annoncer et n'a demandé ni nourriture ni feu.\n\n Il dit qu'il en a vu un. Debout à la lisière des arbres, plus grand qu'un homme et plus mince, et le froid en tombait comme la chaleur tombe d'une forge. La chose l'a regardé et ne s'est pas hâtée. Il dit que les quatre hommes qui l'accompagnaient sont encore là-haut, et qu'ils marchent encore.\n\n Tout ce qu'on voit de lui tremble, sauf ses mains, parfaitement immobiles — ce qui, te dit ton mestre en privé, est la part qui l'inquiète.\n\n Il attend que tu dises quelque chose. Tout le monde dans la salle aussi."
+ ln_omen.2.a:0 "Je le crois. Dis-le à voix haute, pour que la salle m'entende le dire."
+ ln_omen.2.b:0 "Nourrissez-le. Gardez-le. N'en parlez à personne — un seigneur qui crie aux revenants lève ses bannières seul."
+ ln_omen.2.c:0 "Il est ivre, ou fou, ou payé. Mettez-le dehors."
+
+ # ── SILVERWING'S REFUSAL ────────────────────────────────────────────────────────────────────────────────────
+ ln_omen.10.t:0 "[ln_dragon.GetTitledFirstName] ne veut pas traverser"
+ ln_omen.10.desc.open:0 "[ln_dragon.GetTitledFirstName] a plongé dans un mur de boucliers. [ln_dragon.GetSheHe|U] a traversé la fumée de [ln_dragon.GetHerHis] propre feu, des flèches dans [ln_dragon.GetHerHis] aile, sans se détourner.\n\nEt à une lieue de la glace, [ln_dragon.GetSheHe] s'arrête. Pas ralentit — s'arrête, comme un cheval s'arrête devant un serpent, puis siffle, puis vire si brutalement que tu manques de quitter [ln_dragon.GetHerHis] dos pour les arbres.\n\nTu le reprends en vol et tu tentes plus à l'est, là où le Mur est plus bas. Pareil. Tu essaies une troisième fois dans l'après-midi, arrivant haut avec le soleil derrière toi pour que [ln_dragon.GetSheHe] ne le voie pas avant d'être presque dessus, et [ln_dragon.GetSheHe] le voit quand même, et cette fois [ln_dragon.GetSheHe] hurle. Il faut le ramener, [ln_dragon.GetHerHim] et toi, sans insister.\n\n"
+ ln_omen.10.desc.will:0 "Ce n'est pas de la peur. Tu l'as senti effrayé, [ln_dragon.GetHerHis] peur — une fois, gravement, dans une tempête au large de Tarth — et cela n'a rien à voir. Il n'y a aucun frisson en [ln_dragon.GetHerHim], aucune folie. [ln_dragon.GetSheHe|U] refuse, simplement, comme un homme refuse de mettre la main dans le feu, et quand tu le presses une troisième fois, [ln_dragon.GetHerHim] qui ne t'a jamais rien refusé, [ln_dragon.GetSheHe] tourne [ln_dragon.GetHerHis] tête tout autour de ce long cou et te regarde jusqu'à ce que tu cesses de demander.\n\n"
+ ln_omen.10.desc.fear:0 "Et [ln_dragon.GetSheHe] a peur. C'est la part que personne ne croira quand tu la raconteras, parce que tout le monde sait ce qu'est un dragon — mais tu es resté assis sur [ln_dragon.GetHerHis] dos pendant des années et tu sais exactement ce que cela fait quand [ln_dragon.GetSheHe] a peur, et [ln_dragon.GetSheHe] a peur maintenant, d'une ligne de glace sur laquelle rien ne se tient, voilà ce que [ln_dragon.GetSheHe] est.\n\n"
+ ln_omen.10.desc.ward:0 "Et tu ne peux pas dire pourquoi. Aucune odeur de rien, aucun son, rien sur la glace et rien derrière elle qu'un sol blanc qui continue à l'infini. Ce que [ln_dragon.GetSheHe] a heurté n'est pas dans le monde que tu peux voir. C'est dans le Mur, ou c'EST le Mur, et cela y fut mis par des gens morts depuis huit mille ans qui n'ont laissé aucun mot.\n\n"
+ ln_omen.10.desc.close:0 "Les hommes de la Garde sur le parapet ont cessé de faire semblant de travailler. L'un des plus vieux ne regarde pas le dragon du tout. Il te regarde, pour voir ce que tu vas faire, et il y a là quelque chose qui ressemble presque à de la pitié.\n\nSept mille ans de glace, et personne n'a jamais écrit ce qu'on y avait mis."
+ ln_omen.10.a:0 "Encore. Reprenez [ln_dragon.GetHerHim] en vol."
+ ln_omen.10.b:0 "Assez. [ln_dragon.GetSheHe|U] sait quelque chose que j'ignore."
+ ln_omen.10.b_tt:0 "[ln_dragon.GetSheHe|U] est désormais tenu à l'écart de tes guerres, comme si tu avais choisi #bold Ne pas utiliser le dragon#! toi-même. Choisis #bold Utiliser le dragon#! pour changer d'avis."
+ ln_omen.10.d:0 "Le demander à [ln_dragon.GetTitledFirstName] quand même."
+ ln_omen.10.d_tt:0 "[ln_dragon.GetTitledFirstName] ne t'a jamais rien refusé d'autre. [ln_dragon.GetSheHe|U] traverse, et continue de traverser.\n\n#N Tant que le Mur tient, ce qui attend dans ce ciel fera très probablement tomber [ln_dragon.GetHerHim] — et ce qu'il prend ne reste pas mort.#!"
+ ln_omen.10.c:0 "Écrivez à la Citadelle. Il y aura une raison sensée."
+
+ # ── THE TALE, for those who will never sit on a dragon ──────────────────────────────────────────────────────
+ ln_omen.11.t:0 "Une note dans la marge"
+ ln_omen.11.desc:0 "Ce n'est même pas le sujet du livre. C'est une ligne dans un chapitre sur les progrès royaux, consignant comme une curiosité que lors de la visite de la reine Alysanne au Mur, son dragon Silverwing refusa de le survoler, et que Sa Grâce tenta la traversée trois fois avant d'y renoncer.\n\nTrois fois. Quelqu'un a écrit trois fois, puis est passé à la description du festin.\n\nLes dragons ne refusent pas. C'est tout leur principe.\n\nDonc, soit un mestre a menti sur une reine, dans une chronique, sans raison — soit il y a quelque chose dans cette glace, c'est plus vieux que Valyria, et cela y fut mis pour tenir quelque chose dehors."
+ ln_omen.11.a:0 "Alors cela y fut mis pour tenir quelque chose dehors. Je veux savoir quoi."
+ ln_omen.11.b:0 "Le dragon d'une vieille femme a eu un mauvais jour. Rien de plus."

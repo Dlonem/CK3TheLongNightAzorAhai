@@ -1,0 +1,18 @@
+﻿l_french:
+
+ long_night_plus_wall.1.t:0 "Le Mur est tombé"
+ long_night_plus_wall.1.desc:0 "Pendant huit mille ans il a tenu : sept cents pieds de glace dressés contre les ténèbres. Maintenant, avec un grondement qui ébranle les racines mêmes du monde, le Mur s’effondre à Châteaunoir. Là où il se brise, le froid se déverse, et derrière lui marchent les morts, une marée sans fin de l’armée du Roi de la Nuit. Il n’y a plus rien entre les vivants et la Longue Nuit."
+ long_night_plus_wall.1.a:0 "La garde est terminée."
+
+ long_night_plus_wall.2.t:0 "#F L’Âge des Héros est révolu#!"
+ long_night_plus_wall.2.desc:0 "Brandon le Bâtisseur l’a dressé quand les Premiers Hommes gravaient encore leurs mots en runes, et pendant huit mille ans chaque agenouillé et chaque roi, chaque sauvageon et chaque homme de la Garde, chaque mestre et chaque sage-femme ont vécu toute leur vie dans son ombre sans jamais songer à demander s’il tiendrait. Il a tenu. C’était la seule promesse que le monde ait gardée.\n\nPlus maintenant. Le Mur est tombé à Châteaunoir, et par la brèche marche l’hiver lui-même. Les corbeaux volent vers chaque forteresse de Westeros, portant les trois mots que la Garde murmure depuis des siècles, des mots qui étaient un avertissement et qui ne sont plus que la météo : les morts viennent.\n\nCe qui se tient désormais entre les vivants et la Longue Nuit n’est pas de la glace. C’est toi."
+ long_night_plus_wall.2.a:0 "Et maintenant, notre garde commence."
+
+ # 1.1.0 (A1) -- station openers for the monument card. Two sentences each; long_night_plus_wall.2.desc is stacked under them.
+ long_night_plus_wall.2.desc.watch:0 "Chaque frère vivant l’a entendu tomber, où qu’il se tînt sur le Mur. Le serment nous appelle le bouclier qui garde le royaume des hommes ; le bouclier n’est plus, et les hommes restent.\n\n"
+ long_night_plus_wall.2.desc.free_folk:0 "On nous disait que la glace des agenouillés tiendrait toujours, et nous avons passé nos vies du mauvais côté. Maintenant il n’y a plus de mauvais côté, et la chose que nous fuyions peut nous suivre où elle veut.\n\n"
+ long_night_plus_wall.2.desc.dragon:0 "Le sang du dragon entend cette histoire depuis avant le Fléau, et chaque version finit dans le feu. Quelque chose de huit mille ans vient de s’effondrer, et tous les yeux du royaume se tournent vers ce qui vole.\n\n"
+ long_night_plus_wall.2.desc.north:0 "On dit à chaque enfant du Nord que le Mur est là où le monde s’arrête. Il s’est arrêté aujourd’hui, et le Nord est désormais ce qui se tient au nord de rien.\n\n"
+ long_night_plus_wall.2.desc.red:0 "Les flammes montraient un mur de glace et quelque chose de patient derrière, et cette nuit la glace n’est plus. Chaque sermon était pour cela ; chaque feu nocturne est allumé pour ce qui passe à travers.\n\n"
+ long_night_plus_wall.2.desc.lord:0 "Mon mestre a porté la lettre du corbeau à deux mains et n’a pas pu la lire à voix haute. Quoi que j’aie envoyé au nord dans les années qui ont précédé, ce n’était pas assez, et je le saurai jusqu’à la fin de mes jours.\n\n"
+ long_night_plus_wall.2.desc.nobody:0 "Il n’y a ni forteresse ni bannière sous laquelle s’abriter, et la nouvelle est venue comme toutes les nouvelles me viennent : tard, et de la bouche d’un inconnu. Le seul mur qui comptait est tombé, et chaque route mène désormais quelque part où les morts peuvent aller.\n\n"

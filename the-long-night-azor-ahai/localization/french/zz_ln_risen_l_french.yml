@@ -1,0 +1,97 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the Resurrected chain.
+
+ ln_risen.1.t:0 "Ce dont vous vous souvenez"
+ ln_risen.1.desc:0 "C'est le garçon du septon qui pose la question, parce qu'il a neuf ans et que personne n'a songé à le lui interdire.\n\n« Comment c'était ? »\n\nLa salle devient si silencieuse que j'entends le feu crépiter. Tous ceux qui sont ici ont voulu me le demander pendant des mois, et aucun n'en a eu le courage. Un enfant vient de le faire.\n\nLe problème, honnêtement, c'est que je ne sais pas quelle réponse est la vraie. Certains matins, il n'y a absolument rien — une porte qui se ferme, puis une porte qui s'ouvre, et aucun couloir entre les deux. D'autres matins, je me réveille la mâchoire douloureuse, avec la certitude froide et terrifiante qu'il y avait quelque chose de l'autre côté. Et que cela avait conscience de moi. Et que cela ne s'y intéressait pas le moins du monde."
+ ln_risen.1.a:0 "Rien, petit. Il n'y avait rien du tout."
+ ln_risen.1.b:0 "Il y avait quelque chose. Et je n'en parlerai pas."
+
+ ln_risen.2.t:0 "Le goût des choses"
+ ln_risen.2.desc:0 "Mon cuisinier s'y essaie depuis un mois, et je vois bien qu'il a commencé à le prendre personnellement.\n\nIl m'a préparé exactement la tourte de lamproie que j'avais demandée à mes propres noces. Ce matin, il est sorti des cuisines pour me regarder manger, les mains nouées de nervosité dans son tablier. J'ai mâché, avalé, et je lui ai dit que c'était très bon.\n\nC'était comme manger de l'étoffe tiède. Tout l'est. Le pain, le vin, le miel, la fumée du feu — je sais qu'ils sont là comme un homme sait qu'une pièce est froide, mais la joie en a entièrement disparu. Ce que le prêtre a reversé en moi n'a pas faim."
+ ln_risen.2.a:0 "Je mange seulement pour que le corps continue d'avancer."
+ ln_risen.2.b:0 "Transmettez quand même mes compliments aux cuisines."
+
+ ln_risen.3.t:0 "Le fantôme dans la pièce"
+ ln_risen.3.desc:0 "[ln_close.GetTitledFirstName] ne m'a plus regardé en face depuis le jour où c'est arrivé.\n\n[ln_close.GetSheHe|U] me parle, oui. [ln_close.GetSheHe|U] répond aux questions, prend ses repas à ma table et accomplit les gestes de notre vie commune. Mais [ln_close.GetHerHis] yeux se posent toujours un peu au-dessus de mon épaule, ou plus bas, sur mes mains. \n\nJe me suis tourné vers [ln_close.GetHerHim] une fois pour en parler, en exigeant une réponse. [ln_close.GetSheHe|U] a blêmi complètement, a serré le bord de la table et a murmuré : « Vous avez votre visage, mais vous n'avez pas l'air d'être en vie. Et je ne sais plus à qui je parle. »"
+ ln_risen.3.a:0 "Je suis exactement qui j'étais."
+ ln_risen.3.b:0 "Moi non plus, je ne sais pas à qui vous parlez."
+ ln_risen.3.c:0 "Pour [ln_close.GetHerHim], le mieux est de rejoindre [ln_close.GetHerHis] propre famille. [ln_close.GetSheHe|U] n'a jamais consenti à cela."
+
+ ln_risen.4.t:0 "Ce que le feu a coûté"
+ ln_risen.4.desc:0 "[ln_close.GetTitledFirstName] vient enfin me demander une faveur. J'ai attendu cela longtemps.\n\nQuand le prêtre rouge m'a ramené, je croyais que le royaume se soulèverait. Au lieu de quoi, le silence terrifié a commencé à engendrer de la dévotion. [ln_close.GetSheHe|U] demande qu'on élève un temple dans la cour. Pas un septuaire. Un temple rouge.\n\n« Les Sept ont regardé faire pendant que vous refroidissiez », dit [ln_close.GetSheHe], [ln_close.GetHerHis] voix tremblante mais résolue. « Le Maître de la Lumière vous a rendu. Je ne prétendrai pas le contraire pour faire plaisir à un gros septon d'Oldtown. »"
+ ln_risen.4.a:0 "Qu'on bâtisse le temple. Nous Lui devons tout."
+ ln_risen.4.b:0 "Non. Je n'imposerai pas cette hérésie à mon peuple."
+
+ ln_risen.5.t:0 "La femme à la porte"
+ ln_risen.5.desc:0 "Elle se tient à la porte depuis avant l'aube, et elle a amené l'enfant avec elle.\n\nIl doit avoir quatre ans, et à son odeur, il est mort depuis quatre jours au moins. Elle se fraie un passage jusqu'au premier rang de la cour tandis que je sors, tombe à genoux dans la boue et lève vers moi le petit corps raide.\n\n« Le prêtre l'a fait pour vous ! » hurle-t-elle, les larmes creusant des sillons dans la crasse de son visage. « Faites-le pour lui ! Je sais que vous pouvez, monseigneur ! Soufflez le feu en lui ! »\n\nLes gardes avancent d'un pas, attendant mon ordre."
+ ln_risen.5.a:0 "Je ne peux pas rendre ce qui m'a été donné."
+ ln_risen.5.b:0 "Qu'on l'ôte de ma vue."
+ ln_risen.5.c:0 "Ne pas sortir la voir. Que l'intendant s'en occupe."
+
+ ln_risen.6.t:0 "Elle ne se referme pas"
+ ln_risen.6.desc:0 "Je me suis déchiré l'avant-bras sur un clou rouillé dans les écuries il y a trois semaines. Une entaille superficielle, due à l'inattention.\n\nCe matin, j'écarte le bandage. La plaie est exactement aussi ouverte que le jour où elle s'est faite. Elle ne s'est pas infectée, elle n'a pas bleui, et elle ne saigne pas. La chair est simplement écartée, froide et blanche.\n\nSe refermer est une chose que fait un corps vivant. La chair d'un mort reste seulement là où on l'a posée. Je renoue soigneusement le linge et je décide de porter désormais mes brassards de cuir même à l'intérieur."
+ ln_risen.6.a:0 "Un inconvénient mineur pour une seconde vie."
+ ln_risen.6.b:0 "Combien de temps avant que je pourrisse, tout simplement ?"
+
+ ln_risen.7.t:0 "Abomination"
+ ln_risen.7.desc:0 "Cela fait bien plus mal parce que ce n'est pas un étranger qui le dit. C'est [ln_close.GetTitledFirstName].\n\nNous sommes seuls dans le cabinet quand la colère finit par déborder. « Le Père juge », crache [ln_close.GetSheHe], un doigt tremblant pointé sur ma poitrine. « Il vous a jugé. Vous êtes mort. Votre temps était fini. Et puis un prêtre étranger a plongé la main dans ce jugement sacré, vous a volé à l'obscurité, et personne n'a demandé quel en serait le prix ! »\n\n[ln_close.GetSheHe|U] a une peur panique de moi, et [ln_close.GetSheHe] le dit quand même. « Vous êtes une abomination. Vous marchez au soleil alors que votre place est sous terre. »"
+ ln_risen.7.a:0 "Je suis ici parce qu'il reste du travail à faire."
+ ln_risen.7.b:0 "Si vous croyez vraiment cela, quittez ma salle."
+ ln_risen.7.c:0 "Asseyez-vous. Dites-moi exactement ce que vous pensez que je suis."
+
+ ln_risen.8.t:0 "Quelque chose qui manque"
+ ln_risen.8.desc:0 "J'ai essayé de me rappeler le nom du destrier rouan que je montais à douze ans. Le souvenir a entièrement disparu, ne laissant qu'un bord net et vide là où il se trouvait.\n\nCe dernier mois, j'ai commencé à remarquer ce qui manque d'autre, exactement. Pas les choses importantes — les choses chaudes. Je me rappelle parfaitement chaque coup d'épée, chaque registre d'impôts et chaque trahison. Mais l'odeur de la pluie d'été ? Le son du rire de ma mère ? Effacés.\n\nCe qui est ressorti de ce feu a gardé le combat, l'arithmétique et les rancunes. Depuis, il brûle tout le reste en silence."
+ ln_risen.8.a:0 "Je n'aurai pas besoin de souvenirs chauds pour ce qui vient."
+ ln_risen.8.b:0 "Que personne ne sache ce que je perds."
+
+ ln_risen.9.t:0 "L'épreuve"
+ ln_risen.9.desc:0 "C'est un chevalier errant des Riverlands, et il n'est même pas ivre.\n\nIl attend que le festin du soir batte son plein, traverse tranquillement toute la longueur de la salle et m'enfonce proprement une dague dans le flanc, juste sous les côtes. La salle explose de panique. Mes gardes le jettent aussitôt au sol et tirent l'acier pour lui prendre la tête.\n\nJe ne tombe pas. Je regarde la poignée qui dépasse de mon pourpoint. Cela ne fait pas particulièrement mal.\n\n« Il fallait que je sache ! » hurle le chevalier depuis le sol, en sang et riant comme un fou tandis que les gardes le maintiennent. « Tout le monde le dit, mais personne ne l'avait vu ! Maintenant, ils l'ont vu ! »"
+ ln_risen.9.a:0 "Retirez la dague et laissez-le partir."
+ ln_risen.9.b:0 "Prenez sa tête. Personne ne me met à l'épreuve."
+
+ ln_risen.10.t:0 "L'autre côté"
+ # 1.0.12 -- SUPERSEDED, KEPT AS THE SOURCE TEXT. ln_risen.10 no longer uses a single desc: it is
+ # open + one of four branches + close (see events/zz_ln_risen_events.txt). The branch keys below were
+ # written and never landed in English, so every one of them rendered as its own raw key name in the
+ # 18 Aug run. Do not re-point the event at this line.
+ ln_risen.10.desc:0 "Mon mestre a attendu longtemps avant de poser la question, et il le fait avec le calme exaspérant d'un érudit qui a posé des questions grossières toute sa vie et n'a jamais bronché devant la réponse.\n\n\"Qu'avez-vous vu ?\" demande-t-il par-dessus un parchemin. \"Quand vous êtes passé. Je ne demande pas pour les septons. Je demande pour moi.\"\n\nJe le regarde. Je pourrais lui parler du froid, ou de la terrifiante indifférence des ténèbres. Mais la vérité brutale est celle que j'ai cachée à tous : il n'y avait rien. Rien à craindre, et rien à espérer.\n\nQuoi qu'on m'ait épargné, on ne m'a épargné rien du tout. Et je remarque, avec un froid détachement, que j'évalue cette absence d'au-delà en pure affaire pratique — coût, bénéfice, ce qui est dû — plutôt que comme l'énorme révélation, capable de briser le monde, qu'elle est."
+
+ ln_risen.10.desc.open:0 "La question vient du dernier côté d'où je l'attendais : mon propre mestre, au-dessus d'une partie qu'il est en train de perdre largement.\n\n\"Si cela vous était offert de nouveau,\" dit-il en poussant une pièce là où elle n'a rien à faire, \"sachant ce que vous savez à présent. Accepteriez-vous ?\"\n\n"
+ ln_risen.10.desc.less:0 "Et je découvre que je ne peux pas répondre vite, parce que répondre exige de vouloir quelque chose, et le vouloir est l'une des choses que j'ai posées à terre et jamais reprises."
+ ln_risen.10.desc.pages:0 "Dans mon cabinet il y a quarante pages de ma propre main, écrites pour qu'un homme qui se vide lentement puisse comparer la version présente de lui-même au registre. Je ne les ai pas ouvertes depuis longtemps. Je ne suis plus certain de reconnaître l'homme qui s'y trouve."
+ ln_risen.10.desc.nothing:0 "Et la difficulté honnête est celle qu'elle a toujours été : il n'y avait rien. Rien à craindre, et rien à espérer. Quoi qu'on m'ait épargné, on ne m'a épargné rien du tout."
+ ln_risen.10.desc.plain:0 "Et je remarque que je pèse cela comme une affaire de maisonnée — coût, bénéfice, ce qui est dû et à qui — plutôt que comme la chose énorme qu'elle est manifestement."
+ ln_risen.10.desc.close:0 "\n\nLe mestre attend. Il est très vieux, il a posé un grand nombre de questions grossières à un grand nombre de gens par-dessus ce plateau, et il n'a jamais une seule fois détourné les yeux devant la réponse."
+ ln_risen.10.a:0 "Il n'y a que les ténèbres, mestre."
+ ln_risen.10.b:0 "J'ai vu précisément ce que le Maître de la Lumière voulait que je voie."
+
+ ln_risen.11.t:0 "Ils te suivront n'importe où"
+ # 1.0.12 -- SUPERSEDED, KEPT AS THE SOURCE TEXT. Same story as ln_risen.10 above: open + one of four
+ # branches + close. The branches below never landed in English and rendered as raw keys.
+ ln_risen.11.desc:0 "Mon maréchal demande à me parler en privé dans l'armurerie.\n\n\"Les hommes ont cessé d'avoir peur de vous,\" dit-il, adossé à un râtelier d'armes. \"Au début, ils étaient terrifiés. Maintenant ? Ils vous voient prendre dans la cour un coup qui fendrait le crâne d'un homme, et vous ne cillez même pas. Il n'y a pas un homme sur ce sol qui ne monterait pas au nord avec vous jusque dans la gueule même de l'enfer.\"\n\nIl me regarde, et il y a désormais dans ses yeux un fanatisme sombre et sans question. \"Parce qu'ils pensent que la mort ne peut pas vous toucher. Et qu'ils pensent que vous connaissez le chemin du retour.\""
+
+ ln_risen.11.desc.open:0 "Mon maréchal vient dire quelque chose et s'y prend mal pour commencer.\n\nIl y arrive à la fin. C'est ceci : quelque part dans l'année passée, les hommes ont cessé d'avoir peur de moi, et personne ne l'a décidé. Ce qui est venu à la place n'est pas la paix. C'est quelque chose de bien plus utile.\n\n"
+ ln_risen.11.desc.spared:0 "\"C'est le chevalier errant, messire,\" dit-il. \"Celui qui vous a planté un couteau et qui est sorti vivant de cette salle. La moitié d'entre eux était certaine que vous le pendriez. L'autre moitié était certaine que vous feriez bien pire. Vous n'avez fait ni l'un ni l'autre, et ils n'ont pas cessé de retourner cela depuis.\""
+ ln_risen.11.desc.truth:0 "\"C'est la femme à la porte, messire,\" dit-il. \"Vous êtes descendu vous-même. Vous lui avez dit non en face, l'enfant encore dans ses bras, et vous n'avez pas envoyé l'intendant le dire pour vous. Chaque âme de ce château le savait avant le souper.\""
+ ln_risen.11.desc.pages:0 "\"Les gars se sont mis dans la tête que vous tenez un registre,\" dit-il, un peu gêné. \"Que vous écrivez tout parce que vous craignez de le perdre. Et ils trouvent cela — je n'ai pas le mot, messire. Cela les apaise. Qu'il y ait quelque chose dont vous ayez peur.\""
+ ln_risen.11.desc.plain:0 "\"Ils ont compris que la pire chose qui puisse arriver à un homme vous est déjà arrivée,\" dit-il. \"Et que vous vous êtes relevé. Alors ils ont décidé que si vous marchez quelque part, c'est probablement une chose à laquelle un homme peut survivre.\""
+ ln_risen.11.desc.close:0 "\n\nPuis il dit la chose qu'il était venu dire, et il la dit au plancher :\n\n\"Il n'y a pas un homme sur ce sol qui ne monterait pas au nord avec vous. Pas parce qu'ils sont braves. Parce que vous y êtes déjà allé, et que vous êtes revenu, et qu'ils pensent que vous connaissez le chemin.\""
+ ln_risen.11.a:0 "Alors je ferais mieux de valoir qu'on me suive."
+ ln_risen.11.b:0 "Ils devraient suivre un homme vivant. Je leur en trouverai un."
+
+ ln_risen.12.t:0 "Le feu qui est resté"
+ ln_risen.12.desc:0 "Je l'ai remarqué d'abord dans la cour d'exercice, quand une épée à deux mains que j'ai fait tourner dix mille fois m'est montée légère comme une baguette de saule.\n\nPuis sont venues les autres choses. Le froid de l'hiver ne me trouve pas. Des blessures qui devraient élancer dans les matins humides ne se signalent plus du tout. Il y a une chaleur quelque part derrière mes côtes qu'aucune fièvre n'a jamais produite, couverte et patiente, comme une forge la nuit. Quand le prêtre a dit les mots, le vase est revenu contenant bien plus qu'au départ.\n\nEt quelque chose d'autre est venu avec. Ou plutôt, quelque chose n'est pas venu. Hier, un garçon d'écurie a été écrasé sous un lourd chariot dans la cour. Tous ceux qui m'entouraient ont crié et reculé devant ce son écœurant.\n\nMoi, j'ai regardé. C'était intéressant."
+ ln_risen.12.a:0 "Alors que le feu brûle."
+ ln_risen.12.b:0 "Je dois leur cacher cette froideur."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_death_holds_no_terror_modifier:0 "La mort ne fait plus peur"
+ ln_death_holds_no_terror_modifier_desc:0 "La pire chose qui puisse arriver à un homme est déjà arrivée à celui-ci, devant témoins, et il s'est relevé. Il est remarquablement difficile à menacer, et sa garde personnelle l'a remarqué."
+ ln_fire_in_the_blood_modifier:0 "Le feu dans le sang"
+ ln_fire_in_the_blood_modifier_desc:0 "Ce qui est revenu des ténèbres a rapporté avec lui une force surnaturelle et une absence terrifiante d'empathie humaine."
+
+ # ── 1.0.13: THE SIGHTED OPTION ─────────────────────────────────────────────────
+ ln_risen.1.d:0 "Il y avait un couloir, petit. Je l'emprunte depuis que j'ai ton âge."
+ ln_risen.10.desc.corridor:0 "J'ai dit la vérité à un enfant de neuf ans parce qu'il était le seul à demander, et je ne l'ai jamais reprise.\n\nIl y avait un couloir. Je l'ai parcouru depuis que je suis moi-même un garçon, à la façon des voyants — de travers, et dans le désordre, et jamais quand on le veut. Mourir a seulement voulu dire le parcourir éveillé.\n\nLe garçon du septon raconte l'histoire aux autres enfants maintenant, et se trompe un peu, et je le laisse faire. Sa version a une fin."
+

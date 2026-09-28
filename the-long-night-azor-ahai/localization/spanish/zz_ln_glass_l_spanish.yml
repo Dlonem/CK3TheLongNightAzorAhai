@@ -1,0 +1,37 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- dragonglass lore (1.1.0, §11).
+
+ TRAVEL_POINT_OF_INTEREST_TT_ln_poi_dragonglass:0 "Lugar de saber sobre el vidriagón"
+ ln_poi_dragonglass_tt:0 "Activará un evento de saber sobre el vidriagón"
+
+ ln_glass.1.t:0 "La costa de vidrio"
+ ln_glass.1.desc:0 "Las playas al pie del Dragonmont son negras. No oscuras: negras, el negro verdadero de algo que nunca ha sido otra cosa. El pueblo llano lo recoge aquí como otras costas recogen madera de deriva, y te dirán, si preguntas, qué vetas dan hojas y qué vetas dan cuentas.\n\nUn viejo cantero hace girar un trozo entre los dedos y te enseña el truco: por dónde quiere romperse la piedra y por dónde te va a pelear. Fuego helado lo llamaban los valyrios. No sabe por qué. Sabe todo lo demás sobre ello."
+ ln_glass.1.a:0 "Aprender la piedra"
+ ln_glass.2.t:0 "Lo que guardan los registros"
+ ln_glass.2.desc:0 "La Ciudadela tiene una sala para ello: no un estante, una sala. Tratados sobre la obsidiana de tres continentes, una vitrina de hojas sacadas de excavaciones más allá del Muro, y un maestre con tres eslabones de acero valyrio en su cadena que está encantado, como lo está un hombre a quien nadie ha preguntado por su materia en cuarenta años.\n\nLos viejos relatos coinciden entre sí, y eso es lo que los hace merecedores de la vela. Los niños daban a la Guardia cien puñales al año. Los puñales eran de obsidiana. A nadie se le ocurrió entonces anotar por qué, porque entonces todo el mundo lo sabía."
+ ln_glass.2.a:0 "Leerlos todos"
+ ln_glass.3.t:0 "Las criptas recuerdan"
+ ln_glass.3.desc:0 "Los viejos Reyes del Invierno están sentados en la oscuridad con espadas de hierro sobre las rodillas, y cuanto más abajo se baja, más vieja se vuelve la oscuridad. Más allá de las bóvedas que conoces, las criptas siguen: hundidas, selladas, más antiguas que el castillo que tienen encima.\n\nEn el tramo más antiguo tu antorcha encuentra un anaquel tallado en la roca viva y, sobre él, tendidas y ordenadas como el día en que las dejaron, una hilera de hojas de vidrio negro. ¿Dejadas por quién? ¿Para qué? Los Stark llevan ocho mil años sentados sobre este anaquel. Alguien, al principio de todo eso, pensó que debía haber cuchillos en el fondo de la casa."
+ ln_glass.3.a:0 "Tomar una de las hojas"
+ ln_glass.4.t:0 "La Guardia lo dejó escrito"
+ ln_glass.4.desc:0 "La Guardia guarda sus registros en una bóveda bajo la armería, y los más antiguos no son papel, sino palos de cuenta y piedra. Cien puñales al año, de los niños a la Guardia, mientras se mantuvo el acuerdo. Los escribientes anotaron las cifras sin comentario durante tres mil años.\n\nUn hermano juramentado con los dedos manchados de tinta te enseña la última entrada de ese libro. Luego te enseña el anaquel donde se guardaban los puñales. Está vacío, y el polvo que lo cubre es viejo."
+ ln_glass.4.a:0 "Copiar lo que importa"
+ ln_glass.5.t:0 "Los nacidos de la piedra lo saben"
+ ln_glass.5.desc:0 "Los skagosi no te dan la bienvenida, exactamente. Pero la obsidiana se alza en las paredes de esta isla como la grasa en una oveja, y los nacidos de la piedra la trabajan como lo hacían sus padres, sin haber parado nunca.\n\nUn tallador con una empuñadura de hueso de unicornio en el puño te cuenta, en lengua comercial y por señas, lo que le contó su abuela: el vidrio es para los fríos. No para cazar. No para la guerra. Para los fríos, cuando vuelvan. Dice CUANDO igual que los hombres del sur dicen EN INVIERNO."
+ ln_glass.5.a:0 "Comerciar por el conocimiento"
+ ln_glass.6.t:0 "El escondrijo bajo las piedras"
+ ln_glass.6.desc:0 "El Fist se alza del bosque Encantado como un nudillo del mundo antiguo, ceñido por un muro que ninguna mano viva recuerda haber levantado. La tierra de aquí entrega cosas, si cavas donde la tierra parece equivocada.\n\nBajo una piedra de túmulo en la cima de la colina: un hatillo. Una capa que se deshace al tocarla y, dentro, envuelto como algo precioso o algo peligroso, vidriagón: puntas de lanza, hojas de cuchillo, puntas de flecha, docenas de ellas. Alguien escondió esto aquí, en la peor tierra del mundo, contra una necesidad que no podía nombrar. Tú estás donde estuvo. Tú puedes nombrarla."
+ ln_glass.6.a:0 "Llevar el hatillo al sur"
+
+ ln_prophecy.31.c:0 "Tallarlo como es debido - sé cómo corren las facetas"
+
+ # ── the gate lines. Written as what the player must GO AND DO, not as what he lacks. ──
+ ln_knows_the_glass_gate_tt:0 "Has estudiado el vidriagón: por dónde corren las vetas y cómo rompen las facetas"
+ ln_needs_an_unedged_weapon_tt:0 "Llevas un arma a la que todavía no se le ha dado filo con él"
+
+ # ── the modifiers ──
+ ln_knows_the_glass_modifier:0 "Ha estudiado el vidriagón"
+ ln_knows_the_glass_modifier_desc:0 "Fue donde están los registros y aprendió para qué sirve el fuego helado: por dónde corren las vetas, cómo rompen las facetas y por qué los niños contaban cien puñales al año."
+ ln_artifact_dragonglass_edged_modifier:0 "Con filo de vidriagón"
+ ln_artifact_dragonglass_edged_modifier_desc:0 "Un filo de fuego helado tallado como es debido, puesto por una mano que estudió la piedra. Se queda con el arma, sea quien sea el siguiente que la lleve."

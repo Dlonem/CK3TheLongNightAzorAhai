@@ -1,0 +1,21 @@
+﻿l_spanish:
+
+ # 1.0.16 -- these six were all the placeholder string "Winter". That was harmless while the traditions were
+ # assigned to nothing; as of 1.0.16 frostborn carries all three (common/culture/cultures/00_other_culture.txt),
+ # so they are on the culture screen, in tooltips, and in the culture window for anyone who inspects the
+ # Others -- which is exactly what Zobertus was doing when he found the innovation gap.
+ tradition_others_name:0 "El Largo Frío"
+ tradition_others_desc:0 "No son un pueblo. No se casan fuera, no toman consejo ni cambian de opinión, y nada vivo ha persuadido nunca a uno de nada. Lo que tienen en lugar de una cultura es una dirección, y es el sur."
+
+ tradition_others2_name:0 "Sin condiciones"
+ tradition_others2_desc:0 "No hay embajada que enviar ni precio que pagar. Toman lo que pisan, siguen viniendo a través de un invierno que acabaría con un ejército, y la única conversación que alguien ha tenido con ellos se sostuvo a la distancia de una espada."
+
+ tradition_others3_name:0 "Los muertos no se cansan"
+ tradition_others3_desc:0 "Cada fortaleza que toman se vuelve a levantar y camina detrás de ellos. Las pérdidas no debilitan a este ejército como las pérdidas debilitan al tuyo: son el mecanismo por el que crece."
+
+ # `other_parameter` is a culture PARAMETER, and CK3 renders those as culture_parameter_<name> -- the same
+ # bare-in-script / prefixed-in-loc convention as struggle parameters (see
+ # zz_ln_struggle_parameters_l_english.yml). The prefixed key already exists in
+ # culture/other_maa_innovations_l_english.yml. The bare one below is KEPT, not deleted, per the standing
+ # rule now written into common/genes/zz_long_night_genes.txt: deprecate, never delete.
+ other_parameter:0 "No se puede razonar con ellos, ni negociar con ellos, ni agotarlos con el tiempo"

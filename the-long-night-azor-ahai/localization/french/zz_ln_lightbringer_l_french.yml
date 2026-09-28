@@ -1,0 +1,73 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- Lightbringer.
+
+ # ── THE ARTIFACT ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer_name:0 "Illumination"
+ ln_lightbringer_full_description:0 "L'épée rouge des héros, forgée trois fois.\n\nElle est tiède. Non pas de la tiédeur d'une forge, ni de celle d'une main — tiède comme une chose vivante est tiède, sur toute la longueur de l'acier, dans une pièce froide. Les hommes qui l'ont tenue ne s'accordent pas sur sa couleur.\n\nLa troisième trempe a pris une âme, et l'âme est toujours là-dedans."
+ ln_lightbringer_lesser_description:0 "L'épée rouge des héros, forgée trois fois.\n\nElle est tiède, et elle garde un fil qu'aucune pierre à aiguiser ne lui a donné. Dans le noir, elle montre la plus faible ligne de rouge au creux de la gouttière — de quoi la trouver, mais pas de quoi lire.\n\nLe forgeron qui l'a vue sortir de la troisième trempe a dit que c'était la plus belle chose qu'il ferait jamais, mais que quelque chose en elle n'avait pas tout à fait pris. Il refuse d'en parler davantage."
+
+ # ── THE DECISION ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_forge_lightbringer_decision:0 "Forger Illumination"
+ ln_forge_lightbringer_decision_desc:0 "Salladhor Saan la raconte d'une façon et les prêtres rouges d'une autre, mais la forme du récit est toujours la même.\n\nAzor Ahai travailla trente jours et trente nuits et trempa la lame dans l'eau, et l'acier se brisa. Il travailla cinquante jours et cinquante nuits et la trempa dans le cœur d'un lion, et l'acier se brisa. Il travailla cent jours et cent nuits, et quand ce fut fini, il appela sa femme.\n\nLa forge est froide. Le fer est sur l'enclume. Personne ne te force à frapper le premier coup."
+ ln_forge_lightbringer_decision_tt:0 "Tenter une forge de l'épée rouge.\n\n#weak Trois forges sont nécessaires. Les deux premières échouent — c'est le récit, pas un jet de dés. La troisième demande quelque chose, et tu peux refuser.#!"
+ ln_forge_lightbringer_decision_confirm:0 "Allumez la forge."
+ ln_forge_lightbringer_effect_tt:0 "Commencer une forge. #weak L'acier prendra des mois. Ce qui en sortira dépend entièrement de ce que tu es prêt à y mettre.#!"
+ ln_forge_needs_a_forge:0 "Il te faut une salle à toi et, sous la main, un forgeron de cour ou un prêtre rouge."
+ ln_forge_needs_the_coin:0 "Il te faut assez d'or pour une forge — #V 300#! pour un comte, davantage pour un grand seigneur."
+ ln_forge_is_still_cold:0 "La forge n'a pas refroidi depuis la dernière tentative."
+
+ # ── 1. WATER ────────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.1.t:0 "Trente jours et trente nuits"
+ ln_lightbringer.1.desc:0 "C'est la plus belle lame que quiconque dans ma salle ait jamais vue, jusqu'au moment où elle entre dans le bac.\n\nL'eau la prend et il y a un son terrible — pas un sifflement, mais un craquement sec, plat et définitif, comme un os qui casse. Quand la vapeur se dissipe, une fissure court au milieu de l'acier, assez profonde pour y accrocher un ongle.\n\nMon forgeron jure que c'est sa faute. Je sais que non. Il a travaillé trente jours et tout fait à la perfection, mais l'eau n'allait jamais suffire. Sous ma déception, je le savais déjà. Je sais comment va l'histoire, et j'espérais simplement qu'elle avait tort."
+ ln_lightbringer.1.a:0 "Encore. Depuis le début."
+ ln_lightbringer.1.b:0 "Faites venir le prêtre. Je sais ce qu'il faut."
+
+ # ── 2. THE HEART OF A LION ──────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.2.t:0 "Cinquante jours et cinquante nuits"
+ ln_lightbringer.2.desc:0 "Il n'y a pas de lions qui rôdent en Westeros, et il n'y en a plus depuis bien avant que les Lannister n'en mettent un sur leurs bannières.\n\nLe récit réclame une bête que je ne peux pas obtenir facilement. Le prêtre me dit que la difficulté est tout l'enjeu, tandis que mon forgeron insiste qu'il s'agit d'un problème pratique. Un lion peut être acheté dans les Cités libres avec assez d'or et huit semaines de patience. Un chat-sylvestre peut être arraché aux montagnes avec des hommes en armes et du sang-froid. Ou bien il y a un destrier dans mes propres écuries, portant un cœur comme n'importe quelle autre bête.\n\nCinquante jours de travail écrasant attendent sur l'enclume de toute façon. Ce qui entre dans la trempe est ma décision."
+ ln_lightbringer.2.a:0 "Un lion. Acheminé de Volantis. Le récit exige un lion."
+ ln_lightbringer.2.b:0 "Un chat-sylvestre. Nous le chassons nous-mêmes dans les montagnes."
+ ln_lightbringer.2.c:0 "Un destrier de ma propre écurie. Un cœur est un cœur."
+
+ # ── 3. THE THIRD FORGING ────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.3.t:0 "Cent jours"
+ ln_lightbringer.3.desc:0 "Le prêtre ne me laisse pas le lui arracher. Il l'énonce simplement, ce qui rend la chose pire encore.\n\n\"L'eau n'est rien. Une bête n'est presque rien — elle n'a pas plus d'âme que l'eau, elle saigne seulement davantage. L'acier ne demande pas du sang. Il demande une vie qui sait qu'elle est une vie.\"\n\nIl laisse le poids terrible de cela flotter entre nous.\n\n\"Azor Ahai appela sa femme et elle vint. Elle savait ce qu'on demandait, et elle vint quand même. C'est pour cela que l'épée fonctionne. Pas le meurtre. Le savoir, et venir quand même.\"\n\nLa lame repose sur l'enclume, refroidissant. Elle contiendra ce que je choisirai d'y mettre."
+ ln_lightbringer.3.a:0 "Faites venir [ln_beloved.GetFirstName]. [ln_beloved.GetSheHe|U] a le droit qu'on le lui demande."
+ ln_lightbringer.3.b:0 "[ln_volunteer.GetTitledFirstName] s'est offert. Accepter l'offre."
+ ln_lightbringer.3.c:0 "La mienne. La mort m'a déjà eu une fois. Qu'elle réessaie."
+ ln_lightbringer.3.d:0 "Posez le marteau. Pour aucune épée jamais forgée."
+
+ # ── 4. NISSA NISSA ──────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.4.t:0 "[ln_beloved.GetHerHis|U] âme est passée dans l'acier"
+ ln_lightbringer.4.desc:0 "[ln_beloved.GetSheHe|U] est venu à la forge.\n\nC'est la part qu'aucun de ceux qui écrivent ces légendes ne rend jamais correctement — ils en font un meurtre. C'était bien pire qu'un meurtre. [ln_beloved.GetSheHe|U] a écouté tout cela, posé deux questions tranquilles, puis placé [ln_beloved.GetHerHis] mains derrière [ln_beloved.GetHerHis] dos pour que [ln_beloved.GetSheHe] n'aille pas d'instinct saisir la lame, et attendu.\n\nLe son que [ln_beloved.GetSheHe] a fait résonnera dans cette pièce le reste de ma vie. L'acier a pris [ln_beloved.GetHerHim], tout de [ln_beloved.GetHerHim], comme l'eau prend le sel. Quand j'ai tiré la lame, elle est montée d'un rouge si ardent que le forgeron a jeté son bras devant ses yeux, et le feu ordinaire de la forge s'est aussitôt éteint.\n\nElle est tiède. Elle est tiède depuis. En huit mille ans, personne n'a jamais su le dire mieux que cela."
+ ln_lightbringer.4.a:0 "Illumination."
+
+ # ── 5. THE VOLUNTEER ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.5.t:0 "Une vie qui savait qu'elle était une vie"
+ ln_lightbringer.5.desc:0 "[ln_volunteer.GetTitledFirstName] n'a pas eu besoin d'être convaincu, et a absolument refusé d'en être dissuadé. Toute l'épreuve fut terminée bien plus vite que nous ne l'attendions l'un et l'autre.\n\nL'acier a pris le sang. La lame est montée d'un rouge sourd et brûlant et est restée tiède, jetant à genoux tous les hommes de la forge. À toute mesure que l'on pourrait nommer, le rituel a fonctionné.\n\nPourtant, mon prêtre est le seul qui n'ait pas l'air satisfait. Quand je le presse, il dit exactement ce que je craignais : \"Une vie, oui. Consentante, même. Mais tu n'avais pas d'amour pour [ln_volunteer.GetHerHim], et [ln_volunteer.GetSheHe] n'était pas à toi pour être perdu.\"\n\n\"L'épée est réelle\", lui dis-je sèchement.\n\n\"L'épée est réelle\", acquiesce-t-il doucement. \"Mais ce n'est pas celle du récit.\""
+ ln_lightbringer.5.a:0 "Elle tuera les morts tout de même."
+
+ # ── 6. HIS OWN HEART ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.6.t:0 "La mort m'a déjà eu une fois"
+ ln_lightbringer.6.desc:0 "Le prêtre me dit que c'est impossible, puis voit la résolution absolue sur mon visage et se met à prier à la place.\n\nL'ancien récit est extrêmement précis : la troisième trempe consume celui dans qui l'épée entre. Elle arrache une âme à un corps et la lie à un morceau de métal, et il n'existe aucune version du mythe où le forgeur s'en va vivant.\n\nMais j'ai déjà franchi cette porte-là une fois.\n\nJe vais savoir.\n\nJ'enfonce la lame. La forge devient complètement noire. Longtemps après — mon forgeron refuse de dire combien de temps, et n'en parlera plus jamais —, je m'arrache du sol de pierre avec une épée rouge brûlante à la main, et un nouveau trou dans la poitrine qui refuse de se fermer."
+ ln_lightbringer.6.a:0 "Ma vie n'a jamais été à moi de toute façon."
+
+ # ── 7. THE HAMMER GOES DOWN ─────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.7.t:0 "Le marteau retombe"
+ ln_lightbringer.7.desc:0 "Je pose le marteau sur le banc et je sors.\n\nLe prêtre me suit dans la cour, exigeant de savoir si je comprends vraiment ce que je refuse. Je lui dis oui. Il demande encore, formulant autrement la fin du monde, et je lui dis oui encore. Il ne se met pas en colère — il devient quelque chose de bien pire. Il est patient, déclarant simplement qu'il attendra ici.\n\nCent jours de travail écrasant refroidissent sur mon enclume. Quelque part au fond du Nord, une terreur qui marche depuis huit mille ans marche encore.\n\nMais je sais aussi quel visage il m'aurait fallu regarder dans cette forge. Qu'il en soit ainsi."
+ ln_lightbringer.7.a:0 "Que le monde se passe d'une épée."
+ ln_lightbringer.7.b:0 "Pas aujourd'hui. Laissez le fer sur le banc."
+
+ # ── 8. WORD GETS OUT ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.8.t:0 "Une épée qui brûle"
+ ln_lightbringer.8.desc:0 "L'histoire arrive avant tout récit fiable de la chose, et c'est ainsi que je sais que le bouleversement sera immense.\n\n[ln_forger.GetTitledFirstName] a forgé une épée. Pas trouvée dans une ruine — forgée, par trois fois, et la troisième a coûté une vie humaine. Tous ceux qui m'apportent ces rapports sont absolument certains de ce détail, et parfaitement peu fiables sur tout le reste.\n\nLes septons déclarent furieusement que c'est une immonde hérésie. Les mestres insistent que ce n'est qu'un jeu de lumière sur de l'acier plié. Mon propre forgeron, qui n'a jamais eu d'opinion profonde sur quoi que ce soit, me demande tout bas s'il est vrai que la lame ne s'éteint jamais.\n\nHuit mille ans de prêtres rouges promettant un sauveur, et c'est enfin un nom que je reconnais."
+ ln_lightbringer.8.a:0 "Rien qu'une histoire. L'acier est l'acier, et j'en ai assez vu."
+ ln_lightbringer.8.b:0 "Alors les mythes sont vrais, et nous sommes tous très en retard."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer_full_modifier:0 "Illumination"
+ ln_lightbringer_lesser_modifier:0 "Illumination"
+ ln_would_not_pay_the_price_modifier:0 "N'a pas voulu payer le prix"
+ ln_the_forge_is_cold_modifier:0 "La forge est froide"
+ ln_hole_in_his_chest_modifier:0 "Un trou qui ne se ferme pas"

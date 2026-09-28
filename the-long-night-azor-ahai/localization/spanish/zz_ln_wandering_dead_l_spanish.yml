@@ -1,0 +1,13 @@
+﻿l_spanish:
+
+ ln_wandering_dead.1.t:0 "Algo salió de los árboles"
+
+ ln_wandering_dead.1.desc:0 "Los jinetes llegan antes del amanecer con un hombre atravesado en una silla, y él es el afortunado: él solo está muerto.\n\nNo eran un ejército. Once de ellos, saliendo de la linde del bosque en el extremo norte de [ROOT.Char.GetPrimaryTitle.GetName], con la ropa con la que los enterraron y ojos del color de una estrella vista a través del hielo. No gritan y no se cansan y no se detuvieron cuando cayeron los tres primeros.\n\nEl frente está todavía a leguas de distancia. Esto es lo que se filtra por delante de él."
+
+ ln_wandering_dead.1.a:0 "Traed mi espada. Saldré a su encuentro yo mismo."
+ ln_wandering_dead.1.b:0 "Enviad a la guardia de la casa. Para eso está."
+ ln_wandering_dead.1.c:0 "Atrancad las puertas y dejad que sigan hacia el sur."
+ ln_wandering_dead.1.d:0 "Despertad al sacerdote rojo. Que les muestre lo que es el fuego."
+
+ ln_faced_the_dead_modifier:0 "Hizo frente a los muertos"
+ ln_faced_the_dead_modifier_desc:0 "Este se plantó ante los muertos andantes con una hoja en la mano y no huyó. La gente repara en algo así."

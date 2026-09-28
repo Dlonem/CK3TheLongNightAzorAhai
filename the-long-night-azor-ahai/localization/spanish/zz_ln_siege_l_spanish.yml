@@ -1,0 +1,4 @@
+﻿l_spanish:
+ # 1.0.8 -- see common/modifiers/zz_ln_siege_modifiers.txt
+ ln_the_dead_do_not_tire_modifier:0 "Los muertos no se cansan"
+ ln_the_dead_do_not_tire_modifier_desc:0 "No duermen, no comen y no relevan la línea. No hay salida que valga contra una hueste que no necesita descansar, ni modo de esperar a que ceda. Los hombres de las murallas los ven ahí de pie toda la noche, y la siguiente, y algo en ese mirar se quiebra mucho antes que la puerta."

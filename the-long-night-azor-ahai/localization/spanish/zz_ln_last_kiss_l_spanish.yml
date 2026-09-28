@@ -1,0 +1,10 @@
+﻿l_spanish:
+
+ ln_prophecy.20.t:0 "El último beso"
+
+ ln_prophecy.20.desc.named:0 "#e No recuerdo morir, y no recuerdo volver. Hubo el día anterior, y luego hay esto, y nada entre medias que pueda encontrar, por mucho cuidado con que registre mi propia mente.\n\n[ln_the_priest.GetTitledFirstName] se niega a decirme exactamente qué hizo [ln_the_priest.GetSheHe]. [ln_the_priest.GetSheHe|U] solo dice que el Señor de Luz no había acabado conmigo, lo que suena a humildad y desde luego no lo es.\n\nAlgo está profundamente mal. La comida sabe a ceniza. El frío mordiente del invierno no llega a mi piel. Mi maestre, que no cree en la magia y lo ha dicho a voces durante años, me examinó dos veces y salió dos veces de la habitación sin decir una sola palabra.\n\n#bold Ya no tendré hijos. Lo que salió de aquel fuego no es del todo lo que entró en él.#!#!"
+
+ ln_prophecy.20.desc.plain:0 "#e No recuerdo morir, y no recuerdo volver.\n\nAlguien rezó sobre mí: había gente en la habitación, un fuego rugiente y palabras frenéticas en una lengua que solo conozco a medias. Y luego hay un hueco que no consigo situar, por mucho cuidado con que tantee sus bordes.\n\nAlgo está roto de raíz, y no sé nombrarlo. El vino no tiene sabor. El frío no me hace temblar. Me he sorprendido dos veces olvidándome de tener miedo de cosas que deberían aterrar a un hombre vivo.\n\n#bold Ya no tendré hijos. Lo que salió de aquel fuego no es del todo lo que entró en él.#!#!"
+
+ ln_prophecy.20.a:0 "Entonces me queda trabajo por hacer. Averiguaré cuál."
+ ln_prophecy.20.b:0 "Estoy vivo. Por ahora, con eso basta."

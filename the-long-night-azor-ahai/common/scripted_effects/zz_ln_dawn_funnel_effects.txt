@@ -106,16 +106,33 @@ ln_wfd_cornered_effect = {
 		scope:attacker = { trigger_event = { id = ln_dawn.12  days = 16 } }
 	}
 	else = {
-		# Nobody fit to swing. The old resolution, unchanged: the war leader takes the kill.
+		# Nobody fit to swing. The old resolution: the war leader takes the kill.
 		# (Known and accepted: this death fires the catalyst sweep DURING on_victory, and the sweep may
 		# touch this same concluding war. Every guard on that path is idempotent -- the global is already
 		# set, on_victory's living-defender gate fails -- so the second pass is a no-op. Reviewed 1.0.15.)
-		debug_log = "LN_TRACE ENDGAME: war won on score but no candidate found - war leader resolves it"
-		scope:ln_night_king = {
-			death = {
-				death_reason = death_battle
-				killer = scope:attacker
+		#
+		# ── 1.1.3: THIS KILL OBEYS THE BANE RULE AND CARRIES THE STAMP, LIKE EVERY OTHER SANCTIONED ONE. ──
+		# 1.1.2 open item 8. This was `death = { death_reason = death_battle  killer = scope:attacker }` with
+		# no ln_mark_the_sanctioned_kill_effect, and since 1.1.0b's flag gate every unstamped death casts him
+		# down -- so a War for the Dawn WON on score, with nobody eligible to face him (every attacker dead,
+		# a child or a dragon, no adult knights), crowned another Other instead of ending the dark. Mirrors
+		# ln_dawn.12 (zz_ln_dawn_events.txt): the leader's hand is tested; if it bears the bane the stamp goes
+		# on and the blow lands as the ending it is; if not, he is not killed at all -- the victory global
+		# comes down and the king is left standing, exactly as the failsafe's baneless branch leaves him.
+		if = {
+			limit = { scope:attacker = { ln_bears_the_bane_trigger = yes } }
+			debug_log = "LN_TRACE ENDGAME: war won on score but no candidate found - the war leader bears the bane and resolves it"
+			scope:ln_night_king = {
+				ln_mark_the_sanctioned_kill_effect = yes
+				death = {
+					death_reason = death_the_dawn
+					killer = scope:attacker
+				}
 			}
+		}
+		else = {
+			debug_log = "LN_TRACE ENDGAME: war won on score, no candidate, and no bane in the leader's hand - the king is left standing"
+			if = { limit = { has_global_variable = war_for_dawn_victory } remove_global_variable = war_for_dawn_victory }
 		}
 	}
 }
@@ -255,6 +272,8 @@ ln_cast_down_backstop_effect = {
 			struggle:ln_long_night_struggle ?= { is_struggle_phase = ln_phase_the_long_night }
 			NOT = { any_living_character = { has_trait = nightking } }
 		}
+		# 1.1.3 -- read the fallen king before the handle comes down; the card below names him.
+		global_var:ln_nk_cast_down ?= { save_scope_as = ln_dead_nightking }
 		remove_global_variable = ln_nk_cast_down
 
 		# The same successor ladder the story cycle uses: the holder of the Others' realm, else any Other
@@ -306,9 +325,45 @@ ln_cast_down_backstop_effect = {
 					create_story = { type = long_night_story }
 				}
 			}
+			# 1.1.3 -- and every player is told. See ln_send_the_cast_down_card_effect below.
+			ln_send_the_cast_down_card_effect = yes
 		}
 		else = {
 			debug_log = "LN_TRACE BANE BACKSTOP: cast down, and there is no Other left alive to take the crown"
 		}
+	}
+}
+
+# ── 1.1.3: THE CARD THAT SAYS HE IS NOT DESTROYED ──────────────────────────────────────────────────────────
+# Root = anything (the story, or the yearly pulse). scope:ln_next_nightking = the man just crowned (must
+# exist); scope:ln_dead_nightking = the one who fell (may be absent on a strange road). Since he rises again
+# in the same face (ln_the_night_king_rises_again_effect) the card shows only the risen king; the fallen one
+# is still banked in ln_dawn30_fallen for any later text that wants him. Called from the two places every cast-down crowning goes
+# through: the story's cast-down branch (the_long_night.txt) and the backstop above. The three handles go
+# into globals because ln_dawn.30 is queued a day out and a queued event carries no scopes; the killer was
+# banked by the catalyst in on_death (ln_nk_cast_down_by) and is consumed here. every_player with a one-day
+# delay is the idiom the invasion opening uses (zz_ln_invasion_opening_effects.txt:106).
+ln_send_the_cast_down_card_effect = {
+	if = {
+		limit = { exists = scope:ln_dead_nightking }
+		set_global_variable = { name = ln_dawn30_fallen  value = scope:ln_dead_nightking }
+	}
+	else_if = {
+		limit = { has_global_variable = ln_dawn30_fallen }
+		remove_global_variable = ln_dawn30_fallen
+	}
+	set_global_variable = { name = ln_dawn30_new  value = scope:ln_next_nightking }
+	if = {
+		limit = { exists = global_var:ln_nk_cast_down_by }
+		set_global_variable = { name = ln_dawn30_killer  value = global_var:ln_nk_cast_down_by }
+		remove_global_variable = ln_nk_cast_down_by
+	}
+	else_if = {
+		limit = { has_global_variable = ln_dawn30_killer }
+		remove_global_variable = ln_dawn30_killer
+	}
+	debug_log = "LN_TRACE BANE: the cast-down card goes out to every player"
+	every_player = {
+		trigger_event = { id = ln_dawn.30  days = 1 }
 	}
 }

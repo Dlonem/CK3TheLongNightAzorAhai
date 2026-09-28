@@ -23,10 +23,39 @@
 # ── THE BLADE ───────────────────────────────────────────────────────────────────────────────────────────────
 # AGOT's own test, verified rather than guessed: common/scripted_triggers/00_agot_artifact_triggers.txt:44
 #     agot_is_valyrian_steel_artifact = { has_variable = valyrian_steel }
+#
+# ── 1.1.3: A BLADE IS A WEAPON. ONE DEFINITION, USED EVERYWHERE THE MOD ASKS. ──────────────────────────────
+# Xia (Discord, 19 Sep): Consecrate the Blade refused Dawn and accepted a Valyrian Steel Goblet -- "how am I
+# supposed to kill the Night King with a goblet?" AGOT's variable is set on its Valyrian steel ARMOUR too
+# (00_agot_artifact_armor_effects.txt:231), and the Valyrian Steel submod (2962713441) sets it on a goblet
+# of type miscellaneous_when_not_court (its 00_basic_creation_effects.txt:377-411). Everything in this mod
+# that asked "is this Valyrian steel?" read the bare variable, so a goblet or a breastplate could be
+# consecrated, counted as the prophecy deed, and bear the bane against the Night King. Meanwhile the
+# destiny trigger was filtered the other way, to `artifact_type = sword` only, and dropped AGOT's own
+# Valyrian axes, spear and daggers (all in 00_agot_artifact_vs_sword_effects.txt; the hammers and maces in
+# 00_agot_artifact_weapon_effects.txt carry no valyrian_steel -- corrected in the 1.1.3 review). AGOT's one
+# Valyrian crossbow (Lizard-Lion) is excluded by the bow clause below.
+#
+# Artifact scope. The slot is the test: every weapon type vanilla ships (axe, hammer, mace, spear, sword,
+# dagger, artifacts/types/00_types.txt:119-186) sits in primary_armament, and so do the four bow types
+# (:442-457), which are named out -- a Valyrian bowstring is not a blade. artifact_slot_type is vanilla's
+# own trigger (script_values/04_ep2_tournament_values.txt:1313; customizable_localization/
+# 00_artifact_custom_loc.txt:773). Armour, goblets, rings and everything else fall outside the slot.
+ln_is_valyrian_blade_trigger = {
+	agot_is_valyrian_steel_artifact = yes
+	artifact_slot_type = primary_armament
+	NOR = {
+		artifact_type = bow
+		artifact_type = longbow
+		artifact_type = composite
+		artifact_type = crossbow
+	}
+}
+
 # Artifact scope. The NOT clause stops a blade being consecrated twice and stops the forged sword being
 # offered to itself (it is not marked valyrian_steel, but a future route might hand one over that is).
 ln_blade_can_be_consecrated_trigger = {
-	agot_is_valyrian_steel_artifact = yes
+	ln_is_valyrian_blade_trigger = yes
 	NOT = { has_variable = ln_is_lightbringer }
 }
 
@@ -93,6 +122,11 @@ ln_has_a_beloved_to_give_trigger = {
 # Consecration is a rite in front of a fire, not smithing, so it does NOT want ln_has_a_forge_trigger's court
 # smith. It wants somebody who can say the words. ln_has_red_priest_trigger is this mod's own existing test
 # and is reused rather than duplicated.
+# 1.1.3 -- the requirement text (ln_consecrate_needs_a_voice) used to say "or my own faith in the Lord of
+# Light"; the code has never accepted faith alone. It is a red priest in the chaplain (or camp priest) seat,
+# or being one. The text now says exactly that (1.1.3 review: "in my hall" read as any courtier, which the
+# decision's new Hear the Red Priest face does mean -- so Melisandre as Spymaster opens that door but not
+# this one; widening this to ln_red_priest_in_hall_trigger is Thomas's call, not made here).
 ln_can_consecrate_trigger = {
 	is_adult = yes
 	is_alive = yes

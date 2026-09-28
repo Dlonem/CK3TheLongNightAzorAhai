@@ -1,0 +1,32 @@
+﻿l_spanish:
+
+ ln_wight.1.t:0 "Una cara que conozco"
+
+ ln_wight.1.desc.spouse:0 "Llega un jinete del Norte con noticias que le hago repetir dos veces.\n\n[ln_risen.GetTitledFirstName] camina. No vive: camina. El jinete tartamudea que los ojos son del color de una estrella vista a través de hielo espeso, y que la cosa que lleva [ln_risen.GetHerHis] cara no sabe ni su propio nombre.\n\nNos casamos ante un dios. Mirando el cielo que se congela, me descubro preguntándome a cuál de los dos sigue atando ese voto."
+
+ ln_wight.1.desc.soulmate:0 "La carta es terriblemente corta, probablemente porque quien la escribió no tuvo estómago para alargar las palabras.\n\n[ln_risen.GetTitledFirstName] está entre los muertos que caminan. De todo el mundo, [ln_risen.GetFirstNameNoTooltip] era quien habría entendido de verdad lo que siento al leer esto. Esa es la idea que se niega a quedarse quieta en mi pecho."
+
+ ln_wight.1.desc.child:0 "Leo el pergamino de pie, y luego me veo obligado a sentarme.\n\n[ln_risen.GetTitledFirstName] no siguió muerto. Algo antiguo y frío se coló por la puerta tras la que [ln_risen.GetSheHe] estaba, y ahora [ln_risen.GetSheHe] marcha con ello, lejos de todo lo que [ln_risen.GetSheHe] debía llegar a ser.\n\nUn padre que entierra a un hijo es una tragedia fea y natural. Esto es una abominación."
+
+ ln_wight.1.desc.parent:0 "El jinete me entrega el informe, cubierto de barro helado, y aparta la vista mientras lo leo.\n\nHan visto a [ln_risen.GetTitledFirstName] caminando con la horda. Quien me crió, quien me enseñó a sostener una espada y a reverenciar a los dioses, es ahora un siervo de la oscuridad helada. Me descubro preguntándome si alguna parte de [ln_risen.GetHerHim] sigue atrapada dentro, gritando mientras [ln_risen.GetSheHe] ve moverse [ln_risen.GetHerHis] propias manos."
+
+ ln_wight.1.desc.sibling:0 "Conozco la letra en que está escrita la carta. No quiero conocer el resto.\n\n[ln_risen.GetTitledFirstName] camina con los muertos. Crecimos en los mismos salones, discutimos por la misma herencia, y siempre di por hecho que habría tiempo de sobra para zanjarlo.\n\nYa no queda nada que zanjar. Solo queda la pregunta de si puedo ser yo quien lo detenga."
+
+ ln_wight.1.desc.best_friend:0 "He leído la carta tres veces y no ha cambiado.\n\n[ln_risen.GetTitledFirstName] está entre los muertos. No muerto por ellos: uno de ellos, caminando hacia el norte en la oscuridad helada, con una cara que reconocería a cien pasos.\n\nY no queda en el mundo nadie a quien preferiría tener a mi lado mientras la leo más que a [ln_risen.GetHerHim]."
+
+ ln_wight.1.desc.lover:0 "El jinete lleva cuatro días en la silla y se le nota.\n\n[ln_risen.GetTitledFirstName] camina con los muertos. Los Otros rehicieron a [ln_risen.GetHerHim] de dentro hacia fuera y no se molestaron en quitarle la cara. Es la misma cara.\n\nDescubro que eso lo empeora, no lo mejora."
+
+ ln_wight.1.desc.friend:0 "La noticia viaja al sur de mano en mano y me llega muy gastada.\n\n[ln_risen.GetTitledFirstName] se ha levantado. Los muertos no se reúnen bajo estandartes: simplemente se acumulan, y [ln_risen.GetFirstNameNoTooltip] forma parte ahora de esa acumulación: frío, incansable y del todo indiferente a haber sido mi amigo."
+
+ ln_wight.1.desc.generic:0 "La noticia llega al sur como llegan siempre las malas: tarde, y con una certeza que aterra.\n\n[ln_risen.GetTitledFirstName] camina con los muertos. Yo conocía a [ln_risen.GetHerHim]. Eso significaba algo en los reinos de los hombres, pero para lo que ahora lleva [ln_risen.GetHerHis] cara no significa absolutamente nada."
+
+ ln_wight.1.a:0 "Eso ya no es [ln_risen.GetHerHim]."
+ ln_wight.1.b:0 "Entonces me enfrentaré a [ln_risen.GetHerHim] en el campo, y daré paz a [ln_risen.GetHerHim]."
+
+ # 1.0.8 -- the marriage card. NOTE THE TOKEN FORM: bare saved-scope names, [ln_lost.GetTitledFirstName],
+ # NOT [scope:ln_lost...]. Vanilla uses the scope: form zero times across its whole localization; the bare
+ # form is the one proven live in this mod (the reveal chain's slayer attribution, 13 Aug run).
+ ln_wight.2.t:0 "La muerte nos separó"
+ ln_wight.2.desc:0 "El jinete espera en el patio porque no quiere decirlo bajo techo.\n\n[ln_lost.GetTitledFirstName] cayó, y no se quedó caído. Lo que camina ahora marcha al sur con los demás, en el frío que ciega, con la cara junto a la que yo despertaba.\n\nMi septón es hoy excesivamente cuidadoso con las palabras. Los votos decían 'hasta la muerte', murmura, y la muerte ha venido y se ha ido. No hay divorcio que pedir, ni queda nadie a quien pedírselo. Lo que me unía a [ln_lost.GetHerHim], la Larga Noche lo ha roto."
+ ln_wight.2.a:0 "Quemad la capa nupcial."
+ ln_wight.2.b:0 "Entonces encontraré a [ln_lost.GetHerHim] en el campo y acabaré con esto yo mismo."

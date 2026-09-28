@@ -1,0 +1,18 @@
+﻿l_spanish:
+
+ long_night_plus_wall.1.t:0 "El Muro ha caído"
+ long_night_plus_wall.1.desc:0 "Durante ocho mil años se mantuvo en pie: setecientos pies de hielo levantados contra la oscuridad. Ahora, con un rugido que sacude las raíces mismas del mundo, el Muro se derrumba en el Castillo Negro. Por donde se rompe entra a raudales el frío, y detrás de él marchan los muertos, una marea sin fin de la hueste del Rey de la Noche. Ya no hay nada entre los vivos y la Larga Noche."
+ long_night_plus_wall.1.a:0 "La guardia ha terminado."
+
+ long_night_plus_wall.2.t:0 "#F La Era de los Héroes ha terminado#!"
+ long_night_plus_wall.2.desc:0 "Brandon el Constructor lo levantó cuando los Primeros Hombres todavía tallaban sus palabras en runas, y durante ocho mil años cada arrodillado y cada rey, cada salvaje y cada hombre de la Guardia, cada maestre y cada comadrona vivieron toda su vida a su sombra y nunca se les ocurrió preguntar si aguantaría. Aguantó. Era la única promesa que el mundo cumplió.\n\nYa no. El Muro ha caído en el Castillo Negro, y por la brecha camina el invierno en persona. Los cuervos vuelan a cada fortaleza de Poniente con las mismas tres palabras que la Guardia ha susurrado durante siglos, palabras que eran una advertencia y ahora son simplemente el tiempo que hace: los muertos vienen.\n\nLo que se interpone ahora entre los vivos y la Larga Noche no es hielo. Eres tú."
+ long_night_plus_wall.2.a:0 "Y ahora empieza nuestra guardia."
+
+ # 1.1.0 (A1) -- station openers for the monument card. Two sentences each; long_night_plus_wall.2.desc is stacked under them.
+ long_night_plus_wall.2.desc.watch:0 "Todos los hermanos vivos lo oyeron caer, en cualquier punto del Muro en que estuvieran. El juramento nos llama el escudo que guarda los reinos de los hombres; el escudo se ha ido, y los hombres siguen ahí.\n\n"
+ long_night_plus_wall.2.desc.free_folk:0 "Nos dijeron que el hielo de los arrodillados duraría para siempre, y pasamos la vida en el lado equivocado. Ahora no hay lado equivocado, y la cosa de la que huimos puede seguirnos a donde le plazca.\n\n"
+ long_night_plus_wall.2.desc.dragon:0 "La sangre del dragón ha oído esta historia desde antes de la Maldición, y todas las versiones acaban en fuego. Algo de ocho mil años acaba de venirse abajo, y todos los ojos del reino se vuelven hacia lo que vuela.\n\n"
+ long_night_plus_wall.2.desc.north:0 "A todos los niños del Norte se les dice que el Muro es donde acaba el mundo. Hoy se acabó, y el Norte es ahora lo que queda al norte de nada.\n\n"
+ long_night_plus_wall.2.desc.red:0 "Las llamas mostraban un muro de hielo y algo paciente detrás, y esta noche el hielo ya no está. Todos los sermones eran para esto; todos los fuegos nocturnos se encienden por lo que atraviesa la brecha.\n\n"
+ long_night_plus_wall.2.desc.lord:0 "Mi maestre trajo la carta del cuervo con las dos manos y no pudo leerla en voz alta. Lo que enviase al norte en los años anteriores a esto, no fue suficiente, y lo sabré el resto de mi vida.\n\n"
+ long_night_plus_wall.2.desc.nobody:0 "No hay fortaleza ni estandarte bajo el que cobijarse, y la noticia llegó como me llegan todas las noticias: tarde, y de la boca de un desconocido. El único muro que importaba ha caído, y ahora todos los caminos llevan a algún sitio al que pueden llegar los muertos.\n\n"

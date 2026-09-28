@@ -1,0 +1,19 @@
+﻿l_spanish:
+
+ # Taking the red -- the seed, the deepening, the ask.
+ ln_red.1.t:0 "Una duda más fría"
+ ln_red.1.desc.named:0 "Hay un susurro que me sigue, dicho lo bastante bajo para poder negarse. *Nombrado*. Un sacerdote de un dios extranjero me miró y pronunció un título de ocho mil años. Y desde entonces llevo haciendo lo único que juré que no haría: me lo pregunto.\n\nNo por la profecía. Por el dios. Si el título es real —si una fracción de él es real—, entonces algo ahí fuera estaba mirando. Algo me eligió. Y no fueron los dioses en torno a los cuales mis antepasados levantaron sus cantos de septo y sus oraciones ante los arcianos, porque esos dioses no han pronunciado mi nombre en voz alta ni una sola vez."
+ ln_red.1.desc.priest:0 "[ln_red_priest.GetTitledFirstName] lleva a mi servicio el tiempo suficiente para que la extrañeza se haya gastado. Las túnicas rojas son ahora solo túnicas. Los fuegos nocturnos son solo lo que él hace, como un maestre sube a sus cuervos.\n\nAhí está precisamente el problema. En algún momento de los años de su paciencia, de su certeza terrible, de las tardes en que habla del fuego como si diera las nuevas del día, la pregunta dejó de ser suya y pasó a ser mía. Ya no me pregunto si está loco. Me pregunto si tiene razón."
+ ln_red.1.desc.dark:0 "Ahora sé cosas. No rumores: cosas. He leído las cartas, he oído los relatos frenéticos que vuelven del Norte, y he sentido la forma aterradora de lo que espera más allá del borde de todo mapa cómodo.\n\nY en toda la larga lista de dioses a los que ha rezado mi pueblo, exactamente uno ha afirmado alguna vez tratar de ESTO: la oscuridad, y el fuego que la empuja hacia atrás. Es un dios extranjero con un corazón en llamas y sacerdotes que inquietan a todo el que los encuentra. Pero es también, por lo que alcanzo a ver, el único dios que vio venir esto."
+ ln_red.1.a:0 "Dejar que el pensamiento se quede."
+ ln_red.1.b:0 "Quitármelo de la cabeza. Los antiguos dioses bastan."
+
+ ln_red.2.t:0 "El fuego nocturno"
+ ln_red.2.desc:0 "Ocurre en una tarde completamente corriente. Hay un fuego alto recogido contra el frío que muerde, y me descubro de pie ante él mucho más tiempo del que explica el calor.\n\nLas palabras están ahí en mi cabeza, de segunda mano pero enteras, oídas las veces suficientes a las túnicas rojas para que se reciten solas. *La noche es oscura y alberga horrores.* No las digo en voz alta. Pero me quedo ahí mientras resuenan, y cuando por fin me doy la vuelta, la oscuridad justo más allá de la luz del fuego parece —durante un aliento aterrador— exactamente tan honda como dicen los sacerdotes."
+ ln_red.2.a:0 "Quedarme junto al fuego un rato más."
+ ln_red.2.b:0 "Esta locura ha llegado demasiado lejos."
+
+ ln_red.3.t:0 "Vestir el rojo"
+ ln_red.3.desc:0 "Ha dejado de ser un simple pensamiento y se ha convertido en una puerta. Veo los dos lados con una claridad terrible.\n\nAl otro lado: el fuego, la certeza absoluta, un dios que está inequívocamente DESPIERTO mientras la oscuridad se junta; y el precio, pagado por entero y en público. Los septones, los cantores, los hombres leales cuyos abuelos lucharon al lado del mío, todos ellos mirándome tomar una llama extranjera. Lo llamarán locura en el mejor de los casos, y herejía en el peor.\n\nDe este lado: los dioses de mis antepasados, que no han dicho nada. A quienes puede que se les deba todo. Que no han respondido ni una sola vez en todos estos años."
+ ln_red.3.a:0 "Encender el fuego. R'hllor, defiéndeme."
+ ln_red.3.b:0 "No. No mientras miran los dioses de mis padres."

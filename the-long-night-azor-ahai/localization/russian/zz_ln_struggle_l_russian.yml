@@ -28,7 +28,7 @@
  game_concept_ln_struggle_phase_cold_winds_desc:0 "Разведчики перестают возвращаться. Вольный народ уходит на юг в числах, которые ничем разумным не объяснить, и это не набеги — они бегут.\n\n#EMP Никто не знает, сколько это продлится.#! Достаточно долго, чтобы что-то построить, если начать сейчас; недостаточно долго, чтобы успеть, если ждать полной уверенности. И каждый, кто возвращается, действительно увидев одного из них, приближает тьму.\n\nЭто предупреждение. Что вы построите за него, то у вас и будет.\n\nТорговля страдает по всей [struggle_region|E]."
 
  game_concept_ln_struggle_phase_the_long_night:0 "Долгая Ночь"
- game_concept_ln_struggle_phase_the_long_night_desc:0 "Она здесь. Что государство построило за лето, то у государства и есть.\n\nМёртвые к югу от Стены и движутся, а холод лежит на каждом [county|E] в [struggle_region|E].\n\n#EMP Кончается только со смертью Короля Ночи.#! Не по таймеру и не по накоплению."
+ game_concept_ln_struggle_phase_the_long_night_desc:0 "Она здесь. Что государство построило за лето, то у государства и есть.\n\nМёртвые к югу от Стены и движутся, а холод лежит на каждом [county|E] в [struggle_region|E].\n\n#EMP Кончается только тогда, когда Король Ночи уничтожен лицом к лицу — рукой, держащей драконье стекло, валирийскую сталь или Светозарный, либо под крылом дракона.#! Любая другая смерть лишь низвергает его, и он восстаёт снова. Не по таймеру и не по накоплению."
 
  game_concept_ln_struggle_phase_the_dawn:0 "Рассвет"
  game_concept_ln_struggle_phase_the_dawn_desc:0 "Мёртвые лежат недвижно, и холод отступает. Где-то к югу от Перешейка пробивается первая зелень.\n\nПри правиле #EMP Однажды#! [struggle|E] здесь заканчивается. При правиле #EMP Круг#! она перетекает обратно в [ln_struggle_phase_long_summer|E], и колесо поворачивается снова — с каждым разом тяжелее."
@@ -71,7 +71,7 @@
  ln_catalyst_other_sighted:0 "Иного видели — и поверили"
  ln_catalyst_other_sighted_desc:0 "Кто-то видит одного из них, выживает, и ему верят. Нужны все три условия.\n\n#weak Не чаще раза в шесть лет. Продвигает [ln_struggle_phase_cold_winds|E] дальше.#!"
  ln_catalyst_night_king_slain:0 "Король Ночи убит"
- ln_catalyst_night_king_slain_desc:0 "Удар достигает цели.\n\nЗавершает [ln_struggle_phase_the_long_night|E] сразу. Больше ничто на это не способно."
+ ln_catalyst_night_king_slain_desc:0 "Удар достигает цели — лицом к лицу, тем, что способно его прикончить.\n\nЗавершает [ln_struggle_phase_the_long_night|E] сразу. Больше ничто на это не способно."
 
  # ── THE ENDING DECISION ─────────────────────────────────────────────────────────────────────────────────────
  # The schema requires at least one phase to list an ending decision. This is that entry, and it is never shown
@@ -86,5 +86,5 @@
  ln_catalyst_minor_house_ended_desc:0 "Малый [house|E] теряет последнего своего члена. Здесь важно их число.\n\n#weak Не чаще раза в два года.#!"
 
 # 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
- ln_catalyst_winter_is_coming:0 "The warning has begun"
- ln_catalyst_winter_is_coming_desc:0 "White ravens went out. The wells freeze in the second moon and the free folk are coming south in numbers that are not raiding numbers.\n\n#EMP This phase does not fill a bar.#! It lasts somewhere between a reign and a lifetime, and nothing you do will tell you which. Build now.\n\n#weak Once, when the winds turn.#!"
+ ln_catalyst_winter_is_coming:0 "Предупреждение началось"
+ ln_catalyst_winter_is_coming_desc:0 "Разлетелись белые вороны. Колодцы промерзают на второй луне, а вольный народ идёт на юг числами, которые набегами не объяснить.\n\n#EMP Эта фаза не наполняет полосу.#! Она длится где-то между правлением и жизнью, и ничто из сделанного вами не скажет вам, как долго. Строить нужно сейчас.\n\n#weak Однажды, когда переменятся ветра.#!"

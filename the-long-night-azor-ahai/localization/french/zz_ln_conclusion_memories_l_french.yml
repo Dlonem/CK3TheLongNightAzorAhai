@@ -1,0 +1,45 @@
+﻿l_french:
+
+ # Past tense, lower-case, no-perspective default first -- vanilla's own design standard for memories,
+ # straight out of _character_memories.info.
+ ln_forged_lightbringer_memory:0 "a forgé Illumination"
+ ln_forged_lightbringer_memory_desc:0 "J'ai forgé Illumination, et j'ai payé ce que le récit dit qu'elle coûte."
+ ln_forged_lightbringer_memory_desc_second_perspective:0 "vous avez forgé Illumination, et vous avez payé ce que le récit dit qu'elle coûte."
+ ln_forged_lightbringer_memory_desc_third_perspective:0 "[owner.GetName] a forgé Illumination, et a payé ce que le récit dit qu'elle coûte."
+
+ ln_slew_the_night_king_memory:0 "a mis fin à la Longue Nuit"
+ ln_slew_the_night_king_memory_desc:0 "C'est moi qui me tenais là quand cela comptait. Le Roi de la Nuit est tombé, et le soleil s'est levé."
+ ln_slew_the_night_king_memory_desc_second_perspective:0 "c'est vous qui vous teniez là quand cela comptait. Le Roi de la Nuit est tombé, et le soleil s'est levé."
+ ln_slew_the_night_king_memory_desc_third_perspective:0 "[owner.GetName] se tenait là quand cela comptait. Le Roi de la Nuit est tombé, et le soleil s'est levé."
+
+ # The memory type own name key. Its three perspective descriptions have always lived in
+ # zz_ln_reveal_l_english.yml; this line was not anywhere, and the live log said so:
+ # "Character memory name 'ln_stood_at_the_dawn_memory' is not localized".
+ ln_stood_at_the_dawn_memory:0 "s'est tenu debout à l'aube"
+
+ # 1.1.0b -- the two endings, for everyone who was not the man who swung.
+ ln_lived_to_see_the_dawn_memory:0 "a vécu pour voir l'aube"
+ ln_lived_to_see_the_dawn_memory_desc:0 "J'étais vivant quand les ténèbres se sont brisées. La plupart des hommes avec qui j'ai commencé ne l'étaient pas."
+ ln_lived_to_see_the_dawn_memory_desc_second_perspective:0 "vous étiez vivant quand les ténèbres se sont brisées. La plupart des hommes avec qui vous avez commencé ne l'étaient pas."
+ ln_lived_to_see_the_dawn_memory_desc_third_perspective:0 "[owner.GetName] était vivant quand les ténèbres se sont brisées. La plupart des hommes avec qui [owner.GetHeShe] a commencé ne l'étaient pas."
+
+ ln_the_dark_won_memory:0 "a vu les ténèbres gagner"
+ ln_the_dark_won_memory_desc:0 "L'aube n'est pas venue. Je compte les années depuis, et j'ai cessé d'en dire le nombre à quiconque."
+ ln_the_dark_won_memory_desc_second_perspective:0 "l'aube n'est pas venue. Vous comptez les années depuis, et vous avez cessé d'en dire le nombre à quiconque."
+ ln_the_dark_won_memory_desc_third_perspective:0 "l'aube n'est pas venue, et [owner.GetName] compte toujours les années depuis."
+
+ # 1.1.0b -- Nissa Nissa, by name. ln_beloved is the participant tag declared on the type.
+ ln_paid_in_full_memory:0 "a payé le prix d'Illumination"
+ ln_paid_in_full_memory_desc:0 "J'ai passé l'épée au travers du cœur de [ln_beloved.GetTitledFirstName], et elle a pris le feu, et depuis je n'ai pas pu la déposer."
+ ln_paid_in_full_memory_desc_second_perspective:0 "vous avez passé l'épée au travers du cœur de [ln_beloved.GetTitledFirstName], et elle a pris le feu, et depuis vous n'avez pas pu la déposer."
+ ln_paid_in_full_memory_desc_third_perspective:0 "[owner.GetName] a passé l'épée au travers du cœur de [ln_beloved.GetTitledFirstName], et elle a pris le feu."
+
+ # 1.1.0 (A3) -- the Beric record. Participants: ln_the_priest on the man's entry, ln_the_charge on the priest's.
+ ln_came_back_memory:0 "ramené par le feu"
+ ln_came_back_memory_desc:0 "Je suis mort, et [ln_the_priest.GetTitledFirstName] s'est agenouillé au-dessus de moi et a donné au feu ce qu'il demandait, et je suis revenu. Je ne suis pas revenu tout entier."
+ ln_came_back_memory_desc_second_perspective:0 "vous êtes mort, et [ln_the_priest.GetTitledFirstName] a donné au feu ce qu'il demandait pour vous ramener."
+ ln_came_back_memory_desc_third_perspective:0 "[owner.GetName] est mort, et [ln_the_priest.GetTitledFirstName] a ramené [owner.GetHerHim]."
+ ln_spent_myself_memory:0 "a donné le dernier baiser"
+ ln_spent_myself_memory_desc:0 "J'ai posé ma bouche sur celle de [ln_the_charge.GetTitledFirstName] et j'ai demandé au Maître de la Lumière une vie de plus, et il a prélevé le paiement sur moi. On ne me le demandera plus."
+ ln_spent_myself_memory_desc_second_perspective:0 "vous avez donné le dernier baiser à [ln_the_charge.GetTitledFirstName], et le feu a prélevé son paiement sur vous."
+ ln_spent_myself_memory_desc_third_perspective:0 "[owner.GetName] a donné le dernier baiser à [ln_the_charge.GetTitledFirstName], et n'a plus jamais été entier."

@@ -1,0 +1,73 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- Lightbringer.
+
+ # ── THE ARTIFACT ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer_name:0 "Dueña de Luz"
+ ln_lightbringer_full_description:0 "La espada roja de los héroes, forjada tres veces.\n\nEstá caliente. No con el calor de una forja, ni con el de una mano: caliente como está caliente una cosa viva, por todo el acero, en una sala fría. Los hombres que la han sostenido no se ponen de acuerdo en de qué color es.\n\nEl tercer temple se llevó un alma, y el alma sigue ahí dentro."
+ ln_lightbringer_lesser_description:0 "La espada roja de los héroes, forjada tres veces.\n\nEstá caliente, y conserva un filo que ninguna piedra de afilar le dio. En la oscuridad muestra la más leve línea roja a lo largo del vaceo: suficiente para encontrarla, pero no para leer a su luz.\n\nEl herrero que la vio salir del tercer temple dijo que era lo mejor que haría en su vida, pero que algo en ella no había llegado a cuajar. Se niega a hablar más del asunto."
+
+ # ── THE DECISION ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_forge_lightbringer_decision:0 "Forjar Dueña de Luz"
+ ln_forge_lightbringer_decision_desc:0 "Salladhor Saan la cuenta de una manera y los sacerdotes rojos de otra, pero la forma del relato es siempre la misma.\n\nAzor Ahai trabajó treinta días y treinta noches y templó la hoja en agua, y el acero se quebró. Trabajó cincuenta días y cincuenta noches y la templó en el corazón de un león, y el acero se quebró. Trabajó cien días y cien noches, y cuando estuvo hecha, llamó a su esposa.\n\nLa forja está fría. El hierro está en el yunque. Nadie te obliga a dar el primer golpe."
+ ln_forge_lightbringer_decision_tt:0 "Intentar una forja de la espada roja.\n\n#weak Hacen falta tres forjas. Las dos primeras fracasan: así es el relato, no una tirada de dados. La tercera pide algo, y puedes negarte.#!"
+ ln_forge_lightbringer_decision_confirm:0 "Enciende la forja."
+ ln_forge_lightbringer_effect_tt:0 "Comenzar una forja. #weak El acero tardará meses. Lo que salga de ello depende por entero de lo que estés dispuesto a poner en él.#!"
+ ln_forge_needs_a_forge:0 "Necesitas un salón propio y, a mano, un herrero de la corte o un sacerdote rojo."
+ ln_forge_needs_the_coin:0 "Necesitas oro suficiente para una forja: #V 300#! para un conde, más para un gran señor."
+ ln_forge_is_still_cold:0 "La forja no se ha enfriado desde el último intento."
+
+ # ── 1. WATER ────────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.1.t:0 "Treinta días y treinta noches"
+ ln_lightbringer.1.desc:0 "Es la hoja más hermosa que nadie en mi salón ha visto jamás, hasta el momento en que entra en la pila.\n\nEl agua la recibe y se oye un sonido terrible: no un silbido, sino un chasquido seco, plano y definitivo, como un hueso al quebrarse. Cuando el vapor se despeja, hay una grieta por el centro del acero lo bastante honda para engancharse una uña.\n\nMi herrero jura que es culpa suya. Sé que no lo es. Trabajó treinta días e hizo todo a la perfección, pero el agua nunca iba a bastar. Por debajo de mi decepción, ya lo sabía. Sé cómo va la historia, y solo esperaba que estuviera equivocada."
+ ln_lightbringer.1.a:0 "Otra vez. Desde el principio."
+ ln_lightbringer.1.b:0 "Que venga el sacerdote. Sé qué hace falta."
+
+ # ── 2. THE HEART OF A LION ──────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.2.t:0 "Cincuenta días y cincuenta noches"
+ ln_lightbringer.2.desc:0 "No hay leones sueltos por Westeros, y no los hay desde mucho antes de que los Lannister pusieran uno en sus estandartes.\n\nEl relato pide una bestia que no puedo conseguir con facilidad. El sacerdote me dice que la dificultad es precisamente el sentido de todo, mientras mi herrero insiste en que es un problema práctico. Un león puede comprarse en las Ciudades Libres con oro suficiente y ocho semanas de paciencia. Un gato sombrío puede arrancarse de las montañas con hombres armados y puro nervio. O bien hay un caballo de guerra en mis propios establos, que lleva un corazón igual que cualquier otra bestia.\n\nCincuenta días de trabajo agotador están en el yunque de cualquier modo. Lo que entra en el temple es mi decisión."
+ ln_lightbringer.2.a:0 "Un león. Traído por barco desde Volantis. El relato exige un león."
+ ln_lightbringer.2.b:0 "Un gato sombrío. Lo cazamos nosotros en las montañas."
+ ln_lightbringer.2.c:0 "Un caballo de guerra de mi propio establo. Un corazón es un corazón."
+
+ # ── 3. THE THIRD FORGING ────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.3.t:0 "Cien días"
+ ln_lightbringer.3.desc:0 "El sacerdote no me obliga a sacárselo. Lo dice con sencillez, lo que de algún modo lo empeora.\n\n\"El agua no es nada. Una bestia es casi nada: no tiene más alma que el agua, solo sangra más. El acero no pide sangre. Pide una vida que sepa que es una vida.\"\n\nDeja que el peso terrible de eso quede en el aire entre nosotros.\n\n\"Azor Ahai llamó a su esposa y ella vino. Sabía lo que se le pedía, y vino de todos modos. Por eso funciona la espada. No por la muerte. Por el saberlo, y venir de todos modos.\"\n\nLa hoja descansa en el yunque, enfriándose. Contendrá lo que yo decida poner en ella."
+ ln_lightbringer.3.a:0 "Llamad a [ln_beloved.GetFirstName]. [ln_beloved.GetSheHe|U] tiene derecho a que se le pregunte."
+ ln_lightbringer.3.b:0 "[ln_volunteer.GetTitledFirstName] se ha ofrecido. Aceptar la oferta."
+ ln_lightbringer.3.c:0 "La mía. La muerte ya me tuvo una vez. Que lo intente otra vez."
+ ln_lightbringer.3.d:0 "Soltar el martillo. Por ninguna espada jamás forjada."
+
+ # ── 4. NISSA NISSA ──────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.4.t:0 "[ln_beloved.GetHerHis|U] alma entró en el acero"
+ ln_lightbringer.4.desc:0 "[ln_beloved.GetSheHe|U] vino a la forja.\n\nEsa es la parte que nunca acierta nadie de los que escriben estas leyendas: la presentan como un asesinato. Fue mucho peor que un asesinato. [ln_beloved.GetSheHe|U] lo escuchó todo, hizo dos preguntas serenas, luego puso [ln_beloved.GetHerHis] manos a [ln_beloved.GetHerHis] espalda para que [ln_beloved.GetSheHe] no fuera a buscar la hoja por instinto, y esperó.\n\nEl sonido que [ln_beloved.GetSheHe] hizo resonará en esta sala el resto de mi vida. El acero se quedó con [ln_beloved.GetHerHim], con [ln_beloved.GetHerHim] por entero, como el agua se queda con la sal. Cuando saqué la hoja, salió brillando de un rojo tan feroz que el herrero se echó el brazo sobre los ojos, y el fuego corriente de la forja se apagó al instante con un chisporroteo.\n\nEstá caliente. Lo ha estado desde entonces. En ocho mil años, nadie lo ha descrito nunca mejor que así."
+ ln_lightbringer.4.a:0 "Dueña de Luz."
+
+ # ── 5. THE VOLUNTEER ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.5.t:0 "Una vida que sabía que era una vida"
+ ln_lightbringer.5.desc:0 "No hubo que persuadir a [ln_volunteer.GetTitledFirstName], y se negó en redondo a que se le persuadiera de lo contrario. Todo el suplicio terminó mucho antes de lo que ninguno de los dos esperaba.\n\nEl acero tomó la sangre. La hoja salió brillando de un rojo apagado y ardiente y se quedó caliente, y puso de rodillas a todos los hombres de la forja. Por cualquier medida que se quiera nombrar, el ritual funcionó.\n\nY sin embargo, mi sacerdote es el único que no parece satisfecho. Cuando lo aprieto, dice exactamente lo que temía: \"Una vida, sí. Incluso dispuesta. Pero tú no amabas a [ln_volunteer.GetHerHim], y [ln_volunteer.GetSheHe] no era quien te tocaba perder.\"\n\n\"La espada es real,\" le digo con sequedad.\n\n\"La espada es real,\" conviene él en voz baja. \"Pero no es la del relato.\""
+ ln_lightbringer.5.a:0 "Matará a los muertos de todos modos."
+
+ # ── 6. HIS OWN HEART ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.6.t:0 "La muerte ya me tuvo una vez"
+ ln_lightbringer.6.desc:0 "El sacerdote me dice que no puede hacerse, luego ve la resolución absoluta en mi cara y se pone a rezar en su lugar.\n\nEl relato antiguo es extremadamente preciso: el tercer temple consume a aquel en quien entra la espada. Arranca un alma de un cuerpo y la ata a un trozo de metal, y no hay versión del mito en la que el forjador se marche con vida.\n\nPero yo ya he cruzado esa puerta una vez.\n\nLo averiguo.\n\nHundo la hoja. La forja se queda completamente a oscuras. Mucho después —mi herrero se niega a decir cuánto, y no volverá a hablar de ello jamás— me levanto a rastras del suelo de piedra con una espada que arde roja en la mano, y un agujero nuevo en el pecho que se niega a cerrarse."
+ ln_lightbringer.6.a:0 "Mi vida nunca fue mía para conservarla, de todos modos."
+
+ # ── 7. THE HAMMER GOES DOWN ─────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.7.t:0 "El martillo se posa"
+ ln_lightbringer.7.desc:0 "Dejo el martillo en el banco y salgo.\n\nEl sacerdote me sigue al patio, exigiendo saber si de verdad entiendo lo que estoy rechazando. Le digo que sí. Vuelve a preguntar, formulando la perdición del mundo de otra manera, y vuelvo a decirle que sí. No se enfada: se convierte en algo mucho peor. Es paciente, y se limita a decir que esperará aquí.\n\nCien días de trabajo agotador se enfrían en mi yunque. En algún lugar del fondo del Norte, un terror que lleva ocho mil años caminando sigue caminando.\n\nPero también sé a qué cara habría tenido que mirar en esa forja. Así sea."
+ ln_lightbringer.7.a:0 "Que al mundo le falte una espada."
+ ln_lightbringer.7.b:0 "Hoy no. Dejad el hierro en el banco."
+
+ # ── 8. WORD GETS OUT ────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer.8.t:0 "Una espada que arde"
+ ln_lightbringer.8.desc:0 "La historia llega antes que cualquier relato fiable de ella, y así es como sé que va a trastornarlo todo.\n\n[ln_forger.GetTitledFirstName] ha forjado una espada. No la ha encontrado en una ruina: la ha forjado, tres veces, y la tercera costó una vida humana. Todos los que me traen estos informes están completamente seguros de ese detalle, y son completamente poco fiables en todo lo demás.\n\nLos septones la declaran con furia una herejía inmunda. Los maestres insisten en que es solo un juego de la luz sobre acero plegado. Mi propio herrero, que no ha tenido una opinión profunda sobre nada en su vida, me pregunta en voz baja si es verdad que la hoja nunca se apaga.\n\nOcho mil años de sacerdotes rojos prometiendo un salvador, y al final es un nombre que reconozco."
+ ln_lightbringer.8.a:0 "Solo una historia. El acero es acero, y he visto bastante."
+ ln_lightbringer.8.b:0 "Entonces los mitos son ciertos, y todos llegamos muy tarde."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_lightbringer_full_modifier:0 "Dueña de Luz"
+ ln_lightbringer_lesser_modifier:0 "Dueña de Luz"
+ ln_would_not_pay_the_price_modifier:0 "No pagó el precio"
+ ln_the_forge_is_cold_modifier:0 "La forja está fría"
+ ln_hole_in_his_chest_modifier:0 "Un agujero que no se cierra"

@@ -1,0 +1,26 @@
+﻿l_spanish:
+
+ ln_mine_dragonglass_decision_desc:0 "Manda hombres a cavar, y paga lo que cueste.\n\nHay gran cantidad de [dragonglass|E] bajo Dragonstone, y más en una docena de sitios que nadie se ha molestado en reconocer, porque hasta hace muy poco no había razón alguna en el mundo para querer nada de ello."
+ ln_mine_dragonglass_decision_tt:0 "Acumula reservas de [dragonglass|E]."
+ ln_mine_dragonglass_decision_confirm:0 "Cavad."
+
+ ln_prophecy.31.t:0 "Fuego helado"
+ ln_prophecy.31.desc:0 "Llegan los primeros carros y tu maestro de armas no disimula su escepticismo.\n\nEs cristal. Se astilla si lo miras mal, no aguanta el filo contra una espada decente, y armar a los hombres con eso es armarlos con algo que se rompe. Tiene toda la razón.\n\nTambién lleva uno al cinto, te fijas.\n\nLos niños del bosque lo llamaban fuego helado y lo usaron durante ocho mil años contra algo que la Ciudadela está convencida de que nunca existió. Estás dando más crédito a los niños que a la Ciudadela, que no es una frase que esperaras poder decir de ti mismo."
+ ln_prophecy.31.a:0 "Ármalos de todos modos. A todo hombre que pueda llevar uno."
+ ln_prophecy.31.b:0 "En silencio. No hace falta decirle al reino por qué."
+
+ # Station branches, added Session 10.
+ ln_prophecy.31.desc.watch:0 "Llegan los primeros carros y en el Castillo Negro nadie se ríe.\n\nEl cristal se astilla si lo miras mal. No aguanta el filo contra una espada decente. Todos los hermanos del Muro saben ambas cosas, y todos los hermanos cogen uno de todos modos, porque la Guardia es el único lugar del mundo donde las crónicas antiguas nunca se archivaron del todo como cuentos.\n\nSoy el escudo que guarda los reinos de los hombres. Ocho mil años de hombres dijeron esas palabras sin saber de qué se suponía que estaba hecho el escudo.\n\nAhora lo sabes."
+ ln_prophecy.31.desc.seen:0 "Llegan los primeros carros y tu maestro de armas no disimula su escepticismo. Es cristal, dice. Se rompe, dice.\n\nLe dejas terminar. Es un discurso razonable y tiene razón en todo.\n\nPero él no estaba allí. No ha visto lo que tú has visto: el frío que llega antes que la cosa, los ojos como un cielo de invierno sin nada detrás. La Ciudadela puede discutir con los niños del bosque. No puede discutir con tu memoria, y tú tampoco.\n\nFuego helado, lo llamaban los niños. Ya no le das crédito a la palabra de nadie."
+
+ # ── PREPARATION MODIFIERS ───────────────────────────────────────────────────────────────────────────────────
+ ln_valyrian_armed_modifier:0 "Acero forjado con hechizos"
+ ln_valyrian_armed_modifier_desc:0 "Una hoja de un feudo franco muerto hace cuatrocientos años, en manos de alguien con un motivo para usarla.\n\nA ella no le importa lo frío que sea lo que tiene delante."
+ ln_dragonglass_stores_modifier:0 "Reservas de vidriagón"
+ ln_dragonglass_stores_modifier_desc:0 "Cajones de cristal negro mellado, repartidos entre hombres que creen que has perdido el juicio.\n\nDejarán de creerlo."
+
+ # ── THE DRAGONGLASS, SPLIT IN TWO ───────────────────────────────────────────────────────────────────────────
+ ln_dragonglass_armed_modifier:0 "Armados con vidriagón"
+ ln_dragonglass_armed_modifier_desc:0 "Todas las lanzas de la leva han sido rematadas de nuevo con cristal negro, y a todos los hombres se les ha dicho para qué es. Esto dura tanto como dure la oscuridad."
+ ln_dragonglass_knight_modifier:0 "Armado con vidriagón"
+ ln_dragonglass_knight_modifier_desc:0 "Lleva una hoja de cristal volcánico negro. Se rompe contra la malla y mata lo que el acero no llega a tocar."

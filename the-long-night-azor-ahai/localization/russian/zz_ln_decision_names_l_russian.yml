@@ -8,6 +8,7 @@
  ln_mine_dragonglass_decision:0 "Добывать драконье стекло"
  ln_end_the_long_night_struggle_decision:0 "Долгая Ночь кончается"
  ln_send_for_a_red_priest_decision:0 "Послать за красным жрецом"
+ ln_send_for_a_red_priest_decision.hear:0 "Выслушать красного жреца"
  # NOTE: ln_man_an_empty_castle_decision and ln_return_with_fire_decision carry their own name keys in
  # their own loc files, next to the events they open. Kept here for the inherited ones only.
 
@@ -19,5 +20,5 @@
  ln_return_north_decision:0 "Вернуться на север"
 
 # 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
- ln_mine_dragonglass_plain:0 "Mine the Dragonglass"
- ln_mine_dragonglass_raven:0 "Send a Raven: Open the Mine"
+ ln_mine_dragonglass_plain:0 "Добывать драконье стекло"
+ ln_mine_dragonglass_raven:0 "Послать ворона: открыть копи"

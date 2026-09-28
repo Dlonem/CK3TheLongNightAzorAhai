@@ -1,0 +1,10 @@
+﻿l_french:
+
+ ln_prophecy.20.t:0 "Le dernier baiser"
+
+ ln_prophecy.20.desc.named:0 "#e Je ne me souviens pas d'être mort, et je ne me souviens pas d'être revenu. Il y a eu la veille, et puis il y a ceci — et rien entre les deux que je puisse trouver, quelque soin que je mette à fouiller mon propre esprit.\n\n[ln_the_priest.GetTitledFirstName] refuse de me dire exactement ce qu'[ln_the_priest.GetSheHe] a fait. [ln_the_priest.GetSheHe|U] dit seulement que le Maître de la Lumière n'avait pas fini avec moi, ce qui sonne comme de l'humilité et n'en est absolument pas.\n\nQuelque chose va profondément de travers. La nourriture a un goût de cendre. Le froid mordant de l'hiver n'atteint pas ma peau. Mon mestre, qui ne croit pas à la magie et l'a dit haut et fort pendant des années, m'a examiné deux fois et a quitté la pièce deux fois sans prononcer un seul mot.\n\n#bold Je n'aurai plus d'enfants. Ce qui est ressorti de ce feu n'est pas tout à fait ce qui y est entré.#!#!"
+
+ ln_prophecy.20.desc.plain:0 "#e Je ne me souviens pas d'être mort, et je ne me souviens pas d'être revenu.\n\nQuelqu'un a prié au-dessus de moi — il y avait des gens dans la pièce, un feu rugissant, et des mots frénétiques dans une langue que je ne connais qu'à moitié. Et puis il y a un vide que je n'arrive pas à situer, quelque soin que je mette à en tâter les bords.\n\nQuelque chose est cassé jusqu'à la racine, et je ne sais pas le nommer. Le vin n'a plus de goût. Le froid ne me fait plus frissonner. Je me suis surpris, deux fois déjà, à oublier tout simplement d'avoir peur de choses qui devraient terrifier un homme vivant.\n\n#bold Je n'aurai plus d'enfants. Ce qui est ressorti de ce feu n'est pas tout à fait ce qui y est entré.#!#!"
+
+ ln_prophecy.20.a:0 "Alors il me reste du travail. Je découvrirai lequel."
+ ln_prophecy.20.b:0 "Je suis vivant. Pour l'instant, cela doit suffire."

@@ -1,0 +1,27 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.3: who answers the Question of the North.
+#
+# Actalo (Steam, 22 Sep), quoting the Workshop description ("restore the Night's Watch, or open the Gift to the
+# free folk. One crown, one choice, and it sticks for the rest of the game"): "Can you make this up to the
+# player, rather than the AI in the North?"
+#
+# Until 1.1.3 the question went to the Iron Throne, else an independent holder of e_the_north, else whoever
+# ruled Westeros (ln_pose_question_of_the_north_effect), and a player who was Warden of the North under an AI
+# crown, or any Northern lord under an AI King in the North, never saw the card. Thomas's call D-c: a rule,
+# defaulting to a player in the North first. The rungs under the default, in order: a player on the Iron
+# Throne; a player holding e_the_north, vassal or not; the highest-tier player with land in the North
+# mainland; then today's AI ladder unchanged. k_the_wall is deliberately not a rung -- asking the Lord
+# Commander is asking him whether to disband himself. The Crown option is exactly the old behaviour.
+#
+# Same file shape as zz_ln_ranger_rules.txt and zz_ln_prophecy_rules.txt. A save from before 1.1.3 gets the
+# default (a player in the North first), as the engine does for any rule a save lacks -- engine behaviour, not
+# readable from files; if the rule were absent altogether both reads fail and the old AI ladder runs, so no
+# path breaks. The Crown option, the exact old behaviour, is chosen at a new game.
+ln_question_of_the_north = {
+	categories = {
+		agot
+	}
+	default = ln_question_player_in_the_north_first
+
+	ln_question_player_in_the_north_first = { }
+	ln_question_the_crown = { }
+}

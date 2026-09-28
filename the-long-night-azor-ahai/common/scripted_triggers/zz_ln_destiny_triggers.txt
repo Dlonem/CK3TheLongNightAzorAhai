@@ -12,14 +12,14 @@
 # A man in a good breastplate is not Azor Ahai.
 
 # Does he own Valyrian steel with an edge on it?
-# agot_is_valyrian_steel_artifact -- 00_agot_artifact_triggers.txt:44, body is `has_variable = valyrian_steel`.
-# artifact_type = sword -- VANILLA, common/artifacts/types/00_types.txt:163.
 # Ownership rather than equipped: the sword finding the man is the omen. Whether he has it strapped on
 # this afternoon is not. This is the same list AGOT's own reforge_valyrian_steel_decision reads.
+# 1.1.3 -- `artifact_type = sword` was too narrow the other way: AGOT makes Valyrian axes, a spear and daggers
+# (00_agot_artifact_vs_sword_effects.txt) and none of them counted. ln_is_valyrian_blade_trigger
+# (zz_ln_consecration_triggers.txt) is the one definition -- any weapon in the hand slot that is not a bow.
 ln_carries_valyrian_steel_trigger = {
 	any_character_artifact = {
-		agot_is_valyrian_steel_artifact = yes
-		artifact_type = sword
+		ln_is_valyrian_blade_trigger = yes
 	}
 }
 
@@ -72,7 +72,7 @@ ln_is_the_weapon_trigger = {
 #
 #   DRAGONGLASS -- the two Prepare decisions' modifiers (zz_ln_preparation_effects.txt:41, :85), the stores,
 #                  and the mined-it flag. The children of the forest's answer, and the cheapest to get.
-#   VALYRIAN STEEL -- a sword artifact by AGOT's own agot_is_valyrian_steel_artifact, the prophecy layer's
+#   VALYRIAN STEEL -- a Valyrian blade (ln_is_valyrian_blade_trigger, 1.1.3: any hand weapon but a bow), the prophecy layer's
 #                  deed, the armed modifier, and both consecration routes (Lightbringer is Valyrian steel
 #                  that has been paid for twice; Dawn is not Valyrian steel at all, but it is the Sword of
 #                  the Morning and if it cannot end him nothing can).
@@ -137,8 +137,9 @@ ln_bears_the_bane_trigger = {
 # armed with WHAT -- and the honest place for it is beside the first, not inside it.
 #
 # ── AND WHY THIS IS A PENALTY ON GLASS RATHER THAN A BONUS ON STEEL ───────────────────────────────────────
-# The duel in ln_dawn.2.a already rewards the top of the ladder: -25 to the losing branch for Lightbringer,
-# -20 for the bleeding star, -15 for a Valyrian deed. Dragonglass alone gets nothing from that layer, so
+# The duel in ln_dawn.2.a already rewards the top of the ladder on BOTH branches: +60 / +55 / +35 on the win
+# branch and -25 / -20 / -15 on the losing one, for Lightbringer, the bleeding star and a Valyrian deed
+# (1.1.3 correction; this note used to name only the losing side). Dragonglass alone gets nothing from that layer, so
 # adding a fresh tier bonus on top of it would double-count the same three flags. The gap Thomas described
 # is opened from the bottom instead: a man whose ONLY answer is obsidian is meaningfully likelier to fall.
 ln_carries_only_dragonglass_trigger = {

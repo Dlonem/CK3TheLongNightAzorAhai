@@ -1,0 +1,9 @@
+﻿l_spanish:
+
+ wight_raised_memory:0 "se alzó de nuevo como espectro"
+ wight_raised_memory_desc:0 "Morí — y la hechicería fría de los Otros me arrastró de vuelta, un espectro atado a su hueste."
+ wight_raised_memory_desc_second_perspective:0 "moriste — y la hechicería fría de los Otros te arrastró de vuelta, un espectro atado a su hueste."
+ wight_raised_memory_desc_third_perspective:0 "[owner.GetName] murió — y la hechicería fría de los Otros arrastró de vuelta a [owner.GetHerHim], un espectro atado a su hueste."
+
+ wight_government:0 "Esclavo alzado"
+ wight_government_desc:0 "Un cadáver alzado por los Otros para servir en la muerte, ya no dueño de sí mismo."

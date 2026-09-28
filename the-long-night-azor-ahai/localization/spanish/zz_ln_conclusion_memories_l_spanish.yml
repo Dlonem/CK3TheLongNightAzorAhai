@@ -1,0 +1,45 @@
+﻿l_spanish:
+
+ # Past tense, lower-case, no-perspective default first -- vanilla's own design standard for memories,
+ # straight out of _character_memories.info.
+ ln_forged_lightbringer_memory:0 "forjó Dueña de Luz"
+ ln_forged_lightbringer_memory_desc:0 "Forjé Dueña de Luz, y pagué lo que el relato dice que cuesta."
+ ln_forged_lightbringer_memory_desc_second_perspective:0 "forjaste Dueña de Luz, y pagaste lo que el relato dice que cuesta."
+ ln_forged_lightbringer_memory_desc_third_perspective:0 "[owner.GetName] forjó Dueña de Luz, y pagó lo que el relato dice que cuesta."
+
+ ln_slew_the_night_king_memory:0 "puso fin a la Larga Noche"
+ ln_slew_the_night_king_memory_desc:0 "Yo fui el que estaba allí cuando importaba. El Rey de la Noche cayó, y salió el sol."
+ ln_slew_the_night_king_memory_desc_second_perspective:0 "fuiste tú el que estaba allí cuando importaba. El Rey de la Noche cayó, y salió el sol."
+ ln_slew_the_night_king_memory_desc_third_perspective:0 "[owner.GetName] estaba allí cuando importaba. El Rey de la Noche cayó, y salió el sol."
+
+ # The memory type own name key. Its three perspective descriptions have always lived in
+ # zz_ln_reveal_l_english.yml; this line was not anywhere, and the live log said so:
+ # "Character memory name 'ln_stood_at_the_dawn_memory' is not localized".
+ ln_stood_at_the_dawn_memory:0 "estuvo en pie en el amanecer"
+
+ # 1.1.0b -- the two endings, for everyone who was not the man who swung.
+ ln_lived_to_see_the_dawn_memory:0 "vivió para ver el amanecer"
+ ln_lived_to_see_the_dawn_memory_desc:0 "Estaba vivo cuando la oscuridad se quebró. La mayoría de los hombres con los que empecé, no."
+ ln_lived_to_see_the_dawn_memory_desc_second_perspective:0 "estabas vivo cuando la oscuridad se quebró. La mayoría de los hombres con los que empezaste, no."
+ ln_lived_to_see_the_dawn_memory_desc_third_perspective:0 "[owner.GetName] estaba vivo cuando la oscuridad se quebró. La mayoría de los hombres con los que [owner.GetHeShe] empezó, no."
+
+ ln_the_dark_won_memory:0 "vio ganar a la oscuridad"
+ ln_the_dark_won_memory_desc:0 "El amanecer no llegó. He estado contando los años desde entonces, y he dejado de decirle el número a nadie."
+ ln_the_dark_won_memory_desc_second_perspective:0 "el amanecer no llegó. Has estado contando los años desde entonces, y has dejado de decirle el número a nadie."
+ ln_the_dark_won_memory_desc_third_perspective:0 "el amanecer no llegó, y [owner.GetName] sigue contando los años desde entonces."
+
+ # 1.1.0b -- Nissa Nissa, by name. ln_beloved is the participant tag declared on the type.
+ ln_paid_in_full_memory:0 "pagó el precio de Dueña de Luz"
+ ln_paid_in_full_memory_desc:0 "Atravesé el corazón de [ln_beloved.GetTitledFirstName] con la espada, y ella tomó el fuego, y desde entonces no he podido dejarla."
+ ln_paid_in_full_memory_desc_second_perspective:0 "atravesaste el corazón de [ln_beloved.GetTitledFirstName] con la espada, y ella tomó el fuego, y desde entonces no has podido dejarla."
+ ln_paid_in_full_memory_desc_third_perspective:0 "[owner.GetName] atravesó el corazón de [ln_beloved.GetTitledFirstName] con la espada, y ella tomó el fuego."
+
+ # 1.1.0 (A3) -- the Beric record. Participants: ln_the_priest on the man's entry, ln_the_charge on the priest's.
+ ln_came_back_memory:0 "traído de vuelta por el fuego"
+ ln_came_back_memory_desc:0 "Morí, y [ln_the_priest.GetTitledFirstName] se arrodilló sobre mí y le dio al fuego lo que pedía, y volví. No volvió todo de mí."
+ ln_came_back_memory_desc_second_perspective:0 "moriste, y [ln_the_priest.GetTitledFirstName] le dio al fuego lo que pedía para traerte de vuelta."
+ ln_came_back_memory_desc_third_perspective:0 "[owner.GetName] murió, y [ln_the_priest.GetTitledFirstName] trajo de vuelta a [owner.GetHerHim]."
+ ln_spent_myself_memory:0 "dio el último beso"
+ ln_spent_myself_memory_desc:0 "Puse mi boca en la de [ln_the_charge.GetTitledFirstName] y le pedí al Señor de Luz una vida más, y él cobró el pago de mí. No volverán a pedírmelo."
+ ln_spent_myself_memory_desc_second_perspective:0 "diste el último beso a [ln_the_charge.GetTitledFirstName], y el fuego cobró su pago de ti."
+ ln_spent_myself_memory_desc_third_perspective:0 "[owner.GetName] dio el último beso a [ln_the_charge.GetTitledFirstName], y nunca volvió a estar entero."

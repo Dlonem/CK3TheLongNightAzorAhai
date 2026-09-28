@@ -1,0 +1,21 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- opinion modifiers.
+ # Written to be read in a tooltip at a glance: what you did, from their side, in their words.
+
+ ln_gave_me_everything_opinion:0 "M'a tout donné puis est parti"
+ ln_took_the_black_opinion:0 "A pris le noir"
+ ln_took_my_command_opinion:0 "M'a retiré mon commandement"
+ ln_let_me_keep_my_dignity_opinion:0 "M'a laissé ma dignité"
+ ln_saw_what_you_did_to_him_opinion:0 "J'ai vu ce que vous lui avez fait"
+ ln_killed_her_for_a_sword_opinion:0 "L'a tuée pour une épée"
+ ln_paid_the_price_opinion:0 "A payé le prix que le récit demandait"
+ ln_took_one_of_ours_opinion:0 "A pris l'un des nôtres pour l'acier"
+ ln_asks_the_north_for_help_opinion:0 "N'arrête pas de nous écrire au sujet du Mur"
+ ln_fed_the_wall_opinion:0 "A nourri le Mur quand personne d'autre ne le faisait"
+ ln_the_priests_say_it_of_him_opinion:0 "Les prêtres le disent de lui"
+ ln_believes_his_own_legend_opinion:0 "Croit à sa propre légende"
+ ln_named_favored_modifier:0 "Nommé Favorisé"
+ ln_named_favored_modifier_desc:0 "Un prêtre l'a dit à voix haute, et le mot voyage. Ceux qui partagent la foi regardent à deux fois ; ceux qui ne la partagent pas trouvent toute l'affaire embarrassante."
+ ln_named_chosen_modifier:0 "Nommé le prince qui fut promis"
+ ln_named_chosen_modifier_desc:0 "Des temples d'Asshai à Oldtown emploient le nom le plus ancien et le plus dangereux. Cela ne fait pas de vous un héros. Cela fait de vous une querelle, et les hommes prendront parti."

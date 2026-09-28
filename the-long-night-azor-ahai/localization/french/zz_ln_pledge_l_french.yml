@@ -1,0 +1,52 @@
+﻿l_french:
+
+ # ── THE DECISION ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_send_for_a_red_priest_decision_desc:0 "Quelque part à l'est, il y a des hommes qui prêchent une longue nuit et un prince promis depuis avant que votre maison ait eu un nom. Vous les avez toujours tenus pour fous. Maintenant que les vents se refroidissent, vous en êtes beaucoup moins sûr qu'avant.\n\nUne lettre à Myr, et assez d'or pour qu'un prêtre juge la traversée payante."
+ ln_send_for_a_red_priest_decision_tt:0 "Faites venir de l'autre côté de la mer Étroite un prêtre de R'hllor. La traversée prend des mois, et rien ne vous oblige à aimer ce qu'on vous dira au bout."
+ ln_send_for_a_red_priest_decision_confirm:0 "Envoyez un message à Myr."
+ ln_send_for_a_red_priest_decision_desc.hear:0 "Il y a déjà un prêtre de R'hllor sous ton propre toit. Depuis des mois tu entends parler du feu à ta table sans jamais demander ce qu'il dit.\n\nDemande."
+ ln_send_for_a_red_priest_decision_tt.hear:0 "Un prêtre rouge se tient déjà dans ta salle. Écoute ce que le feu a à dire. Cela ne coûte rien, et rien ne t'oblige à l'aimer."
+ ln_send_for_a_red_priest_decision_confirm.hear:0 "Leur demander."
+
+ # ── THE ARRIVAL ─────────────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.1.t:0 "Le prêtre à la porte"
+ ln_pledge.1.t.hall:0 "Le prêtre à la table"
+
+ ln_pledge.1.desc.summer:0 "Le prêtre est plus maigre que je ne l'imaginais, plus vieux, et ne prend pas la peine de s'incliner.\n\n\"Vous m'avez fait venir parce que quelque chose vous empêche de dormir, et que vous ne l'avez confessé à personne dans cette salle.\" Le prêtre laisse cela reposer dans la pièce silencieuse. \"Je ne vous dirai pas que le monde s'achève. Je vous dirai qu'il s'est déjà achevé une fois—et qu'un homme s'est tenu là où les ténèbres étaient les plus épaisses et n'a pas fui. Mon ordre attend depuis longtemps de savoir qui se tiendra là ensuite.\"\n\nLe regard que le prêtre me lance dure un instant de trop.\n\n\"Ce n'est en général pas celui qui nous fait venir.\""
+ ln_pledge.1.desc.hall:0 "Le prêtre vit sous mon toit depuis des mois, mange à ma table, et pas une fois je n'ai demandé ce que dit le feu. Ce soir, je l'ai fait.\n\n\"Je me demandais quand tu le ferais.\" Pas de révérence, pas de surprise. \"Je ne te dirai pas que le monde finit. Je te dirai qu'il a déjà fini, et qu'un homme s'est tenu là où les ténèbres étaient les plus épaisses sans fuir. Mon ordre attend depuis longtemps de savoir qui s'y tiendra ensuite.\"\n\nLe regard qu'on me lance dure un instant de trop.\n\n\"Ce n'est d'ordinaire pas celui qui demande.\""
+ ln_pledge.1.desc.cold:0 "L'été s'est brisé alors que le navire était encore en mer.\n\nLe prêtre entre, venu d'un vent qui n'a aucune raison d'être déjà si froid. Il se tient ruisselant dans ma salle, et ses premiers mots ne sont pas un salut.\n\n\"Depuis combien de temps fait-il froid ?\"\n\nQuand je réponds, le hochement de tête qui me revient est celui de quelqu'un qui confirme une date qu'il avait déjà. \"Alors nous avons moins de temps que je l'espérais et plus que je le craignais. Messire—vos dieux sont une belle foi pour un monde qui va continuer d'exister. Je suis ici parce que le mien est le seul dieu à qui l'on ait jamais posé cette question précise, et il y a répondu. Je peux vous montrer ce que la réponse a coûté.\""
+
+ ln_pledge.1.desc.night:0 "Le prêtre n'est pas venu me convertir. Il n'y a plus de temps pour cela, et nous le savons tous les deux.\n\nIl est descendu d'un navire, a marché vers le nord au milieu de réfugiés gelés qui allaient en sens inverse, et s'est présenté à ma porte avec une besace et le visage de quelqu'un qui arrive exactement là où il voulait aller.\n\n\"Vous savez ce qui est en train d'arriver,\" dit le prêtre. \"Ce que personne dans cette salle ne sait, c'est que cela peut être combattu, que cela l'a déjà été, et que le feu n'est pas une métaphore.\" La besace tombe avec un bruit lourd. \"Je peux apprendre trois choses à vos forgerons avant de mourir de ce froid. Ou vous pouvez me brûler et vous sentir très vertueux pendant environ une saison.\""
+
+ ln_pledge.1.a:0 "Alors votre dieu est mon dieu."
+ ln_pledge.1.a.tt:0 "Vous vous convertissez à R'hllor.\n\nR'hllor est une foi de cette guerre : un [struggle_interloper|E] qui l'embrasse devient [struggle_involved|E] dans la Longue Nuit. Vos bannerets ne vous en remercieront pas."
+ ln_pledge.1.b:0 "Gardez votre feu, prêtre. J'ai mon acier, et je m'en servirai."
+ ln_pledge.1.c:0 "Brûlez ce fanatique."
+
+ # ── AFTER THE CONVERSION ────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.2.t:0 "Ce que la salle a entendu"
+ ln_pledge.2.desc:0 "Il a fallu onze jours pour que la nouvelle atteigne tous ceux qui comptaient, et le douzième, [ln_objector.GetTitledFirstName] est venu me le dire en face.\n\n\"J'ai juré bien des choses à votre service.\" [ln_objector.GetSheHe] le dit d'une voix que la colère fait trembler, une colère tenue serrée. \"Je n'ai pas juré cela. Mon père repose devant nos dieux. Mes enfants ont reçu leur nom devant eux.\" Un silence, et puis vient la partie que [ln_objector.GetSheHe] a visiblement répétée. \"Je ne vous demande pas de vous expliquer. Je demande si l'on attend de moi que je vous suive là-dedans.\""
+ ln_pledge.2.a:0 "On l'attend. De vous tous."
+ ln_pledge.2.b:0 "Non. Je n'ai pas fait cela pour forcer la main à quiconque."
+
+ # ── AFTER THE PLEDGE ────────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.3.t:0 "La colonne vers le nord"
+ ln_pledge.3.desc:0 "Je les regarde monter la route royale dans le premier gris du matin. La colonne est plus petite que je ne l'imaginais quand j'ai prononcé les mots.\n\nMon maréchal a les chiffres écrits et me les lit quand même, comme font les hommes qui veulent qu'il reste consigné qu'ils vous avaient averti : tant de lances parties, tant de récoltes à court de bras, tant d'années avant qu'aucune ne revienne. Il ne dit pas 'si'. Il est charitable.\n\nÀ l'arrière il y a un lourd chariot avec l'outillage des forgerons. Je n'avais pas pensé aux forgerons."
+ ln_pledge.3.a:0 "Envoyez la seconde levée derrière eux."
+ ln_pledge.3.b:0 "C'est ce que j'ai promis. Il faut bien que quelqu'un tienne le sud."
+
+ # ── AFTER THE BURNING ───────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.4.t:0 "Ce qui fut dit dans le feu"
+ ln_pledge.4.desc:0 "Le prêtre n'a pas crié, et c'est cette part-là que je n'arrive pas à chasser de mon esprit.\n\nLes hommes crient. J'ai déjà brûlé des hommes—des brigands, un empoisonneur, une fois un cousin traître—et ils crient, et puis c'est fini et l'on va souper. Le prêtre m'a regardé pendant tout ce temps avec une expression que je suis incapable de nommer depuis des semaines. Vers la fin, il a dit quelque chose que les gardes ont entendu différemment. Mon capitaine dit que c'était une prière. Le garçon qui a allumé le bûcher dit que c'était une date.\n\nIl fait un froid mordant, le matin."
+ ln_pledge.4.a:0 "C'était une prière. Rien de plus."
+ ln_pledge.4.b:0 "Dites que c'était une prière. Dites-le fort, et souvent."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_sworn_to_the_dawn_modifier:0 "Juré à l'Aube"
+ ln_sworn_to_the_dawn_modifier_desc:0 "Des hommes, de l'or et des forgerons engagés dans une guerre dans le Nord à laquelle la moitié de votre cour ne croit pas."
+ ln_burned_the_red_priest_modifier:0 "A brûlé le prêtre rouge"
+ ln_burned_the_red_priest_modifier_desc:0 "Les dévots parlent de vous avec beaucoup de chaleur. Comme tous ceux qui n'ont jamais mis les pieds au nord du Neck."
+ ln_took_the_red_modifier:0 "A pris le Dieu Rouge"
+ ln_took_the_red_modifier_desc:0 "Vous avez changé de dieux devant vos propres bannerets, et ils regardaient."
+ ln_gave_the_last_kiss_modifier:0 "A donné le Dernier Baiser"
+ ln_gave_the_last_kiss_modifier_desc:0 "A rappelé une âme hors du feu, et a payé la différence. Ce qui a été pris n'a pas été rendu."

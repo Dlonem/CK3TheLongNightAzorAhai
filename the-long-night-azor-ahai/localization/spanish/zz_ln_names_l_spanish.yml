@@ -1,0 +1,33 @@
+﻿l_spanish:
+
+# AGOT: The Long Night & Azor Ahai -- ranger captain given names.
+#
+# These nine are used in history/characters/zz_ln_ranger_captains.txt and are NOT in AGOT's First Man name
+# list, so every one of them logged "Missing loc for name" at load -- 44 lines in the 10 Aug run -- and the
+# captains carrying them displayed a raw key instead of a name. Stonesnake, Dalbridge and Softfoot are canon
+# rangers and worth keeping, so the names stay and the loc is supplied here rather than renaming anyone.
+
+ Benjyn:0 "Benjyn"
+ Berron:0 "Berron"
+ Dalbridge:0 "Dalbridge"
+ Eddin:0 "Eddin"
+ Eggen:0 "Eggen"
+ Jorwyn:0 "Jorwyn"
+ Kegs:0 "Kegs"
+ Softfoot:0 "Softfoot"
+ Stonesnake:0 "Stonesnake"
+
+# The Others' own culture name list. Ours (common/culture/name_lists/00_othernames.txt), and it had no
+# localization at all -- "Missing loc for name_list_others" at every load, and the list showed a raw key
+# in the culture window. AGOT localizes its own the same way: name_list_northman:0 "Northman".
+ name_list_others:0 "Otro"
+
+# 1.0.16 -- AND THE NIGHT KING'S OWN GIVEN NAME. history/characters/othersinvasion_characters.txt:3 is
+# `name = Other`, and no key answered it anywhere -- not here, not in AGOT. The engine said so twice in the
+# 27 Aug run:
+#     [characterhistory.cpp:808] Missing loc for name 'Other' for character 'others_thenightking'
+#     [culture_name_equivalency.cpp:101] Missing loc Other: "Other"   (x2)
+# `Other` the NAME and `name_list_others` the LIST are different keys and the list one does not answer for
+# the name -- which is why the line above was already here and the error was still being logged. Same shape
+# as the nine ranger names at the top of this file, same fix.
+ Other:0 "Otro"

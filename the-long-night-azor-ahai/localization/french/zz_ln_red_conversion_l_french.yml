@@ -1,0 +1,19 @@
+﻿l_french:
+
+ # Taking the red -- the seed, the deepening, the ask.
+ ln_red.1.t:0 "Un doute plus froid"
+ ln_red.1.desc.named:0 "Il y a un murmure qui me suit — dit juste assez bas pour pouvoir être nié. *Nommé*. Un prêtre d'un dieu étranger m'a regardé et a prononcé un titre vieux de huit mille ans. Et depuis, je fais la seule chose que j'avais juré de ne pas faire : je me demande.\n\nPas au sujet de la prophétie. Au sujet du dieu. Si le titre est réel — si même une fraction en est réelle —, alors quelque chose, là dehors, regardait. Quelque chose m'a choisi. Et ce ne sont pas les dieux autour desquels mes ancêtres ont bâti leurs chants de septuaire et leurs prières aux barrals, car ces dieux n'ont jamais prononcé mon nom à voix haute."
+ ln_red.1.desc.priest:0 "[ln_red_priest.GetTitledFirstName] est à mon service depuis assez longtemps pour que l'étrangeté se soit usée. Les robes rouges ne sont plus que des robes. Les feux nocturnes sont juste ce qu'il fait, comme un mestre monte à ses corbeaux.\n\nC'est précisément là le problème. Quelque part dans les années de sa patience, de sa terrible certitude, des soirs où il parle du feu comme s'il rapportait les nouvelles du jour — la question a cessé d'être la sienne et est devenue la mienne. Je ne me demande plus s'il est fou. Je me demande s'il a raison."
+ ln_red.1.desc.dark:0 "Je sais des choses maintenant. Pas des rumeurs — des choses. J'ai lu les lettres, entendu les récits affolés qui remontent du Nord, et senti la forme terrifiante de ce qui attend au-delà du bord de toute carte confortable.\n\nEt dans toute la longue liste des dieux que mon peuple a priés, exactement un d'entre eux a prétendu traiter de CELA — les ténèbres, et le feu qui les repousse. C'est un dieu étranger au cœur brûlant, avec des prêtres qui troublent tous ceux qu'ils rencontrent. Mais c'est aussi, autant que je puisse en juger, le seul dieu qui a vu venir ceci."
+ ln_red.1.a:0 "Laisser la pensée s'attarder."
+ ln_red.1.b:0 "Me l'ôter de l'esprit. Les anciens dieux suffisent."
+
+ ln_red.2.t:0 "Le feu nocturne"
+ ln_red.2.desc:0 "Cela arrive un soir tout à fait ordinaire. Un feu est monté haut contre le froid mordant, et je me surprends à rester devant lui bien plus longtemps que la chaleur ne l'explique.\n\nLes mots sont là dans mon esprit, de seconde main mais entiers — entendus assez souvent de bouches en robe rouge pour qu'ils se récitent d'eux-mêmes. *La nuit est sombre et pleine de terreurs.* Je ne les dis pas à voix haute. Mais je reste là tandis qu'ils résonnent, et quand je finis par me détourner, les ténèbres juste au-delà de la lueur du feu paraissent — le temps d'un souffle terrifiant — exactement aussi profondes que les prêtres le disent."
+ ln_red.2.a:0 "Rester près du feu encore un moment."
+ ln_red.2.b:0 "Cette folie est allée assez loin."
+
+ ln_red.3.t:0 "Prendre le rouge"
+ ln_red.3.desc:0 "Ce n'est plus une simple pensée, c'est devenu une porte. J'en vois les deux côtés avec une clarté terrible.\n\nDe l'autre côté : le feu, la certitude absolue, un dieu qui est indubitablement ÉVEILLÉ tandis que les ténèbres s'amassent — et le prix, payé en entier et en public. Les septons, les chanteurs, les hommes loyaux dont les grands-pères ont combattu aux côtés des miens, tous me regardant prendre une flamme étrangère. Ils appelleront cela folie au mieux, et hérésie au pire.\n\nDe ce côté-ci : les dieux de mes ancêtres, qui n'ont rien dit. À qui l'on doit peut-être tout. Qui n'ont pas une seule fois, en toutes ces années, répondu."
+ ln_red.3.a:0 "Allumez le feu. R'hllor, défends-moi."
+ ln_red.3.b:0 "Non. Pas tant que les dieux de mes pères regardent."

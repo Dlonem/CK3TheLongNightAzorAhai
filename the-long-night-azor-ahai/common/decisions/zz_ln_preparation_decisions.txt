@@ -61,11 +61,17 @@ ln_mine_dragonglass_decision = {
 		}
 	}
 
+	# 1.1.3 (W12): the availability test moved out of is_valid. There it rendered AGOT's whole
+	# availability trigger line by line under Requirements -- raw NOT_has_variable_trigger keys, and
+	# failure-sense text shown as passed. Vanilla puts it here 164 times and in is_valid 4.
+	is_valid_showing_failures_only = {
+		is_available_adult_or_is_commanding = yes
+	}
+
 	is_valid = {
 		# 1.1.0 (§8.2, Send a Raven): was is_available, whose in_army = no is what Thomas kept
 		# hitting. This decision can be taken from the field -- Thomas's call, 31 Aug 2026: a lord can order a mine dug -- the effect is gold and a modifier, nothing that needs his hands. The vanilla ladder's
 		# commanding rung (00_available_for_events_triggers.txt:540); everything else it checks is kept.
-		is_available_adult_or_is_commanding = yes
 		gold >= ln_dragonglass_cost_value
 	}
 

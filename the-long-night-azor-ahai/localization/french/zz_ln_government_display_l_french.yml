@@ -1,0 +1,32 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- government display keys the engine derives and looks up on its
+ # own (<government>_adjective and friends; the raw key was showing in the realm panel, live-run
+ # report 305 AC), plus the names for zz_ln_government_title_holders.txt. wight_government and
+ # wight_government_desc already live in long_night_plus_memories_l_english.yml -- NOT restated here,
+ # one definition per key.
+
+ wight_government_with_icon:0 "$wight_government$"
+ wight_government_adjective:0 "Relevé"
+ wight_government_realm:0 "Armée relevée"
+ wight_government_filter_option:0 "Serf relevé"
+ wight_government_filter_option_desc:0 "N'afficher que les personnages relevés au service des morts"
+
+ baron_wight_male:0 "Serf relevé"
+ baron_wight_female:0 "Serve relevée"
+ count_wight_male:0 "Seigneur spectre"
+ count_wight_female:0 "Dame spectre"
+ duke_wight_male:0 "Seigneur du Froid"
+ duke_wight_female:0 "Dame du Froid"
+ king_wight_male:0 "Roi de l'Hiver"
+ king_wight_female:0 "Reine de l'Hiver"
+ emperor_wight_male:0 "Empereur de l'Hiver"
+ emperor_wight_female:0 "Impératrice de l'Hiver"
+
+ ln_ranger_government_with_icon:0 "$ln_ranger_government$"
+ ln_ranger_government_realm:0 "Compagnie de patrouille"
+ ln_ranger_government_filter_option:0 "Compagnie de patrouille"
+ ln_ranger_government_filter_option_desc:0 "N'afficher que les frères juretés en patrouille au-delà du Mur"
+
+ duke_ln_ranger_male:0 "Capitaine-patrouilleur"
+ duke_ln_ranger_female:0 "Capitaine-patrouilleuse"

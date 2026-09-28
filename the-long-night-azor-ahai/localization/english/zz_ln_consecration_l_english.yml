@@ -12,8 +12,9 @@
  ln_consecrate_blade_decision_confirm:0 "Light the fire."
  ln_consecrate_blade_decision_effect_tt:0 "The fire will be lit and the rite prepared. It will be ready inside a fortnight."
 
- ln_consecrate_needs_a_voice:0 "Someone must be able to say the words—a red priest in my hall, or my own faith in the Lord of Light."
- ln_consecrate_needs_a_price:0 "The steel takes a price. Either someone I love walks to the fire, or the blade is Dawn and I was born beneath the bleeding star."
+ ln_consecrate_needs_a_voice:0 "Someone must be able to say the words: a red priest as my Court Chaplain or camp priest, or I am one myself."
+ ln_consecrate_needs_a_price:0 "The steel takes a price: someone I love walks to the fire. Dawn is the exception. It takes no life, but only from the one born beneath the bleeding star."
+ ln_consecrate_dawn_not_yours:0 "Dawn is the only blade I carry, and it was not me the star fell for. It will take no life, and it will not be asked by me."
  ln_consecrate_rite_is_spent:0 "The fire has been lit once already. It has not gone cold yet."
 
  # -- MODIFIERS ----------------------------------------------------------------------------------------------

@@ -1,0 +1,25 @@
+﻿l_spanish:
+
+ # ── RANGING DECISIONS ──────────────────────────────────────────────────────────────────────────────────────
+ ln_march_the_ranging_decision:0 "Poner en marcha la expedición"
+ ln_march_the_ranging_decision_desc:0 "El campamento puede levantarse en una hora. Esa ha sido siempre la eficacia brutal de una expedición: no es un castillo, y nosotros no somos una guarnición. Somos una expedición hacia la oscuridad helada.\n\nLa única pregunta que un capitán responde de verdad es la que hace el mapa."
+ ln_march_the_ranging_decision_tt:0 "Elegir un terreno de expedición más allá del Muro y llevar allí el campamento."
+ ln_march_the_ranging_decision_confirm:0 "Toca el cuerno."
+
+ ln_return_to_the_wall_decision:0 "Regresar al Muro"
+ ln_return_to_the_wall_decision_desc:0 "Lo que esta expedición haya encontrado, o no haya logrado encontrar, el Muro es donde acaba el viaje.\n\nSuena el cuerno para volver la columna al sur. Advierto que todos y cada uno de los hombres del campamento caminan un poco más rápido que a la ida."
+ ln_return_to_the_wall_decision_tt:0 "Llevar el campamento de vuelta a Castle Black."
+ ln_return_to_the_wall_decision_confirm:0 "Vuelve al sur."
+
+ # ── EVENTS ──────────────────────────────────────────────────────────────────────────────────────────────────
+ ln_ranging.1.t:0 "A dónde va la expedición"
+ ln_ranging.1.desc:0 "La compañía está formada en la nieve, los trineos están cargados y la enorme puerta de hielo está abierta.\n\nAl norte de aquí hay tres terrenos a los que un capitán de expedición puede dirigirse razonablemente. Cada hermano negro de la columna tiene una opinión muy firme sobre todos ellos, aunque tienen la disciplina de no decirla.\n\nMiro la extensión aterradora del bosque encantado. El mando es mío."
+ ln_ranging.1.a:0 "Craster's Keep. Al menos es un techo."
+ ln_ranging.1.b:0 "Whitetree. Adentro, al bosque encantado."
+ ln_ranging.1.c:0 "Casa Austera. La costa helada."
+ ln_ranging.1.d:0 "Aún no. El campamento se queda aquí."
+
+ ln_ranging.2.t:0 "El campamento queda en pie"
+ ln_ranging.2.desc.north:0 "Las tiendas están levantadas y el foso cavado antes de que oscurezca.\n\nNo es un castillo. Nunca se pretendió que lo fuera. Pero es la Guardia, en pie en lo hondo de la nieve, haciendo aquello para lo que fue construida. El viento aúlla entre los árboles, y los centinelas escrutan la negrura helada, esperando un movimiento."
+ ln_ranging.2.desc.home:0 "El Muro se traga el horizonte un día entero antes de que lleguemos a él. Siempre lo hace.\n\nAcampamos a su sombra, tan cerca que el frío que sale del hielo se instala en las tiendas, y por primera vez en semanas las guardias pasan sin que un solo hombre dé la voz."
+ ln_ranging.2.a:0 "Así es."

@@ -1,0 +1,33 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- emptying a dungeon northward.
+
+ ln_send_the_dungeons_to_the_wall_decision:0 "[ROOT.Char.Custom('ln_SendDungeonsTitle')]"
+ ln_send_the_dungeons_plain:0 "Enviar a los prisioneros al Muro"
+ ln_send_the_dungeons_raven:0 "Enviar un cuervo: vaciad las celdas"
+ ln_send_the_dungeons_to_the_wall_decision_desc:0 "Tu carcelero tiene la lista en un tablón junto a la puerta, y en un año no se ha acortado. Hombres tomados en una guerra que terminó. Hombres cuyas familias dejaron de responder a los cuervos. Hombres a los que nadie va a rescatar y que nadie quiere especialmente ver colgados.\n\nEl Muro no pregunta qué hicieron. Nunca lo ha preguntado. Solo pregunta si pueden sostener una lanza y si seguirán en pie en lo alto de la calzada cuando suene el cuerno, y los tomará a todos en esos términos sin una palabra de agradecimiento.\n\nNo es misericordia. Es el acuerdo más viejo de los Siete Reinos: el sur conserva las manos limpias, y el norte recibe cuerpos."
+ ln_send_the_dungeons_to_the_wall_decision_tt:0 "Envía al norte, a la Guardia de la Noche, a todo prisionero que pueda vestir el negro, en una sola orden.\n\n#weak Van como hermanos juramentados, no como una oferta que puedan rechazar. Todo hombre que el Muro no quiera se queda en tus celdas.#!"
+ ln_send_the_dungeons_to_the_wall_decision_confirm:0 "Vaciad las celdas. El Muro los aceptará."
+ ln_send_the_dungeons_to_the_wall_decision_desc_north:0 "Tu carcelero tiene la lista en un tablón junto a la puerta. En el Sur llamarían a vaciarla hacia el norte una misericordia, o una broma. A ti te criaron para llamarlo por lo que es: el Muro tiene que estar guarnecido, el Norte siempre lo ha guarnecido, y un hombre que quebró la paz del Rey aún puede sostener una lanza en el lado correcto de él.\n\nTe maldecirán en la calzada y no darán las gracias a nadie. Sus hijos serán hermanos juramentados de la orden más antigua del mundo. Las dos cosas son verdad, y ninguna es asunto tuyo más allá del Gift."
+ ln_send_the_dungeons_to_the_wall_effect_tt:0 "#V [ROOT.Char.MakeScope.ScriptValue('ln_prisoners_fit_for_the_wall_value')|0]#! de tus prisioneros vestirán el negro. Son entregados a la Guardia de la Noche y se unen a la corte del Lord Comandante"
+
+ # ── The four things that can stop you, each said out loud. AGOT hides all of these in is_shown. ──
+ ln_wall_you_are_of_the_free_folk:0 "Eres del pueblo libre: la Guardia no te aceptará hombres"
+ ln_wall_your_seat_is_not_in_the_seven_kingdoms:0 "Tu sede está fuera de los Siete Reinos: el Muro no es tuyo para enviarle hombres"
+ ln_wall_there_is_no_watch_left:0 "No queda Guardia de la Noche que los reciba"
+ ln_wall_none_of_them_will_serve:0 "Ni uno de tus prisioneros puede vestir el negro"
+
+ # ── 1.1.0 (§10): the protections, each named out loud. A correct refusal with no reason reads as a bug. ──
+ ln_wall_he_is_not_yours_to_send:0 "No es tuyo para enviarlo: solo tus propios vasallos y sus sirvientes, o tu propia corte, pueden ser llevados al norte"
+ ln_wall_he_is_a_king_in_his_own_right:0 "Es rey por derecho propio: las cabezas coronadas se rescatan o mueren, no se envían al Muro"
+ ln_wall_his_house_looks_to_him:0 "Su casa depende de él: el Muro no se lleva a la cabeza de una casa"
+ ln_wall_his_dynasty_looks_to_him:0 "Su dinastía depende de él: el Muro no se lleva a la cabeza de una dinastía"
+ ln_wall_he_is_the_last_of_his_house:0 "Es el último de su casa: el Muro acaba con hombres, no con linajes"
+ ln_wall_he_is_too_great_a_lord:0 "Es un señor demasiado grande: no puede enviarse a nadie por encima del rango condal"
+
+ # ── 1.1.0 (§10.2): the tier-ceiling game rule ──
+ rule_ln_wall_tier_ceiling:0 "#explanation_link_light_background;bold LN:#! #e;bold Enviar a los prisioneros#! Límite de rango"
+ setting_ln_wall_county_ceiling:0 "Condes y por debajo #EMP (Por defecto)#!"
+ setting_ln_wall_county_ceiling_desc:0 "Los señores capturados por encima del rango condal no pueden ser enviados al Muro. Los reyes y los duques se rescatan o se ejecutan, como los grandes hombres que son."
+ setting_ln_wall_send_any_tier:0 "Cualquier rango"
+ setting_ln_wall_send_any_tier_desc:0 "Cualquier prisionero elegible puede ser enviado al Muro, sea lo que sea lo que posea. El rey del Trono de Hierro puede acabar sus días como hermano juramentado."

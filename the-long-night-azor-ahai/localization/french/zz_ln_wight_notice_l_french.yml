@@ -1,0 +1,32 @@
+﻿l_french:
+
+ ln_wight.1.t:0 "Un visage que je connais"
+
+ ln_wight.1.desc.spouse:0 "Un cavalier arrive du Nord avec une nouvelle que je lui fais répéter deux fois.\n\n[ln_risen.GetTitledFirstName] marche. Ne vit pas : marche. Le cavalier bégaie que les yeux ont la couleur d'une étoile vue à travers une glace épaisse, et que la chose qui porte [ln_risen.GetHerHis] visage ne connaît même pas son propre nom.\n\nNous nous sommes mariés devant un dieu. En regardant le ciel qui gèle, je me demande lequel de nous deux ce vœu lie encore."
+
+ ln_wight.1.desc.soulmate:0 "La lettre est terriblement brève, sans doute parce que celui qui l'a écrite n'a pas eu le cœur de faire durer les mots.\n\n[ln_risen.GetTitledFirstName] est parmi les morts qui marchent. De tous les êtres au monde, [ln_risen.GetFirstNameNoTooltip] était celui qui aurait vraiment compris ce que je ressens en lisant ceci. C'est cette pensée qui refuse de se tenir tranquille dans ma poitrine."
+
+ ln_wight.1.desc.child:0 "Je lis le parchemin debout, et puis je suis obligé de m'asseoir.\n\n[ln_risen.GetTitledFirstName] n'est pas resté mort. Quelque chose d'ancien et de froid s'est glissé par la porte derrière laquelle [ln_risen.GetSheHe] se tenait, et maintenant [ln_risen.GetSheHe] marche avec cette chose, loin de tout ce que [ln_risen.GetSheHe] devait devenir.\n\nUn parent qui enterre son enfant est une tragédie laide et naturelle. Ceci est une abomination."
+
+ ln_wight.1.desc.parent:0 "Le cavalier me tend le rapport, couvert de boue gelée, et détourne les yeux pendant que je le lis.\n\nOn a vu [ln_risen.GetTitledFirstName] marcher avec la horde. Celui qui m'a élevé, qui m'a appris à tenir une épée et à révérer les dieux, est aujourd'hui l'esclave des ténèbres glacées. Je me surprends à me demander s'il reste en [ln_risen.GetHerHim] une part prise au piège à l'intérieur, qui hurle tandis que [ln_risen.GetSheHe] regarde [ln_risen.GetHerHis] propres mains bouger."
+
+ ln_wight.1.desc.sibling:0 "Je connais l'écriture de cette lettre. Je ne veux pas connaître le reste.\n\n[ln_risen.GetTitledFirstName] marche avec les morts. Nous avons grandi dans les mêmes salles, nous nous sommes disputé le même héritage, et j'ai toujours supposé qu'il y aurait le temps de régler cela.\n\nIl n'y a plus rien à régler. Il n'y a plus que la question de savoir si je peux être celui qui l'arrête."
+
+ ln_wight.1.desc.best_friend:0 "J'ai lu la lettre trois fois et elle n'a pas changé.\n\n[ln_risen.GetTitledFirstName] est parmi les morts. Pas tué par eux : l'un d'eux, marchant vers le nord dans les ténèbres glacées, portant un visage que je reconnaîtrais à cent pas.\n\nEt il ne reste au monde personne que j'aurais voulu davantage à mes côtés pendant que je la lis : [ln_risen.GetHerHim]."
+
+ ln_wight.1.desc.lover:0 "Le cavalier a passé quatre jours en selle et cela se voit.\n\n[ln_risen.GetTitledFirstName] marche avec les morts. Les Autres ont tout refait en [ln_risen.GetHerHim], de l'intérieur vers l'extérieur, et ne se sont pas donné la peine d'emporter le visage. C'est le même visage.\n\nJe trouve que cela rend la chose pire, pas meilleure."
+
+ ln_wight.1.desc.friend:0 "La nouvelle descend vers le sud de main en main et me parvient très usée.\n\n[ln_risen.GetTitledFirstName] s'est relevé. Les morts ne se rassemblent pas sous des bannières : ils s'accumulent, simplement, et [ln_risen.GetFirstNameNoTooltip] fait désormais partie de cette accumulation : froid, infatigable, et totalement indifférent à avoir jamais été mon ami."
+
+ ln_wight.1.desc.generic:0 "La nouvelle descend vers le sud comme le font toujours les mauvaises : tard, et d'une certitude terrifiante.\n\n[ln_risen.GetTitledFirstName] marche avec les morts. [ln_risen.GetHerHim] et moi, nous nous connaissions. Cela voulait dire quelque chose dans les royaumes des hommes, mais pour ce qui porte aujourd'hui [ln_risen.GetHerHis] visage, cela ne veut absolument rien dire."
+
+ ln_wight.1.a:0 "Ce n'est plus [ln_risen.GetHerHim]."
+ ln_wight.1.b:0 "Alors je marcherai contre [ln_risen.GetHerHim] sur le champ, et j'obtiendrai la paix pour [ln_risen.GetHerHim]."
+
+ # 1.0.8 -- the marriage card. NOTE THE TOKEN FORM: bare saved-scope names, [ln_lost.GetTitledFirstName],
+ # NOT [scope:ln_lost...]. Vanilla uses the scope: form zero times across its whole localization; the bare
+ # form is the one proven live in this mod (the reveal chain's slayer attribution, 13 Aug run).
+ ln_wight.2.t:0 "La mort nous a séparés"
+ ln_wight.2.desc:0 "Le cavalier attend dans la cour parce qu'il refuse de le dire sous un toit.\n\n[ln_lost.GetTitledFirstName] est tombé—et n'est pas resté à terre. Ce qui marche à présent descend vers le sud avec les autres, dans le froid aveuglant, portant le visage à côté duquel je me réveillais.\n\nMon septon pèse aujourd'hui ses mots à l'excès. Les vœux disaient 'jusqu'à la mort', murmure-t-il, et la mort est venue et repartie. Il n'y a pas de divorce à demander, et plus personne à qui le demander. Ce qui me liait à [ln_lost.GetHerHim], la Longue Nuit l'a brisé."
+ ln_wight.2.a:0 "Brûlez le manteau de mariage."
+ ln_wight.2.b:0 "Alors ce sera moi qui en finirai, sur le champ, face à [ln_lost.GetHerHim]."

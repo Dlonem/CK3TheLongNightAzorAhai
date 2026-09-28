@@ -1,0 +1,18 @@
+﻿l_spanish:
+ other_turnoff_decision:0 "Detener el alzamiento"
+ other_turnoff_decision_desc:0 "Prohíbe alzar a los muertos a mano, para que ningún gesto perdido despierte lo que debería seguir durmiendo. Toma esta decisión otra vez para levantar la prohibición."
+ other_turnoff_decision_tooltip:0 "Prohibir o permitir la interacción de alzamiento"
+ other_turnoff_decision_confirm:0 "Que así sea"
+ other_turnoff_flag_tooltip:0 "La interacción de alzamiento está prohibida ahora mismo"
+
+ # The Long Night+: Flee South decision
+ flee_south_decision_title:0 "Huir al sur"
+ flee_south_decision_desc:0 "Los muertos están a mis puertas y mi hueste yace quebrada en la nieve. Puedo plantarme en mis murallas y morir con mi gente... o abandonarlo todo —mi sede, mis tierras, mi salón—, reunir a los parientes y las espadas leales que quieran seguirme, y cabalgar al sur por delante del frío. Un refugiado sin tierras, sí. Pero vivo para luchar por el Amanecer otro día."
+ flee_south_decision_confirm:0 "Abandonarlo todo y huir al sur"
+ flee_south_decision_tooltip:0 "Entrega tus tierras a los Otros y huye al sur como refugiado sin tierras del Amanecer"
+
+ # The Long Night+: Reform the Night's Watch decision
+ reform_nights_watch_decision_title:0 "Restaurar la Guardia de la Noche"
+ reform_nights_watch_decision_desc:0 "La Larga Noche está quebrada y los muertos yacen quietos, pero el Muro está casi sin hombres: sus castillos fríos, sus guarniciones dispersas o muertas. Como es derecho de la corona, refundaré la Hermandad Juramentada: nombraré un nuevo Lord Comandante, devolveré a la Guardia sus sedes antiguas y pondré de nuevo centinelas de capa negra sobre el Muro, para que los reinos de los hombres nunca vuelvan a ser tomados desprevenidos."
+ reform_nights_watch_decision_confirm:0 "Restaurar la Guardia"
+ reform_nights_watch_decision_tooltip:0 "Refunda la Guardia de la Noche bajo un nuevo Lord Comandante y concédele los castillos del Muro"

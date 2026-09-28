@@ -168,6 +168,43 @@ ln_red.3 = {
 				court_position:camp_priest_camp_officer = { save_scope_as = ln_red_priest }
 			}
 		}
+		# 1.1.3 review: the same hall search ln_pledge.1 makes (events/zz_ln_pledge_events.txt), so a red priest
+		# serving in another seat or visiting as a guest is found here too. For a ruler not yet of the red god the
+		# chaplain seat above almost never holds one (AGOT's seat wants the ruler's own faith), so without this
+		# the faith fix below never applied to samurai's case (Stannis, Melisandre as Spymaster).
+		else_if = {
+			limit = { ln_red_priest_in_hall_trigger = yes }
+			if = {
+				limit = {
+					exists = character:Melisandre_1
+					character:Melisandre_1 = {
+						OR = { employer ?= root  host ?= root }
+						is_imprisoned = no
+					}
+				}
+				character:Melisandre_1 = { save_scope_as = ln_red_priest }
+			}
+			else_if = {
+				limit = {
+					exists = character:Brotherhood_8
+					character:Brotherhood_8 = {
+						OR = { employer ?= root  host ?= root }
+						is_imprisoned = no
+					}
+				}
+				character:Brotherhood_8 = { save_scope_as = ln_red_priest }
+			}
+			else = {
+				random_courtier_or_guest = {
+					limit = {
+						is_adult = yes
+						is_imprisoned = no
+						has_trait = red_priest
+					}
+					save_scope_as = ln_red_priest
+				}
+			}
+		}
 	}
 
 	title = ln_red.3.t
@@ -196,7 +233,18 @@ ln_red.3 = {
 		}
 		remove_character_flag = ln_red_doubt
 		remove_character_flag = ln_red_doubt_deepened
-		set_character_faith = faith:rhllor_fc
+		# 1.1.3: the priest's own faith when he is of the red god, so he can hold the chaplain seat
+		# afterwards (AGOT's seat wants the ruler's exact faith). Same treatment as ln_pledge.1.a.
+		if = {
+			limit = {
+				exists = scope:ln_red_priest
+				scope:ln_red_priest = { faith = { religion = religion:the_rhllor_religion } }
+			}
+			set_character_faith = scope:ln_red_priest.faith
+		}
+		else = {
+			set_character_faith = faith:rhllor_fc
+		}
 		add_character_flag = ln_took_the_red
 		add_character_modifier = {
 			modifier = ln_took_the_red_modifier

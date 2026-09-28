@@ -1,0 +1,98 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- lore concepts and struggle phase parameters.
+ # Concept loc keys are game_concept_<key> and game_concept_<key>_desc. Aliases do NOT need their own keys.
+
+ # ── LORE CONCEPTS ───────────────────────────────────────────────────────────────────────────────────────────
+ game_concept_wall:0 "el Muro"
+ game_concept_wall_desc:0 "Setecientos pies de hielo que corren cien leguas desde el Bay of Seals hasta el Gorge, levantados hace ocho mil años contra algo sobre lo que las historias han dejado de ser concretas.\n\nLo defiende [nights_watch|E], y cada siglo son menos los que lo defienden. Se construyeron diecinueve castillos a lo largo de él. La mayoría llevan vacíos desde antes de que naciera nadie que hoy viva."
+
+ game_concept_the_others:0 "los Otros"
+ game_concept_the_others_desc:0 "Cosas pálidas que salen caminando del frío, matan con hojas que hacen añicos el hierro y alzan lo que matan.\n\nLos maestres de la Ciudadela han dedicado siglos a dejar establecido que son un cuento para asustar a los niños. Por lo visto, nadie ha consultado a quienes viven donde ellos viven: [free_folk|E]."
+
+ game_concept_wight:0 "espectro"
+ game_concept_wight_desc:0 "Un cadáver alzado por [the_others|E] y puesto a caminar.\n\nUn $game_concept_wight$ no siente nada, no se cansa nunca y pelea mal: todo su peligro está en la aritmética. Cada hombre que cae frente a ellos se levanta en el otro bando, así que una batalla perdida te cuesta dos veces y una batalla ganada te cuesta una.\n\nEl fuego los detiene. Poca cosa más lo hace."
+
+ game_concept_nights_watch:0 "la Guardia de la Noche"
+ game_concept_nights_watch_desc:0 "La orden juramentada para defender [wall|E]. Sus hermanos no toman esposa, no poseen tierras, no engendran hijos y no llevan corona, y sirven hasta morir.\n\nFue veinte mil hombres una vez. Ya no. El reino le manda ladrones, violadores e hijos menores, y luego deja de pensar en ella, que es el arreglo desde hace muchísimo tiempo y nunca se ha puesto a prueba."
+
+ game_concept_free_folk:0 "el pueblo libre"
+ game_concept_free_folk_desc:0 "Los pueblos que viven pasado [wall|E]: thenns y hombres de los clanes, moradores de cuevas, gente de los ríos, los cien nombres que los mapas no se molestan en recoger. Al sur del Muro los llaman salvajes, que no es como se llaman ellos.\n\nNo se arrodillan ante nadie, cosa que los Siete Reinos encuentran ofensiva, y llevan tiempo huyendo al sur en número creciente, cosa que los Siete Reinos encuentran inconveniente. Nadie en el sur ha preguntado todavía de qué huyen."
+
+ game_concept_dragonglass:0 "vidriagón"
+ game_concept_dragonglass_desc:0 "Cristal volcánico. Obsidiana, para un maestre. Los niños del bosque lo llamaban fuego helado.\n\nEs quebradizo, es poco práctico, no aguanta el filo contra el acero, y mata a [the_others|E], que es algo que no hace ninguna otra cosa corriente. Hay gran cantidad bajo Dragonstone, y casi nadie ha tenido nunca un motivo para sacarlo."
+
+ game_concept_valyrian_steel:0 "acero valyrio"
+ game_concept_valyrian_steel_desc:0 "Hojas forjadas con hechizos, venidas de un feudo franco muerto hace cuatrocientos años. Más ligeras que el acero, más afiladas que el acero e imposibles de hacer ahora que los hombres que sabían cómo son ceniza.\n\nQuedan acaso doscientas en el mundo, casi todas reliquias de grandes [houses|E] que las usan para ceremonias. Y además, según resulta, matan a [the_others|E]."
+
+ # ── STRUGGLE PHASE PARAMETERS ───────────────────────────────────────────────────────────────────────────────
+ # These are the bullet lines in each phase's effects tooltip. Struggle parameters are script-read only -- they
+ # have no engine behaviour of their own -- so these describe what the phase's MODIFIERS do, plus the few that
+ # our own code branches on. Nothing here promises an effect that is not actually applied somewhere.
+
+ # The Long Summer
+ ln_the_dark_is_distant:0 "La oscuridad está muy lejos, y se va acercando"
+ ln_the_dark_is_a_story:0 "Más allá del Narrow Sea es un cuento que se cuenta a los niños, y no muy bueno"
+ ln_summer_peace:0 "Largos años de calma: el Norte busca menos peleas y los saqueadores se mueven despacio"
+ ln_insular_in_good_times:0 "La gente cómoda cierra filas: calor para los tuyos, frialdad para todos los demás"
+ ln_the_gods_are_quiet:0 "Nadie reza con fuerza cuando la cosecha es buena"
+
+ # The Cold Winds Rise
+ ln_the_dark_is_coming:0 "La oscuridad se acerca, y todos al norte del Neck lo saben"
+ ln_the_muster_begins:0 "Se está contando a todo hombre capaz de sostener una lanza, y se están guarneciendo las murallas"
+ ln_southern_disbelief:0 "Los reinos del sur siguen peleándose, y tendrán motivos para lamentarlo"
+ ln_old_enemies_talk:0 "Los arrodillados y el [free_folk|E] han empezado a hablarse"
+ ln_prayers_multiply:0 "Cada septo, bosquecillo y templo está lleno, y los fieles acuden armados"
+
+ # The Long Night
+ ln_the_dark_is_here:0 "La oscuridad está aquí"
+ ln_wars_of_the_living:0 "Toda guerra que se libra ahora se libra en el frío, y los muertos se quedan con las sobras"
+ ln_every_spear_counts:0 "Quienes viven con el frío se han vuelto muy buenos en una cosa y peores en todo lo demás"
+ ln_the_living_stand_together:0 "Los viejos agravios dejan de importar cuando al enemigo no le importa quién eras"
+ ln_the_red_god_rises:0 "La noche es oscura y alberga horrores, y ya nadie se ríe del hombre que lo dice"
+ ln_essos_profits:0 "En algún lugar al otro lado del agua, alguien vende grano y acero a los desesperados"
+
+ # The Dawn
+ ln_the_dark_has_passed:0 "La oscuridad ha pasado"
+ ln_no_stomach_for_war:0 "Nadie que estuviera allí quiere otra guerra"
+ ln_bled_together:0 "Sangraron el uno al lado del otro, y por un tiempo eso vale más que cualquier tratado"
+ ln_reckoning_of_faiths:0 "Todas las fes discuten sobre cuál de ellas tenía razón, y todas están reclutando"
+
+# Alias loc keys. In CK3 every alias on a game concept needs its OWN game_concept_<alias>
+# name key - the parent concept's key does not cover them, and a bare [alias|E] renders the
+# raw key instead. Descriptions point back at the parent so there is one source of truth.
+ game_concept_the_wall:0 "el Muro"
+ game_concept_the_wall_desc:0 "$game_concept_wall_desc$"
+ game_concept_walls:0 "Muros"
+ game_concept_walls_desc:0 "$game_concept_wall_desc$"
+ game_concept_others:0 "Otros"
+ game_concept_others_desc:0 "$game_concept_the_others_desc$"
+ game_concept_white_walker:0 "Caminante Blanco"
+ game_concept_white_walker_desc:0 "$game_concept_the_others_desc$"
+ game_concept_white_walkers:0 "Caminantes Blancos"
+ game_concept_white_walkers_desc:0 "$game_concept_the_others_desc$"
+ game_concept_wights:0 "espectros"
+ game_concept_wights_desc:0 "$game_concept_wight_desc$"
+ game_concept_the_nights_watch:0 "la Guardia de la Noche"
+ game_concept_the_nights_watch_desc:0 "$game_concept_nights_watch_desc$"
+ game_concept_black_brothers:0 "hermanos negros"
+ game_concept_black_brothers_desc:0 "$game_concept_nights_watch_desc$"
+ game_concept_wildlings:0 "salvajes"
+ game_concept_wildlings_desc:0 "$game_concept_free_folk_desc$"
+ game_concept_beyond_the_wall:0 "más allá del Muro"
+ game_concept_beyond_the_wall_desc:0 "$game_concept_free_folk_desc$"
+ game_concept_obsidian:0 "obsidiana"
+ game_concept_obsidian_desc:0 "$game_concept_dragonglass_desc$"
+ game_concept_the_dead:0 "los muertos"
+ game_concept_the_dead_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_risen_dead:0 "muertos alzados"
+ game_concept_risen_dead_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_undead_infantry:0 "infantería no muerta"
+ game_concept_undead_infantry_desc:0 "$game_concept_ln_others_infantry_desc$"
+ game_concept_long_night:0 "Larga Noche"
+ game_concept_long_night_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$"
+ game_concept_the_long_night:0 "la Larga Noche"
+ game_concept_the_long_night_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$"
+
+# Trait GROUP name, asked for whenever anything references the group rather than a rung.
+ trait_rhllor_champion:0 "Campeón de R'hllor"

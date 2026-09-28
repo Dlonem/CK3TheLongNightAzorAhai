@@ -30,28 +30,77 @@ others_heartbeat.1 = {
 		# conversion re-ran on EVERY wight in the realm EVERY 15 days for the rest of the campaign.
 		# Thousands of characters, forever -- the hottest loop in the mod and the error-log firehose.
 		# Same behavior, one pass per character: done means other_trait OR wight_trait.
+		#
+		# ── 1.1.3 (W15.5): ONE WALK, NOT THREE. The 1.0.16 note at the bottom of this file said the two
+		# realm walks (conversion here, dual-trait cleanup below) iterate the same list and could be merged.
+		# They are. Each courtier and each vassal is visited once and asked three things in order: does he
+		# need converting (the v0.2.1 limit, unchanged); is he wearing both traits (the LN+ cleanup, now
+		# ln_strip_the_stray_wight_trait_effect in zz_ln_raising_effects.txt); and -- new in 1.1.3 -- is he
+		# a dead non-ruler still wearing the black or the silent sisterhood, which is the freeze-loop trait
+		# (ln_the_dead_keep_no_vows_effect, zz_ln_service_effects.txt). That third question is the mid-save
+		# repair for the thousands of wighted brothers already standing in the dead's own halls on a running
+		# save: the conversion body only strips at the raise, and this beat does NOT re-run it on existing
+		# wights (the limit above is exactly what stops that), so this is where they get stripped, within
+		# 30 days of updating. Cost: two trait tests per already-converted character, on a walk that was
+		# already visiting him.
 		every_courtier_or_guest = {
-			limit = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
-			mutate_into_other_effect = yes
+			if = {
+				limit = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
+				mutate_into_other_effect = yes
+			}
+			else_if = {
+				limit = { has_trait = other_trait  has_trait = wight_trait }
+				ln_strip_the_stray_wight_trait_effect = yes
+			}
+			if = {
+				limit = {
+					is_ruler = no
+					# 1.1.3 review: only the dead. The mutate just above leaves some living men standing (a
+					# dawn_refugee courtier, a noble escape_noble_effect has just moved), and they keep their vows.
+					ln_is_one_of_them_trigger = yes
+					OR = {
+						agot_is_member_of_nights_watch = yes
+						has_trait = silent_sister
+					}
+				}
+				ln_the_dead_keep_no_vows_effect = yes
+			}
 		}
 
 		# Mutate vassals and their courtiers only if they are not already mutated. Restructured with
 		# the same fix, plus one more: the old shape ran mutate on an ALREADY-CONVERTED vassal whenever
 		# any of his courtiers still needed doing. Now the vassal only mutates if he himself needs it.
+		# (1.1.3: the walk is unfiltered and asks per vassal instead -- the old limit visited every vassal
+		# to evaluate itself anyway, and the merged questions need to reach the converted ones too.)
 		every_vassal_or_below = {
-			limit = {
-				OR = {
-					NOR = { has_trait = other_trait  has_trait = wight_trait }
-					any_courtier_or_guest = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
-				}
-			}
 			if = {
 				limit = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
 				mutate_into_other_effect = yes
 			}
+			else_if = {
+				limit = { has_trait = other_trait  has_trait = wight_trait }
+				ln_strip_the_stray_wight_trait_effect = yes
+			}
 			every_courtier_or_guest = {
-				limit = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
-				mutate_into_other_effect = yes
+				if = {
+					limit = { NOR = { has_trait = other_trait  has_trait = wight_trait } }
+					mutate_into_other_effect = yes
+				}
+				else_if = {
+					limit = { has_trait = other_trait  has_trait = wight_trait }
+					ln_strip_the_stray_wight_trait_effect = yes
+				}
+				if = {
+					limit = {
+						is_ruler = no
+						ln_is_one_of_them_trigger = yes
+						OR = {
+							agot_is_member_of_nights_watch = yes
+							has_trait = silent_sister
+						}
+					}
+					ln_the_dead_keep_no_vows_effect = yes
+				}
 			}
 		}
 
@@ -86,38 +135,13 @@ others_heartbeat.1 = {
 			}
 		}
 		
-		# LN+ cleanup: a handful of characters end up with BOTH other_trait and wight_trait — the Other-promotion
-		# (story cycle) and the wight-conversion both touched them across ticks despite their gates. The Others are
-		# the elite, so they win: strip the stray wight_trait (and stale wight flags) from any dual-trait character.
-		every_vassal_or_below = {
-			limit = { has_trait = other_trait  has_trait = wight_trait }
-			remove_trait = wight_trait
-			remove_character_flag = wight_v1
-			remove_character_flag = wight_v2
-			remove_character_flag = wight_v3
-			remove_character_flag = wight_pose_wounded
-			remove_character_flag = wight_pose_loss
-			remove_character_flag = wight_pose_aggressive
-			remove_character_flag = wight_pose_yield
-			remove_character_flag = wight_pose_stayback
-		}
-		every_courtier_or_guest = {
-			limit = { has_trait = other_trait  has_trait = wight_trait }
-			remove_trait = wight_trait
-			remove_character_flag = wight_v1
-			remove_character_flag = wight_v2
-			remove_character_flag = wight_v3
-			remove_character_flag = wight_pose_wounded
-			remove_character_flag = wight_pose_loss
-			remove_character_flag = wight_pose_aggressive
-			remove_character_flag = wight_pose_yield
-			remove_character_flag = wight_pose_stayback
-		}
+		# LN+ cleanup (dual other_trait + wight_trait): merged into the walks above in 1.1.3 -- see the
+		# W15.5 note there. The body is ln_strip_the_stray_wight_trait_effect.
 
 		# LN+ — keep the Night King leading his largest host from the FRONT. As a `commanding_army` holder he is
 		# shielded from siege capture/death by vanilla's siege_0001_can_be_captured (which excludes any commander /
 		# knight from the capture-or-kill pool), so he no longer dies anticlimactically to a siege — yet he can still
-		# fall gloriously in open battle. Re-asserted on this ~15-day pulse if the AI ever leaves him without a command.
+		# fall gloriously in open battle. Re-asserted on this 30-day pulse (15 before 1.0.16) if the AI ever leaves him without a command.
 		if = {
 			limit = {
 				has_trait = nightking
@@ -190,7 +214,7 @@ others_heartbeat.1 = {
 		# NEVER IF: they are not -- siege_morale_loss is a COMMAND modifier and is worth nothing off the
 		# front. AGOT's dragon code says it outright ("If I am not a commander, I get no buffs") and strips
 		# it the moment the rider stops commanding. The 30-day duration is our removal mechanism: against a
-		# ~15-day pulse it gives one full pulse of slack and then lapses on its own. Remove-then-add cannot
+		# 30-day pulse (since 1.0.16) it lapses on its own if the beat ever stops. Remove-then-add cannot
 		# stack, and removing an absent modifier is a silent no-op.
 		every_army = {
 			limit = { army_owner = root }
@@ -224,9 +248,10 @@ others_heartbeat.1 = {
 		# Corvo reported his machine burning past 300k men; this is the CPU-side half of that answer, and
 		# unlike the headcount retune it costs nothing at all.
 		#
-		# STILL ON THE TABLE, NOT DONE HERE: the two walks iterate the SAME list and could be merged into
-		# one, halving it again. That means restructuring the conversion engine's limit, which is not a
-		# thing to do in the same release as a balance pass. Flagged in the work order instead.
+		# 1.1.3: the two walks ARE merged now (W15.5, see the conversion block above); this beat is one
+		# realm walk and one court walk, not two of each. And for the record: this event fires every 30
+		# days, not 15 -- the "~15-day" wording elsewhere in this file and in the session notes is from
+		# before the 1.0.16 change three lines up.
 		if = {
 			limit = { NOT = { has_character_flag = others_heartbeat_active } }
 			add_character_flag = { flag = others_heartbeat_active days = 29 }

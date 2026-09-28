@@ -330,12 +330,17 @@ ln_commander_fell_for_the_dawn = {
 #
 # ── THE ARITHMETIC, because the numbers are not intuitive ────────────────────────────────────────────────
 #   knight_none      base 2000   (game/common/combat_phase_events/00_knight_phase_events.txt:5)
-#   knight_killed    base 30, then scaled by factor = (30 - prowess) / 30, floored at 0.1
+#   knight_killed    base 30, then scaled by factor = (40 - prowess) / 40, floored at 0.1
 #
-# The Night King is created at prowess 30 (agot_long_night_scripted_effects.txt:233), so his factor is
-# (30-30)/30 = 0, floored to 0.1 -- knight_killed enters the pool at an effective 3 against roughly 2000.
-# That is ~0.15% per pulse, which sounds safe and is not: COMBAT_EVENT_DAYS = 5, so a long war rolls it
-# hundreds of times, and RedSaintNino's 2,000 men found it. Compounding is the whole problem.
+# 1.1.3 CORRECTION (1.1.2 open item 20): the numbers above are AGOT's, because AGOT's copy of this file is
+# what loads (same path, "#AGOT Modified": value = 40 / divide = 40 where vanilla has 30 / 30). This header
+# used to compute against vanilla's 30/30. The result is the same either way, and the 1.1.3 review corrected
+# this note's first correction: he is created at prowess 30 (agot_long_night_scripted_effects.txt:233), but
+# `prowess` here is his total, and his own traits add far more (other_trait and nightking in
+# common/traits/invasions_traits.txt, giant +6, sadistic +2), so he is well past 40 and the factor sits on
+# the 0.1 floor -- knight_killed enters the pool at an effective 3 against roughly 2000, ~0.15% per pulse.
+# COMBAT_EVENT_DAYS = 5, so a long war rolls it hundreds of times, and RedSaintNino's 2,000 men found it.
+# Compounding is the whole problem.
 #
 # At base 50000 the pool becomes ~52000 and his death roll is ~0.006% a pulse -- about twenty-five times
 # safer, which is the order of magnitude Thomas asked for. He is still not immortal, and that is deliberate:
@@ -415,5 +420,127 @@ ln_knight_the_walkers_hold = {
 		# Nothing happens, and nothing happening is the point -- the pulse is spent, and knight_killed did
 		# not get it. Same shape as vanilla's knight_none.
 		debug_log = "LN_TRACE WALKER: a battle pulse spent on one of them and it is still standing"
+	}
+}
+
+
+# ═════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# 1.1.2 -- THE COMMANDER POOL, WHICH WAS NEVER SHIELDED AT ALL
+# ═════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# THE BUG THIS FIXES, in players' own words. mikekcallaghan1124, 9 Sep: "I have now killed the night king on
+# two play throughs marked and one was with lightbringer but the war just kept going on both times."
+# Skyblaze137, 11 Sep: "i play Night kings kill and Ather stell life just." Both are describing a cast-down --
+# he died to something that was not one of the four scenes, another of them was crowned, and the Long Night
+# carried on. Thomas's ruling, 12 Sep: "it's pretty lore-breaking for people when it's like, oh I killed the
+# Night King and then his cronies became the new Night King... I want the fix that we have that does that to
+# be incredibly rare. That might mean fixing the root cause."
+#
+# ── THE ROOT CAUSE, AND WHY THE 1.1.0 SHIELD DID NOT CATCH IT ────────────────────────────────────────────
+# ln_knight_the_dead_do_not_fall above shields the KNIGHT pool. The Night King is assign_commander'd to his
+# largest army every ~15 days (00_others_heartbeat_events.txt), and a man cannot be commander and knight in
+# the same combat -- so in his own battles he has spent two versions sitting in a pool nothing was crowding.
+#
+# THE COMMANDER POOL AS IT ACTUALLY LOADS (AGOT's copy wins -- it ships 00_commander_phase_events.txt at
+# vanilla's own path, 977 lines against vanilla's 417, so AGOT's numbers are the live ones):
+#   commander_none                  base 1000   (+2000 for extreme-conqueror AI)
+#   commander_wounded               base 25, factor (50 - prowess)/50  -> 10 at prowess 30
+#   commander_maimed                base 10, factor (40 - prowess)/40  -> 2.5
+#   commander_killed                base 5,  factor -- SEE BELOW       -> 200
+#   commander_dragon_sum            base 1
+#   commander_dragon_joined_battle  base 100000
+#
+# ── THE TWO-STEP THAT WAS KILLING HIM ────────────────────────────────────────────────────────────────────
+# commander_killed's own is_valid will not touch a hale commander: it needs `wounded rank >= 1` OR both
+# martial and prowess at or below low_skill_rating. He is martial 25 / prowess 30, so only the wound opens
+# the door. commander_wounded calls increase_wounds_effect, whose rank-3 branch is an outright
+# `death = { death_reason = death_fight }`. So: wound him once, and every later pulse is a 200-weight roll
+# at killing him outright in a pool of ~1,200. That is ~16% per pulse, every five days, for the rest of the
+# battle.
+#
+# ⚠ AND 200 IS AN UPSTREAM TYPO, NOT A DESIGN. AGOT's commander_killed rescales vanilla's factor and the
+# edit lost a word:
+#       value = 40          # correct -- "value at which immortality happens"
+#       subtract = prowess
+#       value = 40          # <- this was meant to be `divide = 40`
+# Script values execute in order (game/common/script_values/_script_values.info), so the second `value`
+# discards the subtraction and the factor is a flat 40 for EVERY commander in an AGOT game, prowess
+# irrelevant. Their two neighbouring entries made the same rescale correctly (`divide = 50`, `divide = 40`),
+# which is what makes it a typo rather than intent. Registered in UPSTREAM-WATCH; it is theirs to fix and we
+# are not shipping a copy of their file over it.
+#
+# ── SO THIS IS THE SAME TRICK, POINTED AT THE OTHER POOL, PLUS ONE THING MORE ────────────────────────────
+# The entry spends the pulse the way its knight-side siblings do. It also CLOSES THE DOOR BEHIND IT: the
+# effect strips any wound he has picked up, because a wound is the single precondition commander_killed
+# needs. The trait's `opposites` list already names wounded_1/2/3, and opposites are known in this project
+# to block `add_trait` -- but `change_trait_rank`, which is what increase_wounds_no_death_effect actually
+# calls, addresses the trait GROUP and has never been tested against opposites here. Rather than bet a
+# player's campaign on the answer, the entry removes the wound whether or not it should have been possible
+# to apply. If opposites already hold, these three lines are no-ops that cost nothing.
+#
+# ── THE ARITHMETIC ───────────────────────────────────────────────────────────────────────────────────────
+# At base 50000 the commander pool becomes ~51,000 and his chance of being wounded at all falls to ~0.02%
+# a pulse. Conditional on a wound landing, he then has to draw commander_killed (200) before he draws this
+# entry (50000) -- about 0.4%. The two together are ~0.00008% per pulse. He is still not immortal, which is
+# deliberate and matches the knight-side entry: the songs are allowed the one impossible spear.
+#
+# 50000 is also the number chosen for a reason the file states above and is worth repeating: AGOT's
+# commander_dragon_joined_battle sits at 100000 and MUST keep winning its own slot. Nothing in this file may
+# go near that number.
+#
+# ── WHAT THIS DOES NOT TOUCH ─────────────────────────────────────────────────────────────────────────────
+# Every sanctioned kill. ln_dawn.2's duel, ln_dawn.11, ln_dawn.12 and the Last Hour melee all kill him with
+# an explicit `death` effect and never enter either pool. The field battle gets worse as a road to his death;
+# the scenes do not get one jot harder.
+ln_commander_the_dead_do_not_fall = {
+	type = commander
+
+	is_valid = {
+		# Same AGOT exclusion every other entry in this file respects: a rider in the air is not in this
+		# lottery, and with commander_dragon_joined_battle at 100000 a dragon-joined battle is not our
+		# business either.
+		is_current_dragonrider_warfare = no
+
+		is_alive = yes
+		has_trait = nightking
+	}
+
+	chance = {
+		base = 50000
+	}
+
+	effect = {
+		debug_log = "LN_TRACE NIGHT KING: a commander pulse spent on him and he is still standing"
+		# THE DOOR COMMANDER_KILLED COMES THROUGH. Explicitly, one rank at a time, because the three concrete
+		# traits are what the nightking trait's own `opposites` block names.
+		if = { limit = { has_trait = wounded_3 } remove_trait = wounded_3 }
+		if = { limit = { has_trait = wounded_2 } remove_trait = wounded_2 }
+		if = { limit = { has_trait = wounded_1 } remove_trait = wounded_1 }
+	}
+}
+
+
+# ── AND THE REST OF THEM HOLD IN COMMAND TOO ─────────────────────────────────────────────────────────────
+# The commander-side twin of ln_knight_the_walkers_hold, at the same one-order-of-magnitude gap and for the
+# same reason. Walkers lead the dead's smaller hosts constantly; before this they carried the full commander
+# risk while their knight-side selves were shielded. Their wounds are NOT stripped -- that mercy is the
+# Night King's alone, and a Walker who has been hurt in the field is a Walker the living can finish.
+ln_commander_the_walkers_hold = {
+	type = commander
+
+	is_valid = {
+		is_current_dragonrider_warfare = no
+		is_alive = yes
+		has_trait = other_trait
+		# His own entry already spends the pulse for him; two must-win entries in one pool is the mistake
+		# this file warns about above.
+		NOT = { has_trait = nightking }
+	}
+
+	chance = {
+		base = 15000
+	}
+
+	effect = {
+		debug_log = "LN_TRACE WALKER: a commander pulse spent on one of them and it is still standing"
 	}
 }

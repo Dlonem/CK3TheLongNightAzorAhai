@@ -29,6 +29,6 @@
  ln_omen.11.b:0 "У дракона старой женщины выдался неудачный день. И только."
 
 # 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
- ln_omen.10.b_tt:0 "[ln_dragon.GetSheHe|U] is left out of your wars from now on, as if you had taken #bold Don't Use Dragon#! yourself. Take #bold Use Dragon#! to change your mind."
- ln_omen.10.d:0 "Ask it of [ln_dragon.GetTitledFirstName] anyway."
- ln_omen.10.d_tt:0 "[ln_dragon.GetTitledFirstName] has never refused you anything else. [ln_dragon.GetSheHe|U] crosses, and keeps crossing.\n\n#N While the Wall stands, what waits in that sky will most likely bring [ln_dragon.GetHerHim] down — and what he takes does not stay dead.#!"
+ ln_omen.10.b_tt:0 "[ln_dragon.GetSheHe|U] с этих пор остаётся вне ваших войн, как будто вы сами взяли #bold Не использовать дракона#!. Возьмите #bold Использовать дракона#!, чтобы передумать."
+ ln_omen.10.d:0 "Всё равно попросить об этом [ln_dragon.GetTitledFirstName]."
+ ln_omen.10.d_tt:0 "[ln_dragon.GetTitledFirstName] никогда ни в чём другом вам не отказывал. [ln_dragon.GetSheHe|U] перелетает — и перелетает снова.\n\n#N Пока Стена стоит, то, что ждёт в этом небе, скорее всего сведёт [ln_dragon.GetHerHim] вниз, — а то, что он забирает, мёртвым не остаётся.#!"

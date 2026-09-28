@@ -78,6 +78,48 @@ other_empire_female = {
 	name_lists = { name_list_others }
 	tier = empire
 }
+# ── 1.1.2: THE TIER NOBODY WROTE AN ENTRY FOR ────────────────────────────────────────────────────────────
+# h_the_others is a HEGEMONY title (agot_long_night_scripted_effects.txt grants it first of the sixteen), and
+# this file stopped at empire. With no hegemony entry the Night King fell through to AGOT's own
+# hegemony_override_male (common/flavorization/00_agot_title_holders.txt, priority 998) and every card,
+# tooltip and title bar in the game called him "Hegemon Other" -- which is what the player screenshot Thomas
+# brought in on 12 Sep actually shows. other_empire_male:0 "The Great Other" has been written and unreachable
+# since the fork.
+#
+# tier = hegemony IS valid despite vanilla's _flavourization.info listing only barony/county/douchy/kingdom/
+# empire/none -- that file predates hegemonies. AGOT uses tier = hegemony in production in the file named
+# above, which is the proof.
+#
+# Priority 2000 matches every other entry in this file and beats AGOT's 998, the same way the county and
+# kingdom entries already beat theirs.
+#
+# ⚠ 26 Sep 2026 (1.1.3 boot): THIS ENTRY DOES NOT NAME THE NIGHT KING, AND NEVER DID -- and neither do the
+# other `type = character` entries in this file name any ruler. AGOT does not render ruler titles through the
+# engine's flavorization: its GUI reads the customizable localization AGOTGetTitle, which runs
+# apply_character_title_data -> set_title_localization_effect -- the effect the mod already overrides in
+# common/scripted_effects/zz_ln_set_title_loc_override.txt. The Night King, on feudal_government, fell into
+# AGOT's own chain there and rendered "Hegemon"; the fix is a frostborn-culture branch in that file that
+# stamps these same loc keys (other_hegemony_male, other_kingdom_male, ...). The `type = title` entries below
+# DO work ("the Army of the Dead of Oldweir" on the 290 AC map is other_county_title), because AGOT leaves
+# title naming to the engine. The character entries are kept for the vanilla-side loc calls that still read
+# engine flavorization (event text using GetTitledFirstName); they cost nothing.
+other_hegemony_male = {
+	type = character
+	gender = male
+	special = holder
+	priority = 2000
+	name_lists = { name_list_others }
+	tier = hegemony
+}
+other_hegemony_female = {
+	type = character
+	gender = female
+	special = holder
+	priority = 2000
+	name_lists = { name_list_others }
+	tier = hegemony
+}
+
 other_barony_title = {
 	type = title
 	priority = 2000
@@ -107,4 +149,10 @@ other_empire_title = {
 	priority = 2000
 	name_lists = { name_list_others }
 	tier = empire
+}
+other_hegemony_title = {
+	type = title
+	priority = 2000
+	name_lists = { name_list_others }
+	tier = hegemony
 }

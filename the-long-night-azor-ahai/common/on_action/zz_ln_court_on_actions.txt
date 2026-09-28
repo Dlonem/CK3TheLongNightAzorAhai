@@ -30,6 +30,87 @@ ln_dead_join_court = {
 		is_ruler = no
 		exists = scope:new_employer
 		scope:new_employer = { ln_is_one_of_them_trigger = no }
+		# 1.1.3 -- RE-ENTRY GUARD. Set below for one or two days on every man this sends anywhere, so a
+		# second join in that window (whatever moved him) does not start the road again. AGOT's own
+		# being_redirected idiom (00_agot_effects.txt:1026-1029).
+		NOT = { has_character_flag = ln_sent_home_to_the_dead }
+	}
+	effect = {
+		# ── 1.1.3: THE VOWS FIRST, THE MOVE LAST. ─────────────────────────────────────────────────────
+		# The freeze at the Wall was this hook and AGOT's on_join_court_nights_watch bouncing one raised
+		# sworn brother between the Night King's hall and Castle Black until the recursion cap. Full account
+		# above ln_the_dead_keep_no_vows_effect (zz_ln_service_effects.txt). The dead keep no vows: the
+		# black comes off before he is moved, so AGOT's redirect has nothing to open on when he arrives.
+		ln_the_dead_keep_no_vows_effect = yes
+
+		if = {
+			# 1.1.3 review: and a silent sister's hall, for the same reason -- AGOT's twin event
+			# agot_silent_sisters.0001 on the same on_join_court gives a woman who joins a sister's court the
+			# trait and moves her to the Sisterhood after our hook has run (agot_silent_sisters_events.txt:4-58).
+			limit = {
+				scope:new_employer = {
+					OR = {
+						has_trait = nightswatch
+						has_trait = silent_sister
+					}
+				}
+			}
+			# ── THE ONE HALL WE LEAVE ON A DELAY: A LIVING BROTHER'S. ───────────────────────────────────
+			# AGOT's agot_nights_watch.0001 sits on this same on_join_court and gives the black to any
+			# unsworn man who joins a brother's court (agot_nights_watch_events.txt:17-104). It is an EVENT,
+			# so it fires after this effect chain has run -- after the strip above -- and would put the trait
+			# straight back on him. Moved now, he would then carry it into the king's hall, AGOT's day-late
+			# on_leave_court_nights_watch would fetch him back tomorrow, and the loop would run once a day
+			# instead of once a tick. So in a brother's hall the strip lands now and the MOVE waits two days,
+			# from ln_court.1: by then 0001 has had its say, the event strips again, and the join it makes is
+			# to the king, where no handler re-arms the trait. One move instead of three, and nothing tomorrow.
+			add_character_flag = { flag = ln_sent_home_to_the_dead  days = 2 }
+			debug_log = "LN_TRACE COURT: one of the dead joined a sworn brother's living hall - vows stripped, sent to the king in two days"
+			debug_log_scopes = yes
+			trigger_event = { id = ln_court.1  days = 2 }
+		}
+		else = {
+			# Any other living hall: home now. Same body as 1.1.0-1.1.2, lifted into
+			# ln_send_one_of_the_dead_home_effect so the delayed road above runs the same code.
+			add_character_flag = { flag = ln_sent_home_to_the_dead  days = 1 }
+			ln_send_one_of_the_dead_home_effect = yes
+		}
+	}
+}
+
+# ── 1.1.2: THE SAME RULE, THE DOOR NOBODY WAS WATCHING ─────────────────────────────────────────────────
+#
+# Root = the guest; scope:guest = the same character; scope:host = the owner of the court he has arrived at.
+# Registered as a sub-list on vanilla's on_guest_arrived_from_pool from zz_ln_00_hooks.txt.
+#
+# WHY THIS EXISTS SEPARATELY FROM ln_dead_join_court ABOVE. They are different on_actions with different
+# scopes, and the court guest pool is a door this mod never had a hand on:
+#
+#   on_join_court                 root = the character, scope:new_employer = whose court   <- covered since 1.1.0
+#   on_guest_arrived_from_pool    root = the guest,     scope:host         = whose court   <- this
+#
+# Thomas found a wight sitting in King's Landing as "Guest of King Jaehaelor" (13 Sep). Vanilla's
+# guest_allowed_to_arrive_trigger decides who may visit a court and it asks about rivalry, plague,
+# empire-tier claims and faith hostility -- nothing about being dead -- and AGOT's override adds only two
+# Night's Watch clauses. So any wight who drifted into the world pool could be picked up by a southern host
+# with a free guest slot, and ln_dead_join_court could not see him: it is registered on on_join_court alone
+# and its trigger requires `exists = scope:new_employer`, which a pool guest does not carry.
+#
+# SAFE TO DECLARE: AGOT registers six of its own sub-lists on this exact on_action
+# (agot_on_actions/agot_courtier_guest_management_on_actions.txt), which is the proof that sub-lists merge
+# here rather than compete. scope:host is live in this on_action in AGOT's own working handlers.
+#
+# The body is ln_dead_join_court's, with scope:new_employer swapped for scope:host and the same four
+# guards for the same four reasons -- see its header. The yearly sweep
+# (ln_the_dead_stand_in_no_living_hall_effect) is the backstop under this hook, for anyone already seated
+# and for anyone converted after he arrived.
+ln_dead_arrive_as_guest = {
+	trigger = {
+		ln_is_one_of_them_trigger = yes
+		is_imprisoned = no
+		is_ruler = no
+		exists = scope:host
+		scope:host = { ln_is_one_of_them_trigger = no }
 	}
 	effect = {
 		if = {
@@ -40,19 +121,18 @@ ln_dead_join_court = {
 					NOT = { this = root }
 				}
 			}
-			# Home. h_the_others is the Night King's own title -- the same handle the Long Night decisions
-			# read to find him (common/decisions/00_agot_long_night_decisions.txt:20).
-			# 1.1.0b -- and never into a court he is already standing in. The log carried a second,
-			# quieter version of the same error ("in the court they're already in") for characters whose
-			# employer changed inside the Others' own realm.
+			debug_log = "LN_TRACE COURT: one of the dead arrived in a living hall as a guest - sent back to the king"
+			# 1.1.3 -- the vows come off before the move (see ln_the_dead_keep_no_vows_effect). No delay
+			# needed on this road: a guest arrival does not fire on_join_court, so agot_nights_watch.0001
+			# cannot re-arm the trait behind the strip, and the join this makes is to the king.
+			ln_the_dead_keep_no_vows_effect = yes
 			if = {
 				limit = { NOT = { employer ?= title:h_the_others.holder } }
 				title:h_the_others.holder = { add_courtier ?= root }
 			}
 		}
-		else = {
-			# No king to go back to (he is dead, or this IS him). The pool, not a living hall.
-			move_to_pool = yes
-		}
+		# No living king to go back to. Deliberately nothing: the alternative is move_to_pool on a character
+		# who is already a pool character, which is a logged error class in this project, and after the Dawn
+		# the dark-spent sweep is taking these characters anyway. The yearly sweep makes the same call.
 	}
 }

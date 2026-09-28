@@ -22,9 +22,49 @@
 ln_send_for_a_red_priest_decision = {
 	picture = { reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds" }
 
-	desc = ln_send_for_a_red_priest_decision_desc
-	selection_tooltip = ln_send_for_a_red_priest_decision_tt
-	confirm_text = ln_send_for_a_red_priest_decision_confirm
+	# ── 1.1.3: TWO FACES ON ONE BUTTON (Thomas's call D-j). ──────────────────────────────────────────────
+	# samurai (Discord, 24 Sep) had Melisandre as Spymaster and was still told to send to Myr for a priest.
+	# When a red priest is already standing in the hall the decision does not hide -- it changes: "Hear the
+	# Red Priest", no gold, the card tomorrow, and the card shows HIM. Otherwise it is the letter to Myr it
+	# has always been. Dynamic title/desc/tooltip/confirm are vanilla's own decision shape
+	# (_decisions.info: "supports dynamic descriptions like in events (first_valid, ...)"; live use
+	# 00_unity_decisions.txt:1414). ln_red_priest_in_hall_trigger is the one question all four ask.
+	title = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { ln_red_priest_in_hall_trigger = yes }
+				desc = ln_send_for_a_red_priest_decision.hear
+			}
+			desc = ln_send_for_a_red_priest_decision
+		}
+	}
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { ln_red_priest_in_hall_trigger = yes }
+				desc = ln_send_for_a_red_priest_decision_desc.hear
+			}
+			desc = ln_send_for_a_red_priest_decision_desc
+		}
+	}
+	selection_tooltip = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { ln_red_priest_in_hall_trigger = yes }
+				desc = ln_send_for_a_red_priest_decision_tt.hear
+			}
+			desc = ln_send_for_a_red_priest_decision_tt
+		}
+	}
+	confirm_text = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { ln_red_priest_in_hall_trigger = yes }
+				desc = ln_send_for_a_red_priest_decision_confirm.hear
+			}
+			desc = ln_send_for_a_red_priest_decision_confirm
+		}
+	}
 
 	decision_group_type = major
 	ai_check_interval = 60
@@ -47,12 +87,29 @@ ln_send_for_a_red_priest_decision = {
 		#     R'hllor rulers, and which is the road to a Court Chaplain, and through him to a seer, and
 		#     through a seer to being named Favored or Chosen. That whole chain already existed. Nobody
 		#     could reach it.
+		# ── 1.1.3: AND THE INVOLVED, WHO COULD NEVER SEE IT (protag93, Discord, 26 Sep: "I can't send for a
+		# Red Priest", not a follower of R'hllor). A lord whose faith or culture already makes him INVOLVED
+		# -- most of the North -- was neither an interloper nor of the red god, so this OR failed him in
+		# every phase. He has as much reason to want a priest as anyone: the naming chain runs through the
+		# chaplain seat. Three arms now; the R'hllor arm keeps its own guard below, because a red-god lord
+		# who already has a priest has what this decision is for.
+		# 1.1.3 review: the involved arm is for PLAYERS. In 1.1.2 no involved lord could see this at all, and
+		# opened to the AI it would have turned a share of the North's lords R'hllor every wave (Old Gods faiths
+		# are pluralistic; option a is the AI's favourite) -- a world change nobody asked for. protag93's report
+		# was a player's. And never the dead: cold_gods is on the involved list, and a wight lord sending for a
+		# living priest is the court growth 1.1.3 closed elsewhere.
+		ln_is_one_of_them_trigger = no
 		OR = {
 			ln_is_interloper_trigger = yes
 			AND = {
-				faith = { religion = religion:the_rhllor_religion }
-				ln_has_red_priest_trigger = no
+				ln_is_involved_trigger = yes
+				is_ai = no
 			}
+			faith = { religion = religion:the_rhllor_religion }
+		}
+		trigger_if = {
+			limit = { faith = { religion = religion:the_rhllor_religion } }
+			ln_red_priest_in_hall_trigger = no
 		}
 		NOT = { has_character_flag = ln_sworn_to_the_dawn }
 		NOT = { has_character_flag = ln_sent_for_the_red_priest }
@@ -95,17 +152,35 @@ ln_send_for_a_red_priest_decision = {
 		}
 	}
 
-	is_valid = {
+	# 1.1.3 (W12): is_available belongs in is_valid_showing_failures_only. In is_valid it rendered AGOT's
+	# whole availability trigger line by line under Requirements, raw NOT_has_variable_trigger keys and all
+	# (samurai's screenshot). Vanilla puts it in the failures-only block 164 times and in is_valid 4.
+	is_valid_showing_failures_only = {
 		is_available = yes
-		gold >= 150
+	}
+
+	is_valid = {
+		# 1.1.3: no gold when the priest is already in the hall -- there is no crossing to pay for.
+		trigger_if = {
+			limit = { ln_red_priest_in_hall_trigger = no }
+			gold >= 150
+		}
 	}
 
 	effect = {
-		remove_short_term_gold = 150
 		add_character_flag = ln_sent_for_the_red_priest
-
-		# He is coming from Myr, or Volantis, or somewhere further east than that. It takes as long as it takes.
-		trigger_event = { id = ln_pledge.1  days = { 120 400 } }
+		if = {
+			limit = { ln_red_priest_in_hall_trigger = yes }
+			# 1.1.3: he is in the next room. Tomorrow, and it costs nothing. The short flag tells the card
+			# to read as a conversation under your own roof rather than a landing at the gate.
+			add_character_flag = { flag = ln_heard_the_priest_in_hall  days = 5 }
+			trigger_event = { id = ln_pledge.1  days = 1 }
+		}
+		else = {
+			remove_short_term_gold = 150
+			# He is coming from Myr, or Volantis, or somewhere further east than that. It takes as long as it takes.
+			trigger_event = { id = ln_pledge.1  days = { 120 400 } }
+		}
 	}
 
 	# The AI should do this rarely and for reasons. A pious Seven-worshipping Reach lord sending to Essos for a
@@ -168,6 +243,7 @@ ln_send_for_a_red_priest_decision = {
 		modifier = {
 			factor = 0
 			gold < 300
+			ln_red_priest_in_hall_trigger = no   # 1.1.3: the hearing is free
 		}
 	}
 }

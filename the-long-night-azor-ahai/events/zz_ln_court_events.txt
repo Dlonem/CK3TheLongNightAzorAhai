@@ -1,0 +1,38 @@
+﻿namespace = ln_court
+
+# AGOT: The Long Night & Azor Ahai -- 1.1.3, the delayed send-home.
+#
+# ln_court.1 -- one of the dead was found standing in a LIVING SWORN BROTHER'S hall two days ago.
+#
+# Root = the dead man. Queued by ln_dead_join_court (common/on_action/zz_ln_court_on_actions.txt) instead
+# of moving him on the spot, because AGOT's agot_nights_watch.0001 fires on the same join and gives the
+# black to any unsworn man who arrives in a brother's court -- AFTER our hook has stripped it. Moving him
+# at once would carry the re-armed trait into the Night King's hall, and AGOT's day-late
+# on_leave_court_nights_watch would fetch him back to the Wall tomorrow: the freeze loop, at one bounce a
+# day. Two days out, 0001 has had its say, this strips again and makes the one join that no handler
+# re-arms (the king's hall is not a brother's). The full account is above ln_the_dead_keep_no_vows_effect
+# in common/scripted_effects/zz_ln_service_effects.txt.
+#
+# Every guard the hook had is re-asked here, because two days is long enough for the world to have moved
+# him: still one of the dead, not a prisoner (zz_ln_imprison_on_actions.txt owns those), not a ruler
+# (add_courtier refuses one), still in somebody's court, and that somebody still living. If any of it
+# fails the event does nothing and logs nothing, which is right -- whatever moved him has its own hook.
+ln_court.1 = {
+	type = character_event
+	hidden = yes
+
+	trigger = {
+		ln_is_one_of_them_trigger = yes
+		is_alive = yes
+		is_imprisoned = no
+		is_ruler = no
+		exists = employer
+		employer = { ln_is_one_of_them_trigger = no }
+	}
+
+	immediate = {
+		debug_log = "LN_TRACE COURT: the two-day send-home fired - one of the dead leaves a sworn brother's hall"
+		ln_the_dead_keep_no_vows_effect = yes
+		ln_send_one_of_the_dead_home_effect = yes
+	}
+}

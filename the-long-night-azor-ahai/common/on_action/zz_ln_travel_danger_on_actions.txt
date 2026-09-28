@@ -18,11 +18,14 @@
 # because Thomas asked for this to bite.
 ln_travel_the_dead_roads = {
 	trigger = {
+		# 1.1.3 (W15.9): the two global reads first. This fires on every step of every travel plan in the
+		# world, all game; outside the invasion window the first clause refuses it before the vanilla
+		# availability ladder and the location test are ever asked. Same result, cheaper order.
+		has_global_variable = ln_invasion_opening
+		NOT = { has_global_variable = ln_aftermath_started }
 		exists = current_travel_plan
 		is_available_travelling_adult = yes
 		is_location_valid_for_travel_event_on_land = yes
-		has_global_variable = ln_invasion_opening
-		NOT = { has_global_variable = ln_aftermath_started }
 		# The dead do not ambush their own.
 		ln_is_one_of_them_trigger = no
 		ln_on_a_dead_road_trigger = yes

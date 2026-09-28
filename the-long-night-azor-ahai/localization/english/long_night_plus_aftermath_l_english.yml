@@ -55,5 +55,7 @@
 
  # ── 1.0.12a: THE WALL HELD ─────────────────────────────────────────────────────
  ln_aftermath.1.desc.watch_held:0 "The Long Night is over. The dead lie still at last — and the Wall is still there, and there are still black cloaks on it.\n\nThey are fewer than they were. Half the castles are ash and the Lord Commander's muster rolls read like a casualty list, but they held the breach and they are holding it now, which is more than any king in Westeros managed in the same years.\n\nBeyond them the survivors of the free folk are waiting, and they are not raiding. They are asking. The realm looks to [ROOT.Char.GetTitledFirstName] for an answer that cannot wait: reinforce the Watch and keep that gate shut — or open it, and settle the free folk in a North with nobody left to farm it.\n\nWhichever road is taken, there will be no walking back."
+ ln_aftermath.1.desc.not_the_crown:0 "\n\nThe Crown has left the North to you. Whatever you decide here, you decide for it."
+ ln_aftermath.1.desc.the_crown:0 ""
  ln_aftermath.1.a.held:0 "The Watch held. Reinforce it, and keep the gate shut."
 

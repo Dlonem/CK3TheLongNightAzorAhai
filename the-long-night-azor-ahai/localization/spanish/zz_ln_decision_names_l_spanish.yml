@@ -1,0 +1,22 @@
+﻿l_spanish:
+
+ # ── DECISION NAMES ──────────────────────────────────────────────────────────────────────────────────────────
+ # A decision's displayed name is its own key. Without these the decisions list shows the raw script key, which
+ # is what it has been doing -- for the inherited ones as well as ours.
+
+ ln_read_the_signs_decision:0 "Leer las señales"
+ ln_mine_dragonglass_decision:0 "[ROOT.Char.Custom('ln_MineDragonglassTitle')]"
+ ln_mine_dragonglass_plain:0 "Extraer el vidriagón"
+ ln_mine_dragonglass_raven:0 "Enviar un cuervo: abrir la mina"
+ ln_end_the_long_night_struggle_decision:0 "La Larga Noche termina"
+ ln_send_for_a_red_priest_decision:0 "Hacer venir a un sacerdote rojo"
+ ln_send_for_a_red_priest_decision.hear:0 "Escuchar al sacerdote rojo"
+ # NOTE: ln_man_an_empty_castle_decision and ln_return_with_fire_decision carry their own name keys in
+ # their own loc files, next to the events they open. Kept here for the inherited ones only.
+
+ # Inherited from Long Night+, all of them nameless until now.
+ war_for_the_dawn_decision:0 "Convocar la Guerra por el Amanecer"
+ flee_south_decision:0 "Huir al sur"
+ reform_nights_watch_decision:0 "Restaurar la Guardia de la Noche"
+ ln_sell_colonization_rights_decision:0 "Vender derechos de colonización"
+ ln_return_north_decision:0 "Regresar al Norte"

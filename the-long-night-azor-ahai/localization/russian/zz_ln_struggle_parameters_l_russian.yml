@@ -18,29 +18,29 @@
  # (see common/genes/zz_long_night_genes.txt). Deprecate, never delete.
 
  # The Long Summer
- struggle_parameter_ln_the_dark_is_distant:0 "The dark is a long way off, and getting closer"
- struggle_parameter_ln_the_dark_is_a_story:0 "Beyond the Narrow Sea it is a story told to children, and not a very good one"
- struggle_parameter_ln_summer_peace:0 "Long years of quiet: the North picks fewer fights and raiders move slowly"
- struggle_parameter_ln_insular_in_good_times:0 "Comfortable people close ranks — warmth for your own, coldness for everyone else"
- struggle_parameter_ln_the_gods_are_quiet:0 "Nobody prays hard when the harvest is good"
+ struggle_parameter_ln_the_dark_is_distant:0 "Тьма ещё далеко — и приближается"
+ struggle_parameter_ln_the_dark_is_a_story:0 "За Узким морем это сказка для детей, и не самая складная"
+ struggle_parameter_ln_summer_peace:0 "Долгие годы тишины: Север меньше задирается, а налётчики движутся вяло"
+ struggle_parameter_ln_insular_in_good_times:0 "Сытые смыкают ряды — тепло для своих, холод для всех прочих"
+ struggle_parameter_ln_the_gods_are_quiet:0 "Никто не молится усердно, когда урожай хорош"
 
  # The Cold Winds Rise
- struggle_parameter_ln_the_dark_is_coming:0 "The dark is coming, and everyone north of the Neck knows it"
- struggle_parameter_ln_the_muster_begins:0 "Every man who can hold a spear is being counted, and the walls are being manned"
- struggle_parameter_ln_southern_disbelief:0 "The southern realms go on squabbling, and will have cause to regret it"
- struggle_parameter_ln_old_enemies_talk:0 "Kneelers and [free_folk|E] have started speaking to each other"
- struggle_parameter_ln_prayers_multiply:0 "Every sept, grove and temple is full, and the faithful come armed"
+ struggle_parameter_ln_the_dark_is_coming:0 "Тьма идёт, и всякий к северу от Перешейка это знает"
+ struggle_parameter_ln_the_muster_begins:0 "Каждого, кто может держать копьё, вносят в списки, а на стены ставят людей"
+ struggle_parameter_ln_southern_disbelief:0 "Южные земли продолжают грызться и ещё об этом пожалеют"
+ struggle_parameter_ln_old_enemies_talk:0 "Коленопреклонённые и [free_folk|E] начали говорить друг с другом"
+ struggle_parameter_ln_prayers_multiply:0 "Всякая септа, роща и храм полны, и верующие приходят с оружием"
 
  # The Long Night
- struggle_parameter_ln_the_dark_is_here:0 "The dark is here"
- struggle_parameter_ln_wars_of_the_living:0 "Every war fought now is fought in the cold, and the dead take the leavings"
- struggle_parameter_ln_every_spear_counts:0 "Those who live with the cold have got very good at one thing and worse at all the rest"
- struggle_parameter_ln_the_living_stand_together:0 "Old grievances stop mattering when the enemy does not care who you were"
- struggle_parameter_ln_the_red_god_rises:0 "The night is dark and full of terrors, and the man saying so is no longer laughed at"
- struggle_parameter_ln_essos_profits:0 "Somewhere across the water, someone is selling grain and steel to the desperate"
+ struggle_parameter_ln_the_dark_is_here:0 "Тьма здесь"
+ struggle_parameter_ln_wars_of_the_living:0 "Всякая война теперь ведётся в холоде, а мёртвым достаются объедки"
+ struggle_parameter_ln_every_spear_counts:0 "Живущие в холоде очень хорошо научились одному и разучились всему остальному"
+ struggle_parameter_ln_the_living_stand_together:0 "Старые обиды теряют смысл, когда врагу всё равно, кем ты был"
+ struggle_parameter_ln_the_red_god_rises:0 "Ночь темна и полна ужасов, и над тем, кто это говорит, больше не смеются"
+ struggle_parameter_ln_essos_profits:0 "Где-то за водой кто-то продаёт зерно и сталь отчаявшимся"
 
  # The Dawn
- struggle_parameter_ln_the_dark_has_passed:0 "The dark has passed"
- struggle_parameter_ln_no_stomach_for_war:0 "Nobody who was there wants another war"
- struggle_parameter_ln_bled_together:0 "They bled beside each other, and for a while that is worth more than any treaty"
- struggle_parameter_ln_reckoning_of_faiths:0 "Every faith is arguing about which of them was right, and all of them are recruiting"
+ struggle_parameter_ln_the_dark_has_passed:0 "Тьма миновала"
+ struggle_parameter_ln_no_stomach_for_war:0 "Никто из тех, кто там был, не хочет новой войны"
+ struggle_parameter_ln_bled_together:0 "Они истекали кровью бок о бок, и какое-то время это стоит больше любого договора"
+ struggle_parameter_ln_reckoning_of_faiths:0 "Все веры спорят, кто из них был прав, и все набирают сторонников"

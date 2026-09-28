@@ -492,7 +492,8 @@ others_trigger_invasion = {
 		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
 	}
 
-	# Never shown, so it doesn't matter what we write here
+	# SHOWN, on the others_manual_invasion rule (and in debug mode): this is the player's only door into
+	# every wave under that rule. (An older comment here said "never shown"; 1.1.2 open item 13.)
 	title = others_trigger_title
 	desc = others_trigger_desc
 	confirm_text = others_trigger_confirm
@@ -505,6 +506,18 @@ others_trigger_invasion = {
 		NOT = {
 			has_global_variable = others_invasion_has_arrived
 		}
+		# ── 1.1.3: NOT DURING THE DAWN (ashen03, Steam, 11 Sep: "is the second wave automatic?"). ────────
+		# Every wave under the manual rule is by hand, and the button came back about a month into the
+		# Dawn, when others_invasion_has_arrived had been cleared. Using it then forced the phase back to
+		# the Long Night while ln_latch_long_night and ln_latch_dawn were still set (only the Long Summer
+		# re-arm clears them): the new wave skipped its setup and inherited wave one's state, at its Dawn
+		# others_invasion_has_arrived was never removed, and when that Dawn flowed into the Long Summer the
+		# reconcile dragged the struggle back to the Long Night with no Night King and this button hidden.
+		# A Manual + Cycle game jammed for good. ln_latch_dawn is set on Dawn entry and cleared by the Long
+		# Summer re-arm (zz_ln_struggle_effects.txt), so it covers exactly the Dawn and needs no struggle
+		# scope. Deliberately NOT put on others.1 itself: the no-struggle recurrence fallback fires others.1
+		# too (zz_ln_recurrence_effects.txt).
+		NOT = { has_global_variable = ln_latch_dawn }
 		OR = {
 			debug_only = yes
 			has_game_rule = others_manual_invasion
@@ -536,6 +549,55 @@ flee_south_decision = {
 
 	ai_check_interval = 6
 
+	# ── 1.1.3 (W15.1): THE CHEAP TESTS FIRST, AND AN AI DOOR THAT DOES NOT WALK THE MAP. ─────────────────
+	# ai_check_interval = 6 means every AI count on the map evaluated this every six months, and the
+	# proximity trigger below walks three rings of neighbouring counties plus the whole de jure kingdom
+	# (~650k title visits a year across the map; evidence doc E). Two changes, same result for the player:
+	#   * the Iron Throne test, one comparison, moved above the walk so the king never pays for it;
+	#   * an ai_potential (vanilla _decisions.info:142; 194 vanilla uses) that reads what the yearly
+	#     ln_paint_the_dead_roads_effect already paints on every province -- ln_the_dead_are_near one county
+	#     out from the front, ln_the_dead_hold_this_land on held ground (zz_ln_travel_danger_effects.txt) --
+	#     or a live invasion war against the Night King. Vanilla narrows the same way
+	#     (06_ce1_decisions.txt:111). has_province_modifier is vanilla's (00_hunt_triggers.txt:1058).
+	# 1.1.3 review -- AND THE AI'S DOOR IS 1.1.2'S DOOR MINUS THE EXPENSIVE PART. The first cut (war + paint)
+	# opened the door much later than 1.1.2: the paint is yearly and holder-based, and a vassal is not a party
+	# to his liege's defensive war, so most AI counts had only the paint. Restored, cheaply: arm (A) exactly as
+	# 1.1.2 read it (any war the dead wage that includes him); the first ring LIVE (a handful of neighbours);
+	# and arm (C), the dead in his capital's de jure kingdom, over COUNTIES only (any_de_jure_county, the W15.4
+	# form) instead of the whole de jure hierarchy. What is dropped is rings two and three, the walk that cost
+	# the most (~650k visits a year); arm (C) covers nearly all of it inside a March. The player's is_shown is
+	# unchanged and still opens on the full proximity test.
+	ai_potential = {
+		exists = title:h_the_others.holder
+		is_landed = yes
+		NOT = { title:h_the_iron_throne.holder ?= root }
+		OR = {
+			any_character_war = {
+				is_attacker = title:h_the_others.holder
+				OR = {
+					using_cb = other_cb
+					using_cb = other_cb_duchy
+					using_cb = other_cb_empire
+				}
+			}
+			capital_province ?= {
+				OR = {
+					has_province_modifier = ln_the_dead_are_near
+					has_province_modifier = ln_the_dead_hold_this_land
+				}
+			}
+			capital_county ?= {
+				any_neighboring_county = { ln_is_others_realm_county_trigger = yes }
+			}
+			capital_county ?= {
+				exists = kingdom
+				kingdom = {
+					any_de_jure_county = { ln_is_others_realm_county_trigger = yes }
+				}
+			}
+		}
+	}
+
 	is_shown = {
 		exists = title:h_the_others.holder
 		is_landed = yes
@@ -543,6 +605,9 @@ flee_south_decision = {
 		NOT = { has_trait = other_trait }
 		NOT = { has_trait = wight_trait }
 		NOT = { has_character_flag = dawn_refugee }
+		# 1.1.3: the king's test moved up here from below the proximity walk -- one comparison before a
+		# three-ring county walk. Reasoning for the test itself is in the 11 Aug note further down.
+		NOT = { title:h_the_iron_throne.holder ?= root }
 		# 10 Aug -- OPENED EARLIER, and moved into one named trigger so the whole condition lives in one place.
 		# The old test was "a war involving you, OR the front within three county-rings" -- both of which mean
 		# the dead are effectively already here. Thomas, having tested it: "I feel like we should be able to
@@ -565,7 +630,7 @@ flee_south_decision = {
 		#
 		# Hidden rather than merely invalid: he should never be looking at this card at all. His options
 		# are the ones the story is actually about -- hold, or fall with the city.
-		NOT = { title:h_the_iron_throne.holder ?= root }
+		# (1.1.3: the test itself now sits above the proximity walk, at the top of this block.)
 	}
 
 	is_valid = {

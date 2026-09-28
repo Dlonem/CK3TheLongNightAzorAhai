@@ -1,0 +1,42 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- coming home on a dragon.
+
+ ln_return_with_fire_decision:0 "Revenir par le feu"
+ ln_return_with_fire_decision_title:0 "Revenir par le feu"
+ ln_return_with_fire_decision_desc:0 "Votre grande salle tient toujours debout.\n\nVous aviez tenu pour acquis qu'elle ne tiendrait plus. Vous avez fui vers le sud avec tous les autres quand les ténèbres sont tombées, et tout ce que vous saviez disait que ce que vous laissiez derrière vous ne serait plus qu'une empreinte calcinée à l'heure qu'il est.\n\nElle ne l'est pas. Quelqu'un y a gardé le toit, y a posé une porte neuve, et ce soir s'assied dans le fauteuil de votre père en mangeant le grain de votre père, et cela depuis des années, et a tout à fait raisonnablement cessé d'attendre le retour de quiconque.\n\nPersonne dans cette salle n'a jamais vu de dragon."
+ # NO SCOPE REFERENCE HERE. ln_lost_seat is a VARIABLE on the character, not a saved scope, and a decision
+ # selection_tooltip has no scopes saved yet -- the effect block has not run. [ln_lost_seat.GetName] would
+ # print as an unresolved key. Plain text.
+ ln_return_with_fire_decision_tt:0 "Volez jusqu'au siège que vous avez abandonné et réglez la question de savoir qui le tient.\n\nIl y a quatre façons dont cela peut tourner, et une seule est paisible."
+ ln_return_with_fire_decision_confirm:0 "Faire monter le dragon."
+
+ ln_return.1.t:0 "Au-dessus de votre propre salle"
+ ln_return.1.desc:0 "Vous arrivez bas depuis le nord, la lumière derrière vous, et la première chose que vous remarquez, c'est qu'ils ont mal rebâti le mur est.\n\nLa deuxième chose que vous remarquez, ce sont les cris.\n\nQuand vous vous posez dans la cour, il n'y a plus personne. Les portes sont barrées, ce qui est presque drôle.\n\nPuis elles s'ouvrent, et [ln_squatter.GetTitledFirstName] sort sans personne. Pas de garde, pas d'épée, les mains bien en vue. [ln_squatter.GetSheHe|U] s'arrête à ce que [ln_squatter.GetSheHe] a manifestement jugé être une distance survivable, et attend — parce qu'il n'y a rien que [ln_squatter.GetSheHe] puisse dire qui changerait quoi que ce soit, et qu'il ne reste plus qu'à découvrir quelle sorte d'homme est revenue."
+ ln_return.1.a:0 "Agenouillez-vous, et il restera vôtre à tenir. Pour moi."
+ ln_return.1.b:0 "Rien. Reprenez [ln_dragon.GetHerHim] dans les airs, et brûlez tout."
+ ln_return.1.c:0 "[ln_squatter.GetHerHim|U], et [ln_squatter.GetHerHis] lignée. Ne laissez personne pour faire valoir un droit."
+ ln_return.1.d:0 "J'ai un droit et je le ferai valoir comme un homme. Pas comme ceci."
+ ln_return.1.e:0 "Alors réglons cela à l'ancienne. Qu'on donne une épée à [ln_squatter.GetHerHim]."
+
+ ln_return.2.t:0 "[ln_squatter.GetSheHe|U] a gardé le toit"
+ ln_return.2.desc:0 "Les livres sont impeccables.\n\nVoilà ce que vous n'attendiez pas. Vous êtes revenu préparé à la ruine et à une décennie de vol, et à la place il y a un registre d'une main sûre remontant à l'année où les ténèbres se sont levées : chaque récolte, chaque levée, chaque réparation, chaque mort. [ln_squatter.GetSheHe|U] a enterré vos gens de maison comme il se doit. Il existe une liste des endroits.\n\n[ln_squatter.GetSheHe|U] se tient à l'autre bout de la table sans rien dire de tout cela, parce que le dire aurait l'air d'une supplique, et a décidé de ne pas supplier.\n\nLe mur est, en revanche, est vraiment mal bâti. [ln_squatter.GetSheHe|U] a manqué de pierre et a utilisé ce qui lui tombait sous la main."
+ ln_return.2.a:0 "Vous tiendrez un siège sous mon autorité. Vous avez mérité cela."
+ ln_return.2.b:0 "Un cheval et la route. Partez avant la nuit."
+
+ ln_return.3.t:0 "[ln_squatter.GetSheHe|U] avait vu juste"
+ ln_return.3.desc:0 "« Non », dit [ln_squatter.GetSheHe].\n\nPuis, comme vous ne faites rien dans l'instant : « Vous êtes resté là-haut bien longtemps, messire. Un dragon peut brûler ma salle. Il ne peut pas la tenir. Il ne peut pas s'y asseoir, recevoir des serments et marier ma fille au fils de quelqu'un. Le lendemain du jour où vous brûlerez cet endroit, vous aurez un dragon et pas de toit, et tous les seigneurs d'ici au Neck le sauront. »\n\n[ln_squatter.GetSheHe|U] n'a même plus peur. Cela s'est produit quelque part au milieu de la phrase.\n\n« Alors brûlez-la ou ne la brûlez pas. Mais ne venez pas vous planter dans ma cour pour me dire que c'est un choix que vous faites. »"
+ ln_return.3.a:0 "Alors nous le ferons par le chemin long. Levez les bannières."
+ ln_return.3.b:0 "[ln_squatter.GetSheHe|U] a raison. Je ne suis plus cet homme."
+
+ ln_return.4.t:0 "Ce que le feu a laissé"
+ ln_return.4.desc.burned:0 "Vous êtes repassé au-dessus à la première lueur parce que vous vouliez voir.\n\nIl n'y a pas de salle. Il y a une forme noire là où il y avait une salle, avec la cheminée encore debout, parce que les cheminées restent toujours debout. Le village en dessous y est passé aussi — vous ne visiez pas le village, et ce n'est pas une distinction que quiconque fera.\n\nCeux qui en sont sortis sont à la lisière des arbres, et ils sont plus nombreux que vous ne le pensiez. Ils ne font rien : ils se tiennent dans le froid à regarder l'endroit où ils vivaient, et un par un, à mesure que votre ombre passe sur eux, ils lèvent les yeux.\n\nCe n'était pas à vous de le brûler. C'est bel et bien à vous désormais."
+ ln_return.4.desc.blood:0 "Cela a pris moins de temps que vous ne l'attendiez, et c'est le détail que vous garderez.\n\n[ln_squatter.GetSheHe|U] n'a pas couru, et eux non plus. Il y a eu un moment dans la cour où [ln_squatter.GetHerHis] plus jeune enfant a levé les yeux avec une expression d'émerveillement tout simple, parce qu'elle avait six ans et n'en avait jamais vu, et que personne n'avait eu le temps de lui dire ce qui allait arriver.\n\nLa salle est vôtre. Les registres sont dans la loggia, de [ln_squatter.GetHerHis] main. Les gens qui travaillaient pour [ln_squatter.GetHerHim] sont encore là — où iraient-ils — et pas un ne croisera votre regard.\n\nVous avez ce que vous êtes venu chercher. Il va faire très silencieux ici pendant un moment."
+ ln_return.4.a:0 "C'est fait. Cela n'a pas besoin d'explication."
+ ln_return.4.b:0 "Retrouvez ceux qui ont fui. Qu'on les nourrisse."
+
+ ln_dragonfire_scar_modifier:0 "Feu de dragon"
+ ln_dragonfire_scar_modifier_desc:0 "Brûlée par son propre seigneur, depuis le ciel, de mémoire d'homme. Rien n'a été rebâti sur place et les gens d'ici ont un très long chemin à faire avant d'oublier."
+
+ ln_the_lord_who_left_modifier:0 "Le seigneur qui est parti"
+ ln_the_lord_who_left_modifier_desc:0 "Ils ont vu les bannières partir vers le sud et ils sont restés. Quelqu'un d'autre a tenu le grenier honnête pendant des années, puis vous êtes revenu du ciel et l'avez pris en un après-midi. Ils s'en remettront. Cela prendra une quinzaine d'années."

@@ -1,0 +1,63 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the ranging companies.
+
+ ln_ranger_government:0 "Compagnie de patrouille"
+ ln_ranger_government_desc:0 "Un frère jureté de la Garde de Nuit en campagne, avec une compagnie derrière lui, un camp qui se déplace, et pas un mur où que ce soit."
+ d_ln_ranger_01:0 "La Longue Patrouille"
+ d_ln_ranger_01_adj:0 "de la Longue Patrouille"
+ d_ln_ranger_02:0 "La Patrouille Profonde"
+ d_ln_ranger_02_adj:0 "de la Patrouille Profonde"
+ d_ln_ranger_03:0 "La Patrouille Froide"
+ d_ln_ranger_03_adj:0 "de la Patrouille Froide"
+ d_ln_ranger_04:0 "La Patrouille Silencieuse"
+ d_ln_ranger_04_adj:0 "de la Patrouille Silencieuse"
+ d_ln_ranger_05:0 "La Patrouille Noire"
+ d_ln_ranger_05_adj:0 "de la Patrouille Noire"
+ d_ln_ranger_06:0 "La Patrouille d'Hiver"
+ d_ln_ranger_06_adj:0 "de la Patrouille d'Hiver"
+ d_ln_ranger_07:0 "La Patrouille Lointaine"
+ d_ln_ranger_07_adj:0 "de la Patrouille Lointaine"
+ d_ln_ranger_08:0 "La Dernière Patrouille"
+ d_ln_ranger_08_adj:0 "de la Dernière Patrouille"
+
+ # ── RIDING OUT ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_take_the_black_as_a_ranger_decision:0 "Prendre le noir"
+ ln_take_the_black_as_a_ranger_decision_desc:0 "Prendre le noir est censé être un châtiment. Voici la porte par laquelle ce n'en est pas un.\n\n#T Ce que cela coûte#!\nChaque titre que tu détiens, ton mariage et tes fiançailles, chaque revendication, et tout dragon qui te répond. Tel est le serment.\n\n#T Ce qu'on te donne en échange#!\n#P Une compagnie de patrouille qui est la tienne#! — jurée au lord Commandant, un camp qui voyage, des patrouilleurs levés pour une fraction de l'entretien d'un seigneur.\n\n#T Où cela mène#!\nAu nord du Mur. Sers bien, et un fort, la charge de Premier Patrouilleur, voire le siège du lord Commandant pourront suivre."
+ ln_take_the_black_as_a_ranger_decision_tt:0 "Prends le noir et pars en selle : maître d'une compagnie de patrouille, vassal du lord Commandant, avec un camp au lieu d'un fort.\n\n#N Tu renonces à tous tes titres, à toutes tes revendications, à ton mariage, à tes fiançailles et à tout dragon lié à toi.#! Tel est le serment.\n\n#P Tu obtiens un commandement jouable sans terres#! — frères juretés et patrouilleurs à bas prix, martialité et prouesse qui croissent avec le renom.\n\n#weak Aucun prestige requis. Le fort se gagne ensuite, de l'intérieur.#!"
+ ln_take_the_black_as_a_ranger_decision_confirm:0 "La nuit se regroupe, et maintenant ma garde commence."
+ ln_ranger_needs_a_company:0 "Le lord Commandant doit avoir une compagnie à donner — vacante, ou menée par un capitaine qu'il peut relever"
+
+ ln_ranger.1.t:0 "Un cheval et une direction"
+ ln_ranger.1.desc:0 "[ln_lord_commander.GetTitledFirstName] règle toute l'affaire le temps de seller un cheval, et tu as l'impression que c'est l'usage.\n\nTu reçois un manteau. Tu reçois un cheval qui a manifestement déjà fait cela et qui a son avis là-dessus. Tu reçois onze hommes, dont quatre ne soutiennent pas ton regard et dont un est allé au nord du Mur plus de fois qu'il ne saurait compter.\n\nEt tu reçois la seule consigne que la Garde ait jamais vraiment donnée à un patrouilleur, lancée alors qu'il rentre sans se retourner :\n\n« Va voir. Reviens dire ce que tu as vu. Si tu ne peux pas faire la seconde chose, ne t'embarrasse pas de la première. »"
+ ln_ranger.1.a:0 "Au nord, donc. C'est tout."
+ ln_ranger.1.b:0 "Donnez-moi les hommes qui sont déjà allés là-haut."
+ ln_ranger.1.c:0 "Qu'y a-t-il vraiment là-bas ? Personne n'a rien écrit de tout cela."
+
+ # ── COMING IN ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_ask_for_a_castle_decision:0 "Demander un fort"
+ ln_ask_for_a_castle_decision_desc:0 "Tu fais cela depuis longtemps.\n\nAssez longtemps pour que les hommes montés avec toi soient pour la plupart morts ou pour la plupart au sud, et pour que le froid ait cessé d'être un temps pour devenir une chose qui habite tes mains.\n\nIl y a dix-neuf forts sur le Mur et des hommes pour trois, et le lord Commandant n'a jamais dit non à un patrouilleur venu le demander — car un homme qui a passé sa vie du mauvais côté de la glace sait exactement à quoi sert un mur."
+ ln_ask_for_a_castle_decision_tt:0 "Renonce à ta compagnie de patrouille et prends à la place l'un des forts vides du Mur.\n\n#weak Ton camp est levé et la compagnie dissoute — un homme ne peut tenir un fort et patrouiller en même temps, et s'il le pouvait, plus personne ne partirait en patrouille.#!"
+ ln_ask_for_a_castle_decision_confirm:0 "J'aimerais un toit."
+ ln_ranger_needs_to_have_served:0 "Tu dois être frère jureté à part entière — on ne donne pas un fort à une recrue"
+
+ ln_ranger.2.t:0 "Rentré du froid"
+ ln_ranger.2.desc:0 "La compagnie l'a pris mieux que tu ne l'attendais, ce qui a piqué un peu.\n\nIls ont levé le camp en une matinée. D'autres auront ces tentes d'ici l'hiver et ne sauront pas à qui elles étaient, et c'est exactement ainsi que cela doit marcher, et c'est encore étrange à regarder.\n\nLe fort est pire que le camp sur tous les points mesurables. Il y fait plus froid dedans que dehors, le puits est gelé, et il y a au deuxième étage une pièce que personne ne veut t'expliquer.\n\nMais la porte ferme. Tu avais oublié cet effet-là."
+ ln_ranger.2.a:0 "J'ai fait mon temps là-bas. Au tour d'un autre."
+ ln_ranger.2.b:0 "Gardez ma selle près de la porte."
+ ln_ranger.3.t:0 "Un homme relevé"
+ ln_ranger.3.desc:0 "Cela prit huit jours et ce ne fut agréable pour personne.\n\nLe lord Commandant n'y prend pas plaisir et ne prétend pas le contraire. Il a signé l'ordre devant toi, puis est resté un moment à le regarder, et a dit ce que disent les anciens quand ils ont fait le nécessaire : qu'il n'existe aucune version de la Garde où dix-neuf forts sont tenus par les hommes qui méritent le plus de les tenir.\n\nLa compagnie est dissoute. Le camp est levé. Le cheval retourne à qui a besoin d'un cheval.\n\nTu as un toit pour la première fois depuis que tu as pris le manteau, et tu n'es pas encore sûr d'aimer cela."
+ ln_ranger.3.a:0 "Je le tiendrai mieux que lui."
+ ln_ranger.3.b:0 "Rien n'a été gratuit. Retour au cheval, alors."
+ ln_ranger_government_adjective:0 "de patrouille"
+
+ # The truth the decision card tells instead of AGOT's ceremony internals -- the raw effect list read
+ # "You are Deposed", which never happens at runtime (the tooltip evaluates against pre-click state).
+ ln_take_black_tt_vows:0 "Ton ancienne vie est réglée à la manière de la Garde : mariage, fiançailles, revendications et dettes s'arrêtent tous au Mur"
+ ln_take_black_tt_shell:0 "Toute compagnie d'aventuriers que tu menais est dissoute"
+ ln_take_black_tt_household:0 "Ton conseil est congédié. Les courtisans aptes au noir le prennent avec toi, et la plupart des autres suivent leur propre route. Ta proche famille rejoint ton héritier si tu tiens des terres, et reste avec toi sinon."
+
+ # Brother allocation -- the Lord Commander posts men out to the companies. See
+ # common/scripted_effects/zz_ln_brother_allocation_effects.txt.
+ ln_brother_posted_toast:0 "Un frère rejoint ta compagnie"
+ ln_brother_posted_toast_desc:0 "Le lord Commandant a envoyé un frère jureté au nord pour servir sous tes ordres. Il est à toi : fais-en un patrouilleur — ou enterre-le."

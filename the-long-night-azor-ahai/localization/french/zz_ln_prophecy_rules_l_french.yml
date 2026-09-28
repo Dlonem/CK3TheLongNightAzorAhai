@@ -1,0 +1,32 @@
+﻿l_french:
+
+ # ── PROPHECY GAME RULES ─────────────────────────────────────────────────────────────────────────────────────
+ rule_ln_prophecy_truth:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Y eut-il jamais un prince ?"
+ rule_ln_prophecy_truth_desc:0 "Si la prophétie est réellement vraie. Décidé au début de la partie, et #EMP le jeu ne te le dit jamais#!. Tu l'apprends à la fin, ou jamais."
+ setting_ln_prophecy_random:0 "Que les flammes décident #EMP (Par défaut)#!"
+ setting_ln_prophecy_random_desc:0 "Une pièce, lancée au début de la partie, cachée à jamais."
+ setting_ln_prophecy_is_true:0 "Il y a un prince"
+ setting_ln_prophecy_is_true_desc:0 "La prophétie est vraie et les marques signifient ce qu'elles semblent signifier. Toi, tu le sais ; personne dans le monde ne le sait."
+ setting_ln_prophecy_is_a_lie:0 "Il n'y a pas de prince"
+ setting_ln_prophecy_is_a_lie_desc:0 "Il n'y a pas de prince promis et il n'y en a jamais eu. On peut tout de même survivre à la Longue Nuit — ce ne sera simplement pas la prophétie qui l'aura fait."
+ rule_ln_prophecy_naming:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Nommer les prétendants"
+ rule_ln_prophecy_naming_desc:0 "Combien de marques une vie doit porter avant que quelqu'un prononce les mots à voix haute. Il existe neuf marques. Quatre, c'est déjà une vie extraordinaire."
+ setting_ln_naming_normal:0 "Comme le disent les livres #EMP (Par défaut)#!"
+ setting_ln_naming_normal_desc:0 "Deux marques pour être #EMP Favorisé#!, quatre pour être #EMP Élu#!."
+ setting_ln_naming_generous:0 "Les flammes parlent fort"
+ setting_ln_naming_generous_desc:0 "Une et trois. Des prétendants partout, des temples rivaux, plusieurs en vie à la fois."
+ setting_ln_naming_strict:0 "La lecture de la Citadelle"
+ setting_ln_naming_strict_desc:0 "Trois et six. Six exige en pratique un dragon, de sorte que la plupart des mondes ne voient jamais d'#EMP Élu#!."
+ setting_ln_naming_off:0 "Personne n'est jamais nommé"
+ setting_ln_naming_off_desc:0 "La chaîne de la prophétie est désactivée. Les traits de champion restent inaccessibles."
+
+ # ── WHO MAY BE NAMED ────────────────────────────────────────────────────────────────────────────────────────
+ rule_ln_prophecy_claimants:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Qui peut être nommé"
+ rule_ln_prophecy_claimants_desc:0 "#EMP Élu#! est une prétention, non un fait — plusieurs peuvent la porter en même temps. #EMP Azor Ahai Réincarné#! est l'exception : il va à celui qui détruit le Roi de la Nuit, une seule fois."
+ setting_ln_claimants_anyone:0 "N'importe qui #EMP (Par défaut)#!"
+ setting_ln_claimants_anyone_desc:0 "Autant de prétendants qu'il y a de qualifiés, IA comme joueurs. De l'intérieur du monde, aucun moyen de savoir lequel est l'erreur."
+ setting_ln_claimants_players_only:0 "Joueurs uniquement"
+ setting_ln_claimants_players_only_desc:0 "Seuls les joueurs sont jamais nommés. En multijoueur, la prophétie devient une affaire entre les gens autour de la table."
+ setting_ln_claimants_one_at_a_time:0 "Un seul à la fois"
+ setting_ln_claimants_one_at_a_time_desc:0 "Au plus un #EMP Élu#! vivant. Personne ne peut être élevé tant qu'il respire, et la place se libère à l'instant où il cesse — ce qui encourage bel et bien un certain genre de solution."
+

@@ -1,0 +1,25 @@
+[h1]1.1.2 — The Cold Does Not Fall[/h1]
+
+A fix pass, plus Spanish and French. Safe to add to a running game, and an existing save repairs itself on load.
+
+[h2]The Night King stops dying by accident[/h2]
+
+If you killed him and then watched another of the Others take the crown, this is why. He was shielded against dying in the knight lottery back in 1.1.0, but he leads his own host, so the pool he actually sits in is the commander one, and that had no shield at all. It does now. He also survives losing a dragon duel, and the Last Hour melee can no longer kill him out from under its own victory scene.
+
+Dragonglass, Valyrian steel, Lightbringer and dragonfire still end him, in the scenes. Nothing about the endings got harder.
+
+[h2]The dead stay where they belong[/h2]
+[list]
+[*] The Others no longer end up sworn to the Iron Throne after Daenerys and Young Griff invade. A leftover variable was keeping them inside the mega-war's realm-rebuilding pass, which also destroyed their own title and told the mod the Dawn had arrived mid-invasion.
+[*] Wights no longer turn up as guests in living courts. The game will walk one out of the world pool into any hall with a free guest slot, and nothing asked whether he was dead. That is how one ended up in King's Landing. They are turned around on arrival now, and a yearly sweep sends home anyone already seated.
+[/list]
+
+[h2]Languages[/h2]
+
+Spanish and French are in, and Russian gained about 450 lines that had been sitting in English. Every key exists in all four, so nothing renders as a raw string. Only the English is mine; the rest is a first pass and will read like one in places. If you speak one of them and want to fix a line, say so in the discussions and I will take the correction and credit you.
+
+[h2]Also[/h2]
+[list]
+[*] Game rules are shorter, and several of them were wrong. The Death resolution rule in particular now says what it actually does: ordinary steel casts the Night King down, it does not end the Long Night.
+[*] The Night King is styled The Great Other again instead of "Hegemon Other".
+[/list]

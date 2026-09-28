@@ -140,8 +140,20 @@ ln_check_naming_effect = {
 	#
 	# One guard covering both rungs. A man who told the priests they had the wrong man is left alone until the
 	# flag lapses.
+	# ── 1.1.3 (Thomas's call D-d) -- NO NEW NAMINGS ONCE A "ONCE" LONG NIGHT IS OVER. vitor109050
+	# (Discord, 26 Sep): people still get Favored after the Long Night ended. There was never a gate: two
+	# deeds are handed out during the Long Night itself (born beneath the bleeding star, walked out of a
+	# fight with the dead), a generation carries them into the peace, and the yearly sweep kept naming them
+	# for as long as they had a red priest, witch or greenseer. ln_struggle_concluded is set only under
+	# "Once", at the Dawn, immediately before end_struggle (zz_ln_struggle_effects.txt); under The Cycle the
+	# struggle re-arms instead and the global never appears, so a claimant named after one Dawn is still a
+	# claimant for the next wave. Existing Favored keep the trait; un-naming and the Favored flavour chain
+	# are untouched. The two cards re-test this in their own triggers so a naming already queued cancels.
 	if = {
-		limit = { NOT = { has_character_flag = ln_refused_the_name } }
+		limit = {
+			NOT = { has_character_flag = ln_refused_the_name }
+			NOT = { has_global_variable = ln_struggle_concluded }
+		}
 
 		# Level 1 -- Favored. A seer looks at you and says something out loud.
 		if = {
@@ -287,7 +299,8 @@ ln_the_world_forms_a_view_effect = {
 }
 
 # ── UN-NAMING ───────────────────────────────────────────────────────────────────────────────────────────────
-# Two of the eight deeds are things you HOLD, not things you did. Lose the sword, lose the dragon, and the count
+# Three of the nine deeds are things you HOLD, not things you did (the sword, the dragon, and hidden blood, which
+# is recomputed live off the father's current title tier). Lose the sword, lose the dragon, and the count
 # falls. A man who was named on six deeds and is down to four is still Chosen -- the title does not evaporate --
 # but he can no longer be promoted, and if he falls below the Favored threshold entirely the priests who named
 # him have a decision to make. That is a far better story than a trait that only ever ratchets upward.
@@ -305,7 +318,7 @@ ln_check_unnaming_effect = {
 }
 
 # ── THE YEARLY SWEEP ────────────────────────────────────────────────────────────────────────────────────────
-# Root = a playable character. Cheap: the deed count is eight boolean checks and most characters fail the first
+# Root = a playable character. Cheap: the deed count is nine boolean checks and most characters fail the first
 # gate immediately.
 ln_prophecy_yearly_effect = {
 	if = {

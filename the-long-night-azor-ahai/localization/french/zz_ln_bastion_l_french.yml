@@ -1,0 +1,12 @@
+﻿l_french:
+
+ ln_last_bastion_modifier:0 "Le Dernier Bastion"
+ ln_last_bastion_modifier_desc:0 "Le siège d’une grande maison, et le pays autour se vide dans ces murs. Chaque chevalier errant, chaque petit propriétaire, chaque homme capable de porter une lance et de trouver la porte. Les morts prennent la terre découverte en une saison. Ils mettront longtemps à prendre ceci."
+
+ # THE MEN-AT-ARMS TYPE LABEL. Both our undead regiments carry `type = Other_infantry`, a custom category
+ # so that nothing in the ordinary rock-paper-scissors counters them and they counter nothing -- the dead
+ # are not skirmishers. But a MAA type's loc key IS the type string (AGOT does the same for anti_dragon in
+ # agot_regiment_l_english.yml), and nobody had written one, so the tooltip read "Type: Other_infantry".
+ Other_infantry:0 "[ln_others_infantry|E]"
+ game_concept_ln_others_infantry:0 "Les morts"
+ game_concept_ln_others_infantry_desc:0 "Des régiments de relevés. Ils sont dressés à partir de ce que la Longue Nuit a déjà tué, et ce ne sont pas des soldats dans un sens que le reste du monde reconnaîtrait : pas d’exercice, pas de solde, pas de moral à briser, et aucun intérêt pour le terrain qu’ils occupent.\n\nDu point de vue des règles, ils se tiennent #EMP en dehors du système ordinaire de contres#!. Rien dans les levées de Westeros n’est fait pour leur répondre, et eux ne sont faits pour répondre à rien ; les piques ne les émoussent pas et ils n’émoussent pas la cavalerie. Ce qu’ils ont à la place, c’est le nombre. Un seul chevalier peut en abattre vingt sans en être plus en sûreté, car il n’y en a jamais eu seulement vingt.\n\n#weak Les spectres que les Autres relèvent, et les choses plus froides qui descendent au sud avec eux, combattent tous dans cette catégorie.#!"

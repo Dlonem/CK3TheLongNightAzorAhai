@@ -1,0 +1,23 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the ranging companies rule.
+ # Written the way Thomas asked game rules to be written: obvious unless the vagueness is the point, and the
+ # default marked so you can see it without opening anything.
+
+ rule_ln_ranger_recruitment:0 "Las compañías de expedición"
+ rule_ln_ranger_recruitment_desc:0 "Hay ocho compañías de expedición en el Muro. Esto decide cuántas mantiene cubiertas por sí misma la Guardia de la Noche. El Lord Comandante puede relevar a un capitán para ti con cualquier ajuste."
+
+ setting_ln_rangers_watch_fills_ranks:0 "La Guardia recluta #EMP (Predeterminado)#!"
+ setting_ln_rangers_watch_fills_ranks_desc:0 "Las ocho cabalgan desde el inicio de la partida. Cuando muere un capitán, la Guardia lo reemplaza, pero nunca mantendrá a más de cinco de los suyos en el campo. #EMP Las otras tres esperan a un jugador.#!"
+ setting_ln_rangers_players_only:0 "Dejarlas para los jugadores"
+ setting_ln_rangers_players_only_desc:0 "Las ocho cabalgan desde el inicio de la partida con sus capitanes históricos. Cuando uno muere, la Guardia no nombra a nadie y el puesto espera a un jugador."
+ setting_ln_rangers_all_eight_ride:0 "Cabalgan las ocho"
+ setting_ln_rangers_all_eight_ride_desc:0 "Cuando una compañía pierde a su capitán, la Guardia nombra siempre al siguiente. No se reserva ningún puesto."
+
+ # -- 1.1.3: quién responde a la Cuestión del Norte ---------------------------------------------------------
+ rule_ln_question_of_the_north:0 "La Cuestión del Norte"
+ rule_ln_question_of_the_north_desc:0 "Cuando termina la Larga Noche, un gobernante decide si la Guardia de la Noche renace o si el pueblo libre cruza el Muro. Esto decide a quién se le pregunta primero."
+ setting_ln_question_player_in_the_north_first:0 "Un jugador en el Norte primero #EMP (Predeterminado)#!"
+ setting_ln_question_player_in_the_north_first_desc:0 "Un jugador en el Trono de Hierro, luego un jugador que posea el Norte (vasallo o no), luego el jugador de mayor rango con tierras en el Norte. Solo si ningún jugador cumple, pasa a la corona de la IA."
+ setting_ln_question_the_crown:0 "La Corona"
+ setting_ln_question_the_crown_desc:0 "El Trono de Hierro, si no un gobernante independiente del Norte, si no quien gobierne Poniente. A un jugador bajo una corona de la IA no se le pregunta."

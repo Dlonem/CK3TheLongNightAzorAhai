@@ -50,7 +50,7 @@ ln_wandering_dead.1 = {
 			70 = {
 				modifier = { add = 20  prowess >= 14 }
 				modifier = { add = 15  has_trait = brave }
-				modifier = { add = 10  any_character_artifact = { has_variable = valyrian_steel } }
+				modifier = { add = 10  ln_carries_valyrian_steel_trigger = yes }   # 1.1.3: a blade, not any Valyrian trinket
 				add_prestige = major_prestige_gain
 				add_character_flag = ln_deed_survived_the_others
 				add_character_modifier = { modifier = ln_faced_the_dead_modifier  years = 10 }

@@ -1,0 +1,13 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- coming back, and coming back again.
+
+ # The base name lives in theothers_l_english.yml. These are the rungs above it.
+ trait_resurrected_by_rhllor_2:0 "Dos veces retornado"
+ trait_resurrected_by_rhllor_3:0 "Tres veces retornado"
+ trait_resurrected_by_rhllor_4:0 "Retenido por el fuego"
+
+ trait_track_returned:0 "Retornos"
+ trait_track_returned_desc:0 "Cuántas veces se le ha pedido al fuego, y cuánto de él se quedó cada vez."
+ ln_saw_the_first_dawn_modifier:0 "Vio el Primer Amanecer"
+ ln_saw_the_first_dawn_modifier_desc:0 "Este estuvo allí cuando el sol regresó. Se diga lo que se diga de él, nadie dice que no estuviera allí."

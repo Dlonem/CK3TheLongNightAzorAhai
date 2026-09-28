@@ -85,8 +85,8 @@ ln_target_duchy_is_legal_trigger = {
 
 # ══ 1.1.0b -- IS EVERYTHING BEYOND THE WALL THEIRS? ════════════════════════════════════════════════════════
 # No root; reads globals only. Needed because the latch it reads is a NEGATIVE one:
-# ln_refresh_beyond_the_wall_latch_effect sets ln_btw_unfinished while any county in
-# world_westeros_beyond_the_wall is still held by the living, and REMOVES it the moment the region is
+# ln_refresh_beyond_the_wall_latch_effect sets ln_btw_unfinished while a neighbour the invasion search can pick
+# holds living land in world_westeros_beyond_the_wall, or AI wilderness land remains there (1.1.3), and REMOVES it the moment the region is
 # complete -- but it also removes it once the Wall falls, and it does not exist at all before the invasion
 # starts. So "the global is absent" is true in three completely different situations and cannot be read on
 # its own. The invasion having started, plus Castle Black as the discriminator for "we are already past it",
@@ -97,4 +97,35 @@ ln_beyond_the_wall_is_theirs_trigger = {
 		has_global_variable = ln_castle_black_fell
 		NOT = { has_global_variable = ln_btw_unfinished }
 	}
+}
+
+# ══ 1.1.3 -- COULD THE INVASION PULSE EVER PICK THIS MAN? ═══════════════════════════════════════════════════
+# Root = a top liege. The STATIC half of the candidate limit in the_long_night.txt, lifted out of it word for
+# word so that the two stage latches (zz_ln_invasion_target_effects.txt) can ask the same question the search
+# asks. That is the whole fix for the stranding reported by AestheticArtO (years pass beyond the Wall before
+# the dead attack the Watch) and Krazzy Kracker 1 (the North never finished, so the host never grew): each
+# latch used to answer "is anyone LIVING left in this region?", while the search could only ever pick an
+# independent top liege whose realm touches the dead's and who passes these filters. A county held by a
+# vassal of a realm that does not border the dead, an island realm, a landed dawn_refugee under the Night
+# King himself -- all of them kept a gate armed with nobody to attack, and nothing happened until a window
+# flag ran out. Now the latch reads "is there a neighbour the pulse can pick who holds land here?", which is
+# what "finished" always meant.
+#
+# THE TEMPORARY CLAMPS ARE NOT HERE, ON PURPOSE: at-war and cooldown narrow the search to fealty-sized
+# neighbours for a season, and a latch that read them would call a region finished every time the dead were
+# busy. Those stay in the candidate limit, where they belong. The candidate limit calls this; it keeps no
+# copy of these clauses.
+ln_invasion_candidate_is_pickable_trigger = {
+	NOR = {
+		culture = { has_cultural_parameter = other_parameter }
+		faith = faith:cold_gods
+		has_trait = other_trait
+	}
+	is_independent_ruler = yes
+	NOR = {
+		has_government = wilderness_government
+		has_government = ruins_government
+	}
+	highest_held_title_tier >= tier_county
+	is_landed = yes
 }

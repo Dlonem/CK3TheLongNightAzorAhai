@@ -22,11 +22,53 @@
 #   claim this kill (Long Night active, victim a living dragon and not already theirs, victor one of
 #   them or the ground theirs, and the game rule not set to deny it), the death is REPLACED by
 #   ln_the_dead_claim_dragon_effect -- the dragon survives as itself, converted. Otherwise the
-#   original death runs untouched. RIDER deaths in the same branches are untouched either way.
+#   original death runs untouched.
+#
+#   1.1.2 -- AND THE SIX RIDER DEATHS NOW GO THROUGH ln_dragon_duel_rider_lost_effect, defined
+#   immediately below. For every rider in the world that effect is AGOT's death, verbatim and
+#   unchanged. For the Night King it is a fall. See its own header for why.
 #
 # ON EVERY AGOT UPDATE: diff their dragon_combat_result_grab against the body below (minus the six
 # wraps) and fold in any change. The wraps themselves are mechanical; the anchors are the six
 # death_reason lines.
+
+# ── THE RIDER WHO LOST, AND THE ONE RIDER WHO DOES NOT DIE OF IT (1.1.2) ─────────────────────────────
+# Thomas, 12 Sep: "I would like to get rid of that and instead make it so that the only way for the Night
+# King to die is by, you know, Valyrian steel, dragonglass, having that trial of the seven duel or
+# whatever. I don't want there to be any one-offs that would kill him."
+#
+# A dragon duel was one of those one-offs, and a loud one: the disemboweled branch alone kills the losing
+# rider on 94 of 100 rolls. The Others are first in line for a claimed dragon
+# (ln_the_dead_claim_dragon_effect hands it to title:h_the_others.holder), so the Night King is the rider
+# most likely to be in the sky and the one whose death there costs the most -- an unstamped death is a
+# cast-down, another of them is crowned, and the player who just shot him out of the air is told the Long
+# Night goes on.
+#
+# WHAT THIS IS. AGOT's own death, for everyone. The Night King instead comes off his mount and out of the
+# fight -- which is also the scene the show gave us, and it costs the living nothing: the dragon itself is
+# still resolved by the branch above this call, so shooting the ice dragon down still WORKS. What it stops
+# is the rider dying as a side effect of it.
+#
+# NO WOUND IS APPLIED, and that is deliberate rather than mercy: a wound is the one precondition
+# commander_killed needs, so wounding him here would re-open the door the commander-pool shield in
+# common/combat_phase_events/zz_ln_knight_phase_events.txt was added to close.
+#
+# agot_remove_from_combat is AGOT's own effect and is already used ten times in this file's body, so this
+# adds no new symbol -- it is the same exit the 3/2/1 branches of the same random_lists already take.
+ln_dragon_duel_rider_lost_effect = {
+	if = {
+		limit = { has_trait = nightking }
+		debug_log = "LN_TRACE NIGHT KING: thrown from a dragon and not killed by it"
+		debug_log_scopes = yes
+		agot_remove_from_combat = yes
+	}
+	else = {
+		death = {
+			killer = scope:dsc_victor
+			death_reason = death_dragon_duel
+		}
+	}
+}
 
 dragon_combat_result_grab = {
 	scope:dsc_loser = {
@@ -56,10 +98,8 @@ dragon_combat_result_grab = {
 					}
 				}
 			}
-			death = {
-				killer = scope:dsc_victor
-				death_reason = death_dragon_duel_ate
-			}
+			# 1.1.2 -- the rider death, routed. See ln_dragon_duel_rider_lost_effect.
+			ln_dragon_duel_rider_lost_effect = yes
 		}
 		else_if = {
 			limit = {
@@ -103,10 +143,8 @@ dragon_combat_result_grab = {
 						trait = burned
 						value = { 50 200 }
 					}
-					death = {
-						killer = scope:dsc_victor
-						death_reason = death_dragon_duel_fire
-					}
+					# 1.1.2 -- the rider death, routed. See ln_dragon_duel_rider_lost_effect.
+					ln_dragon_duel_rider_lost_effect = yes
 				}
 			}
 		}
@@ -138,10 +176,8 @@ dragon_combat_result_grab = {
 						}
 						always = yes
 					}
-					death = {
-						killer = scope:dsc_victor
-						death_reason = death_dragon_duel
-					}
+					# 1.1.2 -- the rider death, routed. See ln_dragon_duel_rider_lost_effect.
+					ln_dragon_duel_rider_lost_effect = yes
 				}
 			}
 			scope:dsc_loser_dragon = {
@@ -175,10 +211,8 @@ dragon_combat_result_grab = {
 			}
 			random_list = {
 				94 = {
-					death = {
-						killer = scope:dsc_victor
-						death_reason = death_dragon_duel
-					}
+					# 1.1.2 -- the rider death, routed. See ln_dragon_duel_rider_lost_effect.
+					ln_dragon_duel_rider_lost_effect = yes
 				}
 				3 = {
 					add_trait = wounded_3
@@ -213,10 +247,8 @@ dragon_combat_result_grab = {
 					}
 				}
 			}
-			death = {
-				killer = scope:dsc_victor
-				death_reason = death_dragon_duel
-			}
+			# 1.1.2 -- the rider death, routed. See ln_dragon_duel_rider_lost_effect.
+			ln_dragon_duel_rider_lost_effect = yes
 		}
 		else_if = {
 			limit = {
@@ -234,10 +266,8 @@ dragon_combat_result_grab = {
 					}
 				}
 			}
-			death = {
-				killer = scope:dsc_victor
-				death_reason = death_dragon_duel_ate
-			}
+			# 1.1.2 -- the rider death, routed. See ln_dragon_duel_rider_lost_effect.
+			ln_dragon_duel_rider_lost_effect = yes
 		}
 	}
 	scope:dsc_victor = {

@@ -1,0 +1,26 @@
+﻿l_french:
+
+ ln_mine_dragonglass_decision_desc:0 "Envoyez des hommes creuser, et payez ce qu'il faudra.\n\nIl y a énormément de [dragonglass|E] sous Dragonstone, et davantage dans une douzaine d'endroits que personne n'a pris la peine de sonder, parce que jusqu'à très récemment il n'y avait aucune raison au monde d'en vouloir."
+ ln_mine_dragonglass_decision_tt:0 "Constituez des réserves de [dragonglass|E]."
+ ln_mine_dragonglass_decision_confirm:0 "Creusez."
+
+ ln_prophecy.31.t:0 "Feu gelé"
+ ln_prophecy.31.desc:0 "Les premières charrettes arrivent et votre maître d'armes ne cache pas son scepticisme.\n\nC'est du verre. Cela s'ébrèche si on le regarde de travers, cela ne garde pas le fil contre une épée convenable, et armer des hommes avec cela, c'est les armer avec quelque chose qui se brise. Il a entièrement raison.\n\nIl en porte aussi un à la ceinture, vous le remarquez.\n\nLes enfants de la forêt appelaient cela le feu gelé et s'en sont servis pendant huit mille ans contre une chose dont la Citadelle est convaincue qu'elle n'a jamais existé. Vous croyez les enfants plutôt que la Citadelle, ce qui n'est pas une phrase que vous vous attendiez à pouvoir dire de vous-même."
+ ln_prophecy.31.a:0 "Armez-les quand même. Tout homme capable d'en porter un."
+ ln_prophecy.31.b:0 "Discrètement. Il n'est pas nécessaire de dire au royaume pourquoi."
+
+ # Station branches, added Session 10.
+ ln_prophecy.31.desc.watch:0 "Les premières charrettes arrivent et personne, à Châteaunoir, ne rit.\n\nLe verre s'ébrèche si on le regarde de travers. Il ne garde pas le fil contre une épée convenable. Tous les frères du Mur savent ces deux choses, et tous les frères en prennent un quand même, parce que la Garde est le seul endroit au monde où les vieux comptes n'ont jamais été tout à fait classés parmi les contes.\n\nJe suis le bouclier qui garde les royaumes des hommes. Huit mille ans d'hommes ont prononcé ces mots sans savoir en quoi ce bouclier était censé être fait.\n\nMaintenant vous le savez."
+ ln_prophecy.31.desc.seen:0 "Les premières charrettes arrivent et votre maître d'armes ne cache pas son scepticisme. C'est du verre, dit-il. Cela se brise, dit-il.\n\nVous le laissez finir. C'est un discours raisonnable et il a raison sur tout.\n\nMais il n'y était pas. Il n'a pas vu ce que vous avez vu : le froid qui arrive avant la chose, les yeux comme un ciel d'hiver avec rien derrière. La Citadelle peut discuter avec les enfants de la forêt. Elle ne peut pas discuter avec votre mémoire, et vous non plus.\n\nLe feu gelé, disaient les enfants. Vous ne croyez plus la parole de personne."
+
+ # ── PREPARATION MODIFIERS ───────────────────────────────────────────────────────────────────────────────────
+ ln_valyrian_armed_modifier:0 "Acier forgé par sortilège"
+ ln_valyrian_armed_modifier_desc:0 "Une lame venue d'un fief franc mort depuis quatre cents ans, portée par quelqu'un qui a une raison de s'en servir.\n\nElle se moque du froid de ce qu'elle a devant elle."
+ ln_dragonglass_stores_modifier:0 "Réserves de verredragon"
+ ln_dragonglass_stores_modifier_desc:0 "Des caisses de verre noir ébréché, distribuées à des hommes qui pensent que vous avez perdu la raison.\n\nIls cesseront de le penser."
+
+ # ── THE DRAGONGLASS, SPLIT IN TWO ───────────────────────────────────────────────────────────────────────────
+ ln_dragonglass_armed_modifier:0 "Armés de verredragon"
+ ln_dragonglass_armed_modifier_desc:0 "Chaque lance de la levée a reçu une pointe neuve de verre noir, et chaque homme a été informé de son usage. Cela dure aussi longtemps que durent les ténèbres."
+ ln_dragonglass_knight_modifier:0 "Armé de verredragon"
+ ln_dragonglass_knight_modifier_desc:0 "Porte une lame de verre volcanique noir. Elle se brise contre les mailles et tue ce que l'acier ne peut pas toucher."

@@ -1,0 +1,21 @@
+﻿l_french:
+ # Skin Color
+ skin_color_hue_long_night: "Teinte de la peau (Longue Nuit)"
+ vanilla_skin_color_hue_long_night: "Teinte de la peau, originale (Longue Nuit)"
+ 
+ skin_color_saturation_long_night: "Saturation de la peau (Longue Nuit)"
+ vanilla_skin_color_saturation_long_night: "Saturation de la peau, originale (Longue Nuit)"
+ 
+ skin_color_value_long_night: "Luminosité de la peau (Longue Nuit)"
+ vanilla_skin_color_value_long_night: "Luminosité de la peau, originale (Longue Nuit)"
+
+ 
+ # Hair Color
+ hair_color_hue_long_night: "Teinte des cheveux (Longue Nuit)"
+ vanilla_hair_color_hue_long_night: "Teinte des cheveux, originale (Longue Nuit)"
+ 
+ hair_color_saturation_long_night: "Saturation des cheveux (Longue Nuit)"
+ vanilla_hair_color_saturation_long_night: "Saturation des cheveux, originale (Longue Nuit)"
+ 
+ hair_color_value_long_night: "Luminosité des cheveux (Longue Nuit)"
+ vanilla_hair_color_value_long_night: "Luminosité des cheveux, originale (Longue Nuit)"

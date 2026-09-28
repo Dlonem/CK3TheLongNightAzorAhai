@@ -1,0 +1,45 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- STRUGGLE PHASE PARAMETERS, 1.0.16.
+ #
+ # WHY THIS FILE EXISTS. CK3 renders a struggle phase parameter as `struggle_parameter_<name>`, while the
+ # parameter itself is written BARE in the struggle script. Base CK3 proves the convention both ways:
+ #   game/common/struggle/struggles/iberian_struggle_script.txt:132  writes the parameter bare
+ #   game/localization/english/struggles_l_english.yml:117           defines struggle_parameter_<that name>
+ # and base ships 97 such keys. All 20 of our parameters were written bare in the SCRIPT (correct) and their
+ # strings were keyed bare in the LOC (wrong) -- `grep -c struggle_parameter_` across our English loc returned
+ # zero. So every one of the four phases printed raw keys in the struggle window, in every game, since the
+ # struggle shipped. Nobody reported it; it was found by sweeping definitions against required derivations.
+ #
+ # THE BARE KEYS IN zz_ln_concepts_l_english.yml:34-59 ARE DELIBERATELY LEFT IN PLACE. They cost one parse
+ # each and nothing else. Deleting a key because "nothing in the mod references it" is exactly how the three
+ # eye_color_*_long_night genes got removed and started throwing errors out of saved ruler files
+ # (see common/genes/zz_long_night_genes.txt). Deprecate, never delete.
+
+ # The Long Summer
+ struggle_parameter_ln_the_dark_is_distant:0 "L'obscurité est loin, et elle se rapproche"
+ struggle_parameter_ln_the_dark_is_a_story:0 "Au-delà du Narrow Sea, c'est une histoire qu'on raconte aux enfants, et pas une très bonne"
+ struggle_parameter_ln_summer_peace:0 "De longues années de calme : le Nord cherche moins la bagarre et les pillards se déplacent lentement"
+ struggle_parameter_ln_insular_in_good_times:0 "Les gens à leur aise serrent les rangs — de la chaleur pour les siens, de la froideur pour tous les autres"
+ struggle_parameter_ln_the_gods_are_quiet:0 "Personne ne prie avec ardeur quand la récolte est bonne"
+
+ # The Cold Winds Rise
+ struggle_parameter_ln_the_dark_is_coming:0 "L'obscurité vient, et tous ceux au nord du Neck le savent"
+ struggle_parameter_ln_the_muster_begins:0 "Tout homme capable de tenir une lance est compté, et les murailles sont garnies"
+ struggle_parameter_ln_southern_disbelief:0 "Les royaumes du sud continuent de se chamailler, et ils auront de quoi le regretter"
+ struggle_parameter_ln_old_enemies_talk:0 "Les agenouillés et le [free_folk|E] ont commencé à se parler"
+ struggle_parameter_ln_prayers_multiply:0 "Chaque septuaire, bosquet et temple est plein, et les fidèles viennent armés"
+
+ # The Long Night
+ struggle_parameter_ln_the_dark_is_here:0 "L'obscurité est là"
+ struggle_parameter_ln_wars_of_the_living:0 "Toute guerre livrée maintenant se livre dans le froid, et les morts ramassent les restes"
+ struggle_parameter_ln_every_spear_counts:0 "Ceux qui vivent avec le froid sont devenus très bons à une chose et moins bons à tout le reste"
+ struggle_parameter_ln_the_living_stand_together:0 "Les vieilles rancunes cessent de compter quand l'ennemi se moque de qui vous étiez"
+ struggle_parameter_ln_the_red_god_rises:0 "La nuit est sombre et pleine de terreurs, et l'on ne rit plus de celui qui le dit"
+ struggle_parameter_ln_essos_profits:0 "Quelque part de l'autre côté de l'eau, quelqu'un vend du grain et de l'acier aux désespérés"
+
+ # The Dawn
+ struggle_parameter_ln_the_dark_has_passed:0 "L'obscurité est passée"
+ struggle_parameter_ln_no_stomach_for_war:0 "Personne qui y était ne veut d'une autre guerre"
+ struggle_parameter_ln_bled_together:0 "Ils ont saigné côte à côte, et pour un temps cela vaut plus que n'importe quel traité"
+ struggle_parameter_ln_reckoning_of_faiths:0 "Chaque foi débat pour savoir laquelle avait raison, et toutes recrutent"

@@ -101,7 +101,13 @@ I did not invent this. I'm standing on three people's work: [b]Freeholder[/b], w
 
 And to be clear about the endgame: if the AGOT team ever ships their own Long Night, I'll take this down and point you at it. If they'd rather lift anything from here into the base mod instead, it's theirs, no strings. I'd rather this end up in AGOT than stay a separate download forever.
 
-Still on the workbench: killing the Night King as a full scene, more ways to lose well, and a Dance of the Dragons bookmark. The discussion threads are open if you want a say in what lands first.
+Still on the workbench: more ways to lose well, and a Dance of the Dragons bookmark. The discussion threads are open if you want a say in what lands first.
+
+[hr][/hr]
+
+[h2]Languages[/h2]
+
+English, Russian, Spanish and French. Every key exists in all four, so nothing renders as a raw string — but only the English is mine. The Russian is mostly a player's work with the gaps filled in; the Spanish and French are a first pass and will read like one in places. If you speak one of them and want to fix a line, say so in the discussions and I'll take the correction and credit you.
 
 [hr][/hr]
 

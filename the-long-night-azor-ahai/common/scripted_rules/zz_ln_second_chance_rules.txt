@@ -7,8 +7,8 @@
 #
 # WHY WE NEED IT AT ALL. resurrected_by_rhllor has existed in this mod's lineage since Freeholder and NOTHING
 # HAS EVER GRANTED IT. AGOT does not define the trait; it puts `trait = faith_warrior # Favored by Rhllor` on
-# Beric and Stoneheart with the real line commented out and `# AGOT TODO trait` beside it. So one of the eight
-# deeds in the prophecy system was unreachable, which Thomas caught by asking the right question: will a
+# Beric and Stoneheart with the real line commented out and `# AGOT TODO trait` beside it. So one of the nine
+# deeds in the prophecy system (eight at the time) was unreachable, which Thomas caught by asking the right question: will a
 # character in an actual CK3 game ever get this, or am I calibrating against the television?
 #
 # CK3 gives no way to un-kill a character. `death = { }` is terminal and on_death is reactive. This is the ONE

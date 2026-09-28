@@ -1,0 +1,101 @@
+﻿l_french:
+
+ 
+ #The Long Night
+ rule_the_long_night_startdate:0 "#P (AGOT:Invasions):#!  #bold La Longue Nuit#!"
+ 
+ setting_longnight_historical:0 "Historique"
+ setting_longnight_historical_desc:0 "Les Autres envahissent vers #bold 299 AL#! ."
+ 
+ setting_longnight_immediately:0 "Immédiatement"
+ setting_longnight_immediately_desc:0 "Les Autres envahissent #bold maintenant#! ."
+ 
+ setting_longnight_random_300:0 "Aléatoire sur 300 ans"
+ setting_longnight_random_300_desc:0 "Les Autres envahiront #bold au hasard dans les 300 prochaines années#! ."
+ 
+  setting_longnight_random_150:0 "Aléatoire sur 150 ans"
+ setting_longnight_random_150_desc:0 "Les Autres envahiront #bold au hasard dans les 150 prochaines années#! ."
+ 
+ setting_longnight_never:0 "Jamais"
+ setting_longnight_never_desc:0 "J'ai peur !"
+ 
+ 
+ 
+  #Mountain Clansmen
+ rule_mountain_clans_invasion_startdate:0 "#P (AGOT:Invasions):#!  #bold Clans des Montagnes#!"
+ 
+ 
+ setting_mountain_clans_invasion_immediately:0 "Non implémenté"
+ setting_mountain_clans_invasion_immediately_desc:0 "Non implémenté"
+ 
+ setting_mountain_clans_invasion_random_300:0 "Non implémenté"
+ setting_mountain_clans_invasion_random_300_desc:0 "Non implémenté"
+ 
+  setting_mountain_clans_invasion_random_150:0 "Aléatoire sur 150 ans"
+ setting_mountain_clans_invasion_random_150_desc:0 "Non implémenté"
+ 
+ setting_mountain_clans_invasion_never:0 "Non implémenté"
+ setting_mountain_clans_invasion_never_desc:0 "Non implémenté"
+ 
+ 
+ 
+  #Dothraki
+ rule_dothraki_invasion_startdate:0 "#P (AGOT:Invasions):#!  #bold Dothraki#!"
+ 
+ 
+ setting_dothraki_invasion_immediately:0 "Non implémenté"
+ setting_dothraki_invasion_immediately_desc:0 "Non implémenté"
+ 
+ setting_dothraki_invasion_random_300:0 "Non implémenté"
+ setting_dothraki_invasion_random_300_desc:0 "Non implémenté"
+ 
+  setting_dothraki_invasion_random_150:0 "Aléatoire sur 150 ans"
+ setting_dothraki_invasion_random_150_desc:0 "Non implémenté"
+ 
+ setting_dothraki_invasion_never:0 "Non implémenté"
+ setting_dothraki_invasion_never_desc:0 "Non implémenté"
+ 
+ 
+ 
+  #Summer Islander
+ rule_summer_islander_invasion_startdate:0 "#P (AGOT:Invasions):#!  #bold Dothraki#!"
+ 
+ 
+ setting_summer_islander_invasion_immediately:0 "Non implémenté"
+ setting_summer_islander_invasion_immediately_desc:0 "Non implémenté"
+ 
+ setting_summer_islander_invasion_random_300:0 "Non implémenté"
+ setting_summer_islander_invasion_random_300_desc:0 "Non implémenté"
+ 
+  setting_summer_islander_invasion_random_150:0 "Aléatoire sur 150 ans"
+ setting_summer_islander_invasion_random_150_desc:0 "Non implémenté"
+ 
+ setting_summer_islander_invasion_never:0 "Non implémenté"
+ setting_summer_islander_invasion_never_desc:0 "Non implémenté"
+ 
+ 
+ 
+   #Robbers and Brigands
+ rule_brigands_invasion_startdate:0 "#P (AGOT:Invasions):#!  #bold Voleurs et brigands#!"
+ 
+ 
+ setting_brigands_invasion_immediately:0 "Non implémenté"
+ setting_brigands_invasion_immediately_desc:0 "Non implémenté"
+ 
+ setting_brigands_invasion_random_300:0 "Non implémenté"
+ setting_brigands_invasion_random_300_desc:0 "Non implémenté"
+ 
+  setting_brigands_invasion_random_150:0 "Aléatoire sur 150 ans"
+ setting_brigands_invasion_random_150_desc:0 "Non implémenté"
+ 
+ setting_brigands_invasion_never:0 "Non implémenté"
+ setting_brigands_invasion_never_desc:0 "Non implémenté"
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

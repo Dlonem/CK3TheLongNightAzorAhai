@@ -1,0 +1,63 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the ranging companies.
+
+ ln_ranger_government:0 "Compañía de expedición"
+ ln_ranger_government_desc:0 "Un hermano juramentado de la Guardia de la Noche en campaña, con una compañía a su espalda, un campamento que se mueve y ni un muro en ninguna parte."
+ d_ln_ranger_01:0 "La Larga Expedición"
+ d_ln_ranger_01_adj:0 "de la Larga Expedición"
+ d_ln_ranger_02:0 "La Expedición Profunda"
+ d_ln_ranger_02_adj:0 "de la Expedición Profunda"
+ d_ln_ranger_03:0 "La Expedición Fría"
+ d_ln_ranger_03_adj:0 "de la Expedición Fría"
+ d_ln_ranger_04:0 "La Expedición Silenciosa"
+ d_ln_ranger_04_adj:0 "de la Expedición Silenciosa"
+ d_ln_ranger_05:0 "La Expedición Negra"
+ d_ln_ranger_05_adj:0 "de la Expedición Negra"
+ d_ln_ranger_06:0 "La Expedición de Invierno"
+ d_ln_ranger_06_adj:0 "de la Expedición de Invierno"
+ d_ln_ranger_07:0 "La Expedición Lejana"
+ d_ln_ranger_07_adj:0 "de la Expedición Lejana"
+ d_ln_ranger_08:0 "La Última Expedición"
+ d_ln_ranger_08_adj:0 "de la Última Expedición"
+
+ # ── RIDING OUT ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_take_the_black_as_a_ranger_decision:0 "Vestir el negro"
+ ln_take_the_black_as_a_ranger_decision_desc:0 "Vestir el negro se supone que es un castigo. Esta es la puerta por la que no lo es.\n\n#T Lo que cuesta#!\nTodos los títulos que tengas, tu matrimonio y tu compromiso, todas tus reclamaciones y cualquier dragón que te obedezca. Ese es el juramento.\n\n#T Lo que se te entrega a cambio#!\n#P Una compañía de expedición propia#! — juramentada al Lord Comandante, un campamento que viaja, exploradores reclutados por una fracción de lo que cuesta mantener a un señor.\n\n#T Hacia dónde va#!\nAl norte del Muro. Sirve bien y puede que lleguen un castillo, el puesto de Primer Explorador, incluso la silla del Lord Comandante."
+ ln_take_the_black_as_a_ranger_decision_tt:0 "Viste el negro y sal a cabalgar: señor de una compañía de expedición, vasallo del Lord Comandante, con un campamento en lugar de un castillo.\n\n#N Renuncias a todos tus títulos, reclamaciones, a tu matrimonio, a tu compromiso y a cualquier dragón vinculado a ti.#! Ese es el juramento.\n\n#P Obtienes un mando jugable sin tierras#! — hermanos juramentados y exploradores baratos, con marcial y destreza que escalan con el renombre.\n\n#weak No se requiere prestigio. El castillo se gana después, desde dentro.#!"
+ ln_take_the_black_as_a_ranger_decision_confirm:0 "La noche se avecina, y ahora comienza mi guardia."
+ ln_ranger_needs_a_company:0 "El Lord Comandante debe tener una compañía que dar: vacante, o al mando de un capitán al que pueda relevar"
+
+ ln_ranger.1.t:0 "Un caballo y una dirección"
+ ln_ranger.1.desc:0 "[ln_lord_commander.GetTitledFirstName] lo resuelve todo en el tiempo que lleva ensillar un caballo, y te da la impresión de que es lo habitual.\n\nRecibes una capa. Recibes un caballo que claramente ha hecho esto antes y tiene opiniones al respecto. Recibes once hombres, cuatro de los cuales no te sostienen la mirada y uno de los cuales ha estado al norte del Muro más veces de las que puede contar.\n\nY recibes la única instrucción que la Guardia ha dado de verdad a un explorador, lanzada mientras él vuelve adentro sin darse la vuelta:\n\n‘Ve y mira. Vuelve y di lo que viste. Si no puedes hacer lo segundo, no te molestes con lo primero.’"
+ ln_ranger.1.a:0 "Al norte, entonces. Eso es todo."
+ ln_ranger.1.b:0 "Dadme a los hombres que ya han estado allá arriba."
+ ln_ranger.1.c:0 "¿Qué hay ahí fuera en realidad? Nadie ha escrito nada de esto."
+
+ # ── COMING IN ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_ask_for_a_castle_decision:0 "Pedir un castillo"
+ ln_ask_for_a_castle_decision_desc:0 "Llevas mucho tiempo haciendo esto.\n\nEl suficiente para que los hombres que subieron contigo estén casi todos muertos o casi todos al sur, y para que el frío haya dejado de ser clima y se haya convertido en algo que vive en tus manos.\n\nHay diecinueve castillos en el Muro y hombres para tres, y el Lord Comandante no ha dicho no ni una sola vez a un explorador que entrara a pedirlo, porque un hombre que ha pasado la vida en el lado equivocado del hielo sabe exactamente para qué sirve un muro."
+ ln_ask_for_a_castle_decision_tt:0 "Renuncia a tu compañía de expedición y toma en su lugar uno de los castillos vacíos del Muro.\n\n#weak Tu campamento se levanta y la compañía se disuelve: un hombre no puede sostener un castillo y salir de expedición a la vez, y si pudiera, nadie volvería a salir de expedición.#!"
+ ln_ask_for_a_castle_decision_confirm:0 "Me gustaría tener un techo."
+ ln_ranger_needs_to_have_served:0 "Debes ser hermano juramentado de pleno derecho: a un recluta no se le da un castillo"
+
+ ln_ranger.2.t:0 "De vuelta del frío"
+ ln_ranger.2.desc:0 "La compañía se lo tomó mejor de lo que esperabas, lo que escoció un poco.\n\nLevantaron el campamento en una mañana. Para el invierno otros tendrán esas tiendas y no sabrán de quién fueron, y así es exactamente como debe funcionar y sigue siendo extraño verlo.\n\nEl castillo es peor que el campamento en todo lo medible. Dentro hace más frío que fuera, el pozo está helado y hay una habitación en el segundo piso que nadie te quiere explicar.\n\nPero la puerta cierra. Habías olvidado lo que era eso."
+ ln_ranger.2.a:0 "Cumplí mi tiempo ahí fuera. Le toca a otro."
+ ln_ranger.2.b:0 "Que mi silla de montar quede junto a la puerta."
+ ln_ranger.3.t:0 "Un hombre relevado"
+ ln_ranger.3.desc:0 "Llevó ocho días y no fue agradable para nadie.\n\nAl Lord Comandante no le gusta esto y no finge lo contrario. Firmó la orden delante de ti y luego se quedó un rato mirándola, y dijo lo que dicen los hombres veteranos cuando han hecho algo necesario: que no existe ninguna versión de la Guardia en la que diecinueve castillos estén en manos de los hombres que más merecen sostenerlos.\n\nLa compañía se disuelve. El campamento se levanta. El caballo vuelve a quien necesite un caballo.\n\nTienes un techo por primera vez desde que tomaste la capa, y aún no estás seguro de que te guste."
+ ln_ranger.3.a:0 "Lo sostendré mejor que él."
+ ln_ranger.3.b:0 "Nada salió gratis. De vuelta al caballo, entonces."
+ ln_ranger_government_adjective:0 "Expedicionaria"
+
+ # The truth the decision card tells instead of AGOT's ceremony internals -- the raw effect list read
+ # "You are Deposed", which never happens at runtime (the tooltip evaluates against pre-click state).
+ ln_take_black_tt_vows:0 "Tu vida anterior se liquida al modo de la Guardia: matrimonio, compromiso, reclamaciones y deudas terminan todos en el Muro"
+ ln_take_black_tt_shell:0 "Cualquier compañía de aventureros que dirigieras queda disuelta"
+ ln_take_black_tt_household:0 "Tu consejo queda disuelto. Los cortesanos aptos para el negro lo toman contigo, y la mayoría de los demás sigue su camino. Tu familia cercana pasa a tu heredero si tienes tierras, y se queda contigo si no."
+
+ # Brother allocation -- the Lord Commander posts men out to the companies. See
+ # common/scripted_effects/zz_ln_brother_allocation_effects.txt.
+ ln_brother_posted_toast:0 "Un hermano se une a tu compañía"
+ ln_brother_posted_toast_desc:0 "El Lord Comandante ha enviado al norte a un hermano juramentado para servir a tus órdenes. Es tuyo: haz de él un explorador — o entiérralo."

@@ -1,0 +1,35 @@
+﻿l_french:
+
+ # ── THE ROADS THE DEAD HOLD (1.0.12) ────────────────────────────────────────────────
+ ln_the_dead_hold_this_land:0 "Les morts tiennent cette terre"
+ ln_the_dead_hold_this_land_desc:0 "Rien de vivant ne garde les routes ici. Ce qui les parcourt n'a pas besoin de manger, ne dort pas, et ne s'arrête pas à la lisière des arbres."
+ ln_the_dead_are_near:0 "Les morts sont à un comté d'ici"
+ ln_the_dead_are_near_desc:0 "La frontière de leur pays est une ligne sur une carte. Ce qui est à l'intérieur ne le sait pas."
+
+ ln_travel.1.t:0 "La route n'est pas vide"
+ ln_travel.1.desc:0 "Tes éclaireurs reviennent au galop, ce qui est la première chose qui ne va pas, car ils sont censés revenir au pas.\n\nIl y a des silhouettes sur la route devant. Pas beaucoup — vingt, peut-être trente. Elles n'avancent pas vite. C'est la deuxième chose qui ne va pas : les hommes qui veulent te voler se hâtent, et les hommes qui veulent parler s'arrêtent.\n\nCeux-là ne font ni l'un ni l'autre. Ils viennent simplement, du même pas tranquille, et le plus proche porte ce qui reste d'un manteau de paysan et ce qui reste d'un paysan."
+ ln_travel.1.desc.btw:0 "Il n'y a pas de route ici. Il y a un passage entre les arbres que les gens ont emprunté assez longtemps pour le creuser, et ce n'est pas la même chose.\n\nIls sortent des pins des deux côtés à la fois, sans un bruit et sans hâte, et ils sont plus nombreux que tu ne peux en compter dans la lumière qui te reste. Certains portent des fourrures. L'un porte du noir, ou en portait.\n\nLe froid les a très bien conservés."
+ ln_travel.1.a:0 "Passez au travers. Ils sont lents."
+ ln_travel.1.a_through:0 "Au travers, et ressortis de l'autre côté"
+ ln_travel.1.a_caught:0 "Une main s'est fermée sur la bride"
+ ln_travel.1.b:0 "Formez une ligne. Faites du feu."
+ ln_travel.1.b_tt:0 "Ton escorte tient la route le temps d'allumer les torches.\n\n#weak Cela marche bien plus souvent que non. Quand cela ne marche pas, cela coûte l'un d'eux. Dans les deux cas, cela te coûte un mois et demi.#!"
+ ln_travel.1.b_burned:0 "Ils brûlent"
+ ln_travel.1.b_cost:0 "Ils brûlent, et l'un des tiens avec"
+ ln_travel.1.c:0 "Laissez les chariots. En selle."
+ ln_travel.1.c_tt:0 "Tout ce qui a des roues reste sur la route. Toi, non.\n\n#weak Personne n'est blessé, et tout le monde apprend que tu as fui.#!"
+
+ ln_travel.2.t:0 "L'un d'eux"
+ ln_travel.2.desc:0 "Les chevaux s'arrêtent avant que tu le leur dises. Tous, d'un coup, et ensuite ils n'avanceront pas et ne tourneront pas.\n\nElle se tient là où le chemin coude, et elle ne se hâte pas non plus, mais pour une autre raison. Elle est plus grande qu'un homme et plus mince. Son armure a la couleur de la glace profonde et semble poussée plutôt que forgée. Elle te regarde venir depuis un moment.\n\nDerrière elle les arbres sont blancs d'un givre qui n'y était pas il y a une heure.\n\nQuand elle bouge, le bruit de ton souffle est la chose la plus forte au monde."
+ ln_travel.2.a:0 "Allez à sa rencontre. Je ne suis pas venu si loin pour être trouvé dans la neige."
+ ln_travel.2.a_shatter:0 "Elle s'est défaite comme la glace sur une pierre"
+ ln_travel.2.a_cold:0 "Elle t'a laissé vivre, ce qui est pire"
+ ln_travel.2.b:0 "Il faut bien que quelqu'un soit le plus lent."
+ ln_travel.2.b_tt:0 "Tu laisses [ln_travel_guard.GetTitledFirstName] sur la route et tu ne t'arrêtes pas.\n\n#weak Il ne revient pas. Tous ceux qui t'accompagnent sauront exactement ce qui a été fait, et par qui.#!"
+ ln_travel.2.c:0 "En selle. Ne regardez pas derrière."
+ ln_travel.2.c_clear:0 "Elle n'a pas suivi"
+ ln_travel.2.c_hurt:0 "Elle n'a pas suivi longtemps"
+ ln_travel.2.c_taken:0 "Il ne lui en fallait qu'un d'entre vous"
+ ln_past_the_wall:0 "Au-delà du Mur"
+ ln_past_the_wall_desc:0 "Le mandement de personne ne court ici et personne ne viendra pour toi. Le froid prend des voyageurs qui faisaient tout comme il faut, et les choses qui parcourent ce pays pendant la Longue Nuit ne s'annoncent pas."
+

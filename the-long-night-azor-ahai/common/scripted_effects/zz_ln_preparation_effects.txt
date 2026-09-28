@@ -8,8 +8,9 @@
 # practice and costs nothing in the centuries when there is nothing to fight.
 #
 # And it uses the artifact the player ALREADY HAS. No Valyrian steel is created, copied, or borrowed from
-# another mod -- ln_has_deed_valyrian_steel_trigger reads AGOT's own `has_variable = valyrian_steel` marker on
-# whatever blade they happen to own.
+# another mod -- ln_has_deed_valyrian_steel_trigger reads AGOT's own valyrian_steel marker, through the
+# 1.1.3 blade test (ln_is_valyrian_blade_trigger: a hand weapon, not a bow, not armour or a goblet), on
+# whatever they happen to own.
 
 ln_preparation_upkeep_effect = {
 	if = {

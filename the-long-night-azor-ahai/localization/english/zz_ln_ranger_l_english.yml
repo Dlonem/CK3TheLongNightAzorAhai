@@ -55,6 +55,7 @@
  # "You are Deposed", which never happens at runtime (the tooltip evaluates against pre-click state).
  ln_take_black_tt_vows:0 "Your former life is settled the Watch's way: marriage, betrothal, claims and debts all end at the Wall"
  ln_take_black_tt_shell:0 "Any adventurer company you led is disbanded"
+ ln_take_black_tt_household:0 "Your council is dismissed. Courtiers fit for the black take it with you, and most of the rest go their own way. Your close family goes to your heir if you hold land, and stays with you if you do not."
 
  # Brother allocation -- the Lord Commander posts men out to the companies. See
  # common/scripted_effects/zz_ln_brother_allocation_effects.txt.

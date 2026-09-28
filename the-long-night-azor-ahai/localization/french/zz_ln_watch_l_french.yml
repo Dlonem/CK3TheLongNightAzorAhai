@@ -1,0 +1,142 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the Wall.
+
+ ln_man_an_empty_castle_decision:0 "[ROOT.Char.Custom('ln_ManAnEmptyCastleTitle')]"
+ ln_man_an_empty_castle_plain:0 "Occuper un fort vide"
+ ln_man_an_empty_castle_raven:0 "Envoyer un corbeau : occuper le fort"
+ # Updated! note this triggers for Rangers of the Night's Watch
+ ln_man_an_empty_castle_decision_desc:0 "J'ai bien servi comme patrouilleur, mais une autre tâche m'appelle désormais. Nombre des forts du Mur sont en ruine, abandonnés par nécessité à mesure que nos effectifs fondaient. Installer des hommes dans ces ruines étaiera nos défenses, et la fumée montant au-dessus du Mur dissuadera peut-être les sauvageons de l'escalader pour piller les terres du sud."
+ ln_man_an_empty_castle_decision_tt:0 "Demande au lord Commandant l'un des forts vides du Mur. Tu le gardes pour lui et tiens ton tronçon du Mur.\n\n#weak On te confie la première charge de gardien que personne n'a prise, en remontant le Mur dans l'ordre. Fort Nox, la Tour Ombreuse et Fort-Levant sont les trois derniers, et vont aux frères anciens.#!"
+ ln_man_an_empty_castle_decision_confirm:0 "Rassemblez une troupe. Nous partons à l'aube."
+ ln_watch.1.t:0 "À toi, désormais"
+ ln_watch.1.desc:0 "[ln_lord_commander.GetTitledFirstName] semble hésitant lorsqu'il me rejoint dans mon nouveau domaine. « Je ne suis toujours pas certain que ce soit une bonne idée », admet-il prudemment, embrassant du regard ce spectacle désolant, « mais ce qui est fait est fait. »\n\nLes hommes de la Garde de Nuit ont déjà entamé la tâche ardue de rendre ce fort habitable, mais il faudra longtemps avant que ce lieu puisse de nouveau porter vraiment le nom de fort. Les murs se sont effondrés depuis longtemps, le toit des cuisines s'est affaissé, et une odeur de moisi monte de ce qui reste de la bibliothèque.\n\nLe lord Commandant offre quelques derniers conseils avant de partir. « Tu feras bien de choisir un problème à la fois, sinon tu te noieras dans un marais de ta propre fabrication. »"
+ ln_watch.1.a:0 "On commence par les murs. La sécurité avant tout."
+ ln_watch.1.b:0 "Les cuisines d'abord. Un homme ne se bat pas le ventre vide."
+ ln_watch.1.c:0 "La bibliothèque, et tout le savoir que nous avons perdu avec elle."
+
+ ln_watch.2.t:0 "Mole's Town"
+ # Updated! Left option c alone; it seemed good enough. Reduced number of crows from 6 to 2 because that's how many pop up
+ ln_watch.2.desc:0 "Deux des hommes ont disparu, et chacun sait exactement où chercher. Mole's Town se trouve à une demi-lieue au sud de Castle Black, et les hommes de la Garde de Nuit y ont plié leurs vœux depuis que le Mur était neuf. L'intendant réprime un sourire en rapportant que les hommes manquent à leur poste.\n\nSi nous décapitions chaque garçon qui chevauche la nuit jusqu'à Mole's Town, seuls des fantômes garderaient le Mur... mais ces six-là ont été pris, et il faut faire quelque chose d'eux."
+ ln_watch.2.a:0 "Allez-y à cheval et ramenez-les par le col !"
+ ln_watch.2.b:0 "Et alors ? Tous les hommes ici en ont fait autant."
+ ln_watch.2.c:0 "Laissez-les revenir d'eux-mêmes. Puis fouettez-les."
+
+ ln_watch.3.t:0 "The Fist of the First Men"
+ # Updated!
+ ln_watch.3.desc:0 "Le Fist of the First Men s'élève au-dessus des forêts au nord du Mur, une colline isolée que couronne un ancien fort circulaire, bâti par les Premiers Hommes durant l'Âge de l'Aube. Des générations durant, il a servi à la Garde de poste avancé lors de ses patrouilles, offrant un abri contre les éléments, une position défendable et une vue sur la forêt environnante. Voici qu'un vieux patrouilleur buriné affirme qu'il peut nous servir davantage.\n\n\"Lors de ma première patrouille, j'ai trouvé une cache de pointes de flèche en verredragon enfouie sur cette colline\", me dit-il en tordant ses mains usées. \"Je n'y ai guère prêté attention, alors. Mais aujourd'hui, avec tout ce qui arrive, je ne peux plus m'en détacher.\"\n\nSon visage est plein d'espoir, mais aussi un peu gêné, comme s'il savait que ses paroles sonnent comme de la folie. \"Donnez-moi seulement quelques hommes et des vivres, et je suis sûr de pouvoir retrouver cette cache\", jure-t-il gravement."
+ ln_watch.3.a:0 "Si cette cache existe, il nous la faut, quel qu'en soit le prix."
+ ln_watch.3.b:0 "Je ne gaspillerai pas les ressources de la Garde à courir après des snarks et des grumkins."
+
+ ln_watch.4.t:0 "Le déserteur"
+ # Updated! "The Deserter" might be a better title but idk if that's changeable or not
+ ln_watch.4.desc:0 "Mon intendant me réveille au petit matin avec de sinistres nouvelles : l'un de nos frères juretés a été pris alors qu'il tentait de déserter à la faveur de la nuit. Tout homme sait que les frères de la Garde de Nuit prononcent leurs vœux pour la vie ; le châtiment de la désertion est la mort.\n\nPourtant, tandis qu'on le traîne vers le billot, l'homme ne plaide pas pour sa vie, seulement pour qu'on l'écoute. Ses divagations sont presque incohérentes ; il parle du froid, de choses mortes qui marchent dans les bois, et d'ombres d'un blanc livide. Les autres hommes murmurent entre eux, visiblement troublés par le radotage de leur frère."
+ ln_watch.4.a:0 "Je n'en écouterai pas davantage. Apportez-moi mon épée."
+ ln_watch.4.b:0 "Calme-toi et parle clairement. Seront-ce là tes dernières paroles ?"
+ ln_watch.4.c:0 "Envoyez-le à Castle Black. Que le lord Commandant le pende."
+
+ # ── REBUILDING ──────────────────────────────────────────────────────────────────────────────────────────────
+ # 1.0.12b -- RENAMED. Thomas, in play: "I feel like you need to change the decision localization for Open
+ # Another Castle to, like, Restore Castle Ruins, because I had no idea that's what that meant." He wrote the
+ # feature and could not tell from the button what it did, which is the whole argument. "Open Another Castle"
+ # reads like unlocking a menu; the decision takes one of YOUR ruins and makes it a working castle again.
+ # The two stale TODO comments that used to sit here ("Might need to be renamed. Not clear if it does
+ # anything") were inherited and are answered now.
+ ln_rebuild_the_castle_decision:0 "[ROOT.Char.Custom('ln_RebuildTheCastleTitle')]"
+ ln_rebuild_the_castle_plain:0 "Restaurer un fort en ruine"
+ ln_rebuild_the_castle_raven:0 "Envoyer un corbeau : de l'or pour le fort"
+ ln_rebuild_the_castle_decision_desc:0 "Nombre des forts du Mur sont en ruine, abandonnés par nécessité à mesure que nos effectifs fondaient. L'heure est venue de rebâtir ces forts et d'étayer nos défenses contre ce qui menace au nord. On coupera le bois dans le Gift, on fera venir la pierre par mer de White Harbor, et des bâtisseurs viendront de la Tour Ombreuse et de Fort-Levant pour mener l'ouvrage à son terme. Le labeur sera rude, mais il en vaudra la peine le jour où un fort se dressera là où il n'y avait qu'une ruine."
+ ln_rebuild_the_castle_decision_tt:0 "Remets en service l'un de tes forts en ruine, en le rendant propre à défendre un tronçon du Mur et à loger des frères juretés de la Garde de Nuit.\n\nL'ouvrage sera lent et coûteux. Cette décision peut être répétée tant qu'il reste des forts à restaurer."
+ ln_rebuild_the_castle_decision_confirm:0 "Faites venir les maçons."
+ ln_rebuild_needs_the_coin:0 "Il te faut #V 400#! d'or pour faire surgir un fort d'une ruine."
+
+ ln_watch.5.t:0 "Il a un toit"
+ # Updated! Mostly.
+ ln_watch.5.desc:0 "Alors que les bâtisseurs ôtent le dernier des échafaudages, je contemple leur ouvrage achevé. Le fort n'est pas beau. La pierre neuve n'a pas la couleur de l'ancienne, et les murs ne sont pas tout à fait de niveau. Mais la porte ferme, le puits a de l'eau, et un feu flambe aux cuisines. Ce n'est pas parfait, mais [ln_rebuilt_county.GetName] abrite de nouveau la Garde de Nuit— et c'est tout ce qui compte."
+ ln_watch.5.a:0 "Envoyez un corbeau à Castle Black : le fort est occupé."
+ # consider improving this
+ ln_watch.5.b:0 "Répandez la nouvelle au sud, que tout le royaume sache ce que j'ai fait."
+ ln_black_needs_somewhere_for_the_realm_to_go:0 "Tu dois avoir un héritier ou un suzerain à qui tes terres puissent passer"
+ ln_black_needs_a_castle_standing_empty:0 "Le lord Commandant doit avoir un fort vide"
+ ln_black_not_at_war_with_the_watch:0 "Tu ne dois pas être en guerre contre la Garde de Nuit"
+ # The one below NEEDS to be updated, but it's not clear what the trigger is to "be somebody"
+ ln_black_needs_to_be_somebody:0 "Le lord Commandant donne des forts aux hommes qui peuvent les tenir — un nom connu, une seigneurie à déposer, les éperons d'un chevalier, ou des hommes derrière toi"
+
+ # ── BEGGING ─────────────────────────────────────────────────────────────────────────────────────────────────
+ ln_petition_the_realm_decision:0 "[ROOT.Char.Custom('ln_PetitionTheRealmTitle')]"
+ ln_petition_the_realm_plain:0 "Solliciter le royaume"
+ ln_petition_the_realm_raven:0 "Envoyer un corbeau : solliciter le royaume"
+ # Updated with clearer text!
+ # This event gives you gold but doesn't tell you how much!
+ ln_petition_the_realm_decision_desc:0 "Les terres du Gift n'ont jamais suffi à nourrir la Garde de Nuit. Depuis l'Âge des Héros, les seigneurs de Westeros ont compris l'importance du Mur... et l'importance de nourrir ceux qui le tiennent.\n\nLa générosité du royaume s'est éteinte avec les années, mais si nous lâchons nos corbeaux, quelques seigneurs du Nord répondront toujours."
+ ln_petition_the_realm_decision_tt:0 "Demande au Nord de se souvenir du Mur.\n\n#weak Plus il fait froid, plus les seigneurs sont enclins à envoyer de l'aide.#!"
+ ln_petition_the_realm_decision_confirm:0 "Lâchez les corbeaux."
+ ln_petition_the_realm_effect_tt:0 "Demande aux maisons du Nord de soutenir la Garde de Nuit. Peu répondront, mais un peu d'or vaut mieux que rien."
+ ln_watch.6.t:0 "Des charrettes sur le Kingsroad"
+ ln_watch.6.desc:0 "Les charrettes de vivres envoyées par les seigneurs du Nord arrivent une à une durant les jours qui suivent. Aux yeux du royaume, la Garde de Nuit n'est plus la noble institution qu'elle fut. Mes frères se découragent en voyant le peu qu'on nous a envoyé : quelques barils de bœuf salé, un peu de biscuit de mer et quelques piécettes. Ce n'est pas grand-chose, mais cela vaut mieux que rien.\n\nAvec les vivres nous est parvenue une volée de corbeaux, chacun portant une lettre d'un seigneur du Nord. Certains m'informent qu'ils ont envoyé à la Garde ce qu'ils pouvaient, d'autres expliquent en mots mielleux pourquoi ils ne nous ont rien envoyé. L'usage voudrait que je réponde à toutes, mais le parchemin manque à la Garde de Nuit, et il me faut choisir quelles lettres recevront réponse."
+ ln_watch.6.a:0 "Écrivez à ceux qui nous ont aidés, pour les remercier de leur contribution."
+ ln_watch.6.b:0 "Envoyez des reproches aux seigneurs qui ne nous ont rien envoyé."
+
+ # ── THE WATCH GOES ON ───────────────────────────────────────────────────────────────────────────────────────
+ ln_watch.7.t:0 "Et maintenant ma garde commence"
+ ln_watch.7.desc:0 "Ils l'ont brûlé aux premières lueurs, parce que la terre est trop dure pour autre chose et à cause de ce qui arrive aux hommes qu'on y laisse.\n\nPersonne n'a fait de discours. Quelqu'un a dit les mots — tous les mots, pas la version courte qu'on sert aux recrues — et tous les ont repris, puis le feu a pris et chacun s'est remis à l'ouvrage, car il y a une garde à tenir et elle ne s'arrête pas pour cela.\n\nLe fort est à toi, maintenant. Et tout ce qui se trouve dehors aussi, ce qui est pire.\n\nLa nuit se regroupe."
+ ln_watch.7.a:0 "Les mots sont les mêmes mots. Redites-les."
+
+ # ── THE OTHER SIDE OF THE PETITION ──────────────────────────────────────────────────────────────────────────
+ ln_send_men_and_grain_decision:0 "[ROOT.Char.Custom('ln_SendMenAndGrainTitle')]"
+ ln_send_men_and_grain_plain:0 "Envoyer hommes et grain au Mur"
+ ln_send_men_and_grain_raven:0 "Envoyer un corbeau : hommes et grain pour le Mur"
+ # Updated! Added some flavor about the north, since this event only triggers for northern houses as far as I can tell
+ ln_send_men_and_grain_decision_desc:0 "Les dépenses ne manquent pas à la Garde de Nuit. Hommes, grain et or sont indispensables pour tenir le Mur debout et les sauvageons à distance. Chaque année, la liste de leurs besoins s'allonge ; une contribution généreuse de l'une des maisons nobles allégerait le fardeau de la Garde... et gagnerait la faveur du lord Commandant."
+ ln_send_men_and_grain_decision_desc_north:0 "Ta maison nourrit la Garde depuis avant qu'il y eût des rois au Sud pour l'oublier. Le Mur est le toit du Nord ; les hommes qui le tiennent sont des hommes du Nord, quel que soit leur père ; et un seigneur du nord qui laisse Castle Black avoir faim en répondra devant ses propres morts.\n\nEnvoie ce que l'année peut céder. Ce n'est pas de la générosité. C'est le plus vieux loyer du monde, et il a toujours été payé."
+ ln_send_men_and_grain_decision_tt:0 "Envoie or, grain et hommes vers le nord. La Garde de Nuit se souviendra de qui l'aura aidée."
+ ln_send_men_and_grain_decision_confirm:0 "Chargez les charrettes."
+ ln_send_men_and_grain_effect_tt:0 "Choisis combien envoyer vers le nord. Chaque sou compte !"
+ ln_donate_needs_the_coin:0 "Il te faut au moins #V 100#! d'or pour envoyer de l'aide à la Garde de Nuit"
+ ln_watch.8.t:0 "Une lettre du Mur"
+ ln_watch.8.desc:0 "Le lord Commandant envoie sa réponse dès l'arrivée des charrettes, ce qui en dit long sur le peu de courrier que reçoit [ln_lord_commander.GetTitledFirstName]. Il me remercie de mon soutien et détaille exactement l'usage qui sera fait de mon or, comme s'il s'attendait à être contrôlé.\n\nSous son nom, le lord Commandant ajoute un post-scriptum bref et maladroit : \"La plupart des hommes ont oublié le Mur. Merci de vous souvenir de nous.\""
+ ln_watch.8.a:0 "Le Nord se souvient."
+ ln_watch.8.b:0 "Faites en sorte que les hommes sachent qui les nourrit."
+
+ # ── A WALL WITH NO VACANCIES ────────────────────────────────────────────────────────────────────────────────
+ ln_black_needs_a_castle:0 "Un fort doit être abandonné, ou tenu par un dirigeant incapable de le tenir"
+ # Updated! May need to come back and update again
+ ln_black_needs_someone_to_relieve:0 "Un fort doit être tenu par un frère que le lord Commandant relèverait— un incapable, âgé de plus de 70 ans, ou qui n'a jamais prononcé ses vœux"
+ ln_take_the_black_and_wait_decision:0 "Demander un commandement"
+ ln_take_the_black_and_wait_decision_desc:0 "Le Mur doit être tenu par des hommes capables. Si des forts sont commandés par des incapables, des vieillards ou des déloyaux, il revient au lord Commandant de faire en sorte qu'un homme plus jeune et plus compétent prenne le commandement à leur place. Je peux être cet homme ; il me suffit de le demander."
+ ln_take_the_black_and_wait_decision_tt:0 "Demande au lord Commandant de relever un frère qui ne peut plus tenir son fort. Le commandement te sera transféré.\n\n#weak On ne prend jamais le fort d'un joueur— seulement celui d'un frère de l'IA incapable, passé soixante-dix ans, ou qui n'a jamais prononcé ses vœux.#!"
+ ln_take_the_black_and_wait_decision_confirm:0 "Écrivez au lord Commandant."
+ ln_watch.9.t:0 "Mon nouveau commandement"
+ ln_watch.9.desc:0 "Le lord Commandant ne met pas longtemps à me trouver un poste. L'ancien commandant du fort n'est pas heureux d'en remettre les rênes, mais il ne discute pas non plus. Après m'avoir confié les clefs et le registre, il demande s'il peut au moins rester ici comme intendant.\n\n\"J'ai tenu ce fort presque toute ma vie\", me dit-il avec un soupir sombre. \"J'entends y rester, si vous le permettez.\""
+ ln_watch.9.a:0 "Reste ; un bon homme comme toi me sera utile."
+ ln_watch.9.b:0 "Tu ne m'es plus d'aucune utilité. Ne me dérange plus."
+ # It's unclear what option C does, except that it triggers if there is no castle available. May need to be rewritten.
+ ln_watch.9.c:0 "Alors informe-moi quand un poste se libérera."
+
+
+ ln_watch.10.t:0 "Combien"
+ # Updated!
+ ln_watch.10.desc:0 "L'intendant m'attend dans la cour, où les hommes s'apprêtent à charger les vivres que j'enverrai au Mur. Il me tend un registre détaillant nos ressources et une lettre du lord Commandant exposant ce dont la Garde de Nuit a besoin pour passer les trois prochaines années.\n\nIl ne me reste qu'à décider ce que j'envoie."
+ ln_watch.10.a:0 "Une charrette de grain devrait suffire."
+ ln_watch.10.b:0 "Envoyez-leur tout ce que nous pouvons nous permettre de perdre."
+ ln_watch.10.c:0 "N'épargnez aucune dépense. La Garde de Nuit ne doit pas tomber."
+ ln_watch.10.d:0 "J'ai changé d'avis. N'envoyez rien."
+
+ ln_emptied_the_vaults:0 "A vidé les coffres"
+
+ # The Watch cannot secede from itself. See common/casus_belli_types/zz_ln_independence_war_shadow.txt.
+ # changed this one for clarity. I don't think this needs fancy text
+ ln_cannot_forsake_the_watch:0 "Impossible de déclarer son indépendance vis-à-vis de la Garde de Nuit !"
+
+ # ── A WALL CASTLE'S OFFICERS ────────────────────────────────────────────────────────────────────────────
+ # The Lord Commander keeps First Ranger, First Steward, First Builder and the Wandering Crow. His keepers
+ # and his ranging captains get the ranks a single castle actually has. Flavorization loc keys are named
+ # after the entry itself -- see common/flavorization/zz_ln_nw_keeper_councillor_flavor.txt.
+ ln_nw_keeper_marshal_flavor:0 "Maître d'armes"
+ ln_nw_keeper_marshal_flavor_possessive:0 "du Maître d'armes"
+ ln_nw_keeper_castellan_flavor:0 "Intendant du fort"
+ ln_nw_keeper_castellan_flavor_possessive:0 "de l'Intendant du fort"
+ ln_nw_keeper_steward_flavor:0 "Maître bâtisseur"
+ ln_nw_keeper_steward_flavor_possessive:0 "du Maître bâtisseur"
+ ln_nw_keeper_chancellor_flavor:0 "Recruteur"
+ ln_nw_keeper_chancellor_flavor_possessive:0 "du Recruteur"

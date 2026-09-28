@@ -25,8 +25,8 @@
 # copy of this block and is NOT refactored to call the effect below. That is deliberate: the setup-site copy
 # works, it sits deep inside an inherited file with hand-mangled formatting, and rewriting a working path for
 # neatness is exactly the class of change that produced the white dragons on 20 Aug. If that block ever needs
-# editing, replace it with `ln_enforce_independence_effect = yes` then -- the limit here is strictly narrower
-# (it also requires a LIVING liege, which at setup is always true) so the behaviour is identical.
+# editing, keep it a plain independence assertion: since the 26 Sep boot fix in 1.1.3 the effect below never touches the Night King
+# himself (he is the one the others are sworn TO), so it is no longer a drop-in replacement for that block.
 #
 # becomes_independent inside a title-and-vassal change is the only correct tool; there is no set_liege or
 # clear_liege effect in CK3. Verified in vanilla at 00_war_effects.txt:1243
@@ -37,49 +37,207 @@
 # ── THE ONE ASSERTION ───────────────────────────────────────────────────────────────────────────────────────
 # Root = a character who may be one of the dead.
 #
-# ONLY IF: he is one of them, he is a ruler, he is not already independent, and his DIRECT LIEGE IS LIVING.
+# ONLY IF: he is one of them, he is a landed ruler, and he stands outside the Night King's realm -- independent,
+# or under a living liege whose own top liege is living (1.1.3, after the 26 Sep boot; before that: "his direct liege is living").
 # NEVER IF: his liege is also one of the dead -- an Other in the Night King's realm is where an Other belongs,
 # and freeing him would shatter the dead's own hierarchy from the inside. That clause is the whole reason this
 # is not simply "free every Other": in a chain of Other -> Other -> living king, only the OUTERMOST dead man
-# matches, and freeing him carries his dead vassals out with him, which is the correct answer in one move.
+# matches, and moving him carries his dead vassals with him, which is the correct answer in one move.
+#
+# ── 1.1.3 -- AND NEVER A BARON, AND NEVER TWICE IN ONE BREATH ─────────────────────────────────────────────
+# Thomas's own 13 Sep debug.log, read properly: the "400 enforcements" session 61 counted as volume were
+# EIGHT characters x 50 each, all in one second, and the engine's own trace names the shape --
+#     title_and_vassal_change_manager.cpp:123: Executing change nested in N other change(s), originating
+#     from ... zz_ln_independence_effects.txt line: 56 (ln_enforce_independence_effect)
+# with N running 1 to 49 for each of the eight (392 nested + 8 top-level = 400). Every one of the eight had a
+# BARONY as his primary title (Quinlan of b_hellgate_hall, Yorbert of b_hardvales_town, ...). A baron cannot
+# stand alone in CK3: the change resolves, he still has his living liege, resolving it fires on_vassal_change
+# again, ln_others_vassal_change calls this again on the same man, and it nests until the engine stops it at
+# 50. Each level is a full title-and-vassal change, and it ran from the load-time sweep, the yearly sweep and
+# every inheritance of a dead baron. That is a real slice of "the game gets slow" (Griczzly, 12 Sep).
+#
+# So: county tier or better before anyone is freed (highest_held_title_tier >= tier_county is vanilla's own
+# form, task_contracts/laamp_base_contracts.txt:745), and a one-day flag so no other shape can re-enter while
+# the change it started is still resolving. The marker strip below still runs for a dead baron, so AGOT's
+# mega-war rebuild still cannot select him, which was the point of 1.1.2. What "cannot be independent" is,
+# exactly, is inferred from the trace (the result, not the rule); the tier guard is right either way.
+#
+# ── 1.1.3, after the 26 Sep boot -- AND THE DEAD SERVE THE NIGHT KING, NOT NOBODY ────────────────────────────────────────────────
+# Thomas's 26 Sep -develop run, read in the autosave: c_oldweir's title history is 8284.8.15 CONQUEST by the
+# Night King, 8284.9.10 GRANTED by his AI to one of the Others (a vassal in his own realm, exactly right), and
+# then "one of the dead was serving a living liege and no longer is" -- because the county's de jure duke was
+# a living chief the fealty branch had just sworn to the Night King and the yearly net had not yet converted,
+# so the engine seated the new Other under him, and this effect read "living liege" and FREED him. Out of the
+# Night King's realm, for good: the candidate search and every invasion CB refuse the dead, so an independent
+# dead realm is never taken back. By 290 AC the map showed "The Army of the Dead of Oldweir" as its own colour
+# beside The Long Night, and Thomas's words were "owned by a Wight but didn't have a ruler". The 62 setup
+# Others land under living chiefs the same way and were being freed on day one (five in this run).
+#
+# So the rule is now the one the header above always stated -- an Other in the Night King's realm is where an
+# Other belongs -- carried through: any dead ruler who stands OUTSIDE the Night King's realm is sworn to him,
+# with the fealty idiom the invasion pulse already uses on small neighbours (the_long_night.txt, the
+# swear_fealty branch), and a dead man whose living liege is himself inside the Night King's realm (the
+# Oldweir shape) is left exactly where he is -- the liege is on the yearly net's list. Independence survives
+# for the cases it was written for: no living Night King to swear to, and the Night King himself standing as
+# somebody's vassal (void's 1.1.2 report) -- he is freed first, and the dead are sworn to him after.
+#
+# WHO IS TOUCHED: the outermost dead man only, as before -- independent, or under a LIVING liege whose top
+# liege is also living. A dead vassal of a dead liege is carried by his liege. Landed, county tier or better
+# (a landless adventurer cannot swear fealty and the scouring Others are landless by design; a baron cannot
+# stand alone, 1.1.3). The Night King is never sworn to anyone; a vassalized Night King is freed. Never AGOT's
+# placeholder characters (agot_is_dummy_character). The one-day flag is the re-entry guard for both branches:
+# change_liege fires on_vassal_change on him, and the hook calls this again while the change resolves.
 ln_enforce_independence_effect = {
 	if = {
 		limit = {
 			ln_is_one_of_them_trigger = yes
 			is_ruler = yes
-			is_independent_ruler = no
-			exists = liege
-			liege = { ln_is_one_of_them_trigger = no }
+			is_landed = yes
+			highest_held_title_tier >= tier_county
+			# Never AGOT's placeholder characters. ln_is_one_of_them_trigger counts ruins_government as theirs
+			# (zz_ln_ice_dragon_triggers.txt), so "Ruin of Ruins" with its six ruined keeps would otherwise
+			# swear the whole heap to the Night King in one move. 1.1.3 review: keyed on WHO he is (AGOT's own
+			# agot_is_dummy_character: the ruin / unknown / wilderness / dummy traits the placeholders carry,
+			# history/characters/00_agot_dummy_characters.txt), not on government -- a real Other the Night
+			# King grants a wilderness county takes wilderness_government (session63: 25 of them), and a
+			# government test would leave one that 1.1.2 freed outside the realm for good.
+			agot_is_dummy_character = no
+			NOT = { has_character_flag = ln_being_freed }
+			OR = {
+				is_independent_ruler = yes
+				AND = {
+					liege ?= { ln_is_one_of_them_trigger = no }
+					top_liege ?= { ln_is_one_of_them_trigger = no }
+				}
+			}
 		}
-		debug_log = "LN_TRACE INDEPENDENCE: one of the dead was serving a living liege and no longer is"
+		add_character_flag = { flag = ln_being_freed  days = 1 }
+		if = {
+			limit = {
+				exists = title:h_the_others.holder
+				# (No "not himself" test: this character was refused above if he carries nightking, and the
+				# holder here must carry it, so they cannot be the same man. The 26 Sep second boot showed why
+				# the old `NOT = { this = root }` had to go: from the story pulse, root is the STORY, and the
+				# comparison logged "left was 'character', right was 'story'" once per man sworn.)
+				title:h_the_others.holder = {
+					is_alive = yes
+					has_trait = nightking
+					# 1.1.3 review: never swear the dead THROUGH him into a living realm. A Night King who is
+					# himself somebody's vassal (void's 1.1.2 report, the mega-war rebuild) is freed by the
+					# else_if below first, exactly as 1.1.2 freed him; the dead are sworn on a later pulse.
+					is_independent_ruler = yes
+				}
+				NOT = { has_trait = nightking }
+			}
+			debug_log = "LN_TRACE INDEPENDENCE: one of the dead stood outside the Night King's realm - sworn to him"
+			debug_log_scopes = yes
+			create_title_and_vassal_change = {
+				type = swear_fealty
+				save_scope_as = ln_fealty_change
+				add_claim_on_loss = no
+			}
+			change_liege = {
+				liege = title:h_the_others.holder
+				change = scope:ln_fealty_change
+			}
+			resolve_title_and_vassal_change = scope:ln_fealty_change
+		}
+		else_if = {
+			limit = { is_independent_ruler = no }
+			debug_log = "LN_TRACE INDEPENDENCE: one of the dead was serving a living liege and no longer is (the Night King himself, or no free Night King to swear to)"
+			debug_log_scopes = yes
+			create_title_and_vassal_change = {
+				type = independency
+				save_scope_as = ln_independence_change
+				add_claim_on_loss = no
+			}
+			becomes_independent = { change = scope:ln_independence_change }
+			resolve_title_and_vassal_change = scope:ln_independence_change
+		}
+	}
+	# 1.1.2 -- AND THEN TAKE THE MARKER OFF HIM, or AGOT will simply do it again. See below.
+	ln_strip_the_dead_from_the_megawar_effect = yes
+}
+
+# ── 1.1.2: THE MARKER, WHICH IS THE ACTUAL CAUSE ────────────────────────────────────────────────────────────
+# 1.1.1 freed them and it was not enough, because it treated the symptom. void's report was right about the
+# system and wrong about the trigger, and the difference matters:
+#
+#   HE SAID: the megawar rebuild vassalizes them because they hold land in the de jure North.
+#   IT IS:   the megawar rebuild walks `every_ruler` filtered on ONE substantive clause --
+#            `exists = var:agot_pwl_direct` (AGOT, common/scripted_effects/00_agot_mega_wars_effects.txt,
+#            agot_mw_rebuild_realm_effect). De jure land only decides WHICH liege he is handed to.
+#
+# Its other filters are two: `nights_watch_government`, and the holders of k_the_most_devout / k_the_wall.
+# Nothing about government beyond the Watch, nothing about faith, culture, trait, or h_the_others. So the
+# dead pass every clause AGOT wrote and the marker is the only thing that puts them in the room.
+#
+# ⚠ AND THE VASSALAGE IS THE SECOND-WORST HALF OF IT. Before the reassignment, the same block runs
+# `destroy_title` on any held title whose tier matches the crown realm's. Dany's and Young Griff's invasions
+# are megawars whose crown title is h_the_iron_throne -- hegemony tier. h_the_others is hegemony tier. So the
+# rebuild DESTROYS h_the_others, and this mod's own ln_long_night_over_trigger is
+# `NOT = { exists = title:h_the_others.holder }`. The entire mod is told the Dawn has come, mid-invasion,
+# with the Night King alive and now somebody's vassal. That is the "game breaking" in his report.
+#
+# NOTHING IN THE MOD EVER CLEARED THIS VARIABLE -- checked, zero hits before 1.1.2. Every clear site is
+# AGOT's own and each is conditional on AGOT's restore having succeeded. So once one of the dead was seeded
+# with it (a wight lord inheriting a vassalized seat; the wildling chieftess who came in by war settlement;
+# any independence war they are dragged into), he kept it for the rest of the game and stayed in the
+# rebuild population permanently, however many times we freed him.
+#
+# WHY STRIPPING IT IS RIGHT AND NOT RUDE. The variable means "this ruler had a liege before the war, put him
+# back afterwards." For the dead there is no before and no afterwards -- the assertion two blocks up says
+# they answer to nobody living. Removing it tells AGOT the truth rather than fighting its conclusion every
+# year.
+#
+# KNOWN SIDE EFFECTS, both checked and both acceptable:
+#   1. AGOT's agot_is_independent_ruler is `is_independent_ruler = yes AND NOT has_variable = agot_pwl_direct
+#      AND NOT has_character_flag = bookmark_independent`. With the marker gone it can finally return yes for
+#      the Night King -- which is correct, and may be the answer to the forty-a-boot agot_can_wear_crown_trigger
+#      refusals recorded in the_long_night.txt. Watch for him wearing the Crown of True Winter; that is not a
+#      regression.
+#   2. zz_ln_megawar_cb_shadow.txt reads the same variable in two trigger_if limits. With it absent those go
+#      false and the clauses pass -- fail-open, which is what that file's own header already commits to.
+ln_strip_the_dead_from_the_megawar_effect = {
+	if = {
+		limit = {
+			ln_is_one_of_them_trigger = yes
+			OR = {
+				has_variable = agot_pwl_direct
+				has_variable = agot_pwl_top
+			}
+		}
+		debug_log = "LN_TRACE INDEPENDENCE: one of the dead was carrying AGOT's pre-war-liege marker - removed"
 		debug_log_scopes = yes
-		create_title_and_vassal_change = {
-			type = independency
-			save_scope_as = ln_independence_change
-			add_claim_on_loss = no
-		}
-		becomes_independent = { change = scope:ln_independence_change }
-		resolve_title_and_vassal_change = scope:ln_independence_change
+		if = { limit = { has_variable = agot_pwl_direct } remove_variable = agot_pwl_direct }
+		if = { limit = { has_variable = agot_pwl_top }    remove_variable = agot_pwl_top }
 	}
 }
 
 # ── THE SWEEP ───────────────────────────────────────────────────────────────────────────────────────────────
-# Called once a year from ln_struggle_yearly_work_effect, behind that effect's own calendar stamp, so it runs
-# exactly once a year however many characters reach the line.
+# Called from ln_struggle_yearly_work_effect (behind its calendar stamp, once a year), at game start, and since
+# 1.1.3 also on the story's 30-day pulse (the_long_night.txt), so a running save folds its outside dead in
+# within a month -- or within a year while the post-defeat cooldown holds that pulse (the 1.1.3 review).
 #
 # THE HOOKS ARE NOT ENOUGH ON THEIR OWN, and void's report is the proof: on_title_gain and on_vassal_gained
 # catch a title CHANGING HANDS, but AGOT's megawar automation re-parents a title the dead already hold, which
 # fires neither. A yearly pass is the only thing that closes a door nobody has enumerated yet. It is cheap --
-# every_ruler once a year, and the limit rejects everyone living on its first clause. Same cost profile as
-# ln_bastion_effects.txt, which walks every_ruler twice a year and says so.
+# every_ruler per call, and the limit rejects everyone living (ln_is_one_of_them_trigger is a short OR). Same cost profile as
+# ln_bastion_effects.txt, which walks every_ruler once a year (since 1.1.3) and says so.
+#
+# 1.1.3 -- ONE WALK, NOT TWO. 1.1.2 ran this as two every_ruler passes: the first freed the vassalized dead,
+# the second took AGOT's pre-war-liege marker off EVERY one of the dead, liege or no liege, because an
+# independent Other carrying a stale marker is exactly the character the mega-war bomb goes off under. Both
+# passes still happen; they are one walk now. ln_enforce_independence_effect ends with the marker strip
+# unconditionally, and its own limit decides whether the freeing part applies, so a single pass over every
+# dead ruler does exactly what the two did. Same result, half the cost.
 ln_others_independence_sweep_effect = {
 	every_ruler = {
-		limit = {
-			ln_is_one_of_them_trigger = yes
-			is_independent_ruler = no
-			exists = liege
-			liege = { ln_is_one_of_them_trigger = no }
-		}
+		limit = { ln_is_one_of_them_trigger = yes }
 		ln_enforce_independence_effect = yes
+		# 1.1.3 (27 Sep third boot) -- same walk, same men: fill a dead lord's empty chaplain seat from his
+		# own dead court, which stops the engine generating a new living clergyman for it every month.
+		# Body and the measurement in zz_ln_service_effects.txt.
+		ln_the_dead_keep_their_own_chaplain_effect = yes
 	}
 }

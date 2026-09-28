@@ -35,6 +35,16 @@ others_siege.0001 = {
 	hidden = yes
 	
 	trigger = {
+		# 1.1.3 (W15.2): this fires on EVERY siege completion in the world, all game, and the immediate
+		# below only does anything when the primary siege attacker is an Other. Asked first, here, so
+		# an ordinary war between living lords is refused on one trait test instead of re-running
+		# vanilla siege.0001's whole trigger to build a list nobody reads.
+		scope:war ?= {
+			OR = {
+				primary_attacker = { has_trait = other_trait }
+				primary_defender = { has_trait = other_trait }
+			}
+		}
 		scope:county.holder = scope:previous_controller
 		OR = {
 			any_war_enemy = { this = scope:previous_controller }

@@ -13,8 +13,9 @@
 # (cleared in the per-summer reset alongside the other latches).
 #
 # The card is the warning delivered the fun way, and the options carry real freight:
-#   * take them in  -> an actual veteran of the Wall joins your court (the fork's proven create_character
-#                      shape, nightswatch + lifestyle_nw_ranger), plus ln_heard_the_warning -- the same
+#   * take them in  -> an actual veteran of the Wall joins your court (a real survivor from the fall, or
+#                      one generated stranger; since 1.1.3 neither wears the black any more -- see the
+#                      note at the create_character), plus ln_heard_the_warning -- the same
 #                      knowledge-gate flag the intro card and the Citadel option grant
 #   * send them on  -> the warning flag and a little honor; the word keeps travelling
 #   * the sentence  -> the law of the realm says deserters die. These men swear the Wall is DOWN, which
@@ -120,7 +121,8 @@ ln_scatter.2 = {
 	# actually got out. CK3 cannot answer that: by the time this fires the Wall's court has been wighted
 	# or destroyed and the brothers who "escaped" were never modelled as anything -- there is no roster
 	# left to pull from. Generating them at the door is the honest version of the same fiction, and they
-	# are built to be exactly who he described: hardened, prowess 14-24, a full nightswatch trait.
+	# are built to be exactly who he described: hardened, prowess 16-24. (The nightswatch trait itself came
+	# off in 1.1.3 -- it is what sent him to the Wall the moment you took him in; see below.)
 	immediate = {
 		play_music_cue = "mood_the_others"
 
@@ -135,6 +137,7 @@ ln_scatter.2 = {
 					is_alive = yes
 					is_landed = no
 					NOT = { has_character_flag = ln_took_service }
+					ln_is_one_of_them_trigger = no
 				}
 			}
 			random_in_global_list = {
@@ -143,11 +146,19 @@ ln_scatter.2 = {
 					is_alive = yes
 					is_landed = no
 					NOT = { has_character_flag = ln_took_service }
+					ln_is_one_of_them_trigger = no
 				}
 				add_character_flag = ln_took_service
 				save_scope_as = ln_scattered_brother
 			}
 		}
+		# 1.1.3 -- NO BLACK ON THE STRANGER EITHER. He was made with the nightswatch trait, and that trait is
+		# what AGOT's on_join_court_nights_watch opens on: "Take them in" (set_employer, below) sent him
+		# straight to whoever held k_the_wall -- after the fall, very often a raised keeper, i.e. into a dead
+		# man's court, where the yearly net would have wighted him. The real survivors are released from
+		# their vows before they walk (ln_this_brother_flees_effect), and he matches them: a hard northman
+		# who WAS of the Watch, with the years and the prowess to show for it, and no vow left to be sent
+		# home to. The card text says they are released.
 		if = {
 			limit = { NOT = { exists = scope:ln_scattered_brother } }
 			create_character = {
@@ -159,11 +170,8 @@ ln_scatter.2 = {
 				gender = male
 				martial = { 10 16 }
 				prowess = { 16 24 }
-				trait = nightswatch
-				trait = lifestyle_nw_ranger
 				trait = brave
 				save_scope_as = ln_scattered_brother
-				after_creation = { add_trait_xp = { trait = nightswatch  value = 100 } }
 			}
 		}
 		# THE TWO WHO CAME WITH HIM ARE REAL OR THEY ARE NOBODY. Thomas: "if the list is empty, it should
@@ -177,6 +185,7 @@ ln_scatter.2 = {
 					is_alive = yes
 					is_landed = no
 					NOT = { has_character_flag = ln_took_service }
+					ln_is_one_of_them_trigger = no
 				}
 			}
 			random_in_global_list = {
@@ -185,6 +194,7 @@ ln_scatter.2 = {
 					is_alive = yes
 					is_landed = no
 					NOT = { has_character_flag = ln_took_service }
+					ln_is_one_of_them_trigger = no
 				}
 				add_character_flag = ln_took_service
 				save_scope_as = ln_scattered_brother_2
@@ -197,6 +207,7 @@ ln_scatter.2 = {
 					is_alive = yes
 					is_landed = no
 					NOT = { has_character_flag = ln_took_service }
+					ln_is_one_of_them_trigger = no
 				}
 			}
 			random_in_global_list = {
@@ -205,6 +216,7 @@ ln_scatter.2 = {
 					is_alive = yes
 					is_landed = no
 					NOT = { has_character_flag = ln_took_service }
+					ln_is_one_of_them_trigger = no
 				}
 				add_character_flag = ln_took_service
 				save_scope_as = ln_scattered_brother_3
@@ -217,6 +229,14 @@ ln_scatter.2 = {
 		name = ln_scatter.2.a
 		add_character_flag = ln_heard_the_warning
 		custom_tooltip = ln_scatter_brothers_join_tt
+		# 1.1.3 review: a man banked by 1.1.2 still wears the black (1.1.3 releases a brother only as he flees),
+		# and a sworn man joining this hall is sent straight back to the Lord Commander by AGOT's
+		# on_join_court_nights_watch. Released first, as the tooltip says. A no-op for men released in 1.1.3.
+		scope:ln_scattered_brother = {
+			if = { limit = { agot_is_member_of_nights_watch = yes } agot_remove_nightswatch_traits_effect = yes }
+		}
+		if = { limit = { exists = scope:ln_scattered_brother_2 }  scope:ln_scattered_brother_2 = { if = { limit = { agot_is_member_of_nights_watch = yes } agot_remove_nightswatch_traits_effect = yes } } }
+		if = { limit = { exists = scope:ln_scattered_brother_3 }  scope:ln_scattered_brother_3 = { if = { limit = { agot_is_member_of_nights_watch = yes } agot_remove_nightswatch_traits_effect = yes } } }
 		scope:ln_scattered_brother = { set_employer = root }
 		if = { limit = { exists = scope:ln_scattered_brother_2 }  scope:ln_scattered_brother_2 = { set_employer = root } }
 		if = { limit = { exists = scope:ln_scattered_brother_3 }  scope:ln_scattered_brother_3 = { set_employer = root } }
@@ -243,6 +263,13 @@ ln_scatter.2 = {
 		# exists = root.capital_province as well, because this option is reachable by a landless root and a
 		# missing province would fail the same call for a different reason.
 		hidden_effect = {
+			# 1.1.3 review: released before they walk on, as in option a (a 1.1.2 survivor is still sworn,
+			# and AGOT's leave handler would fetch a sworn man back to Castle Black from the pool).
+			scope:ln_scattered_brother = {
+				if = { limit = { agot_is_member_of_nights_watch = yes } agot_remove_nightswatch_traits_effect = yes }
+			}
+			if = { limit = { exists = scope:ln_scattered_brother_2 }  scope:ln_scattered_brother_2 = { if = { limit = { agot_is_member_of_nights_watch = yes } agot_remove_nightswatch_traits_effect = yes } } }
+			if = { limit = { exists = scope:ln_scattered_brother_3 }  scope:ln_scattered_brother_3 = { if = { limit = { agot_is_member_of_nights_watch = yes } agot_remove_nightswatch_traits_effect = yes } } }
 			if = {
 				limit = {
 					exists = root.capital_province

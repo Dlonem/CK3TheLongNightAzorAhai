@@ -1,0 +1,48 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- consecration, the second road to Lightbringer.
+ # TOKEN FORM: bare saved-scope names, [ln_beloved.GetFirstName], NOT [scope:ln_beloved...]. That is the form
+ # the rest of the Lightbringer chain uses and the one proven live in this mod. [ln_the_blade.GetName] is an
+ # artifact scope -- vanilla uses [this_artifact.GetName] 37 times, so the promote is real.
+
+ # -- THE DECISION -------------------------------------------------------------------------------------------
+ ln_consecrate_blade_decision:0 "Consagrar la hoja"
+ ln_consecrate_blade_decision_desc:0 "El relato dice que Azor Ahai trabajó cien días y cien noches e hizo la espada de la nada. No dice que ese sea el único modo en que se ha hecho nunca.\n\nEl acero valyrio nunca fue solo fuego y plegado. Lo que los herreros del Freehold pusieron en él, el acero lo bebió, y no ha dejado de beber desde entonces: por eso una hoja de quinientos años sigue tomando un filo que ningún armero vivo sabe darle.\n\nA lo que ha bebido una vez se le puede hacer beber otra. Lo que entra la segunda vez decide lo que sale."
+ ln_consecrate_blade_decision_tt:0 "Consagrar la hoja valyria que llevo."
+ ln_consecrate_blade_decision_confirm:0 "Encended el fuego."
+ ln_consecrate_blade_decision_effect_tt:0 "Se encenderá el fuego y se preparará el rito. Estará listo en menos de quince días."
+
+ ln_consecrate_needs_a_voice:0 "Alguien tiene que poder decir las palabras: un sacerdote rojo como capellán de mi corte o sacerdote de mi campamento, o que yo mismo lo sea."
+ ln_consecrate_needs_a_price:0 "El acero cobra un precio: alguien a quien amo camina hasta el fuego. Albor es la excepción. No cobra ninguna vida, pero solo al nacido bajo la estrella sangrante."
+ ln_consecrate_dawn_not_yours:0 "Albor es la única hoja que llevo, y no fue por mí por quien cayó la estrella. No cobrará ninguna vida, y no seré yo quien se lo pida."
+ ln_consecrate_rite_is_spent:0 "El fuego ya se ha encendido una vez. Todavía no se ha enfriado."
+
+ # -- MODIFIERS ----------------------------------------------------------------------------------------------
+ ln_lightbringer_consecrated_modifier:0 "Dueña de Luz"
+ ln_lightbringer_consecrated_modifier_desc:0 "La hoja bebió por segunda vez, y lo que entró en ella se quedó dentro. Ahora responde a un nombre más antiguo, sea lo que sea lo que esté grabado en el pomo."
+ ln_the_rite_is_spent_modifier:0 "El fuego sigue encendido"
+ ln_the_rite_is_spent_modifier_desc:0 "Se ha convocado un rito y aún no ha sido respondido. No se puede pedir nada más a estas llamas hasta que lo sea."
+
+ # -- 1. THE CHOICE ------------------------------------------------------------------------------------------
+ ln_consecrate.1.t:0 "La segunda bebida"
+ ln_consecrate.1.desc.dawn:0 "Han levantado el fuego en el patio porque no hay en este castillo un hogar lo bastante grande, y [ln_the_blade.GetName] descansa sobre dos caballetes al lado, con la palidez del vidrio lácteo y un frío mayor que el de la noche.\n\nEl sacerdote lleva tres días leyendo las llamas y ha dejado de fingir calma sobre lo que encontró. Esta espada nunca fue valyria, dice. Lo que el Freehold hiciera con su acero, nadie lo hizo con esta: esta cayó del cielo ya terminada, y lleva ocho mil años esperando a que alguien repare en lo que es.\n\n\"Ya ha sido templada\", dice. \"En una estrella. No queda precio que pagar ni nada que poner dentro. Solo quiere que se le pida, y solo se lo pedirá aquel por quien bajó la estrella\".\n\nMe mira como un hombre mira una puerta que no está seguro de querer abierta."
+ ln_consecrate.1.desc.beloved:0 "Han levantado el fuego en el patio, y [ln_the_blade.GetName] descansa sobre dos caballetes al lado.\n\nEl sacerdote no quiere tocar la hoja. Se ha pasado el día explicando, con mucho cuidado, que esto no es una forja y que aquí no se va a hacer nada: la espada ya existe, la espada ya es extraordinaria, y todo lo que un rito puede hacer es darle algo en lo que convertirse.\n\nY luego me dijo lo que cuesta, y no lo endulzó, y desde entonces no he podido pensar en nada más.\n\n[ln_beloved.GetTitledFirstName] está en el salón, a mi espalda. [ln_beloved.GetSheHe|U] sabe que el fuego está encendido. No creo que [ln_beloved.GetSheHe] sepa por qué."
+ ln_consecrate.1.desc:0 "Han levantado el fuego en el patio, y [ln_the_blade.GetName] descansa sobre dos caballetes al lado, y el sacerdote espera que yo diga algo.\n\nEl acero está dispuesto. Eso es lo que más me inquieta: no tuvo que persuadirlo, ni prepararlo, ni pedirle nada al Señor de Luz. Solo miró la hoja y dijo que tomaría cualquier cosa que yo pusiera en ella.\n\nLa dificultad es enteramente mía."
+ ln_consecrate.1.a:0 "Llamad a [ln_beloved.GetFirstName]. [ln_beloved.GetSheHe|U] tiene derecho a que se le pregunte."
+ ln_consecrate.1.b:0 "Decid las palabras. La estrella pagó esto hace mucho tiempo."
+ ln_consecrate.1.c:0 "Devolvedla a la vaina."
+
+ # -- 2. THE LIFE --------------------------------------------------------------------------------------------
+ ln_consecrate.2.t:0 "Ya era una espada"
+ ln_consecrate.2.desc:0 "[ln_beloved.GetSheHe|U] salió al fuego.\n\nLas leyendas se equivocan del mismo modo en que siempre se equivocan: lo cuentan como un asesinato, y es mucho peor que un asesinato. [ln_beloved.GetSheHe|U] lo escuchó todo, hizo una pregunta que no supe responder y luego se quedó donde el sacerdote le indicó a [ln_beloved.GetHerHim], y no volvió a moverse.\n\nEsto es lo que nadie te advierte: la hoja no cambió. No brilló, no cantó, no se anunció. Entró como entra cualquier espada, porque ya era una espada, y esa es la diferencia entre esto y una forja. No hubo un instante en que el acero se convirtiera en algo. Solo estaba [ln_beloved.GetTitledFirstName], y luego no estaba.\n\nAhora está caliente. No noté cuándo empezó. No he podido soltarla desde entonces, y ya no tengo la certeza de que esa decisión sea mía."
+ ln_consecrate.2.a:0 "Entonces valió la pena. Tiene que haber valido la pena."
+
+ # -- 3. DAWN -----------------------------------------------------------------------------------------------
+ ln_consecrate.3.t:0 "La estrella baja dos veces"
+ ln_consecrate.3.desc:0 "El sacerdote dijo las palabras, y yo puse la mano en la empuñadura, y no ocurrió absolutamente nada.\n\nNo se sorprendió. Dijo que había entendido mal lo que es una consagración: que había venido hasta aquí esperando darle algo a la espada, cuando todo el sentido de esta hoja es que recibió todo el día en que cayó. Esta noche no se añadió nada a [ln_the_blade.GetName]. Fue reconocida.\n\nY entonces se le fue el frío. Es la única manera en que puedo describirlo. Desde que mi casa tiene esta espada la hemos llamado pálida y hermosa e insoportable de sostener mucho rato, y esta noche está simplemente tibia, como está tibia una piedra cuando le ha dado el sol.\n\nTodos los hombres del patio se arrodillaron. No se lo pedí y no habría podido impedirlo."
+ ln_consecrate.3.a:0 "Siempre fue esto. Nosotros solo la llevábamos."
+
+ # -- 4. HE PUT IT BACK ---------------------------------------------------------------------------------------
+ ln_consecrate.4.t:0 "Hierro frío"
+ ln_consecrate.4.desc:0 "Dejé que el fuego se consumiera sin decir nada, y al final el sacerdote lo entendió y se metió dentro.\n\nÉl lo contará como una falta de valor. Quizá lo fue. Pero le he estado dando vueltas media noche y siempre llego al mismo sitio: una espada que cuesta una persona no es un arma, es una deuda, y he visto lo que hacen los hombres cuando han pagado una. Se pasan el resto de su vida demostrando que el precio era razonable.\n\nLa oscuridad sigue viniendo. La enfrentaré con el acero que ya tengo, y con las personas que no puse dentro de él."
+ ln_consecrate.4.a:0 "El acero basta. Tendrá que bastar."

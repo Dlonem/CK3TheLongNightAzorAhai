@@ -1,0 +1,32 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the spear.
+ # TOKEN FORM: bare saved-scope names, the form the rest of this mod uses and the one proven live.
+ # A dragon is an ordinary character in AGOT, so the person promotes work on it normally.
+
+ ln_spear.1.t:0 "Derribado del cielo"
+
+ ln_spear.1.desc.lived_champion:0 "La batalla está decidida. Desde aquí arriba no sé de qué lado cayó, y por un momento no me importa demasiado.\n\nLuego [ln_spear_dragon.GetFirstName] vira para otra pasada, y abajo, en el hielo, algo levanta el brazo.\n\nNunca veo la lanza. Lo que veo es el ala izquierda de [ln_spear_dragon.GetFirstName] dejar de funcionar—batiendo, y luego simplemente ya no está—y oigo salir de [ln_spear_dragon.GetHerHim] un sonido que voy a seguir oyendo el resto de mi vida.\n\nCaemos juntos. Recuerdo que el suelo llegaba muy rápido y que era muy blanco, y recuerdo pensar, con una claridad que me asusta más que la caída, que no es así como esto acaba.\n\nEstoy roto en muchísimos sitios y estoy en pie antes de que pase una hora, y los hombres que me sacaron de los restos de [ln_spear_dragon.GetHerHim] no me miran de frente. Uno de ellos ha empezado a rezar en una lengua que no tengo. Lo que sea que el dios rojo quiere de mí, está claro que no ha terminado de pedirlo.\n\n#bold Está de pie en el hielo a una milla de distancia y me devuelve la mirada, y no creo que ninguno de los dos esté sorprendido.#!"
+
+ ln_spear.1.desc.lived:0 "La batalla está decidida. Desde aquí arriba no sé de qué lado cayó, y por un momento no me importa demasiado.\n\nLuego [ln_spear_dragon.GetFirstName] vira para otra pasada, y abajo, en el hielo, algo levanta el brazo.\n\nNunca veo la lanza. No creo que nadie vea la lanza. Lo que veo es el ala izquierda de [ln_spear_dragon.GetFirstName] dejar de funcionar—batiendo, y luego simplemente ya no está—y oigo salir de [ln_spear_dragon.GetHerHim] un sonido que voy a seguir oyendo el resto de mi vida.\n\nCaemos juntos. Recuerdo que el suelo llegaba muy rápido y que era muy blanco. No recuerdo el golpe.\n\nAhora hay hombres de pie sobre mí, gritando algo de lo que no oigo nada. Mi costado izquierdo no responde cuando se lo pido, y hay muchísima sangre que estoy bastante seguro de que es mía. [ln_spear_dragon.GetFirstName] está a doscientas yardas con vapor saliéndole de [ln_spear_dragon.GetHerHis] boca, y nada más en [ln_spear_dragon.GetHerHim] se mueve.\n\n#bold Nunca han podido alcanzarnos allí arriba. Eso era todo. Era lo único que teníamos.#!"
+
+ ln_spear.1.desc.died:0 "La batalla está decidida. Desde aquí arriba no sé de qué lado cayó, y por un momento no me importa demasiado.\n\nLuego [ln_spear_dragon.GetFirstName] vira para otra pasada, y abajo, en el hielo, algo levanta el brazo.\n\nNunca veo la lanza. Lo que veo es el ala izquierda de [ln_spear_dragon.GetFirstName] dejar de funcionar—batiendo, y luego simplemente ya no está—y el horizonte gira hasta un lugar al que los horizontes no van.\n\nCaemos juntos. Hay un tramo que dura más de lo que tiene derecho a durar, en el que el suelo todavía está muy lejos y no hay absolutamente nada a lo que agarrarse, y tengo tiempo de pensar un pensamiento claro.\n\n#bold Nunca han podido alcanzarnos allí arriba.#!"
+
+ ln_spear.1.a:0 "Levantadme. Quiero ver qué le ha hecho a [ln_spear_dragon.GetFirstName]."
+ ln_spear.1.a.champion:0 "Levantadme. Ya ha visto mi cara, y quiero que me haya visto en pie."
+ ln_spear.1.b:0 "Así que así es como acaba."
+
+ # ── THE TAKEN DRAGON'S RECORD (1.0.12b) ─────────────────────────────────────────
+ ln_dragon_taken_memory:0 "tomado por la lanza del Rey de la Noche"
+ ln_dragon_taken_memory_desc:0 "Derribado del cielo por la lanza del Rey de la Noche, y alzado antes de que el cuerpo se enfriara. Las alas siguen volando. Nada detrás de los ojos es lo que era."
+ ln_dragon_taken_memory_desc_second_perspective:0 "Tu dragón fue derribado del cielo por la lanza del Rey de la Noche, y alzado antes de que el cuerpo se enfriara. Sigue volando. No es tuyo, y no es él."
+ ln_dragon_taken_memory_desc_third_perspective:0 "Este dragón fue derribado del cielo por la lanza del Rey de la Noche, y alzado antes de que el cuerpo se enfriara. Ahora vuela para los muertos."
+
+ # ── THE EMPTY SKY (1.0.12b) ─────────────────────────────────────────────────────
+ ln_spear.2.t:0 "El cielo vacío"
+ ln_spear.2.desc:0 "Las tablillas me saldrán del brazo en un mes, me dicen. Nadie me dice qué le sale a lo demás.\n\nSigo haciendo eso de aguzar el oído por si oigo a [ln_spear_dragon.GetHerHim]. Diez años sabiendo dónde estaba [ln_spear_dragon.GetSheHe] como sabes dónde está tu propia mano, y el saber sigue ahí — solo ha cambiado de color. [ln_spear_dragon.GetSheHe|U] está al norte de mí. [ln_spear_dragon.GetSheHe|U] está siempre al norte de mí ahora.\n\nAyer llegó un pastor jurando que había visto a [ln_spear_dragon.GetFirstName] sobre la loma, y el salón se quedó en silencio, porque todos saben de quién era [ln_spear_dragon.GetSheHe]. Pálido, dijo. Como escarcha con alas. Sigue siendo [ln_spear_dragon.GetHerHim]. Esa es la parte que mi cabeza no consigue sostener: sigue siendo [ln_spear_dragon.GetHerHis] forma, sigue siendo [ln_spear_dragon.GetHerHis] batir de alas, sigue siendo la manera en que [ln_spear_dragon.GetSheHe] vira a la izquierda antes de que [ln_spear_dragon.GetSheHe] aterrice.\n\nLo único es que [ln_spear_dragon.GetSheHe] no va a aterrizar para mí."
+ ln_spear.2.desc.gone:0 "Me dicen que [ln_spear_dragon.GetFirstName] está muerto — muerto de verdad ahora, abatido en algún lugar al norte del Muro, y esta vez nada se volvió a levantar.\n\nCreí que sería peor que la primera vez. No lo es. La primera vez, los muertos tomaron [ln_spear_dragon.GetHerHis] forma y la hicieron volar como una capa robada, y cada informe de alas pálidas sobre los árboles era un garfio dentro de mí.\n\nAhora el cielo está solo vacío. Un jinete puede llorar un cielo vacío."
+ ln_spear.2.a:0 "[ln_spear_dragon.GetSheHe|U] es mío. Recuperaré a [ln_spear_dragon.GetHerHim], o acabaré yo mismo con [ln_spear_dragon.GetHerHim]."
+ ln_spear.2.b:0 "Dejadme quedarme a solas con esto. [ln_spear_dragon.GetSheHe|U] se ganó al menos eso."
+ ln_spear.2.c:0 "El fuego se llevó a [ln_spear_dragon.GetHerHim] y me dejó a mí. El fuego no ha terminado conmigo."
+

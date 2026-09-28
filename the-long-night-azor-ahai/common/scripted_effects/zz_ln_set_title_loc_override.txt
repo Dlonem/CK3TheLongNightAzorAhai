@@ -87,6 +87,62 @@ set_title_localization_effect = {
 		}
 	}
 
+	# ── 1.1.3, after the 26 Sep boot: THE OTHERS, BY CULTURE -- and the Night King. ────────────────────────────────────────────
+	# "Hegemon Other" (Tureno, 14 Sep; Thomas's 26 Sep run, still). 1.1.2 answered it with a flavorization
+	# entry (common/flavorization/others_title_holders.txt, other_hegemony_male at priority 2000), and it
+	# never showed, because AGOT does not render ruler titles through the engine's flavorization at all: its
+	# GUI reads AGOTGetTitle (common/customizable_localization/00_agot_title_holder_custom_loc.txt), which is
+	# apply_character_title_data -> set_title_localization_effect -> THIS FILE. The Night King is on
+	# feudal_government (engine-assigned with the land), so he fell past the wight branch above into AGOT's own
+	# chain, whose feudal-hegemony key reads "Hegemon". The flavorization file's whole name_list_others set
+	# (Chieftain / High Chieftain / King of Winter / The Great Other) has been unreachable since the fork for
+	# the same reason; it still names TITLES ("the Army of the Dead of Oldweir" is its other_county_title,
+	# and that path AGOT does not override), so it stays. The rulers are named here, where AGOT looks.
+	# frostborn is the dead's culture -- every raise sets it, the Night King is created with it -- so this is
+	# the name_lists = { name_list_others } test the flavorization meant, in the form AGOT's chain can see.
+	# Culture AND identity: the 26 Sep second boot showed LIVING frostborn lords ("Other Lowborn of
+	# c_voss_voln", a generated successor in a frostborn county, before the yearly net reaches him) -- they
+	# keep AGOT's names until they are raised. And identity alone would catch AGOT's ruins placeholders,
+	# which ln_is_one_of_them_trigger counts as theirs; the culture test keeps those out. Before the ranger
+	# and wilderness branches on purpose: an Other holding a wilderness county is a Chieftain, not a Warden.
+	# Thomas, 27 Sep, on screen: "The Great Other Other 'the Night King' The Others" -- too many Others.
+	# other_hegemony_male now reads "King" (Queen / Roi / Король / Rey), so he is "King Other 'the Night King'".
+	else_if = {
+		limit = {
+			exists = $SCOPE$
+			$SCOPE$ ?= {
+				culture = culture:frostborn
+				ln_is_one_of_them_trigger = yes
+			}
+		}
+		if = {
+			limit = { $SCOPE$ ?= { ln_named_title_tier_trigger = { TIER = tier_hegemony } } }
+			ln_stamp_title_effect = { SCOPE = $SCOPE$ MALE = other_hegemony_male FEMALE = other_hegemony_female }
+		}
+		else_if = {
+			limit = { $SCOPE$ ?= { ln_named_title_tier_trigger = { TIER = tier_empire } } }
+			ln_stamp_title_effect = { SCOPE = $SCOPE$ MALE = other_empire_male FEMALE = other_empire_female }
+		}
+		else_if = {
+			limit = { $SCOPE$ ?= { ln_named_title_tier_trigger = { TIER = tier_kingdom } } }
+			ln_stamp_title_effect = { SCOPE = $SCOPE$ MALE = other_kingdom_male FEMALE = other_kingdom_female }
+		}
+		else_if = {
+			limit = { $SCOPE$ ?= { ln_named_title_tier_trigger = { TIER = tier_duchy } } }
+			ln_stamp_title_effect = { SCOPE = $SCOPE$ MALE = other_duchy_male FEMALE = other_duchy_female }
+		}
+		else_if = {
+			limit = { $SCOPE$ ?= { ln_named_title_tier_trigger = { TIER = tier_county } } }
+			ln_stamp_title_effect = { SCOPE = $SCOPE$ MALE = other_county_male FEMALE = other_county_female }
+		}
+		else_if = {
+			limit = { $SCOPE$ ?= { ln_named_title_tier_trigger = { TIER = tier_barony } } }
+			ln_stamp_title_effect = { SCOPE = $SCOPE$ MALE = other_barony_male FEMALE = other_barony_female }
+		}
+		else = {
+			ln_stamp_title_effect = { SCOPE = $SCOPE$ MALE = lord_non_paramount FEMALE = lady_non_paramount }
+		}
+	}
 	### THE RANGERS ###
 	else_if = {
 		limit = {

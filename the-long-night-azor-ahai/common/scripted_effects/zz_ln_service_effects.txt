@@ -42,6 +42,19 @@ ln_the_dead_employ_nobody_effect = {
 
 	# 1.1.0a -- AND NOBODY OF THEIRS KEEPS A FRIEND. See ln_the_dead_have_no_allies_effect below.
 	ln_the_dead_have_no_allies_effect = yes
+
+	# 1.1.3 (Thomas's call D-f) -- AND NOBODY LIVING PAYS THEM TRIBUTE. wight_government carries
+	# government_is_tribal, tribal authority grants can_have_tributaries, so the Night King could take a
+	# small living neighbour as a tributary through AGOT's make_tributary_cb -- and a tributary may join his
+	# wars (the Discord thread of 19 Sep, one of the roads). The mod says the dead answer to nobody living
+	# and employ nobody living; a living realm paying them tribute is the same shape. every_tributary /
+	# end_tributary are vanilla's own (casus_belli_types/09_mpo_wars.txt:852-855). Yearly, from the story
+	# pulse, like everything else here.
+	every_tributary = {
+		limit = { ln_is_one_of_them_trigger = no }
+		debug_log = "LN_TRACE SERVICE: a living realm was paying the dead tribute - ended"
+		end_tributary = yes
+	}
 }
 
 # 1.1.0a -- THE BELT TO is_alliance_valid's BRACES.
@@ -74,6 +87,301 @@ ln_the_dead_have_no_allies_effect = {
 		debug_log = "LN_TRACE SERVICE: one of the dead was holding an alliance - breaking it"
 		every_ally = {
 			break_alliance = scope:ln_ally_owner
+		}
+	}
+
+	# ── 1.1.3: AND NOBODY LIVING FIGHTS BESIDE THEM IN A WAR ALREADY RUNNING. ────────────────────────────
+	# Breaking an alliance does not pull an ally out of a war he is already in, and the roads that put living
+	# rulers on the dead's side were never alliances at all (adventurer companies, paid help, tributaries; the
+	# full list is above ln_the_dead_march_alone in 00_others_on_actions.txt). That hook catches the join as
+	# it happens; this is the belt under it for the war in the 19 Sep screenshot that had run eleven months,
+	# and for any scripted add_attacker the hook turns out not to see. Called from the invasion pulse's 30-day
+	# group as well as from the yearly net (the_long_night.txt), so a live war is cleaned within a month.
+	#
+	# COLLECT, THEN REMOVE: the list is walked to a temporary list first so the loop never edits the list it
+	# is walking. is_war_leader = <char> is AGOT's own form (00_war.txt:778); every_war_attacker /
+	# every_war_defender are already in 00_long_night_cbs.txt; add_to_temporary_list / every_in_list /
+	# remove_from_list are vanilla's (00_war_effects.txt:909, 06_ep3_laamp_interactions.txt:5188).
+	every_ruler = {
+		limit = {
+			ln_is_one_of_them_trigger = yes
+			is_at_war = yes
+		}
+		save_temporary_scope_as = ln_dead_leader
+		every_character_war = {
+			limit = { is_war_leader = scope:ln_dead_leader }
+			save_temporary_scope_as = ln_dead_war
+			if = {
+				limit = { is_attacker = scope:ln_dead_leader }
+				every_war_attacker = {
+					limit = { ln_is_one_of_them_trigger = no }
+					add_to_temporary_list = ln_living_beside_the_dead
+				}
+			}
+			else = {
+				every_war_defender = {
+					limit = { ln_is_one_of_them_trigger = no }
+					add_to_temporary_list = ln_living_beside_the_dead
+				}
+			}
+			every_in_list = {
+				list = ln_living_beside_the_dead
+				save_temporary_scope_as = ln_turncoat
+				debug_log = "LN_TRACE ALLIES: a living ruler was fighting on the dead's side of a running war - removed by the sweep"
+				debug_log_scopes = yes
+				scope:ln_dead_war = { remove_participant = scope:ln_turncoat }
+				remove_from_list = ln_living_beside_the_dead
+			}
+		}
+	}
+}
+
+# ── 1.1.2: AND NONE OF THEM STANDS IN A LIVING HALL ────────────────────────────────────────────────────
+#
+# Thomas, 13 Sep, from his own campaign: "keep in mind in my game, there is currently a WIGHT in the court
+# of the King of the Iron Throne??" The screenshot is Lonnel Norrey, House Norrey -- a Stark mountain
+# bannerman, birthplace Stoutfast -- carrying wight_trait, wight_v2, ln_one_of_them, the frostborn culture
+# and the cold_gods faith, sitting in King's Landing with his converted wife beside him, and the header
+# reads "Guest of King Jaehaelor".
+#
+# ── WHY THE EXISTING GUARD DID NOT CATCH HIM, AND IT IS THE WORD "GUEST" ───────────────────────────────
+# Nothing in this mod moved him. He was converted where he stood, in the North, by one of the
+# every_courtier_or_guest walks (the 30-day heartbeat in 00_others_heartbeat_events.txt is the likeliest;
+# the on_title_gain hook and the yearly net above are the same class). VANILLA'S GUEST SYSTEM moved him:
+# a pool character leaves a court on a ~5%/month roll (game/common/courtier_guest_management/
+# guest_management.txt), and any host with a free guest slot then picks him up through guest_can_arrive ->
+# guest_allowed_to_arrive_trigger. That trigger asks about rivalry, plague, empire-tier claims and faith
+# hostility. It does not ask whether the candidate is dead, and neither does AGOT's override of it.
+#
+# ln_dead_join_court (common/on_action/zz_ln_court_on_actions.txt) is registered on on_join_court alone,
+# and additionally requires `exists = scope:new_employer`. A pool guest arrives through
+# on_guest_arrived_from_pool with scope:host, not scope:new_employer. Both roads end in the same silence.
+# 1.1.2 hooks that on_action as well -- but a hook only catches ARRIVALS, and it cannot reach a man who is
+# already sitting there, or one converted after he arrived. That is what this sweep is for.
+#
+# ── WHY A SWEEP AND NOT ONLY A HOOK ────────────────────────────────────────────────────────────────────
+# The mod's own standing rule, written in zz_ln_independence_effects.txt: a repair keyed on the presence of
+# a marker only reaches games that produced the marker, and mid-save repairs must be self-healing. This one
+# reaches Thomas's live campaign on the next yearly tick without him doing anything.
+#
+# ── THE SHAPE, AND WHAT EACH GUARD IS FOR ──────────────────────────────────────────────────────────────
+# every_ruler, not every_vassal_or_below: the population this is FOR is a dead man in a court that is
+# nobody's vassal -- the Iron Throne itself, in this case. Same reasoning as ln_the_dead_have_no_allies_effect
+# above, which walks every_ruler yearly for exactly that reason and costs one flag test per ruler.
+#   * host must be LIVING -- an Other in the Night King's hall, or in another Other's, is where he belongs.
+#   * is_imprisoned = no -- a prisoner is not a courtier; zz_ln_imprison_on_actions.txt owns him and
+#     keep_imprisoned is deliberate. Same exemption ln_dead_join_court makes.
+#   * is_ruler = no -- add_courtier refuses a ruler, and CK3 1.19's landless rulers read is_landed = no
+#     while still being rulers. That is the 1.1.0b lesson from ln_dead_join_court's own header, learned off
+#     56 live errors.
+#   * the whole body is gated on a LIVING Night King, so there is somewhere to send him. With no king there
+#     is no add_courtier target, and the alternative -- move_to_pool on a man who may already be a pool
+#     character -- is an error class this project has already eaten once
+#     (events/zz_ln_scattered_brothers_events.txt records it). Doing nothing is the safe answer there, and
+#     after the Dawn the dark-spent sweep is taking these characters anyway.
+#
+# add_courtier on a pool guest is AGOT's own idiom: agot_redirect_to_appropiate_court_effect does exactly
+# that from their on_arrive_from_pool_uninteractable handler. `?=` because add_courtier can still refuse.
+ln_the_dead_stand_in_no_living_hall_effect = {
+	if = {
+		limit = {
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = { is_alive = yes }
+		}
+		title:h_the_others.holder = { save_temporary_scope_as = ln_the_dead_king }
+		every_ruler = {
+			limit = {
+				ln_is_one_of_them_trigger = no
+				any_courtier_or_guest = {
+					ln_is_one_of_them_trigger = yes
+					is_imprisoned = no
+					is_ruler = no
+					NOT = { employer ?= { ln_is_one_of_them_trigger = yes } }
+				}
+			}
+			every_courtier_or_guest = {
+				limit = {
+					ln_is_one_of_them_trigger = yes
+					is_imprisoned = no
+					is_ruler = no
+					# 1.1.3, after the 26 Sep boot -- not one the dead already employ. The 26 Sep autosave shows what a "guest" can
+					# be: court_data { employer = the Night King, host = a living count } -- a courtier of the
+					# dead sitting in a living hall as a guest, some of them years past their leave date. He is
+					# in this list through the host, and add_courtier on him is refused ("already in the court
+					# they're in", 62 lines in one run). Nothing this effect can do moves him, and the same save
+					# shows the guest clock does not reliably send him home either (six years past his date);
+					# that visiting state is the engine's and is recorded, not fixed (UPSTREAM-WATCH, 1.1.3
+					# review). Skipping him removes the error spam and changes nothing else: 1.1.2's add_courtier
+					# on him was always refused. The ones this sweep is FOR are employed by the living host.
+					NOT = { employer ?= { ln_is_one_of_them_trigger = yes } }
+				}
+				save_temporary_scope_as = ln_dead_guest
+				debug_log = "LN_TRACE SERVICE: one of the dead was standing in a living hall - sent back to the king"
+				debug_log_scopes = yes
+				# 1.1.3 -- the vows come off BEFORE the move, or AGOT's court maintenance sends him straight
+				# back to the Wall on the join. See ln_the_dead_keep_no_vows_effect below.
+				ln_the_dead_keep_no_vows_effect = yes
+				scope:ln_the_dead_king = { add_courtier ?= scope:ln_dead_guest }
+			}
+		}
+	}
+}
+
+# ── 1.1.3: AND THE DEAD KEEP NO VOWS ───────────────────────────────────────────────────────────────────
+#
+# THE FREEZE AT THE WALL (Steam, KHALED, 16 Sep; Discord, 23 Sep: "my game freezes up whenever they reach
+# the wall", on the same date every reload). Two court handlers, one of them ours, each of which is right on
+# its own terms, and together they move one man back and forth until the engine's recursion cap stops them:
+#
+#   AGOT, on_join_court_nights_watch (agot_court_maintenance_on_actions.txt:1-35): anyone wearing the
+#        `nightswatch` trait who joins a court whose owner does not wear it is sent back -- to an old
+#        employer who is a LANDED brother, else to the Lord Commander.
+#   OURS, ln_dead_join_court (zz_ln_court_on_actions.txt): any dead non-ruler who joins a living court is
+#        sent to the Night King.
+#
+# A raised sworn brother keeps the trait -- the conversion body never touched it -- so once a living Lord
+# Commander holds the Wall while the dead stand at it, W joins the king's hall, AGOT sends him to the Lord
+# Commander, we send him to the king, AGOT's first branch sends him back to the Lord Commander (old
+# employer, landed, a brother), and so on until the cap. Every move also queues AGOT's day-late
+# on_leave_court_nights_watch, which restarts the loop tomorrow, and queued on_actions are saved with the
+# game. That is why it freezes on the same date after a reload. The 10 Sep verdict that this freeze was
+# "not ours" rested on no zz_ln file appearing in the recursion lines; those lines are anonymous
+# on_action_namespace events and can never carry a file name, so the absence proved nothing.
+#
+# THE FIX IS THE TRAIT. The dead keep no vows: strip the black (and the silent sisterhood, whose handler in
+# the same AGOT file has the same shape) from any dead non-ruler BEFORE he is moved anywhere. With the
+# trait gone every one of AGOT's redirects is silent -- on_join_court, on_leave_court and the pool arrival
+# handler all open on `has_trait = nightswatch` -- and the loop has no second half.
+#
+# Root = one of the dead. Called from the two court hooks, the yearly sweep above, the 30-day heartbeat
+# (events/00_others_heartbeat_events.txt, for wights already standing in the dead's own halls), the
+# delayed send-home event ln_court.1, and the conversion body itself (agot_long_night_scripted_effects.txt,
+# non-rulers only). agot_remove_nightswatch_traits_effect is AGOT's own release (00_agot_nightswatch_effects.txt:672);
+# agot_is_member_of_nights_watch is theirs too (00_agot_nights_watch_triggers.txt:15). Both are silent
+# no-ops on a man who wears nothing, so calling this twice costs a trait test and nothing else.
+#
+# RULERS ARE NOT STRIPPED HERE ON PURPOSE. A raised keeper on nights_watch_government could fail its own
+# can_get_government without the trait, and a ruler cannot be add_courtier'd anyway, so he is not in the
+# loop. Every caller either tests is_ruler = no itself or only ever reaches courtiers.
+ln_the_dead_keep_no_vows_effect = {
+	if = {
+		limit = { agot_is_member_of_nights_watch = yes }
+		debug_log = "LN_TRACE COURT: one of the dead still wore the black - vows stripped"
+		agot_remove_nightswatch_traits_effect = yes
+	}
+	if = {
+		limit = { has_trait = silent_sister }
+		debug_log = "LN_TRACE COURT: one of the dead was still a silent sister - vows stripped"
+		remove_trait = silent_sister
+	}
+}
+
+# Root = one of the dead, a non-ruler, standing in a living court. Where he goes: the Night King's hall if
+# there is a living king who is not him and he is not already there; the pool otherwise. This is the body
+# ln_dead_join_court had since 1.1.0, lifted out so the delayed event ln_court.1 can run the same road two
+# days later without a second copy of it. h_the_others is the Night King's own title -- the same handle the
+# Long Night decisions read to find him (common/decisions/00_agot_long_night_decisions.txt:20). `?=` because
+# add_courtier can still refuse, and never into a court he is already standing in (the 1.1.0b log carried a
+# quieter version of the add_courtier error for exactly that).
+ln_send_one_of_the_dead_home_effect = {
+	if = {
+		limit = {
+			exists = title:h_the_others.holder
+			title:h_the_others.holder = {
+				is_alive = yes
+				NOT = { this = root }
+			}
+		}
+		if = {
+			limit = { NOT = { employer ?= title:h_the_others.holder } }
+			debug_log = "LN_TRACE COURT: one of the dead stood in a living hall - sent to the king"
+			debug_log_scopes = yes
+			title:h_the_others.holder = { add_courtier ?= root }
+		}
+	}
+	else = {
+		# No king to go back to (he is dead, or this IS him). The pool, not a living hall.
+		debug_log = "LN_TRACE COURT: one of the dead stood in a living hall and there is no king - pooled"
+		move_to_pool = yes
+	}
+}
+
+# ── 1.1.3 (27 Sep third boot): THE DEAD KEEP THEIR OWN CHAPLAIN ────────────────────────────────────────
+#
+# WHERE 2,400 NEW CHARACTERS A YEAR CAME FROM. Thomas's third -develop run (8299 -> 8305): living characters
+# 47,218 -> 60,041, wights 18,117 -> 32,260. Comparing the 8303.1.1 and 8305.1.25 autosaves, 5,297 of the
+# 5,418 new wights DID NOT EXIST two years earlier -- they were created, not converted -- and 4,987 of them are
+# "Other", frostborn, lowborn, 97% male, and every one carries a LEARNING education. That is the clergy
+# background of vanilla's pool_court_chaplain selector (common/pool_character_selectors/00_clergy.txt,
+# age 25-55). The Court Chaplain is the one council seat AGOT still auto-fills for AI rulers, and it fills
+# FROM THE POOL (councillor_court_chaplain: auto_fill + fill_from_pool = yes), generating a character when
+# the pool has none. For a dead lord that character is a living cold-gods clergyman, and this mod's own
+# council gate refuses him (can_be_councillor_basics_trigger -> ln_may_serve_trigger: the living do not serve
+# the dead). So the seat stays empty, he stays in the hall, the heartbeat raises him, and next month the
+# engine makes another. In the same save 116 of 189 dead courts had an empty chaplain seat; 0 of 1,325 living
+# courts did. One immortal courtier per empty seat per month, forever -- the whole of the growth.
+#
+# THE FIX IS TO FILL THE SEAT, FROM THE DEAD HE ALREADY HAS. A seat with a chaplain in it is never auto-filled,
+# so the engine stops generating. Candidates are his own dead courtiers who pass the engine's own chaplain test
+# (can_be_court_chaplain_trigger, which already carries ln_may_serve_trigger), best learning first --
+# vanilla's own assignment shape (00_councillor_effects.txt, choose_and_assign_appropriate_councillor_
+# position_effect: NOT exists cp:councillor_X, then assign_councillor_type in the court owner's scope). A
+# court with no valid dead courtier yet gets one generated man at most per pulse; the heartbeat raises him and
+# the next pulse seats him. No AGOT file is touched and no council position is forked.
+#
+# Called on every dead ruler from the 30-day and yearly independence sweep (the walk already visits them).
+# Valid-position guards mirror AGOT's valid_position for the seat so the assign is never refused.
+ln_the_dead_keep_their_own_chaplain_effect = {
+	if = {
+		limit = {
+			ln_is_one_of_them_trigger = yes
+			is_landed = yes
+			NOT = { exists = cp:councillor_court_chaplain }
+			NOR = {
+				government_has_flag = government_is_landless_adventurer
+				government_has_flag = government_is_nomadic
+				government_has_flag = government_is_custom_landless
+				government_has_flag = government_is_nw
+				any_liege_or_above = { government_has_flag = government_is_nw }
+				# 1.1.3 review: governments with `council = no` have no chaplain seat to fill (AGOT
+				# 00_agot_government_types.txt; vanilla 00_government_types.txt). An Other granted a wilderness
+				# county takes wilderness_government (session63), and without this he got a futile appointment
+				# and a trace every pulse. The three AGOT placeholder governments carry government_is_uninteractable.
+				government_has_flag = government_is_uninteractable
+				has_government = wilderness_government
+				has_government = ruins_government
+				has_government = mercenary_government
+				has_government = holy_order_government
+				has_government = herder_government
+				has_government = lorathi_principality_government
+				has_government = silent_sisterhood_government
+				has_government = kingsguard_government
+			}
+		}
+		save_temporary_scope_as = ln_dead_lord
+		if = {
+			limit = {
+				any_courtier = {
+					ln_is_one_of_them_trigger = yes
+					is_councillor = no
+					can_be_court_chaplain_trigger = { COURT_OWNER = scope:ln_dead_lord }
+				}
+			}
+			ordered_courtier = {
+				limit = {
+					ln_is_one_of_them_trigger = yes
+					is_councillor = no
+					can_be_court_chaplain_trigger = { COURT_OWNER = scope:ln_dead_lord }
+				}
+				order_by = learning
+				save_temporary_scope_as = ln_dead_chaplain
+			}
+			debug_log = "LN_TRACE SERVICE: a dead lord's empty chaplain seat filled from his own dead court"
+			debug_log_scopes = yes
+			assign_councillor_type = {
+				type = councillor_court_chaplain
+				target = scope:ln_dead_chaplain
+			}
 		}
 	}
 }

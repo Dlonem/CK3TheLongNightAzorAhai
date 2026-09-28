@@ -1,6 +1,7 @@
 ﻿# AGOT: The Long Night & Azor Ahai -- counting deeds.
 #
-# Eight deeds. Nobody will ever have all eight; six is already an extraordinary life. The count is recomputed
+# Nine deeds (eight until hidden blood was added; 1.1.3 corrected the count in every comment that said eight).
+# Nobody will ever have all nine; six is already an extraordinary life. The count is recomputed
 # live rather than stored, so a deed that depends on holding something (Valyrian steel, a dragon) is LOST when
 # the thing is lost -- and a man can therefore be un-named, which is one of the more interesting things this
 # system can do to a player.

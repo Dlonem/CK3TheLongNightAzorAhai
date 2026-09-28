@@ -1,0 +1,13 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the orientation card.
+
+ ln_prophecy.30.t:0 "Llevan un tiempo diciéndolo"
+ ln_prophecy.30.desc_open:0 "[ln_the_seer.GetTitledFirstName] lleva semanas dando vueltas a esto y por fin lo ha soltado, con la llaneza sin bochorno de un hombre que ha decidido que el bochorno no es lo importante.\n\n"
+ ln_prophecy.30.desc_favored:0 "«Hay algo que la gente dice de ti. No a la cara. Es la vieja profecía: la del príncipe que fue prometido, el hombre nacido de nuevo entre sal y humo para despertar dragones de la piedra y acabar con la Larga Noche antes de que empiece.»\n\n«Lo dicen de alguien en cada generación. Se han equivocado todas y cada una de las veces.»\n\n"
+ ln_prophecy.30.desc_chosen:0 "«Hay algo que la gente dice de ti, y hace ya tiempo que dejó de ser un susurro. El príncipe que fue prometido. Azor Ahai renacido.»\n\n«Entiende lo que eso significa en la práctica. Vendrán sacerdotes. Hombres que se lo crean te seguirán más lejos de lo que permite el sentido común. Y en algún lugar hay un segundo hombre a quien le están diciendo lo mismo, y alguien echando la cuenta de cómo resolver eso.»\n\n"
+ ln_prophecy.30.desc_risen:0 "«Moriste. Quiero que quede claro que no hablo en poesía. Tu corazón se detuvo y tu cuerpo se enfrió, y luego no siguió así, y todos los hombres que estaban en esa habitación han contado la historia desde entonces con la misma cara.»\n\n«La Fe Roja tiene una palabra para lo que eres y no voy a usarla delante de ti todavía. Pero deberías saber que la gente empezará a usarla, y que no todos la dirán con buena intención.»\n\n"
+ ln_prophecy.30.desc_azor:0 "«Ya lo sabes. Estuviste allí. Pero las historias van a necesitar que alguien lo haya dicho en voz alta en una sala con testigos, así que: Azor Ahai renacido, el príncipe que fue prometido, y el hombre que le puso fin.»\n\n«No tengo nada que enseñarte. He venido de muy lejos para estar aquí y estar seguro, y lo estoy.»\n\n"
+ ln_prophecy.30.desc_close:0 "«Hoy no hay que hacer nada con nada de esto. Pero seguirá ocurriendo, y se hará más ruidoso, y un día llegará alguien que quiera algo de ello. Mejor que lo hayas oído de mí y sentado.»"
+ ln_prophecy.30.a:0 "Sé lo que dicen. Dilo de todos modos."
+ ln_prophecy.30.b:0 "No he pedido esto y no lo quiero."

@@ -28,7 +28,7 @@
  game_concept_ln_struggle_phase_cold_winds_desc:0 "The rangers stop coming back. The free folk are moving south in numbers nobody can explain away, and they are not raiding — they are running.\n\n#EMP Nobody knows how long this lasts.#! Long enough to build something if you start now; not long enough to finish if you wait to be certain. And every man who comes back having actually seen one brings the dark closer.\n\nThis is the warning. What you build in it is what you will have.\n\nTrade suffers across the [struggle_region|E]."
 
  game_concept_ln_struggle_phase_the_long_night:0 "The Long Night"
- game_concept_ln_struggle_phase_the_long_night_desc:0 "It is here. Whatever the realm built during the summer is what the realm has.\n\nThe dead are south of the Wall and moving, and the cold sits on every [county|E] in the [struggle_region|E].\n\n#EMP Ends only when the Night King dies.#! Not on a timer, not by accumulation."
+ game_concept_ln_struggle_phase_the_long_night_desc:0 "It is here. Whatever the realm built during the summer is what the realm has.\n\nThe dead are south of the Wall and moving, and the cold sits on every [county|E] in the [struggle_region|E].\n\n#EMP Ends only when the Night King is destroyed in person, by dragonglass, Valyrian steel or Lightbringer in hand, or with a dragon overhead.#! Any other death casts him down, and he rises again. Not on a timer, not by accumulation."
 
  game_concept_ln_struggle_phase_the_dawn:0 "The Dawn"
  game_concept_ln_struggle_phase_the_dawn_desc:0 "The dead lie still and the cold breaks. Somewhere south of the Neck the first green shows through.\n\nUnder #EMP Once#! the [struggle|E] ends here. Under #EMP The Cycle#! it flows back to [ln_struggle_phase_long_summer|E] and the wheel turns again — heavier every time."
@@ -76,7 +76,7 @@
  ln_catalyst_other_sighted:0 "An Other was seen, and believed"
  ln_catalyst_other_sighted_desc:0 "Someone sees one, survives, and is believed. All three must happen.\n\n#EMP During the warning this is the one thing that brings the dark closer.#! Every believed sighting takes years off what is left, directly — it does not wait for a threshold.\n\n#weak At most once every six years. Carries [ln_struggle_phase_cold_winds|E] onward.#!"
  ln_catalyst_night_king_slain:0 "The Night King is slain"
- ln_catalyst_night_king_slain_desc:0 "The blow lands.\n\nEnds [ln_struggle_phase_the_long_night|E] outright. Nothing else can."
+ ln_catalyst_night_king_slain_desc:0 "The blow lands, face to face, with something that can end him.\n\nEnds [ln_struggle_phase_the_long_night|E] outright. Nothing else can."
 
  # ── THE ENDING DECISION ─────────────────────────────────────────────────────────────────────────────────────
  # The schema requires at least one phase to list an ending decision. This is that entry, and it is never shown

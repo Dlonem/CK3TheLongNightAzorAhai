@@ -1,0 +1,300 @@
+﻿l_spanish:
+
+# Others Dynasty
+# NOTE: dynn_others / dynn_Others / dynn_others_motto used to be defined HERE as "Winter" and AGAIN in
+# dynasties/otherdynasty_names_l_english.yml as "The Others". Duplicate keys make CK3 pick one arbitrarily.
+# Settled on "The Others"; the dedicated dynasty-name file is now the single definition.
+ dynn_the_others:0 "Los Otros"
+ dynn_the_others_motto:0 "Todos se helarán."
+ house_theothers:0 "Los Otros"
+
+# White Walker Titles
+ h_the_others:0 "Las Tierras del Eterno Invierno"
+ d_others:0 "Invierno"
+ head_of_faith_the_other:0 "Rey de la Noche"
+ 
+ other_barony_title:0 "el Ejército de los Muertos"
+ other_county_title:0 "el Ejército de los Muertos"
+ other_duchy_title:0 "el Ejército de los Muertos"
+ other_kingdom_title:0 "el Ejército de los Muertos"
+ other_empire_title:0 "el Ejército de los Muertos"
+ other_hegemony_title:0 "el Ejército de los Muertos"
+ other_leader_name:0 "Otro"
+ # REMOVED: ten placeholder title keys here all read "Other" and were re-defined further
+ # down this same file with the real titles (Chieftain / High Chieftain / King of Winter /
+ # The Great Other). Duplicate keys make CK3 warn and pick one -- the good set was a coin flip.
+ other_name:0 "Otro"
+ # "Skroth" was Long Night+'s invention -- neither book nor show. Under the default rule this name is never
+ # seen: ln_raise_fallen_dragon_effect renames the raised dragon to whatever it was called in life, so it
+ # comes back as Vhagar the Undead. It only shows on the legacy "One Simply Appears" setting, where there is
+ # no dead dragon to take a name from -- so it is now the plain folk name the northerners use.
+ dragon_skroth:0 "El Dragón de Hielo"
+
+freehold_call_vassal_to_war_interaction_notification_title: "Llamada de ayuda RP del Feudo Franco utilizada"
+freehold_call_vassal_to_war_interaction_toast: "[actor.GetTitledFirstName] llamó a la guerra a su vasallo [recipient.GetTitledFirstName]"
+
+SCOURING_CB_NAME:0 "Arrasamiento de [TITLE.GetNameNoTier]"
+SCOURING_CB_NAME_BASE:0 "Arrasamiento"
+scouring_cb:0 "Arrasamiento"
+
+# Nickname
+ nick_the_great_other:0 "el Rey de la Noche"
+ nick_the_great_other_desc:0 "El pueblo llano ya tiene un nombre para [CHARACTER.GetShortUINameNoTooltipNoFormat|U]: el Rey de la Noche, el que gobierna la oscuridad y a los muertos."
+
+#White Walker Traits
+ trait_other:0 "Otro"
+ trait_other_desc:0 "Los Otros son altos y enjutos, con la carne pálida como la leche. Tienen ojos azules y fríos que se han descrito como si ardieran igual que el hielo, o brillaran como estrellas azules. Los Otros tienen sangre azul pálida y huesos lustrosos como vidrio lechoso"
+
+ trait_nightking:0 "Gran Otro"
+ trait_nightking_desc:0 "El primero de los Otros y señor de los muertos. El invierno camina donde él camina, y no se detiene."
+
+
+# rhllor trait
+ trait_chosen_by_rhllor:0 "Elegido"
+ trait_chosen_by_rhllor_desc:0 "Los templos ya no lo susurran: lo predican. Azor Ahai Renacido, el príncipe que fue prometido. Si las llamas aciertan no es algo que nadie vivo pueda comprobar, y en algún lugar hay siempre otro hombre al que le están diciendo lo mismo."
+# rhllor trait
+ trait_favored_by_rhllor:0 "Favorecido"
+ trait_favored_by_rhllor_desc:0 "Un vidente ha contado las señales de esta vida y ha dicho la palabra en voz alta: favorecido de R'hllor. Los sacerdotes ya lo han dicho antes, de otros hombres, y han enterrado a casi todos. Ahora los fuegos vigilan a este, y con ellos todo el mundo."
+ # rhllor trait
+ trait_resurrected_by_rhllor:0 "Devuelto por R'hllor"
+ trait_resurrected_by_rhllor_desc:0 "Murió, con testigos, y no siguió muerto. Un sacerdote rojo pidió al fuego por él, y el fuego devolvió casi todo."
+ 
+ 
+#Modifiers
+agot_long_night_smallfolk_outraged_modifier:0 "Pueblo llano indignado"
+
+agot_long_night_destruction_modifier:0 "Destrucción de la Larga Noche"
+
+#war for the dawn
+
+WAR_FOR_THE_DAWN_WAR_NAME:0 "La Guerra por el Amanecer"
+ WAR_FOR_THE_DAWN_WAR_NAME_BASE:0 ""
+ WAR_FOR_THE_DAWN_WAR_CB:0 "La Guerra por el Amanecer"
+ war_for_the_dawn_defeat_desc:0 "Una hora de lobos y escudos partidos, cuando la era de los hombres se viene abajo."
+ war_for_the_dawn_victory_desc:0 "Quizá llegue el día en que el valor de los hombres flaquee, en que abandonemos a nuestros amigos y rompamos todos los lazos de hermandad, pero no es este día."
+ 
+ 
+  #Letters on Winter
+ others_sword:0 "Espada de cristal"
+ other_sword_description:0 "Una espada que portan los Otros desde el norte profundo."
+ 
+ dusk_sword:0 "Hoja del Invierno"
+ dusk_sword_desc:0 "La espada que porta el Gran Otro, forjada en las Tierras del Eterno Invierno hace miles de años."
+ 
+crown_of_the_great_other_name:0 "Corona de los Otros"
+crown_of_the_great_other_description:0 "Una corona de hielo, forjada en las Tierras del Eterno Invierno."
+ 
+ 
+ #Letters on Winter
+ long_nights_WINTER_IS_COMING:0 "Se Acerca el Invierno"
+ long_nights_WINTER_IS_COMING_DESC:0 "Os escribimos desde la Ciudadela con noticias urgentes: se acerca el invierno. Lamentablemente, nos vemos incapaces de predecir la duración de esta estación, una anomalía sin precedentes en nuestros registros. Instamos a todos a prepararse para un periodo indeterminado de frío severo y a permanecer vigilantes."
+ 
+ long_nights_WINTER_IS_HERE:0 "A los señores del reino"
+ long_nights_WINTER_IS_HERE_DESC:0 "Escribo desde Castillo Negro con la mayor urgencia: los salvajes huyen hacia el sur en números sin precedentes, empujados por el alzamiento implacable de los vientos fríos. La amenaza crece cada día, y nuestras filas están lamentablemente escasas de hombres para afrontar lo que viene. Os lo imploro, por la seguridad del reino: enviad más hombres a reforzar el Muro de inmediato."
+ 
+ long_nights_WAR_FOR_THE_DAWN:0 "A los valientes"
+ long_nights_WAR_FOR_THE_DAWN_DESC:0 "Marcho al norte para enfrentarme a la mayor amenaza que nuestro mundo ha conocido: los Caminantes Blancos, en una guerra por el amanecer mismo. Llamo a todo hombre y toda mujer capaces a tomar las armas y unirse a mí en esta lucha noble, porque si flaqueamos, nuestro mundo se hundirá en una oscuridad eterna. Quedaos a mi lado y devolvamos juntos la luz al reino."
+ 
+  long_nights_WINTER_IS_OVER:0 "El Amanecer ha llegado"
+ long_nights_WINTER_IS_OVER_DESC:0 "Con el corazón lleno de júbilo, proclamamos el fin de la Larga Noche y la llegada del Amanecer."
+ 
+
+
+
+
+
+
+
+wights:0 "Espectros"
+
+others.2.title:0 "#e Los Vientos del Invierno#!"
+others.2.desc:0 "#e Ha llegado noticia del norte profundo, donde los hombres van y pocas veces vuelven, y lo que contaron heló incluso a las voluntades más firmes.\n\n Los salvajes huyen hacia el sur en números nunca vistos, como si los persiguieran #bold sombras#!, y los maestres murmuran de un invierno que roerá la carne y quebrará la piedra, alargándose años sin cuento.\n\n Pero no es el frío lo que hay que temer, ni el hambre. Es lo que aguarda en el corazón de esa oscuridad, en el silencio entre dos alientos.\n\n #bold Los Otros han regresado, y la Larga Noche ha comenzado.#!#!"
+others.2.a:0 "El invierno ha llegado."
+
+others.3.title:0 "#BER Un Sueño de Primavera#!"
+others.3.desc:0 "#BER Los Otros se habían ido, expulsados a los rincones oscuros del mundo que los engendraron, y el reino quedó al fin libre de su sombra de hielo.\n\n Los campos yacían calcinados y las aldeas vacías allí donde habían caminado los muertos, pero los hombres podían reconstruir; siempre lo hacían.\n\n El primer indicio de la #bold primavera#! llegó tras un invierno brutal. Voces esperanzadas hablaban de paz, de una unidad forjada en el terror compartido. \n\n Pero en los huesos de las casas antiguas y en las miradas de los grandes señores quedaba un temor: el temor de que las alianzas atadas con fuego y hielo se deshilacharan y se rompieran ahora que la #bold Gran Guerra#! había terminado.\n\n Porque los hombres se habían librado de los muertos, sí, pero los hombres siempre habían sido su peor enemigo.#!"
+
+
+others.3.a:0 "Las alianzas de la Gran Guerra durarán, sin duda."
+others.2.a.tt:0 "No harás sacrificio alguno a los Dioses Fríos y afrontarás las consecuencias."
+
+others_occupation.1.t:0 "#e El Arrasamiento de [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.1_desc:0 "#e La noche ya no termina: un manto de escarcha y muerte se arrastra sobre las ruinas de mis tierras. \n\n Los Otros, con su malicia fría y silenciosa, han asolado el reino y no me queda más remedio que hacerles frente.\n\n Mientras el frío se cierra y mi aliento se vuelve niebla, me asomo al borde: ¿hago un #warning sacrificio#! a #bold [thenightking.GetFaith.GetName]#! y espero clemencia, o me aferro a un fuego que se apaga y resisto hasta el final?#!"
+others_occupation.1_desc_child:0 "\n\n#e Veo el miedo en los ojos #bold [child.GetTitledFirstNamePossessive]#!.#!"
+others_occupation.1_desc_faith:0 "#e \n\n¿Habría perdón para mí en [ROOT.Char.GetFaith.GetName]?#!"
+
+others_occupation.1.a:0 "No adoraré a estos demonios."
+others_occupation.1.a.tt:0 "No harás sacrificio alguno a los Dioses Fríos y afrontarás las consecuencias."
+
+others_occupation.1.b:0 "¿Aceptarán un sacrificio menor?"
+others_occupation.1.b.tt:0 "Sacrificarás a cortesanos y plebeyos a los Dioses Fríos."
+
+others_occupation.1.c:0 "Lo siento, [child.GetTitledFirstName]."
+others_occupation.1.c.tt:0 "Se sacrificará a [child.GetFirstName]."
+
+
+others_occupation.2.t:0 "#e El Arrasamiento de [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.2.desc:0 "#e #bold Los Otros habían llegado.#!\n\n No había nada entre nosotros y los muertos.\n\n La escarcha se agarraba al aire y cada aliento era una plegaria callada, pero los muertos no rezan.\n\n Avanzaban por la nieve como fantasmas, y yo sentía el frío metiéndose en mis huesos.\n\n Nuestras espadas pesaban, nuestras manos estaban entumecidas de frío. Si fallábamos ahora, sería algo más que nuestra muerte: el fin del calor, de la vida misma. \n\n #warning;bold La noche no terminaría nunca.#! #!"
+others_occupation.2.a:0 "#BER ¡Por el Amanecer!#!"
+others_occupation.2.a.tt:0 "Lucharás por la supervivencia de tu casa y de tus tierras. Si fracasas en esta guerra, tú y toda tu corte podéis morir. Tus tierras quedarán #warning asoladas.#!"
+
+others_occupation.3.t:0 "#e El Salvador de [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.3.desc:0 "#BER Los muertos habían sido repelidos, pero por muy poco.\n\n Su aliento de hielo seguía en el viento, recordando que esta victoria no era más que una pausa fugaz en la matanza.\n\n La Casa [ROOT.Char.GetHouse.GetBaseName] sigue en pie, mis tierras aún no han sido tragadas por la escarcha, pero lo siento en los huesos: esto no es salvación. Los Otros volverán, más terribles que antes, y cuando vengan, vendrán en números incontables.\n\n La Larga Noche no ha terminado. Y si queremos sobrevivir, debemos encontrar a las pocas almas que queden y mantenernos juntos en esta oscuridad... o ser devorados por ella.#!"
+others_occupation.3.a:0 "Debemos perseverar."
+others_occupation.3.a.tt:0 "Has repelido a los Otros por el momento."
+
+others_occupation.4.t:0 "#e El Arrasamiento de [ROOT.Char.GetPrimaryTitle.GetNameNoTier]#!"
+others_occupation.4.desc:0 "#e La batalla se perdió, mis estandartes pisoteados en la nieve, mis hombres dispersos como hojas muertas al viento.\n\n El frío había venido por todos nosotros, y tras él los Otros, moviéndose como sombras en la tormenta, silenciosos, imparables. Ahora tenían mis tierras en su garra de hielo.\n\n Lo que quedaba de mi gente se acurrucaba de miedo, rezando por un amanecer que quizá nunca llegue.#!"
+others_occupation.4.a:0 "¡No!"
+others_occupation.4.a.tt:0 "Has sido derrotado."
+
+others_maintenance.2.t:0 "#bold El Futuro de los Siete Reinos#!"
+others_maintenance.2.desc:0 "Los Otros habían caído y la Larga Noche había terminado. \n \n Pero la victoria traía su propio peso, y la pregunta se alzaba como una sombra al amanecer: ¿qué camino tomaría ahora el reino?\n\n ¿Doblar la rodilla ante el Trono de Hierro, o tomar nuestro propio destino y gobernarnos solos, libres de los caprichos lejanos de un rey extranjero?"
+others_maintenance.2.a:0 "Juraremos lealtad al Trono de Hierro."
+others_maintenance.2.a.tt:0 "Jurarás lealtad al Trono de Hierro."
+others_maintenance.2.b:0 "La Casa [ROOT.Char.GetHouse.GetBaseName] debe gobernar."
+others_maintenance.2.b.tt:0 "Seguirás siendo independiente."
+
+others_trigger_title:0 "#e Desencadenar la Larga Noche#!"
+others_trigger_desc:0 "La Larga Noche comenzará. Los Otros tomarán al instante tierras más allá del Muro y empezarán su conquista."
+others_trigger_confirm:0 "Se Acerca el Invierno"
+others_trigger_tooltip:0 "Los Otros invadirán de inmediato"
+
+war_for_the_dawn_cb:0 "Guerra por el Amanecer"
+ln_contiguous_transfer_tt:0 "Las tierras ocupadas que lindan con las tierras de los muertos se toman también; lo que queda más lejos se abandona"
+
+war_for_the_dawn_decision_title:0 "Guerra por el Amanecer"
+war_for_the_dawn_decision_desc:0 "Los Otros han regresado, y todo lo que matan marcha con ellos: hombres muertos sobre caballos muertos, y cosas peores salidas del norte lejano. Ningún reino puede resistir eso por sí solo. Solo unidos puede Westeros esperar ver el amanecer. #warning La Guerra por el Amanecer no puede declararse mientras los Otros saborean una victoria reciente.#!"
+war_for_the_dawn_decision_confirm:0 "Por el amanecer"
+war_for_the_dawn_decision_tt:0 "Es posible perder tierras ocupadas ante los Otros"
+ ln_wfd_no_recent_victory:0 "Los Otros no deben estar saboreando una victoria reciente, a menos que la Guerra por el Amanecer ya se esté librando, en cuyo caso aún puedes unirte a ella."
+
+frostborn_culture_name:0 "Otros"
+
+
+
+ #Game rules
+ rule_agot_others_invasion_chance:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Larga Noche#!: probabilidad"
+ setting_others_certain_invasion_chance:0 "Segura #EMP (predeterminado)#!"
+ setting_others_certain_invasion_chance_desc:0 "La Larga Noche ocurrirá con total seguridad."
+ setting_others_near_certain_invasion_chance:0 "Casi segura"
+ setting_others_near_certain_invasion_chance_desc:0 "La Larga Noche probablemente ocurrirá. La tirada se hace una sola vez, para la primera Larga Noche; con El Ciclo, todas las siguientes llegan de todos modos."
+ setting_others_even_odds_invasion_chance:0 "Mitad y mitad"
+ setting_others_even_odds_invasion_chance_desc:0 "La Larga Noche puede ocurrir o no. La tirada se hace una sola vez, para la primera Larga Noche; con El Ciclo, todas las siguientes llegan de todos modos."
+ setting_others_remote_odds_invasion_chance:0 "Poco probable"
+ setting_others_remote_odds_invasion_chance_desc:0 "La Larga Noche probablemente no ocurrirá. La tirada se hace una sola vez, para la primera Larga Noche; con El Ciclo, todas las siguientes llegan de todos modos."
+ setting_others_invasion_wont_happen:0 "Ninguna"
+ setting_others_invasion_wont_happen_desc:0 "La Larga Noche no ocurrirá nunca."
+ 
+ rule_agot_others_invasion_moment:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Larga Noche#!: momento"
+ setting_others_random_window_invasion:0 "Un verano al azar #EMP (predeterminado)#!"
+ setting_others_random_window_invasion_desc:0 "Viene, y nadie sabe cuándo. Normalmente entre setenta y ciento sesenta años, a veces mucho más tarde."
+ setting_others_immediate_invasion:0 "De inmediato"
+ setting_others_immediate_invasion_desc:0 "La Larga Noche comenzará de inmediato."
+ setting_others_invasion_in_50_years:0 "En cincuenta años"
+ setting_others_invasion_in_50_years_desc:0 "Unos cincuenta años desde el inicio."
+ setting_others_invasion_in_100_years:0 "En cien años"
+ setting_others_invasion_in_100_years_desc:0 "Alrededor de un siglo desde el inicio."
+ setting_others_invasion_in_150_years:0 "En ciento cincuenta años"
+ setting_others_invasion_in_150_years_desc:0 "Alrededor de siglo y medio desde el inicio, con quince años de margen."
+ setting_others_full_random_invasion:0 "Azar total"
+ setting_others_full_random_invasion_desc:0 "La horquilla más amplia que hay: menos de treinta años, o casi trescientos. Nadie sabe cuánto tiempo te queda, tú incluido."
+ setting_others_historical_invasion:0 "Histórico"
+ setting_others_historical_invasion_desc:0 "En una partida que empiece antes del 255 d. C., Se Acerca el Invierno comienza alrededor del 275 d. C. y la Larga Noche llega entre 12 y 45 años después, así que puede caer entre el 280 y el 320 d. C. aproximadamente. Desde el 255 d. C. o después, el juego arranca ya en Se Acerca el Invierno y la Larga Noche llega para el 300 d. C. En ambos casos, solo si la regla de probabilidad la deja llegar."
+ setting_others_manual_invasion:0 "Manual"
+ setting_others_manual_invasion_desc:0 "No ocurre nada hasta que un jugador toma la decisión, y cada oleada posterior hay que llamarla igual. La barra de progreso vacía es la regla funcionando, no un atasco."
+ 
+ rule_agot_others_invasion_strength:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Larga Noche#!: fuerza"
+ setting_others_weak_invasion:0 "Débil"
+ setting_others_weak_invasion_desc:0 "La Larga Noche no será especialmente difícil."
+ setting_others_standard_invasion:0 "Estándar #EMP (predeterminado)#!"
+ setting_others_standard_invasion_desc:0 "Los Otros serán lo bastante fuertes para poner en aprietos a los Siete Reinos."
+ setting_others_strong_invasion:0 "Fuerte"
+ setting_others_strong_invasion_desc:0 "Los Otros serán lo bastante poderosos para arrollar a los Siete Reinos."
+ setting_others_insane_invasion:0 "Demencial"
+ setting_others_insane_invasion_desc:0 "¡La Larga Noche será brutal e imposible de vencer por medios convencionales!"
+ 
+ 
+ rule_agot_others_resolution:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Larga Noche#!: resolución"
+ setting_others_death_resolution:0 "Muerte #EMP (predeterminado)#!"
+ setting_others_death_resolution_desc:0 "La oscuridad se levanta cuando el Rey de la Noche es destruido en persona: en el campo tras romper su hueste, acorralado tras una Guerra por el Amanecer perdida, o encadenado, por una mano que lleve vidriagón, acero valyrio o Dueña de Luz, o con un dragón en el cielo. Cualquier otra muerte (una batalla, un dragón en la refriega, un accidente) solo lo derriba, y a los pocos días se alza de nuevo."
+ setting_others_war_resolution:0 "#BER Guerra por el Amanecer#!"
+ setting_others_war_resolution_desc:0 "La oscuridad solo se levanta cuando se gana la #BER Guerra por el Amanecer#!. Matar al Rey de la Noche no basta por sí solo. Cualquier muerte antes de eso solo lo derriba."
+
+ rule_agot_others_cb_tier:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Larga Noche#!: rango de guerra"
+ setting_others_cb_kingdom:0 "Marca #EMP (predeterminado)#!"
+ setting_others_cb_duchy:0 "Ducado (desgaste lento)"
+ setting_others_cb_duchy_desc:0 "Los Otros toman un #bold ducado#! cada vez. La invasión más lenta con diferencia, y la que más tiempo deja para responder a la llamada."
+ setting_others_cb_kingdom_desc:0 "Los Otros toman una #bold Marca#! cada vez. El solar de un abanderado cae antes que el de su señor, y #bold Invernalia solo cuando el Norte haya quedado en silencio#!."
+ setting_others_cb_empire:0 "Imperio (embate rápido)"
+ setting_others_cb_empire_desc:0 "Los Otros guerrean a nivel de #bold imperio#!: guerras menos numerosas y mucho más vastas, que barren reinos enteros de una vez."
+
+ rule_agot_longnight_iron_throne_reformation:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Larga Noche#!: reforma del Trono de Hierro"
+ setting_longnight_iron_throne_reformation_on:0 "Activada #EMP (predeterminado)#!"
+ setting_longnight_iron_throne_reformation_on_desc:0 "Tras la Larga Noche, a todo gobernante independiente que quede en Westeros se le ofrece la oportunidad de jurar lealtad al Trono de Hierro."
+ setting_longnight_iron_throne_reformation_off:0 "Desactivada"
+ setting_longnight_iron_throne_reformation_off_desc:0 "Los gobernantes siguen siendo independientes tras la Larga Noche."
+
+ # The Long Night+: Night King command bonus (keeps the dead a credible threat)
+ night_king_command_modifier:0 "El Mando Frío"
+ night_king_command_modifier_desc:0 "La voluntad del Gran Otro empuja a la hueste de los muertos: golpea más fuerte, aguanta más y la dirige sin piedad ni miedo."
+ 
+ rule_agot_long_night_armor:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Larga Noche#!: Otros acorazados"
+ setting_agot_long_night_armor_on:0 "Activado"
+  setting_agot_long_night_armor_on_desc:0 "Los Otros llevarán armadura especial."
+   setting_agot_long_night_armor_off:0 "Desactivado"
+  setting_agot_long_night_armor_off_desc:0 "Los Otros no llevarán armadura especial. #warning USA ESTA OPCIÓN SI UTILIZAS ALGÚN MOD QUE AÑADA ROPA Y NO QUIERES OTROS DESNUDOS#!"
+  
+   rule_agot_long_night_dragon:0 "#explanation_link_light_background;bold AGOT:#! #e;bold La Larga Noche#!: dragón de hielo"
+ setting_agot_long_night_dragon_on:0 "Aparece uno sin más"
+  setting_agot_long_night_dragon_on_desc:0 "A los Otros se les entrega un dragón mientras existan dragones en alguna parte. #EMP No hace falta que haya muerto ninguno antes.#!"
+   setting_agot_long_night_dragon_off:0 "Desactivado"
+  setting_agot_long_night_dragon_off_desc:0 "Los Otros nunca consiguen un dragón."
+ other_unlanded_male:0 "Otro"
+ other_unlanded_female:0 "Otra"
+
+ other_county_male:0 "Caudillo"
+ other_county_female:0 "Caudilla"
+ other_duchy_male:0 "Gran caudillo"
+ other_duchy_female:0 "Gran caudilla"
+
+ other_barony_male:0 "Caudillo"
+ other_barony_female:0 "Caudilla"
+ other_kingdom_male:0 "Rey del Invierno"
+ other_kingdom_female:0 "Reina del Invierno"
+ other_empire_male:0 "Rey del Invierno"
+ other_empire_female:0 "Reina del Invierno"
+ # 1.1.2 -- h_the_others is HEGEMONY tier and rendered as "Hegemon Other". 1.1.3: the Others' ruler names are
+ # stamped by the frostborn branch in common/scripted_effects/zz_ln_set_title_loc_override.txt (the flavorization
+ # entry never reached AGOT's title chain). Hegemony is "King" (Thomas, 27 Sep); empire reads as the kingdom does,
+ # so no rank ever prints "Other Other".
+ other_hegemony_male:0 "Rey"
+ other_hegemony_female:0 "Reina"
+
+ # ── THE OTHERS' DRAGON ──────────────────────────────────────────────────────────────────────────────────────
+ setting_agot_long_night_dragon_raise:0 "Alzan a sus presas #EMP (predeterminado)#!"
+ setting_agot_long_night_dragon_raise_desc:0 "#EMP A los Otros no se les da nada.#! Consiguen un dragón solo derribando uno, y vuelve siendo él mismo: mismo nombre, misma cara, color equivocado."
+ # ── THE UNDEAD DRAGON ───────────────────────────────────────────────────────────────────────────────────────
+ nick_the_undead:0 "el No Muerto"
+ trait_ln_undead_dragon:0 "Alzado"
+ trait_ln_undead_dragon_desc:0 "Murió una vez, en la guerra por el amanecer, y lo obligaron a levantarse de nuevo. Obedece a lo que lo mató."
+
+ # 1.0.8 -- war_for_the_dawn_cb's on_white_peace_desc and on_invalidated_desc pointed at these two keys and
+ # NOTHING DEFINED THEM, so either outcome printed the raw key to the player. Pre-existing; found by the
+ # loc-key audit. The key NAMES are inherited leftovers from the Great Ranging and are left alone on purpose
+ # -- renaming them means editing the CB file to fix a string, and the CB file is not worth the risk.
+ great_ranging_white_peace_desc:0 "La guerra acaba sin final. No se acuerdan términos, porque no hay nadie al otro lado que los acuerde: la hueste simplemente deja de venir, y los hombres que quedan bajan los escudos y esperan a ver si eso significa algo.\n\nNo significa nada. Los muertos no están vencidos. Solo están en otra parte."
+ great_ranging_invalidated_desc:0 "La guerra ha terminado porque el motivo ha desaparecido. La causa que convocó estos estandartes ya no se sostiene, y una guerra necesita tener algo por lo que librarse.\n\nLos cuernos tocan retirada. Si eso es clemencia o solo una pausa, nadie aquí puede responderlo."
+
+ # 1.0.16 -- the CB's third key. SCOURING_CB_NAME and SCOURING_CB_NAME_BASE (:35-36) were defined and used by
+ # war_name/war_name_base; `cb_name = SCOURING_CB` at common/casus_belli_types/00_long_night_cbs.txt:1633 had
+ # no key at all, so the CB itself rendered raw wherever the engine names the cb rather than the war.
+ SCOURING_CB:0 "Arrasamiento"
+
+ # 1.1.0b -- shown when a lord already fighting takes the decision. Joining is still open to him; only
+ # opening a second war of his own is not.
+ ln_wfd_already_at_war:0 "Ya estás en guerra, aunque si se está librando la Guerra por el Amanecer, todavía puedes marchar a ella."
+
+ # 1.0.16 -- the War for the Dawn's new prerequisite. Written as a statement of the world rather than a
+ # rules line: the player should finish reading it knowing what to go and do.
+ ln_wfd_never_been_beaten:0 "Nadie ha hecho retroceder aún a los muertos. Hasta que un ejército de los vivos los haya vencido en el campo, no hay guerra a la que marchar, solo un invierno con el que nadie ha discutido."

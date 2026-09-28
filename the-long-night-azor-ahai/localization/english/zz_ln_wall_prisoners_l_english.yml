@@ -27,7 +27,7 @@
 
  # ── 1.1.0 (§10.2): the tier-ceiling game rule ──
  rule_ln_wall_tier_ceiling:0 "#explanation_link_light_background;bold LN:#! #e;bold Send the Prisoners#! Tier Ceiling"
- setting_ln_wall_county_ceiling:0 "Counts and Below"
+ setting_ln_wall_county_ceiling:0 "Counts and Below #EMP (Default)#!"
  setting_ln_wall_county_ceiling_desc:0 "Captured lords above county rank cannot be sent to the Wall. Kings and dukes are ransomed or executed like the great men they are."
  setting_ln_wall_send_any_tier:0 "Any Rank"
  setting_ln_wall_send_any_tier_desc:0 "Any eligible prisoner can be sent to the Wall, whatever he holds. The King of the Iron Throne can end his days a sworn brother."

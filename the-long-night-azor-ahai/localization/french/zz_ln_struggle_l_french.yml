@@ -1,0 +1,91 @@
+﻿l_french:
+
+ # ============================================================================================================
+ # AGOT: The Long Night & Azor Ahai -- struggle localization.
+ #
+ # STRUCTURE, copied from vanilla (game/localization/english/struggles/):
+ #   * Each phase gets a GAME CONCEPT in common/game_concepts/zz_ln_struggle_concepts.txt, so the phase name can
+ #     be written as a hoverable link anywhere in the game.
+ #   * The concept desc holds the real prose. The phase _desc key then just references it, exactly as vanilla
+ #     does -- struggle_iberia_phase_hostility_desc:0 "$game_concept_struggle_phase_iberia_hostility_desc$".
+ #     One source of truth; the two can never drift apart.
+ #   * Every catalyst needs BOTH <key> and <key>_desc, or the struggle window prints the raw key at the player.
+ #
+ # LINK FORMS. Plurals are ALIASES on the singular concept, not bare plurals:
+ #   struggle_catalyst = { alias = { struggle_catalyst_catalyst struggle_catalyst_catalysts } }
+ # so it is [struggle_catalyst_catalysts|E], never [struggle_catalysts|E]. There is no "wall" concept in either
+ # vanilla or AGOT, so the Wall is plain text throughout.
+ # ============================================================================================================
+
+ # ── GAME CONCEPTS ───────────────────────────────────────────────────────────────────────────────────────────
+ game_concept_ln_long_night_struggle_concept:0 "La Longue Nuit"
+ game_concept_ln_long_night_struggle_concept_desc:0 "La $game_concept_ln_long_night_struggle_concept$ est une [struggle|E] qui couvre Westeros et les terres au-delà du Mur.\n\nIl n'y a pas de paix négociée avec ce qui sort du nord. Seulement ce qui reste debout du royaume quand les ténèbres se lèvent.\n\nQuatre [struggle_phase_phases|E], dans l'ordre : [ln_struggle_phase_long_summer|E], [ln_struggle_phase_cold_winds|E], [ln_struggle_phase_the_long_night|E], [ln_struggle_phase_the_dawn|E]."
+
+ game_concept_ln_struggle_phase_long_summer:0 "Le Long Été"
+ game_concept_ln_struggle_phase_long_summer_desc:0 "Les récoltes sont bonnes, les routes sont sûres, et les seuls hommes qui parlent de l'[winter|E] sont ceux que personne n'écoute.\n\n#EMP Toute partie commence ici, et la plupart y restent le plus clair d'un siècle.#! Voir [ln_struggle_phase_cold_winds|E] désignée comme la [struggle_phase_phase|E] suivante, c'est cette [struggle|E] qui vous dit où elle finira par aller — non qu'elle ait commencé. Rien ne vient encore vous chercher.\n\nChaque dragon qui meurt et chaque patrouille qui ne revient pas retire une année à l'horloge. Achevez des [struggle_catalyst_catalysts|E] pour amener [ln_struggle_phase_cold_winds|E].\n\n#weak Un mauvais siècle avance les ténèbres, mais jusqu'à un certain point seulement : prenez assez d'avance sur la règle de délai que vous avez choisie et les [struggle_catalyst_catalysts|E] cessent de compter jusqu'à ce que les années rattrapent.#!"
+
+ game_concept_ln_struggle_phase_cold_winds:0 "L'Hiver Vient"
+ game_concept_ln_struggle_phase_cold_winds_desc:0 "Les patrouilleurs cessent de revenir. Le peuple libre descend vers le sud en nombres que personne ne peut expliquer, et il ne pille pas : il fuit.\n\n#EMP Personne ne sait combien de temps cela dure.#! Assez longtemps pour bâtir quelque chose si vous commencez maintenant ; pas assez pour l'achever si vous attendez d'être certain. Et chaque homme qui revient en ayant vraiment vu l'un d'eux rapproche les ténèbres.\n\nCeci est l'avertissement. Ce que vous y bâtissez est ce que vous aurez.\n\nLe commerce souffre dans toute la [struggle_region|E]."
+
+ game_concept_ln_struggle_phase_the_long_night:0 "La Longue Nuit"
+ game_concept_ln_struggle_phase_the_long_night_desc:0 "Elle est là. Ce que le royaume a bâti durant l'été est ce que le royaume possède.\n\nLes morts sont au sud du Mur et ils avancent, et le froid pèse sur chaque [county|E] de la [struggle_region|E].\n\n#EMP Ne s'achève que lorsque le Roi de la Nuit est détruit en personne, par le verredragon, l'acier valyrien ou Illumination en main, ou avec un dragon dans le ciel.#! Toute autre mort ne fait que l'abattre, et il se relève. Pas au bout d'un délai, pas par accumulation."
+
+ game_concept_ln_struggle_phase_the_dawn:0 "L'Aube"
+ game_concept_ln_struggle_phase_the_dawn_desc:0 "Les morts reposent immobiles et le froid se brise. Quelque part au sud du Neck, la première verdure pointe.\n\nAvec #EMP Une fois#! la [struggle|E] s'achève ici. Avec #EMP Le Cycle#! elle reflue vers [ln_struggle_phase_long_summer|E] et la roue tourne encore — plus lourde à chaque fois."
+
+ # ── THE STRUGGLE ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_long_night_struggle:0 "La Longue Nuit"
+ ln_long_night_struggle_desc:0 "$game_concept_ln_long_night_struggle_concept_desc$\n\nLes dirigeants [struggle_involved|E] vivent déjà sous le froid. Les dirigeants [struggle_interloper|E] sont ceux qui vont le découvrir."
+
+ # ── PHASES (desc references the concept, vanilla-style) ─────────────────────────────────────────────────────
+ ln_phase_long_summer:0 "Le Long Été"
+ ln_phase_long_summer_desc:0 "$game_concept_ln_struggle_phase_long_summer_desc$"
+ ln_phase_long_summer_effects:0 "Le Long Été"
+
+ ln_phase_cold_winds:0 "L'Hiver Vient"
+ ln_phase_cold_winds_desc:0 "$game_concept_ln_struggle_phase_cold_winds_desc$"
+ ln_phase_cold_winds_effects:0 "L'Hiver Vient"
+
+ ln_phase_the_long_night:0 "La Longue Nuit"
+ ln_phase_the_long_night_desc:0 "$game_concept_ln_struggle_phase_the_long_night_desc$"
+ ln_phase_the_long_night_effects:0 "La Longue Nuit"
+
+ ln_phase_the_dawn:0 "L'Aube"
+ ln_phase_the_dawn_desc:0 "$game_concept_ln_struggle_phase_the_dawn_desc$"
+ ln_phase_the_dawn_effects:0 "L'Aube"
+
+
+ # ── CATALYSTS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_catalyst_year_passed:0 "Une année de plus, et le sud oublie"
+ ln_catalyst_year_passed_desc:0 "Le temps passe et les gens oublient. La règle de délai de l'invasion fixe à quelle vitesse.\n\n#weak Silencieux dans une année où les ténèbres ont déjà de l'avance sur le calendrier.#!"
+ ln_catalyst_dragon_died:0 "Un dragon est mort"
+ ln_catalyst_dragon_died_desc:0 "Un dragon meurt n'importe où dans le monde. La magie s'amincit chaque fois qu'il en part un.\n\n#weak Le plus lourd d'entre eux. Au plus une fois tous les trois ans.#!"
+ ln_catalyst_house_extinguished:0 "Une grande maison s'est éteinte"
+ ln_catalyst_house_extinguished_desc:0 "Une grande [house|E] perd son dernier membre.\n\n#weak Au plus une fois tous les trois ans.#!"
+ ln_catalyst_watch_undermanned:0 "La Garde s'amenuise"
+ ln_catalyst_watch_undermanned_desc:0 "La Garde tombe sous les effectifs qu'il lui faut pour tenir le Mur.\n\n#weak Au plus une fois tous les cinq ans.#!"
+ ln_catalyst_ranging_lost:0 "Une patrouille n'est pas revenue"
+ ln_catalyst_ranging_lost_desc:0 "Des patrouilleurs passent au nord du Mur et ne reviennent pas.\n\n#weak Au plus une fois tous les quatre ans.#!"
+ ln_catalyst_warning_dismissed:0 "On a ri d'un avertissement"
+ ln_catalyst_warning_dismissed_desc:0 "Quelqu'un qui a quelque chose à dire qui en vaut la peine n'est pas cru.\n\n#weak Au plus une fois tous les trois ans.#!"
+ # ── 1.1.0: the two entries that make Winter Is Coming's panel readable. Both say what actually happens,
+ # because on a time-based phase the number beside them is not a progress bar and pretending otherwise is
+ # how the panel got a reputation for being broken in the first place.
+ ln_catalyst_winter_is_coming:0 "L'avertissement a commencé"
+ ln_catalyst_winter_is_coming_desc:0 "Les corbeaux blancs sont partis. Les puits gèlent à la deuxième lune et le peuple libre descend vers le sud en nombres qui ne sont pas des nombres de pillage.\n\n#EMP Cette phase ne remplit pas de jauge.#! Elle dure quelque part entre un règne et une vie, et rien de ce que vous ferez ne vous dira lequel. Bâtissez maintenant.\n\n#weak Une seule fois, quand les vents tournent.#!"
+ ln_catalyst_other_sighted:0 "Un Autre a été vu, et on l'a cru"
+ ln_catalyst_other_sighted_desc:0 "Quelqu'un en voit un, survit, et on le croit. Les trois doivent se produire.\n\n#EMP Pendant l'avertissement, c'est la seule chose qui rapproche les ténèbres.#! Chaque observation crue retire des années à ce qui reste, directement : elle n'attend aucun seuil.\n\n#weak Au plus une fois tous les six ans. Fait avancer [ln_struggle_phase_cold_winds|E].#!"
+ ln_catalyst_night_king_slain:0 "Le Roi de la Nuit est tué"
+ ln_catalyst_night_king_slain_desc:0 "Le coup porte, face à face, avec quelque chose qui peut l'achever.\n\nMet fin à [ln_struggle_phase_the_long_night|E] sur-le-champ. Rien d'autre ne peut le faire."
+
+ # ── THE ENDING DECISION ─────────────────────────────────────────────────────────────────────────────────────
+ # The schema requires at least one phase to list an ending decision. This is that entry, and it is never shown
+ # to a player -- the struggle actually ends from script when the Dawn is reached under the "Once" rule.
+ ln_end_the_long_night_struggle_decision_title:0 "La Longue Nuit s'achève"
+ ln_end_the_long_night_struggle_decision_desc:0 "La roue cesse de tourner."
+ ln_end_the_long_night_struggle_decision_confirm:0 "Ainsi cela s'achève."
+ ln_end_the_long_night_struggle_decision_tt:0 "Met fin à la [struggle|E] $ln_long_night_struggle$."
+ ln_catalyst_dragon_born:0 "Les dragons reviennent au monde"
+ ln_catalyst_dragon_born_desc:0 "Un dragon éclôt dans un monde où il en reste trois ou moins en vie.\n\n#weak Au plus une fois tous les trois ans, et jamais tant que les dragons sont communs.#!"
+ ln_catalyst_minor_house_ended:0 "Une maison mineure s'éteint"
+ ln_catalyst_minor_house_ended_desc:0 "Une [house|E] mineure perd son dernier membre. C'est leur nombre qui compte.\n\n#weak Au plus une fois tous les deux ans.#!"

@@ -1,0 +1,16 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the Wall, named for the men on it.
+ #
+ # Thomas: "I think I have another mod installed that essentially renames the wall to be the Night's Watch on
+ # the Empire title. I kinda wanna have the same localization. That way it gives people an opportunity so that
+ # they don't have to have that mod installed."
+ #
+ # A pure localization override -- the safest kind of change there is. It touches no script, it cannot error,
+ # and if his other mod is loaded and renames it too, whichever loads last wins and both say the same thing.
+ #
+ # EMPIRE TIER ONLY. The kingdom, duchy and counties keep their geography, so the Shadow Tower is still a
+ # tower and Castle Black is still a castle. It is the polity that is called the Night's Watch, not the ice.
+
+ e_the_wall:0 "La Guardia de la Noche"
+ e_the_wall_adj:0 "de la Guardia de la Noche"

@@ -1,0 +1,23 @@
+﻿l_spanish:
+
+ dawn_refugee_modifier:0 "Huido al sur"
+ dawn_refugee_modifier_desc:0 "Expulsado de hogar y salón por los muertos en marcha, ha huido al sur entre los vivos: un refugiado sin tierra, perseguido por lo que dejó atrás, rápido en el camino y endurecido por la supervivencia."
+
+ # 1.0.15 -- names for the five modifiers that showed as raw keys in tooltips (audit find).
+ others_sword_modifier:0 "Hoja de la Larga Noche"
+ others_sword_modifier_desc:0 "Una espada del hielo de los Otros: bebe el calor, y la mano que la sostiene olvida cómo era el verano."
+ others_weak_modifier:0 "Poder del Invierno (tenue)"
+ others_weak_modifier_desc:0 "El frío que respalda al Rey de la Noche es escaso en esta era; los muertos caminan, pero despacio."
+ others_standard_modifier:0 "Poder del Invierno"
+ others_standard_modifier_desc:0 "Toda la fuerza de la larga oscuridad se mueve con él."
+ others_strong_modifier:0 "Poder del Invierno (profundo)"
+ others_strong_modifier_desc:0 "El frío corre profundo en esta era, y los muertos con él."
+ others_insane_modifier:0 "Poder del Invierno (sin fin)"
+ others_insane_modifier_desc:0 "La noche es oscura y alberga horrores, y en esta era no tiene fondo."
+
+ # 1.0.15 -- new modifiers.
+ ln_named_azor_ahai_modifier:0 "Azor Ahai Renacido"
+ ln_named_azor_ahai_modifier_desc:0 "La Larga Noche terminó en esta mano. No es una afirmación que el mundo discuta."
+ ln_cold_trophy_modifier:0 "Un Otro cautivo"
+ ln_cold_trophy_modifier_desc:0 "Uno de los fríos está de pie en las celdas de abajo, y todos en el salón lo saben. El reino teme al señor que lo retiene. La casa, sobre todo, teme la escalera."
+

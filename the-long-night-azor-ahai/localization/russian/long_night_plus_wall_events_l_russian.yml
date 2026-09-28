@@ -9,10 +9,10 @@
  long_night_plus_wall.2.a:0 "И теперь начинается наш дозор."
 
 # 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
- long_night_plus_wall.2.desc.watch:0 "Every brother alive heard it go, wherever on the Wall he stood. The vow calls us the shield that guards the realms of men; the shield is gone, and the men remain.\n\n"
- long_night_plus_wall.2.desc.free_folk:0 "We were told the kneelers' ice would stand forever, and we spent our lives on the wrong side of it. Now there is no wrong side, and the thing we ran from can follow us wherever it likes.\n\n"
- long_night_plus_wall.2.desc.dragon:0 "The blood of the dragon has heard this story since before the Doom, and every telling of it ends in fire. Something eight thousand years old has just come down, and every eye in the realm is turning toward what flies.\n\n"
- long_night_plus_wall.2.desc.north:0 "Every Northern child is told the Wall is where the world ends. It ended today, and the North is what stands north of nothing now.\n\n"
- long_night_plus_wall.2.desc.red:0 "The flames showed a wall of ice and something patient behind it, and tonight the ice is gone. Every sermon was for this; every nightfire is lit for what walks through.\n\n"
- long_night_plus_wall.2.desc.lord:0 "My maester carried the raven's letter in both hands and could not read it aloud. Whatever I sent north in the years before this, it was not enough, and I will know that for the rest of my life.\n\n"
- long_night_plus_wall.2.desc.nobody:0 "There is no keep and no banner to shelter under, and the news came the way all news reaches me: late, and from a stranger's mouth. The one wall that mattered is down, and every road now leads somewhere the dead can reach.\n\n"
+ long_night_plus_wall.2.desc.watch:0 "Всякий живой брат слышал, как она пошла, где бы он на Стене ни стоял. Обет называет нас щитом, что охраняет царства людей; щита больше нет, а люди остались.\n\n"
+ long_night_plus_wall.2.desc.free_folk:0 "Нам говорили, что лёд коленопреклонённых простоит вечно, и мы прожили свою жизнь не с той его стороны. Теперь никакой «не той» стороны нет вовсе, и то, от чего мы бежали, может идти за нами куда ему угодно.\n\n"
+ long_night_plus_wall.2.desc.dragon:0 "Кровь дракона слышала эту повесть ещё до Рока, и всякий её пересказ кончается огнём. Только что наземь пало нечто восьмитысячелетнее, и всякий глаз в державе обращается к тому, что летает.\n\n"
+ long_night_plus_wall.2.desc.north:0 "Всякому северному ребёнку говорят, что Стена — это место, где кончается мир. Сегодня он кончился, и Север теперь — то, что стоит к северу от ничего.\n\n"
+ long_night_plus_wall.2.desc.red:0 "Пламя показывало стену изо льда и что-то терпеливое за нею, и нынче ночью льда больше нет. Всякая проповедь была ради этого; всякий ночной костёр зажжён ради того, что войдёт в пролом.\n\n"
+ long_night_plus_wall.2.desc.lord:0 "Мой мейстер принёс воронье письмо в обеих руках и не смог прочесть его вслух. Сколько бы я ни посылал на север в годы до этого, этого было мало, и знать это я буду до конца своих дней.\n\n"
+ long_night_plus_wall.2.desc.nobody:0 "Нет ни крепости, ни знамени, под которым укрыться, и весть пришла так, как до меня доходят все вести: поздно и из чужого рта. Единственная стена, которая имела значение, пала, и всякая дорога теперь ведёт туда, куда достанут мёртвые.\n\n"

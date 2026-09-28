@@ -38,8 +38,14 @@ ln_consecrate_blade_decision = {
 		}
 	}
 
-	is_valid = {
+	# 1.1.3 (W12): the availability test moved out of is_valid. There it rendered AGOT's whole
+	# availability trigger line by line under Requirements -- raw NOT_has_variable_trigger keys, and
+	# failure-sense text shown as passed. Vanilla puts it here 164 times and in is_valid 4.
+	is_valid_showing_failures_only = {
 		is_available = yes
+	}
+
+	is_valid = {
 		is_imprisoned = no
 
 		custom_description = {
@@ -63,6 +69,27 @@ ln_consecrate_blade_decision = {
 						NOT = { ln_blade_is_dawn_trigger = yes }
 					}
 				}
+			}
+		}
+
+		# 1.1.3 -- WHEN DAWN IS THE ONLY BLADE HE HAS AND THE STAR WAS NOT HIS, SAY SO. Xia (Discord, 19 Sep)
+		# stood at this button with Dawn and no bleeding-star deed and could not tell why the rite refused it;
+		# the price line above is true but does not name his case. This line only exists in that one case, so
+		# the failure explains itself and every other champion never sees it.
+		trigger_if = {
+			limit = {
+				ln_carries_dawn_trigger = yes
+				NOT = { has_character_flag = ln_deed_bleeding_star }
+				NOT = {
+					any_equipped_character_artifact = {
+						ln_blade_can_be_consecrated_trigger = yes
+						NOT = { ln_blade_is_dawn_trigger = yes }
+					}
+				}
+			}
+			custom_description = {
+				text = ln_consecrate_dawn_not_yours
+				always = no
 			}
 		}
 

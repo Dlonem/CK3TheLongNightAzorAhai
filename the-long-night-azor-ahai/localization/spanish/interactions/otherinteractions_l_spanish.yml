@@ -1,0 +1,4 @@
+﻿l_spanish:
+ call_antiother_interaction:0 "Pedir ayuda"
+ call_antiother_interaction_desc:0 "Llámalos en ayuda de tu guerra"
+ CALL_OTHER_WAR_NOTIFICATION:0 "Reclamo tu ayuda."

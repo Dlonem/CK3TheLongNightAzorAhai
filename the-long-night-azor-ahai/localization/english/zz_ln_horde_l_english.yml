@@ -9,10 +9,10 @@
 
  # ── recurrence game rule ────────────────────────────────────────────────────────────────────────────────────
  rule_agot_long_night_recurrence:0 "#explanation_link_light_background;bold AGOT:#! #e;bold The Long Night#! Recurrence"
- setting_long_night_once:0 "Once"
+ setting_long_night_once:0 "Once #EMP (Default)#!"
  setting_long_night_once_desc:0 "The Long Night comes once. If the living survive it, it is over."
  setting_long_night_recurs:0 "The Cycle"
- setting_long_night_recurs_desc:0 "The Long Night returns every ninety to a hundred and thirty years, and every winter is worse than the last. It ends when a dynasty breaks the cycle — or the cycle breaks the world."
+ setting_long_night_recurs_desc:0 "The Long Night comes back, and every winter is worse than the last. How long the world gets between them is set by the Moment rule. It ends when a dynasty breaks the cycle, or the cycle breaks the world."
  # ── wave escalation modifiers ───────────────────────────────────────────────────────────────────────────────
  ln_wave_escalation_1_modifier:0 "The Dead Remember"
  ln_wave_escalation_1_modifier_desc:0 "They have come south before, and they did not forget the road."

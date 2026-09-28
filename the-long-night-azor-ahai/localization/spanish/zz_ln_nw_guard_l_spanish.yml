@@ -1,0 +1,7 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- 1.0.15, the sworn-brother inheritance guard.
+
+ ln_nwguard.1.t:0 "La Guardia no toma parte"
+ ln_nwguard.1.desc:0 "El cuervo llegó con títulos dentro.\n\nPor toda ley del reino, las tierras son ahora de [ROOT.Char.GetTitledFirstName|E]: una muerte en algún lugar del sur, una línea agotada, un nombre en una página que resulta ser el nombre de alguien que vistió el negro. El maestre lo leyó dos veces, y el salón se quedó muy callado.\n\nPero las palabras se dijeron ante un arciano, y no se desdicen por una herencia: #bold no poseer tierras, no llevar corona, no alcanzar gloria.#! Las tierras pasan a [ln_nw_receiver.GetTitledFirstName|E], y la Guardia perdura, más pobre y más orgullosa por ello.\n\n#bold La noche se avecina, y la Guardia no toma parte.#!"
+ ln_nwguard.1.a:0 "Mi guardia no ha terminado."

@@ -1,0 +1,24 @@
+﻿l_spanish:
+
+#Traits and modifiers
+ trait_other_trait:0 "Otro"
+ trait_other_trait_desc:0 "Los Otros son altos y enjutos, de carne pálida como la leche. Tienen ojos azules y fríos que han sido descritos como ardientes cual hielo, o brillantes como estrellas azules. Los Otros tienen sangre azul pálida y huesos lustrosos como el vidrio lechoso"
+ trait_other_trait_character_desc:0 "Los Otros son altos y enjutos, de carne pálida como la leche. Tienen ojos azules y fríos que han sido descritos como ardientes cual hielo, o brillantes como estrellas azules. Los Otros tienen sangre azul pálida y huesos lustrosos como el vidrio lechoso"
+ trait_wight_trait:0 "Espectro"
+ trait_wight_trait_desc:0 "Un cadáver alzado por la magia fría de los Otros para servir en su hueste interminable. Incansable e insensible, no conoce ni dolor ni miedo, y sus ojos arden de un azul siniestro. Cuando los Otros sean por fin derrotados y la Larga Noche termine, el poder oscuro que lo animaba falla, y vuelve a derrumbarse en carne sin vida."
+ trait_wight_trait_character_desc:0 "Un cadáver alzado por la magia fría de los Otros para servir en su hueste interminable. Incansable e insensible, no conoce ni dolor ni miedo, y sus ojos arden de un azul siniestro. Cuando los Otros sean por fin derrotados y la Larga Noche termine, el poder oscuro que lo animaba falla, y vuelve a derrumbarse en carne sin vida."
+
+
+
+ # Modifiers
+ other_emergency_modifier:0 "Medidas de emergencia"
+ other_emergency_modifier_desc:0 "Este gobernante está sometido a un estado de emergencia."
+ other_retaking_modifier:0 "Reconquista para la humanidad"
+ other_retaking_modifier_desc:0 "Este gobernante busca recuperar territorio para la humanidad."
+ other_vassal_retaking_modifier:0 "Este gobernante lucha junto a su señor para recuperar territorio para la humanidad."
+ other_chill_modifier:0 "Enfriándose"
+ other_noconvert_modifier:0 "Conversión de tierras reciente"
+ other_offensive_modifier:0 "Avalancha"
+ other_offensive_modifier_desc:0 "El ejército de los muertos se abalanza para tomar un lugar."
+ other_offensive2_modifier:0 "Avalancha"
+ other_offensive2_modifier_desc:0 "El ejército de los muertos se abalanza para tomar un lugar."

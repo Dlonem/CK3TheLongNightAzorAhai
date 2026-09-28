@@ -1,0 +1,22 @@
+﻿l_french:
+
+ # ── the horde ──────────────────────────────────────────────────────────────────────────────────────────────
+ ln_wight_horde:0 "Morts relevés"
+ ln_wight_horde_flavor:0 "Les morts ordinaires de chaque place que les Autres ont prise, marchant parce qu'on le leur ordonne. Pris un à un, ils ne sont rien — lents, cassants, armés de ce qu'ils tenaient en mourant. Ils sont simplement très nombreux, et ils ne s'arrêtent pas."
+
+ # ── the realm renames itself ────────────────────────────────────────────────────────────────────────────────
+ ln_realm_the_long_night:0 "La Longue Nuit"
+
+ # ── recurrence game rule ────────────────────────────────────────────────────────────────────────────────────
+ rule_agot_long_night_recurrence:0 "#explanation_link_light_background;bold AGOT:#! Récurrence de #e;bold la Longue Nuit#!"
+ setting_long_night_once:0 "Une seule fois #EMP (par défaut)#!"
+ setting_long_night_once_desc:0 "La Longue Nuit vient une fois. Si les vivants y survivent, elle est terminée."
+ setting_long_night_recurs:0 "Le Cycle"
+ setting_long_night_recurs_desc:0 "La Longue Nuit revient, et chaque hiver est pire que le précédent. Le répit que le monde obtient entre eux est fixé par la règle du Moment. Cela s'achève quand une dynastie brise le cycle, ou quand le cycle brise le monde."
+ # ── wave escalation modifiers ───────────────────────────────────────────────────────────────────────────────
+ ln_wave_escalation_1_modifier:0 "Les morts se souviennent"
+ ln_wave_escalation_1_modifier_desc:0 "Ils sont déjà venus au sud, et ils n'ont pas oublié la route."
+ ln_wave_escalation_2_modifier:0 "Des siècles d'hiver"
+ ln_wave_escalation_2_modifier_desc:0 "Le monde a été saigné deux fois. Chaque place que les morts ont jamais prise est encore à eux, prête à être relevée."
+ ln_wave_escalation_3_modifier:0 "La dernière Longue Nuit"
+ ln_wave_escalation_3_modifier_desc:0 "Il ne reste plus grand-chose à conquérir, et plus rien qui se souvienne d'un été."

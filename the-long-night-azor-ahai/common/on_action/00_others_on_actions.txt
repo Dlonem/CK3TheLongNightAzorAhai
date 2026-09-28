@@ -54,7 +54,18 @@
 # BLOCK in two places competes rather than merges, and the loser goes silent. Renamed to a sub-list
 # and registered in zz_ln_00_hooks.txt beside the county-memory stamp, per the standing rule: a
 # vanilla on_action is declared in the hooks file and nowhere else. Body untouched.
+#
+# 1.1.3 -- A REAL TRIGGER. on_title_gain fires for every title that changes hands anywhere in the world, and
+# all four branches below need root or his liege to be one of the dead (the first needs other_trait, which is
+# one of the identity markers). Refusing the living here, before the effect chain is built, is free; the body
+# is unchanged and every branch still asks its own narrower question.
 ln_others_title_gain = {
+	trigger = {
+		OR = {
+			ln_is_one_of_them_trigger = yes
+			liege ?= { ln_is_one_of_them_trigger = yes }
+		}
+	}
 	effect = {
 		if = {
 			limit = { root = { has_trait = other_trait } }
@@ -158,6 +169,86 @@ ln_others_vassal_gained = {
 			# not on the new vassal: a vassal of one of the dead is exactly where he belongs and the effect's
 			# own limit refuses to touch him.
 			root = { ln_enforce_independence_effect = yes }
+		}
+	}
+}
+
+# ── 1.1.2: THE DEAD DO NOT ACQUIRE A LIEGE, AND NOW WE FIND OUT ON THE DAY ───────────────────────────────
+# Registered on vanilla's on_vassal_change from zz_ln_00_hooks.txt; see the long note there for why this hook
+# and not on_vassal_gained. Root = the character whose liege changed. The hook also fires when a ruler gains
+# independence, which is why the body does no work of its own: the effect it calls carries its own limit. A
+# newly-independent Other does match it now (1.1.3: the dead serve the Night King, so he is sworn to him),
+# and the one-day ln_being_freed flag stops the change it starts from re-entering.
+#
+# WHY THE ONE CALL DOES BOTH THINGS. ln_enforce_independence_effect puts him back where he belongs AND ends,
+# unconditionally, with the strip that takes AGOT's pre-war-liege marker off him so the megawar rebuild stops
+# selecting him at all. The strip is the one that prevents the damage -- see zz_ln_independence_effects.txt --
+# and it runs whether or not the freeing part applied, which matters here because the marker is set on the
+# way IN to a vassalage, so a ruler who has just been handed a liege is precisely the one carrying it.
+# (1.1.2 called the strip a second time after the effect; that was the same strip twice.)
+#
+# 1.1.3 -- A REAL TRIGGER, NOT AN `if` INSIDE THE EFFECT. This fires on every liege change in the world, and
+# the living never need to enter it. A trigger block is refused before the effect chain is even built; the
+# old shape built the chain and then asked. Same result, and it is the shape the engine offers for this.
+# (Thomas's 13 Sep log also showed this hook re-entering ln_enforce_independence_effect fifty deep on dead
+# barons; that half is fixed in the effect itself -- see zz_ln_independence_effects.txt.)
+ln_others_vassal_change = {
+	trigger = {
+		ln_is_one_of_them_trigger = yes
+	}
+	effect = {
+		debug_log = "LN_TRACE INDEPENDENCE: one of the dead changed liege - checking him"
+		ln_enforce_independence_effect = yes
+	}
+}
+
+# ── 1.1.3: THE DEAD MARCH ALONE ─────────────────────────────────────────────────────────────────────────
+# Discord thread, 19 Sep, with screenshots: living rulers on the Night King's side of an invasion war --
+# "+ Allies (2)", a Targaryen-looking king, a queen with a crow sigil, an 11-month war at -27% that had
+# picked up a paid ally. Our alliance ban holds (zz_ln_alliance_rules.txt and the yearly sweep); alliances
+# were never the road. AGOT and vanilla have at least six other doors, and not one of them asks who leads
+# the war: join_war_interaction (any landless adventurer, auto-accepted), contract_assistance (paid help,
+# likelier when the recipient is losing), hire_laamp_mercenaries (he hires a company), laamp_war_change_sides
+# (a hired company defects to him), a living TRIBUTARY (wight_government is tribal, tribal authority grants
+# can_have_tributaries, and tributaries may join his wars), and AGOT's mega-war rebels on pre-1.1.2 saves.
+# AGOT runs its sellsword and exile companies as landless adventurers -- d_laamp_targaryen_exiles carries
+# the dragon -- which is what the screenshot looks like. Full working in claude/EVIDENCE-26sep-A-wars.md.
+#
+# ONE CHOKE POINT. Every one of those roads ends in the engine's own on_join_war_as_secondary (root = the
+# joiner, scope:war = the war; vanilla war_on_actions.txt:14-18). Registered from zz_ln_00_hooks.txt. A
+# living man who has just joined the side the dead LEAD is removed on the spot. The living joining the War
+# for the Dawn, or defending against an invasion, are untouched: there the side's leader is living. And one
+# of the dead joining a living-led side is left alone here -- that is a different question, recorded, not
+# decided. remove_participant in war scope is vanilla's (06_ep3_laamp_interactions.txt:7390) and AGOT's
+# (agot_war_on_actions.txt:357). Removing inside this callback has no precedent found; if the boot shows a
+# log line or a stuck war entry, move the removal to a one-day hidden event and keep this as the detector.
+# The 30-day/yearly sweep in zz_ln_service_effects.txt is the belt for wars already running and for any
+# scripted add_attacker this hook turns out not to see.
+ln_the_dead_march_alone = {
+	trigger = {
+		ln_is_one_of_them_trigger = no
+		exists = scope:war
+	}
+	effect = {
+		scope:war = {
+			if = {
+				limit = {
+					is_attacker = root
+					primary_attacker = { ln_is_one_of_them_trigger = yes }
+				}
+				debug_log = "LN_TRACE ALLIES: a living ruler joined the dead's side of a war - removed"
+				debug_log_scopes = yes
+				remove_participant = root
+			}
+			else_if = {
+				limit = {
+					is_defender = root
+					primary_defender = { ln_is_one_of_them_trigger = yes }
+				}
+				debug_log = "LN_TRACE ALLIES: a living ruler joined the dead's side of a war - removed"
+				debug_log_scopes = yes
+				remove_participant = root
+			}
 		}
 	}
 }

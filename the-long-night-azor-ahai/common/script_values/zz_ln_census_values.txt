@@ -1,0 +1,39 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.3 (W16): the yearly census, debug builds only.
+#
+# Griczzly (Steam, 12 Sep): "the game gets slow." Thomas's own 13 Sep character_stats.csv shows +28% living
+# characters in seven game years of a Long Night, all of it in courts, rulers flat -- and whether that is the
+# Long Night's doing cannot be settled without a baseline. These three counts are the mod's half of the
+# measurement: how many wights, how many Others, how many members of house_theothers are alive on each
+# yearly tick. They are read ONLY under debug mode (the caller in ln_struggle_yearly_work_effect is gated on
+# debug_only = yes), because each one is a walk over every living character and a census that slows the
+# game it is measuring is no census at all. The line lands in debug.log as LN_CENSUS.
+#
+# Iterator-count script values are vanilla's own shape (00_dlc_fp3_script_values.txt:20-35).
+ln_census_wights_value = {
+	value = 0
+	every_living_character = {
+		limit = { has_trait = wight_trait }
+		add = 1
+	}
+}
+
+ln_census_others_value = {
+	value = 0
+	every_living_character = {
+		limit = { has_trait = other_trait }
+		add = 1
+	}
+}
+
+ln_census_house_theothers_value = {
+	value = 0
+	if = {
+		limit = { exists = house:house_theothers }
+		house:house_theothers = {
+			every_house_member = {
+				limit = { is_alive = yes }
+				add = 1
+			}
+		}
+	}
+}

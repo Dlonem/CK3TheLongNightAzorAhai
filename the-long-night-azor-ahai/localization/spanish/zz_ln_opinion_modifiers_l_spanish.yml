@@ -1,0 +1,8 @@
+﻿l_spanish:
+ ln_fed_the_watch_opinion:0 "Dio hombres a la Guardia"
+ ln_turned_the_crow_away_opinion:0 "Rechazó a la Guardia"
+
+ # 1.0.16 -- declared at common/opinion_modifiers/zombie_crime_opinions.txt:1 and reachable through the
+ # triggered_opinion on invasions_traits.txt:57 and :62 (gated on witchcraft_illegal / witchcraft_shunned),
+ # so it rendered raw in the opinion breakdown for anyone whose faith outlaws the dead walking.
+ other_crime:0 "Es uno de los muertos"

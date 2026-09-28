@@ -1,0 +1,37 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the melee's prowess modifiers (1.1.0).
+ #
+ # These are all temporary: applied when an LN melee opens, stripped at the scrub, bounded at two years so a
+ # missed scrub cannot follow a man for life. Every one of them is visible on the character sheet while the
+ # fight is running, which is why every one of them needs a name -- the 1 Sep audit found the whole set
+ # shipping with none, which would have put raw keys like "ln_the_cold_between_3_modifier" on screen mid-duel.
+ #
+ # The five cold bands share a name on purpose. A fighter only ever holds one of them, so the band number is
+ # bookkeeping and the player has no use for it.
+
+ ln_the_cold_between_0_modifier:0 "El frío de por medio"
+ ln_the_cold_between_1_modifier:0 "El frío de por medio"
+ ln_the_cold_between_2_modifier:0 "El frío de por medio"
+ ln_the_cold_between_3_modifier:0 "El frío de por medio"
+ ln_the_cold_between_4_modifier:0 "El frío de por medio"
+ ln_the_cold_between_0_modifier_desc:0 "Todo lo que sabes de matar hombres lo aprendiste con hombres. La destreza cuenta la mitad contra algo que no lo ha sido en ocho mil años."
+ ln_the_cold_between_1_modifier_desc:0 "Todo lo que sabes de matar hombres lo aprendiste con hombres. La destreza cuenta la mitad contra algo que no lo ha sido en ocho mil años."
+ ln_the_cold_between_2_modifier_desc:0 "Todo lo que sabes de matar hombres lo aprendiste con hombres. La destreza cuenta la mitad contra algo que no lo ha sido en ocho mil años."
+ ln_the_cold_between_3_modifier_desc:0 "Todo lo que sabes de matar hombres lo aprendiste con hombres. La destreza cuenta la mitad contra algo que no lo ha sido en ocho mil años."
+ ln_the_cold_between_4_modifier_desc:0 "Todo lo que sabes de matar hombres lo aprendiste con hombres. La destreza cuenta la mitad contra algo que no lo ha sido en ocho mil años."
+
+ ln_bane_lightbringer_modifier:0 "Dueña de Luz en la mano"
+ ln_bane_lightbringer_modifier_desc:0 "La espada de la que habla toda la profecía, en el único combate para el que se hizo. Devuelve más de lo que el frío arrebata."
+ ln_bane_valyrian_modifier:0 "Acero valyrio en la mano"
+ ln_bane_valyrian_modifier_desc:0 "Acero de dragón. Nadie que viva recuerda cómo se hizo, y a él no le importa qué esté cortando."
+ ln_bane_glass_modifier:0 "Vidriagón en la mano"
+ ln_bane_glass_modifier_desc:0 "Fuego helado, y funciona: a un brazo de distancia, que es justamente todo el problema."
+
+ ln_melee_named_chosen_modifier:0 "Nombrado, y la línea lo sabe"
+ ln_melee_named_chosen_modifier_desc:0 "Los hombres a tu espalda han oído cómo te llaman los sacerdotes. Que sea cierto ha dejado de importar; lo que importa es que se mantienen en pie mientras te miran."
+ ln_melee_named_favored_modifier:0 "Favorecido, y la línea lo sabe"
+ ln_melee_named_favored_modifier_desc:0 "Alguien dijo las palabras sobre ti una vez, y la línea recuerda haberlo oído."
+
+ ln_led_with_the_bane_modifier:0 "Fuiste el primero"
+ ln_led_with_the_bane_modifier_desc:0 "Desenvainaste antes de que nadie te lo pidiera y saliste por delante de tu propia línea. Eso te compra un paso, y significa que la cosa en medio de ese campo no mira a nadie más."

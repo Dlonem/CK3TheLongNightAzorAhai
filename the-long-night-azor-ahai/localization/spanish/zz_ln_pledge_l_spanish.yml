@@ -1,0 +1,52 @@
+﻿l_spanish:
+
+ # ── THE DECISION ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_send_for_a_red_priest_decision_desc:0 "En algún lugar al este hay hombres que predican sobre una larga noche y un príncipe prometido desde antes de que tu casa tuviera nombre. Siempre los has tenido por locos. Ahora que los vientos se vuelven más fríos, estás mucho menos seguro de lo que estabas.\n\nUna carta a Myr, y oro suficiente para que a un sacerdote le merezca la pena la travesía."
+ ln_send_for_a_red_priest_decision_tt:0 "Manda al otro lado del mar Angosto a buscar un sacerdote de R'hllor. La travesía lleva meses, y no estás obligado a que te guste lo que te digan al final de ella."
+ ln_send_for_a_red_priest_decision_confirm:0 "Manda aviso a Myr."
+ ln_send_for_a_red_priest_decision_desc.hear:0 "Ya hay un sacerdote de R'hllor bajo tu propio techo. Llevas meses oyendo hablar del fuego en tu mesa y ni una vez has preguntado qué dice.\n\nPregunta."
+ ln_send_for_a_red_priest_decision_tt.hear:0 "Un sacerdote rojo ya está en tu salón. Escucha lo que el fuego tiene que decir. No cuesta nada, y no estás obligado a que te guste."
+ ln_send_for_a_red_priest_decision_confirm.hear:0 "Preguntarles."
+
+ # ── THE ARRIVAL ─────────────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.1.t:0 "El sacerdote en la puerta"
+ ln_pledge.1.t.hall:0 "El sacerdote a la mesa"
+
+ ln_pledge.1.desc.summer:0 "El sacerdote es más flaco de lo que esperaba, más viejo, y no se molesta en inclinarse.\n\n\"Me has mandado llamar porque algo te quita el sueño, y no se lo has confesado a nadie en esta sala.\" El sacerdote deja que eso se asiente en la sala silenciosa. \"No te diré que el mundo se acaba. Te diré que ya se acabó una vez, y que un hombre se mantuvo donde la oscuridad era más espesa y no huyó. Mi orden lleva mucho tiempo esperando a saber quién se mantendrá ahí la próxima vez.\"\n\nLa mirada que me dirige el sacerdote dura un instante de más.\n\n\"Por lo común no es el que manda a buscarnos.\""
+ ln_pledge.1.desc.hall:0 "El sacerdote lleva meses bajo mi techo, comiendo a mi mesa, y ni una vez he preguntado qué dice el fuego. Esta noche lo hice.\n\n\"Me preguntaba cuándo lo harías.\" Sin reverencia, sin sorpresa. \"No te diré que el mundo se acaba. Te diré que ya se acabó una vez, y que un hombre se plantó donde la oscuridad era más densa y no huyó. Mi orden lleva mucho tiempo esperando saber quién será el siguiente.\"\n\nLa mirada que me dirige dura un instante de más.\n\n\"Normalmente no es el que pregunta.\""
+ ln_pledge.1.desc.cold:0 "El verano se quebró cuando el barco aún estaba en el mar.\n\nEl sacerdote entra desde un viento que no tiene por qué ser ya tan frío. Se queda chorreando en mi salón, y sus primeras palabras no son un saludo.\n\n\"¿Cuánto tiempo lleva haciendo frío?\"\n\nCuando respondo, el asentimiento que me devuelve es el de alguien que confirma una fecha que ya tenía. \"Entonces tenemos menos tiempo del que esperaba y más del que temía. Mi señor, tus dioses son una fe excelente para un mundo que va a seguir existiendo. Yo estoy aquí porque el mío es el único dios al que se le ha hecho alguna vez esta pregunta en concreto, y la respondió. Puedo enseñarte lo que costó la respuesta.\""
+
+ ln_pledge.1.desc.night:0 "El sacerdote no ha venido a convertirme. Ya no queda tiempo para eso, y los dos lo sabemos.\n\nBajó de un barco, caminó hacia el norte entre refugiados helados que iban en la otra dirección, y llegó a mi puerta con un zurrón y la cara de alguien que llega exactamente a donde pretendía.\n\n\"Sabes lo que está pasando,\" dice el sacerdote. \"Lo que nadie en este salón sabe es que se puede combatir, que ya se combatió antes, y que el fuego no es una metáfora.\" El zurrón cae al suelo con un golpe sordo. \"Puedo enseñar tres cosas a tus herreros antes de morir de este frío. O puedes quemarme y sentirte muy justo durante una estación, más o menos.\""
+
+ ln_pledge.1.a:0 "Entonces tu dios es mi dios."
+ ln_pledge.1.a.tt:0 "Te conviertes a R'hllor.\n\nR'hllor es una fe de esta guerra: un [struggle_interloper|E] que la abraza pasa a estar [struggle_involved|E] en la Larga Noche. Tus abanderados no te lo agradecerán."
+ ln_pledge.1.b:0 "Guarda tu fuego, sacerdote. Yo tengo mi acero, y lo usaré."
+ ln_pledge.1.c:0 "Quemad a este fanático."
+
+ # ── AFTER THE CONVERSION ────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.2.t:0 "Lo que oyó el salón"
+ ln_pledge.2.desc:0 "La noticia tardó once días en llegar a todos los que importaban, y al duodécimo, [ln_objector.GetTitledFirstName] vino a decírmelo a la cara.\n\n\"He jurado muchísimas cosas a tu servicio,\" dice [ln_objector.GetSheHe], con la voz temblando de una ira muy apretada. \"Esto no lo juré. Mi padre descansa ante nuestros dioses. Mis hijos recibieron nombre ante ellos.\" Una pausa, y entonces llega la parte que [ln_objector.GetSheHe] ha estado ensayando a todas luces. \"No te pido que te expliques. Pregunto si se espera que te siga en esto.\""
+ ln_pledge.2.a:0 "Se espera. De todos vosotros."
+ ln_pledge.2.b:0 "No. No hice esto para forzarle la mano a nadie."
+
+ # ── AFTER THE PLEDGE ────────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.3.t:0 "La columna hacia el norte"
+ ln_pledge.3.desc:0 "Los veo marchar camino real arriba en el primer gris de la mañana. Es una columna más pequeña de lo que imaginaba cuando dije las palabras.\n\nMi mariscal tiene las cifras anotadas y me las lee de todos modos, como hacen los hombres cuando quieren que quede constancia de que te avisaron: tantas lanzas que se van, tantas cosechas sin manos suficientes, tantos años antes de que vuelva alguna. No dice 'si'. Está siendo amable.\n\nAl final de la columna hay un carro pesado con las herramientas de los herreros. No había pensado en los herreros."
+ ln_pledge.3.a:0 "Envía tras ellos la segunda leva."
+ ln_pledge.3.b:0 "Eso es lo que prometí. Alguien tiene que sostener el sur."
+
+ # ── AFTER THE BURNING ───────────────────────────────────────────────────────────────────────────────────────
+ ln_pledge.4.t:0 "Lo que se dijo en el fuego"
+ ln_pledge.4.desc:0 "El sacerdote no gritó, y esa es la parte que no consigo quitarme de la cabeza.\n\nLos hombres gritan. He quemado hombres antes —bandidos, un envenenador, una vez un primo traidor— y gritan, y luego se acaba y uno va a cenar. El sacerdote me miró todo el tiempo con una expresión que llevo semanas sin poder nombrar. Cerca del final dijo algo que los guardias oyeron de maneras distintas. Mi capitán dice que era una oración. El muchacho que encendió la pira dice que era una fecha.\n\nHa hecho un frío cortante por las mañanas."
+ ln_pledge.4.a:0 "Era una oración. Nada más."
+ ln_pledge.4.b:0 "Di que era una oración. Dilo alto, y a menudo."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_sworn_to_the_dawn_modifier:0 "Juramentado al Amanecer"
+ ln_sworn_to_the_dawn_modifier_desc:0 "Hombres, oro y herreros comprometidos en una guerra en el Norte en la que media corte no cree."
+ ln_burned_the_red_priest_modifier:0 "Quemó al sacerdote rojo"
+ ln_burned_the_red_priest_modifier_desc:0 "Los devotos hablan de ti con mucho calor. También todos los que nunca han estado al norte del Cuello."
+ ln_took_the_red_modifier:0 "Tomó al Dios Rojo"
+ ln_took_the_red_modifier_desc:0 "Cambiaste de dioses delante de tus propios abanderados, y estaban mirando."
+ ln_gave_the_last_kiss_modifier:0 "Dio el Último Beso"
+ ln_gave_the_last_kiss_modifier_desc:0 "Llamó a un alma de vuelta desde el fuego, y pagó la diferencia. Lo que le fue quitado no le ha sido devuelto."

@@ -1,0 +1,23 @@
+﻿l_french:
+
+ # The Cold Winds flavour cards -- Wall and North only, strictly atmosphere.
+ ln_coldwinds.1.t:0 "Il n'y avait personne"
+ ln_coldwinds.1.desc:0 "Le patrouilleur qui le raconte a dit des choses plus dures sans ciller, et [ROOT.Char.GetSheHe] ne cille pas davantage maintenant. C'est cela qui rend la chose mauvaise.\n\n« Trouvé la patrouille à trois jours de marche. Tous. Étendus dans la neige les yeux ouverts, froids comme la pierre. J'ai compté les corps deux fois, noble [ROOT.Char.Custom('FormOfAddressForLiege')]. Nous sommes repartis chercher une charrette et des bras. Nous avons été absents une demi-journée. »\n\nIl regarde le feu, pas [ROOT.Char.GetHerHim].\n\n« Quand nous sommes revenus, il n'y avait personne. Pas traînés ailleurs. Aucune trace qui s'en aille. Juste la neige, tassée là où ils étaient couchés, et huit séries d'empreintes qui marchaient vers le nord. »"
+ ln_coldwinds.1.a:0 "Les morts ne se lèvent pas pour partir. Cherchez encore."
+ ln_coldwinds.1.b:0 "Barrez la porte au crépuscule. Chaque crépuscule."
+ ln_coldwinds.2.t:0 "Le silence"
+ ln_coldwinds.2.desc:0 "La forêt hantée a toujours eu une voix : des loups au crépuscule, des corbeaux qui se querellent dans les arbres blancs, le petit remue-ménage et les craquements des bêtes qui vivent leur vie sous la neige.\n\nLes hommes qui marchent sur le haut de la glace ont commencé à le faire remarquer, ce qui chez de tels hommes veut dire deux mots et un coup de menton : rien ne bouge. Pas de loups ce mois-ci. Pas d'oiseaux cette semaine. La dernière patrouille est rentrée et le seul bruit qu'elle ait pu rapporter de trois jours sous les arbres, c'était celui de ses propres chevaux qui respiraient.\n\nUne forêt n'est jamais silencieuse. À moins que tout ce qui s'y trouve ait un meilleur endroit où être."
+ ln_coldwinds.2.a:0 "Une forêt se tait quand quelque chose y chasse."
+ ln_coldwinds.2.b:0 "L'hiver. Ce n'est que l'hiver."
+ ln_coldwinds.3.t:0 "Les feux demandent qu'on s'en occupe"
+ ln_coldwinds.3.desc:0 "Ce sont les plus vieux qui l'ont remarqué, ceux qui nourrissent les feux de nuit depuis quarante ans et connaissent leurs humeurs comme un berger connaît le temps. Les feux demandent qu'on s'en occupe, disent-ils. Du bois qui devrait brûler jusqu'au matin n'est plus que cendre grise au milieu du quart. Les flammes se dressent étrangement dans l'air immobile, penchées, comme s'il y avait un vent que personne, à côté d'elles, ne peut sentir.\n\nEt sans qu'aucun ordre ait été donné, les vieux ont cessé de s'asseoir le dos tourné au nord."
+ ln_coldwinds.3.a:0 "Doublez la ration de bois. Ne dites rien."
+ ln_coldwinds.3.b:0 "M'asseoir avec les vieux. Les écouter jusqu'au bout."
+ ln_coldwinds.4.t:0 "Les loups descendent vers le sud"
+ ln_coldwinds.4.desc:0 "Le gibier est en mouvement. Des élans sur la route royale en nombre que le plus vieux des veneurs n'a jamais vu, des cerfs traversant à la nage des rivières qu'ils n'ont jamais franchies, et derrière eux les loups : des meutes entières, qui passent la nuit devant [ROOT.Char.GetHerHis] fortin sans s'arrêter pour inquiéter les bergeries.\n\nC'est le détail que le petit peuple ne cesse de répéter, comme il le fait quand une chose lui fait peur de travers : les loups ne chassent pas. Ils voyagent. Tout ce qui vit au nord d'ici a un endroit où il préférerait être, et cet endroit est au sud."
+ ln_coldwinds.4.a:0 "Bonne chasse, alors."
+ ln_coldwinds.4.b:0 "Demandez ce qu'ils fuient."
+ ln_coldwinds.5.t:0 "Elle ne s'est jamais trompée"
+ ln_coldwinds.5.desc:0 "Il y a aux cuisines une vieille femme qui a survécu à trois seigneurs de cette maison, et chaque hiver de sa longue vie elle a annoncé le temps avant qu'il arrive : les hommes qui règlent l'abattage et le grain de semence vont d'abord la consulter à voix basse, et cela depuis des années.\n\nCette année, elle refuse de donner une date pour le dégel. Elle s'assoit plus près du feu qu'avant, travaille ses aiguilles, et dit la même chose à qui le lui demande, de la voix plate d'une femme qui rapporte ce qu'elle voit par une fenêtre :\n\n« Les vents froids se lèvent. Celui-ci ne finit pas. »"
+ ln_coldwinds.5.a:0 "Donnez-lui une place près du grand feu."
+ ln_coldwinds.5.b:0 "Les vieilles femmes disent de vieilles choses."

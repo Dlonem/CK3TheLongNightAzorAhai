@@ -1,0 +1,25 @@
+﻿l_french:
+
+ # ── RANGING DECISIONS ──────────────────────────────────────────────────────────────────────────────────────
+ ln_march_the_ranging_decision:0 "Mettre la patrouille en marche"
+ ln_march_the_ranging_decision_desc:0 "Le camp peut être levé en une heure. C'est la brutale efficacité d'une patrouille : ce n'est pas un château, et nous ne sommes pas une garnison. Nous sommes une expédition dans les ténèbres glacées.\n\nLa seule question à laquelle un capitaine répond vraiment, c'est celle que pose la carte."
+ ln_march_the_ranging_decision_tt:0 "Choisir un terrain de patrouille au-delà du Mur et y conduire le camp."
+ ln_march_the_ranging_decision_confirm:0 "Sonnez du cor."
+
+ ln_return_to_the_wall_decision:0 "Retourner au Mur"
+ ln_return_to_the_wall_decision_desc:0 "Quoi que cette patrouille ait trouvé, ou n'ait pas trouvé, c'est au Mur que le voyage s'achève.\n\nLe cor sonne pour tourner la colonne vers le sud. Je remarque que chaque homme du camp, sans exception, marche un peu plus vite qu'à l'aller."
+ ln_return_to_the_wall_decision_tt:0 "Ramener le camp à Castle Black."
+ ln_return_to_the_wall_decision_confirm:0 "Tournez au sud."
+
+ # ── EVENTS ──────────────────────────────────────────────────────────────────────────────────────────────────
+ ln_ranging.1.t:0 "Où va la patrouille"
+ ln_ranging.1.desc:0 "La compagnie est rangée dans la neige, les traîneaux sont chargés, et l'immense porte de glace est ouverte.\n\nAu nord d'ici, il y a trois terrains vers lesquels un capitaine de patrouille peut raisonnablement marcher. Chaque frère noir de la colonne a un avis très arrêté sur les trois, bien qu'il ait la discipline de le garder pour lui.\n\nJe regarde l'étendue terrifiante des bois hantés. Le commandement est mien."
+ ln_ranging.1.a:0 "Craster's Keep. Au moins, c'est un toit."
+ ln_ranging.1.b:0 "Whitetree. Au fond des bois hantés."
+ ln_ranging.1.c:0 "Durlieu. Le rivage gelé."
+ ln_ranging.1.d:0 "Pas encore. Le camp reste ici."
+
+ ln_ranging.2.t:0 "Le camp tient"
+ ln_ranging.2.desc.north:0 "Les tentes sont dressées et le fossé creusé avant la nuit.\n\nCe n'est pas un château. Cela n'a jamais été prévu pour. Mais c'est la Garde, debout au fond des neiges, faisant ce pour quoi elle a été bâtie. Le vent hurle dans les arbres, et les sentinelles scrutent les ténèbres glacées, guettant un mouvement."
+ ln_ranging.2.desc.home:0 "Le Mur avale l'horizon une journée entière avant que nous l'atteignions. C'est toujours ainsi.\n\nNous campons à son ombre, assez près pour que le froid qui tombe de la glace s'installe dans les tentes, et pour la première fois depuis des semaines les tours de garde passent sans qu'un seul homme crie."
+ ln_ranging.2.a:0 "En effet."

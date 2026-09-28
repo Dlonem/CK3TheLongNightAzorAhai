@@ -1,0 +1,48 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- consecration, the second road to Lightbringer.
+ # TOKEN FORM: bare saved-scope names, [ln_beloved.GetFirstName], NOT [scope:ln_beloved...]. That is the form
+ # the rest of the Lightbringer chain uses and the one proven live in this mod. [ln_the_blade.GetName] is an
+ # artifact scope -- vanilla uses [this_artifact.GetName] 37 times, so the promote is real.
+
+ # -- THE DECISION -------------------------------------------------------------------------------------------
+ ln_consecrate_blade_decision:0 "Consacrer la lame"
+ ln_consecrate_blade_decision_desc:0 "Le récit dit qu'Azor Ahai a œuvré cent jours et cent nuits et qu'il a fait l'épée à partir de rien. Il ne dit pas que c'est la seule manière dont cela ait jamais été fait.\n\nL'acier valyrien n'a jamais été seulement du feu et du pliage. Ce que les forgerons du Freehold y ont mis, l'acier l'a bu, et il boit depuis : c'est pourquoi une lame de cinq cents ans prend encore un fil qu'aucun armurier vivant ne sait lui donner.\n\nCe qui a bu une fois peut être amené à boire encore. Ce qu'on y met la seconde fois décide de ce qui en ressort."
+ ln_consecrate_blade_decision_tt:0 "Consacrer la lame valyrienne que je porte."
+ ln_consecrate_blade_decision_confirm:0 "Allumez le feu."
+ ln_consecrate_blade_decision_effect_tt:0 "Le feu sera allumé et le rite préparé. Tout sera prêt sous quinze jours."
+
+ ln_consecrate_needs_a_voice:0 "Il faut que quelqu'un puisse dire les mots : un prêtre rouge comme chapelain de ma cour ou prêtre de mon camp, ou que j'en sois un moi-même."
+ ln_consecrate_needs_a_price:0 "L'acier exige un prix : quelqu'un que j'aime marche jusqu'au feu. Aube est l'exception. Elle ne prend aucune vie, mais seulement de celui né sous l'étoile sanglante."
+ ln_consecrate_dawn_not_yours:0 "Aube est la seule lame que je porte, et ce n'est pas pour moi que l'étoile est tombée. Elle ne prendra aucune vie, et ce n'est pas moi qui la lui demanderai."
+ ln_consecrate_rite_is_spent:0 "Le feu a déjà été allumé une fois. Il n'est pas encore refroidi."
+
+ # -- MODIFIERS ----------------------------------------------------------------------------------------------
+ ln_lightbringer_consecrated_modifier:0 "Illumination"
+ ln_lightbringer_consecrated_modifier_desc:0 "La lame a bu une seconde fois, et ce qui est entré en elle y est resté. Elle répond désormais à un nom plus ancien, quel que soit ce qui est gravé sur le pommeau."
+ ln_the_rite_is_spent_modifier:0 "Le feu brûle encore"
+ ln_the_rite_is_spent_modifier_desc:0 "Un rite a été appelé et n'a pas encore reçu de réponse. On ne peut rien demander de plus à ces flammes avant qu'il en ait une."
+
+ # -- 1. THE CHOICE ------------------------------------------------------------------------------------------
+ ln_consecrate.1.t:0 "La seconde gorgée"
+ ln_consecrate.1.desc.dawn:0 "Ils ont dressé le feu dans la cour parce qu'il n'y a dans ce château aucun âtre assez grand, et [ln_the_blade.GetName] repose sur deux tréteaux à côté, pâle comme du verre laiteux, avec un froid qui dépasse celui de la nuit.\n\nLe prêtre lit les flammes depuis trois jours et a cessé de feindre le calme au sujet de ce qu'il y a trouvé. Cette épée n'a jamais été valyrienne, dit-il. Ce que le Freehold a fait à son acier, personne ne l'a fait à celle-ci : celle-ci est tombée du ciel déjà achevée, et elle attend depuis huit mille ans que quelqu'un remarque ce qu'elle est.\n\n\"Elle a déjà été trempée\", dit-il. \"Dans une étoile. Il ne reste aucun prix à payer et rien à y mettre. Elle veut seulement qu'on le lui demande, et cela ne lui sera demandé que par celui pour qui l'étoile est descendue.\"\n\nIl me regarde comme un homme regarde une porte dont il n'est pas certain de vouloir qu'elle s'ouvre."
+ ln_consecrate.1.desc.beloved:0 "Ils ont dressé le feu dans la cour, et [ln_the_blade.GetName] repose sur deux tréteaux à côté.\n\nLe prêtre ne veut pas toucher la lame. Il a passé la journée à expliquer, très soigneusement, que ceci n'est pas une forge et que rien ne sera fabriqué ici : l'épée existe déjà, l'épée est déjà extraordinaire, et tout ce qu'un rite peut faire, c'est lui donner quelque chose à devenir.\n\nEt puis il m'a dit ce que cela exige, sans rien adoucir, et je n'ai pas pu penser à autre chose depuis.\n\n[ln_beloved.GetTitledFirstName] est dans la salle derrière moi. [ln_beloved.GetSheHe|U] sait que le feu est allumé. Je ne crois pas que [ln_beloved.GetSheHe] sache pourquoi."
+ ln_consecrate.1.desc:0 "Ils ont dressé le feu dans la cour, et [ln_the_blade.GetName] repose sur deux tréteaux à côté, et le prêtre attend que je dise quelque chose.\n\nL'acier est consentant. C'est cela qui me trouble le plus : il n'a eu ni à le convaincre, ni à le préparer, ni à rien demander au Maître de la Lumière. Il a simplement regardé la lame et dit qu'elle prendrait tout ce que j'y mettrais.\n\nLa difficulté est entièrement mienne."
+ ln_consecrate.1.a:0 "Qu'on appelle [ln_beloved.GetFirstName]. [ln_beloved.GetSheHe|U] a le droit qu'on le lui demande."
+ ln_consecrate.1.b:0 "Dites les mots. L'étoile a payé cela il y a bien longtemps."
+ ln_consecrate.1.c:0 "Qu'on la remette au fourreau."
+
+ # -- 2. THE LIFE --------------------------------------------------------------------------------------------
+ ln_consecrate.2.t:0 "C'était déjà une épée"
+ ln_consecrate.2.desc:0 "[ln_beloved.GetSheHe|U] a marché jusqu'au feu.\n\nLes légendes se trompent de la même manière qu'elles se trompent toujours : elles racontent cela comme un meurtre, et c'est bien pire qu'un meurtre. [ln_beloved.GetSheHe|U] a tout écouté, a posé une question à laquelle je n'ai pas su répondre, puis a pris la place que le prêtre avait indiquée à [ln_beloved.GetHerHim], et n'a plus bougé.\n\nVoici ce dont personne ne vous avertit : la lame n'a pas changé. Elle n'a pas brillé, elle n'a pas chanté, elle ne s'est pas annoncée. Elle est entrée comme entre n'importe quelle épée, parce que c'était déjà une épée, et c'est là la différence entre ceci et une forge. Il n'y a pas eu d'instant où l'acier est devenu quelque chose. Il y avait seulement [ln_beloved.GetTitledFirstName], et puis il n'y avait plus rien.\n\nElle est tiède, à présent. Je n'ai pas remarqué quand cela a commencé. Je n'ai pas pu la reposer depuis, et je n'ai plus la certitude que ce soit à moi d'en décider."
+ ln_consecrate.2.a:0 "Alors cela valait la peine. Il faut que cela ait valu la peine."
+
+ # -- 3. DAWN -----------------------------------------------------------------------------------------------
+ ln_consecrate.3.t:0 "L'étoile descend deux fois"
+ ln_consecrate.3.desc:0 "Le prêtre a dit les mots, j'ai posé la main sur la poignée, et il ne s'est absolument rien passé.\n\nIl n'en a pas été surpris. Il a dit que j'avais mal compris ce qu'est une consécration : que j'avais marché jusqu'à ce feu en pensant donner quelque chose à l'épée, alors que tout l'intérêt de cette lame est qu'elle a tout reçu le jour où elle est tombée. Rien n'a été ajouté à [ln_the_blade.GetName] cette nuit. Elle a été reconnue.\n\nEt puis le froid l'a quittée. C'est la seule façon dont je puisse le décrire. Depuis que ma maison détient cette épée, nous l'avons appelée pâle, belle, et insupportable à tenir longtemps, et ce soir elle est simplement tiède, comme une pierre est tiède quand le soleil a donné dessus.\n\nTous les hommes de la cour se sont agenouillés. Je ne l'avais pas demandé et je n'aurais pas pu les en empêcher."
+ ln_consecrate.3.a:0 "Elle a toujours été cela. Nous ne faisions que la porter."
+
+ # -- 4. HE PUT IT BACK ---------------------------------------------------------------------------------------
+ ln_consecrate.4.t:0 "Fer froid"
+ ln_consecrate.4.desc:0 "J'ai laissé le feu s'éteindre sans rien dire, et le prêtre a fini par comprendre et est rentré.\n\nIl racontera cela comme un manque de courage. Peut-être que c'en était un. Mais j'ai retourné la chose la moitié de la nuit et j'arrive toujours au même endroit : une épée qui coûte une personne n'est pas une arme, c'est une dette, et j'ai vu ce que font les hommes une fois qu'ils en ont payé une. Ils passent le reste de leur vie à prouver que le prix était raisonnable.\n\nL'obscurité vient toujours. Je l'affronterai avec l'acier que j'ai déjà, et avec les gens que je n'y ai pas mis."
+ ln_consecrate.4.a:0 "L'acier suffit. Il faudra bien qu'il suffise."

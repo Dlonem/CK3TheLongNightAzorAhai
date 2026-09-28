@@ -1,0 +1,50 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- how a Walker dies (1.1.0, 1 Sep 2026).
+ #
+ # THOMAS, watching agot_multi_duel.0022 narrate the Night King's death: "the Night King, he shattered
+ # into ice when he died in Game of Thrones." AGOT's outro lines are written for a body -- "pierces his
+ # heart, and he falls with a final gasp", "a spray of blood", "crumples to the ground". None of that is
+ # true of a thing that has not been a person for eight thousand years.
+ #
+ # ⚠ THIS IS A LOCALIZATION OVERRIDE, NOT A COPIED EVENT, AND THAT IS THE WHOLE POINT. agot_multi_duel.0022
+ # is ~1,200 lines of triggered_desc and portrait wiring; shadowing it would put us on the hook for every
+ # duel in AGOT and break on their next update. Overriding ten loc keys does not.
+ #
+ # ⚠ AND EVERY OTHER DUEL IN THE GAME IS BYTE-IDENTICAL. Each override is a single Custom() call that
+ # branches on the loser: a Walker or the Night King gets ice, and ANYTHING ELSE gets AGOT's own original
+ # sentence, reproduced verbatim below under ln_duel_outro_agot_N. Those ten strings were extracted
+ # programmatically from agot_multi_duel_events_l_english.yml rather than retyped, so a human duel reads
+ # exactly as it did before this file existed. If AGOT rewrites their outros, ours go stale and want
+ # re-extracting -- that is the maintenance cost, and it is the cheapest one on offer.
+
+ # ── the overrides ──
+ agot_multi_duel.0020.desc.outro1:0 "[loser_duelist.Custom('LN_MultiDuelOutro_1')]"
+ agot_multi_duel.0020.desc.outro2:0 "[loser_duelist.Custom('LN_MultiDuelOutro_2')]"
+ agot_multi_duel.0020.desc.outro3:0 "[loser_duelist.Custom('LN_MultiDuelOutro_3')]"
+ agot_multi_duel.0020.desc.outro4:0 "[loser_duelist.Custom('LN_MultiDuelOutro_4')]"
+ agot_multi_duel.0020.desc.outro5:0 "[loser_duelist.Custom('LN_MultiDuelOutro_5')]"
+ agot_multi_duel.0020.desc.outro6:0 "[loser_duelist.Custom('LN_MultiDuelOutro_6')]"
+ agot_multi_duel.0020.desc.outro7:0 "[loser_duelist.Custom('LN_MultiDuelOutro_7')]"
+ agot_multi_duel.0020.desc.outro8:0 "[loser_duelist.Custom('LN_MultiDuelOutro_8')]"
+ agot_multi_duel.0020.desc.outro9:0 "[loser_duelist.Custom('LN_MultiDuelOutro_9')]"
+ agot_multi_duel.0020.desc.outro10:0 "[loser_duelist.Custom('LN_MultiDuelOutro_10')]"
+
+ # ── AGOT's originals, verbatim, for every loser who is not one of them ──
+ ln_duel_outro_agot_1:0 "\n\nD'une dernière botte désespérée, [winner_duelist.GetTitledFirstNameNoTooltip] enfonce [winner_duelist.GetHerHis] [winner_duelist.Custom('signature_weapon')] dans la poitrine [loser_duelist.GetTitledFirstNamePossessiveNoTooltip], et le duel s'achève dans une gerbe de sang. [loser_duelist.GetTitledFirstNameNoTooltip] tombe à terre pour ne plus se relever."
+ ln_duel_outro_agot_2:0 "\n\n[loser_duelist.GetTitledFirstNameNoTooltip] parvient à désarmer [winner_duelist.GetTitledFirstNameNoTooltip], mais avant que [loser_duelist.GetSheHe] puisse en finir avec [winner_duelist.GetHerHim], la [winner_duelist.Custom('signature_weapon')] [winner_duelist.GetTitledFirstNamePossessiveNoTooltip] trouve le chemin du cœur [loser_duelist.GetTitledFirstNamePossessiveNoTooltip]. [loser_duelist.GetTitledFirstNameNoTooltip] s'effondre, mort avant que [loser_duelist.GetSheHe] ne touche le sol."
+ ln_duel_outro_agot_3:0 "\n\nLa [winner_duelist.Custom('signature_weapon')] [winner_duelist.GetTitledFirstNamePossessiveNoTooltip] atteint [loser_duelist.GetTitledFirstNameNoTooltip] à la gorge ; une gerbe de sang marque la fin du duel tandis que [loser_duelist.GetTitledFirstNameNoTooltip] s'effondre, sans vie."
+ ln_duel_outro_agot_4:0 "\n\nLe dernier moulinet désespéré [loser_duelist.GetTitledFirstNamePossessiveNoTooltip] manque sa cible et ouvre la voie au coup mortel [winner_duelist.GetTitledFirstNamePossessiveNoTooltip] contre [loser_duelist.GetHerHim]. La [winner_duelist.Custom('signature_weapon')] [winner_duelist.GetTitledFirstNamePossessiveNoTooltip] [winner_duelist.Custom('AGOT_SignatureWeaponCriticalPresent')] [loser_duelist.GetHerHis] cœur, et [loser_duelist.GetTitledFirstNameNoTooltip] tombe dans un dernier râle."
+ ln_duel_outro_agot_5:0 "\n\nD'un revers brutal, [winner_duelist.GetTitledFirstNameNoTooltip] décapite [loser_duelist.GetTitledFirstNameNoTooltip] et met fin au duel d'un seul coup décisif. Le corps [loser_duelist.GetTitledFirstNamePossessiveNoTooltip] s'affaisse sur le sol."
+ ln_duel_outro_agot_6:0 "\n\nLe coup final [winner_duelist.GetTitledFirstNamePossessiveNoTooltip] [winner_duelist.Custom('AGOT_SignatureWeaponCriticalPresent')] le flanc [loser_duelist.GetTitledFirstNamePossessiveNoTooltip], et la blessure fatale jette [loser_duelist.GetTitledFirstNameNoTooltip] sur [loser_duelist.GetHerHis] genoux avant que [loser_duelist.GetSheHe] ne s'effondre, mort."
+ ln_duel_outro_agot_7:0 "\n\n[winner_duelist.GetTitledFirstNameNoTooltip] porte un coup mortel à [loser_duelist.GetTitledFirstNameNoTooltip], [winner_duelist.GetHerHis] [winner_duelist.Custom('signature_weapon')] s'enfonçant profondément dans la poitrine de [winner_duelist.GetHerHis] adversaire. Le corps sans vie [loser_duelist.GetTitledFirstNamePossessiveNoTooltip] s'affale sur le sol."
+ ln_duel_outro_agot_8:0 "\n\n[loser_duelist.GetTitledFirstNameNoTooltip] se découvre en allongeant le bras, et [winner_duelist.GetTitledFirstNameNoTooltip] en profite : une seule botte précise de [winner_duelist.GetHerHis] [winner_duelist.Custom('signature_weapon')] passe à travers [winner_duelist.GetHerHim]. [loser_duelist.GetTitledFirstNameNoTooltip] tombe, mort avant que [loser_duelist.GetSheHe] ne touche le sol."
+ ln_duel_outro_agot_9:0 "\n\nD'un coup vif et sauvage, [winner_duelist.GetTitledFirstNameNoTooltip] ouvre la gorge [loser_duelist.GetTitledFirstNamePossessiveNoTooltip]. Les yeux [loser_duelist.GetTitledFirstNamePossessiveNoTooltip] s'écarquillent de saisissement tandis que [loser_duelist.GetSheHe] s'effondre, le sang jaillissant de la plaie."
+ ln_duel_outro_agot_10:0 "\n\n[winner_duelist.GetTitledFirstNameNoTooltip] se glisse au-delà de la garde [loser_duelist.GetTitledFirstNamePossessiveNoTooltip] et enfonce [winner_duelist.GetHerHis] [winner_duelist.Custom('signature_weapon')] profondément dans [loser_duelist.GetHerHis] ventre. [loser_duelist.GetTitledFirstNameNoTooltip] vacille le temps d'un battement de cœur avant de s'effondrer, sans vie, sur le sol taché de sang."
+
+ # ── and how one of them ends instead ──
+ ln_duel_outro_ice_1:0 "\n\nLa lame passe au travers, et rien ne saigne. Il y a un craquement comme d'un lac qui cède au printemps, et [loser_duelist.GetTitledFirstNameNoTooltip] se défait — éclat après éclat de [loser_duelist.GetHerHim], fondant déjà là où ils tombent."
+ ln_duel_outro_ice_2:0 "\n\n[loser_duelist.GetTitledFirstNameNoTooltip] ne tombe pas : quelque chose lâche. Un instant il y a une forme dans la neige avec une épée plantée dedans ; l'instant suivant, un éparpillement de verre pâle sur le sol, et un froid qui en monte et fait souffrir l'air."
+ ln_duel_outro_ice_3:0 "\n\nElle entre sous le bras et tout [loser_duelist.GetHerHim] se bloque, blanc et immobile, comme de l'eau qui décide d'être glace. Puis [loser_duelist.GetTitledFirstNameNoTooltip] éclate, et le vent emporte l'essentiel de ce qui reste avant que cela ne touche terre."
+ ln_duel_outro_ice_4:0 "\n\nIl n'y a pas de cri d'agonie. [loser_duelist.GetTitledFirstNameNoTooltip] cesse simplement d'être une chose et en devient plusieurs milliers, tintant sur le sol gelé comme un panneau de verre de Myr qu'on laisse tomber, et les morceaux sont de l'eau avant que quiconque ne songe à en ramasser un."
+ ln_duel_outro_ice_5:0 "\n\nLe coup porte et [loser_duelist.GetTitledFirstNameNoTooltip] éclate — pas de sang, pas d'os, mais une gerbe de glace dure et claire qui pique le visage de chaque homme assez près pour le voir, et qui a quitté leurs joues le temps d'un souffle."

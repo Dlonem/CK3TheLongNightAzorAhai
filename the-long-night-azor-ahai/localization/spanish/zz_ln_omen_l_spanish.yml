@@ -1,0 +1,32 @@
+﻿l_spanish:
+
+ ln_omen.1.t:0 "La expedición no ha regresado"
+ ln_omen.1.desc:0 "Seis hombres cruzaron [wall|E] hacia el norte antes del último deshielo. Hombres con experiencia: uno de ellos había hecho el cruce once veces y sabía encontrar el Milkwater en la niebla.\n\n Llevan ocho semanas de retraso. Eso, por sí solo, no es notable. Las expediciones se alargan, los hombres se rompen piernas, [free_folk|E] toma prisioneros y a veces los devuelve por un rescate.\n\n Lo notable es que la partida enviada a buscarlos dio la vuelta en el Haunted Forest y volvió a casa, y ninguno de los cuatro dirá por qué.\n\n El Lord Comandante lo ha asentado como seis perdidos. El escribiente que anotó la entrada no levantó la vista mientras lo hacía."
+ ln_omen.1.a:0 "Manda hombres. Quiero saber qué hizo volver a esa partida."
+ ln_omen.1.b:0 "Seis hombres. La Guardia pierde seis hombres casi todos los años."
+
+ ln_omen.2.t:0 "El hombre que volvió"
+ ln_omen.2.desc:0 "Es explorador, o lo era. Entró en tu salón sin anunciarse y no pidió comida ni fuego.\n\n Dice que vio uno. De pie en la linde de los árboles, más alto que un hombre y más delgado, y el frío le salía como el calor sale de una forja. Lo miró y no tuvo prisa. Dice que los cuatro hombres que iban con él siguen allá arriba, y siguen caminando.\n\n Todo lo que se le ve tiembla, menos las manos, que están completamente quietas, y tu maestre te dice en privado que esa es la parte que le preocupa.\n\n Espera que digas algo. Y con él todos los demás en el salón."
+ ln_omen.2.a:0 "Le creo. Que se diga en voz alta, para que el salón me oiga decirlo."
+ ln_omen.2.b:0 "Dale de comer. Quédatelo. Ni una palabra a nadie: el señor que pregona aparecidos convoca solo."
+ ln_omen.2.c:0 "Está borracho, o loco, o pagado. Échalo."
+
+ # ── SILVERWING'S REFUSAL ────────────────────────────────────────────────────────────────────────────────────
+ ln_omen.10.t:0 "[ln_dragon.GetTitledFirstName] no quiere cruzar"
+ ln_omen.10.desc.open:0 "[ln_dragon.GetTitledFirstName] ha volado contra un muro de escudos. [ln_dragon.GetSheHe|U] ha volado a través del humo de [ln_dragon.GetHerHis] propio fuego con flechas en [ln_dragon.GetHerHis] ala y no ha girado.\n\nY a una milla del hielo [ln_dragon.GetSheHe] se detiene. No afloja: se detiene, como se detiene un caballo ante una serpiente, y luego sisea, y luego vira tan brusco que casi te caes de [ln_dragon.GetHerHis] lomo a los árboles.\n\nVuelves a subir con [ln_dragon.GetHerHim] y lo intentas más al este, donde el Muro es más bajo. Lo mismo. Lo intentas una tercera vez por la tarde, llegando alto con el sol a la espalda para que [ln_dragon.GetSheHe] no lo vea hasta estar casi encima, y [ln_dragon.GetSheHe] lo ve de todos modos, y esta vez [ln_dragon.GetSheHe] chilla.\n\n"
+ ln_omen.10.desc.will:0 "No es miedo. Has sentido [ln_dragon.GetHerHis] miedo, una vez, muy fuerte, en una tormenta frente a Tarth, y no se parece en nada a esto. No hay un temblor en [ln_dragon.GetHerHim], nada salvaje. [ln_dragon.GetSheHe|U] simplemente no quiere, como un hombre no quiere meter la mano en el fuego, y cuando insistes con [ln_dragon.GetHerHim] por tercera vez [ln_dragon.GetSheHe] gira [ln_dragon.GetHerHis] cabeza del todo sobre ese cuello largo y te mira hasta que dejas de pedirlo.\n\n"
+ ln_omen.10.desc.fear:0 "Y [ln_dragon.GetSheHe] tiene miedo. Esa es la parte que nadie va a creerte cuando lo cuentes, porque todo el mundo sabe lo que es un dragón; pero llevas años sentado en [ln_dragon.GetHerHis] lomo y sabes exactamente cómo se siente [ln_dragon.GetSheHe] cuando [ln_dragon.GetSheHe] tiene miedo, y ahora [ln_dragon.GetSheHe] tiene miedo de una línea de hielo sin nada encima.\n\n"
+ ln_omen.10.desc.ward:0 "Y no sabes decir por qué. No huele a nada, no se oye nada, no hay nada sobre el hielo ni detrás de él salvo tierra blanca que sigue para siempre. Aquello con lo que [ln_dragon.GetSheHe] ha topado no está en el mundo que puedes ver. Está en el Muro, o ES el Muro, y lo pusieron allí gentes que llevan ocho mil años muertas y no dejaron una nota.\n\n"
+ ln_omen.10.desc.close:0 "Los de la Guardia en el adarve han dejado de disimular que trabajan. Uno de los más viejos no mira al dragón en absoluto. Te mira a ti, para ver qué vas a hacer al respecto, y hay en ello algo que se parece mucho a la compasión.\n\nSiete mil años de hielo, y nadie ha escrito nunca qué se puso dentro."
+ ln_omen.10.a:0 "Otra vez. Sube otra vez con [ln_dragon.GetHerHim]."
+ ln_omen.10.b:0 "Basta. [ln_dragon.GetSheHe|U] sabe algo que yo no sé."
+ ln_omen.10.b_tt:0 "[ln_dragon.GetSheHe|U] queda fuera de tus guerras a partir de ahora, como si hubieras tomado tú mismo #bold No usar dragón#!. Toma #bold Usar dragón#! para cambiar de opinión."
+ ln_omen.10.d:0 "Pídeselo a [ln_dragon.GetTitledFirstName] de todos modos."
+ ln_omen.10.d_tt:0 "[ln_dragon.GetTitledFirstName] nunca te ha negado nada más. [ln_dragon.GetSheHe|U] cruza, y sigue cruzando.\n\n#N Mientras el Muro siga en pie, lo que aguarda en ese cielo acabará probablemente con [ln_dragon.GetHerHim], y lo que él se lleva no sigue muerto.#!"
+ ln_omen.10.c:0 "Escribe a la Ciudadela. Habrá una razón sensata."
+
+ # ── THE TALE, for those who will never sit on a dragon ──────────────────────────────────────────────────────
+ ln_omen.11.t:0 "Una nota al margen"
+ ln_omen.11.desc:0 "No es ni siquiera el tema del libro. Es una línea en un capítulo sobre progresos reales, que anota como curiosidad que en la visita de la reina Alysanne al Muro su dragón Silverwing no quiso volar por encima, y que Su Gracia intentó el cruce tres veces antes de dejarlo.\n\nTres veces. Alguien escribió tres veces y luego pasó a describir el festín.\n\nLos dragones no se niegan. En eso consisten enteramente.\n\nAsí que, o un maestre mintió sobre una reina, en una crónica, sin motivo alguno, o hay algo en ese hielo, es más viejo que Valyria, y lo pusieron allí para mantener algo fuera."
+ ln_omen.11.a:0 "Entonces lo pusieron allí para mantener algo fuera. Quiero saber qué."
+ ln_omen.11.b:0 "El dragón de una anciana tuvo un mal día. Nada más."

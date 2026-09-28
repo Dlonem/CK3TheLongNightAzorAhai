@@ -853,6 +853,32 @@ ln_begin_last_hour_melee_effect = {
 			flag = multi_duelist_plot_armor
 			days = 400
 		}
+		# ⚠ 1.1.2 -- AND SO DOES HE, AND THIS WAS A REAL LEAK INSIDE A SANCTIONED SCENE. ────────────────
+		# DUEL_FATALITY = possible is set for this story in zz_ln_multi_duel_theme_override.txt, and AGOT's
+		# engine carries a 50-weight Death branch in every exchange, gated on exactly one thing:
+		# `trigger = { NOT = { has_character_flag = multi_duelist_plot_armor } }`
+		# (00_agot_multi_duel_effects.txt, the duel-outcome random_list). The champion was armoured here in
+		# 1.1.0; the Night King never was. So the engine could kill him mid-melee -- and an engine kill
+		# carries no ln_fell_in_the_scene stamp, which means ln_death_catalyst_effect's else_if caught it,
+		# cast him down, and crowned a successor. The player had just won the Last Hour and was told the
+		# Long Night goes on. That is precisely the report Thomas brought in on 12 Sep.
+		#
+		# THE ENDING DOES NOT DEPEND ON THE ENGINE'S KILL, which is why armouring him is safe rather than a
+		# stall. ln_last_hour_watch_story (zz_ln_encounter_story.txt) ticks daily and reads
+		# agot_multi_duelist_cant_continue on him -- that trigger is `NOT alive OR yielded OR downed`, so a
+		# DOWNED Night King fires it exactly as a dead one did. The watchdog then sends ln_lasthour.20 and
+		# ln_last_hour_victory_effect does the kill itself, with the stamp on first, which is the ordering
+		# this file already wrote for the case where the engine "left him downed". All that changes is that
+		# the downed case is now the only case.
+		#
+		# END_STORY_ON = dead_leader below is now decorative on both sides -- it already was on side A, and
+		# the watchdog has owned this ending since 1.1.0 for that same reason.
+		scope:ln_night_king = {
+			add_character_flag = {
+				flag = multi_duelist_plot_armor
+				days = 400
+			}
+		}
 		multi_duel_leaders_effect = {
 			SIDE_A_LEADER = root
 			SIDE_B_LEADER = scope:ln_night_king

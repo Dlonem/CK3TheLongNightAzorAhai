@@ -60,6 +60,7 @@
  # "You are Deposed", which never happens at runtime (the tooltip evaluates against pre-click state).
  ln_take_black_tt_vows:0 "С прежней жизнью поступают по обычаю Дозора: брак, помолвка, притязания и долги — всё остаётся у Стены"
  ln_take_black_tt_shell:0 "Любая ватага искателей приключений под вашим началом распускается"
+ ln_take_black_tt_household:0 "Ваш совет распущен. Придворные, годные для чёрного, принимают его вместе с вами, а большинство остальных уходит своей дорогой. Ваша близкая семья отходит к наследнику, если у вас есть земли, и остаётся с вами, если нет."
 
  # Brother allocation -- the Lord Commander posts men out to the companies. See
  # common/scripted_effects/zz_ln_brother_allocation_effects.txt.

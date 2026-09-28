@@ -1,0 +1,35 @@
+﻿l_spanish:
+
+ # ── THE ROADS THE DEAD HOLD (1.0.12) ────────────────────────────────────────────────
+ ln_the_dead_hold_this_land:0 "Los muertos dominan esta tierra"
+ ln_the_dead_hold_this_land_desc:0 "Nada vivo guarda los caminos aquí. Lo que los recorre no necesita comer, no duerme y no se detiene en la linde de los árboles."
+ ln_the_dead_are_near:0 "Los muertos están a un condado"
+ ln_the_dead_are_near_desc:0 "La frontera de su país es una línea en un mapa. Lo que hay dentro no lo sabe."
+
+ ln_travel.1.t:0 "El camino no está vacío"
+ ln_travel.1.desc:0 "Tus batidores vuelven al galope, que es lo primero que está mal, porque deberían volver al paso.\n\nHay figuras en el camino, delante. No muchas: veinte, quizá treinta. No se mueven deprisa. Eso es lo segundo que está mal: los hombres que quieren robarte se dan prisa, y los hombres que quieren hablar se detienen.\n\nEstos no hacen ninguna de las dos cosas. Simplemente siguen avanzando, al mismo paso sin prisa, y el más cercano lleva puesto lo que queda del abrigo de un granjero y lo que queda de un granjero."
+ ln_travel.1.desc.btw:0 "Aquí no hay camino. Hay un paso entre los árboles que la gente ha usado el tiempo suficiente para desgastarlo, y no es lo mismo.\n\nSalen de los pinos por los dos lados a la vez, sin un sonido y sin prisa, y son más de los que puedes contar con la luz que tienes. Algunos llevan pieles. Uno lleva negro, o lo llevaba.\n\nEl frío los ha conservado muy bien."
+ ln_travel.1.a:0 "Atraviésalos. Son lentos."
+ ln_travel.1.a_through:0 "A través, y fuera por el otro lado"
+ ln_travel.1.a_caught:0 "Una mano se cerró sobre la brida"
+ ln_travel.1.b:0 "Forma una línea. Enciende un fuego."
+ ln_travel.1.b_tt:0 "Tu escolta mantiene el camino mientras se encienden las antorchas.\n\n#weak Funciona muchas más veces de las que no. Cuando no funciona, cuesta uno de ellos. En cualquier caso te cuesta un mes y medio.#!"
+ ln_travel.1.b_burned:0 "Arden"
+ ln_travel.1.b_cost:0 "Arden, y también uno de los tuyos"
+ ln_travel.1.c:0 "Deja los carros. Cabalga."
+ ln_travel.1.c_tt:0 "Todo lo que va sobre ruedas se queda en el camino. Tú no.\n\n#weak Nadie resulta herido, y todo el mundo oye que huiste.#!"
+
+ ln_travel.2.t:0 "Uno de ellos"
+ ln_travel.2.desc:0 "Los caballos se detienen antes de que se lo ordenes. Todos, a la vez, y luego no quieren seguir y no quieren dar la vuelta.\n\nEstá de pie donde el sendero se curva, y tampoco tiene prisa, pero por otra razón. Es más alto que un hombre y más delgado que un hombre. Su armadura tiene el color del hielo profundo y parece crecida antes que fabricada. Lleva un rato viéndote llegar.\n\nDetrás de él los árboles están blancos de una escarcha que no estaba ahí hace una hora.\n\nCuando se mueve, el sonido de tu respiración es lo más ruidoso del mundo."
+ ln_travel.2.a:0 "Hazle frente. No he llegado tan lejos para que me encuentren en la nieve."
+ ln_travel.2.a_shatter:0 "Se deshizo como hielo contra una piedra"
+ ln_travel.2.a_cold:0 "Te dejó vivir, que es peor"
+ ln_travel.2.b:0 "Alguien tiene que ser el más lento."
+ ln_travel.2.b_tt:0 "Dejas a [ln_travel_guard.GetTitledFirstName] en el camino y no te detienes.\n\n#weak No vuelve. Todos los que van contigo sabrán exactamente qué se hizo y quién lo hizo.#!"
+ ln_travel.2.c:0 "Cabalga. No mires atrás."
+ ln_travel.2.c_clear:0 "No te siguió"
+ ln_travel.2.c_hurt:0 "No te siguió muy lejos"
+ ln_travel.2.c_taken:0 "Solo necesitaba a uno de los tuyos"
+ ln_past_the_wall:0 "Pasado el Muro"
+ ln_past_the_wall_desc:0 "Aquí no rige la autoridad de nadie y nadie va a venir por ti. El frío se lleva a viajeros que lo hacían todo bien, y las cosas que caminan por esta tierra en la Larga Noche no se anuncian."
+

@@ -1,0 +1,21 @@
+﻿l_spanish:
+ # Skin Color
+ skin_color_hue_long_night: "Tono de piel (Larga Noche)"
+ vanilla_skin_color_hue_long_night: "Tono de piel vainilla (Larga Noche)"
+ 
+ skin_color_saturation_long_night: "Saturación de piel (Larga Noche)"
+ vanilla_skin_color_saturation_long_night: "Saturación de piel vainilla (Larga Noche)"
+ 
+ skin_color_value_long_night: "Brillo de piel (Larga Noche)"
+ vanilla_skin_color_value_long_night: "Brillo de piel vainilla (Larga Noche)"
+
+ 
+ # Hair Color
+ hair_color_hue_long_night: "Tono de pelo (Larga Noche)"
+ vanilla_hair_color_hue_long_night: "Tono de pelo vainilla (Larga Noche)"
+ 
+ hair_color_saturation_long_night: "Saturación de pelo (Larga Noche)"
+ vanilla_hair_color_saturation_long_night: "Saturación de pelo vainilla (Larga Noche)"
+ 
+ hair_color_value_long_night: "Brillo de pelo (Larga Noche)"
+ vanilla_hair_color_value_long_night: "Brillo de pelo vainilla (Larga Noche)"

@@ -1,0 +1,50 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- the Last Hour melee (1.1.0, §3).
+ # ⚠ ln_lasthour.1 is the §13 VOICE SAMPLE -- Thomas approves this exchange before the other four are written.
+
+ ln_dawn.2.e:0 "Nous n’irons pas seuls à lui - formez la ligne"
+
+ ln_lasthour.1.t:0 "La Dernière Heure"
+ # The first block counts HIS side (the walker scopes vary 1-3 with the difficulty rule, §9.4); the
+ # second counts yours. Never promise a number the portraits cannot keep.
+ ln_lasthour.1.desc.walkers3:0 "Il t’attend sur la neige découverte, et il n’a pas pris la peine d’amener son armée. Trois de ses pâles semblables se tiennent à une longueur de lance derrière lui, immobiles comme de la glace taillée. Il n’a pas besoin de plus, et il sait que tu le sais."
+ ln_lasthour.1.desc.walkers2:0 "Il t’attend sur la neige découverte, et il n’a pas pris la peine d’amener son armée. Deux de ses pâles semblables se tiennent à une longueur de lance derrière lui, immobiles comme de la glace taillée. Il n’a pas besoin de plus, et il sait que tu le sais."
+ ln_lasthour.1.desc.walkers1:0 "Il t’attend sur la neige découverte, et il n’a pas pris la peine d’amener son armée. Un de ses pâles semblables se tient à une longueur de lance derrière lui, immobile comme de la glace taillée. Il n’a pas besoin de plus, et il sait que tu le sais."
+ ln_lasthour.1.desc.walkers0:0 "Il t’attend sur la neige découverte, et il n’a pas pris la peine d’amener son armée. Il n’en a pas besoin, et il sait que tu le sais."
+ ln_lasthour.1.desc.line:0 "\n\nMais toi non plus, tu n’es pas venu seul. Des bottes crissent derrière toi — ceux qui ont répondu, ceux qui ont une raison propre d’être sur ce champ. De l’acier, du verre, et les dieux qu’il reste encore à chacun de vous.\n\nIl regarde la ligne se former. Quelque chose bouge dans le bleu de ses yeux qui, sur un visage vivant, aurait pu être de l’intérêt."
+ ln_lasthour.1.desc.alone:0 "\n\nPersonne n’a répondu. Personne n’est venu. Il y a toi, le vent et les morts.\n\nIl te regarde franchir seul les cent derniers pas. Quelque chose bouge dans le bleu de ses yeux qui, sur un visage vivant, aurait pu être du respect."
+ ln_lasthour.1.a:0 "En avant - cela se termine ici, d’une façon ou d’une autre"
+ ln_lasthour.1.c:0 "Tire-la d’abord. Que tout le champ voie ce qu’elle est."
+ ln_lasthour.1.d:0 "Je prends le premier rang. Cette lame a été faite pour quelque chose."
+ ln_lasthour.1.e:0 "Amenez-moi tout près."
+ ln_lasthour.1.f:0 "Ils sont venus ici à cause de moi. Qu’ils me regardent y aller le premier."
+ ln_lasthour.1.b:0 "Faire demi-tour - ce n’est pas l’heure"
+
+ # ── option tooltips (the effects run hidden; these lines are what the player is told) ──
+ ln_dawn.2.e_tt:0 "Une ligne est levée parmi ceux qui sont sur le champ : l’homme que l’histoire a déjà choisi, d’abord tes parents et tes amis, puis tout étranger portant un acier qui fonctionne, six au plus et jamais plus de deux de ta propre maison. Puis vous allez à lui ensemble."
+ ln_lasthour.1.c_tt:0 "Tu entres le premier, portant la seule chose dont chaque homme derrière toi a entendu parler. Cela t’achète un pas. Cela signifie aussi que la chose au milieu de ce champ ne regarde personne d’autre."
+ ln_lasthour.1.d_tt:0 "De l’acier valyrien, porté au seul combat pour lequel il était vraiment fait. Tu prends le premier rang, et l’attention qui va avec."
+ ln_lasthour.1.e_tt:0 "L’obsidienne est une réponse de combat au couteau. Elle fonctionne, et elle fonctionne à longueur de bras, ce qui est tout son problème."
+ ln_lasthour.1.f_tt:0 "Tu es ce que les prêtres leur racontent depuis des années. Que ce soit vrai a cessé d’importer ; ce qui importe, c’est que la ligne y croie pendant qu’elle te regarde avancer."
+ ln_lasthour.1.a_tt:0 "La mêlée commence. Elle se livrera homme par homme dans les jours qui suivent — blessures, chutes, et pire — et un Marcheur Blanc n’accepte jamais une reddition."
+ ln_lasthour.1.b_tt:0 "La ligne se disperse et le champ demeure. Il sera toujours là quand tu auras trouvé ton courage."
+ ln_lasthour.20.a_tt:0 "Le Roi de la Nuit est achevé de ta main. Chaque Marcheur tombé de sa lignée s’ajoute à ton compte, et chacun de tes survivants en porte le souvenir."
+
+ ln_lasthour.20.t:0 "L’Aube"
+ ln_lasthour.20.desc:0 "C’est fini, et pendant un instant personne n’y croit. Le vent souffle encore. La neige tient encore dans ses congères. Mais le froid — le froid qui s’est tenu dans la poitrine de chaque homme depuis le début de la longue obscurité — se vide du monde comme l’eau d’une écuelle fendue.\n\nLà où il est tombé, il n’y a plus qu’un anneau de givre qui s’élargit, et ses pâles semblables ont disparu comme s’ils ne s’étaient jamais tenus là. À travers le Nord, à travers le monde, cent mille morts s’effondrent d’un seul coup et ne se relèvent pas.\n\nLes hommes encore debout dans la ligne se regardent. Quelqu’un rit, haut et brisé. Un autre est à genoux. Le soleil se lève, et voilà des années que le soleil ne s’était pas levé."
+ ln_lasthour.20.a:0 "Que vienne le matin"
+
+ ln_lasthour.30.t:0 "Ce que le froid garde"
+ ln_lasthour.30.desc:0 "Il n’y a pas de douleur. C’est la première chose qui ne va pas. Il y a eu de la douleur, énormément, puis le froid est monté à travers elle comme l’eau à travers la neige, et maintenant il n’y a plus rien du tout.\n\nTu regardes tes propres mains s’assurer sur la glace sans le leur avoir demandé. Elles ont la mauvaise couleur. Les pensées que tu penses raccourcissent, et l’espace entre elles s’élargit, et quelque part dans cet espace qui s’élargit tu comprends — sans peur, car la peur est partie où la douleur est partie — que celle-ci est la dernière que tu penseras avec des mots.\n\nIl se tient au-dessus de toi. Il ne jubile pas. Il attend, comme un homme attend que la glace finisse de prendre sur un étang qu’il veut traverser."
+ ln_lasthour.30.a:0 "..."
+
+ # ── Memories ──
+ ln_faced_the_night_king_memory:0 "s’est dressé contre le Roi de la Nuit"
+ ln_faced_the_night_king_memory_desc:0 "Je me suis tenu dans la ligne à la Dernière Heure, contre le Roi de la Nuit lui-même, et je respirais encore quand le soleil s’est levé."
+ ln_faced_the_night_king_memory_desc_second_perspective:0 "tu t’es tenu dans la ligne à la Dernière Heure, contre le Roi de la Nuit lui-même, et tu respirais encore quand le soleil s’est levé."
+ ln_faced_the_night_king_memory_desc_third_perspective:0 "[owner.GetName] s’est tenu dans la ligne à la Dernière Heure, contre le Roi de la Nuit lui-même."
+ ln_raised_as_an_other_memory:0 "le Roi de la Nuit l’a pris"
+ ln_raised_as_an_other_memory_desc:0 "Je suis tombé à la Dernière Heure, et le Roi de la Nuit ne m’a pas laissé mourir. Il a fait de moi l’un des siens."
+ ln_raised_as_an_other_memory_desc_second_perspective:0 "tu es tombé à la Dernière Heure, et le Roi de la Nuit ne t’a pas laissé mourir. Il a fait de toi l’un des siens."
+ ln_raised_as_an_other_memory_desc_third_perspective:0 "[owner.GetName] est tombé à la Dernière Heure, et le Roi de la Nuit a fait de [owner.GetHerHim] l’un des siens."

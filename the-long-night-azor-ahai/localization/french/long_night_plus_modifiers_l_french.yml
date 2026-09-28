@@ -1,0 +1,23 @@
+﻿l_french:
+
+ dawn_refugee_modifier:0 "Fui vers le sud"
+ dawn_refugee_modifier_desc:0 "Chassé de son âtre et de sa salle par la marche des morts, il a fui vers le sud parmi les vivants — un réfugié déraciné, hanté par ce qu'il a laissé derrière lui, rapide sur les routes et endurci par la survie."
+
+ # 1.0.15 -- names for the five modifiers that showed as raw keys in tooltips (audit find).
+ others_sword_modifier:0 "Lame de la Longue Nuit"
+ others_sword_modifier_desc:0 "Une épée faite de la glace des Autres — elle boit la chaleur, et la main qui la tient oublie ce qu'était l'été."
+ others_weak_modifier:0 "Puissance de l'hiver (faible)"
+ others_weak_modifier_desc:0 "Le froid qui suit le Roi de la Nuit est mince en cet âge ; les morts marchent, mais lentement."
+ others_standard_modifier:0 "Puissance de l'hiver"
+ others_standard_modifier_desc:0 "Toute la force des longues ténèbres se déplace avec lui."
+ others_strong_modifier:0 "Puissance de l'hiver (profonde)"
+ others_strong_modifier_desc:0 "Le froid est profond en cet âge, et les morts avec lui."
+ others_insane_modifier:0 "Puissance de l'hiver (sans fin)"
+ others_insane_modifier_desc:0 "La nuit est sombre et pleine de terreurs, et en cet âge elle est sans fond."
+
+ # 1.0.15 -- new modifiers.
+ ln_named_azor_ahai_modifier:0 "Azor Ahai Réincarné"
+ ln_named_azor_ahai_modifier_desc:0 "La Longue Nuit s'est achevée par cette main. Ce n'est pas une prétention que le monde discute."
+ ln_cold_trophy_modifier:0 "Un Autre captif"
+ ln_cold_trophy_modifier_desc:0 "L'un des êtres de froid se tient dans les cellules en dessous, et tout le monde dans la salle le sait. Le royaume craint le seigneur qui le détient. La maisonnée, elle, craint surtout l'escalier."
+

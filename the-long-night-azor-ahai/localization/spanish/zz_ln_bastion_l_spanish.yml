@@ -1,0 +1,12 @@
+﻿l_spanish:
+
+ ln_last_bastion_modifier:0 "El Último Bastión"
+ ln_last_bastion_modifier_desc:0 "El solar de una gran casa, y la tierra de alrededor se está vaciando dentro de estos muros. Cada caballero andante, cada pequeño propietario, cada hombre capaz de cargar una lanza y encontrar la puerta. Los muertos se quedan con el campo abierto en una estación. Tardarán mucho en quedarse con esto."
+
+ # THE MEN-AT-ARMS TYPE LABEL. Both our undead regiments carry `type = Other_infantry`, a custom category
+ # so that nothing in the ordinary rock-paper-scissors counters them and they counter nothing -- the dead
+ # are not skirmishers. But a MAA type's loc key IS the type string (AGOT does the same for anti_dragon in
+ # agot_regiment_l_english.yml), and nobody had written one, so the tooltip read "Type: Other_infantry".
+ Other_infantry:0 "[ln_others_infantry|E]"
+ game_concept_ln_others_infantry:0 "Los muertos"
+ game_concept_ln_others_infantry_desc:0 "Regimientos de los levantados. Se alzan de lo que la Larga Noche ya ha matado, y no son soldados en ningún sentido que el resto del mundo reconocería: sin instrucción, sin paga, sin moral que quebrar y sin ningún interés en el terreno que ocupan.\n\nEn términos de reglas quedan #EMP fuera del sistema ordinario de contrarrestos#!. Nada en las levas de Poniente está hecho para responderles, y ellos no están hechos para responder a nada; las picas no los frenan y ellos no frenan a la caballería. Lo que tienen en su lugar es número. Un solo caballero puede derribar a veinte y no estar más a salvo por ello, porque nunca fueron solo veinte.\n\n#weak Los espectros que levantan los Otros, y las cosas más frías que bajan al sur con ellos, luchan todos en esta categoría.#!"

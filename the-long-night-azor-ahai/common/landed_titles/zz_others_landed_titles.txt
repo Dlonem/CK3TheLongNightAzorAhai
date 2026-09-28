@@ -8,4 +8,8 @@ h_the_others = {
 	capital = c_harrenhal
 	can_be_named_after_dynasty = no
 	ignore_titularity_for_title_weighting = yes
+	# 1.1.3 -- one Night King. Every Other is named "Other", so a successor read "Other II"; when he is
+	# cast down and rises again he is the same king (ln_crown_the_next_nightking_effect). Vanilla key,
+	# common/landed_titles/_landed_titles.info:188, used on h_china (02_china.txt:11).
+	disable_regnal_numbers = yes
 }

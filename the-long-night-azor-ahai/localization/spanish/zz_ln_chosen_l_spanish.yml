@@ -1,0 +1,80 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the Chosen chain.
+
+ ln_chosen.1.t:0 "Una corona ha decidido para qué sirvo"
+ ln_chosen.1.desc:0 "La oferta es abrumadoramente generosa, y así es exactamente como sé que no es una oferta de verdad.\n\nTierras, un asiento en un consejo real, un matrimonio de prestigio—y a cambio, cabalgo bajo el estandarte de [ln_chosen_king.GetTitledFirstName]. Se me ve hacerlo. Y la profecía que me sigue a todas partes pasa discretamente a [ln_chosen_king.GetHerHis] libro de cuentas político.\n\nEl enviado tiene cuidado de no decir nada de esto en voz alta. Habla de honor, de necesidad y de la oscuridad de los tiempos. Luego deja que el silencio se alargue un poco más de lo debido, asegurándose de que entiendo con precisión qué está comprando su rey.\n\nLo difícil es que podría tener razón. Un campeón elegido sin un ejército detrás no es más que un rumor. Un campeón con una corona detrás es una causa sagrada."
+ ln_chosen.1.a:0 "Pronunciaré el juramento."
+ ln_chosen.1.b:0 "Lucharé al lado de [ln_chosen_king.GetHerHim]. Pero no pertenezco a ninguna corona."
+ ln_chosen.1.c:0 "Los reyes son un problema del sur. Que se marche el enviado."
+
+ ln_chosen.2.t:0 "Un enviado del otro"
+ ln_chosen.2.desc:0 "Ha venido sin regalos, sin títulos y sin exigencias. Eso por sí solo me dice que esta gente va terriblemente en serio.\n\n\"Quien me envía no dice que seas falso,\" dice el enviado en voz baja. \"Solo que no lo sabe. Las mismas marcas, los mismos sacerdotes, y un enorme deseo de estar en una habitación con la única otra persona viva que entiende el problema.\"\n\nEspera. Luego, bajando aún más la voz: \"Se me pidió decir una cosa más, exactamente así—si eres tú, te seguirán. Y mirarte la cara mientras lo decía.\"\n\nMe está mirando la cara."
+ ln_chosen.2.a:0 "Entonces nos reuniremos. Uno de los dos se equivoca, y puedo ser yo."
+ ln_chosen.2.b:0 "Que vuelva a casa. No tengo nada que decirle a un rumor."
+ ln_chosen.2.c:0 "Que vuelva a casa con un nombre y con el lugar donde estaré."
+
+ ln_chosen.3.t:0 "La Ciudadela tiene preguntas"
+ ln_chosen.3.desc:0 "Tiene once páginas y es de una cortesía increíble.\n\nSe ha asignado a mi caso un maestre de la Ciudadela, y agradecería respuestas. Los nombres de los testigos. Si el cometa del año de mi nacimiento puede ser corroborado por alguien ajeno a mi casa. Si consentiría en ser examinado.\n\nCada pregunta es perfectamente razonable. Cada pregunta está también, con toda precisión, diseñada para producir una respuesta que pueda anotarse, archivarse y olvidarse en silencio.\n\nLa Ciudadela lleva muchísimo tiempo en el oficio de hacer que la magia no ocurra, y es terriblemente buena en ello."
+ ln_chosen.3.a:0 "Responder a las once páginas. Con honestidad."
+ ln_chosen.3.b:0 "Quemarla. No me están estudiando, me están catalogando."
+ ln_chosen.3.c:0 "Invitarlo aquí. Que me observe durante un año."
+
+ ln_chosen.4.t:0 "No preguntaron"
+ ln_chosen.4.desc:0 "La pira ya está levantada cuando entro en el patio, y ya hay un hombre atado a ella.\n\nNadie me llamó. Ese es el detalle que no consigo superar. Esto se dispuso en mi propio castillo por sacerdotes que consideran el asunto zanjado, y a ninguno de ellos se le ocurrió que quizá hubiera que consultar al hombre que está en el centro de su profecía.\n\nEl condenado es un cazador furtivo, de unos cuarenta años, encerrado en mis celdas desde el Día de la Doncella. No hace ningún ruido en absoluto, que es de algún modo la parte más horrible.\n\nLa antorcha está encendida. El sacerdote que la sostiene me mira con una expresión de pura y sencilla bienvenida."
+ ln_chosen.4.a:0 "Apagarla. Con mis propias manos si hace falta."
+ ln_chosen.4.b:0 "Es demasiado tarde para detenerlo. Quedarse ahí y mirar."
+ ln_chosen.4.c:0 "Apagarla — y colgar al hombre que la encendió."
+
+ ln_chosen.5.t:0 "El cuchillo"
+ ln_chosen.5.desc:0 "Llegó más cerca de lo que mi guardia quiere admitir.\n\nEra un sirviente, cuatro meses en mi casa, con referencias que alguien pagó con oro de verdad para que parecieran auténticas. Fue rápido, pero no tuvo suerte. Ahora está en las celdas con un brazo destrozado y una calma intensamente inquietante.\n\nNo dirá quién lo envió. Sí dice, sin que nadie se lo pregunte, que no cree que yo sea un impostor—y cree en la profecía por completo. Precisamente por eso vino. Dos hombres no pueden ser ambos el príncipe que fue prometido, y la forma más rápida de resolver una profecía es reducir el número de candidatos con un filo en la oscuridad.\n\nAlguien pagó muchísimo dinero por esa aritmética."
+ ln_chosen.5.a:0 "Que se sepa que fracasó. Eso vale más que él."
+ ln_chosen.5.b:0 "Averiguar quién lo envió. En silencio y hasta el final."
+ ln_chosen.5.c:0 "Dejarlo ir. Que les cuente lo que vio."
+
+ ln_chosen.6.t:0 "Están esperando algo"
+ ln_chosen.6.desc:0 "Lo siento a lo largo de toda la línea antes incluso de que suenen los cuernos.\n\nNo están asustados. Ese es el problema. Los hombres asustados son útiles: el miedo los mantiene alerta y los mantiene atentos. Estos están tranquilos, porque ha corrido una historia por las hogueras sobre quién los dirige, y un número aterrador de ellos ha concluido en silencio que hoy no es el día en que mueren.\n\nAsí que cuando la línea se rompa—y las líneas siempre se rompen—no cederá como ceden normalmente las líneas. Se quebrará toda de golpe, porque lo que la mantenía unida nunca fue la disciplina.\n\nMi mariscal no ha dicho nada al respecto. También se ha esforzado en no mirarme ni una vez esta mañana."
+ ln_chosen.6.a:0 "Recorrer la línea a caballo y decirles la verdad antes de los cuernos."
+ ln_chosen.6.b:0 "No decir nada. Dejarles tenerlo un día más."
+ ln_chosen.6.c:0 "Cabalgar al frente, donde sus arqueros puedan verme."
+
+ ln_chosen.7.t:0 "Sal y humo"
+ ln_chosen.7.desc:0 "Estoy despierto. Estoy completamente seguro de que estoy despierto, y es ese el detalle que no me deja.\n\nHay sal en mis labios—sal de verdad, y no hay mar en cien millas. Hay humo que no viene del hogar. Y hay una forma en el borde de la habitación que no hace absolutamente nada, solo está ahí, lo cual es infinitamente peor que si se moviera.\n\nDura, a juzgar por la vela, cerca de un dedo de cera.\n\nLuego la habitación es solo una habitación, y yo soy una persona sentada en la cama con las manos temblando. Hay una costra de sal en el dorso de mi mano. Sigue ahí por la mañana."
+ ln_chosen.7.a:0 "Anotar exactamente lo que ocurrió. No interpretar nada."
+ ln_chosen.7.b:0 "Llevárselo al sacerdote. Él sabrá qué fue."
+ ln_chosen.7.c:0 "Fue un sueño. Los hombres sueñan."
+
+ ln_chosen.8.t:0 "La Fe responde"
+ ln_chosen.8.desc:0 "Se leyó en las escalinatas del Gran Septo, y se leerá en todos los septos del reino antes de que acabe el mes.\n\nNo se me llama hereje de forma explícita—el Septón Supremo siempre es cuidadoso. Lo que se condena es 'el fuego extranjero y quienes le permiten darles nombre', que es exactamente lo mismo dicho de una manera a la que no se puede responder con un duelo.\n\nDos septones ya han huido de mis tierras. Un pacto matrimonial acordado en tres cuartas partes ha quedado en completo silencio. Mi maestre me advierte de que también se está leyendo en el Norte, y allí no está sentando nada bien.\n\nLo cual no significa que a mí me vaya bien. Es simplemente otra clase de problema, más lejos."
+ ln_chosen.8.a:0 "Que lo hagan. Tengo una guerra que preparar."
+ ln_chosen.8.b:0 "Responder. Por escrito, a todos los septos del reino."
+ ln_chosen.8.c:0 "Bien. Que lo lean en el Norte y veamos qué pasa."
+
+ ln_chosen.9.t:0 "Quien no quiere decirlo"
+ ln_chosen.9.desc:0 "[ln_holdout.GetTitledFirstName] nunca me ha negado nada, y no me lo niega ahora. [ln_holdout.GetSheHe|U] ha venido con [ln_holdout.GetHerHis] leva contada, [ln_holdout.GetHerHis] caballería juramentada, y una negativa rotunda a pronunciar la palabra.\n\n\"Cabalgaré a donde me señales, y moriré allí si es lo que hace falta,\" dice [ln_holdout.GetSheHe], mirándome fijamente a los ojos. \"Lo que no haré es plantarme en un patio y llamar profecía a un hombre vivo, porque no lo creo, y no voy a mentir delante de mis propios hijos.\"\n\nTodo el salón lo oyó. La cuestión no es si [ln_holdout.GetSheHe] es leal—es evidente que [ln_holdout.GetSheHe] lo es. Es qué hará el resto de mis banderizos con el hecho de que decir 'no' en voz alta al príncipe que fue prometido resultó ser algo que se puede sobrevivir."
+ ln_chosen.9.a:0 "[ln_holdout.GetSheHe|U] no tiene que creerlo. [ln_holdout.GetSheHe|U] tiene que cabalgar."
+ ln_chosen.9.b:0 "Dar ejemplo con [ln_holdout.GetHerHim]. Los demás están mirando."
+
+ ln_chosen.10.t:0 "Aquí ya no queda nada por hacer"
+ ln_chosen.10.desc.open:0 "Los caballos están listos y lo han estado desde el primer rayo de luz. Nadie me lo ha vuelto a preguntar. Simplemente lo han preparado todo y luego han encontrado otras cosas que hacer a la vista del patio.\n\n"
+ ln_chosen.10.desc.burned:0 "No dejo de pensar en el cazador furtivo que quemé. No en los gritos—en el silencio. Tenía cuarenta años y no emitió un sonido, mientras una multitud de mi propia gente contemplaba lo que creía algo sagrado."
+ ln_chosen.10.desc.believed:0 "No dejo de pensar en los hombres del patio. No estaban asustados, porque creían de verdad que la profecía me hacía invencible. Pienso en lo que les costará cuando la línea se rompa por fin."
+ ln_chosen.10.desc.dismissed:0 "No he vuelto a probar la sal desde entonces. Me dije que solo fue un sueño de fiebre, pero desde entonces he tenido mucho cuidado de no mirarme el dorso de la mano a la luz."
+ ln_chosen.10.desc.risen:0 "Ya he estado una vez al otro lado de esto. Es lo único que hace soportable la espera. Sea lo que sea lo que salga de la espesura del bosque, tengo una idea bastante clara de lo que se siente al perder, y era más silencioso de lo que la gente cree."
+ ln_chosen.10.desc.plain:0 "Mi mariscal ha contado la columna tres veces. Sabe exactamente cuántos hombres van. No ha dicho el número en voz alta, porque los dos sabemos que no es suficiente."
+ ln_chosen.10.desc.close:0 "\n\nEl camino al norte es el único que se ha despejado."
+ ln_chosen.10.a:0 "Entonces partimos."
+ ln_chosen.10.b:0 "Todavía no. Primero hay trabajo aquí."
+
+ # ── FERVOR REASONS ──────────────────────────────────────────────────────────────────────────────────────────
+ ln_fervor_loss_refusal:0 "El Elegido rechazó el fuego"
+
+ # The friendship reason when two Chosen meet instead of feuding (ln_chosen.2, option a).
+ ln_friend_two_chosen:0 "Conoció a la única otra persona viva que entiende el problema"
+
+ # ── 1.0.13: THE SIGHTED OPTIONS ────────────────────────────────────────────────
+ ln_chosen.3.d:0 "Ya he visto lo que la Ciudadela hace con esta carta. Devolverla sin abrir."
+ ln_chosen.7.d:0 "He soñado esta habitación. La soñé antes de la sal."
+ ln_chosen.10.desc.dreamt:0 "Ya he estado aquí antes, en el sentido que importa. No esta habitación — esta hora. La soñé hace años y desperté incapaz de explicarle a nadie por qué lloraba, y desde entonces he caminado hacia ella sin poder decirlo en voz alta ni una sola vez.\n\nHay una soledad particular en reconocer el peor día de tu vida mientras sigues de pie en su comienzo.\n\nLos hombres me miran como se mira a alguien que sabe algo. Tienen razón, y eso no ha servido de nada ni una sola vez."
+ ln_chosen.10.desc.silent:0 "La Ciudadela me escribió once páginas y yo las devolví con el sello intacto, y he pensado en eso más a menudo de lo que esperaba.\n\nQuerían que quedara por escrito para poder archivarlo. Las cosas archivadas dejan de ser verdad. Sea lo que sea esto, ha seguido siendo peligroso precisamente porque ningún maestre llegó a ponerle un número y dejarlo en un estante.\n\nNo habrá registro de mí. Solo habrá lo que venga después, y si queda alguien para contarlo mal."
+

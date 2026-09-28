@@ -10,3 +10,32 @@ ln_ranging_arrival = {
 		trigger_event = ln_ranging.2
 	}
 }
+
+# ── 1.1.3: THE ONE MOMENT EVERY ROAD INTO A RANGING COMPANY SHARES ─────────────────────────────────────
+#
+# Root = the character whose government just changed; scope:old_government = what it was (vanilla's own
+# header on on_government_change, common/on_action/dlc/mpo/mpo_on_actions_2.txt:604-606, and the
+# `scope:old_government = government_type:X` form is theirs too). Registered as a sub-list from
+# zz_ln_00_hooks.txt; AGOT registers two of its own on this on_action (agot_general_on_actions.txt:396,
+# agot_government_on_actions.txt:1), which is the proof that sub-lists merge here.
+#
+# WHY HERE. The player ceremony, the AI recruitment route, company succession and the takeover door all end
+# in `change_government = ln_ranger_government`, and each of them left the new captain with a council of
+# seats that no longer exist and nobody in his court who could sit in the four that do -- the broken council
+# and the crash Silence reported. Hooking the government change catches every road at once, including the
+# ceremony's backstop when its first attempt is refused, and any road added later. The body is
+# ln_set_up_the_camp_effect (zz_ln_ranger_effects.txt); this only decides when it runs.
+#
+# ONLY IF: he is now on our ranger government and was not a moment ago. NEVER IF: he holds the Wall
+# (company succession's last-resort rung can hand the Lord Commander a company; his council is not a
+# ranger's to fire).
+ln_became_a_ranger = {
+	trigger = {
+		has_government = ln_ranger_government
+		NOT = { scope:old_government = government_type:ln_ranger_government }
+		NOT = { has_title = title:k_the_wall }
+	}
+	effect = {
+		ln_set_up_the_camp_effect = yes
+	}
+}

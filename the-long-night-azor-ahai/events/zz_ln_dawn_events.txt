@@ -70,6 +70,31 @@ ln_dawn.1 = {
 			}
 		}
 
+		# ── 1.1.3: UNDER THE WAR RULE, ONLY WHILE A WAR FOR THE DAWN AGAINST HIM IS LIVE. ─────────────────
+		# Skyblaze137 / Viktor's "I killed him and another took over", in its war-rule shape: this scene
+		# had no rule check, so under others_war_resolution with no War for the Dawn declared the duel was
+		# offered, won, stamped, and ln_dawn.3 said "The Long Night is over, and you ended it" -- and then
+		# the catalyst's ending branch failed on war_for_dawn_victory and the story crowned a successor.
+		# The capture road already guards exactly this case (zz_ln_imprison_on_actions.txt, the same OR);
+		# the field scene and the Last Hour (entered from ln_dawn.2's option e, so covered by this one gate)
+		# never got it. Failing the trigger here rather than inside the scene also leaves ln_dawn_offered
+		# unspent, so the scene is still there for the battle that comes AFTER the war is called.
+		trigger_if = {
+			limit = { has_game_rule = others_war_resolution }
+			enemy_side = {
+				OR = {
+					any_side_commander = {
+						has_trait = nightking
+						any_character_war = { using_cb = war_for_the_dawn_cb  primary_defender = prev }
+					}
+					any_side_knight = {
+						has_trait = nightking
+						any_character_war = { using_cb = war_for_the_dawn_cb  primary_defender = prev }
+					}
+				}
+			}
+		}
+
 		# Once. The wheel can turn under The Cycle, so this is cleared with the other latches at a new summer
 		# rather than being permanent.
 		NOT = { has_global_variable = ln_dawn_offered }
@@ -1244,5 +1269,101 @@ ln_dawn.20 = {
 		}
 
 		ai_chance = { base = 0 }
+	}
+}
+
+# ══ 30. HE IS NOT DESTROYED (1.1.3) ═════════════════════════════════════════════════════════════════════════
+# Krazzy Kracker 1, Skyblaze137 (Steam) and Viktor (Discord), September: "when he died someone else just took
+# over", "why I kill Night King all no Dead and just Hegemony". The cast-down rule is the design (1.0.15b: a
+# death outside the four confrontation scenes, or by a hand with no bane, casts him down and another Other
+# takes the crown) -- and NOTHING IN THE GAME SAID SO. Every cast-down path carried debug_log lines only, and
+# two texts the player does see said the opposite (the struggle phase's "Ends only when the Night King dies",
+# the catalyst's "Nothing else can"; both corrected in 1.1.3). So every report was a player learning the rule
+# by being surprised by it. This card lands for every player the day after the crown passes, from the one
+# place every cast-down goes through (the story's cast-down branch, the_long_night.txt) and from the yearly
+# backstop that repairs a lost race (ln_cast_down_backstop_effect).
+#
+# Root = a player. The fallen king, the new king and the killer travel in GLOBALS, not saved scopes -- the
+# card is queued a day out and a queued event does not carry scopes -- and are rebuilt in immediate, exactly
+# as others.2 rebuilds its own (events/others_events/others_events.txt). The killer was banked in on_death by
+# the catalyst (zz_ln_catalyst_effects.txt, ln_nk_cast_down_by), because scope:killer exists there and is not
+# known to exist in the story's on_owner_death; a death with no killer (a scorpion bolt, an accident) leaves
+# it unset and the card reads that as its own case. The desc says why THIS death did not count, then what
+# would; the option's tooltip names the three roads plainly. Loc in zz_ln_dawn_l_*.yml (four languages).
+ln_dawn.30 = {
+	type = character_event
+	title = ln_dawn.30.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					exists = scope:ln_dawn30_killer
+					scope:ln_dawn30_killer = { has_trait = dragon }
+				}
+				desc = ln_dawn.30.desc.dragon
+			}
+			triggered_desc = {
+				trigger = {
+					exists = scope:ln_dawn30_killer
+					scope:ln_dawn30_killer = { ln_bears_the_bane_trigger = yes }
+				}
+				desc = ln_dawn.30.desc.bane
+			}
+			triggered_desc = {
+				trigger = { NOT = { exists = scope:ln_dawn30_killer } }
+				desc = ln_dawn.30.desc.nokiller
+			}
+			desc = ln_dawn.30.desc
+		}
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_game_rule = others_war_resolution }
+				desc = ln_dawn.30.desc.rule.war
+			}
+			desc = ln_dawn.30.desc.rule.death
+		}
+		first_valid = {
+			# 1.1.3 review: every cast-down sets ln_nk_has_been_beaten itself (zz_ln_catalyst_effects.txt), so
+			# this line reads "can now be called" -- and not while a War for the Dawn is already running on him.
+			triggered_desc = {
+				trigger = {
+					has_global_variable = ln_nk_has_been_beaten
+					NOT = {
+						scope:ln_dawn30_new ?= {
+							any_character_war = { using_cb = war_for_the_dawn_cb  primary_defender = prev }
+						}
+					}
+				}
+				desc = ln_dawn.30.desc.beaten
+			}
+			desc = ln_dawn.30.desc.notbeaten
+		}
+	}
+	theme = war
+	override_background = { reference = agot_frozen_forest }
+	# 1.1.3 -- one portrait: he rose again in the same face (ln_crown_the_next_nightking_effect), so the
+	# fallen body beside him would show the same man twice.
+	left_portrait = {
+		character = scope:ln_dawn30_new
+		animation = menacing
+	}
+
+	trigger = {
+		is_alive = yes
+		exists = global_var:ln_dawn30_new
+		global_var:ln_dawn30_new ?= { is_alive = yes }
+	}
+
+	immediate = {
+		play_music_cue = "mood_the_others"
+		global_var:ln_dawn30_fallen ?= { save_scope_as = ln_dawn30_fallen }
+		global_var:ln_dawn30_new ?= { save_scope_as = ln_dawn30_new }
+		global_var:ln_dawn30_killer ?= { save_scope_as = ln_dawn30_killer }
+		debug_log = "LN_TRACE BANE: the cast-down card is on screen"
+	}
+
+	option = {
+		name = ln_dawn.30.a
+		ai_chance = { base = 100 }
 	}
 }

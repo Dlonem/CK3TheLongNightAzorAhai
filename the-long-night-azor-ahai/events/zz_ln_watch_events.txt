@@ -291,9 +291,18 @@ ln_watch.6 = {
 	theme = diplomacy
 	left_portrait = { character = root  animation = personality_honorable }
 
+	# 1.1.3 (1.1.2 open item 12): the decision that queues this is open to a ranging captain on
+	# ln_ranger_government -- landless by construction -- and this trigger required a landed keeper, so a
+	# ranger who petitioned the realm paid the decision and never got the card or the yield. The trigger now
+	# mirrors the decision's own is_shown (zz_ln_watch_petition_decisions.txt).
 	trigger = {
-		has_government = nights_watch_government
-		is_landed = yes
+		OR = {
+			AND = {
+				has_government = nights_watch_government
+				is_landed = yes
+			}
+			has_government = ln_ranger_government
+		}
 	}
 
 	immediate = {

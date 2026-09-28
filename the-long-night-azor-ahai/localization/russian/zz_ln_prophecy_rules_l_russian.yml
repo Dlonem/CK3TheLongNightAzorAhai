@@ -20,20 +20,9 @@
  setting_ln_naming_off:0 "Никого никогда не нарекают"
  setting_ln_naming_off_desc:0 "Цепь пророчества выключена. Черты поборника остаются недоступными."
 
- # ── DEED FLAG DESCRIPTIONS ──────────────────────────────────────────────────────────────────────────────────
- # Used by tooltips that list what marks a character carries.
- ln_deed_salt_and_smoke:0 "Рождён среди соли и дыма"
- ln_deed_bleeding_star:0 "Рождён под кровоточащей звездой"
- ln_deed_survived_the_others:0 "Ушёл живым от мёртвых"
- ln_deed_dragon_dreams:0 "Сны, что приходят как воспоминания"
- ln_deed_greensight:0 "Видит сквозь чардрева"
- ln_deed_valyrian_steel:0 "Носит сталь, выкованную с чарами"
- ln_deed_woke_dragons:0 "Пробудил драконов из камня"
- ln_deed_returned:0 "Умер и мёртвым не остался"
-
  # ── WHO MAY BE NAMED ────────────────────────────────────────────────────────────────────────────────────────
  rule_ln_prophecy_claimants:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Азор Ахай#! — кого можно наречь"
- rule_ln_prophecy_claimants_desc:0 "#EMP Избранный#! — это притязание, а не факт: их может быть несколько разом. #EMP Азор Ахай, рождённый вновь#! — исключение: он достаётся тому, кто убьёт Короля Ночи, и лишь однажды."
+ rule_ln_prophecy_claimants_desc:0 "#EMP Избранный#! — это притязание, а не факт: их может быть несколько разом. #EMP Азор Ахай, рождённый вновь#! — исключение: он достаётся тому, кто уничтожит Короля Ночи, и лишь однажды."
  setting_ln_claimants_anyone:0 "Кто угодно #EMP (по умолчанию)#!"
  setting_ln_claimants_anyone_desc:0 "Столько притязателей, сколько подходит, — и ИИ, и игроки. Изнутри мира не понять, кто из них ошибка."
  setting_ln_claimants_players_only:0 "Только игроки"

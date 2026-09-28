@@ -337,6 +337,8 @@ create_character = {
 
 
 
+								# 1.1.3 -- no AGOT bookmark starts at or after 8300 (the latest is 8284.6.2), so this grace is
+								# dead code on every shipped start; kept for a custom bookmark, one date test.
 								if = { limit = { game_start_date >= 8300.1.1 }
 
 									add_character_flag = { flag = long_night_cooldown years = 2 }
@@ -1081,6 +1083,13 @@ others_character_female_spawner = yes
 
 
 others_character_female_spawner = yes
+
+# 1.1.3 -- HIS HEIR IS ONE OF THE SIXTY-TWO JUST SPAWNED, NOT WHOEVER THE ENGINE FINDS. Tureno (Steam, 14
+# Sep) saw "the last regent before the trigger" as heir at the start. The current scope is scope:otherinvader here;
+# the effect names the best sword among his courtier Others as designated heir. Body and reasoning beside
+# ln_crown_the_next_nightking_effect in zz_ln_catalyst_effects.txt. Called again at every crowning and once
+# a year, so a running save gets its heir on the next yearly tick.
+ln_designate_an_other_heir_effect = yes
 
 
 
@@ -4476,6 +4485,19 @@ flee_noble_south_effect = {
 
 		}
 
+		# 1.1.3 (26 Sep second boot) -- THE HEIR DOES NOT FLEE IN THE SAME BREATH. The handover below fires
+		# on_title_gain for the successor; if his new liege is one of the dead, ln_others_title_gain mutates him
+		# on the spot, and the mutate rolls THIS road again for him -- he flees, his successor inherits, and so
+		# on down the vassal chain. The boot log shows one stack 51 levels deep (heartbeat -> mutate -> flee ->
+		# on_title_gain -> mutate -> flee ...) and the engine's "Executing change with potential infinite loop"
+		# warning, all in one tick. 51 consecutive passes of a 10-35% roll are not independent rolls, so the
+		# nested rolls are evidently correlated (inferred from the result, not from engine code). Marked for one
+		# day, the successor is left alone by the mutate his own inheritance starts (mutate_into_other_effect's
+		# guard, 1.1.3 review) and stays a living vassal of the dead; the heartbeat's next walk converts him with
+		# his own roll. Set BEFORE the transfer, because on_title_gain fires inside resolve_title_and_vassal_change.
+		scope:flee_successor = {
+			add_character_flag = { flag = ln_heir_to_a_fled_lord  days = 1 }
+		}
 		create_title_and_vassal_change = { type = granted save_scope_as = flee_south_change }
 
 		every_held_title = {
@@ -4821,6 +4843,8 @@ ln_mutate_into_other_unguarded_effect = {
 
 			NOT = { has_character_flag = dawn_refugee }
 
+			NOT = { has_character_flag = ln_heir_to_a_fled_lord }   # 1.1.3 -- see flee_noble_south_effect
+
 			NOT = { house ?= house:house_theothers }
 
 		}
@@ -5105,8 +5129,9 @@ ln_mutate_into_other_unguarded_effect = {
 	# Cannibal Bows and Bowmen alongside the Risen Dead. A conquered lord's regiments do not disband when his
 	# culture changes to frostborn on the line above, so his household troops kept standing under a dead man's
 	# banner. Everything that is not Other_infantry is destroyed; see the full account at the effect.
-	# DELIBERATELY OUTSIDE the one-shot guard, exactly like the dragonglass strip: the heartbeat re-runs this
-	# effect on existing wights, so running saves are cleaned on their next tick.
+	# DELIBERATELY OUTSIDE the one-shot guard, exactly like the dragonglass strip: this effect IS re-run on
+	# existing wights (by the title-gain and liege-culture hooks in 00_others_on_actions.txt and the yearly
+	# service net, not by the heartbeat -- see the 1.1.3 note below), so running saves get cleaned too.
 	ln_strip_living_regiments_effect = yes
 
 
@@ -5114,19 +5139,40 @@ ln_mutate_into_other_unguarded_effect = {
 	# v0.2.1 -- the dead do not fight with dragonglass. Live-run report (305 AC): conquered lords
 	# kept Dragonglass-Armed after being raised, so the Night King's own host marched with the
 	# living's anti-wight kit. Every preparation modifier is stripped -- the stores, the arms, the
-	# hall's daggers, the heirloom steel. DELIBERATELY OUTSIDE the one-shot guard below: the heartbeat
-	# re-runs this effect on existing wights, so wights raised before this fix shipped (running saves)
-	# are cleaned on their next tick too. remove_character_modifier is a silent no-op when the
+	# hall's daggers, the heirloom steel. DELIBERATELY OUTSIDE the one-shot guard below: the effect is
+	# re-run on existing wights by the hooks named above, so wights raised before this fix shipped
+	# (running saves) are cleaned on their next pass too. remove_character_modifier is a silent no-op when the
 	# modifier is not there, so the repeat costs nothing and logs nothing.
 	remove_character_modifier = ln_dragonglass_armed_modifier
 	remove_character_modifier = ln_dragonglass_knight_modifier
 	remove_character_modifier = ln_dragonglass_stores_modifier
 	remove_character_modifier = ln_valyrian_armed_modifier
 
+	# 1.1.3 -- AND THE DEAD KEEP NO VOWS. A raised sworn brother kept the `nightswatch` trait, and that
+	# trait is what AGOT's court maintenance opens on: on_join_court_nights_watch sent him back to the Wall
+	# every time our court hook sent him to the king, until the recursion cap -- the freeze at the Wall
+	# (KHALED, Steam, 16 Sep; Discord, 23 Sep). The black (and the silent sisterhood) come off here, at
+	# the raise, for every non-ruler. Rulers keep it on purpose: a raised keeper on nights_watch_government
+	# could fail its own can_get_government without it, and a ruler cannot be add_courtier'd, so he was
+	# never in the loop. The body and the full account are in zz_ln_service_effects.txt.
+	# DELIBERATELY OUTSIDE ln_on_raised_as_wight_effect below: the Supernatural compat patch replaces that
+	# hook's whole body, and a player running the patch must not lose this. WHO RE-RUNS THIS ON EXISTING
+	# WIGHTS (1.1.3 correction of the older comments in this effect): NOT the heartbeat -- its limits have
+	# skipped wight_trait since v0.2.1. The re-runs come from ln_others_title_gain and the two county
+	# liege/culture hooks in 00_others_on_actions.txt (holder + every courtier, unfiltered) and from the
+	# yearly service net's courtier walk (zz_ln_service_effects.txt). That reaches a wight only when his
+	# dead ruler gains land; the wights already standing in the dead's own halls are therefore stripped by
+	# the heartbeat's own walk instead (events/00_others_heartbeat_events.txt), within 30 days.
+	if = {
+		limit = { is_ruler = no }
+		ln_the_dead_keep_no_vows_effect = yes
+	}
+
 	# CONVERSION HOOK -- see common/scripted_effects/zz_ln_conversion_hooks.txt. Empty in this mod;
 	# a compatibility patch overrides it to unmake whatever the body was before the dead took it.
-	# Outside the one-shot guard for the same reason the dragonglass strip is: the heartbeat re-runs
-	# this effect, so wights that already exist in a running save get the same treatment.
+	# Outside the one-shot guard for the same reason the dragonglass strip is: the title-gain and
+	# liege-culture hooks re-run this effect, so wights that already exist in a running save get the
+	# same treatment (not on every heartbeat -- see the 1.1.3 note above).
 	ln_on_raised_as_wight_effect = yes
 
 	# Raise as a wight LAST — AFTER the disease/age/wound purge above, so no opposite trait blocks
@@ -5135,11 +5181,12 @@ ln_mutate_into_other_unguarded_effect = {
 
 	# Everything that must run exactly ONCE per wight lives in this NOT-has-wight_trait guard, because
 
-	# others_heartbeat re-runs this whole effect on existing wights.
+	# the title-gain and liege-culture hooks re-run this whole effect on existing wights (see above).
 
 	# 1.0.15 -- BACKFILL for pre-1.0.7 saves: a wight raised before the identity stamp existed carries the
 	# trait but not ln_one_of_them, and the portrait layer now requires a by-name marker (see the drift note
-	# in others_special.txt). The heartbeat re-runs this effect on existing wights, so the stamp lands here.
+	# in others_special.txt). The title-gain hooks re-run this effect on existing wights, so the stamp lands
+	# here for any wight whose dead ruler gains land; the rest are caught by the yearly backfill.
 	# Corroborated by context: only genuine targets of this effect ever reach this line.
 	if = {
 
@@ -5306,7 +5353,16 @@ ln_mutate_into_other_unguarded_effect = {
 # design question, not decided by a bug.
 mutate_into_other_effect = {
 	if = {
-		limit = { NOT = { has_trait = dragon } }
+		limit = {
+			NOT = { has_trait = dragon }
+			# 1.1.3 review -- THE HEIR OF A LORD WHO JUST FLED IS LEFT ALONE FOR THE DAY. The flag is set in
+			# flee_noble_south_effect before the handover; the handover fires on_title_gain, and without this
+			# the hook raised him on the spot, so the heir of a lord who fled never got the roll every other
+			# living lord under the dead gets (1.1.2 gave him one, inside the 51-deep chain). Left standing for
+			# the day, he is a living vassal of the dead like any other, and the heartbeat's next walk (30 days)
+			# converts him with his own roll -- one flight per line per heartbeat, never a chain in one tick.
+			NOT = { has_character_flag = ln_heir_to_a_fled_lord }
+		}
 		ln_mutate_into_other_unguarded_effect = yes
 	}
 }

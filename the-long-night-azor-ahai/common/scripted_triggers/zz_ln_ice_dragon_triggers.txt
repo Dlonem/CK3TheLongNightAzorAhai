@@ -222,10 +222,17 @@ ln_storage_entry_is_blank_trigger = {
 # Named here, beside its parent, and called from all ten. Scripted triggers do work inside portrait weight
 # and trigger blocks -- AGOT calls agot_should_be_knight_idle_trigger from portrait_animations at seventeen
 # sites, so this is their own idiom rather than a bet.
+# 1.1.3 -- the house lookup is guarded exactly as ln_is_one_of_them_trigger's is (its 1.1.1b note above):
+# a bare `house ?= house:house_theothers` still runs the right-hand lookup and logs "Failed to fetch a valid
+# house" when the house has no living members. Same trigger_if/trigger_else shape, for the same two reasons.
 ln_is_marked_as_theirs_trigger = {
 	OR = {
 		has_character_flag = ln_one_of_them
-		house ?= house:house_theothers
+		trigger_if = {
+			limit = { exists = house:house_theothers }
+			house ?= house:house_theothers
+		}
+		trigger_else = { always = no }
 		has_government = wight_government
 		has_government = ruins_government
 	}

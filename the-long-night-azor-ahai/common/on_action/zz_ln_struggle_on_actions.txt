@@ -16,6 +16,14 @@ ln_struggle_game_start = {
 		# the black as a ranger, and game start is the only moment that is guaranteed to be before everything.
 		ln_mark_ranger_titles_effect = yes
 
+		# 1.1.2 -- AND A LOAD-TIME PASS OF THE INDEPENDENCE SWEEP. The sweep already runs yearly, but void's
+		# report is a game-breaking state and a player loading an existing 1.1.1 save should not have to wait
+		# up to a year for it: AGOT's pre-war-liege marker is sticky and every save that ever seeded one is
+		# still carrying it. Running it here makes the update itself the repair. On a fresh game it walks
+		# every_ruler once and rejects everyone living on the first clause, which is the same cost the yearly
+		# pass already pays. See zz_ln_independence_effects.txt.
+		ln_others_independence_sweep_effect = yes
+
 		# 1.0.15 -- PIN THE NIGHT KING'S FACE DONOR. others_thenightking is a history character who dies in
 		# 6934; at any real bookmark he is centuries dead, and the engine prunes dead characters nothing is
 		# holding on to. His DNA is the only scripted face the Night King has, and the copy that uses it

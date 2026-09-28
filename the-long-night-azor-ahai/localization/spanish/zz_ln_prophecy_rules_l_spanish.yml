@@ -1,0 +1,32 @@
+﻿l_spanish:
+
+ # ── PROPHECY GAME RULES ─────────────────────────────────────────────────────────────────────────────────────
+ rule_ln_prophecy_truth:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — ¿Hubo alguna vez un príncipe?"
+ rule_ln_prophecy_truth_desc:0 "Si la profecía es realmente cierta. Se decide al inicio de la partida, y #EMP el juego nunca te lo dice#!. Lo descubres al final, o no lo descubres nunca."
+ setting_ln_prophecy_random:0 "Que decidan las llamas #EMP (Por defecto)#!"
+ setting_ln_prophecy_random_desc:0 "Una moneda, lanzada al inicio de la partida, oculta para siempre."
+ setting_ln_prophecy_is_true:0 "Hay un príncipe"
+ setting_ln_prophecy_is_true_desc:0 "La profecía es cierta y las señales significan lo que parecen significar. Tú lo sabes; nadie en el mundo lo sabe."
+ setting_ln_prophecy_is_a_lie:0 "No hay príncipe"
+ setting_ln_prophecy_is_a_lie_desc:0 "No hay príncipe prometido y nunca lo hubo. La Larga Noche puede sobrevivirse igualmente: solo que no habrá sido la profecía quien lo hizo."
+ rule_ln_prophecy_naming:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Nombrar aspirantes"
+ rule_ln_prophecy_naming_desc:0 "Cuántas señales necesita una vida antes de que alguien diga las palabras en voz alta. Existen nueve señales. Cuatro ya es una vida extraordinaria."
+ setting_ln_naming_normal:0 "Como dicen los libros #EMP (Por defecto)#!"
+ setting_ln_naming_normal_desc:0 "Dos señales para ser #EMP Favorecido#!, cuatro para ser #EMP Elegido#!."
+ setting_ln_naming_generous:0 "Las llamas hablan alto"
+ setting_ln_naming_generous_desc:0 "Una y tres. Aspirantes por todas partes, templos rivales, varios vivos a la vez."
+ setting_ln_naming_strict:0 "La lectura de la Ciudadela"
+ setting_ln_naming_strict_desc:0 "Tres y seis. Seis exige en la práctica un dragón, así que la mayoría de los mundos no ven nunca a un #EMP Elegido#!."
+ setting_ln_naming_off:0 "Nadie es nombrado nunca"
+ setting_ln_naming_off_desc:0 "La cadena de la profecía está desactivada. Los rasgos de campeón siguen siendo inalcanzables."
+
+ # ── WHO MAY BE NAMED ────────────────────────────────────────────────────────────────────────────────────────
+ rule_ln_prophecy_claimants:0 "#explanation_link_light_background;bold AGOT:#! #e;bold Azor Ahai#! — Quién puede ser nombrado"
+ rule_ln_prophecy_claimants_desc:0 "#EMP Elegido#! es una pretensión, no un hecho: varios pueden ostentarla a la vez. #EMP Azor Ahai Renacido#! es la excepción: va a quien destruya al Rey de la Noche, una sola vez."
+ setting_ln_claimants_anyone:0 "Cualquiera #EMP (Por defecto)#!"
+ setting_ln_claimants_anyone_desc:0 "Tantos aspirantes como cumplan los requisitos, tanto IA como jugadores. Desde dentro del mundo no hay modo de saber cuál es el error."
+ setting_ln_claimants_players_only:0 "Solo jugadores"
+ setting_ln_claimants_players_only_desc:0 "Solo se nombra a los jugadores. En multijugador la profecía se convierte en un asunto entre las personas de la mesa."
+ setting_ln_claimants_one_at_a_time:0 "Uno cada vez"
+ setting_ln_claimants_one_at_a_time_desc:0 "Como máximo un #EMP Elegido#! vivo. Nadie puede ser elevado mientras respire, y el puesto vuelve a abrirse en el momento en que deja de hacerlo, lo que sí incentiva un cierto tipo de solución."
+

@@ -7,42 +7,43 @@
  # artifact scope -- vanilla uses [this_artifact.GetName] 37 times, so the promote is real.
 
  # -- THE DECISION -------------------------------------------------------------------------------------------
- ln_consecrate_blade_decision:0 "Consecrate the Blade"
- ln_consecrate_blade_decision_desc:0 "The tale says Azor Ahai laboured a hundred days and a hundred nights and made the sword out of nothing. It does not say that is the only way it has ever been done.\n\nValyrian steel was never only fire and folding. Whatever the smiths of the Freehold put into it, the steel drank, and it has been drinking ever since—that is why a blade five hundred years old still takes an edge no armourer alive can put on it.\n\nA thing that has drunk once can be made to drink again. What goes into it the second time decides what comes back out."
- ln_consecrate_blade_decision_tt:0 "Consecrate the Valyrian blade I carry."
- ln_consecrate_blade_decision_confirm:0 "Light the fire."
- ln_consecrate_blade_decision_effect_tt:0 "The fire will be lit and the rite prepared. It will be ready inside a fortnight."
+ ln_consecrate_blade_decision:0 "Освятить клинок"
+ ln_consecrate_blade_decision_desc:0 "Предание говорит, что Азор Ахай трудился сто дней и сто ночей и сделал меч из ничего. Оно не говорит, что это единственный способ, каким это когда-либо делали.\n\nВалирийская сталь никогда не была только огнём и проковкой. Что бы кузнецы Фригольда в неё ни вложили, сталь это выпила — и пьёт до сих пор; потому клинок пятисотлетней давности и держит лезвие, какого ему не поставит ни один живой оружейник.\n\nТо, что выпило однажды, можно заставить выпить снова. Что вложат в него во второй раз, то и решит, что выйдет обратно."
+ ln_consecrate_blade_decision_tt:0 "Освятить валирийский клинок, который я несу."
+ ln_consecrate_blade_decision_confirm:0 "Разжечь огонь."
+ ln_consecrate_blade_decision_effect_tt:0 "Огонь разожгут, обряд подготовят. Всё будет готово в пределах двух недель."
 
- ln_consecrate_needs_a_voice:0 "Someone must be able to say the words—a red priest in my hall, or my own faith in the Lord of Light."
- ln_consecrate_needs_a_price:0 "The steel takes a price. Either someone I love walks to the fire, or the blade is Dawn and I was born beneath the bleeding star."
- ln_consecrate_rite_is_spent:0 "The fire has been lit once already. It has not gone cold yet."
+ ln_consecrate_needs_a_voice:0 "Кто-то должен быть способен произнести слова: красный жрец — мой придворный капеллан или жрец лагеря, либо я сам красный жрец."
+ ln_consecrate_needs_a_price:0 "Сталь берёт цену: к огню идёт тот, кого я люблю. Рассвет — исключение. Он не берёт жизни, но лишь у того, кто рождён под кровоточащей звездой."
+ ln_consecrate_dawn_not_yours:0 "Рассвет — единственный клинок при мне, а звезда падала не ради меня. Он не возьмёт жизни, и просить его буду не я."
+ ln_consecrate_rite_is_spent:0 "Огонь уже разжигали однажды. Он ещё не остыл."
 
  # -- MODIFIERS ----------------------------------------------------------------------------------------------
- ln_lightbringer_consecrated_modifier:0 "Lightbringer"
- ln_lightbringer_consecrated_modifier_desc:0 "The blade drank a second time, and what went into it stayed there. It answers to an older name now, whatever is engraved on the pommel."
- ln_the_rite_is_spent_modifier:0 "The Fire Is Still Lit"
- ln_the_rite_is_spent_modifier_desc:0 "A rite has been called and not yet answered. Nothing further can be asked of these flames until it is."
+ ln_lightbringer_consecrated_modifier:0 "Светозарный"
+ ln_lightbringer_consecrated_modifier_desc:0 "Клинок выпил во второй раз, и то, что в него вошло, там и осталось. Теперь он отзывается на имя постарше, что бы ни было вырезано на яблоке рукояти."
+ ln_the_rite_is_spent_modifier:0 "Огонь ещё горит"
+ ln_the_rite_is_spent_modifier_desc:0 "Обряд созван и ещё не получил ответа. Пока не получит, у этого пламени больше ничего не попросишь."
 
  # -- 1. THE CHOICE ------------------------------------------------------------------------------------------
- ln_consecrate.1.t:0 "The Second Drinking"
- ln_consecrate.1.desc.dawn:0 "They have built the fire in the yard because there is no hearth in this castle large enough, and [ln_the_blade.GetName] is lying across two trestles beside it, pale as milkglass and colder than the night.\n\nThe priest has been reading the flames for three days and has stopped pretending to be calm about what he found. This sword was never Valyrian, he says. Whatever the Freehold did to their steel, no one did it to this—this fell out of the sky already finished, and it has been waiting eight thousand years for somebody to notice what it is.\n\n\"It has already been quenched,\" he says. \"In a star. There is no price left to pay and nothing left to put into it. It only wants to be asked, and it will only be asked by the one the star came down for.\"\n\nHe looks at me the way a man looks at a door he is not certain he wants opened."
- ln_consecrate.1.desc.beloved:0 "They have built the fire in the yard, and [ln_the_blade.GetName] is lying across two trestles beside it.\n\nThe priest will not touch the blade. He has spent the day explaining, very carefully, that this is not a forging and that nothing here will be made—the sword already exists, the sword is already extraordinary, and all a rite can do is give it something to become.\n\nAnd then he told me what it takes, and did not soften it, and I have not been able to think about anything else since.\n\n[ln_beloved.GetTitledFirstName] is in the hall behind me. [ln_beloved.GetSheHe|U] knows the fire is lit. I do not think [ln_beloved.GetSheHe] knows why."
- ln_consecrate.1.desc:0 "They have built the fire in the yard, and [ln_the_blade.GetName] is lying across two trestles beside it, and the priest is waiting for me to say something.\n\nThe steel is willing. That is the part that unsettles me most—he did not have to persuade it, or prepare it, or beg the Lord of Light for anything. He simply looked at the blade and said that it would take whatever I put into it.\n\nThe difficulty is entirely mine."
- ln_consecrate.1.a:0 "Call for [ln_beloved.GetFirstName]. [ln_beloved.GetSheHe|U] has the right to be asked."
- ln_consecrate.1.b:0 "Say the words. The star paid for this a long time ago."
- ln_consecrate.1.c:0 "Put it back in the scabbard."
+ ln_consecrate.1.t:0 "Второе питьё"
+ ln_consecrate.1.desc.dawn:0 "Огонь сложили во дворе, потому что в этом замке нет очага такой величины, а [ln_the_blade.GetName] лежит рядом на двух козлах, бледный, как молочное стекло, и холоднее ночи.\n\nЖрец читает пламя третий день и перестал делать вид, что спокоен насчёт того, что нашёл. Этот меч никогда не был валирийским, говорит он. Что бы Фригольд ни делал со своей сталью, с этим не делал никто: он упал с неба уже законченным и восемь тысяч лет ждал, чтобы кто-нибудь заметил, что он такое.\n\n\"Его уже закалили,\" — говорит он. \"В звезде. Платить больше нечем, и вкладывать в него нечего. Он хочет лишь одного — чтобы его попросили, и попросит его лишь тот, ради кого сошла звезда.\"\n\nОн смотрит на меня так, как человек смотрит на дверь, которую не уверен, что хочет открыть."
+ ln_consecrate.1.desc.beloved:0 "Огонь сложили во дворе, а [ln_the_blade.GetName] лежит рядом на двух козлах.\n\nЖрец не прикоснётся к клинку. Он целый день очень тщательно объяснял: это не ковка, и здесь ничего не сделают — меч уже есть, меч уже необычен, и всё, что может обряд, — это дать ему, чем стать.\n\nА потом он сказал мне, чего это стоит, и ничего не смягчил, и с тех пор я ни о чём другом думать не могу.\n\n[ln_beloved.GetTitledFirstName] в чертоге у меня за спиной. [ln_beloved.GetSheHe|U] знает, что огонь разожжён. Не думаю, что [ln_beloved.GetSheHe] знает зачем."
+ ln_consecrate.1.desc:0 "Огонь сложили во дворе, [ln_the_blade.GetName] лежит рядом на двух козлах, и жрец ждёт, что я что-нибудь скажу.\n\nСталь согласна. Вот это и тревожит меня больше всего: ему не пришлось её убеждать, или готовить, или что-то вымаливать у Владыки Света. Он просто посмотрел на клинок и сказал, что тот возьмёт всё, что я в него вложу.\n\nТрудность целиком моя."
+ ln_consecrate.1.a:0 "Позвать [ln_beloved.GetFirstName]. [ln_beloved.GetSheHe|U] вправе услышать этот вопрос."
+ ln_consecrate.1.b:0 "Произнести слова. Звезда заплатила за это очень давно."
+ ln_consecrate.1.c:0 "Вернуть его в ножны."
 
  # -- 2. THE LIFE --------------------------------------------------------------------------------------------
- ln_consecrate.2.t:0 "It Was Already a Sword"
- ln_consecrate.2.desc:0 "[ln_beloved.GetSheHe|U] came out to the fire.\n\nThe legends have it wrong in the same way they always do—they tell it as a murder, and it is so much worse than a murder. [ln_beloved.GetSheHe|U] listened to the whole of it, asked one question I could not answer, and then stood where the priest showed [ln_beloved.GetHerHim] and did not move again.\n\nHere is the thing nobody warns you about: the blade did not change. It did not glow, it did not sing, it did not announce itself. It went in like any sword goes in, because it was already a sword, and that is the difference between this and a forging. There was no moment where the steel became something. There was only [ln_beloved.GetTitledFirstName], and then there was not.\n\nIt is warm now. I did not notice when it started. I have not been able to put it down since, and I am no longer certain that is my decision to make."
- ln_consecrate.2.a:0 "Then it was worth it. It has to have been worth it."
+ ln_consecrate.2.t:0 "Это и так уже был меч"
+ ln_consecrate.2.desc:0 "[ln_beloved.GetSheHe|U] выходит к огню.\n\nПредания врут здесь так же, как врут всегда: они рассказывают это как убийство, а это много хуже убийства. [ln_beloved.GetSheHe|U] выслушивает всё до конца, задаёт один вопрос, на который я не могу ответить, а потом встаёт туда, куда жрец [ln_beloved.GetHerHim] поставил, и больше не двигается.\n\nВот о чём никто не предупреждает: клинок не изменился. Он не засветился, не запел, не возвестил о себе. Он вошёл так, как входит любой меч, потому что он и так уже был мечом, — и в этом разница между этим и ковкой. Не было мига, когда сталь чем-то стала. Было только [ln_beloved.GetTitledFirstName] — а потом не было.\n\nТеперь он тёплый. Я не знаю, когда это началось. С тех пор я не могу его отложить и уже не понимаю, моё ли это решение."
+ ln_consecrate.2.a:0 "Значит, это того стоило. Это должно было того стоить."
 
  # -- 3. DAWN -----------------------------------------------------------------------------------------------
- ln_consecrate.3.t:0 "The Star Comes Down Twice"
- ln_consecrate.3.desc:0 "The priest said the words, and I put my hand on the hilt, and nothing whatsoever happened.\n\nHe was not surprised. He said I had misunderstood what a consecration is—that I had come out here expecting to give the sword something, when the entire point of this blade is that it was given everything the day it landed. Nothing was added to [ln_the_blade.GetName] tonight. It was recognised.\n\nAnd then the cold went out of it. That is the only way I can describe it. For as long as my house has held this sword we have called it pale and beautiful and unbearable to hold for long, and tonight it is simply warm, the way a stone is warm when the sun has been on it.\n\nEvery man in the yard knelt. I did not ask them to and I could not have stopped them."
- ln_consecrate.3.a:0 "It was always this. We were only carrying it."
+ ln_consecrate.3.t:0 "Звезда сходит дважды"
+ ln_consecrate.3.desc:0 "Жрец произнёс слова, моя рука легла на рукоять — и не произошло ровным счётом ничего.\n\nОн не удивился. Он сказал, что освящение я понимаю неверно: будто мне хотелось что-то мечу дать, тогда как вся суть этого клинка в том, что ему дали всё в день, когда он упал. Нынче ночью к [ln_the_blade.GetName] ничего не добавили. Его узнали.\n\nА потом из него ушёл холод. Иначе я это описать не могу. Сколько мой дом держит этот меч, столько мы и звали его бледным, прекрасным и невыносимым в руке надолго, — а нынче ночью он просто тёплый, как тёпл камень, на котором полежало солнце.\n\nВсе во дворе опустились на колени. Их об этом не просили, и остановить их было нельзя."
+ ln_consecrate.3.a:0 "Он всегда был этим. Мы его только носили."
 
  # -- 4. HE PUT IT BACK ---------------------------------------------------------------------------------------
- ln_consecrate.4.t:0 "Cold Iron"
- ln_consecrate.4.desc:0 "I let the fire burn down without saying anything, and eventually the priest understood and went inside.\n\nHe will tell it as a failure of nerve. Perhaps it was. But I have been turning it over half the night and I keep arriving at the same place: a sword that costs a person is not a weapon, it is a debt, and I have watched what men do once they have paid one. They spend the rest of their lives proving the price was reasonable.\n\nThe dark is still coming. I will meet it with the steel I already have, and with the people I did not put into it."
- ln_consecrate.4.a:0 "The steel is enough. It will have to be."
+ ln_consecrate.4.t:0 "Холодное железо"
+ ln_consecrate.4.desc:0 "Я молчу, пока огонь не прогорает, и в конце концов жрец понимает и уходит внутрь.\n\nОн расскажет это как малодушие. Может быть, так и было. Но я полночи это перебираю и всё прихожу к одному и тому же: меч, который стоит человека, — не оружие, а долг, и я знаю, что делают люди, однажды такой долг заплатившие. Остаток жизни они доказывают, что цена была разумной.\n\nТьма всё равно идёт. Я встречу её той сталью, что у меня уже есть, и теми людьми, которые в неё не вошли."
+ ln_consecrate.4.a:0 "Стали довольно. Должно быть довольно."

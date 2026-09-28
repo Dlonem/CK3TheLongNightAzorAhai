@@ -1,0 +1,7 @@
+﻿l_french:
+
+ # The rider who lived while his dragon did not -- fired from ln_the_dead_claim_dragon_effect.
+ ln_dragonfall.1.t:0 "La mauvaise couleur"
+ ln_dragonfall.1.desc:0 "[ln_cold_dragon.GetFirstName] est tombé. Il n'y a pas de mot plus doux pour le dire -- les ailes se sont repliées de travers, la neige a jailli, et quelque chose qui avait porté [ROOT.Char.GetHerHis] vie entière sur son dos a heurté la terre comme un donjon qui s'écroule.\n\n[ROOT.Char.GetSheHe|U] n'a pas détourné les yeux, et c'est ainsi que [ROOT.Char.GetSheHe] a vu le reste. Les morts ont marché vers le corps sans se hâter, comme des hommes marchent vers une table déjà dressée. Puis [ln_cold_dragon.GetFirstName] s'est relevé.\n\nLa forme est juste. La forme est exactement juste, et c'est là le pire. Mais les écailles ont pris le gris d'une glace vieille d'une semaine, et les yeux qui trouvaient [ROOT.Char.GetHerHim] sur tous les champs du monde sont d'un bleu aveugle et bouilli -- et ils ont glissé sur [ROOT.Char.GetHerHim] comme si [ROOT.Char.GetSheHe] était du sol."
+ ln_dragonfall.1.a:0 "[ln_cold_dragon.GetSheHe|U] me reconnaîtra. Même maintenant."
+ ln_dragonfall.1.b:0 "Ce n'est pas [ln_cold_dragon.GetHerHim]. Tuez-le deux fois."

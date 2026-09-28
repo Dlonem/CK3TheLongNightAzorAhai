@@ -1,0 +1,7 @@
+﻿l_french:
+
+ # AGOT: The Long Night & Azor Ahai -- 1.0.15, the sworn-brother inheritance guard.
+
+ ln_nwguard.1.t:0 "La Garde ne prend aucun parti"
+ ln_nwguard.1.desc:0 "Le corbeau est arrivé avec des titres dedans.\n\nPar toute loi du royaume, les terres sont désormais à [ROOT.Char.GetTitledFirstName|E] — une mort quelque part dans le sud, une lignée tarie, un nom sur une page qui se trouve être celui d'un homme qui a pris le noir. Le mestre l'a lu deux fois, et la salle est devenue très silencieuse.\n\nMais les mots ont été dits devant un barral, et ils ne se dédisent pas pour un héritage : #bold ne tenir nulle terre, ne porter nulle couronne, n'acquérir nulle gloire.#! Les terres passent à [ln_nw_receiver.GetTitledFirstName|E], et la Garde demeure, plus pauvre et plus fière pour cela.\n\n#bold La nuit se rassemble, et la Garde ne prend aucun parti.#!"
+ ln_nwguard.1.a:0 "Ma garde n'est pas terminée."

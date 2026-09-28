@@ -10,6 +10,7 @@
  ln_mine_dragonglass_raven:0 "Send a Raven: Open the Mine"
  ln_end_the_long_night_struggle_decision:0 "The Long Night Ends"
  ln_send_for_a_red_priest_decision:0 "Send for a Red Priest"
+ ln_send_for_a_red_priest_decision.hear:0 "Hear the Red Priest"
  # NOTE: ln_man_an_empty_castle_decision and ln_return_with_fire_decision carry their own name keys in
  # their own loc files, next to the events they open. Kept here for the inherited ones only.
 

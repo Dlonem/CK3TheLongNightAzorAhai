@@ -1,0 +1,61 @@
+﻿l_french:
+
+ # ── THE INTERACTION ─────────────────────────────────────────────────────────────────────────────────────────
+ ln_lords_blessing_interaction:0 "Offrir la bénédiction du Maître"
+ ln_lords_blessing_interaction_desc:0 "Tiens-toi devant [recipient.GetTitledFirstName] et dis les mots : que le Maître de la Lumière a un usage pour [recipient.GetHerHim], que tu seras là quand cela comptera, et que lorsque [recipient.GetSheHe] tombera, tu as l’intention de discuter.\n\n[recipient.GetSheHe|U] peut bien sûr te dire de sortir."
+ LN_LORDS_BLESSING_NOTIFICATION:0 "[actor.GetTitledFirstName] offre à [recipient.GetTitledFirstName] la bénédiction de R'hllor"
+ ln_blessing_must_be_present_tt:0 "Tu dois être à la même cour que cette personne : une bénédiction se donne en personne ou pas du tout"
+ ln_fervor_gain_blessing:0 "Un seigneur a reçu la bénédiction du Maître"
+ ln_fervor_gain_resurrection:0 "Un homme a été rappelé hors du feu"
+
+ # ── THE BLESSING LANDS ──────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.40.t:0 "Les mots sont dits"
+ ln_prophecy.40.desc:0 "[ln_blessing_sponsor.GetTitledFirstName] n’en fait pas une cérémonie, ce qui est d’une certaine façon pire.\n\nPas d’encens, pas de cantiques, personne n’est invité. [ln_blessing_sponsor.GetSheHe|U] te trouve là où tu te tiens par hasard, pose une main à plat sur ton sternum, dit une chose brève dans une langue que tu n’as pas — puis, en langue commune, pour qu’il n’y ait aucun malentendu : « Quand tu tomberas, ne les laisse pas t’enterrer vite. Envoie-moi chercher. Ce qu’il restera de toi, envoie-moi chercher. »\n\nPuis [ln_blessing_sponsor.GetSheHe] retire [ln_blessing_sponsor.GetHerHis] bras et demande si tu as mangé.\n\nPlus tard dans la nuit, tu remarques que tu n’as pas cessé de penser à ce « ce qu’il restera »."
+ ln_prophecy.40.a:0 "Alors j’enverrai te chercher. Que R'hllor nous garde tous les deux."
+ ln_prophecy.40.b:0 "J’ai consenti à quelque chose et je ne sais pas bien à quoi."
+
+ # ── THE KILLING BLOW ────────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.21.t:0 "Envoie-moi chercher, quoi qu’il reste"
+ ln_prophecy.21.desc:0 "Ils ont tenu parole. Il a fallu deux jours et un cheval qui en est mort, mais ils t’ont envoyé chercher — et te voilà sous une tente, avec [ln_the_fallen.GetTitledFirstName] sur une table à tréteaux et le manteau de quelqu’un sur [ln_the_fallen.GetHerHis] visage.\n\nLes hommes qui ont porté [ln_the_fallen.GetHerHim] jusqu’ici ne sont pas partis. Le bruit a couru de ce que tu as dit dans cette cour, et la moitié du camp a décidé que c’était une promesse et l’autre moitié une fanfaronnade, et les deux attendent de savoir laquelle.\n\nTu en as un. Tu n’en as jamais eu qu’un.\n\nLe feu du brasero fait ce que fait le feu quand on va lui demander quelque chose. Il se penche."
+ ln_prophecy.21.a:0 "Alors prends-le sur moi. Pas sur [ln_the_fallen.GetHerHim]."
+ ln_prophecy.21.b:0 "Pas cette fois. R'hllor me pardonne — pas cette fois."
+
+ # ── THE MODIFIER ────────────────────────────────────────────────────────────────────────────────────────────
+ ln_fell_in_the_dark_modifier:0 "Tombé dans le noir"
+ ln_fell_in_the_dark_modifier_desc:0 "Abattu par un coup qui aurait dû tout finir, et jamais vraiment relevé depuis."
+
+ # ── THE DECISION (1.0.14) ───────────────────────────────────────────────────────────────────────────────────
+ ln_ask_for_the_blessing_decision_title:0 "Demander la bénédiction du Maître"
+ ln_ask_for_the_blessing_decision_desc:0 "Il y a un prêtre rouge sous ton toit, et tu repenses à une chose que l’un d’eux a dite un jour.\n\nIls ne l’offrent pas souvent, et ils ne l’offrent pas à n’importe qui. Mais demander ne coûte rien, sauf le moment où il faut le dire à voix haute : que tu t’attends à mourir, que tu préférerais l’éviter, et que tu aimerais que quelqu’un soit là quand cela arrivera."
+ ln_ask_for_the_blessing_decision_tt:0 "Demande au prêtre rouge de dire les mots sur toi."
+ ln_ask_for_the_blessing_decision_confirm:0 "Fais-le venir."
+ ln_ask_blessing_already_blessed_tt:0 "Un prêtre a déjà dit les mots sur toi"
+ # 1.0.16 -- DEPRECATED, DELIBERATELY KEPT. Its clause was removed from
+ # common/decisions/zz_ln_blessing_decisions.txt to open the Beric track, so nothing in the mod requests this
+ # string today. It stays because deleting a key on the grounds that "nothing references it" is precisely how
+ # the three eye_color_*_long_night genes were removed in v0.1.0 and started throwing portraitcontext errors
+ # out of saved ruler files (see common/genes/zz_long_night_genes.txt). One parse, no risk. Deprecate, never
+ # delete -- and if the gate ever returns, the string is still here and still right.
+ ln_ask_blessing_already_returned_tt:0 "Le feu t’a déjà rendu une fois"
+
+ # ── THE NUDGE (1.0.14) ──────────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.41.t:0 "À quoi sert le prêtre rouge"
+ ln_prophecy.41.desc:0 "[ln_the_priest.GetTitledFirstName] n’est pas un hôte confortable. [ln_the_priest.GetSheHe|U] entretient le feu plus haut que personne ne le souhaite et a des opinions sur les ombres dans les coins de ta salle.\n\nMais quelqu’un de ta maison répète une chose dite par [ln_the_priest.GetHerHim] à un garçon d’écurie mourant l’hiver dernier, et elle te reste : que le Maître de la Lumière ne reprend pas toujours ce qu’on Lui offre, et qu’un prêtre assez proche au bon moment peut parfois discuter la chose.\n\nLe garçon d’écurie est mort quand même. Personne n’avait rien demandé à [ln_the_priest.GetTitledFirstName] avant."
+ ln_prophecy.41.a:0 "Superstition. Le feu prend ce qu’il prend."
+ ln_prophecy.41.b:0 "Alors quelqu’un devrait demander à [ln_the_priest.GetTitledFirstName] à l’avance."
+
+ # ── THE TWO-WAY HANDSHAKE (1.0.14) ──────────────────────────────────────────────────────────────────────────
+ ln_prophecy.21.c:0 "Donne-le — et qu’il sache ce que cela m’a coûté."
+
+ ln_prophecy.22.t:0 "Tu ne te relèves pas"
+ ln_prophecy.22.desc.hope:0 "Le coup porte et le sol arrive plus vite qu’il ne devrait.\n\nTu perçois le bruit qui s’éloigne. Quelqu’un crie un ordre qui ne te concerne plus. Il y a une grande quantité de ton propre sang entre toi et le ciel, et le calcul n’est pas compliqué.\n\nQuelque part derrière la ligne, on envoie chercher [ln_the_priest.GetTitledFirstName]. Si [ln_the_priest.GetSheHe] vient, et quel prix [ln_the_priest.GetSheHe] acceptera de payer quand [ln_the_priest.GetSheHe] arrivera, cela échappe désormais entièrement à tes mains."
+ ln_prophecy.22.desc.spent:0 "Le coup porte et le sol arrive plus vite qu’il ne devrait.\n\nTu perçois le bruit qui s’éloigne. Quelqu’un crie un ordre qui ne te concerne plus. Il y a une grande quantité de ton propre sang entre toi et le ciel, et le calcul n’est pas compliqué.\n\nQuelque part derrière la ligne, on envoie chercher [ln_the_priest.GetTitledFirstName]. Mais [ln_the_priest.GetSheHe] l’a déjà fait, pour quelqu’un d’autre, et il n’y en a jamais eu qu’un à donner."
+ ln_prophecy.22.a:0 "Voilà donc comment cela se termine."
+
+ ln_prophecy.23.t:0 "Le feu t’a rendu"
+ ln_prophecy.23.desc:0 "Tu n’as pas conscience de la discussion qu’on tient au-dessus de toi. Tu n’as conscience de rien, ce qui est tout le problème, et cela dure un temps dont personne ensuite ne tombera d’accord.\n\nPuis il y a une main sur ta poitrine qui est beaucoup trop chaude, et une voix qui dit des mots dans une langue que tu n’as pas, encore et encore, avec un entêtement qui tient moins de la prière que du recouvrement d’une dette.\n\nTu reviens comme un homme remonte d’une eau profonde : mal, et d’un seul coup. [ln_the_priest.GetTitledFirstName] a les lèvres grises et ne te regarde pas. Quelque chose a été pris pour payer cela, et ce n’est pas à toi seul qu’on l’a pris."
+ ln_prophecy.23.a:0 "Lève-toi."
+
+ ln_prophecy.24.t:0 "Le feu a gardé ce qu’il avait"
+ ln_prophecy.24.desc:0 "[ln_the_priest.GetTitledFirstName] s’agenouille dans la boue à côté de toi et te regarde un long moment.\n\nTu ne peux pas entendre ce que [ln_the_priest.GetSheHe] décide. Tu peux seulement voir [ln_the_priest.GetHerHis|U] visage pendant que [ln_the_priest.GetSheHe] le décide — puis [ln_the_priest.GetHerHim] qui se relève, et le ciel là où était [ln_the_priest.GetHerHis] crâne.\n\nIl n’y en a jamais qu’un à donner. Il n’allait pas t’être donné."
+ ln_prophecy.24.a:0 "Alors cela s’achève ici."

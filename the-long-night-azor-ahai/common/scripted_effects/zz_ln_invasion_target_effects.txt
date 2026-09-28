@@ -607,7 +607,8 @@ ln_pick_invasion_kingdom_effect = {
 # which sits ABOVE the war/fealty fork, so a county held by AGOT's Wilderness_Empress or Ruin_Empress can be
 # taken by neither branch. There is no third road: it is the only place in the mod that moves land to the dead.
 #
-# MEASURED, from AGOT's own title history at 8298 (not estimated): world_westeros_beyond_the_wall is 25 de
+# MEASURED, from AGOT's own title history at 8298 (not estimated; note that AGOT ships no bookmark that late --
+# the latest is 8284.6.2 -- so this is the map's title history read at that date, not a start): world_westeros_beyond_the_wall is 25 de
 # jure duchies and 123 counties. Fourteen of them sit with the placeholders at bookmark. The invasion opening
 # already grabs four by name (c_ask_vith, c_basordryn, c_roveggs_spine, c_vurk_ryg -- all of d_tor_rag_dur),
 # which leaves TEN permanently untakeable:
@@ -636,9 +637,14 @@ ln_pick_invasion_kingdom_effect = {
 ln_absorb_the_frozen_waste_effect = {
 	if = {
 		limit = { NOT = { has_global_variable = ln_castle_black_fell } }
-		random_county = {
+		# 1.1.3 (W15.7): random_county_in_region, not random_county filtered on the region. The world walk
+		# visited every county on the map every 30 days to keep ~123; the region iterator (vanilla,
+		# 00_ep1_inspiration_effects.txt:737; already in this mod in zz_long_night_plus_aftermath_effects.txt)
+		# starts from the region's own list. Membership is by the county's province, the same thing the old
+		# title_province test read; the boot check compares the latch traces before and after.
+		random_county_in_region = {
+			region = world_westeros_beyond_the_wall
 			limit = {
-				title_province ?= { geographical_region = world_westeros_beyond_the_wall }
 				# NEVER the dragon-storage placeholder. AGOT parks every living non-historical dragon's
 				# portrait genes in a story attached to title:c_ruins.holder (knowledge base §7), and the
 				# standing rule is that the invasion must never touch it. The geography test above already
@@ -666,16 +672,75 @@ ln_absorb_the_frozen_waste_effect = {
 }
 
 # The completeness latch. Called ONCE per pulse from the_long_night.txt, never from the candidate limit --
-# any_county walks every county in the world and the candidate limit is evaluated per neighbour.
+# it walks the dead's neighbours' realms (and, for the frozen waste, the beyond-the-Wall region's own county
+# list) and the candidate limit is evaluated per neighbour.
 #
 # ln_is_one_of_them_trigger is the ownership test used everywhere else in the mod. One caveat worth writing
 # down: it counts ruins_government as theirs (line 94 of zz_ln_ice_dragon_triggers.txt) but NOT
-# wilderness_government, so c_hardhome reads as already-theirs before it is taken while the thirteen
-# wilderness counties never can. That asymmetry is harmless here only because ln_absorb_the_frozen_waste_effect
+# wilderness_government, so the ruins seats read as already-theirs before they are taken while the thirteen
+# wilderness counties never can (the latch's frozen-waste arm counts wilderness only, for that reason). That asymmetry is harmless here only because ln_absorb_the_frozen_waste_effect
 # above takes both kinds anyway -- if that effect is ever removed, this latch stops being reachable.
 #
 # `exists = holder` first: an unheld county must not hold the latch open forever.
 ln_refresh_beyond_the_wall_latch_effect = {
+	# ── 1.1.3 review: CARRY A 1.1.2 SAVE'S STAGE CLOCKS OVER, ONCE. ──────────────────────────────────────────
+	# 1.1.2 kept the three escape clocks as flags on this Night King; 1.1.3 keeps them as wave-scoped globals.
+	# Without this a 1.1.2 save started all three afresh, and a window that had already RUN OUT re-opened for
+	# 8 / 4 / 20 years. Carried as they stand: a clock that started stays started; a window still open gets a
+	# fresh term (a timed flag's remaining time cannot be read); a lapsed window stays lapsed. Then the old
+	# flags come off, so this runs once. Scope = the pulse's Night King (story_owner), as for the flags.
+	if = {
+		limit = { has_character_flag = ln_btw_gate_started }
+		if = {
+			limit = { NOT = { has_global_variable = ln_btw_gate_started } }
+			set_global_variable = { name = ln_btw_gate_started  value = yes }
+			if = {
+				limit = { has_character_flag = ln_btw_gate_window }
+				set_global_variable = { name = ln_btw_gate_window  value = yes  years = 8 }
+			}
+		}
+		remove_character_flag = ln_btw_gate_started
+		debug_log = "LN_TRACE INVASION: a 1.1.2 save's beyond-the-Wall clock carried over to the 1.1.3 global"
+	}
+	if = {
+		limit = { has_character_flag = ln_btw_gate_window }
+		remove_character_flag = ln_btw_gate_window
+	}
+	if = {
+		limit = { has_character_flag = ln_wall_gate_started }
+		if = {
+			limit = { NOT = { has_global_variable = ln_wall_gate_started } }
+			set_global_variable = { name = ln_wall_gate_started  value = yes }
+			if = {
+				limit = { has_character_flag = ln_wall_gate_window }
+				set_global_variable = { name = ln_wall_gate_window  value = yes  years = 4 }
+			}
+		}
+		remove_character_flag = ln_wall_gate_started
+		debug_log = "LN_TRACE INVASION: a 1.1.2 save's Wall clock carried over to the 1.1.3 global"
+	}
+	if = {
+		limit = { has_character_flag = ln_wall_gate_window }
+		remove_character_flag = ln_wall_gate_window
+	}
+	if = {
+		limit = { has_character_flag = ln_north_gate_started }
+		if = {
+			limit = { NOT = { has_global_variable = ln_north_gate_started } }
+			set_global_variable = { name = ln_north_gate_started  value = yes }
+			if = {
+				limit = { has_character_flag = ln_north_gate_window }
+				set_global_variable = { name = ln_north_gate_window  value = yes  years = 20 }
+			}
+		}
+		remove_character_flag = ln_north_gate_started
+		debug_log = "LN_TRACE INVASION: a 1.1.2 save's North clock carried over to the 1.1.3 global"
+	}
+	if = {
+		limit = { has_character_flag = ln_north_gate_window }
+		remove_character_flag = ln_north_gate_window
+	}
+
 	# WALL-DOWN GUARD (adversarial review). Once the Wall has fallen nothing reads ln_btw_unfinished
 	# ever again -- the only gate that consults it is fenced on this same global. Without this branch
 	# the walk below kept crawling every county title in the game every 30 days for the rest of the
@@ -704,52 +769,126 @@ ln_refresh_beyond_the_wall_latch_effect = {
 			# a targeting gate must never be the thing that stops the Long Night. The stranding case is
 			# real and documented at the stage-one gate -- a northern county held by a VASSAL of a
 			# southern liege is never selectable, because the search returns top lieges only.
+			# 1.1.3 (Thomas's call D-o): the clock is a WAVE-SCOPED GLOBAL, not a flag on this king. The
+			# three windows used to be character flags, and ln_crown_the_next_nightking_effect copies none
+			# of them, so a Night King cast down and replaced mid-wave restarted 8 / 4 / 20 years. Timed
+			# globals (`years =`, the omen precedent at zz_ln_omen_effects.txt:70) belong to the wave and are
+			# cleared with ln_north_done in the Long Summer re-arm (zz_ln_struggle_effects.txt), so wave two
+			# still gets fresh clocks. A save carrying the old flags simply starts its clocks over once.
 			if = {
-				limit = { NOT = { has_character_flag = ln_north_gate_started } }
-				add_character_flag = ln_north_gate_started
-				add_character_flag = { flag = ln_north_gate_window  years = 20 }
+				limit = { NOT = { has_global_variable = ln_north_gate_started } }
+				set_global_variable = { name = ln_north_gate_started  value = yes }
+				set_global_variable = { name = ln_north_gate_window  value = yes  years = 20 }
 			}
+			# ── 1.1.3: THE LATCH ASKS THE SEARCH'S OWN QUESTION. ────────────────────────────────────────
+			# Krazzy Kracker 1 (Steam, 21 Sep): "the Night King never really got stronger or kept
+			# attacking." This latch used to ask whether any living non-wilderness holder was left in the
+			# North; the search one file over can only pick an independent top liege whose realm touches
+			# the dead's and who passes its static filters. Any holdout it cannot reach -- a county under a
+			# vassal of a realm that does not border the dead, an island, a landed dawn_refugee sworn to
+			# the Night King himself -- kept ln_north_unfinished set with nobody to attack, and because
+			# ln_north_done only ever latched in the else, the host stayed capped at the 100k step (see
+			# zz_ln_horde_values.txt) for the rest of the wave, EVEN AFTER the 20-year window lapsed.
+			#
+			# So: "unfinished" now means "a neighbour the pulse could pick still holds northern land", read
+			# with the same static filter the search uses (ln_invasion_candidate_is_pickable_trigger,
+			# zz_ln_invasion_order_triggers.txt; the temporary at-war/cooldown clamps are deliberately not
+			# in it). The current scope here is the Night King (root is the story, the 26 Sep lesson: never
+			# compare against root in this file), and the expression is the one the 1.1.1b trace already
+			# runs from the same scope every pulse (the_long_night.txt, "NO living independent neighbour
+			# holds a single county in the North"). It walks the dead's neighbours' realms instead of every
+			# county in the world, which is also cheaper.
+			#
+			# ln_north_done CLOSES ONLY ONCE THE DEAD ACTUALLY STAND IN THE NORTH: the pulse right after the
+			# Wall falls could otherwise see no northern neighbour yet (the Watch's realm is e_the_wall) and
+			# call the North finished before a single county of it was taken. The behaviour change to accept
+			# knowingly: when only unreachable land is left, the dead turn south at once and get the 200k
+			# step, instead of idling for up to twenty years. That is the point.
 			if = {
 				limit = {
-					any_county = {
-						title_province ?= { geographical_region = world_westeros_the_north }
-						exists = holder
-						NOT = { holder = { ln_is_one_of_them_trigger = yes } }
-						# A county that can never be taken must not hold the gate open. The frozen-waste absorb
-						# covers beyond the Wall only, so a wilderness holder in the North is precisely the
-						# permanent stall this clause exists to prevent. (ruins_government already reads as
-						# theirs inside ln_is_one_of_them_trigger, so ruined land needs no clause of its own.)
-						NOT = { holder = { has_government = wilderness_government } }
+					any_neighboring_top_liege_realm_owner = {
+						ln_invasion_candidate_is_pickable_trigger = yes
+						any_sub_realm_county = {
+							title_province ?= { geographical_region = world_westeros_the_north }
+							NOT = { holder = { ln_is_one_of_them_trigger = yes } }
+							# A county that can never be taken must not hold the gate open. (ruins_government
+							# already reads as theirs inside ln_is_one_of_them_trigger.)
+							NOT = { holder = { has_government = wilderness_government } }
+						}
 					}
 				}
 				set_global_variable = { name = ln_north_unfinished  value = yes }
 			}
-			else = {
+			else_if = {
+				limit = {
+					any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_the_north } }
+				}
 				if = {
 					limit = { has_global_variable = ln_north_unfinished }
 					remove_global_variable = ln_north_unfinished
 				}
 				set_global_variable = { name = ln_north_done  value = yes }
+				debug_log = "LN_TRACE INVASION: North latch closed - no neighbour the pulse can pick holds northern land"
+			}
+			# 1.1.3 review -- THE THIRD STATE: nobody the search can pick holds northern land, and the dead hold
+			# none of it either. Neither branch above ran, so an ln_north_unfinished left standing (a 1.1.2 save
+			# set it for ANY living northern holder) would keep the North gate refusing everyone with nobody to
+			# attack -- the stranding W7 exists to end. Clear it; ln_north_done still waits for the dead to stand
+			# in the North.
+			else_if = {
+				limit = { has_global_variable = ln_north_unfinished }
+				remove_global_variable = ln_north_unfinished
 			}
 		}
 	}
 	else = {
 		# THE ESCAPE CLOCK, started on the first pulse of this Long Night and never restarted. The gate
-		# in the_long_night.txt explains why a hard targeting gate needs one at all. A wave-2 Night King
-		# is a new character and gets a fresh eight years. An old save that never ran this line has no
-		# window flag at all, so the gate simply never binds and targeting behaves exactly as it did
-		# before 1.0.8 -- the mid-save policy, unchanged: missing old saves is fine, breaking them is not.
+		# in the_long_night.txt explains why a hard targeting gate needs one at all. 1.1.3 (D-o): a
+		# wave-scoped global rather than a flag on this king, so a cast-down successor does NOT get a fresh
+		# eight years; the Long Summer re-arm clears it for the next wave (zz_ln_struggle_effects.txt). A
+		# 1.1.2 save's flag clock is carried over at the top of this effect.
 		if = {
-			limit = { NOT = { has_character_flag = ln_btw_gate_started } }
-			add_character_flag = ln_btw_gate_started
-			add_character_flag = { flag = ln_btw_gate_window  years = 8 }
+			limit = { NOT = { has_global_variable = ln_btw_gate_started } }
+			set_global_variable = { name = ln_btw_gate_started  value = yes }
+			set_global_variable = { name = ln_btw_gate_window  value = yes  years = 8 }
 		}
+		# ── 1.1.3: THE LATCH ASKS THE SEARCH'S OWN QUESTION, one stage earlier. ────────────────────────
+		# AestheticArtO (Discord, 23 Sep): years pass after beyond the Wall is taken before the dead attack
+		# the Watch. Same stranding as the North latch (see above): "any county up there not held by the
+		# dead" kept this set while the search could reach nobody who held it -- a free folk chief sworn
+		# south, a county under a southern liege after AGOT colonisation, an island. Measured conquests
+		# beyond the Wall take 5-6 years, so a stranded game idled the rest of the 8-year window with the
+		# far north looking taken (up to ~6 years on Strong/Insane).
+		#
+		# Two arms, and the second is what keeps the frozen waste honest: ln_absorb_the_frozen_waste_effect
+		# eats one wilderness/ruins county per pulse and nothing else moves that land, so while any
+		# wilderness county remains the region is not finished and the latch stays up; it clears itself one
+		# county a pulse. (Ruins are theirs already, see the arm.) The first arm is the search's filter.
+		# Known and unchanged from 1.1.2: under The Cycle, wave two opens with the frozen waste to eat again,
+		# so its first stage waits that many pulses (bounded by the eight-year window).
 		if = {
 			limit = {
-				any_county = {
-					title_province ?= { geographical_region = world_westeros_beyond_the_wall }
-					exists = holder
-					NOT = { holder = { ln_is_one_of_them_trigger = yes } }
+				OR = {
+					any_neighboring_top_liege_realm_owner = {
+						ln_invasion_candidate_is_pickable_trigger = yes
+						any_sub_realm_county = {
+							title_province ?= { geographical_region = world_westeros_beyond_the_wall }
+							NOT = { holder = { ln_is_one_of_them_trigger = yes } }
+						}
+					}
+					any_county_in_region = {
+						region = world_westeros_beyond_the_wall
+						NOT = { this = title:c_ruins }
+						exists = holder
+						# Wilderness only, as the work order specified and as 1.1.2 read it: a ruins holder counts
+						# as theirs (ln_is_one_of_them_trigger), so ruins never held this latch before and must
+						# not now -- after a Dawn the scour hands every seat the dead held to the ruins
+						# placeholder, and counting those would stall wave two's first stage (1.1.3 review).
+						holder = {
+							is_ai = yes
+							has_government = wilderness_government
+						}
+					}
 				}
 			}
 			set_global_variable = { name = ln_btw_unfinished  value = yes }
@@ -767,18 +906,19 @@ ln_refresh_beyond_the_wall_latch_effect = {
 		# north finished, or its eight-year window gone) while Castle Black still stands. Four years for
 		# the dead to put the Watch down before the gate gives up and opens the south -- the same
 		# fail-open escape-clock shape as stage one, for the same reason: a phase that ends slightly
-		# wrong beats an invasion that stops forever. Runs in the same root as the other flags (the
-		# pulse Night King), and a wave-2 king is a new character with a fresh clock, same as stage one.
+		# wrong beats an invasion that stops forever. 1.1.3 (D-o): a wave-scoped global, as above -- the
+		# same clock across a cast-down, fresh for the next wave. The six CB sites that refill this window on a Watch win or draw
+		# (00_long_night_cbs.txt) write the same global.
 		if = {
 			limit = {
-				NOT = { has_character_flag = ln_wall_gate_started }
+				NOT = { has_global_variable = ln_wall_gate_started }
 				OR = {
 					NOT = { has_global_variable = ln_btw_unfinished }
-					NOT = { has_character_flag = ln_btw_gate_window }
+					NOT = { has_global_variable = ln_btw_gate_window }
 				}
 			}
-			add_character_flag = ln_wall_gate_started
-			add_character_flag = { flag = ln_wall_gate_window  years = 4 }
+			set_global_variable = { name = ln_wall_gate_started  value = yes }
+			set_global_variable = { name = ln_wall_gate_window  value = yes  years = 4 }
 		}
 	}
 
@@ -803,8 +943,9 @@ ln_refresh_beyond_the_wall_latch_effect = {
 	# right answer both mechanically (it is a live condition, not an achievement) and in the fiction.
 	if = {
 		limit = {
-			any_county = {
-				title_province ?= { geographical_region = world_westeros_the_wall }
+			# 1.1.3 (W15.7): the region's own list (a handful of counties), not every county on the map.
+			any_county_in_region = {
+				region = world_westeros_the_wall
 				exists = holder
 				holder = { ln_is_one_of_them_trigger = yes }
 			}

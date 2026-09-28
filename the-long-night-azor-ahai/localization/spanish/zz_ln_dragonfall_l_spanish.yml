@@ -1,0 +1,7 @@
+﻿l_spanish:
+
+ # The rider who lived while his dragon did not -- fired from ln_the_dead_claim_dragon_effect.
+ ln_dragonfall.1.t:0 "El color equivocado"
+ ln_dragonfall.1.desc:0 "[ln_cold_dragon.GetFirstName] cayó. No hay palabra más suave para decirlo -- las alas se plegaron mal, la nieve se alzó, y algo que había llevado [ROOT.Char.GetHerHis] vida entera sobre el lomo golpeó la tierra como una fortaleza que se derrumba.\n\n[ROOT.Char.GetSheHe|U] no apartó la mirada, y por eso [ROOT.Char.GetSheHe] vio el resto. Los muertos caminaron hasta el cuerpo sin prisa, como los hombres caminan hacia una mesa ya servida. Y entonces [ln_cold_dragon.GetFirstName] se puso en pie.\n\nLa forma es la correcta. La forma es exactamente la correcta, y eso es lo peor de todo. Pero las escamas se han vuelto del gris del hielo de una semana, y los ojos que encontraban a [ROOT.Char.GetHerHim] en todos los campos del mundo son de un azul ciego y hervido -- y pasaron sobre [ROOT.Char.GetHerHim] como si [ROOT.Char.GetSheHe] fuera suelo."
+ ln_dragonfall.1.a:0 "[ln_cold_dragon.GetSheHe|U] me conocerá. Incluso ahora."
+ ln_dragonfall.1.b:0 "Eso no es [ln_cold_dragon.GetHerHim]. Matadlo dos veces."

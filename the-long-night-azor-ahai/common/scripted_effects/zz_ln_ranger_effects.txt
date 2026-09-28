@@ -228,6 +228,16 @@ ln_take_the_black_as_a_ranger_effect = {
 	# playable rule explicitly passes: our safety-net arm (has_government = ln_ranger_government, added to
 	# AGOT's NW clause) holds through title grant, fealty, lay-down and AGOT's ceremony alike -- landed,
 	# landless, adventurer or courtier.
+	#
+	# ── 1.1.3 -- SETTLED BY THE 27 SEP BOOT: THIS LINE SUCCEEDS. ──────────────────────────────────────────────
+	# The work order suspected change_government consults can_get_government (which he fails here: no ranger
+	# title, no Wall liege, no black yet). The ranger test (session66) says it does not: no "illegal
+	# government" error, and ln_became_a_ranger (on_government_change, zz_ln_ranging_on_actions.txt) printed
+	# for both players while each still held his old title, i.e. at THIS line. So the camp's council and
+	# household steps run here, before the vows; the step that needs him sworn (one brother in the camp) is
+	# skipped here and run again after agot_add_to_nightswatch_effect below. It also means he is on an
+	# NW-flagged government at the company grant, so AGOT's title-gain sweep (our shadow) runs too -- see
+	# zz_ln_nights_watch_effects.txt, the household note. The backstop further down stays: it is a no-op now.
 	change_government = ln_ranger_government
 
 	ln_grant_a_ranging_company_effect = yes
@@ -307,6 +317,9 @@ ln_take_the_black_as_a_ranger_effect = {
 
 	custom_tooltip = ln_take_black_tt_vows
 	custom_tooltip = ln_take_black_tt_shell
+	# 1.1.3 -- what ln_set_up_the_camp_effect does to his court, said on the button (it runs from the
+	# government-change hook, so nothing here shows it otherwise).
+	custom_tooltip = ln_take_black_tt_household
 	hidden_effect = {
 		agot_add_to_nightswatch_effect = yes
 	}
@@ -326,6 +339,12 @@ ln_take_the_black_as_a_ranger_effect = {
 	}
 
 	ln_pitch_the_camp_effect = yes
+
+	# 1.1.3 review -- AND NOW THAT HE WEARS THE BLACK, ONE BROTHER IN THE CAMP. The camp hook ran at the
+	# government change above, before the vows, and skipped this step: a brother moved into an unsworn man's
+	# court is sent straight back to the Lord Commander by AGOT's on_join_court_nights_watch. Idempotent (it
+	# does nothing if a sworn man already stands in his court).
+	ln_put_a_brother_in_the_camp_effect = yes
 
 	add_character_flag = ln_took_the_black
 	add_character_flag = ln_rode_out
@@ -430,6 +449,17 @@ ln_this_brother_flees_effect = {
 		debug_log = "LN_TRACE: a landed brother flees the Wall but keeps his seat - not pooled"
 	}
 	else = {
+	# ── 1.1.3 -- RELEASED FROM HIS VOWS BEFORE HE WALKS (Thomas's call D-k). ──────────────────────────────
+	# A brother who fled still wore the black, and the black is what AGOT's court maintenance opens on:
+	# on_leave_court_nights_watch (agot_court_maintenance_on_actions.txt:37-66, one day late) fetched him
+	# straight back to Castle Black from the pool, and "Take them in" (ln_scatter.2.a, set_employer) sent
+	# him back again at once through on_join_court_nights_watch's first branch. The Wall he swore to is
+	# down; he is not a deserter (the card's own law option makes that argument) and he is not a brother
+	# either. AGOT's own release (00_agot_nightswatch_effects.txt:672) takes the vows and the three Watch
+	# lifestyle traits, which is what leaving the Watch means in AGOT's model. The card text says so.
+	# 1.1.3 review: released in the arm that actually moves him, so a man with nowhere to go (the last arm)
+	# keeps his vows where he stands, as in 1.1.2.
+	debug_log = "LN_TRACE: a brother flees the Wall - released from his vows as he goes"
 	random_list = {
 		34 = {
 			trigger = {
@@ -437,6 +467,7 @@ ln_this_brother_flees_effect = {
 				exists = title:d_winterfell.holder.capital_province
 				NOT = { is_in_pool_at = title:d_winterfell.holder.capital_province }
 			}
+			agot_remove_nightswatch_traits_effect = yes
 			move_to_pool_at = title:d_winterfell.holder.capital_province
 		}
 		33 = {
@@ -445,6 +476,7 @@ ln_this_brother_flees_effect = {
 				exists = title:c_karhold.holder.capital_province
 				NOT = { is_in_pool_at = title:c_karhold.holder.capital_province }
 			}
+			agot_remove_nightswatch_traits_effect = yes
 			move_to_pool_at = title:c_karhold.holder.capital_province
 		}
 		33 = {
@@ -453,6 +485,7 @@ ln_this_brother_flees_effect = {
 				exists = title:c_last_hearth.holder.capital_province
 				NOT = { is_in_pool_at = title:c_last_hearth.holder.capital_province }
 			}
+			agot_remove_nightswatch_traits_effect = yes
 			move_to_pool_at = title:c_last_hearth.holder.capital_province
 		}
 		# Every northern seat is closed to him. He is still out there; he simply has nowhere to be put.
@@ -493,6 +526,106 @@ ln_this_brother_flees_effect = {
 	}
 }
 
+# ── 1.1.3: ONE MAN HE CAN APPOINT ──────────────────────────────────────────────────────────────────────────
+# Scope (this) = the ranger captain; root is not read. Called from ln_set_up_the_camp_effect (when he is already
+# sworn: the AI roads), from the end of the ceremony (after his vows), and once for a camp set up before 1.1.3
+# (ln_repair_the_ranger_camps_effect, below). Does nothing if a sworn man already stands in his court.
+ln_put_a_brother_in_the_camp_effect = {
+	# 3. ONE MAN HE CAN APPOINT -- AGOT's crash guard, in AGOT's own shape (agot_nw_ranger_on_creation,
+	#    00_agot_first_ranger_laamp_effects.txt:175-214). The four ranger seats need `has_trait = nightswatch
+	#    is_male = yes`; if nobody in his court passes, one brother rides down from the Lord Commander's court
+	#    (agot_nw_laamp_ranger_arrives, :217 -- it toasts both men and reads scope:first_ranger for the loc, so the
+	#    scope is saved under AGOT's name), else one is made whole, the create_character shape company succession
+	#    below already uses. location and employer are never both passed; he is add_courtier'd after creation.
+	if = {
+		limit = {
+			NOT = {
+				any_courtier = {
+					is_male = yes
+					is_adult = yes
+					has_trait = nightswatch
+				}
+			}
+		}
+		save_scope_as = first_ranger
+		if = {
+			limit = {
+				exists = title:k_the_wall.holder
+				title:k_the_wall.holder = {
+					NOT = { this = scope:first_ranger }
+					any_courtier = { agot_valid_ranger_camper = yes }
+				}
+			}
+			debug_log = "LN_TRACE RANGER: no brother in the new camp - one rides down from the Lord Commander's court"
+			agot_nw_laamp_ranger_arrives = yes
+		}
+		else = {
+			debug_log = "LN_TRACE RANGER: no brother in the new camp and none to spare at the Wall - one is made"
+			create_character = {
+				age = { 18 40 }
+				dynasty = none
+				culture = culture:northman
+				faith = faith:old_gods_wnw
+				location = scope:first_ranger.location
+				gender = male
+				trait = nightswatch
+				trait = lifestyle_nw_ranger
+				save_scope_as = ln_first_brother_in_camp
+				after_creation = {
+					add_trait_xp = {
+						trait = nightswatch
+						value = 100
+					}
+					scope:first_ranger = {
+						add_courtier = scope:ln_first_brother_in_camp
+					}
+				}
+			}
+		}
+	}
+}
+
+# ── 1.1.3 review: A CAMP SET UP BEFORE 1.1.3 ─────────────────────────────────────────────────────────────────
+# ln_set_up_the_camp_effect only runs on a NEW change onto ln_ranger_government, so a player who took the black
+# as a ranger under 1.1.2 or earlier (Silence, 17 Sep) keeps his old council in seats a camp does not have
+# (AGOT refuses every normal seat to government_is_custom_landless, 00_council_positions.txt) and may have no
+# sworn brother to appoint -- the state AGOT's crash guard exists for. Once a year, for every ranger captain:
+# dismiss anyone sitting in a seat other than the spouse's or the four ranger seats (the camp's only valid
+# ones, 00_agot_council_rangers.txt), and put one brother in the camp if he is sworn and has none. The household
+# step is NOT repeated: an established camp's courtiers are its own business. Idempotent; on a camp set up
+# by 1.1.3 both halves find nothing to do. Root is not read (the yearly root is a playable character).
+ln_repair_the_ranger_camps_effect = {
+	every_ruler = {
+		limit = {
+			is_alive = yes
+			has_government = ln_ranger_government
+		}
+		save_temporary_scope_as = ln_camp_captain
+		every_councillor = {
+			limit = {
+				NOR = {
+					has_council_position = councillor_spouse
+					has_council_position = councillor_ranger_1
+					has_council_position = councillor_ranger_2
+					has_council_position = councillor_ranger_3
+					has_council_position = councillor_ranger_4
+				}
+			}
+			debug_log = "LN_TRACE RANGER: a ranger camp still had a councillor in a seat a camp does not have - dismissed"
+			debug_log_scopes = yes
+			scope:ln_camp_captain = { fire_councillor = prev }
+			remove_opinion = {
+				modifier = fired_from_council_opinion
+				target = scope:ln_camp_captain
+			}
+		}
+		if = {
+			limit = { has_trait = nightswatch }
+			ln_put_a_brother_in_the_camp_effect = yes
+		}
+	}
+}
+
 # ── NOTHING OF THE DEAD KEEPS LAND AFTER THE DAWN ───────────────────────────────────────────────────────────
 # 13 Aug (1.0.6a). agot_long_night_scour_others_lands_effect now catches every one of the dead, but it only
 # runs ONCE, from the story cycle's on_end. A save whose Long Night is already over -- Thomas's, and every
@@ -527,7 +660,10 @@ ln_this_brother_flees_effect = {
 # NOT = { has_global_variable = ln_aftermath_started }, so it stops running at exactly the moment these
 # leftovers appear. This one has no such gate, which is the entire point.
 ln_clear_orphaned_wight_governments_effect = {
-	every_living_character = {
+	# 1.1.3 (W15.3a): every_ruler, not every_living_character. The limit already required is_ruler = yes,
+	# so the walk over ~100,000 living characters a year found exactly what a walk over ~5,000 rulers
+	# finds. Identical result; the is_ruler clause stays as documentation of why.
+	every_ruler = {
 		limit = {
 			has_government = wight_government
 			NOT = { has_trait = wight_trait }
@@ -706,6 +842,104 @@ ln_pitch_the_camp_effect = {
 				move_domicile = title:c_castle_black.title_province
 			}
 		}
+	}
+}
+
+# ── 1.1.3: THE CAMP IS SET UP ON EVERY ROAD IN -- council, household, and one man he can appoint ────────────
+#
+# Silence (Steam, 17 Sep): "Take the Black (Ranger)" breaks the council and the court, then crashes. AGOT +
+# LN only, landed and landless alike.
+#
+# WHAT WE WERE DOING. Every road into a ranging company ends in `change_government = ln_ranger_government`
+# (this file's ceremony and its backstop, the AI route in zz_ln_ranger_recruitment_effects.txt, company
+# succession below), and that government carries government_is_custom_landless with the default `council = yes`.
+# Read in AGOT, that does three things at once to a man who arrives with a court:
+#   * every ordinary council seat becomes INVALID for him -- AGOT's valid_position refuses
+#     government_is_custom_landless on chancellor, steward, marshal, spymaster and chaplain
+#     (00_council_positions.txt:72-79, :258, :429, :622, :1042), castellan refuses agot_is_landless_nw_character
+#     (00_agot_council_positions.txt:181), and vanilla's court positions hide the same way. His old councillors
+#     were left sitting in seats that no longer exist. That is the broken council.
+#   * the only seats that DO exist are the four ranger seats (00_agot_council_rangers.txt), whose valid_character
+#     needs `has_trait = nightswatch  is_male = yes` -- and nobody in a southern lord's household qualifies.
+#   * AGOT itself, when it makes a landless ranger, runs agot_nw_laamp_start_effect (fire the council, pool the
+#     strangers, reset the regiments) and agot_nw_ranger_on_creation, whose comment at two sites reads verbatim
+#     "#Add a courtier to avoid crash upon attempting to appoint a councillor"
+#     (00_agot_first_ranger_laamp_effects.txt:174, story_cycles/agot_story_cycle_nw_ranger.txt:64). We ran none
+#     of it. The crash is probable, not proven -- Thomas took the black on 20 Aug without one -- and most likely
+#     needs the appointment attempt: the player clicking an empty ranger seat, or the engine auto-filling one.
+#
+# WHAT THIS DOES. The three load-bearing parts of AGOT's routine, in AGOT's order, and NOT the whole of it:
+# agot_nw_laamp_start_effect also starts the First Ranger story, tries first_ranger_government (illegal for us,
+# see the government file's header on why we do not claim their flag) and kills a non-family chaplain, none of
+# which a ranging captain should inherit. Regiments and the succession law are left alone on purpose (Thomas's
+# call D-l): a southern king riding north with his heavy cavalry may be a feature.
+#
+# Root = the new ranger, already on ln_ranger_government. Fired from ln_became_a_ranger
+# (common/on_action/zz_ln_ranging_on_actions.txt) on on_government_change, so it runs on every road at the one
+# moment they all share, and only when the government actually changed (scope:old_government is not ours).
+# Idempotent: a court with nobody to fire, nobody to move and a brother already in it does nothing at all.
+ln_set_up_the_camp_effect = {
+	debug_log = "LN_TRACE RANGER: a man came onto the ranger government - setting up his camp"
+	debug_log_scopes = yes
+
+	# 1. THE COUNCIL. Every seat but the spouse's -- there is no seat left for them to sit in. AGOT :9-24, minus
+	#    the death branch. remove_opinion so they do not resent a dismissal nobody chose.
+	every_councillor = {
+		limit = { NOT = { has_council_position = councillor_spouse } }
+		root = { fire_councillor = prev }
+		remove_opinion = {
+			modifier = fired_from_council_opinion
+			target = root
+		}
+	}
+
+	# 2. THE HOUSEHOLD. Thomas's stated design (zz_ln_nights_watch_effects.txt, the family note): the guard and the
+	#    hangers-on go north with him and take the black if they are fit for it; the rest go to the pool. Family
+	#    and consorts stay -- the ceremony's own lay-down moves the close family to the heir, and a landless man
+	#    keeps them beside him (AGOT exempts the same four groups and then sends them to the house head or a
+	#    ruler of their faith; this mod keeps them, as 1.1.2 did). The dead are never
+	#    touched here; zz_ln_court_on_actions.txt owns them. agot_reasonable_potential_nw_member is AGOT's own
+	#    fitness test (00_agot_nights_watch_triggers.txt:6-13); agot_add_to_nightswatch_effect is their whole
+	#    swearing-in, which on a courtier never reaches its depose clause.
+	every_courtier = {
+		limit = {
+			is_alive = yes
+			NOR = {
+				has_trait = nightswatch
+				has_trait = nightswatch_temp
+				is_close_or_extended_family_of = root
+				is_consort_of = root
+				# Lovers and friends stay too -- AGOT's own routine keeps exactly these four groups
+				# (00_agot_first_ranger_laamp_effects.txt, the every_courtier limits).
+				has_relation_lover = root
+				has_relation_friend = root
+				# 1.1.3 review: the wives and husbands of his kin (the heir's wife, a daughter's husband) and
+				# the heir himself stay for the lay-down -- they are not "hangers-on", and 1.1.2 kept them.
+				any_spouse = { is_close_or_extended_family_of = root }
+				AND = {
+					exists = root.primary_heir
+					this = root.primary_heir
+				}
+			}
+			ln_is_one_of_them_trigger = no
+		}
+		if = {
+			limit = { agot_reasonable_potential_nw_member = yes }
+			debug_log = "LN_TRACE RANGER: a courtier of the new ranger takes the black with him"
+			agot_add_to_nightswatch_effect = yes
+		}
+		else = {
+			debug_log = "LN_TRACE RANGER: a courtier of the new ranger is not fit for the black - pooled"
+			move_to_pool = yes
+		}
+	}
+
+	# 3. ONE MAN HE CAN APPOINT -- only once he wears the black himself: a brother moved into an unsworn man's
+	#    court is sent straight back by AGOT's on_join_court_nights_watch (1.1.3 review; the ceremony calls this
+	#    again after its vows). Body below.
+	if = {
+		limit = { has_trait = nightswatch }
+		ln_put_a_brother_in_the_camp_effect = yes
 	}
 }
 

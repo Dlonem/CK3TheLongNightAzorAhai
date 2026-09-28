@@ -1,0 +1,97 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the Resurrected chain.
+
+ ln_risen.1.t:0 "Lo que recuerdas"
+ ln_risen.1.desc:0 "Es el muchacho del septón quien lo pregunta, porque tiene nueve años y a nadie se le ocurrió prohibírselo.\n\n«¿Cómo fue?»\n\nEl salón queda tan callado que oigo crepitar el fuego. Todos los que están en esta sala han querido preguntármelo durante meses, y a ninguno le sobró el valor. Ahora lo ha hecho un niño.\n\nEl problema, siendo honesto, es que no sé qué respuesta es la verdadera. Algunas mañanas no hay absolutamente nada: una puerta que se cierra, luego una puerta que se abre, y ningún corredor entre las dos. Otras mañanas despierto con la mandíbula dolorida y la certeza fría y espantosa de que había algo al otro lado. Y que era consciente de mí. Y que no tenía el menor interés."
+ ln_risen.1.a:0 "Nada, muchacho. No había nada en absoluto."
+ ln_risen.1.b:0 "Había algo. Y no hablaré de ello."
+
+ ln_risen.2.t:0 "El sabor de las cosas"
+ ln_risen.2.desc:0 "Mi cocinero lleva un mes intentándolo, y se le nota que ha empezado a tomárselo como algo personal.\n\nMe ha preparado exactamente el pastel de lamprea que pedí en mi propia boda. Esta mañana salió de las cocinas para verme comer, con las manos retorcidas de nervios en el mandil. Mastiqué, tragué y le dije que estaba muy bueno.\n\nFue como comer paño tibio. Todo lo es. El pan, el vino, la miel, el humo del fuego: noto que están ahí igual que un hombre nota que una estancia está fría, pero el placer ha desaparecido por completo. Lo que el sacerdote volvió a verter en mí no siente hambre."
+ ln_risen.2.a:0 "Como solo para mantener el cuerpo en marcha."
+ ln_risen.2.b:0 "Envía mis felicitaciones a las cocinas de todos modos."
+
+ ln_risen.3.t:0 "El fantasma en la sala"
+ ln_risen.3.desc:0 "[ln_close.GetTitledFirstName] no me ha mirado a la cara desde el día en que ocurrió.\n\n[ln_close.GetSheHe|U] me habla, sí. [ln_close.GetSheHe|U] responde preguntas, come a mi mesa y cumple con los gestos de nuestra vida compartida. Pero [ln_close.GetHerHis] ojos se posan siempre en algún punto justo por encima de mi hombro, o abajo, en mis manos. \n\nUna vez le pregunté por ello a [ln_close.GetHerHim], insistiendo en una respuesta. [ln_close.GetSheHe|U] palideció por completo, agarró el borde de la mesa y susurró: «Tienes tu cara, pero no pareces con vida. Y ya no sé con quién estoy hablando.»"
+ ln_risen.3.a:0 "Soy exactamente quien era."
+ ln_risen.3.b:0 "Yo tampoco sé con quién estás hablando."
+ ln_risen.3.c:0 "Que [ln_close.GetHerHis] familia venga por [ln_close.GetHerHim]. [ln_close.GetSheHe|U] nunca accedió a esto."
+
+ ln_risen.4.t:0 "Lo que costó el fuego"
+ ln_risen.4.desc:0 "[ln_close.GetTitledFirstName] viene por fin a pedirme un favor. Llevaba mucho tiempo esperándolo.\n\nCuando el sacerdote rojo me trajo de vuelta, pensé que el reino se alzaría. En cambio, el silencio aterrado ha empezado a engendrar devoción. [ln_close.GetSheHe|U] pide que se levante un templo en el patio. No un septo. Un templo rojo.\n\n«Los Siete se quedaron mirando mientras te enfriabas», dice [ln_close.GetSheHe], con [ln_close.GetHerHis] voz temblorosa pero firme. «El Señor de Luz te devolvió. No voy a fingir lo contrario solo para complacer a un septón gordo de Oldtown.»"
+ ln_risen.4.a:0 "Levantad el templo. Le debemos todo."
+ ln_risen.4.b:0 "No. No impondré esta herejía a mi pueblo."
+
+ ln_risen.5.t:0 "La mujer en la puerta"
+ ln_risen.5.desc:0 "Lleva de pie en la puerta desde antes del alba, y ha traído al niño con ella.\n\nParece tener unos cuatro años y, por el olor, lleva muerto al menos cuatro días. Se abre paso a la fuerza hasta el frente del patio mientras salgo, cae de rodillas en el barro y alza el cuerpecito rígido hacia mí.\n\n«¡El sacerdote lo hizo por vos!», grita, con las lágrimas abriendo surcos en la tierra de su cara. «¡Hacedlo por él! ¡Sé que podéis, mi señor! ¡Soplad el fuego dentro de él!»\n\nLos guardias dan un paso al frente, esperando mi orden."
+ ln_risen.5.a:0 "No puedo devolver lo que me fue dado."
+ ln_risen.5.b:0 "Quitadla de mi vista."
+ ln_risen.5.c:0 "No salir a verla. Que se encargue el mayordomo."
+
+ ln_risen.6.t:0 "No se cierra"
+ ln_risen.6.desc:0 "Me desgarré el antebrazo con un clavo oxidado en los establos hace tres semanas. Fue un rasgón superficial, de puro descuido.\n\nEsta mañana retiro el vendaje. La herida está exactamente igual de abierta que el día en que ocurrió. No ha supurado, no ha amoratado y no sangra. La carne está simplemente partida, fría y blanca.\n\nVolver a unirse es algo que hace un cuerpo vivo. La carne de un muerto solo se queda donde la ponen. Vuelvo a envolver el lino con cuidado y decido que empezaré a llevar los brazales de cuero también bajo techo."
+ ln_risen.6.a:0 "Un inconveniente menor por una segunda vida."
+ ln_risen.6.b:0 "¿Cuánto tardaré en podrirme sin más?"
+
+ ln_risen.7.t:0 "Abominación"
+ ln_risen.7.desc:0 "Duele mucho más porque no lo dice un extraño. Lo dice [ln_close.GetTitledFirstName].\n\nEstamos solos en el solar cuando la cólera desborda por fin. «El Padre juzga», escupe [ln_close.GetSheHe], señalándome el pecho con un dedo tembloroso. «Te juzgó. Moriste. Tu tiempo se había cumplido. Y entonces un sacerdote extranjero metió la mano en ese juicio sagrado, te robó de vuelta de la oscuridad, ¡y nadie preguntó cuál sería el precio!»\n\n[ln_close.GetSheHe|U] me tiene terror, y [ln_close.GetSheHe] lo dice de todas formas. «Eres una abominación. Caminas bajo el sol cuando tu lugar está bajo la tierra.»"
+ ln_risen.7.a:0 "Estoy aquí porque queda trabajo por hacer."
+ ln_risen.7.b:0 "Si de verdad crees eso, abandona mi salón."
+ ln_risen.7.c:0 "Siéntate. Dime exactamente qué crees que soy."
+
+ ln_risen.8.t:0 "Algo que falta"
+ ln_risen.8.desc:0 "Traté de recordar el nombre del destrero ruano que montaba a los doce años. El recuerdo ha desaparecido por completo y no deja más que un borde limpio y vacío donde solía estar.\n\nEn el último mes he empezado a notar qué más falta exactamente. No las cosas importantes: las cálidas. Recuerdo a la perfección cada estocada, cada libro de cuentas y cada traición. ¿Pero el olor de la lluvia de verano? ¿El sonido de la risa de mi madre? Borrados.\n\nLo que salió de aquel fuego se quedó con la lucha, la aritmética y los rencores. Desde entonces ha estado quemando en silencio todo lo demás."
+ ln_risen.8.a:0 "No necesitaré recuerdos cálidos para lo que viene."
+ ln_risen.8.b:0 "Que nadie sepa lo que estoy perdiendo."
+
+ ln_risen.9.t:0 "La prueba"
+ ln_risen.9.desc:0 "Es un caballero andante de las Riverlands, y ni siquiera está borracho.\n\nEspera a que el festín de la noche esté en su punto más alto, recorre el salón de extremo a extremo sin prisa y me hunde limpiamente un puñal en el costado, justo bajo las costillas. La sala estalla en puro pánico. Mis guardias lo derriban al suelo de inmediato y desenvainan para cortarle la cabeza.\n\nNo caigo. Bajo la vista a la empuñadura que sobresale de mi jubón. No me duele especialmente.\n\n«¡Tenía que saberlo!», grita el caballero desde el suelo, ensangrentado y riendo como un loco mientras los guardias lo sujetan. «¡Todos lo dicen, pero nadie lo había visto! ¡Ahora lo han visto!»"
+ ln_risen.9.a:0 "Sacadme el puñal y dejadlo marchar."
+ ln_risen.9.b:0 "Cortadle la cabeza. Nadie me pone a prueba."
+
+ ln_risen.10.t:0 "El otro lado"
+ # 1.0.12 -- SUPERSEDED, KEPT AS THE SOURCE TEXT. ln_risen.10 no longer uses a single desc: it is
+ # open + one of four branches + close (see events/zz_ln_risen_events.txt). The branch keys below were
+ # written and never landed in English, so every one of them rendered as its own raw key name in the
+ # 18 Aug run. Do not re-point the event at this line.
+ ln_risen.10.desc:0 "Mi maestre ha esperado mucho tiempo para preguntarlo, y lo hace con la calma exasperante de un erudito que ha hecho preguntas impertinentes toda su vida y nunca ha apartado la vista de una respuesta.\n\n«¿Qué viste?», pregunta por encima de un pergamino. «Cuando pasaste. No lo pregunto por los septones. Lo pregunto por mí.»\n\nLo miro. Podría hablarle del frío, o de la indiferencia espantosa de la oscuridad. Pero la verdad brutal es la misma que he guardado de todos: allí no había nada. Nada que temer y nada que esperar.\n\nDe lo que sea que me salvaran, no me salvaron de nada. Y noto, con un desapego frío, que estoy evaluando esta falta de vida después de la muerte como un asunto puramente práctico —coste, beneficio, lo que se debe— y no como la revelación enorme, capaz de romper el mundo, que es."
+
+ ln_risen.10.desc.open:0 "La pregunta llega del último sitio donde la esperaba: mi propio maestre, en medio de una partida que está perdiendo de largo.\n\n«Si te lo ofrecieran otra vez», dice, empujando una pieza a donde no tiene nada que hacer, «sabiendo lo que sabes ahora. ¿Lo aceptarías?»\n\n"
+ ln_risen.10.desc.less:0 "Y descubro que no puedo responder deprisa, porque responder exige querer algo, y el querer es una de las partes que dejé en el suelo y nunca volví a recoger."
+ ln_risen.10.desc.pages:0 "En mi solana hay cuarenta páginas de mi propia mano, escritas para que un hombre que se vacía en silencio pueda comparar la versión presente de sí mismo con el registro. Hace mucho que no las abro. Ya no estoy seguro de reconocer al hombre que hay en ellas."
+ ln_risen.10.desc.nothing:0 "Y la dificultad honesta es la que ha sido siempre: allí no había nada. Nada que temer y nada que esperar. De lo que sea que me salvaran, no me salvaron de nada."
+ ln_risen.10.desc.plain:0 "Y noto que lo estoy pesando como un asunto de la casa —coste, beneficio, lo que se debe y a quién— y no como la cosa enorme que a todas luces es."
+ ln_risen.10.desc.close:0 "\n\nEl maestre espera. Es muy viejo, ha puesto muchísimas preguntas impertinentes a muchísima gente al otro lado de ese tablero, y nunca ha apartado la vista de la respuesta."
+ ln_risen.10.a:0 "Solo hay oscuridad, maestre."
+ ln_risen.10.b:0 "Vi exactamente lo que el Señor de Luz quería que viera."
+
+ ln_risen.11.t:0 "Te seguirán a cualquier parte"
+ # 1.0.12 -- SUPERSEDED, KEPT AS THE SOURCE TEXT. Same story as ln_risen.10 above: open + one of four
+ # branches + close. The branches below never landed in English and rendered as raw keys.
+ ln_risen.11.desc:0 "Mi mariscal me pide hablar a solas en la armería.\n\n«Los hombres han dejado de tenerte miedo», dice, apoyado en un armero. «Al principio estaban aterrados. ¿Ahora? Te ven recibir en el patio un golpe que le partiría el cráneo a un hombre, y no parpadeas. No hay en este suelo un hombre que no fuera al norte contigo hasta la boca misma del infierno.»\n\nMe mira, y hay ahora en sus ojos un fanatismo oscuro y sin preguntas. «Porque creen que la muerte no puede tocarte. Y creen que tú conoces el camino de vuelta.»"
+
+ ln_risen.11.desc.open:0 "Mi mariscal viene a decirme algo y empieza bastante mal.\n\nAl final llega. Es esto: en algún momento del último año los hombres dejaron de tenerme miedo, y nadie decidió que debieran. Lo que ha llegado en su lugar no es paz. Es algo bastante más útil.\n\n"
+ ln_risen.11.desc.spared:0 "«Es el caballero andante, mi señor», dice. «El que te hundió un puñal y salió vivo de este salón. La mitad estaba segura de que lo colgarías. La otra mitad estaba segura de que harías algo bastante peor. No hiciste ninguna de las dos cosas, y desde entonces no han dejado de darle vueltas.»"
+ ln_risen.11.desc.truth:0 "«Es la mujer de la puerta», dice. «Bajaste tú mismo. Le dijiste que no a la cara, con el niño todavía en sus brazos, y no mandaste al mayordomo a decirlo por ti. Todas las almas de este castillo lo sabían antes de la cena.»"
+ ln_risen.11.desc.pages:0 "«Los muchachos se han metido en la cabeza que llevas un registro», dice, algo incómodo. «Que lo escribes todo porque tienes miedo de perderlo. Y eso les resulta… no tengo la palabra, mi señor. Los tranquiliza. Que haya algo que te dé miedo.»"
+ ln_risen.11.desc.plain:0 "«Han caído en que lo peor que le puede pasar a un hombre ya te ha pasado», dice. «Y que te volviste a levantar. Así que han decidido que, si tú caminas hacia algún sitio, probablemente sea algo que un hombre puede sobrevivir.»"
+ ln_risen.11.desc.close:0 "\n\nLuego dice lo que de verdad vino a decir, y lo dice al suelo:\n\n«No hay en este suelo un hombre que no fuera al norte contigo. No porque sean valientes. Porque tú ya has ido, y volviste, y creen que conoces el camino.»"
+ ln_risen.11.a:0 "Entonces más me vale merecer que me sigan."
+ ln_risen.11.b:0 "Deberían seguir a un hombre vivo. Les encontraré uno."
+
+ ln_risen.12.t:0 "El fuego que se quedó"
+ ln_risen.12.desc:0 "Lo noté primero en el patio de armas, cuando un mandoble que he blandido diez mil veces subió ligero como una vara de sauce.\n\nLuego vinieron las otras cosas. El frío del invierno no me encuentra. Heridas que deberían doler en las mañanas húmedas no dan señal alguna. Hay un calor en algún sitio detrás de mis costillas que ninguna fiebre produjo nunca, contenido y paciente, como una forja de noche. Cuando el sacerdote dijo las palabras, el recipiente volvió conteniendo mucho más de lo que tenía al principio.\n\nY algo más vino con ello. O más bien, algo no vino. Ayer un mozo de cuadra quedó aplastado bajo un carro cargado en el patio. Todos a mi alrededor gritaron y se estremecieron con ese sonido repugnante.\n\nYo solo miré. Fue interesante."
+ ln_risen.12.a:0 "Entonces que el fuego arda."
+ ln_risen.12.b:0 "Debo ocultarles esta frialdad."
+
+ # ── MODIFIERS ───────────────────────────────────────────────────────────────────────────────────────────────
+ ln_death_holds_no_terror_modifier:0 "La muerte ya no asusta"
+ ln_death_holds_no_terror_modifier_desc:0 "Lo peor que le puede pasar a un hombre ya le ha pasado a este, con testigos delante, y se volvió a levantar. Resulta notablemente difícil amenazarlo, y su guardia personal se ha dado cuenta."
+ ln_fire_in_the_blood_modifier:0 "Fuego en la sangre"
+ ln_fire_in_the_blood_modifier_desc:0 "Lo que volviera de la oscuridad trajo consigo una fuerza sobrenatural y una falta de empatía humana que da miedo."
+
+ # ── 1.0.13: THE SIGHTED OPTION ─────────────────────────────────────────────────
+ ln_risen.1.d:0 "Había un corredor, muchacho. Lo camino desde que tenía tu edad."
+ ln_risen.10.desc.corridor:0 "Le dije la verdad a un niño de nueve años porque fue el único que preguntó, y nunca me he desdicho.\n\nHabía un corredor. Lo camino desde que yo mismo era un muchacho, al modo en que caminan los verdevidentes: de lado, y en desorden, y nunca cuando uno quiere. Morir solo significó caminarlo despierto.\n\nAhora el muchacho del septón cuenta la historia a los otros niños, y la cuenta un poco mal, y lo dejo. Su versión tiene un final."
+

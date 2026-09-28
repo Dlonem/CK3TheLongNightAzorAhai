@@ -1,0 +1,13 @@
+﻿l_french:
+
+ ln_wandering_dead.1.t:0 "Quelque chose est sorti des arbres"
+
+ ln_wandering_dead.1.desc:0 "Les cavaliers rentrent avant l'aube avec un homme en travers d'une selle, et c'est lui le chanceux : il n'est que mort.\n\nCe n'était pas une armée. Onze, sortant de la lisière des arbres à la bordure nord de [ROOT.Char.GetPrimaryTitle.GetName], dans les vêtements dans lesquels on les avait enterrés, les yeux de la couleur d'une étoile vue à travers la glace. Ils ne crient pas et ils ne se fatiguent pas et ils ne se sont pas arrêtés quand les trois premiers sont tombés.\n\nLe front est encore à des lieues. Voilà ce qui suinte devant lui."
+
+ ln_wandering_dead.1.a:0 "Apportez mon épée. J'irai à leur rencontre moi-même."
+ ln_wandering_dead.1.b:0 "Envoyez la garde de la maison. C'est à cela qu'elle sert."
+ ln_wandering_dead.1.c:0 "Barrez les portes et laissez-les continuer vers le sud."
+ ln_wandering_dead.1.d:0 "Réveillez le prêtre rouge. Qu'il leur montre ce qu'est le feu."
+
+ ln_faced_the_dead_modifier:0 "A fait face aux morts"
+ ln_faced_the_dead_modifier_desc:0 "Celui-ci s'est planté devant les morts qui marchent, une lame à la main, et n'a pas fui. Les gens remarquent une chose pareille."

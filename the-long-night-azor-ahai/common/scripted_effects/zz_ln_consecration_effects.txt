@@ -135,3 +135,78 @@ ln_pick_the_beloved_effect = {
 		}
 	}
 }
+
+# ── 1.1.3: A GOBLET THAT BECAME LIGHTBRINGER IS UNMADE (Thomas's call D-n) ─────────────────────────────────
+# Until 1.1.3 the rite accepted anything carrying AGOT's valyrian_steel variable -- armour, and the Valyrian
+# Steel submod's goblet (Xia, Discord, 19 Sep). A save where that happened has a consecrated trinket holding
+# ln_is_lightbringer, the world's one-Lightbringer global closed, and no way to consecrate a real blade.
+#
+# Root = anything; called once a year from ln_struggle_yearly_work_effect. Same shape and the same reasoning
+# as ln_lightbringer_restamp_effect (zz_ln_lightbringer_effects.txt): there is no global artifact iterator,
+# every_ruler is the population that can reach an artifact cheaply, the whole thing is behind
+# ln_lightbringer_forged (a single failed global read in every game where no Lightbringer exists), and the
+# latch is set ON THE FIND of any Lightbringer, not on the attempt -- one in a courtier's hands this year
+# surfaces on a ruler eventually, and latching early would give up on exactly that save. (1.1.3 review: the
+# latch used to wait for a CONSECRATED artifact, so a game where the sword was forged and never consecrated
+# walked every ruler's artifacts every year forever; any Lightbringer found closes it now.) The only writers
+# of ln_is_lightbringer are the forge (a sword, always a weapon) and the rite, so only a consecrated artifact
+# can be wrong, and ln_was_consecrated is the rite's own stamp.
+#
+# WHAT IS UNMADE: a consecrated artifact in a slot that is plainly not a weapon -- armour, helmet, regalia or
+# a miscellaneous slot (the goblet). NOT one standing in a COURT slot: AGOT and the Valyrian Steel submod
+# reforge Valyrian blades onto pedestals and back (01_agot_reforge_valyrian_steel.txt), and a real
+# Lightbringer on display must not be unmade for where it stands (1.1.3 review). A crossbow consecrated
+# before 1.1.3 is kept too: it is a weapon in the hand, even though the rite no longer accepts one.
+#
+# READ EVERYTHING, THEN REMOVE, THEN ASK THE WORLD. The slot test is read before anything is taken off; the
+# globals and the forger's flag go last, and only if no artifact anywhere still carries ln_is_lightbringer,
+# so a real blade can be consecrated again. The memory stays: it happened. The rarity stays illustrious: the
+# engine cannot tell us what it was before.
+ln_unconsecrate_what_is_not_a_blade_effect = {
+	if = {
+		limit = {
+			has_global_variable = ln_lightbringer_forged
+			NOT = { has_global_variable = ln_consecration_slot_checked }
+		}
+		every_ruler = {
+			every_character_artifact = {
+				limit = { has_variable = ln_is_lightbringer }
+				set_global_variable = { name = ln_consecration_slot_checked  value = yes }
+				if = {
+					limit = {
+						has_variable = ln_was_consecrated
+						OR = {
+							artifact_slot_type = armor
+							artifact_slot_type = helmet
+							artifact_slot_type = regalia
+							artifact_slot_type = miscellaneous
+						}
+					}
+					debug_log = "LN_TRACE CONSECRATION: the consecrated artifact is not a weapon - unmade"
+					remove_variable = ln_is_lightbringer
+					remove_variable = ln_was_consecrated
+					remove_artifact_modifier = ln_lightbringer_consecrated_modifier
+					set_global_variable = { name = ln_consecration_was_unmade  value = yes }
+				}
+				else = {
+					debug_log = "LN_TRACE CONSECRATION: Lightbringer is a weapon (or on display) - nothing to repair"
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_global_variable = ln_consecration_was_unmade
+				NOT = {
+					any_living_character = {
+						any_character_artifact = { has_variable = ln_is_lightbringer }
+					}
+				}
+			}
+			debug_log = "LN_TRACE CONSECRATION: no Lightbringer stands anywhere - the world may make one again"
+			remove_global_variable = ln_consecration_was_unmade
+			global_var:ln_lightbringer_forger ?= { remove_character_flag = ln_forged_lightbringer }
+			remove_global_variable = ln_lightbringer_forger
+			remove_global_variable = ln_lightbringer_forged
+		}
+	}
+}

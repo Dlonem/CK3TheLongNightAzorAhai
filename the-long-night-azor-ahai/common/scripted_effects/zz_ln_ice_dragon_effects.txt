@@ -119,12 +119,19 @@ ln_others_take_a_dragon_effect = {
 # zz_ln_ice_dragon_effects.txt create_character above). The purges mutate ran (disease, wounds) cannot be
 # un-run and do not need to be. Runs only while the invasion window is open because the bug can only be
 # created inside it; once every save has passed through one yearly tick with this live, it finds nothing.
+# 1.1.3 (W15.3b): ONE SHOT PER SAVE. The header above says it -- "the door is closed at conversion" (the
+# dragon guard on mutate_into_other_effect) and "once every save has passed through one yearly tick with
+# this live, it finds nothing". It kept walking every living character every year of every Long Night
+# anyway. Latched on a global, the ln_wight_marriage_retro_done shape (zz_ln_wight_notice_effects.txt):
+# the first yearly tick inside the window does the one full walk, and no save pays for it twice.
 ln_dewight_dragons_effect = {
 	if = {
 		limit = {
 			has_global_variable = ln_invasion_opening
 			NOT = { has_global_variable = ln_aftermath_started }
+			NOT = { has_global_variable = ln_dewight_dragons_done }
 		}
+		set_global_variable = { name = ln_dewight_dragons_done  value = yes }
 		every_living_character = {
 			limit = {
 				has_trait = dragon
@@ -835,11 +842,16 @@ ln_dragonpit_sweep_effect = {
 			exists = struggle:ln_long_night_struggle
 			struggle:ln_long_night_struggle = { is_struggle_phase = ln_phase_the_long_night }
 		}
-		# every_living_dragon rather than every_in_global_list over living_dragons: it is an ENGINE list builder
-		# (AGOT uses it to populate their global list in the first place), so iterating it while killing things
-		# does not depend on how a script-maintained list behaves mid-loop. Cheap either way -- there are tens of
-		# dragons in the world, not thousands.
-		every_living_dragon = {
+		# 1.1.3 (W15.3c): THE OLD COMMENT HERE WAS WRONG about the cost. every_living_dragon is AGOT's
+		# scripted list with `base = living_character` (scripted_lists/00_agot_scripted_lists_filler_lists.txt:71),
+		# i.e. a full walk of every living character filtered on has_trait = dragon -- this file's own notes
+		# at the ice-dragon spawners say as much. AGOT keeps a global variable list of the living dragons
+		# (living_dragons, added at 00_agot_dragon_effects.txt:2298/:2973 and read live at
+		# 00_commander_phase_events.txt:832), which is tens of entries. The mid-loop worry the old comment
+		# raised is met the collect-then-act way: the list is walked into a temporary list first and the
+		# deaths run over that, so nothing is killed inside the walk of a script-maintained list.
+		every_in_global_list = {
+			variable = living_dragons
 			limit = {
 				is_alive = yes
 				has_trait = dragon
@@ -850,6 +862,10 @@ ln_dragonpit_sweep_effect = {
 				exists = var:pitted_dragon_location
 				var:pitted_dragon_location = { ln_county_is_theirs_trigger = yes }
 			}
+			add_to_temporary_list = ln_pitted_and_taken
+		}
+		every_in_list = {
+			list = ln_pitted_and_taken
 			# Killed in the cage. death_reason is AGOT's own execution reason so the death feed reads correctly,
 			# and no killer is named: the recorder does not need one, because the county being theirs already
 			# satisfies ln_others_were_here_trigger on its own.

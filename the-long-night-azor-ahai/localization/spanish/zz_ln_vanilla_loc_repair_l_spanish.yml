@@ -1,0 +1,28 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- two base-game localization keys that do not resolve.
+ #
+ # NOT AN OVERRIDE OF ANY FILE. Localization merges by KEY: the last mod to define a key wins, and nothing
+ # else in that key's original file is touched. So this repairs both strings for the entire playset -- AGOT's
+ # decisions included -- without shadowing a single file of theirs.
+ #
+ # ALREADY_IN_ACTIVITY
+ #   vanilla's is_available does `custom_description = { text = ALREADY_IN_ACTIVITY  NOR = { ... } }`, a
+ #   POSITIVE block, so the engine wants the plain key. Vanilla ships only ALREADY_IN_ACTIVITY_FIRST_NOT and
+ #   ALREADY_IN_ACTIVITY_THIRD_NOT. The plain key has never existed, so every decision in the game using
+ #   is_available prints "ALREADY_IN_ACTIVITY has no localization" in magenta. Worded to match the two
+ #   variants that do exist.
+ #
+ # ALREADY_PLANNING_ACTIVITY
+ #   the key exists; its text embeds [activity|E] and that concept tooltip is failing in this playset,
+ #   rendering as "Activity(BUG: ...". Same sentence, without the link.
+
+ ALREADY_IN_ACTIVITY:0 "No estás ocupado con otra cosa en este momento"
+ # ALREADY_PLANNING_ACTIVITY removed 1.0.12b -- vanilla 1.19 ships the key itself now; keeping ours was a
+ # "Duplicate localization key" error on every boot.
+
+ # 1.0.16 -- THIRD ENTRY, and like the two above it this is vanilla's gap, not ours.
+ # game/common/factions/00_peasant_faction_new.txt:608 does `custom_description = { text =
+ # character_is_immune_to_factions ... }` and base CK3 ships no such key. We inherit the identical block at
+ # our :651. Defining it here repairs it for the whole playset without shadowing anyone's file.
+ character_is_immune_to_factions:0 "Es inmune a las facciones"

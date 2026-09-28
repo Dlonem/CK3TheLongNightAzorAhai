@@ -1,0 +1,32 @@
+﻿l_spanish:
+
+ # AGOT: The Long Night & Azor Ahai -- the conclusion.
+
+ nick_the_dawnbringer:0 "el Portador del Amanecer"
+ nick_the_dawn:0 "el Amanecer"
+ nick_the_prince_that_was_promised:0 "el príncipe que fue prometido"
+
+ ln_reveal.9.t:0 "El recuento"
+ ln_reveal.9.desc_open:0 "Los maestres llevan con ello desde el deshielo y por fin han producido un número, y ese número es la razón por la que nadie quiere leer el resto de la página.\n\n"
+ ln_reveal.9.desc_sword:0 "Terminó con una espada forjada para ello. Esa es la parte que los bardos conservarán y sobre la que los maestres discutirán durante cuatrocientos años: que alguien forjó lo que la vieja historia decía que había que forjar, y luego fue e hizo lo que la vieja historia decía que había que hacer, y funcionó exactamente como estaba anunciado. No hay manera cómoda de escribir eso en un libro de historia.\n\n"
+ ln_reveal.9.desc_sword_unused:0 "La espada se forjó. Costó lo que el relato decía que costaría. Y al final no fue la espada la que lo terminó, que es una frase que alguien va a tener que explicarle a quien la pagó.\n\n"
+ ln_reveal.9.desc_no_sword:0 "No se forjó ninguna espada. Nadie cantó. Terminó como terminan la mayoría de las cosas: hombres con acero común, de pie en el lugar equivocado en el momento justo, y la mayoría de ellos no lo sobrevivió.\n\n"
+ ln_reveal.9.desc_watch_held:0 "La Guardia de la Noche resistió. No intacta — nada en ella está intacto —, pero hay capas negras en el Muro y hombres en los castillos, y la institución que el sur pasó un siglo tratando como una colonia penal para violadores y ladrones es la razón de que haya un sur.\n\n"
+ ln_reveal.9.desc_watch_broke:0 "La Guardia de la Noche no resistió. Los castillos están vacíos de una manera en que nunca antes lo estuvieron, y los hombres que podrían haberlos guarnecido están bajo la nieve entre aquí y el Muro.\n\n"
+ ln_reveal.9.desc_close:0 "Salió el sol. Eso es toda la buena noticia y es suficiente.\n\nEl gran maestre quiere saber qué escribir en lo alto de la página. Lleva una semana preguntando. Le gustaría un nombre para ello, y una fecha, y una frase que dentro de trescientos años la gente pueda leer sin necesitar el resto del libro."
+ ln_reveal.9.a:0 "Escribirlo. Todo. Sobre todo las partes de las que nadie sale bien."
+ ln_reveal.9.b:0 "Que la siguiente hornada lo averigüe por sí misma. Nosotros lo hicimos."
+ # ── WHAT KIND OF MAN THE HISTORIES ARE WRITING ABOUT ────────────────────────────────────────────────────────
+ ln_reveal.9.desc_you_forge:0 "Tu nombre aparece en él más de una vez, y no por las razones que habrías elegido. Tienen la forja. Tienen los tres templados. Alguien ha escrito lo que costó el tercero y otro lo ha tachado y lo ha vuelto a escribir.\n\n"
+ ln_reveal.9.desc_you_risen:0 "Tu nombre aparece en él, con lo que te ocurrió anotado en el tono llano y despreocupado que los maestres usan para las cosas que no creen. '[ROOT.Char.GetSheHe|U] estaba muerto. [ROOT.Char.GetSheHe|U] no estaba muerto después.' Cuatro palabras de cautela y directo a la siguiente entrada.\n\n"
+ ln_reveal.9.desc_you_watch:0 "Tu nombre aparece en él bajo el Muro, en la lista de hombres que mantuvieron un castillo que nadie había mantenido en la memoria de los vivos. Es una lista corta y es la única parte de esto que el Norte va a leer dos veces.\n\n"
+ ln_reveal.9.desc_you_return:0 "Tu nombre aparece en él, y al lado la palabra que usan para los hombres que volvieron de Essos con algo que el reino no quería y no podía rechazar.\n\n"
+ ln_reveal.9.desc_you_chosen:0 "Tu nombre aparece en él muchísimo: el nombramiento, los hombres que vinieron a ver si era cierto, los que vinieron a asegurarse de que no lo fuera. Decidan lo que decidan las historias, no podrán dejarte fuera.\n\n"
+ ln_reveal.9.desc_you_favored:0 "Tu nombre aparece en él, en la parte de los sacerdotes, rodeado de las palabras que los maestres usan cuando consignan que la gente creía algo y no que así fuera.\n\n"
+ ln_reveal.9.desc_you_witness:0 "Tu nombre aparece en él una vez, en una lista, en medio. Estuviste allí. Resulta que eso vale más que casi todo lo demás en este libro.\n\n"
+ ln_reveal.9.desc_you_nobody:0 "Tu nombre no aparece en él en absoluto, lo cual tuvo su mérito dado dónde estuviste de pie durante la mayor parte de ello.\n\n"
+
+ ln_reveal.9.desc_close_cycle:0 "Salió el sol. Eso es toda la buena noticia y es suficiente.\n\nEl gran maestre quiere un nombre para ello, y una fecha, y una frase que la gente lea dentro de trescientos años. Se ha decidido por 'el final'.\n\nEl pueblo libre, que perdió más que nadie y no escribe nada, usa otra palabra. No terminado: #EMP dormido#!. Nadie les discute eso. Nadie que estuviera allí está del todo seguro de que se equivoquen."
+
+ # ln_dawn.4 -- he walked into its reach and walked back out.
+ nick_the_undaunted:0 "el Impávido"

@@ -1,0 +1,61 @@
+﻿l_spanish:
+ # The Long Night+ — AFTERMATH (resettling) localization.
+
+ # The renamed Wall kingdom if the wildling path is taken (set_title_name on k_the_wall).
+ ln_giftlands:0 "the Giftlands"
+ ln_giftlands_adj:0 "Giftland"
+
+ # --- THE QUESTION OF THE NORTH (ln_aftermath.1) ---
+ ln_aftermath.1.t:0 "La cuestión del Norte"
+ ln_aftermath.1.desc:0 "La Larga Noche ha terminado. Los muertos yacen quietos al fin, y más allá del Muro quebrado los supervivientes del pueblo libre miran al sur, a una tierra vaciada de vivos.\n\nEl reino espera de [ROOT.Char.GetTitledFirstName] una respuesta que no puede aguardar: ¿volverá a alzarse la Guardia de la Noche para guarnecer la ruina del Muro y mantener fuera a los salvajes, o se dará la bienvenida al sur al pueblo libre, para que asiente las tierras muertas como súbditos de la Corona?\n\nSea cual sea el camino que se tome, no habrá vuelta atrás."
+ ln_aftermath.1.a:0 "La Guardia volverá a alzarse."
+ ln_aftermath.1.a.tt:0 "La #bold Guardia de la Noche#! se refunda sobre la ruina del Muro. El pueblo libre #bold nunca#! será bienvenido al sur."
+ ln_aftermath.1.b:0 "Que el pueblo libre venga al sur."
+ ln_aftermath.1.b.tt:0 "El pueblo libre se asienta en el Muro y en las tierras a sus pies, clan por clan, como vasallos de la Corona. La #bold Guardia de la Noche#! #bold nunca#! volverá a alzarse."
+
+ # --- Notification: the free folk pour south (ln_aftermath.3) ---
+ ln_aftermath.3.t:0 "El pueblo libre baja al sur"
+ ln_aftermath.3.desc:0 "El Muro es una ruina y ningún manto negro guarnece lo que queda de él. Por la brecha vienen los supervivientes del pueblo libre, no como saqueadores esta vez, sino como colonos, arreando sus rebaños hacia el Norte vaciado. La Guardia de la Noche no volverá a alzarse jamás."
+ ln_aftermath.3.a:0 "El mundo ha cambiado."
+
+ ln_aftermath.4.t:0 "La Guardia vuelve a alzarse"
+ ln_aftermath.4.desc:0 "Los mantos negros se mueven de nuevo sobre el Muro quebrado. Donde la Guardia de la Noche había quedado reducida a huesos y silencio, la Corona la ha levantado otra vez: una guarnición sobre la ruina, jurada para sostener la brecha contra lo que el Norte aún esconda. Al otro lado se le dice al pueblo libre que se quede en su lado de un muro que ya no está."
+ ln_aftermath.4.a:0 "El mundo ha cambiado."
+
+ # --- Player refugee arrival (ln_aftermath.21) ---
+ ln_aftermath.21.t:0 "El camino a casa"
+ ln_aftermath.21.desc:0 "La caravana se detiene. Ante [ROOT.Char.GetFirstName] se extiende tierra vacía: hogares fríos, campos en barbecho y ni un alma viva que los reclame. Los colonos miran a su líder: ¿es aquí donde acaba el vagar?"
+ ln_aftermath.21.a:0 "Aquí reconstruimos."
+ ln_aftermath.21.a.tt:0 "Asentar este condado ahora: pasa a ser tuyo, en tu cultura y tu fe. Tu gente colona funda la nueva comunidad, y tus días de refugiado han terminado."
+ ln_aftermath.21.b:0 "Aún no. Seguimos la marcha."
+
+ # --- Player notification: the road ends (ln_aftermath.25) ---
+ ln_aftermath.25.t:0 "No queda tierra"
+ ln_aftermath.25.desc:0 "Todo condado que valga la pena asentar lo ha reclamado otro: señores que regresan, clanes salvajes, cartas essosíes. El camino a casa ya no lleva a ninguna parte. Queda el campamento, y con él la vida de aventurero errante."
+ ln_aftermath.25.a:0 "Así sea."
+
+ # --- Sell Colonization Rights to Essos (decision) ---
+ ln_sell_colonization_rights_decision_title:0 "Vender derechos de colonización a Essos"
+ ln_sell_colonization_rights_decision_desc:0 "Las costas arrasadas del Norte están vacías, y a las Ciudades Libres les sobran oro y colonos. Otorga por carta uno de los condados costeros muertos a un señor essosí: oro para la Corona ahora, un enclave extranjero en suelo norteño para siempre."
+ ln_sell_colonization_rights_decision_confirm:0 "Firmar la carta"
+ ln_sell_colonization_rights_decision_tooltip:0 "Vender un condado costero devastado del Norte a un señor de las Ciudades Libres."
+ ln_sell_colonization_rights_effect_tt:0 "Un #bold condado costero salvaje#! del Norte al azar es colonizado por un #bold señor essosí#! generado (braavosi lo más probable), que te jura como vasallo. Tus #bold vasallos del Norte#! resentirán la venta."
+
+ # --- Return North (decision) ---
+ ln_return_north_decision_title:0 "Regresar al Norte"
+ ln_return_north_decision_desc:0 "La Larga Noche ha terminado, y llega al sur la noticia de que las tierras muertas están vacías. En algún lugar allá arriba hay un hogar que fue tuyo, o que podría serlo. Reúne el campamento, carga los carros y toma el camino a casa."
+ ln_return_north_decision_confirm:0 "Tomar el camino a casa"
+ ln_return_north_decision_tooltip:0 "Equipar una caravana de colonos y viajar de vuelta al norte para repoblar tu sede perdida, o la tierra vacía más próxima."
+ ln_return_north_effect_tt:0 "Tu campamento se equipa para el regreso: #bold suministros de asentamiento#!, una #bold despensa llena de provisiones#! y #bold oro#! para fundar la nueva comunidad. La caravana toma el #bold camino Real#! hacia tu #bold antigua sede#! si está vacía, o hacia el condado sin reclamar más próximo, reabasteciéndose por el camino en #bold King's Landing#!, la #bold Inn at the Crossroads#! y #bold Moat Cailin#!, según exija la ruta. A la llegada, la #bold gente colona#! en proporción a tu antigua posición se reúne bajo tu estandarte —supervivientes del Norte que acuden a un señor que vuelve— y podrás asentar la tierra, convirtiéndote en su señor, refugiado ya no."
+
+ # --- Modifiers / opinions ---
+ ln_restored_ancestral_seat_modifier:0 "Restauró la sede ancestral"
+ ln_restored_ancestral_seat_modifier_desc:0 "Huyó por delante de los muertos, sobrevivió a la Larga Noche y volvió a casa para levantar la sede ancestral de sus cenizas. Las canciones lo recordarán."
+ ln_sold_the_north_opinion:0 "Vendió suelo norteño a extranjeros"
+
+ # ── 1.0.12a: THE WALL HELD ─────────────────────────────────────────────────────
+ ln_aftermath.1.desc.watch_held:0 "La Larga Noche ha terminado. Los muertos yacen quietos al fin, y el Muro sigue en pie, y sigue habiendo mantos negros en él.\n\nSon menos de los que eran. La mitad de los castillos son ceniza y las listas de revista del Lord Comandante se leen como un parte de bajas, pero sostuvieron la brecha y la siguen sosteniendo, que es más de lo que logró ningún rey de Westeros en esos mismos años.\n\nAl otro lado esperan los supervivientes del pueblo libre, y no están saqueando. Están pidiendo. El reino espera de [ROOT.Char.GetTitledFirstName] una respuesta que no puede aguardar: reforzar la Guardia y mantener esa puerta cerrada, o abrirla y asentar al pueblo libre en un Norte sin nadie que lo labre.\n\nSea cual sea el camino que se tome, no habrá vuelta atrás."
+ ln_aftermath.1.desc.not_the_crown:0 "\n\nLa Corona te ha dejado el Norte. Decidas lo que decidas aquí, lo decides por ella."
+ ln_aftermath.1.desc.the_crown:0 ""
+ ln_aftermath.1.a.held:0 "La Guardia resistió. Reforzadla, y que la puerta siga cerrada."
+

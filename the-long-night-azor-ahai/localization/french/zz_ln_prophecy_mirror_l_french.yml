@@ -1,0 +1,45 @@
+﻿l_french:
+
+ ln_read_the_signs_decision_desc:0 "Assieds-toi avec ce que l’on sait de ta propre vie et compte les signes honnêtement."
+ ln_read_the_signs_decision_tt:0 "Regarde les marques sur ta vie."
+ ln_read_the_signs_decision_confirm:0 "Compte-les."
+
+ ln_prophecy.10.t:0 "Les marques sur ta vie"
+ ln_prophecy.10.desc.intro:0 "Mets de côté, un instant, ce que tu voudrais voir vrai.\n"
+
+ ln_prophecy.10.desc.is_chosen:0 "#EMP On t’a nommé le prince qui fut promis.#! Pas à voix basse, et pas par un seul homme. Si cette désignation était juste, nul vivant ne peut le dire.\n"
+ ln_prophecy.10.desc.is_favored:0 "#EMP On t’a désigné comme favorisé.#! Quelqu’un qui lit les flammes, ou les arbres, ou les entrailles a prononcé ton nom à voix haute, et d’autres l’ont entendu.\n"
+ ln_prophecy.10.desc.refused:0 "#EMP Tu as refusé le nom#!, devant témoins, et personne ne l’a évoqué depuis. Mais refuser le titre ne fait pas disparaître les marques.\n"
+ ln_prophecy.10.desc.unnamed:0 "Personne ne t’a rien dit. Et pourtant, il y a dans ta vie des choses qu’il est extrêmement difficile de classer comme des coïncidences.\n"
+
+ ln_prophecy.10.deed.dreams:0 "\n#EMP Des rêves qui arrivent comme des souvenirs.#! Tu as su des choses que tu n’avais aucun moyen physique de savoir, et tu as appris jeune à ne plus en parler."
+ ln_prophecy.10.deed.green:0 "\n#EMP Tu vois par les barrals.#! Le sang des Premiers Hommes coule pur en toi, quoi qu’en pense ton mestre."
+ ln_prophecy.10.deed.salt:0 "\n#EMP Né parmi le sel et la fumée.#! De l’eau salée à portée d’oreille de la chambre d’accouchement, et soit un dragon encore vivant dans le monde ce matin-là, soit l’hiver déjà au sol."
+ ln_prophecy.10.deed.star:0 "\n#EMP Né sous une étoile saignante.#! Tu es venu dans un monde qui avait déjà commencé à mal tourner, et tu n’as jamais connu l’autre."
+ ln_prophecy.10.deed.survived:0 "\n#EMP Tu es reparti vivant d’entre les morts.#! Pas tous ceux qui étaient avec toi."
+ ln_prophecy.10.deed.steel:0 "\n#EMP Tu portes un acier forgé par sortilège.#! Une lame issue d’un fief franc mort depuis quatre cents ans, et il n’en reste peut-être que deux cents au monde."
+ ln_prophecy.10.deed.dragons:0 "\n#EMP Tu as éveillé des dragons dans la pierre.#! Ou quelque chose d’ancien l’a fait, et c’est toi qui étais là."
+ ln_prophecy.10.deed.returned:0 "\n#EMP Tu es mort, et tu n’es pas resté mort.#! Tu n’es pas tout à fait prêt à réfléchir à ce qui est revenu au juste."
+ ln_prophecy.10.deed.blood:0 "\n#EMP Un sang que personne ne connaît.#! Tu es né du mauvais côté d’un mariage, et du bon côté de quelque chose de bien plus ancien. Savoir si un vivant peut le prouver est une autre question que celle de savoir si c’est vrai."
+
+ ln_prophecy.10.desc.has_priest:0 "\n\nIl y a un prêtre rouge sous ton toit. Si le compte atteint un jour le nombre suffisant, c’est lui qui le dira."
+ ln_prophecy.10.desc.has_seer:0 "\n\nIl y a sous ton toit quelqu’un qui voit. Pas un prêtre rouge—le Nord n’en regorge pas—mais la désignation se moque de savoir lequel s’en charge."
+ ln_prophecy.10.desc.no_seer:0 "\n\n#EMP Il n’y a personne auprès de toi qui lise les flammes, ni les barrals, ni quoi que ce soit d’autre.#! Quoi que valent les marques, nul n’est là pour les compter à voix haute. Et une prophétie que personne ne dit n’est qu’une série de coïncidences qui arrivent à une seule personne."
+
+ ln_prophecy.10.a:0 "Laisser cela de côté. Il y a du travail."
+
+ # ── WHAT YOU DID ABOUT IT ───────────────────────────────────────────────────────────────────────────────────
+ ln_prophecy.10.did.quiet:0 "\n#weak Tu n’as pas corrigé le prêtre, mais tu ne lui as pas donné raison non plus.#!"
+ ln_prophecy.10.did.kept:0 "\n#weak On t’a dit ce que tu étais. Tu n’as pas déposé le manteau depuis.#!"
+ ln_prophecy.10.did.glass:0 "\n#weak Il y a quelque part dans tes domaines une cave pleine de verre noir, et des hommes qui te croient complètement fou.#!"
+ ln_prophecy.10.did.sworn:0 "\n#weak Tu as engagé tes épées dans une guerre du Nord à laquelle la moitié de ta cour ne croit même pas.#!"
+ ln_prophecy.10.did.burned:0 "\n#weak Tu as brûlé un prêtre de R'hllor. Il n’a pas crié. Tu y penses encore.#!"
+ ln_prophecy.10.did.wishes:0 "\n#weak Tu es revenu d’entre les morts, et il y a des matins où tu voudrais ne pas l’avoir fait.#!"
+ ln_prophecy.10.did.ended:0 "\n#weak L’obscurité a fini par se rompre, et elle s’est rompue tandis que tu te tenais dedans.#!"
+
+ # ── WHAT READING THE SIGNS ACTUALLY DOES ────────────────────────────────────────────────────────────────────
+ ln_read_the_signs_effect_marks:0 "Fais le compte des neuf marques dont débattent les textes anciens : #Y les rêves de dragon, la vervoyance, naître parmi le sel et la fumée, une étoile saignante, survivre à ce qui aurait dû te tuer, porter une épée d’acier valyrien, éveiller des dragons dans la pierre, revenir d’entre les morts, et porter sans le savoir le sang du dragon#!."
+ ln_read_the_signs_effect_many:0 "#P Tu en portes un très grand nombre. D’autres ont commencé à le dire à voix haute.#!"
+ ln_read_the_signs_effect_some:0 "#Y Tu en portes plusieurs. Assez pour qu’un mestre le note discrètement.#!"
+ ln_read_the_signs_effect_few:0 "#weak Tu en portes quelques-unes. La plupart des hommes n’en portent aucune.#!"
+ ln_read_the_signs_effect_costs:0 "On te montrera quelles marques sont sur toi, lesquelles ne le sont pas, et ce qui compterait encore. #weak Ne coûte rien et ne change rien — c’est un miroir, pas une prétention.#!"

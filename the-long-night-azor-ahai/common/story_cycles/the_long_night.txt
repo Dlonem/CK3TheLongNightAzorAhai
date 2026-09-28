@@ -7,6 +7,9 @@
 	story_owner = {
 
 		trigger_event = { id = others_heartbeat.1 days = 1 }
+	# 1.1.3 -- NOTE: AGOT 0.5.2.1's latest bookmark is 8284.6.2 (13 bookmarks, common/bookmarks). No start
+	# at or after 8300 exists, so this two-year grace is dead code on every shipped bookmark; it is kept
+	# because a custom or future bookmark could reach it and it costs one date test.
 	if = { limit = { game_start_date >= 8300.1.1 }
 
 	add_character_flag = { flag = long_night_cooldown years = 2 }
@@ -178,8 +181,15 @@
 			}
 			title:h_the_others.holder = { save_scope_as = ln_next_nightking }
 		}
+		# 1.1.3 -- ONLY IF THE HEIR IS ONE OF THEM. The heir is chosen by ln_designate_an_other_heir_effect
+		# now (at setup, at every crowning, and on the dying king before inheritance), so this rung should
+		# always pass; the guard is for a save from before that, where the engine's pick for a relative-less
+		# ruler was a human (Tureno's "last regent"). A human heir falls through to the Other search below.
 		else_if = {
-			limit = { exists = story_owner.primary_heir }
+			limit = {
+				exists = story_owner.primary_heir
+				story_owner.primary_heir = { has_trait = other_trait }
+			}
 			story_owner.primary_heir = { save_scope_as = ln_next_nightking }
 		}
 		else = {
@@ -206,6 +216,10 @@
 				# AUDIT FIX: one crowning, shared -- and this is where the ln_one_of_them stamp arrives.
 				ln_crown_the_next_nightking_effect = yes
 			}
+			# 1.1.3 -- AND EVERY PLAYER IS TOLD. Nothing on this road was ever visible: the player saw a
+			# battle-event line and a death notice, and the Others kept marching. ln_dawn.30 says he was cast
+			# down, not destroyed, and what would destroy him. Body in zz_ln_dawn_funnel_effects.txt.
+			ln_send_the_cast_down_card_effect = yes
 		}
 		else = {
 			debug_log = "LN_TRACE BANE: cast down, but there is no Other left alive to take the crown - the story ends"
@@ -243,9 +257,14 @@
 	# 13 Aug (1.0.6): promotion is now guarded. make_story_owner with a nonexistent heir leaves the story
 	# with a dead owner and the engine destroys it silently -- which reads as "the Long Night ended for no
 	# reason". If there is nobody to promote, end it DELIBERATELY and say so in the log.
+	# 1.1.3 -- ONLY IF THE HEIR IS ONE OF THEM (see the same guard on the cast-down rung above). A human
+	# heir under the war rule falls through to the Other search in the else below, which is the same ladder.
 	else_if = {
 
-	limit = { exists = story_owner.primary_heir }
+	limit = {
+		exists = story_owner.primary_heir
+		story_owner.primary_heir = { has_trait = other_trait }
+	}
 
 	make_story_owner = story_owner.primary_heir
 
@@ -454,6 +473,28 @@
 		}
 	}
 
+	# ── 1.1.3 -- THE DEAD'S HOUSEKEEPING HAS ITS OWN PULSE. ─────────────────────────────────────────────────────
+	# Two sweeps the yearly net also runs, here every 30 days while there is a Night King:
+	#   ln_the_dead_have_no_allies_effect (zz_ln_service_effects.txt) -- a living company that joined the dead's
+	#     side of a running war by a road the on_join_war_as_secondary hook does not see is out within a month;
+	#   ln_others_independence_sweep_effect (zz_ln_independence_effects.txt) -- any dead ruler standing outside
+	#     the Night King's realm is sworn to him, and a dead lord's empty chaplain seat is filled from his own
+	#     dead court before the engine generates another living clergyman for it.
+	# They sat inside the invasion pulse until the 1.1.3 review found that pulse held for 1-3 years by the
+	# post-defeat cooldown once Castle Black has fallen -- which would have let the chaplain generator run
+	# for a year per new dead lord, and a 1.1.2 save loaded in a cooldown wait a year for its repair. Each is
+	# every_ruler walks filtered on ln_is_one_of_them_trigger; the independence sweep carries the chaplain fill.
+	effect_group = {
+		days = 30
+		triggered_effect = {
+			trigger = { exists = title:h_the_others.holder }
+			effect = {
+				ln_the_dead_have_no_allies_effect = yes
+				ln_others_independence_sweep_effect = yes
+			}
+		}
+	}
+
 	effect_group = {
 
         days = 30
@@ -608,7 +649,7 @@
 
 			# 1.0.8 -- recompute the beyond-the-Wall completeness latch ONCE, here, before the candidate
 
-			# search reads it. It walks every county in the world, so it must never run per candidate.
+			# search reads it. It walks the dead's neighbours' realms and a region's county list (1.1.3), so it must never run per candidate.
 
 			ln_refresh_beyond_the_wall_latch_effect = yes
 
@@ -619,6 +660,10 @@
 			# common/scripted_effects/zz_ln_horde_effects.txt; it is a top-up to a target, so on a pulse
 			# where he is already at strength it does nothing at all.
 			ln_horde_muster_effect = yes
+
+			# (1.1.3: the two monthly sweeps that used to sit here -- no living allies, every dead lord in his
+			# realm -- have their own 30-day group above, so the post-defeat cooldown that holds this pulse
+			# does not hold them. See "THE DEAD'S HOUSEKEEPING".)
 
 			# 1.0.8 -- and take one county of the frozen waste. See zz_ln_invasion_target_effects.txt:
 
@@ -704,14 +749,14 @@
 			if = {
 				limit = {
 					has_global_variable = ln_north_unfinished
-					has_character_flag = ln_north_gate_window
+					has_global_variable = ln_north_gate_window
 				}
 				debug_log = "LN_TRACE INVASION: the North stage gate is ARMED -- ln_north_unfinished is set and the 20-year window is open, so only a neighbour holding land in the North can be picked"
 			}
 			if = {
 				limit = {
 					has_global_variable = ln_north_unfinished
-					has_character_flag = ln_north_gate_window
+					has_global_variable = ln_north_gate_window
 					NOT = {
 						any_neighboring_top_liege_realm_owner = {
 							ln_is_one_of_them_trigger = no
@@ -726,25 +771,50 @@
 				debug_log = "LN_TRACE INVASION: ...and NO living independent neighbour holds a single county in the North -- the North gate is refusing everyone. Whoever still holds northern land is not a top liege the search can see"
 			}
 
+			# ── 1.1.3: THE SAME TWO LINES FOR STAGE ONE, which never had them. AestheticArtO (Discord, 23
+			# Sep): years pass after beyond the Wall is taken before the dead attack the Watch -- the same
+			# stranding shape as the North one, one stage earlier, and nothing said so. With the 1.1.3 latch
+			# (built from the search's own filters, zz_ln_invasion_target_effects.txt) the second line prints
+			# only while the frozen waste is still being absorbed (the latch's second arm: AI wilderness land
+			# beyond the Wall, one county a pulse). Printing with no such land left means the latch and the
+			# search have drifted apart, and that is the bug.
+			if = {
+				limit = {
+					has_global_variable = ln_btw_unfinished
+					has_global_variable = ln_btw_gate_window
+					NOT = { has_global_variable = ln_castle_black_fell }
+				}
+				debug_log = "LN_TRACE INVASION: the beyond-the-Wall stage gate is ARMED -- ln_btw_unfinished is set and the 8-year window is open, so only a neighbour holding land beyond the Wall can be picked"
+			}
+			if = {
+				limit = {
+					has_global_variable = ln_btw_unfinished
+					has_global_variable = ln_btw_gate_window
+					NOT = { has_global_variable = ln_castle_black_fell }
+					NOT = {
+						any_neighboring_top_liege_realm_owner = {
+							ln_invasion_candidate_is_pickable_trigger = yes
+							any_sub_realm_county = { title_province ?= { geographical_region = world_westeros_beyond_the_wall } }
+						}
+					}
+				}
+				debug_log = "LN_TRACE INVASION: ...and NO pickable neighbour holds land beyond the Wall -- the stage-one gate is refusing everyone. Expected while wilderness beyond the Wall is still being absorbed; otherwise the latch and the search have drifted apart"
+			}
+
 			random_neighboring_top_liege_realm_owner = {
 
 			limit = {
 
-				NOR = {
-
-					culture = {
-
-						has_cultural_parameter = other_parameter
-
-					}
-
-					faith = faith:cold_gods
-
-					has_trait = other_trait
-
-				}
-
-				is_independent_ruler = yes
+				# ── 1.1.3: THE STATIC HALF OF THIS LIMIT LIVES IN ONE TRIGGER NOW. ──────────────────────
+				# ln_invasion_candidate_is_pickable_trigger (zz_ln_invasion_order_triggers.txt) is the
+				# identity, independence, government, tier and landed tests that used to be spelled out
+				# here in three places, lifted out word for word so the stage LATCHES can ask exactly what
+				# this search asks -- which is what closed the stranding on both sides of the Wall (see the
+				# latches in zz_ln_invasion_target_effects.txt). The at-war and cooldown clamps below stay
+				# here on purpose: they are temporary, and a latch that read them would call a region
+				# finished every time the dead were busy. The long notes that explained each clause are kept
+				# below, at the spots the clauses used to occupy.
+				ln_invasion_candidate_is_pickable_trigger = yes
 
 				# NOT THE EMPTY LAND -- 10 Aug, read out of the crash save rather than guessed.
 				#
@@ -788,10 +858,7 @@
 				# placeholders -- what was actually skipping them is the `count >= 4` war/fealty fork below,
 				# which is Axel's report and is addressed there. So: barred outright, both branches, as
 				# before, and nothing real loses a thing.
-				NOR = {
-					has_government = wilderness_government
-					has_government = ruins_government
-				}
+				# (1.1.3: the two-government NOR is inside ln_invasion_candidate_is_pickable_trigger above.)
 
 				# 11 Aug -- ONE WAR AT A TIME, NOT ONE ANYTHING AT A TIME. Axel on the Workshop: "once the
 				# actual Long Night starts, the Others tend to have trouble spreading through any province
@@ -859,7 +926,7 @@
 				# whose seat lies south of it is not a candidate at all. The dead finish the north, THEN turn.
 				#
 				# ONLY IF: ln_btw_unfinished is up -- recomputed once per pulse in the effect below, never per
-				# candidate, because the test behind it walks every county in the world.
+				# candidate, because the test behind it walks the neighbours' realms (1.1.3: the search's own question).
 				# NEVER IF: the north is finished. The latch clears, this clause stops applying, and the invasion
 				# targets normally in every direction for the rest of the game.
 				#
@@ -880,7 +947,8 @@
 				# Wall county held by a VASSAL (never selectable: the search returns top lieges only) whose
 				# own liege is seated south of the Wall and so fails the test below; a dawn_refugee holder,
 				# whom mutate_into_other_effect permanently refuses to wight. None of these exist at the
-				# 8298/8300 starts -- every beyond-Wall county there is free-folk-under-Rayder or one of the
+				# bookmarks (the latest AGOT ships is 8284.6.2; the "8298/8300 starts" older notes speak of do not
+				# exist) -- every beyond-Wall county there is free-folk-under-Rayder or one of the
 				# placeholders the absorb effect covers -- but they are all reachable by ordinary play.
 				#
 				# So the gate runs on a clock: eight years from the first pulse of this Long Night, which is
@@ -893,7 +961,7 @@
 					limit = {
 						has_global_variable = ln_btw_unfinished
 						NOT = { has_global_variable = ln_castle_black_fell }
-						scope:ln_pulse_night_king = { has_character_flag = ln_btw_gate_window }
+						has_global_variable = ln_btw_gate_window   # 1.1.3: a wave-scoped global, not a flag on this king (see the latch effect)
 					}
 					OR = {
 						capital_province ?= { geographical_region = world_westeros_beyond_the_wall }
@@ -907,12 +975,13 @@
 				# other one in ln_refresh_beyond_the_wall_latch_effect) runs out. trigger_else_if on purpose:
 				# this applies exactly when stage one's limit fails, never on top of it.
 				# ONLY IF: the Wall stands AND the stage-two window is live.
-				# NEVER IF: Castle Black has fallen, the window lapsed, or the save predates these flags --
-				# every one of those fails OPEN, per the standing mid-save rule.
+				# NEVER IF: Castle Black has fallen or the window lapsed -- both fail OPEN, per the standing mid-save
+				# rule. (1.1.3: the clocks are wave-scoped globals; a 1.1.2 save's flag clocks are carried over
+				# once in ln_refresh_beyond_the_wall_latch_effect, so a window that had lapsed stays lapsed.)
 				trigger_else_if = {
 					limit = {
 						NOT = { has_global_variable = ln_castle_black_fell }
-						scope:ln_pulse_night_king = { has_character_flag = ln_wall_gate_window }
+						has_global_variable = ln_wall_gate_window   # 1.1.3: a wave-scoped global, not a flag on this king (see the latch effect)
 					}
 					OR = {
 						capital_province ?= { geographical_region = world_westeros_the_wall }
@@ -931,12 +1000,12 @@
 				# world_westeros_the_north is AGOT's own region (00_agot_geographical_region.txt:503) and it
 				# already contains the Neck and the north mainland plus Bear Island and Skagos -- so the
 				# release point is the Neck by construction, without naming a county.
-				# ONLY IF: the North is unfinished AND this Night King's twenty-year window is still open.
-				# NEVER IF: either is false -- both fail OPEN, and an old save carrying neither is unaffected.
+				# ONLY IF: the North is unfinished AND this wave's twenty-year window is still open.
+				# NEVER IF: either is false -- both fail OPEN. A 1.1.2 save's flag clock is carried over once (see above).
 				trigger_else_if = {
 					limit = {
 						has_global_variable = ln_north_unfinished
-						scope:ln_pulse_night_king = { has_character_flag = ln_north_gate_window }
+						has_global_variable = ln_north_gate_window   # 1.1.3: a wave-scoped global, not a flag on this king (see the latch effect)
 					}
 					OR = {
 						capital_province ?= { geographical_region = world_westeros_the_north }
@@ -951,9 +1020,8 @@
 					always = yes
 				}
 
-				highest_held_title_tier >= tier_county
-
-				is_landed = yes
+				# (1.1.3: `highest_held_title_tier >= tier_county` and `is_landed = yes` are inside
+				# ln_invasion_candidate_is_pickable_trigger at the top of this limit.)
 
 			}
 
@@ -995,26 +1063,27 @@
 				# rather than addition because that is the form vanilla uses on this exact list builder --
 				# see hold_court_events_general.txt, random_neighboring_top_liege_realm_owner with base 1
 				# and factor modifiers.
+				# 1.1.3 (W15.4): any_de_jure_county, not any_in_de_jure_hierarchy filtered to county tier.
+				# The hierarchy walk visits every duchy, kingdom AND county under the empire three times per
+				# candidate, every 30 days; the county iterator (vanilla, 197 uses) asks the same question
+				# of the same set. Same counts, same factors, same result.
 				modifier = {
 					factor = 3
-					capital_county ?= { empire ?= { any_in_de_jure_hierarchy = {
-						tier = tier_county
+					capital_county ?= { empire ?= { any_de_jure_county = {
 						count >= 1
 						holder ?= { ln_is_one_of_them_trigger = yes }
 					} } }
 				}
 				modifier = {
 					factor = 3
-					capital_county ?= { empire ?= { any_in_de_jure_hierarchy = {
-						tier = tier_county
+					capital_county ?= { empire ?= { any_de_jure_county = {
 						count >= 6
 						holder ?= { ln_is_one_of_them_trigger = yes }
 					} } }
 				}
 				modifier = {
 					factor = 3
-					capital_county ?= { empire ?= { any_in_de_jure_hierarchy = {
-						tier = tier_county
+					capital_county ?= { empire ?= { any_de_jure_county = {
 						count >= 12
 						holder ?= { ln_is_one_of_them_trigger = yes }
 					} } }
@@ -1265,9 +1334,19 @@
 			#
 			# So this now asks the same one. If the artifact will take him, he puts it on; if not, nothing
 			# runs and nothing logs. Whatever AGOT does to that trigger later, this follows it.
+			# 1.1.3 (W15 small): and only if it is not already on his head. This sits on the 10-day pulse; the
+			# re-equip is a no-op once he wears it, and a no-op that still runs an artifact walk every ten
+			# days for the rest of the wave is a cost with no result. is_equipped is vanilla's artifact
+			# trigger (00_artifact_interactions.txt:56).
 			if = {
-				limit = { agot_can_wear_crown_trigger = yes }
-				every_character_artifact = { limit = { has_variable = crown_of_true_winter_artifact } equip_artifact_to_owner_replace = yes }
+				limit = {
+					agot_can_wear_crown_trigger = yes
+					any_character_artifact = {
+						has_variable = crown_of_true_winter_artifact
+						is_equipped = no
+					}
+				}
+				every_character_artifact = { limit = { has_variable = crown_of_true_winter_artifact  is_equipped = no } equip_artifact_to_owner_replace = yes }
 			}
 
 		save_scope_as = thegreatother

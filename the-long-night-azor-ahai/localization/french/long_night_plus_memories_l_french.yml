@@ -1,0 +1,9 @@
+﻿l_french:
+
+ wight_raised_memory:0 "s'est relevé en spectre"
+ wight_raised_memory_desc:0 "Je suis mort — et la froide sorcellerie des Autres m'a ramené, spectre lié à leur horde."
+ wight_raised_memory_desc_second_perspective:0 "tu es mort — et la froide sorcellerie des Autres t'a ramené, spectre lié à leur horde."
+ wight_raised_memory_desc_third_perspective:0 "[owner.GetName] est mort — et la froide sorcellerie des Autres a ramené [owner.GetHerHim], spectre lié à leur horde."
+
+ wight_government:0 "Esclave relevé"
+ wight_government_desc:0 "Un cadavre relevé par les Autres pour servir dans la mort — il ne s'appartient plus."

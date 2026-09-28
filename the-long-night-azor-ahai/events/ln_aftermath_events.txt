@@ -28,6 +28,14 @@ ln_aftermath.1 = {
 			}
 			desc = ln_aftermath.1.desc
 		}
+		# 1.1.3 (D-c): when the card lands on a Northern player who is not the Crown, say so.
+		first_valid = {
+			triggered_desc = {
+				trigger = { NOT = { ln_aftermath_crown_trigger = yes } }
+				desc = ln_aftermath.1.desc.not_the_crown
+			}
+			desc = ln_aftermath.1.desc.the_crown
+		}
 	}
 	theme = realm
 	left_portrait = {
@@ -37,7 +45,13 @@ ln_aftermath.1 = {
 
 	trigger = {
 		NOT = { exists = global_var:ln_nw_dilemma_done }
-		ln_aftermath_crown_trigger = yes
+		# 1.1.3 (D-c): a player in the North may be asked before the Crown -- see the new rule and
+		# ln_question_of_the_north_player_trigger. The crown trigger itself is untouched (the Essos charter
+		# decision reads it).
+		OR = {
+			ln_aftermath_crown_trigger = yes
+			ln_question_of_the_north_player_trigger = yes
+		}
 		ln_long_night_over_trigger = yes
 	}
 

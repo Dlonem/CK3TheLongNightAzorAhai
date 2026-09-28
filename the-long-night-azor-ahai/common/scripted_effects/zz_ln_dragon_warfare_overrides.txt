@@ -1,0 +1,258 @@
+﻿# AGOT: The Long Night & Azor Ahai -- 1.1.3: the dragon-warfare battle events do not pick out the Night King.
+#
+# THIS FILE OVERRIDES ONE AGOT SCRIPTED EFFECT BY KEY: `agot_call_dragon_warfare_events`, from
+# common/scripted_effects/00_agot_dragon_warfare_effects.txt (line 612 as of AGOT 0.5.2.1). Same mechanism,
+# same warning and same maintenance duty as zz_ln_dragon_combat_overrides.txt: scripted effects are keyed
+# singletons, the last loaded definition wins, this mod loads after AGOT, and database_conflicts.log will
+# log the duplicate key on every boot -- that line is EXPECTED and is this file working.
+#
+# WHY. Thomas, 12 Sep: "I don't want there to be any one-offs that would kill him." 1.1.2 closed the
+# dragon-vs-dragon duel (dragon_combat_result_grab). These are the OTHER dragon roads, and Viktor's "dies in
+# a dragon duel" (Discord, 26 Sep) is most likely one of them: when a living dragonrider commands against
+# the Night King's army, commander_dragon_joined_battle (00_commander_phase_events.txt:676, base 100000) in
+# the DRAGON side's pool calls this effect, which our commander shield never competes with, and
+#   * A Tail Thwack (0016-0018) lets the rider CHOOSE to kill the enemy commander, killer = the dragon;
+#   * A Fiery Arrangement (0011-0013) burns every enemy knight and commander not riding, ~56% each;
+#   * A Mad Charge (0006-0010) can kill the picked enemy knight (A Shattering Roar, 0001-0005, kills nobody;
+#     its guard below only keeps him from being its target);
+#   * the scorpion branch (0020) can kill the dragonrider himself when he rides into scorpions.
+# A dragon is a bane (ln_slain_by_a_bane_trigger), so every one of these passes half the ending gate and
+# fails only the scene stamp: to the player it is "I killed him with a dragon, the rule says dragonfire ends
+# him, and it didn't" -- a cast-down, and until 1.1.3 no card to say so.
+#   * the water-wizard branch (0040) can kill the dragonrider the same way the scorpions can.
+# NOT covered, recorded instead (UPSTREAM-WATCH): commander_wild_dragon_joined_battle
+# (00_commander_phase_events.txt:802) fires 0026/0029, which burn enemy commanders without calling this
+# effect. A wild dragon joining a battle against his host is rare, and a death there is a cast-down: he rises.
+#
+# WHAT CHANGED, EXACTLY -- and nothing else changed, byte for byte: six `modifier = { factor = 0 ... }`
+# blocks, each marked "LN 1.1.3 (D-a)", one per branch, that zero the branch when the Night King is the man
+# it would reach. Each sits LAST in its entry where AGOT adds weight after its own zeroing (weight modifiers
+# apply in order, so an `add` after a `factor = 0` brings the branch back -- the 1.1.3 review caught exactly
+# that on A Tail Thwack). Dragons still join his battles, still burn his host, still fight his ice dragon; they
+# cannot pick HIM out of the line. The alternative -- counting a dragon's battle kill as a real ending --
+# would make a random battle event end the Long Night, which is the dice-roll ending Thomas ruled against
+# in August (zz_ln_catalyst_effects.txt, the RedSaintNino note).
+#
+# ON EVERY AGOT UPDATE: diff their agot_call_dragon_warfare_events against the body below (minus the five
+# marked blocks) and fold in any change. Registered in ln-audit-tools/upstreamwatch.py as
+# AGOT-DRAGON-WARFARE-EVENTS-FORK (anchor lines only -- the body diff is this manual step).
+
+# Triggers dragon combat handler events in the right spots in commander/knight phase events
+# Expected scopes present when this is called are:
+# dragon_in_battle - the dragon in battle
+# dragonrider_in_battle - the rider of the dragon
+# dragon_commander_in_battle - commander leading a dragonrider, may be equal to dragonrider_in_battle
+# so if that's an issue check for it
+# enemy_knight - a random enemy knight facing the dragonrider
+# enemy_dragonrider - an enemy dragonrider (if exists)
+# enemy_commander_in_battle - enemy army commander facing the dragonrider
+# battle_location - the location of the battle
+# ROOT here is the dragonrider
+agot_call_dragon_warfare_events = {
+	# Knights can be at 'home' sometimes so just to make sure it calls the right location
+	scope:combat_side.combat.location = { save_scope_as = battle_location }
+	# Use modifiers with factor = 0 to disable events that shouldn't fire based on scopes
+	if = { # If dragon duel should happen
+		limit = {
+			# Appropriate scopes exist
+			exists = scope:dragonrider_in_battle
+			exists = scope:dragonrider_in_battle.var:current_dragon
+			exists = scope:enemy_dragonrider
+			exists = scope:enemy_dragonrider.var:current_dragon
+			# And none are currently in a dragon combat event already
+			scope:enemy_dragonrider = {
+				NOT = { has_character_flag = agot_in_dragon_duel_opening }
+				NOT = { has_variable = engaged_in_single_combat }
+				NOT = { has_variable = engaged_in_dragon_combat }
+			}
+			scope:dragonrider_in_battle = {
+				NOT = { has_character_flag = agot_in_dragon_duel_opening }
+				NOT = { has_variable = engaged_in_single_combat }
+				NOT = { has_variable = engaged_in_dragon_combat }
+			}
+		}
+		trigger_event = agot_dragon_combat.0001
+		# random_list = {
+			# 95 = {
+				# trigger_event = agot_dragon_combat.0001
+			# }
+			# 5 = {
+				# add_character_flag = dragon_night_ride
+				# trigger_event = agot_dragon_combat.0001
+			# }
+		# }
+	}
+	else = { # Else if dragon combat event should happen
+		random_list = {
+			200 = { # Nothing
+				modifier = {
+					factor = 2
+					scope:combat_side = {
+						enemy_side = {
+							has_maa_of_type = scorpions
+						}
+					}
+				}
+			}
+			20 = { # A Shattering Roar - agot_dragon_warfare.0001-0005
+				modifier = {
+					factor = 0
+					NOT = { exists = scope:enemy_knight }
+				}
+				# LN 1.1.3 (D-a): never at the Night King as the enemy knight (0001-0005 kill nobody; kept so
+				# he is never this branch's target either).
+				modifier = {
+					factor = 0
+					scope:enemy_knight ?= { has_trait = nightking }
+				}
+				trigger_event = agot_dragon_warfare.0001
+				# random_list = {
+					# 95 = {
+						# trigger_event = agot_dragon_warfare.0001
+					# }
+					# 5 = {
+						# add_character_flag = dragon_night_ride
+						# trigger_event = agot_dragon_warfare.0001
+					# }
+				# }
+			}
+			20 = { # A Mad Charge - agot_dragon_warfare.0006-0010
+				modifier = {
+					factor = 0
+					NOT = { exists = scope:enemy_knight }
+				}
+				# LN 1.1.3 (D-a): never at the Night King as the enemy knight -- 0006-0010 can end him.
+				modifier = {
+					factor = 0
+					scope:enemy_knight ?= { has_trait = nightking }
+				}
+				trigger_event = agot_dragon_warfare.0006
+				# random_list = {
+					# 95 = {
+						# trigger_event = agot_dragon_warfare.0006
+					# }
+					# 5 = {
+						# add_character_flag = dragon_night_ride
+						# trigger_event = agot_dragon_warfare.0006
+					# }
+				# }
+			}
+			20 = { # A Fiery Arrangement - agot_dragon_warfare.0011-0015
+				modifier = {
+					add = { #i.e. not possible if less than level six, scaling up to 60
+						value = {
+							value = level_six_dragon_combat
+							add = scope:dragon_in_battle.dragon_combat_effectiveness
+							max = 40
+						}
+					}
+				}
+				modifier = { # If enemy commander is at least decent, reduce chance, this is pretty dumb
+					factor = 0.5
+					exists = scope:enemy_commander_in_battle
+					scope:enemy_commander_in_battle = {
+						martial < decent_skill_rating
+					}
+				}
+				modifier = {
+					factor = 0
+					NOT = { exists = scope:enemy_knight }
+				}
+				# LN 1.1.3 (D-a): 0011-0015 burn every enemy knight AND every enemy commander (~56% each);
+				# never while the Night King stands on the other side, as commander or as knight.
+				modifier = {
+					factor = 0
+					OR = {
+						scope:enemy_commander_in_battle ?= { has_trait = nightking }
+						# 0012 burns every_side_commander, and a side can carry several armies.
+						scope:combat_side ?= {
+							enemy_side ?= {
+								OR = {
+									any_side_commander = { has_trait = nightking }
+									any_side_knight = { has_trait = nightking }
+								}
+							}
+						}
+					}
+				}
+				trigger_event = agot_dragon_warfare.0011
+				# random_list = {
+					# 95 = {
+						# trigger_event = agot_dragon_warfare.0011
+					# }
+					# 5 = {
+						# add_character_flag = dragon_night_ride
+						# trigger_event = agot_dragon_warfare.0011
+					# }
+				# }
+			}
+			20 = { # A Tail Thwack - agot_dragon_warfare.0016-0020
+				modifier = {
+					factor = 0
+					OR = {
+						NOT = { exists = scope:enemy_commander_in_battle }
+						scope:enemy_commander_in_battle = {
+							has_trait = craven
+						}
+					}
+				}
+				modifier = {
+					add = 20
+					exists = scope:enemy_commander_in_battle
+					scope:enemy_commander_in_battle ?= {
+						has_trait = brave
+					}
+				}
+				modifier = {
+					add = -15
+					add = scope:enemy_commander_in_battle.martial # Only decent commanders will come up with the idea
+					exists = scope:enemy_commander_in_battle
+				}
+				modifier = { # But good commanders will see the folly of it
+					factor = 0.5
+					exists = scope:enemy_commander_in_battle
+					scope:enemy_commander_in_battle = {
+						martial > very_high_skill_rating
+					}
+				}
+				# LN 1.1.3 (D-a): 0016-0018 let the rider choose to kill the enemy commander; never him. LAST in
+				# the entry: AGOT's `add = 20` (brave) and `add = martial` above would re-open a branch zeroed
+				# before them (his martial is 40+, so it came back at about half its old weight).
+				modifier = {
+					factor = 0
+					scope:enemy_commander_in_battle ?= { has_trait = nightking }
+				}
+				trigger_event = agot_dragon_warfare.0016
+				# random_list = {
+					# 95 = {
+						# trigger_event = agot_dragon_warfare.0016
+					# }
+					# 5 = {
+						# add_character_flag = dragon_night_ride
+						# trigger_event = agot_dragon_warfare.0016
+					# }
+				# }
+			}
+			0 = {
+				dragon_scorpion_battle_event_modifiers = yes
+				# LN 1.1.3 (D-a): 0020 can kill the rider; never when the rider is the Night King on his
+				# ice dragon. Root here is the dragonrider.
+				modifier = {
+					factor = 0
+					scope:dragonrider_in_battle ?= { has_trait = nightking }
+				}
+				trigger_event = agot_dragon_warfare.0020
+			}
+			0 = {
+				dragon_water_wizard_battle_event_modifiers = yes
+				# LN 1.1.3 (D-a): 0040 kills the dragonrider (death_dragon_water_wizard_rider,
+				# agot_dragon_warfare_events.txt:3435); never when the rider is the Night King.
+				modifier = {
+					factor = 0
+					scope:dragonrider_in_battle ?= { has_trait = nightking }
+				}
+				trigger_event = agot_dragon_warfare.0040
+			}
+		}
+	}
+}

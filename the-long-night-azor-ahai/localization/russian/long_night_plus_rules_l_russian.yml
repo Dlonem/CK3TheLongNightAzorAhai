@@ -3,4 +3,4 @@
  GAME_OVER_CANNOT_PLAY_WIGHT:0 "Вы подняты упырём — безвольным рабом Короля Ночи. Ваша воля больше вам не принадлежит."
 
 # 1.1.1 -- keys added in English so nothing renders raw. Untranslated until replaced.
- GAME_OVER_CANNOT_PLAY_OTHER:0 "The Night King has raised you as one of his own kind. What walks in your skin is no longer you."
+ GAME_OVER_CANNOT_PLAY_OTHER:0 "Король Ночи поднял вас одним из своего рода. То, что ходит в вашей шкуре, — больше не вы."

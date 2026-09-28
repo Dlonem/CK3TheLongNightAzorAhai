@@ -5,7 +5,7 @@
 # and it has held up: flags cost nothing, survive succession correctly by simply not surviving it, and can be
 # read by anything.
 #
-# Two of the eight are FREE, and finding that out was the single best discovery in this whole system. AGOT
+# Two of the nine are FREE, and finding that out was the single best discovery in this whole system. AGOT
 # assigns `dragon_dreams` and `greensight` as character FLAGS at birth (00_agot_birth_effects.txt), weighted by
 # culture and faith doctrine -- and then never promotes them to traits, because the only event that does the
 # promotion (agot_greensight.0001 / agot_dragon_dreams.0001) has ZERO call sites in AGOT as shipped. There is a
@@ -53,10 +53,13 @@ ln_has_deed_survived_trigger = {
 # blades got the deed for the pile. any_equipped_character_artifact (18 uses in vanilla) means you have to
 # actually be carrying it, which is also the only reading under which the deed means anything: the prophecy is
 # about a man with a sword, not a man with a sword collection.
+# 1.1.3 -- A BLADE, NOT A BREASTPLATE OR A GOBLET. The bare variable counted AGOT's Valyrian armour and the
+# Valyrian Steel submod's goblet as the deed. ln_is_valyrian_blade_trigger (zz_ln_consecration_triggers.txt)
+# is the one definition of "a Valyrian blade" the whole mod now reads.
 ln_has_deed_valyrian_steel_trigger = {
 	any_equipped_character_artifact = {
 		OR = {
-			has_variable = valyrian_steel
+			ln_is_valyrian_blade_trigger = yes
 
 			# LIGHTBRINGER IS NOT VALYRIAN STEEL and this mod is not going to pretend otherwise -- every
 			# version of the tale puts it thousands of years before the Freehold existed. It is marked with
@@ -133,6 +136,39 @@ ln_has_red_priest_trigger = {
 			OR = {
 				has_trait = red_priest
 				faith = { religion = religion:the_rhllor_religion }
+			}
+		}
+	}
+}
+
+# ── 1.1.3: IS THERE A RED PRIEST IN THE HALL AT ALL, IN ANY SEAT OR NONE? ──────────────────────────────────
+# samurai (Discord, 24 Sep): playing Stannis with Melisandre as SPYMASTER, "Send for a Red Priest" was still
+# offered, and taking it brought a stranger who became Court Chaplain instead of her. ln_has_red_priest_trigger
+# above reads the chaplain seat (or the camp priest) and nothing else, which is right for what it asks -- "is
+# there a seer in office" -- and wrong for what the decision needs, which is "is there anyone here I could
+# hear". So this is the wider question, and ln_has_red_priest_trigger stays what it is (ln_has_a_seer_trigger
+# and the naming chain read it and should go on reading the seat, not the hall).
+#
+# Melisandre only gains red_priest at 8289.1.1 in her history (00_agot_char_stormlands.txt:2153), after AGOT's
+# latest bookmark (8284.6.2), so in most games she does NOT carry the trait; Thoros gains it at 8276
+# (00_agot_char_riverlands.txt). Both are named by id, guarded with exists, the same way
+# ln_summon_the_red_priest_effect names them. Prisoners are not in the hall; children are not priests.
+ln_red_priest_in_hall_trigger = {
+	OR = {
+		ln_has_red_priest_trigger = yes
+		any_courtier_or_guest = {
+			is_adult = yes
+			is_imprisoned = no
+			OR = {
+				has_trait = red_priest
+				AND = {
+					exists = character:Melisandre_1
+					this = character:Melisandre_1
+				}
+				AND = {
+					exists = character:Brotherhood_8
+					this = character:Brotherhood_8
+				}
 			}
 		}
 	}

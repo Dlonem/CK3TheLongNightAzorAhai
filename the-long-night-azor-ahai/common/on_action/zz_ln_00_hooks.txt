@@ -57,6 +57,60 @@ on_vassal_gained = {
 	}
 }
 
+# 1.1.2 -- THE HOOK THAT READS THE RIGHT SIDE. on_vassal_gained puts ROOT on the LIEGE and the vassal in
+# scope:vassal, so when a Stark acquires the Night King, root is the Stark and our body -- which opens with
+# `root = { ln_is_one_of_them_trigger = yes }` -- skips the whole block. It has never been able to see the
+# case void reported.
+#
+# on_vassal_change is the mirror of it and vanilla's own header says so exactly:
+#     "A vassal changes their liege / root = vassal changing their status /
+#      scope:old_liege = the previous liege of the vassal /
+#      It is also fired for rulers gaining independence, those can be identified by checking current liege"
+# (common/on_action/title_on_actions.txt). Root is the character whose liege changed -- the Night King
+# himself -- so the same body that could not see him now runs on him, the same tick, instead of up to a year
+# later on the sweep.
+#
+# SAFE TO DECLARE: AGOT already declares this on_action twice without collision, once with an `effect` and
+# once as an `on_actions` sub-list (agot_on_actions/agot_title_on_actions.txt, agot_pentos_treaty...), which
+# is the proof that sub-lists merge here. Ours is a third declaration in the same shape as the two above.
+#
+# RE-ENTRANT BY DESIGN AND HARMLESS: the swear (change_liege) and the independency (becomes_independent)
+# both re-fire this on_action on the same man while the change resolves. Since 1.1.3 the guard is the one-day
+# ln_being_freed flag the effect sets before it changes anything, so the second pass only strips the marker.
+# The boots since 26 Sep show zero nested changes. No loop.
+on_vassal_change = {
+	on_actions = {
+		ln_others_vassal_change
+	}
+}
+
+# 1.1.3 -- THE CAMP IS SET UP THE MOMENT A MAN BECOMES A RANGER. Root = the character whose government
+# changed, scope:old_government = the one before (vanilla's header, dlc/mpo/mpo_on_actions_2.txt:604-606).
+# Every road into a ranging company ends in change_government = ln_ranger_government, so this is the one
+# hook that catches all of them: the old council is fired, the household sworn or pooled, and one brother put
+# in the camp so the ranger seats can be filled without the crash AGOT's own comments warn of. Body in
+# common/on_action/zz_ln_ranging_on_actions.txt; effect in zz_ln_ranger_effects.txt. AGOT registers two
+# sub-lists of its own here (agot_general_on_actions.txt:396, agot_government_on_actions.txt:1), so ours merges.
+on_government_change = {
+	on_actions = {
+		ln_became_a_ranger
+	}
+}
+
+# 1.1.3 -- THE DEAD MARCH ALONE. Root = the character who just joined a war as a secondary attacker or
+# defender, scope:war = the war (vanilla's own header, war_on_actions.txt:14-18). Every AGOT/vanilla road
+# that lets a living ruler fight beside the dead -- adventurer companies offering to join, paid help, a
+# hired company, a company switching sides, a living tributary, the old mega-war rebels -- ends in this one
+# engine event as far as vanilla's header says (the 1.1.3 boots also caught 3 joiners only the sweep removed,
+# so some road does not fire it), and none of those roads asks who leads the war. Body in 00_others_on_actions.txt; the
+# 30-day and yearly sweep in zz_ln_service_effects.txt is the belt under it for wars already running. AGOT
+# registers its own sub-list here (agot_war_on_actions.txt:1-5), so ours merges.
+on_join_war_as_secondary = {
+	on_actions = {
+		ln_the_dead_march_alone
+	}
+}
+
 # Root on both of these is THE CULTURE, not a character. scope:actor and scope:landed_title are the
 # engine-supplied handles and are what the bodies use.
 on_county_auto_granted_to_local_culture = {
@@ -125,6 +179,22 @@ on_title_gain_inheritance = {
 on_join_court = {
 	on_actions = {
 		ln_dead_join_court
+	}
+}
+
+# 1.1.2 -- THE OTHER HALF OF THAT DOOR. A character who arrives from the world pool as somebody's GUEST
+# does not come through on_join_court; he comes through here, and with a different scope name --
+# vanilla's own header: "Called when a pool character has appeared at the court. root, scope:guest: the
+# guest / host: their host (owner of the court)". ln_dead_join_court reads scope:new_employer, so it was
+# blind to every wight the guest system ever walked into a living hall. Thomas found one sitting in King's
+# Landing on 13 Sep. Body in zz_ln_court_on_actions.txt; the yearly sweep in zz_ln_service_effects.txt is
+# the backstop for anyone already seated.
+#
+# AGOT registers six sub-lists on this same on_action (agot_courtier_guest_management_on_actions.txt), so
+# a seventh merges rather than competes -- the same shape as every other entry in this file.
+on_guest_arrived_from_pool = {
+	on_actions = {
+		ln_dead_arrive_as_guest
 	}
 }
 
